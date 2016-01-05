@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AE607C691C3C0EAD00BE9AC4 /* IntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */; settings = {ASSET_TAGS = (); }; };
+		AE607C731C3C0FA100BE9AC4 /* RMQClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE7FE911C3BCA6000DF8C4F /* RMQClient.framework */; settings = {ASSET_TAGS = (); }; };
 		AEE7FE951C3BCA6000DF8C4F /* RMQClient.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE7FE941C3BCA6000DF8C4F /* RMQClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEE7FE9C1C3BCA6000DF8C4F /* RMQClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE7FE911C3BCA6000DF8C4F /* RMQClient.framework */; settings = {ASSET_TAGS = (); }; };
-		AEE7FEA11C3BCA6000DF8C4F /* RMQClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE7FEA01C3BCA6000DF8C4F /* RMQClientTests.m */; };
 		AEE7FEAD1C3BCD0F00DF8C4F /* RMQClientConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE7FEAB1C3BCD0F00DF8C4F /* RMQClientConnection.h */; settings = {ASSET_TAGS = (); }; };
 		AEE7FEAE1C3BCD0F00DF8C4F /* RMQClientConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE7FEAC1C3BCD0F00DF8C4F /* RMQClientConnection.m */; settings = {ASSET_TAGS = (); }; };
 		AEE7FEB11C3BCEBA00DF8C4F /* RMQClientChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE7FEAF1C3BCEBA00DF8C4F /* RMQClientChannel.h */; settings = {ASSET_TAGS = (); }; };
@@ -21,6 +22,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		AE607C741C3C0FA100BE9AC4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AEE7FE881C3BCA6000DF8C4F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AEE7FE901C3BCA6000DF8C4F;
+			remoteInfo = RMQClient;
+		};
 		AEE7FE9D1C3BCA6000DF8C4F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AEE7FE881C3BCA6000DF8C4F /* Project object */;
@@ -31,11 +39,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AE607C671C3C0EAD00BE9AC4 /* RMQClientTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RMQClientTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegrationTests.swift; sourceTree = "<group>"; };
 		AEE7FE911C3BCA6000DF8C4F /* RMQClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RMQClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEE7FE941C3BCA6000DF8C4F /* RMQClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMQClient.h; sourceTree = "<group>"; };
 		AEE7FE961C3BCA6000DF8C4F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AEE7FE9B1C3BCA6000DF8C4F /* RMQClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RMQClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		AEE7FEA01C3BCA6000DF8C4F /* RMQClientTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RMQClientTests.m; sourceTree = "<group>"; };
 		AEE7FEA21C3BCA6000DF8C4F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AEE7FEAB1C3BCD0F00DF8C4F /* RMQClientConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQClientConnection.h; sourceTree = "<group>"; };
 		AEE7FEAC1C3BCD0F00DF8C4F /* RMQClientConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQClientConnection.m; sourceTree = "<group>"; };
@@ -48,6 +57,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		AE607C6B1C3C0FA100BE9AC4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AE607C731C3C0FA100BE9AC4 /* RMQClient.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AEE7FE8D1C3BCA6000DF8C4F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -104,7 +121,8 @@
 		AEE7FE9F1C3BCA6000DF8C4F /* RMQClientTests */ = {
 			isa = PBXGroup;
 			children = (
-				AEE7FEA01C3BCA6000DF8C4F /* RMQClientTests.m */,
+				AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */,
+				AE607C671C3C0EAD00BE9AC4 /* RMQClientTests-Bridging-Header.h */,
 				AEE7FEA21C3BCA6000DF8C4F /* Info.plist */,
 			);
 			path = RMQClientTests;
@@ -170,9 +188,13 @@
 		AEE7FE881C3BCA6000DF8C4F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Pivotal;
 				TargetAttributes = {
+					AE607C6D1C3C0FA100BE9AC4 = {
+						CreatedOnToolsVersion = 7.0;
+					};
 					AEE7FE901C3BCA6000DF8C4F = {
 						CreatedOnToolsVersion = 7.0;
 					};
@@ -200,6 +222,13 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		AE607C6C1C3C0FA100BE9AC4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AEE7FE8F1C3BCA6000DF8C4F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -217,6 +246,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		AE607C6A1C3C0FA100BE9AC4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AEE7FE8C1C3BCA6000DF8C4F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -232,13 +268,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AEE7FEA11C3BCA6000DF8C4F /* RMQClientTests.m in Sources */,
+				AE607C691C3C0EAD00BE9AC4 /* IntegrationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		AE607C751C3C0FA100BE9AC4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AEE7FE901C3BCA6000DF8C4F /* RMQClient */;
+			targetProxy = AE607C741C3C0FA100BE9AC4 /* PBXContainerItemProxy */;
+		};
 		AEE7FE9E1C3BCA6000DF8C4F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = AEE7FE901C3BCA6000DF8C4F /* RMQClient */;
@@ -370,20 +411,25 @@
 		AEE7FEA91C3BCA6000DF8C4F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = RMQClientTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClientTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "RMQClientTests/RMQClientTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		AEE7FEAA1C3BCA6000DF8C4F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = RMQClientTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClientTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "RMQClientTests/RMQClientTests-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -406,6 +452,7 @@
 				AEE7FEA71C3BCA6000DF8C4F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		AEE7FEA81C3BCA6000DF8C4F /* Build configuration list for PBXNativeTarget "RMQClientTests" */ = {
 			isa = XCConfigurationList;
@@ -414,6 +461,7 @@
 				AEE7FEAA1C3BCA6000DF8C4F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
