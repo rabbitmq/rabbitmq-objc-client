@@ -20,7 +20,7 @@ class IntegrationTests: XCTestCase {
         super.tearDown()
     }
     
-    func testIntegration() {
+    func XtestIntegration() {
         let conn = RMQClientConnection()
         conn.start()
         
