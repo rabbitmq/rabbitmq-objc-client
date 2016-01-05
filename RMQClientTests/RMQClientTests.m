@@ -7,6 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "RMQClientConnection.h"
 
 @interface RMQClientTests : XCTestCase
 
@@ -24,16 +25,32 @@
     [super tearDown];
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
-}
-
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
+- (void)testIntegration {
+    RMQClientConnection *conn = [RMQClientConnection new];
+    [conn start];
+    
+    RMQClientChannel *ch = [conn createChannel];
+    
+    RMQClientQueue *q = [ch queue:@"rmqclient.examples.hello_world" autoDelete:YES];
+    RMQClientExchange *x = [ch defaultExchange];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"subscription data received"];
+    
+    NSDictionary *expectedInfo = @{@"consumer_tag" : @"foo"};
+    NSDictionary *expectedMeta = @{@"foo" : @"bar"};
+    NSDictionary *expectedPayload = @{@"baz" : @"qux"};
+    
+    [q subscribe:^void(NSDictionary *info, NSDictionary *meta, NSDictionary *p) {
+        if ([info isEqual:expectedInfo] && [meta isEqual:expectedMeta] && [p isEqual:expectedPayload]) {
+            [expectation fulfill];
+        } else {
+            XCTFail(@"subscribe response unexpected");
+        }
     }];
+    
+    [x publish:@"Hello!" routingKey:q.name];
+    
+    [self waitForExpectationsWithTimeout:5 handler:nil];
 }
 
 @end
