@@ -1,11 +1,3 @@
-//
-//  RMQClient.h
-//  RMQClient
-//
-//  Created by Pivotal on 05/01/2016.
-//  Copyright © 2016 Pivotal. All rights reserved.
-//
-
 #import <UIKit/UIKit.h>
 
 //! Project version number for RMQClient.

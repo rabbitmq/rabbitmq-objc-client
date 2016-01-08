@@ -1,2 +1,2 @@
-#import "RMQClientConnection.h"
+#import "RMQSession.h"
 #import "AMQURI.h"
