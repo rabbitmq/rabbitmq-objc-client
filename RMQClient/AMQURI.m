@@ -13,6 +13,8 @@
 @property (nonatomic,nonnull,readwrite) NSString *host;
 @property (nonatomic,nonnull,readwrite) NSString *vhost;
 @property (nonatomic,nonnull,readwrite) NSNumber *portNumber;
+@property (nonatomic,nonnull,readwrite) NSString *username;
+@property (nonatomic,nonnull,readwrite) NSString *password;
 @property (nonatomic,readwrite) BOOL isSSL;
 @end
 
@@ -37,6 +39,8 @@
     AMQURI *u = [[AMQURI alloc] init];
     u.host = components.host;
     u.vhost = vhost;
+    u.username = components.user;
+    u.password = components.password;
     
     if ([components.scheme isEqualToString:@"amqp"]) {
         u.portNumber = @5672;

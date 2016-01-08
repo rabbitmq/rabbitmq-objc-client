@@ -76,4 +76,15 @@ class AMQURIParse: XCTestCase {
         }
     }
     
+    func testParsesUsernameAndPassword() {
+        let val = try! AMQURI.parse("amqp://hedgehog:t0ps3kr3t@hub.megacorp.internal")
+        XCTAssertEqual("/", val.vhost)
+        XCTAssertEqual("hub.megacorp.internal", val.host)
+        XCTAssertEqual(5672, val.portNumber)
+        XCTAssertEqual("amqp", val.scheme)
+        XCTAssertFalse(val.isSSL!)
+        XCTAssertEqual("hedgehog", val.username)
+        XCTAssertEqual("t0ps3kr3t", val.password)
+    }
+
 }
