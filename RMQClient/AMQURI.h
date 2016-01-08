@@ -9,5 +9,11 @@
 #import <Foundation/Foundation.h>
 
 @interface AMQURI : NSObject
-+ (id)parse:(NSString *)uri error:(NSError **)error;
+@property (nonatomic,nonnull,readonly) NSString *scheme;
+@property (nonatomic,nonnull,readonly) NSString *host;
+@property (nonatomic,nonnull,readonly) NSString *vhost;
+@property (nonatomic,nonnull,readonly) NSNumber *portNumber;
+@property (nonatomic,readonly) BOOL isSSL;
+
++ (nullable id)parse:(nonnull NSString *)uri error:(NSError * _Nullable * _Nullable)error;
 @end
