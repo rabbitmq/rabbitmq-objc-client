@@ -1,1 +1,4 @@
 language: objective-c
+osx_image: xcode7.2
+xcode_project: RMQClient.xcodeproj
+xcode_scheme: RMQClientTests
