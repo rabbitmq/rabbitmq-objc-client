@@ -12,7 +12,7 @@ class AMQURIParse: XCTestCase {
     
     func testNonAMQPSchemesNotAllowed() {
         do {
-            try AMQURI.parse("http://dev.rabbitmq.com")
+            try AMQURI.parse("amqpfoo://dev.rabbitmq.com")
             XCTFail("No error assigned")
         }
         catch let e as NSError {
@@ -48,10 +48,32 @@ class AMQURIParse: XCTestCase {
     func testParsesVhostAsEmptyStringWhenPathIsJustASlash() {
         let val = try! AMQURI.parse("amqp://dev.rabbitmq.com/")
         XCTAssertEqual("", val.vhost)
-        XCTAssertEqual("dev.rabbitmq.com", val.host)
-        XCTAssertEqual(5672, val.portNumber)
-        XCTAssertEqual("amqp", val.scheme)
-        XCTAssertFalse(val.isSSL!)
+    }
+    
+    func testPercentEncodedSlashIsJustSlash() {
+        let val = try! AMQURI.parse("amqp://dev.rabbitmq.com/%2Fvault")
+        XCTAssertEqual("/vault", val.vhost)
+    }
+    
+    func testDoesNotIncludeSlashesWhenNoneAfterFirst() {
+        let val = try! AMQURI.parse("amqp://dev.rabbitmq.com/a.path.without.slashes")
+        XCTAssertEqual("a.path.without.slashes", val.vhost)
+    }
+    
+    func testSlashesNotAllowedInVhost() {
+        do {
+            try AMQURI.parse("amqp://dev.rabbitmq.com/a/path/with/slashes")
+            XCTFail("No error assigned")
+        }
+        catch let e as NSError {
+            XCTAssertEqual(
+                "amqp://dev.rabbitmq.com/a/path/with/slashes has multiple-segment path; please percent-encode any slashes in the vhost name (e.g. /production => %2Fproduction). Learn more at http://bit.ly/amqp-gem-and-connection-uris",
+                e.localizedDescription
+            )
+        }
+        catch {
+            XCTFail("Wrong error")
+        }
     }
     
 }
