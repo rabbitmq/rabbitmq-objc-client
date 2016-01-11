@@ -3,10 +3,6 @@ import XCTest
 class RMQTCPSocketTransportTest: XCTestCase {
     
     func testOpenAndClose() {
-        if NSProcessInfo.processInfo().environment["CI"] != nil {
-            return
-        }
-        
         let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
         
         XCTAssertFalse(transport.isOpen())
