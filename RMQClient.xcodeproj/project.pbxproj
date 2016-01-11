@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AE607C691C3C0EAD00BE9AC4 /* IntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */; settings = {ASSET_TAGS = (); }; };
 		AE898D581C3C2D2E00AA3BF1 /* AMQURIParse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE898D571C3C2D2E00AA3BF1 /* AMQURIParse.swift */; settings = {ASSET_TAGS = (); }; };
 		AE898D5B1C3C30D100AA3BF1 /* AMQURI.h in Headers */ = {isa = PBXBuildFile; fileRef = AE898D591C3C30D100AA3BF1 /* AMQURI.h */; settings = {ASSET_TAGS = (); }; };
 		AE898D5C1C3C30D100AA3BF1 /* AMQURI.m in Sources */ = {isa = PBXBuildFile; fileRef = AE898D5A1C3C30D100AA3BF1 /* AMQURI.m */; settings = {ASSET_TAGS = (); }; };
@@ -16,9 +15,11 @@
 		AEA45EC61C43C20F00FE1F62 /* AMQProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA45EC41C43C20F00FE1F62 /* AMQProtocol.m */; settings = {ASSET_TAGS = (); }; };
 		AEA45EC81C43CBBE00FE1F62 /* RMQSessionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA45EC71C43CBBE00FE1F62 /* RMQSessionTest.swift */; settings = {ASSET_TAGS = (); }; };
 		AEA45ECA1C43D2B900FE1F62 /* RMQTransport.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA45EC91C43D2B900FE1F62 /* RMQTransport.h */; settings = {ASSET_TAGS = (); }; };
-		AEA45ECE1C43F44400FE1F62 /* RMQTCPSocketTransportTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA45ECD1C43F44400FE1F62 /* RMQTCPSocketTransportTest.swift */; settings = {ASSET_TAGS = (); }; };
 		AEA45ED11C43F4DC00FE1F62 /* RMQTCPSocketTransport.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA45ECF1C43F4DC00FE1F62 /* RMQTCPSocketTransport.h */; settings = {ASSET_TAGS = (); }; };
 		AEA45ED21C43F4DC00FE1F62 /* RMQTCPSocketTransport.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA45ED01C43F4DC00FE1F62 /* RMQTCPSocketTransport.m */; settings = {ASSET_TAGS = (); }; };
+		AEA45EDC1C440FE400FE1F62 /* RMQClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE7FE911C3BCA6000DF8C4F /* RMQClient.framework */; settings = {ASSET_TAGS = (); }; };
+		AEA45EE21C440FFD00FE1F62 /* IntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */; settings = {ASSET_TAGS = (); }; };
+		AEA45EE31C44100C00FE1F62 /* RMQTCPSocketTransportTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA45ECD1C43F44400FE1F62 /* RMQTCPSocketTransportTest.swift */; settings = {ASSET_TAGS = (); }; };
 		AEE7FE951C3BCA6000DF8C4F /* RMQClient.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE7FE941C3BCA6000DF8C4F /* RMQClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEE7FE9C1C3BCA6000DF8C4F /* RMQClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE7FE911C3BCA6000DF8C4F /* RMQClient.framework */; settings = {ASSET_TAGS = (); }; };
 		AEE7FEAD1C3BCD0F00DF8C4F /* RMQSession.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE7FEAB1C3BCD0F00DF8C4F /* RMQSession.h */; settings = {ASSET_TAGS = (); }; };
@@ -32,6 +33,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		AEA45EDD1C440FE400FE1F62 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AEE7FE881C3BCA6000DF8C4F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AEE7FE901C3BCA6000DF8C4F;
+			remoteInfo = RMQClient;
+		};
 		AEE7FE9D1C3BCA6000DF8C4F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AEE7FE881C3BCA6000DF8C4F /* Project object */;
@@ -43,7 +51,7 @@
 
 /* Begin PBXFileReference section */
 		AE607C671C3C0EAD00BE9AC4 /* RMQClientTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RMQClientTests-Bridging-Header.h"; sourceTree = "<group>"; };
-		AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegrationTests.swift; sourceTree = "<group>"; };
+		AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IntegrationTests.swift; path = ../RMQClientTests/IntegrationTests.swift; sourceTree = "<group>"; };
 		AE898D571C3C2D2E00AA3BF1 /* AMQURIParse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AMQURIParse.swift; sourceTree = "<group>"; };
 		AE898D591C3C30D100AA3BF1 /* AMQURI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQURI.h; sourceTree = "<group>"; };
 		AE898D5A1C3C30D100AA3BF1 /* AMQURI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQURI.m; sourceTree = "<group>"; };
@@ -52,9 +60,12 @@
 		AEA45EC41C43C20F00FE1F62 /* AMQProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQProtocol.m; sourceTree = "<group>"; };
 		AEA45EC71C43CBBE00FE1F62 /* RMQSessionTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQSessionTest.swift; sourceTree = "<group>"; };
 		AEA45EC91C43D2B900FE1F62 /* RMQTransport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQTransport.h; sourceTree = "<group>"; };
-		AEA45ECD1C43F44400FE1F62 /* RMQTCPSocketTransportTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQTCPSocketTransportTest.swift; sourceTree = "<group>"; };
+		AEA45ECD1C43F44400FE1F62 /* RMQTCPSocketTransportTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RMQTCPSocketTransportTest.swift; path = ../RMQClientTests/RMQTCPSocketTransportTest.swift; sourceTree = "<group>"; };
 		AEA45ECF1C43F4DC00FE1F62 /* RMQTCPSocketTransport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQTCPSocketTransport.h; sourceTree = "<group>"; };
 		AEA45ED01C43F4DC00FE1F62 /* RMQTCPSocketTransport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQTCPSocketTransport.m; sourceTree = "<group>"; };
+		AEA45ED71C440FE400FE1F62 /* RMQClientIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RMQClientIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AEA45EDB1C440FE400FE1F62 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AEA45EE41C44111200FE1F62 /* RMQClientIntegrationTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RMQClientIntegrationTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		AEE7FE911C3BCA6000DF8C4F /* RMQClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RMQClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEE7FE941C3BCA6000DF8C4F /* RMQClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMQClient.h; sourceTree = "<group>"; };
 		AEE7FE961C3BCA6000DF8C4F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -71,6 +82,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		AEA45ED41C440FE400FE1F62 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AEA45EDC1C440FE400FE1F62 /* RMQClient.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AEE7FE8D1C3BCA6000DF8C4F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -89,11 +108,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AEA45ED81C440FE400FE1F62 /* RMQClientIntegrationTests */ = {
+			isa = PBXGroup;
+			children = (
+				AEA45EE41C44111200FE1F62 /* RMQClientIntegrationTests-Bridging-Header.h */,
+				AEA45EDB1C440FE400FE1F62 /* Info.plist */,
+				AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */,
+				AEA45ECD1C43F44400FE1F62 /* RMQTCPSocketTransportTest.swift */,
+			);
+			path = RMQClientIntegrationTests;
+			sourceTree = "<group>";
+		};
 		AEE7FE871C3BCA6000DF8C4F = {
 			isa = PBXGroup;
 			children = (
 				AEE7FE931C3BCA6000DF8C4F /* RMQClient */,
 				AEE7FE9F1C3BCA6000DF8C4F /* RMQClientTests */,
+				AEA45ED81C440FE400FE1F62 /* RMQClientIntegrationTests */,
 				AEE7FE921C3BCA6000DF8C4F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -103,6 +134,7 @@
 			children = (
 				AEE7FE911C3BCA6000DF8C4F /* RMQClient.framework */,
 				AEE7FE9B1C3BCA6000DF8C4F /* RMQClientTests.xctest */,
+				AEA45ED71C440FE400FE1F62 /* RMQClientIntegrationTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -136,11 +168,9 @@
 			children = (
 				AE607C671C3C0EAD00BE9AC4 /* RMQClientTests-Bridging-Header.h */,
 				AEE7FEA21C3BCA6000DF8C4F /* Info.plist */,
-				AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */,
 				AE898D571C3C2D2E00AA3BF1 /* AMQURIParse.swift */,
 				AEA45EC11C43BD4700FE1F62 /* BasicConsume.swift */,
 				AEA45EC71C43CBBE00FE1F62 /* RMQSessionTest.swift */,
-				AEA45ECD1C43F44400FE1F62 /* RMQTCPSocketTransportTest.swift */,
 			);
 			path = RMQClientTests;
 			sourceTree = "<group>";
@@ -167,6 +197,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		AEA45ED61C440FE400FE1F62 /* RMQClientIntegrationTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AEA45EDF1C440FE400FE1F62 /* Build configuration list for PBXNativeTarget "RMQClientIntegrationTests" */;
+			buildPhases = (
+				AEA45ED31C440FE400FE1F62 /* Sources */,
+				AEA45ED41C440FE400FE1F62 /* Frameworks */,
+				AEA45ED51C440FE400FE1F62 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AEA45EDE1C440FE400FE1F62 /* PBXTargetDependency */,
+			);
+			name = RMQClientIntegrationTests;
+			productName = RMQClientIntegrationTests;
+			productReference = AEA45ED71C440FE400FE1F62 /* RMQClientIntegrationTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		AEE7FE901C3BCA6000DF8C4F /* RMQClient */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = AEE7FEA51C3BCA6000DF8C4F /* Build configuration list for PBXNativeTarget "RMQClient" */;
@@ -213,6 +261,9 @@
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Pivotal;
 				TargetAttributes = {
+					AEA45ED61C440FE400FE1F62 = {
+						CreatedOnToolsVersion = 7.0;
+					};
 					AEE7FE901C3BCA6000DF8C4F = {
 						CreatedOnToolsVersion = 7.0;
 					};
@@ -235,11 +286,19 @@
 			targets = (
 				AEE7FE901C3BCA6000DF8C4F /* RMQClient */,
 				AEE7FE9A1C3BCA6000DF8C4F /* RMQClientTests */,
+				AEA45ED61C440FE400FE1F62 /* RMQClientIntegrationTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		AEA45ED51C440FE400FE1F62 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AEE7FE8F1C3BCA6000DF8C4F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -257,6 +316,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		AEA45ED31C440FE400FE1F62 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AEA45EE21C440FFD00FE1F62 /* IntegrationTests.swift in Sources */,
+				AEA45EE31C44100C00FE1F62 /* RMQTCPSocketTransportTest.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AEE7FE8C1C3BCA6000DF8C4F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -277,8 +345,6 @@
 			files = (
 				AE898D581C3C2D2E00AA3BF1 /* AMQURIParse.swift in Sources */,
 				AEA45EC21C43BD4700FE1F62 /* BasicConsume.swift in Sources */,
-				AEA45ECE1C43F44400FE1F62 /* RMQTCPSocketTransportTest.swift in Sources */,
-				AE607C691C3C0EAD00BE9AC4 /* IntegrationTests.swift in Sources */,
 				AEA45EC81C43CBBE00FE1F62 /* RMQSessionTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -286,6 +352,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		AEA45EDE1C440FE400FE1F62 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AEE7FE901C3BCA6000DF8C4F /* RMQClient */;
+			targetProxy = AEA45EDD1C440FE400FE1F62 /* PBXContainerItemProxy */;
+		};
 		AEE7FE9E1C3BCA6000DF8C4F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = AEE7FE901C3BCA6000DF8C4F /* RMQClient */;
@@ -294,6 +365,29 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		AEA45EE01C440FE400FE1F62 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = RMQClientIntegrationTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClientIntegrationTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "RMQClientIntegrationTests/RMQClientIntegrationTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AEA45EE11C440FE400FE1F62 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = RMQClientIntegrationTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClientIntegrationTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "RMQClientIntegrationTests/RMQClientIntegrationTests-Bridging-Header.h";
+			};
+			name = Release;
+		};
 		AEE7FEA31C3BCA6000DF8C4F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -442,6 +536,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		AEA45EDF1C440FE400FE1F62 /* Build configuration list for PBXNativeTarget "RMQClientIntegrationTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AEA45EE01C440FE400FE1F62 /* Debug */,
+				AEA45EE11C440FE400FE1F62 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		AEE7FE8B1C3BCA6000DF8C4F /* Build configuration list for PBXProject "RMQClient" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

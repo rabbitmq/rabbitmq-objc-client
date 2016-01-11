@@ -9,10 +9,20 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>RMQClientCI.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>AE607C6D1C3C0FA100BE9AC4</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>AEA45ED61C440FE400FE1F62</key>
 		<dict>
 			<key>primary</key>
 			<true/>

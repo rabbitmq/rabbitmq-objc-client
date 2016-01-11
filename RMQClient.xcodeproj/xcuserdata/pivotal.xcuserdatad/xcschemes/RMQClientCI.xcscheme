@@ -38,16 +38,6 @@
                ReferencedContainer = "container:RMQClient.xcodeproj">
             </BuildableReference>
          </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AEA45ED61C440FE400FE1F62"
-               BuildableName = "RMQClientIntegrationTests.xctest"
-               BlueprintName = "RMQClientIntegrationTests"
-               ReferencedContainer = "container:RMQClient.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
