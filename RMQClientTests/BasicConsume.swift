@@ -7,7 +7,7 @@ class BasicConsume: XCTestCase {
             user: "rmqclient",
             password: "rmqclient_password",
             vhost: "rmqclient_testbed",
-            transport: FakeAMQTransport()
+            transport: FakeTransport()
         )
         conn.start()
         defer { conn.close() }
@@ -28,8 +28,8 @@ class BasicConsume: XCTestCase {
     }
  
     func testAutomaticAcknowledgementMode() {
-        let transport: AMQTransport = FakeAMQTransport()
-        let conn = RMQSession(user: "rmqclient", password: "rmqclient_password", vhost: "rmqclient_testbed", transport: FakeAMQTransport())
+        let transport: RMQTransport = FakeTransport()
+        let conn = RMQSession(user: "rmqclient", password: "rmqclient_password", vhost: "rmqclient_testbed", transport: FakeTransport())
         conn.start()
         
         let ch = conn.createChannel()

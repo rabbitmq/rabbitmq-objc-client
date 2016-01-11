@@ -4,7 +4,7 @@
 @property (copy, nonatomic, readwrite) NSString *user;
 @property (copy, nonatomic, readwrite) NSString *password;
 @property (copy, nonatomic, readwrite) NSString *vhost;
-@property (nonatomic, readwrite) id <AMQTransport> transport;
+@property (nonatomic, readwrite) id <RMQTransport> transport;
 @end
 
 @implementation RMQSession
@@ -12,7 +12,7 @@
 - (instancetype)initWithUser:(NSString *)user
                     password:(NSString *)password
                        vhost:(NSString *)vhost
-                   transport:(id<AMQTransport>)transport {
+                   transport:(id<RMQTransport>)transport {
     self = [super init];
     if (self) {
         self.user = user;

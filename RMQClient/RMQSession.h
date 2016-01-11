@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "RMQChannel.h"
-#import "AMQTransport.h"
+#import "RMQTransport.h"
 
 @interface RMQSession : NSObject
 @property (copy, nonatomic, readonly) NSString *user;
@@ -10,7 +10,7 @@
 - (instancetype)initWithUser:(NSString *)user
                     password:(NSString *)password
                        vhost:(NSString *)vhost
-                   transport:(id <AMQTransport>)transport;
+                   transport:(id <RMQTransport>)transport;
 - (void)start;
 - (void)close;
 - (RMQChannel *)createChannel;
