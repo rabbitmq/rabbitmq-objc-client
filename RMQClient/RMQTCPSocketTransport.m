@@ -3,9 +3,26 @@
 @interface RMQTCPSocketTransport ()
 @property (nonnull, nonatomic, readwrite) NSInputStream *readStream;
 @property (nonnull, nonatomic, readwrite) NSOutputStream *writeStream;
+@property (nonnull, nonatomic, readwrite) NSString *host;
+@property (nonnull, nonatomic, readwrite) NSNumber *port;
 @end
 
 @implementation RMQTCPSocketTransport
+
+- (instancetype)initWithHost:(NSString *)host port:(NSNumber *)port {
+    self = [super init];
+    if (self) {
+        self.host = host;
+        self.port = port;
+    }
+    return self;
+}
+
+- (id)init
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
 
 - (void)connect {
     CFReadStreamRef read;
@@ -31,8 +48,8 @@
 }
 
 - (BOOL)isOpen {
-    return [self.readStream streamStatus] == NSStreamStatusOpen &&
-    [self.writeStream streamStatus] == NSStreamStatusOpen;
+    return self.readStream.streamStatus == NSStreamStatusOpen &&
+    self.writeStream.streamStatus == NSStreamStatusOpen;
 }
 
 @end
