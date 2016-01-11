@@ -9,5 +9,5 @@
 @property (nonatomic,nonnull,readonly) NSString *password;
 @property (nonatomic,readonly) BOOL isSSL;
 
-+ (nullable id)parse:(nonnull NSString *)uri error:(NSError * _Nullable * _Nullable)error;
++ (nullable instancetype)parse:(nonnull NSString *)uri error:(NSError * _Nullable * _Nullable)error;
 @end

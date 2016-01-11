@@ -11,7 +11,7 @@
 @end
 
 @implementation AMQURI
-+ (id)parse:(NSString *)uri error:(NSError *__autoreleasing  _Nullable *)error {
++ (instancetype)parse:(NSString *)uri error:(NSError *__autoreleasing  _Nullable *)error {
     NSURLComponents *components = [NSURLComponents componentsWithString:uri];
     
     if (![self isAMQPScheme:components.scheme]) {
