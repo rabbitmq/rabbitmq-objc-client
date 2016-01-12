@@ -1,27 +1,29 @@
 import XCTest
 
-class FakeTransport: RMQTransport {
+@objc class FakeTransport: NSObject, RMQTransport {
     var myData: NSData = NSData()
     
-    @objc func connect() {
+    func connect() {
         
     }
-    @objc func close() {
+    func close() {
         
     }
-    @objc func write(data: NSData) {
+    func write(data: NSData) {
         myData = data
     }
-    @objc func isOpen() -> Bool {
+    func isOpen() -> Bool {
         return false
     }
-    
-    func read() -> String {
-        return String(data: myData, encoding: NSUTF8StringEncoding)!
+    func read() -> NSData {
+        return NSData()
+    }
+    func spy() -> String {
+        return String(data: myData, encoding: NSASCIIStringEncoding)!
     }
 }
 
-class RMQSessionTest: XCTestCase {
+class RMQConnectionTest: XCTestCase {
     
     override func setUp() {
         super.setUp()
@@ -34,7 +36,7 @@ class RMQSessionTest: XCTestCase {
         
         conn.start()
         
-        XCTAssertEqual("AMQP0091", transport.read())
+        XCTAssertEqual("AMQP\0\0\t\u{01}", transport.spy())
     }
     
 }

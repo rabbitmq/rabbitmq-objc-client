@@ -29,7 +29,7 @@ class BasicConsume: XCTestCase {
  
     func testAutomaticAcknowledgementMode() {
         let transport: RMQTransport = FakeTransport()
-        let conn = RMQConnection(user: "rmqclient", password: "rmqclient_password", vhost: "rmqclient_testbed", transport: FakeTransport())
+        let conn = RMQConnection(user: "rmqclient", password: "rmqclient_password", vhost: "rmqclient_testbed", transport: transport)
         conn.start()
         
         let ch = conn.createChannel()

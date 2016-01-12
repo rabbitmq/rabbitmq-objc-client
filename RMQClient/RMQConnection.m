@@ -23,8 +23,23 @@
     return self;
 }
 
+- (instancetype)init
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 - (void)start {
-    [self.transport write:[@"AMQP0091" dataUsingEncoding:NSUTF8StringEncoding]];
+    char *buffer = malloc(8);
+    memcpy(buffer, "AMQP", strlen("AMQP"));
+    buffer[4] = 0x00;
+    buffer[5] = 0x00;
+    buffer[6] = 0x09;
+    buffer[7] = 0x01;
+
+    NSData *data = [NSData dataWithBytesNoCopy:buffer length:8];
+
+    [self.transport write:data];
 }
 
 - (void)close {

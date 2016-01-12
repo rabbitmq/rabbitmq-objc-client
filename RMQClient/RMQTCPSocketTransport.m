@@ -18,7 +18,7 @@
     return self;
 }
 
-- (id)init
+- (instancetype)init
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
@@ -38,13 +38,19 @@
     [self.writeStream open];
 }
 
+- (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode {
+}
+
 - (void)close {
     [self.readStream close];
     [self.writeStream close];
 }
 
 - (void)write:(NSData *)data {
-    
+}
+
+- (NSData *)read {
+    return [NSData new];
 }
 
 - (BOOL)isOpen {

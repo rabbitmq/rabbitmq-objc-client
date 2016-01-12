@@ -4,5 +4,6 @@
 - (void)connect;
 - (void)close;
 - (void)write:(nonnull NSData *)data;
+- (nonnull NSData *)read; // TODO: return a domain object, not NSData
 - (BOOL)isOpen;
 @end
