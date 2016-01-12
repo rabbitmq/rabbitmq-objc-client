@@ -51,7 +51,7 @@
 
 /* Begin PBXFileReference section */
 		AE607C671C3C0EAD00BE9AC4 /* RMQClientTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RMQClientTests-Bridging-Header.h"; sourceTree = "<group>"; };
-		AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IntegrationTests.swift; path = ../RMQClientTests/IntegrationTests.swift; sourceTree = "<group>"; };
+		AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegrationTests.swift; sourceTree = "<group>"; };
 		AE898D571C3C2D2E00AA3BF1 /* AMQURIParse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AMQURIParse.swift; sourceTree = "<group>"; };
 		AE898D591C3C30D100AA3BF1 /* AMQURI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQURI.h; sourceTree = "<group>"; };
 		AE898D5A1C3C30D100AA3BF1 /* AMQURI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQURI.m; sourceTree = "<group>"; };
@@ -60,7 +60,7 @@
 		AEA45EC41C43C20F00FE1F62 /* AMQProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQProtocol.m; sourceTree = "<group>"; };
 		AEA45EC71C43CBBE00FE1F62 /* RMQSessionTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQSessionTest.swift; sourceTree = "<group>"; };
 		AEA45EC91C43D2B900FE1F62 /* RMQTransport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQTransport.h; sourceTree = "<group>"; };
-		AEA45ECD1C43F44400FE1F62 /* RMQTCPSocketTransportTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RMQTCPSocketTransportTest.swift; path = ../RMQClientTests/RMQTCPSocketTransportTest.swift; sourceTree = "<group>"; };
+		AEA45ECD1C43F44400FE1F62 /* RMQTCPSocketTransportTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQTCPSocketTransportTest.swift; sourceTree = "<group>"; };
 		AEA45ECF1C43F4DC00FE1F62 /* RMQTCPSocketTransport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQTCPSocketTransport.h; sourceTree = "<group>"; };
 		AEA45ED01C43F4DC00FE1F62 /* RMQTCPSocketTransport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQTCPSocketTransport.m; sourceTree = "<group>"; };
 		AEA45ED71C440FE400FE1F62 /* RMQClientIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RMQClientIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
