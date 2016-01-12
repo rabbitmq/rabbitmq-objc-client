@@ -3,7 +3,7 @@ import XCTest
 class IntegrationTests: XCTestCase {
     
     func XtestIntegration() {
-        let conn = RMQSession()
+        let conn = RMQConnection()
         conn.start()
         
         let ch = conn.createChannel()

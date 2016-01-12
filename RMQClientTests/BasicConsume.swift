@@ -3,7 +3,7 @@ import XCTest
 class BasicConsume: XCTestCase {
     
     func testCarriesServerGeneratedConsumerTagWithBasicConsumeOK() {
-        let conn = RMQSession(
+        let conn = RMQConnection(
             user: "rmqclient",
             password: "rmqclient_password",
             vhost: "rmqclient_testbed",
@@ -29,7 +29,7 @@ class BasicConsume: XCTestCase {
  
     func testAutomaticAcknowledgementMode() {
         let transport: RMQTransport = FakeTransport()
-        let conn = RMQSession(user: "rmqclient", password: "rmqclient_password", vhost: "rmqclient_testbed", transport: FakeTransport())
+        let conn = RMQConnection(user: "rmqclient", password: "rmqclient_password", vhost: "rmqclient_testbed", transport: FakeTransport())
         conn.start()
         
         let ch = conn.createChannel()

@@ -1,2 +1,2 @@
-#import "RMQSession.h"
+#import "RMQConnection.h"
 #import "RMQTCPSocketTransport.h"

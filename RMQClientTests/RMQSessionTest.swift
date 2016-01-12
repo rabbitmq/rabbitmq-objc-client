@@ -30,7 +30,7 @@ class RMQSessionTest: XCTestCase {
     
     func testSendsPreambleToTransport() {
         let transport: FakeTransport = FakeTransport()
-        let conn = RMQSession(user: "foo", password: "bar", vhost: "baz", transport: transport)
+        let conn = RMQConnection(user: "foo", password: "bar", vhost: "baz", transport: transport)
         
         conn.start()
         

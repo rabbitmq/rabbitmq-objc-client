@@ -1,13 +1,13 @@
-#import "RMQSession.h"
+#import "RMQConnection.h"
 
-@interface RMQSession ()
+@interface RMQConnection ()
 @property (copy, nonatomic, readwrite) NSString *user;
 @property (copy, nonatomic, readwrite) NSString *password;
 @property (copy, nonatomic, readwrite) NSString *vhost;
 @property (nonatomic, readwrite) id <RMQTransport> transport;
 @end
 
-@implementation RMQSession
+@implementation RMQConnection
 
 - (instancetype)initWithUser:(NSString *)user
                     password:(NSString *)password
