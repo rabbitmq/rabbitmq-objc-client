@@ -1,10 +1,10 @@
 #import "RMQTCPSocketTransport.h"
 
 @interface RMQTCPSocketTransport ()
-@property (nonnull, nonatomic, readwrite) NSInputStream *readStream;
-@property (nonnull, nonatomic, readwrite) NSOutputStream *writeStream;
 @property (nonnull, nonatomic, readwrite) NSString *host;
 @property (nonnull, nonatomic, readwrite) NSNumber *port;
+@property (nonatomic, readwrite) BOOL _isConnected;
+@property (nonnull, nonatomic, readwrite) GCDAsyncSocket *socket;
 @end
 
 @implementation RMQTCPSocketTransport
@@ -12,6 +12,7 @@
 - (instancetype)initWithHost:(NSString *)host port:(NSNumber *)port {
     self = [super init];
     if (self) {
+        self.socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
         self.host = host;
         self.port = port;
     }
@@ -25,37 +26,36 @@
 }
 
 - (void)connect {
-    CFReadStreamRef read;
-    CFWriteStreamRef write;
-    CFStreamCreatePairWithSocketToHost(NULL, (CFStringRef)@"localhost", 5672, &read, &write);
-    self.readStream = (__bridge_transfer NSInputStream *)read;
-    self.writeStream = (__bridge_transfer NSOutputStream *)write;
-    [self.readStream setDelegate:self];
-    [self.writeStream setDelegate:self];
-    [self.readStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [self.writeStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [self.readStream open];
-    [self.writeStream open];
-}
-
-- (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode {
+    NSError *error = nil;
+    if (![self.socket connectToHost:self.host onPort:self.port.unsignedIntegerValue error:&error]) {
+        NSLog(@"*************** Something is very wrong: %@", error);
+    }
 }
 
 - (void)close {
-    [self.readStream close];
-    [self.writeStream close];
+    [self.socket disconnectAfterReadingAndWriting];
 }
 
+#define TAG_WROTE_STUFF 10
+
 - (void)write:(NSData *)data {
+    [self.socket writeData:data withTimeout:10 tag:TAG_WROTE_STUFF];
 }
 
 - (NSData *)read {
     return [NSData new];
 }
 
-- (BOOL)isOpen {
-    return self.readStream.streamStatus == NSStreamStatusOpen &&
-    self.writeStream.streamStatus == NSStreamStatusOpen;
+- (BOOL)isConnected {
+    return self._isConnected;
+}
+
+- (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
+    self._isConnected = true;
+}
+
+- (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err {
+    self._isConnected = false;
 }
 
 @end

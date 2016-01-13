@@ -2,22 +2,25 @@ import XCTest
 
 class RMQTCPSocketTransportTest: XCTestCase {
     
-    func testOpenAndClose() {
+    func pollUntil(checker: () -> Bool) {
+        for _ in 1...10 {
+            if checker() {
+                return
+            } else {
+                NSRunLoop.currentRunLoop().runUntilDate(NSDate().dateByAddingTimeInterval(0.5))
+            }
+        }
+        XCTFail("polling timed out")
+    }
+    
+    func testConnectAndDisconnect() {
         let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
         
-        XCTAssertFalse(transport.isOpen())
+        XCTAssertFalse(transport.isConnected())
         transport.connect()
-        
-        for _ in 1...10 {
-            if transport.isOpen() {
-                break
-            }
-            sleep(1)
-        }
-        XCTAssert(transport.isOpen())
-        
+        pollUntil { transport.isConnected() }
         transport.close()
-        XCTAssertFalse(transport.isOpen())
+        pollUntil { !transport.isConnected() }
     }
     
     func testSendPreambleReceiveConnectionStart() {
@@ -26,13 +29,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
         transport.connect()
         defer { transport.close() }
         
-        for _ in 1...10 {
-            if transport.isOpen() {
-                break
-            }
-            sleep(1)
-        }
-        XCTAssert(transport.isOpen())
+        pollUntil { transport.isConnected() }
         
         let data = "AMQP".dataUsingEncoding(NSASCIIStringEncoding) as! NSMutableData
         let a = [0x00, 0x00, 0x09, 0x01]
@@ -42,7 +39,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
         
         transport.write(data)
         
-        transport.read()
+        // TODO: check something
     }
 
 }

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AE29CCB11C45048C00D97494 /* AMQProtocolTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE29CCB01C45048C00D97494 /* AMQProtocolTest.swift */; settings = {ASSET_TAGS = (); }; };
-		AE29CCC51C4667AC00D97494 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE29CCC01C46675700D97494 /* CocoaAsyncSocket.framework */; };
+		AE29CCC61C4669B800D97494 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE29CCC01C46675700D97494 /* CocoaAsyncSocket.framework */; };
 		AE898D581C3C2D2E00AA3BF1 /* AMQURIParse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE898D571C3C2D2E00AA3BF1 /* AMQURIParse.swift */; settings = {ASSET_TAGS = (); }; };
 		AE898D5B1C3C30D100AA3BF1 /* AMQURI.h in Headers */ = {isa = PBXBuildFile; fileRef = AE898D591C3C30D100AA3BF1 /* AMQURI.h */; settings = {ASSET_TAGS = (); }; };
 		AE898D5C1C3C30D100AA3BF1 /* AMQURI.m in Sources */ = {isa = PBXBuildFile; fileRef = AE898D5A1C3C30D100AA3BF1 /* AMQURI.m */; settings = {ASSET_TAGS = (); }; };
@@ -111,7 +111,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AE29CCC51C4667AC00D97494 /* CocoaAsyncSocket.framework in Frameworks */,
 				AEA45EDC1C440FE400FE1F62 /* RMQClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -120,6 +119,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AE29CCC61C4669B800D97494 /* CocoaAsyncSocket.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

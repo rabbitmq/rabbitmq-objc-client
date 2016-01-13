@@ -12,7 +12,7 @@ import XCTest
     func write(data: NSData) {
         myData = data
     }
-    func isOpen() -> Bool {
+    func isConnected() -> Bool {
         return false
     }
     func read() -> NSData {
@@ -25,13 +25,8 @@ import XCTest
 
 class RMQConnectionTest: XCTestCase {
     
-    override func setUp() {
-        super.setUp()
-        srandom(UInt32(time(nil)))
-    }
-    
     func testSendsPreambleToTransport() {
-        let transport: FakeTransport = FakeTransport()
+        let transport = FakeTransport()
         let conn = RMQConnection(user: "foo", password: "bar", vhost: "baz", transport: transport)
         
         conn.start()
