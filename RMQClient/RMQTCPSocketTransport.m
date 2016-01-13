@@ -8,11 +8,6 @@
 @property (nonnull, nonatomic, readwrite) NSMutableDictionary *callbacks;
 @end
 
-typedef enum AMQP_TAGS : NSUInteger {
-    AMQPTagHeader,
-    AMQP_TAGS_SIZE
-} AMQP_TAGS;
-
 @implementation RMQTCPSocketTransport
 
 - (instancetype)initWithHost:(NSString *)host port:(NSNumber *)port {
@@ -111,7 +106,7 @@ struct __attribute__((__packed__)) AMQPHeader {
 }
 
 - (uint32_t)generateTag {
-    return arc4random_uniform(INT32_MAX - AMQP_TAGS_SIZE) + AMQP_TAGS_SIZE;
+    return arc4random_uniform(INT32_MAX);
 }
 
 @end
