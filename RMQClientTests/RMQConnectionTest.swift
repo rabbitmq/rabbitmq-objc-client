@@ -9,14 +9,14 @@ import XCTest
     func close() {
         
     }
-    func write(data: NSData) {
-        myData = data
+    func write(data: NSData, onComplete complete: () -> Void) {
+        myData = data;
     }
     func isConnected() -> Bool {
         return false
     }
-    func read() -> NSData {
-        return NSData()
+    func readFrame(complete: (NSData) -> Void) {
+        
     }
     func spy() -> String {
         return String(data: myData, encoding: NSASCIIStringEncoding)!

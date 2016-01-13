@@ -39,7 +39,9 @@
 
     NSData *data = [NSData dataWithBytesNoCopy:buffer length:8];
 
-    [self.transport write:data];
+    [self.transport write:data onComplete:^{
+        NSLog(@"finished sending preamble");
+    }];
 }
 
 - (void)close {

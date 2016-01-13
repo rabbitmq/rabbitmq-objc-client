@@ -3,7 +3,8 @@
 @protocol RMQTransport
 - (void)connect;
 - (void)close;
-- (void)write:(nonnull NSData *)data;
-- (nonnull NSData *)read; // TODO: return a domain object, not NSData
+- (void)write:(nonnull NSData *)data
+   onComplete:(void (^ _Nonnull)())complete;
+- (void)readFrame:(void (^ _Nonnull)(NSData * _Nonnull))complete;
 - (BOOL)isConnected;
 @end

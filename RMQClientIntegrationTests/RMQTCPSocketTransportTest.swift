@@ -12,7 +12,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
         }
         XCTFail("polling timed out")
     }
-    
+
     func testConnectAndDisconnect() {
         let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
         
@@ -23,7 +23,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
         pollUntil { !transport.isConnected() }
     }
     
-    func testSendPreambleReceiveConnectionStart() {
+    func testSendingPreambleStimulatesAConnectionStart() {
         let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
         
         transport.connect()
@@ -37,9 +37,20 @@ class RMQTCPSocketTransportTest: XCTestCase {
             data.appendBytes(&b, length: 1)
         }
         
-        transport.write(data)
+        var writeSent = false
+        transport.write(data) {
+            writeSent = true
+        }
+        pollUntil { writeSent }
         
-        // TODO: check something
+        var readData: NSData = NSData()
+        XCTAssertEqual(0, readData.length)
+        transport.readFrame() { receivedData in
+            readData = receivedData
+        }
+        pollUntil { readData.length > 0 }
+        
+        XCTAssertEqual("foo", String(data: readData, encoding: NSASCIIStringEncoding))
     }
 
 }
