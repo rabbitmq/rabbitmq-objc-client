@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
-#import "JKVValue.h"
+
+@import JKVValue;
 
 @interface AMQProtocolBasicConsumeOK : NSObject
 @property (nonnull, copy, nonatomic, readonly) NSString *name;
