@@ -2,25 +2,25 @@ import XCTest
 
 class RMQTCPSocketTransportTest: XCTestCase {
     
-    func pollUntil(checker: () -> Bool) {
+    func pollUntil(checker: () -> Bool) -> Bool {
         for _ in 1...10 {
             if checker() {
-                return
+                return true
             } else {
                 NSRunLoop.currentRunLoop().runUntilDate(NSDate().dateByAddingTimeInterval(0.5))
             }
         }
-        XCTFail("polling timed out")
+        return false
     }
-
+    
     func testConnectAndDisconnect() {
         let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
         
         XCTAssertFalse(transport.isConnected())
         transport.connect()
-        pollUntil { transport.isConnected() }
+        XCTAssert(pollUntil { transport.isConnected() }, "didn't connect")
         transport.close()
-        pollUntil { !transport.isConnected() }
+        XCTAssert(pollUntil { !transport.isConnected() }, "didn't disconnect")
     }
     
     func testSendingPreambleStimulatesAConnectionStart() {
@@ -29,7 +29,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
         transport.connect()
         defer { transport.close() }
         
-        pollUntil { transport.isConnected() }
+        XCTAssert(pollUntil { transport.isConnected() }, "didn't connect")
         
         let data = "AMQP".dataUsingEncoding(NSASCIIStringEncoding) as! NSMutableData
         let a = [0x00, 0x00, 0x09, 0x01]
@@ -41,16 +41,16 @@ class RMQTCPSocketTransportTest: XCTestCase {
         transport.write(data) {
             writeSent = true
         }
-        pollUntil { writeSent }
+        XCTAssert(pollUntil { writeSent }, "didn't send write")
         
         var readData: NSData = NSData()
         XCTAssertEqual(0, readData.length)
         transport.readFrame() { receivedData in
             readData = receivedData
         }
-        pollUntil { readData.length > 0 }
+        XCTAssert(pollUntil { readData.length > 0 }, "didn't read")
         
         XCTAssertEqual("foo", String(data: readData, encoding: NSASCIIStringEncoding))
     }
-
+    
 }
