@@ -48,7 +48,7 @@
 struct __attribute__((__packed__)) AMQPHeader {
     char           type;
     unsigned short channel;
-    unsigned long  size;
+    unsigned int   size;
 };
 
 #define AMQP_HEADER_SIZE 7
@@ -61,9 +61,9 @@ struct __attribute__((__packed__)) AMQPHeader {
         
         char              hostType = ntohl(header->type);
         unsigned short hostChannel = ntohl(header->channel);
-        unsigned long     hostSize = ntohl(header->size);
+        unsigned int      hostSize = ntohl(header->size);
         
-        NSLog(@"<<<<<<<<<< HEADER type %d channel %d size %lu", hostType, hostChannel, hostSize);
+        NSLog(@"<<<<<<<<<< HEADER type %d channel %d size %u", hostType, hostChannel, hostSize);
         
         [self read:hostSize complete:^(NSData * _Nonnull payload) {
             NSLog(@"%@", payload);
