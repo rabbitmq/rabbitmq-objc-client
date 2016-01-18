@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AE29CCB11C45048C00D97494 /* AMQProtocolTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE29CCB01C45048C00D97494 /* AMQProtocolTest.swift */; settings = {ASSET_TAGS = (); }; };
+		AE29CCC61C4669B800D97494 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE29CCC01C46675700D97494 /* CocoaAsyncSocket.framework */; };
 		AE898D581C3C2D2E00AA3BF1 /* AMQURIParse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE898D571C3C2D2E00AA3BF1 /* AMQURIParse.swift */; settings = {ASSET_TAGS = (); }; };
 		AE898D5B1C3C30D100AA3BF1 /* AMQURI.h in Headers */ = {isa = PBXBuildFile; fileRef = AE898D591C3C30D100AA3BF1 /* AMQURI.h */; settings = {ASSET_TAGS = (); }; };
 		AE898D5C1C3C30D100AA3BF1 /* AMQURI.m in Sources */ = {isa = PBXBuildFile; fileRef = AE898D5A1C3C30D100AA3BF1 /* AMQURI.m */; settings = {ASSET_TAGS = (); }; };
@@ -34,6 +35,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		AE29CCBF1C46675700D97494 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AE29CCB91C46675700D97494 /* CocoaAsyncSocket.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6CD990101B77868C0011A685;
+			remoteInfo = "iOS CocoaAsyncSocket";
+		};
+		AE29CCC11C46675700D97494 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AE29CCB91C46675700D97494 /* CocoaAsyncSocket.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9FC41F131B9D965000578BEB;
+			remoteInfo = "Mac CocoaAsyncSocket";
+		};
+		AE29CCC31C46675700D97494 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AE29CCB91C46675700D97494 /* CocoaAsyncSocket.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7D8B70C41BCFA15700D8E273;
+			remoteInfo = "tvOS CocoaAsyncSocket";
+		};
 		AEA45EDD1C440FE400FE1F62 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AEE7FE881C3BCA6000DF8C4F /* Project object */;
@@ -52,6 +74,7 @@
 
 /* Begin PBXFileReference section */
 		AE29CCB01C45048C00D97494 /* AMQProtocolTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AMQProtocolTest.swift; sourceTree = "<group>"; };
+		AE29CCB91C46675700D97494 /* CocoaAsyncSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CocoaAsyncSocket.xcodeproj; path = Carthage/Checkouts/CocoaAsyncSocket/CocoaAsyncSocket.xcodeproj; sourceTree = "<group>"; };
 		AE607C671C3C0EAD00BE9AC4 /* RMQClientTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RMQClientTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegrationTests.swift; sourceTree = "<group>"; };
 		AE898D571C3C2D2E00AA3BF1 /* AMQURIParse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AMQURIParse.swift; sourceTree = "<group>"; };
@@ -96,6 +119,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AE29CCC61C4669B800D97494 /* CocoaAsyncSocket.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,6 +134,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AE29CCBA1C46675700D97494 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AE29CCC01C46675700D97494 /* CocoaAsyncSocket.framework */,
+				AE29CCC21C46675700D97494 /* CocoaAsyncSocket.framework */,
+				AE29CCC41C46675700D97494 /* CocoaAsyncSocket.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		AEA45ED81C440FE400FE1F62 /* RMQClientIntegrationTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -128,6 +162,7 @@
 				AEE7FE9F1C3BCA6000DF8C4F /* RMQClientTests */,
 				AEA45ED81C440FE400FE1F62 /* RMQClientIntegrationTests */,
 				AEE7FE921C3BCA6000DF8C4F /* Products */,
+				AE29CCB91C46675700D97494 /* CocoaAsyncSocket.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -226,7 +261,6 @@
 				AEE7FE8D1C3BCA6000DF8C4F /* Frameworks */,
 				AEE7FE8E1C3BCA6000DF8C4F /* Headers */,
 				AEE7FE8F1C3BCA6000DF8C4F /* Resources */,
-				AE637E231C4CFBCD006F9EDF /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -286,6 +320,12 @@
 			mainGroup = AEE7FE871C3BCA6000DF8C4F;
 			productRefGroup = AEE7FE921C3BCA6000DF8C4F /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = AE29CCBA1C46675700D97494 /* Products */;
+					ProjectRef = AE29CCB91C46675700D97494 /* CocoaAsyncSocket.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				AEE7FE901C3BCA6000DF8C4F /* RMQClient */,
@@ -294,6 +334,30 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		AE29CCC01C46675700D97494 /* CocoaAsyncSocket.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CocoaAsyncSocket.framework;
+			remoteRef = AE29CCBF1C46675700D97494 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		AE29CCC21C46675700D97494 /* CocoaAsyncSocket.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CocoaAsyncSocket.framework;
+			remoteRef = AE29CCC11C46675700D97494 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		AE29CCC41C46675700D97494 /* CocoaAsyncSocket.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CocoaAsyncSocket.framework;
+			remoteRef = AE29CCC31C46675700D97494 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		AEA45ED51C440FE400FE1F62 /* Resources */ = {
@@ -318,24 +382,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		AE637E231C4CFBCD006F9EDF /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/CocoaAsyncSocket.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/JKVValue.framework",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		AEA45ED31C440FE400FE1F62 /* Sources */ = {
