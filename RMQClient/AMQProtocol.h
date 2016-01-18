@@ -1,6 +1,5 @@
 #import <Foundation/Foundation.h>
-
-@import JKVValue;
+@import Mantle;
 
 @interface AMQProtocolBasicConsumeOK : NSObject
 @property (nonnull, copy, nonatomic, readonly) NSString *name;
@@ -24,7 +23,7 @@
 
 @end
 
-@interface AMQProtocolConnectionStart : JKVValue<AMQProtocolMethod>
+@interface AMQProtocolConnectionStart : MTLModel<AMQProtocolMethod>
 
 @property (nonnull, copy, nonatomic, readonly) NSNumber *versionMajor;
 @property (nonnull, copy, nonatomic, readonly) NSNumber *versionMinor;

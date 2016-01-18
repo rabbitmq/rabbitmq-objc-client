@@ -1,4 +1,2 @@
 github "robbiehanson/CocoaAsyncSocket" "6e018ddf7c456106f898efae66ea5e5c94737a96"
-github "Quick/Nimble" "v2.0.0-rc.3"
-github "Quick/Quick" "v0.6.0"
-github "jeffh/JKVValue" "cfb08ac3ff30fb28d1b543ed025ba9b3d268a8ca"
+github "Mantle/Mantle" "6a4141363f2c0170b11e41e375ae485038e2e9db"
