@@ -261,6 +261,7 @@
 				AEE7FE8D1C3BCA6000DF8C4F /* Frameworks */,
 				AEE7FE8E1C3BCA6000DF8C4F /* Headers */,
 				AEE7FE8F1C3BCA6000DF8C4F /* Resources */,
+				AE637E2C1C4CFF28006F9EDF /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -382,6 +383,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		AE637E2C1C4CFF28006F9EDF /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/CocoaAsyncSocket.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		AEA45ED31C440FE400FE1F62 /* Sources */ = {
