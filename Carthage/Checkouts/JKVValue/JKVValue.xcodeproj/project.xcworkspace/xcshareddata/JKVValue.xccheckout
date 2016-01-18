@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>2F9FE553-C0A3-47E9-9AF8-70A9EEA8D968</string>
+	<key>IDESourceControlProjectName</key>
+	<string>JKVValue</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>8BBDFE6AD417A21738CEF1A18F65FB8C11C2D6F2</key>
+		<string>https://github.com/jeffh/JKVValue.git</string>
+		<key>9C17E6AC4A93E78FE05F88AE0011DD4EAD50139D</key>
+		<string>https://github.com/jeffh/cedar</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>JKVValue.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>8BBDFE6AD417A21738CEF1A18F65FB8C11C2D6F2</key>
+		<string>../..</string>
+		<key>9C17E6AC4A93E78FE05F88AE0011DD4EAD50139D</key>
+		<string>../..Externals/cedar</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/jeffh/JKVValue.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>8BBDFE6AD417A21738CEF1A18F65FB8C11C2D6F2</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>9C17E6AC4A93E78FE05F88AE0011DD4EAD50139D</string>
+			<key>IDESourceControlWCCName</key>
+			<string>cedar</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>8BBDFE6AD417A21738CEF1A18F65FB8C11C2D6F2</string>
+			<key>IDESourceControlWCCName</key>
+			<string>JKVValue</string>
+		</dict>
+	</array>
+</dict>
+</plist>
