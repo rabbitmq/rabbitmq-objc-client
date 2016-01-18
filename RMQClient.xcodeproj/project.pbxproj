@@ -160,11 +160,11 @@
 		AEE7FE871C3BCA6000DF8C4F = {
 			isa = PBXGroup;
 			children = (
-				AE80BAC11C4D4E6B00E6DFFD /* JKVValue.h */,
 				AEE7FE931C3BCA6000DF8C4F /* RMQClient */,
 				AEE7FE9F1C3BCA6000DF8C4F /* RMQClientTests */,
 				AEA45ED81C440FE400FE1F62 /* RMQClientIntegrationTests */,
 				AEE7FE921C3BCA6000DF8C4F /* Products */,
+				AE80BAC11C4D4E6B00E6DFFD /* JKVValue.h */,
 				AE29CCB91C46675700D97494 /* CocoaAsyncSocket.xcodeproj */,
 			);
 			sourceTree = "<group>";
