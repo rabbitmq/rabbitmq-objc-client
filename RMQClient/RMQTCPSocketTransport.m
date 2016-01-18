@@ -46,9 +46,9 @@
 }
 
 struct __attribute__((__packed__)) AMQPHeader {
-    char           type;
-    unsigned short channel;
-    unsigned int   size;
+    UInt8  type;
+    UInt16 channel;
+    UInt32 size;
 };
 
 #define AMQP_HEADER_SIZE 7
@@ -59,19 +59,11 @@ struct __attribute__((__packed__)) AMQPHeader {
         const struct AMQPHeader *header;
         header = (const struct AMQPHeader *)data.bytes;
         
-        char              hostType = ntohl(header->type);
-        unsigned short hostChannel = ntohl(header->channel);
-        unsigned int      hostSize = ntohl(header->size);
-        
-        NSLog(@"<<<<<<<<<< HEADER type %d channel %d size %u", hostType, hostChannel, hostSize);
+        UInt32 hostSize    = CFSwapInt32BigToHost(header->size);
         
         [self read:hostSize complete:^(NSData * _Nonnull payload) {
-            NSLog(@"%@", payload);
-            
             [self read:AMQP_FINAL_OCTET_SIZE complete:^(NSData * _Nonnull frameEnd) {
-                NSLog(@"FRAME END: %@", frameEnd);
-                
-                // hardcode parse as a Connection Start for now
+                complete(payload);
             }];
         }];
     }];
@@ -83,13 +75,19 @@ struct __attribute__((__packed__)) AMQPHeader {
     [self.socket readDataToLength:len withTimeout:10 tag:tag];
 }
 
+- (BOOL)isConnected {
+    return self._isConnected;
+}
+
+- (uint32_t)generateTag {
+    return arc4random_uniform(INT32_MAX);
+}
+
+# pragma mark - GCDAsyncSocketDelegate
+
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
     void (^foundCallback)() = [self.callbacks objectForKey:@(tag)];
     foundCallback(data);
-}
-
-- (BOOL)isConnected {
-    return self._isConnected;
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
@@ -103,10 +101,6 @@ struct __attribute__((__packed__)) AMQPHeader {
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag {
     void (^foundCallback)() = [self.callbacks objectForKey:@(tag)];
     foundCallback();
-}
-
-- (uint32_t)generateTag {
-    return arc4random_uniform(INT32_MAX);
 }
 
 @end

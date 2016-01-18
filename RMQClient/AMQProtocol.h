@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+@import JKVValue;
 
 @interface AMQProtocolBasicConsumeOK : NSObject
 @property (nonnull, copy, nonatomic, readonly) NSString *name;
@@ -19,6 +20,18 @@
 @protocol AMQProtocolMethod <NSObject>
 
 + (nonnull instancetype)decode:(nonnull NSData *)data;
+
+@end
+
+@interface AMQProtocolConnectionStart : JKVValue<AMQProtocolMethod>
+
+@property (nonnull, copy, nonatomic, readonly) NSNumber *versionMajor;
+@property (nonnull, copy, nonatomic, readonly) NSNumber *versionMinor;
+@property (nonnull, copy, nonatomic, readonly) NSDictionary<NSString *, NSString *> *serverProperties;
+
+- (nonnull instancetype)initWithVersionMajor:(nonnull NSNumber *)versionMajor
+                                versionMinor:(nonnull NSNumber *)versionMinor
+                            serverProperties:(nonnull NSDictionary<NSString *, NSString *> *)serverProperties;
 
 @end
 

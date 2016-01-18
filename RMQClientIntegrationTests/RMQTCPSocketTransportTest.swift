@@ -49,8 +49,12 @@ class RMQTCPSocketTransportTest: XCTestCase {
             readData = receivedData
         }
         XCTAssert(pollUntil { readData.length > 0 }, "didn't read")
-        
-        XCTAssertEqual("foo", String(data: readData, encoding: NSASCIIStringEncoding))
+        XCTAssertEqual(
+            AMQProtocolConnectionStart(
+                versionMajor: 0, versionMinor: 9, serverProperties: ["cluster_name": "rabbit@myapp.cfapps.pez.pivotal.io"]
+            ),
+            AMQProtocolConnectionStart.decode(readData)
+        )
     }
-    
+
 }
