@@ -59,7 +59,7 @@ struct __attribute__((__packed__)) AMQPHeader {
         const struct AMQPHeader *header;
         header = (const struct AMQPHeader *)data.bytes;
         
-        UInt32 hostSize    = CFSwapInt32BigToHost(header->size);
+        UInt32 hostSize = CFSwapInt32BigToHost(header->size);
         
         [self read:hostSize complete:^(NSData * _Nonnull payload) {
             [self read:AMQP_FINAL_OCTET_SIZE complete:^(NSData * _Nonnull frameEnd) {

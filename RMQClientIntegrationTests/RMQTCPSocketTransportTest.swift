@@ -49,12 +49,10 @@ class RMQTCPSocketTransportTest: XCTestCase {
             readData = receivedData
         }
         XCTAssert(pollUntil { readData.length > 0 }, "didn't read")
-        XCTAssertEqual(
-            AMQProtocolConnectionStart(
-                versionMajor: 0, versionMinor: 9, serverProperties: ["cluster_name": "rabbit@myapp.cfapps.pez.pivotal.io"]
-            ),
-            AMQProtocolConnectionStart.decode(readData)
-        )
+        let connectionStart = AMQParser().parse(readData)
+
+        XCTAssertEqual(0, connectionStart.versionMajor)
+        XCTAssertEqual(9, connectionStart.versionMinor)
     }
 
 }

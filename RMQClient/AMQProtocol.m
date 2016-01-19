@@ -1,4 +1,5 @@
 #import "AMQProtocol.h"
+#import "AMQParser.h"
 
 @interface AMQProtocolBasicConsumeOK ()
 @property (copy, nonatomic, readwrite) NSString *name;
@@ -50,26 +51,37 @@
 @implementation AMQProtocolConnectionStart
 
 struct __attribute__((__packed__)) AMQPConnectionStart {
-    UInt16  classID;
-    UInt16  methodID;
-    
     char    versionMajor;
     char    versionMinor;
-    UInt32  tableLength;
 };
 
 + (instancetype)decode:(NSData *)data {
+//    NSData *d = [NSData dataWithBytesNoCopy:(void *)data.bytes length:data.length];
+//    NSString* dataFormatString = @"data:application/octet-stream;base64,%@";
+//    NSString* dataString = [NSString stringWithFormat:dataFormatString, [d base64EncodedStringWithOptions:0]];
+//    NSURL* dataURL = [NSURL URLWithString:dataString];
+
     const struct AMQPConnectionStart *cs;
     cs = (const struct AMQPConnectionStart *)data.bytes;
-    
+
     char versionMajor = cs->versionMajor;
     char versionMinor = cs->versionMinor;
-    int tableLength   = CFSwapInt32BigToHost(cs->tableLength);
+    
+    const char *cursor = (const char *)data.bytes + sizeof(*cs);
+    const char *end = (const char *)data.bytes + data.length;
+    
+    AMQParser *parser = [AMQParser new];
+    NSDictionary *serverProperties = [parser parseFieldTable:&cursor end:end];
+    
+    /* cursor == start of the last two Connection.Start fields */
+    NSString *mechanisms = [parser parseLongString:&cursor end:end];
+    NSString *locales = [parser parseLongString:&cursor end:end];
 
     return [[AMQProtocolConnectionStart alloc] initWithVersionMajor:@(versionMajor)
                                                        versionMinor:@(versionMinor)
-                                                   serverProperties:@{}];
+                                                   serverProperties:serverProperties];
 }
+
 - (instancetype)initWithVersionMajor:(NSNumber *)versionMajor
                         versionMinor:(NSNumber *)versionMinor
                     serverProperties:(NSDictionary<NSString *,NSString *> *)serverProperties {
@@ -81,4 +93,5 @@ struct __attribute__((__packed__)) AMQPConnectionStart {
     }
     return self;
 }
+
 @end

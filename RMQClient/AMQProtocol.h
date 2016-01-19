@@ -31,6 +31,6 @@
 
 - (nonnull instancetype)initWithVersionMajor:(nonnull NSNumber *)versionMajor
                                 versionMinor:(nonnull NSNumber *)versionMinor
-                            serverProperties:(nonnull NSDictionary<NSString *, NSString *> *)serverProperties;
+                            serverProperties:(nonnull NSDictionary<NSObject *, NSObject *> *)serverProperties;
 
 @end
