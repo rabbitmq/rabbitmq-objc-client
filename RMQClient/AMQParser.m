@@ -10,6 +10,8 @@
 enum field_value_types {
     field_table = 'F',
     boolean = 't',
+    short_string = 's',
+    long_string = 'S',
 };
 
 - (NSDictionary *)parseFieldTable:(const char **)cursor
@@ -30,6 +32,12 @@ enum field_value_types {
                 break;
             case boolean:
                 dict[key] = @([self parseBoolean:cursor end:end]);
+                break;
+            case short_string:
+                dict[key] = [self parseShortString:cursor end:end];
+                break;
+            case long_string:
+                dict[key] = [self parseLongString:cursor end:end];
                 break;
         }
     }

@@ -18,7 +18,13 @@ class AMQParserTest: XCTestCase {
                     "exchange_exchange_bindings" : true,
                     "per_consumer_qos" : true,
                     "publisher_confirms" : true
-                ]
+                ],
+                "cluster_name" : "rabbit@myapp.cfapps.pez.pivotal.io",
+                "copyright"    : "Copyright (C) 2007-2015 Pivotal Software, Inc.",
+                "information"  : "Licensed under the MPL.  See http://www.rabbitmq.com/",
+                "platform"     : "Erlang/OTP",
+                "product"      : "RabbitMQ",
+                "version"      : "3.6.0",
             ]
         )
         let actual : AMQProtocolConnectionStart = parser.parse(data)
