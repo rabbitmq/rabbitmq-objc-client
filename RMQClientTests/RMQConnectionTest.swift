@@ -18,7 +18,7 @@ import XCTest
     func readFrame(complete: (NSData) -> Void) {
         
     }
-    func spy() -> String {
+    func lastWrite() -> String {
         return String(data: myData, encoding: NSASCIIStringEncoding)!
     }
 }
@@ -31,7 +31,7 @@ class RMQConnectionTest: XCTestCase {
         
         conn.start()
         
-        XCTAssertEqual("AMQP\0\0\t\u{01}", transport.spy())
+        XCTAssertEqual("AMQP\0\0\u{09}\u{01}", transport.lastWrite())
     }
     
 }
