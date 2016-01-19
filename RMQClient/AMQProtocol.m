@@ -45,7 +45,9 @@
 @interface AMQProtocolConnectionStart ()
 @property (nonnull, copy, nonatomic, readwrite) NSNumber *versionMajor;
 @property (nonnull, copy, nonatomic, readwrite) NSNumber *versionMinor;
-@property (nonnull, copy, nonatomic, readwrite) NSDictionary<NSString *, NSString *> *serverProperties;
+@property (nonnull, copy, nonatomic, readwrite) NSDictionary<NSObject *, NSObject *> *serverProperties;
+@property (nonnull, copy, nonatomic, readwrite) NSString *mechanisms;
+@property (nonnull, copy, nonatomic, readwrite) NSString *locales;
 @end
 
 @implementation AMQProtocolConnectionStart
@@ -79,17 +81,23 @@ struct __attribute__((__packed__)) AMQPConnectionStart {
 
     return [[AMQProtocolConnectionStart alloc] initWithVersionMajor:@(versionMajor)
                                                        versionMinor:@(versionMinor)
-                                                   serverProperties:serverProperties];
+                                                   serverProperties:serverProperties
+                                                         mechanisms:mechanisms
+                                                            locales:locales];
 }
 
 - (instancetype)initWithVersionMajor:(NSNumber *)versionMajor
                         versionMinor:(NSNumber *)versionMinor
-                    serverProperties:(NSDictionary<NSString *,NSString *> *)serverProperties {
+                    serverProperties:(NSDictionary<NSObject *,NSObject *> *)serverProperties
+                          mechanisms:(NSString *)mechanisms
+                             locales:(NSString *)locales {
     self = [super init];
     if (self) {
         self.serverProperties = serverProperties;
         self.versionMajor = versionMajor;
         self.versionMinor = versionMinor;
+        self.mechanisms = mechanisms;
+        self.locales = locales;
     }
     return self;
 }

@@ -24,7 +24,9 @@ class AMQMethodFrameTest: XCTestCase {
                 "platform"     : "Erlang/OTP",
                 "product"      : "RabbitMQ",
                 "version"      : "3.6.0",
-            ]
+            ],
+            mechanisms: "AMQPLAIN PLAIN",
+            locales: "en_US"
         )
         let actual = AMQMethodFrame().parse(data) as! AMQProtocolConnectionStart
         XCTAssertEqual(expected, actual)
