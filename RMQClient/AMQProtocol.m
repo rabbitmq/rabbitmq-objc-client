@@ -82,24 +82,3 @@ struct __attribute__((__packed__)) AMQPConnectionStart {
     return self;
 }
 @end
-
-@implementation AMQProtocolConnectionClose
-
-+ (AMQProtocolMethodFrame *)encode:(NSNumber *)replyCode
-                         replyText:(NSString *)replyText
-                           classID:(NSNumber *)classID
-                          methodID:(NSNumber *)methodID {
-    // class id is 10, method id is 50
-    
-//    unsigned char *buffer = malloc()
-//    NSData *payload = [NSData dataWithBytesNoCopy:bytes length:sizeof(bytes)];
-//    return [[AMQProtocolMethodFrame alloc] initWithPayload:payload
-//                                                   channel:@0];
-    return [AMQProtocolMethodFrame new];
-}
-
-+ (instancetype)decode:(NSData *)data {
-    return [AMQProtocolConnectionClose new];
-}
-
-@end

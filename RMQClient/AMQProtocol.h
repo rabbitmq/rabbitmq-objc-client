@@ -34,17 +34,3 @@
                             serverProperties:(nonnull NSDictionary<NSString *, NSString *> *)serverProperties;
 
 @end
-
-@interface AMQProtocolConnectionClose : NSObject<AMQProtocolMethod>
-
-@property (nonnull, copy, nonatomic, readonly) NSNumber *replyCode;
-@property (nonnull, copy, nonatomic, readonly) NSString *replyText;
-@property (nonnull, copy, nonatomic, readonly) NSNumber *classID;
-@property (nonnull, copy, nonatomic, readonly) NSNumber *methodID;
-
-+ (nonnull AMQProtocolMethodFrame *)encode:(nonnull NSNumber *)replyCode
-                                 replyText:(nonnull NSString *)replyText
-                                   classID:(nonnull NSNumber *)classID
-                                  methodID:(nonnull NSNumber *)methodID;
-
-@end
