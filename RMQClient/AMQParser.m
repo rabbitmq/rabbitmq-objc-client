@@ -1,18 +1,13 @@
 #import "AMQParser.h"
 
-@implementation AMQParser
-
-- (AMQProtocolConnectionStart *)parse:(NSData *)data {
-    NSRange range = NSMakeRange(4, data.length - 4); // ignore classID and methodID for now
-    return [AMQProtocolConnectionStart decode:[data subdataWithRange:range]];
-}
-
-enum field_value_types {
-    field_table = 'F',
-    boolean = 't',
-    short_string = 's',
-    long_string = 'S',
+enum AMQParserFieldValue {
+    AMQParserFieldTable = 'F',
+    AMQParserBoolean = 't',
+    AMQParserShortString = 's',
+    AMQParserLongString = 'S',
 };
+
+@implementation AMQParser
 
 - (NSDictionary *)parseFieldTable:(const char **)cursor
                               end:(const char *)end {
@@ -25,18 +20,18 @@ enum field_value_types {
     while (*cursor < start + tableLength && *cursor < end) {
         NSString *key = [self parseShortString:cursor end:end];
         
-        enum field_value_types type = *((*cursor)++);
+        enum AMQParserFieldValue type = *((*cursor)++);
         switch (type) {
-            case field_table:
+            case AMQParserFieldTable:
                 dict[key] = [self parseFieldTable:cursor end:end];
                 break;
-            case boolean:
+            case AMQParserBoolean:
                 dict[key] = @([self parseBoolean:cursor end:end]);
                 break;
-            case short_string:
+            case AMQParserShortString:
                 dict[key] = [self parseShortString:cursor end:end];
                 break;
-            case long_string:
+            case AMQParserLongString:
                 dict[key] = [self parseLongString:cursor end:end];
                 break;
         }

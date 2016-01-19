@@ -49,7 +49,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
             readData = receivedData
         }
         XCTAssert(pollUntil { readData.length > 0 }, "didn't read")
-        let connectionStart = AMQParser().parse(readData)
+        let connectionStart = AMQMethodFrame().parse(readData) as! AMQProtocolConnectionStart
 
         XCTAssertEqual(0, connectionStart.versionMajor)
         XCTAssertEqual(9, connectionStart.versionMinor)
