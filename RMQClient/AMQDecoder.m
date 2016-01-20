@@ -24,11 +24,17 @@
 }
 
 - (id)decodeObjectForKey:(NSString *)key {
-    if ([key isEqualToString:@"octet"]) {
+    NSDictionary *keyTypes = @{@"10_10_version-major"     : @"octet",
+                               @"10_10_version-minor"     : @"octet",
+                               @"10_10_server-properties" : @"field-table",
+                               @"10_10_mechanisms"        : @"longstr",
+                               @"10_10_locales"           : @"longstr"};
+    NSString *keyType = keyTypes[key];
+    if ([keyType isEqualToString:@"octet"]) {
         return [self.parser parseChar:&_cursor end:self.end];
-    } else if ([key isEqualToString:@"field-table"]) {
+    } else if ([keyType isEqualToString:@"field-table"]) {
         return [self.parser parseFieldTable:&_cursor end:self.end];
-    } else if ([key isEqualToString:@"longstr"]) {
+    } else if ([keyType isEqualToString:@"longstr"]) {
         return [self.parser parseLongString:&_cursor end:self.end];
     } else {
         return NSNull.null;

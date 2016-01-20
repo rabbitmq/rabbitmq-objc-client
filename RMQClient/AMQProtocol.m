@@ -31,11 +31,11 @@
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
     if (self) {
-        self.versionMajor = [coder decodeObjectForKey:@"octet"];
-        self.versionMinor = [coder decodeObjectForKey:@"octet"];
-        self.serverProperties = [coder decodeObjectForKey:@"field-table"];
-        self.mechanisms = [coder decodeObjectForKey:@"longstr"];
-        self.locales = [coder decodeObjectForKey:@"longstr"];
+        self.versionMajor = [coder decodeObjectForKey:@"10_10_version-major"];
+        self.versionMinor = [coder decodeObjectForKey:@"10_10_version-minor"];
+        self.serverProperties = [coder decodeObjectForKey:@"10_10_server-properties"];
+        self.mechanisms = [coder decodeObjectForKey:@"10_10_mechanisms"];
+        self.locales = [coder decodeObjectForKey:@"10_10_locales"];
     }
     return self;
 }
