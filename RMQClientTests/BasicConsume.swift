@@ -17,7 +17,7 @@ class BasicConsume: XCTestCase {
         
         let q = ch.queue("", autoDelete: false, exclusive: true)
         
-        let consumeOK: AMQProtocolBasicConsumeOK = ch.basicConsume(q)
+        let consumeOK: AMQProtocolBasicConsumeOk = ch.basicConsume(q)
         
         XCTAssertNotNil(
             consumeOK.consumerTag.rangeOfString(
