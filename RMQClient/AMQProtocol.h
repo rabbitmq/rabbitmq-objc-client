@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 @import Mantle;
 
-@interface AMQProtocolBasicConsumeOK : NSObject
+@interface AMQProtocolBasicConsumeOk : NSObject
 @property (nonnull, copy, nonatomic, readonly) NSString *name;
 @property (nonnull, copy, nonatomic, readonly) NSString *consumerTag;
 @end

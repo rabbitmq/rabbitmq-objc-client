@@ -12,16 +12,16 @@
 - (void)close {
     
 }
-- (AMQProtocolBasicConsumeOK *)basicConsume:(RMQQueue *)queue {
-    return [AMQProtocolBasicConsumeOK new];
+- (AMQProtocolBasicConsumeOk *)basicConsume:(RMQQueue *)queue {
+    return [AMQProtocolBasicConsumeOk new];
 }
-- (AMQProtocolBasicConsumeOK *)basicConsume:(RMQQueue *)queue
+- (AMQProtocolBasicConsumeOk *)basicConsume:(RMQQueue *)queue
                                 consumerTag:(NSString *)consumerTag
                                         ack:(BOOL)shouldAck
                                   exclusive:(BOOL)isExclusive
                                  onDelivery:(void (^)(NSDictionary *,
                                                       NSDictionary *,
                                                       NSData *))onDelivery {
-    return [AMQProtocolBasicConsumeOK new];
+    return [AMQProtocolBasicConsumeOk new];
 }
 @end

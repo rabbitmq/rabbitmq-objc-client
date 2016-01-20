@@ -1,12 +1,12 @@
 #import "AMQProtocol.h"
 #import "AMQParser.h"
 
-@interface AMQProtocolBasicConsumeOK ()
+@interface AMQProtocolBasicConsumeOk ()
 @property (copy, nonatomic, readwrite) NSString *name;
 @property (copy, nonatomic, readwrite) NSString *consumerTag;
 @end
 
-@implementation AMQProtocolBasicConsumeOK
+@implementation AMQProtocolBasicConsumeOk
 
 - (instancetype)init {
     self = [super init];

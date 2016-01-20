@@ -9,8 +9,8 @@
           exclusive:(BOOL)isExclusive;
 - (RMQExchange *)defaultExchange;
 - (void)close;
-- (AMQProtocolBasicConsumeOK *)basicConsume:(RMQQueue *)queue;
-- (AMQProtocolBasicConsumeOK *)basicConsume:(RMQQueue *)queue
+- (AMQProtocolBasicConsumeOk *)basicConsume:(RMQQueue *)queue;
+- (AMQProtocolBasicConsumeOk *)basicConsume:(RMQQueue *)queue
                                 consumerTag:(NSString *)consumerTag
                                         ack:(BOOL)shouldAck
                                   exclusive:(BOOL)isExclusive
