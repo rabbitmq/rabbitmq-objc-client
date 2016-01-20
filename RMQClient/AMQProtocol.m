@@ -1,5 +1,5 @@
 #import "AMQProtocol.h"
-#import "AMQParser.h"
+#import "AMQCoder.h"
 
 @interface AMQProtocolBasicConsumeOk ()
 @property (copy, nonatomic, readwrite) NSString *name;
@@ -29,33 +29,21 @@
 
 @implementation AMQProtocolConnectionStart
 
-struct __attribute__((__packed__)) AMQPConnectionStart {
-    char    versionMajor;
-    char    versionMinor;
-};
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.versionMajor = [coder decodeObjectForKey:@"octet"];
+        self.versionMinor = [coder decodeObjectForKey:@"octet"];
+        self.serverProperties = [coder decodeObjectForKey:@"field-table"];
+        self.mechanisms = [coder decodeObjectForKey:@"longstr"];
+        self.locales = [coder decodeObjectForKey:@"longstr"];
+    }
+    return self;
+}
 
 + (instancetype)decode:(NSData *)data {
-    const struct AMQPConnectionStart *cs;
-    cs = (const struct AMQPConnectionStart *)data.bytes;
-
-    char versionMajor = cs->versionMajor;
-    char versionMinor = cs->versionMinor;
-    
-    const char *cursor = (const char *)data.bytes + sizeof(*cs);
-    const char *end = (const char *)data.bytes + data.length;
-    
-    AMQParser *parser = [AMQParser new];
-    NSDictionary *serverProperties = [parser parseFieldTable:&cursor end:end];
-    
-    /* cursor == start of the last two Connection.Start fields */
-    NSString *mechanisms = [parser parseLongString:&cursor end:end];
-    NSString *locales = [parser parseLongString:&cursor end:end];
-
-    return [[AMQProtocolConnectionStart alloc] initWithVersionMajor:@(versionMajor)
-                                                       versionMinor:@(versionMinor)
-                                                   serverProperties:serverProperties
-                                                         mechanisms:mechanisms
-                                                            locales:locales];
+    AMQCoder *coder = [[AMQCoder alloc] initWithData:data];
+    return [[AMQProtocolConnectionStart alloc] initWithCoder:coder];
 }
 
 - (instancetype)initWithVersionMajor:(NSNumber *)versionMajor

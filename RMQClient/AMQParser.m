@@ -48,6 +48,11 @@ enum AMQParserFieldValue {
     return value;
 }
 
+- (NSNumber *)parseChar:(const char **)cursor
+                    end:(const char *)end {
+    return @(*((*cursor)++));
+}
+
 - (NSString *)parseShortString:(const char **)cursor
                            end:(const char *)end {
     unsigned int length = *((*cursor)++);

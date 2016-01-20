@@ -15,7 +15,7 @@
 
 @end
 
-@interface AMQProtocolConnectionStart : MTLModel<AMQProtocolMethod>
+@interface AMQProtocolConnectionStart : MTLModel<AMQProtocolMethod,NSCoding>
 
 @property (nonnull, copy, nonatomic, readonly) NSNumber *versionMajor;
 @property (nonnull, copy, nonatomic, readonly) NSNumber *versionMinor;
