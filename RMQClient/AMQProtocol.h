@@ -9,14 +9,6 @@
 @protocol AMQProtocolFrame <NSObject>
 @end
 
-@interface AMQProtocolMethodFrame : NSObject<AMQProtocolFrame>
-
-- (nonnull instancetype)initWithPayload:(nonnull NSData *)payload
-                                channel:(nonnull NSNumber *)channel;
-- (nonnull NSData *)encode;
-
-@end
-
 @protocol AMQProtocolMethod <NSObject>
 
 + (nonnull instancetype)decode:(nonnull NSData *)data;

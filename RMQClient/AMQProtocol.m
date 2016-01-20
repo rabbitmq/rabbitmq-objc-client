@@ -19,29 +19,6 @@
 
 @end
 
-@interface AMQProtocolMethodFrame ()
-@property (copy, nonatomic, readwrite) NSData *payload;
-@property (copy, nonatomic, readwrite) NSNumber *channel;
-@end
-
-@implementation AMQProtocolMethodFrame
-
-- (instancetype)initWithPayload:(NSData *)payload
-                        channel:(NSNumber *)channel {
-    self = [super init];
-    if (self) {
-        self.payload = payload;
-        self.channel = channel;
-    }
-    return self;
-}
-
-- (NSData *)encode {
-    return [NSData new];
-}
-
-@end
-
 @interface AMQProtocolConnectionStart ()
 @property (nonnull, copy, nonatomic, readwrite) NSNumber *versionMajor;
 @property (nonnull, copy, nonatomic, readwrite) NSNumber *versionMinor;
