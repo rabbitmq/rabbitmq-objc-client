@@ -9,13 +9,7 @@
 @protocol AMQProtocolFrame <NSObject>
 @end
 
-@protocol AMQProtocolMethod <NSObject>
-
-+ (nonnull instancetype)decode:(nonnull NSData *)data;
-
-@end
-
-@interface AMQProtocolConnectionStart : MTLModel<AMQProtocolMethod,NSCoding>
+@interface AMQProtocolConnectionStart : MTLModel<NSCoding>
 
 @property (nonnull, copy, nonatomic, readonly) NSNumber *versionMajor;
 @property (nonnull, copy, nonatomic, readonly) NSNumber *versionMinor;

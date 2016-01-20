@@ -41,11 +41,6 @@
     return self;
 }
 
-+ (instancetype)decode:(NSData *)data {
-    AMQCoder *coder = [[AMQCoder alloc] initWithData:data];
-    return [[AMQProtocolConnectionStart alloc] initWithCoder:coder];
-}
-
 - (instancetype)initWithVersionMajor:(NSNumber *)versionMajor
                         versionMinor:(NSNumber *)versionMinor
                     serverProperties:(NSDictionary<NSObject *,NSObject *> *)serverProperties

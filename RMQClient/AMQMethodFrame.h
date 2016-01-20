@@ -3,6 +3,6 @@
 
 @interface AMQMethodFrame : NSObject
 
-- (id<AMQProtocolMethod>)parse:(NSData *)data;
+- (id)parse:(NSData *)data;
 
 @end
