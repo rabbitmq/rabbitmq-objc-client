@@ -14,7 +14,7 @@
 		AE898D581C3C2D2E00AA3BF1 /* AMQURIParse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE898D571C3C2D2E00AA3BF1 /* AMQURIParse.swift */; settings = {ASSET_TAGS = (); }; };
 		AE898D5B1C3C30D100AA3BF1 /* AMQURI.h in Headers */ = {isa = PBXBuildFile; fileRef = AE898D591C3C30D100AA3BF1 /* AMQURI.h */; settings = {ASSET_TAGS = (); }; };
 		AE898D5C1C3C30D100AA3BF1 /* AMQURI.m in Sources */ = {isa = PBXBuildFile; fileRef = AE898D5A1C3C30D100AA3BF1 /* AMQURI.m */; settings = {ASSET_TAGS = (); }; };
-		AEA45EC21C43BD4700FE1F62 /* BasicConsume.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA45EC11C43BD4700FE1F62 /* BasicConsume.swift */; settings = {ASSET_TAGS = (); }; };
+		AEA45EC21C43BD4700FE1F62 /* BasicConsumeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA45EC11C43BD4700FE1F62 /* BasicConsumeTest.swift */; settings = {ASSET_TAGS = (); }; };
 		AEA45EC51C43C20F00FE1F62 /* AMQProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA45EC31C43C20F00FE1F62 /* AMQProtocol.h */; settings = {ASSET_TAGS = (); }; };
 		AEA45EC61C43C20F00FE1F62 /* AMQProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA45EC41C43C20F00FE1F62 /* AMQProtocol.m */; settings = {ASSET_TAGS = (); }; };
 		AEA45EC81C43CBBE00FE1F62 /* RMQConnectionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA45EC71C43CBBE00FE1F62 /* RMQConnectionTest.swift */; settings = {ASSET_TAGS = (); }; };
@@ -68,7 +68,7 @@
 		AE898D571C3C2D2E00AA3BF1 /* AMQURIParse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AMQURIParse.swift; sourceTree = "<group>"; };
 		AE898D591C3C30D100AA3BF1 /* AMQURI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQURI.h; sourceTree = "<group>"; };
 		AE898D5A1C3C30D100AA3BF1 /* AMQURI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQURI.m; sourceTree = "<group>"; };
-		AEA45EC11C43BD4700FE1F62 /* BasicConsume.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicConsume.swift; sourceTree = "<group>"; };
+		AEA45EC11C43BD4700FE1F62 /* BasicConsumeTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicConsumeTest.swift; sourceTree = "<group>"; };
 		AEA45EC31C43C20F00FE1F62 /* AMQProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQProtocol.h; sourceTree = "<group>"; };
 		AEA45EC41C43C20F00FE1F62 /* AMQProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQProtocol.m; sourceTree = "<group>"; };
 		AEA45EC71C43CBBE00FE1F62 /* RMQConnectionTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQConnectionTest.swift; sourceTree = "<group>"; };
@@ -195,7 +195,7 @@
 				AE607C671C3C0EAD00BE9AC4 /* RMQClientTests-Bridging-Header.h */,
 				AEE7FEA21C3BCA6000DF8C4F /* Info.plist */,
 				AE898D571C3C2D2E00AA3BF1 /* AMQURIParse.swift */,
-				AEA45EC11C43BD4700FE1F62 /* BasicConsume.swift */,
+				AEA45EC11C43BD4700FE1F62 /* BasicConsumeTest.swift */,
 				AEA45EC71C43CBBE00FE1F62 /* RMQConnectionTest.swift */,
 				AE80BAB81C4D48C400E6DFFD /* AMQMethodFrameTest.swift */,
 				AE41C5521C4FC88F00129207 /* Fixtures.swift */,
@@ -397,7 +397,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AE898D581C3C2D2E00AA3BF1 /* AMQURIParse.swift in Sources */,
-				AEA45EC21C43BD4700FE1F62 /* BasicConsume.swift in Sources */,
+				AEA45EC21C43BD4700FE1F62 /* BasicConsumeTest.swift in Sources */,
 				AE80BAB91C4D48C400E6DFFD /* AMQMethodFrameTest.swift in Sources */,
 				AE41C5531C4FC88F00129207 /* Fixtures.swift in Sources */,
 				AEA45EC81C43CBBE00FE1F62 /* RMQConnectionTest.swift in Sources */,

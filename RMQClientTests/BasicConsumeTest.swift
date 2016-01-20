@@ -1,6 +1,6 @@
 import XCTest
 
-class BasicConsume: XCTestCase {
+class BasicConsumeTest: XCTestCase {
     
     func testCarriesServerGeneratedConsumerTagWithBasicConsumeOK() {
         let conn = RMQConnection(
