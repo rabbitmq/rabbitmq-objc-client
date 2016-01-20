@@ -1,7 +1,7 @@
-#import "AMQCoder.h"
+#import "AMQDecoder.h"
 #import "AMQParser.h"
 
-@interface AMQCoder ()
+@interface AMQDecoder ()
 
 @property (nonatomic, readwrite) NSData *data;
 @property (nonatomic, readwrite) const char *cursor;
@@ -10,7 +10,7 @@
 
 @end
 
-@implementation AMQCoder
+@implementation AMQDecoder
 
 - (instancetype)initWithData:(NSData *)data {
     self = [super init];

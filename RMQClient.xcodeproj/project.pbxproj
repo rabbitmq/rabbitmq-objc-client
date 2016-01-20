@@ -36,8 +36,8 @@
 		AEE7FEBA1C3BD2B400DF8C4F /* RMQExchange.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE7FEB81C3BD2B400DF8C4F /* RMQExchange.m */; settings = {ASSET_TAGS = (); }; };
 		AEEEF0741C4EA7060056A5EB /* AMQMethodFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = AEEEF0721C4EA7060056A5EB /* AMQMethodFrame.h */; settings = {ASSET_TAGS = (); }; };
 		AEEEF0751C4EA7060056A5EB /* AMQMethodFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = AEEEF0731C4EA7060056A5EB /* AMQMethodFrame.m */; settings = {ASSET_TAGS = (); }; };
-		AEEEF0821C4F9BFA0056A5EB /* AMQCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = AEEEF0801C4F9BFA0056A5EB /* AMQCoder.h */; settings = {ASSET_TAGS = (); }; };
-		AEEEF0831C4F9BFA0056A5EB /* AMQCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = AEEEF0811C4F9BFA0056A5EB /* AMQCoder.m */; settings = {ASSET_TAGS = (); }; };
+		AEEEF0821C4F9BFA0056A5EB /* AMQDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = AEEEF0801C4F9BFA0056A5EB /* AMQDecoder.h */; settings = {ASSET_TAGS = (); }; };
+		AEEEF0831C4F9BFA0056A5EB /* AMQDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = AEEEF0811C4F9BFA0056A5EB /* AMQDecoder.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,8 +93,8 @@
 		AEE7FEB81C3BD2B400DF8C4F /* RMQExchange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQExchange.m; sourceTree = "<group>"; };
 		AEEEF0721C4EA7060056A5EB /* AMQMethodFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQMethodFrame.h; sourceTree = "<group>"; };
 		AEEEF0731C4EA7060056A5EB /* AMQMethodFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQMethodFrame.m; sourceTree = "<group>"; };
-		AEEEF0801C4F9BFA0056A5EB /* AMQCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQCoder.h; sourceTree = "<group>"; };
-		AEEEF0811C4F9BFA0056A5EB /* AMQCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQCoder.m; sourceTree = "<group>"; };
+		AEEEF0801C4F9BFA0056A5EB /* AMQDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQDecoder.h; sourceTree = "<group>"; };
+		AEEEF0811C4F9BFA0056A5EB /* AMQDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQDecoder.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,8 +177,8 @@
 				AEEEF0731C4EA7060056A5EB /* AMQMethodFrame.m */,
 				AEA45EC31C43C20F00FE1F62 /* AMQProtocol.h */,
 				AEA45EC41C43C20F00FE1F62 /* AMQProtocol.m */,
-				AEEEF0801C4F9BFA0056A5EB /* AMQCoder.h */,
-				AEEEF0811C4F9BFA0056A5EB /* AMQCoder.m */,
+				AEEEF0801C4F9BFA0056A5EB /* AMQDecoder.h */,
+				AEEEF0811C4F9BFA0056A5EB /* AMQDecoder.m */,
 				AE80BAB11C4D47C100E6DFFD /* AMQParser.h */,
 				AE80BAB21C4D47C100E6DFFD /* AMQParser.m */,
 				AE898D591C3C30D100AA3BF1 /* AMQURI.h */,
@@ -215,7 +215,7 @@
 				AEE7FEAD1C3BCD0F00DF8C4F /* RMQConnection.h in Headers */,
 				AEE7FEB51C3BD16200DF8C4F /* RMQQueue.h in Headers */,
 				AE80BAB31C4D47C100E6DFFD /* AMQParser.h in Headers */,
-				AEEEF0821C4F9BFA0056A5EB /* AMQCoder.h in Headers */,
+				AEEEF0821C4F9BFA0056A5EB /* AMQDecoder.h in Headers */,
 				AEEEF0741C4EA7060056A5EB /* AMQMethodFrame.h in Headers */,
 				AEE7FE951C3BCA6000DF8C4F /* RMQClient.h in Headers */,
 				AEE7FEB91C3BD2B400DF8C4F /* RMQExchange.h in Headers */,
@@ -383,7 +383,7 @@
 				AE80BAB41C4D47C100E6DFFD /* AMQParser.m in Sources */,
 				AEA45EC61C43C20F00FE1F62 /* AMQProtocol.m in Sources */,
 				AEE7FEB61C3BD16200DF8C4F /* RMQQueue.m in Sources */,
-				AEEEF0831C4F9BFA0056A5EB /* AMQCoder.m in Sources */,
+				AEEEF0831C4F9BFA0056A5EB /* AMQDecoder.m in Sources */,
 				AEEEF0751C4EA7060056A5EB /* AMQMethodFrame.m in Sources */,
 				AEE7FEB21C3BCEBA00DF8C4F /* RMQChannel.m in Sources */,
 			);

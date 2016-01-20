@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface AMQCoder : NSCoder
+@interface AMQDecoder : NSCoder
 
 - (instancetype)initWithData:(NSData *)data;
 

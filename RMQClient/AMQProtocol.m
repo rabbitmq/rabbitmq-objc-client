@@ -1,5 +1,4 @@
 #import "AMQProtocol.h"
-#import "AMQCoder.h"
 
 @interface AMQProtocolBasicConsumeOk ()
 @property (copy, nonatomic, readwrite) NSString *name;
