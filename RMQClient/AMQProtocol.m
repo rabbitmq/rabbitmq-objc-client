@@ -35,11 +35,6 @@ struct __attribute__((__packed__)) AMQPConnectionStart {
 };
 
 + (instancetype)decode:(NSData *)data {
-//    NSData *d = [NSData dataWithBytesNoCopy:(void *)data.bytes length:data.length];
-//    NSString* dataFormatString = @"data:application/octet-stream;base64,%@";
-//    NSString* dataString = [NSString stringWithFormat:dataFormatString, [d base64EncodedStringWithOptions:0]];
-//    NSURL* dataURL = [NSURL URLWithString:dataString];
-
     const struct AMQPConnectionStart *cs;
     cs = (const struct AMQPConnectionStart *)data.bytes;
 
