@@ -1,15 +1,9 @@
 import XCTest
 
 class RMQTransportContract: XCTestCase {
-    override func performTest(run: XCTestRun) {
-        if self.dynamicType != RMQTransportContract.self {
-            super.performTest(run)
-        }
-    }
 
     func newTransport() -> RMQTransport {
-        XCTFail("must implement newTransport() for this test")
-        return RMQTCPSocketTransport()
+        return FakeTransport()
     }
     
     func pollUntil(checker: () -> Bool) -> Bool {

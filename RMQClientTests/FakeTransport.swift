@@ -23,9 +23,3 @@
         return String(data: myData, encoding: NSASCIIStringEncoding)!
     }
 }
-
-class FakeTransportTest: RMQTransportContract {
-    override func newTransport() -> RMQTransport {
-        return FakeTransport()
-    }
-}

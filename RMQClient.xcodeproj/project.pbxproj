@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AE254F5F1C51B4D000DEA468 /* FakeTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47CF711C51A81D00BA2A9B /* FakeTransport.swift */; settings = {ASSET_TAGS = (); }; };
+		AE254F601C51B4D800DEA468 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE41C5521C4FC88F00129207 /* Fixtures.swift */; settings = {ASSET_TAGS = (); }; };
 		AE41C5531C4FC88F00129207 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE41C5521C4FC88F00129207 /* Fixtures.swift */; settings = {ASSET_TAGS = (); }; };
 		AE41C5631C51A2D500129207 /* RMQTransportContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE41C5621C51A2D500129207 /* RMQTransportContract.swift */; settings = {ASSET_TAGS = (); }; };
 		AE41C5641C51A47700129207 /* RMQTransportContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE41C5621C51A2D500129207 /* RMQTransportContract.swift */; settings = {ASSET_TAGS = (); }; };
@@ -379,6 +381,8 @@
 			files = (
 				AE41C5641C51A47700129207 /* RMQTransportContract.swift in Sources */,
 				AEA45EE21C440FFD00FE1F62 /* IntegrationTests.swift in Sources */,
+				AE254F5F1C51B4D000DEA468 /* FakeTransport.swift in Sources */,
+				AE254F601C51B4D800DEA468 /* Fixtures.swift in Sources */,
 				AEA45EE31C44100C00FE1F62 /* RMQTCPSocketTransportTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
