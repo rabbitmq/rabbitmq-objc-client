@@ -1,58 +1,7 @@
 import XCTest
 
-class RMQTCPSocketTransportTest: XCTestCase {
-    
-    func pollUntil(checker: () -> Bool) -> Bool {
-        for _ in 1...10 {
-            if checker() {
-                return true
-            } else {
-                NSRunLoop.currentRunLoop().runUntilDate(NSDate().dateByAddingTimeInterval(0.5))
-            }
-        }
-        return false
+class RMQTCPSocketTransportTest: RMQTransportContract {
+    override func newTransport() -> RMQTransport {
+        return RMQTCPSocketTransport(host: "localhost", port: 5672)
     }
-    
-    func testConnectAndDisconnect() {
-        let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
-        
-        XCTAssertFalse(transport.isConnected())
-        transport.connect()
-        XCTAssert(pollUntil { transport.isConnected() }, "didn't connect")
-        transport.close()
-        XCTAssert(pollUntil { !transport.isConnected() }, "didn't disconnect")
-    }
-    
-    func testSendingPreambleStimulatesAConnectionStart() {
-        let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
-        
-        transport.connect()
-        defer { transport.close() }
-        
-        XCTAssert(pollUntil { transport.isConnected() }, "didn't connect")
-        
-        let data = "AMQP".dataUsingEncoding(NSASCIIStringEncoding) as! NSMutableData
-        let a = [0x00, 0x00, 0x09, 0x01]
-        for var b in a {
-            data.appendBytes(&b, length: 1)
-        }
-        
-        var writeSent = false
-        transport.write(data) {
-            writeSent = true
-        }
-        XCTAssert(pollUntil { writeSent }, "didn't send write")
-        
-        var readData: NSData = NSData()
-        XCTAssertEqual(0, readData.length)
-        transport.readFrame() { receivedData in
-            readData = receivedData
-        }
-        XCTAssert(pollUntil { readData.length > 0 }, "didn't read")
-        let connectionStart = AMQMethodFrame().parse(readData) as! AMQProtocolConnectionStart
-
-        XCTAssertEqual(0, connectionStart.versionMajor)
-        XCTAssertEqual(9, connectionStart.versionMinor)
-    }
-
 }

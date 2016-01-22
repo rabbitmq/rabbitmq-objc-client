@@ -1,28 +1,5 @@
 import XCTest
 
-@objc class FakeTransport: NSObject, RMQTransport {
-    var myData: NSData = NSData()
-    
-    func connect() {
-        
-    }
-    func close() {
-        
-    }
-    func write(data: NSData, onComplete complete: () -> Void) {
-        myData = data;
-    }
-    func isConnected() -> Bool {
-        return false
-    }
-    func readFrame(complete: (NSData) -> Void) {
-        
-    }
-    func lastWrite() -> String {
-        return String(data: myData, encoding: NSASCIIStringEncoding)!
-    }
-}
-
 class RMQConnectionTest: XCTestCase {
     
     func testSendsPreambleToTransport() {
