@@ -17,10 +17,10 @@
 }
 
 - (void)encodeObject:(NSDictionary *)objv forKey:(NSString *)key {
-    [self.data appendData:[self encodeFoo:objv]];
+    [self.data appendData:[self encodeDictionary:objv]];
 }
 
-- (NSData *)encodeFoo:(NSDictionary *)objv{
+- (NSData *)encodeDictionary:(NSDictionary *)objv{
     if ([objv[@"type"] isEqualToString:@"long-string"]) {
         return [self encodeLongString:objv[@"value"]];
     } else if ([objv[@"type"] isEqualToString:@"short-string"]) {
@@ -53,18 +53,12 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[self encodeShortString:pair[@"key"]]];
     
-    // translate pair[type] to t or whatever
-    // write the t or whatever
-    // call encodeObject with pair[value] wrapped in a dictionary
-    
     NSDictionary *fieldValueTypes = @{@"boolean": @"t", @"field-table": @"F"};
-    NSString *fieldValueType = fieldValueTypes[pair[@"value-type"]];
+    NSString *fieldValueType = fieldValueTypes[pair[@"value"][@"type"]];
     NSData *type = [fieldValueType dataUsingEncoding:NSASCIIStringEncoding];
     
     [encoded appendData:type];
-    
-    NSDictionary *wrapper = @{@"type": pair[@"value-type"], @"value": pair[@"value"]};
-    [encoded appendData:[self encodeFoo:wrapper]];
+    [encoded appendData:[self encodeDictionary:pair[@"value"]]];
 
     return encoded;
 }
@@ -88,15 +82,14 @@
 - (NSData *)encodeLongString:(NSString*)longString {
     NSMutableData *encoded = [NSMutableData new];
     NSData *value = [longString dataUsingEncoding:NSASCIIStringEncoding];
-    uint32_t len  = CFSwapInt32HostToBig((uint32_t)value.length);
-    [encoded appendBytes:&len length:sizeof(UInt32)];
+    [encoded appendData:[self encodeLongUInt:value.length]];
     [encoded appendData:value];
     return encoded;
 }
 
 - (NSData *)encodeLongUInt:(NSUInteger)val {
     NSMutableData *encoded = [NSMutableData new];
-    uint32_t longVal = (uint32_t)val;
+    uint32_t longVal = CFSwapInt32HostToBig((uint32_t)val);
     [encoded appendBytes:&longVal length:sizeof(uint32_t)];
     return encoded;
 }

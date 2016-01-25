@@ -103,28 +103,13 @@ class AMQEncodingTest: XCTestCase {
         XCTAssertEqual(expectedData, encoder.data)
     }
     
-    func testFieldValuePairBecomesFieldNameThenFieldValue() {
-        let encoder = AMQEncoder()
-
-        let expectedData = "\u{08}has_catst\u{01}".dataUsingEncoding(NSASCIIStringEncoding)
-
-        let input = [
-            "type": "field-value-pair",
-            "key": "has_cats",
-            "value-type": "boolean",
-            "value": true
-        ]
-        encoder.encodeObject(input, forKey: "foobar")
-        XCTAssertEqual(expectedData, encoder.data)
-    }
-
     func testFieldTableBecomesSeriesOfKeyValues() {
         let encoder = AMQEncoder()
-        let fieldTableLength             = "\u{31}\u{00}\u{00}\u{00}"
+        let fieldTableLength             = "\u{00}\u{00}\u{00}\u{31}"
         let cats                         = "\u{08}has_catst\u{01}"
         let dogs                         = "\u{08}has_dogst\u{00}"
         let massHysteriaKeyLength        = "\u{0D}"
-        let massHysteriaTableLength      = "\u{08}\u{00}\u{00}\u{00}"
+        let massHysteriaTableLength      = "\u{00}\u{00}\u{00}\u{08}"
         let ghost                        = "\u{05}ghostt\u{00}"
         
         let massHysteria = "\(massHysteriaKeyLength)mass_hysteriaF\(massHysteriaTableLength)\(ghost)"
@@ -138,25 +123,34 @@ class AMQEncodingTest: XCTestCase {
                 [
                     "type": "field-value-pair",
                     "key": "has_cats",
-                    "value-type": "boolean",
-                    "value": true
+                    "value": [
+                        "type": "boolean",
+                        "value": true
+                    ]
                 ],
                 [
                     "type": "field-value-pair",
                     "key": "has_dogs",
                     "value-type": "boolean",
-                    "value": false
+                    "value": [
+                        "type": "boolean",
+                        "value": false
+                    ]
                 ],
                 [
                     "type": "field-value-pair",
                     "key": "mass_hysteria",
-                    "value-type": "field-table",
                     "value": [
-                        [
-                            "type": "field-value-pair",
-                            "key": "ghost",
-                            "value-type": "boolean",
-                            "value": false
+                        "type" : "field-table",
+                        "value": [
+                            [
+                                "type": "field-value-pair",
+                                "key": "ghost",
+                                "value": [
+                                    "type": "boolean",
+                                    "value" :false
+                                ]
+                            ]
                         ]
                     ]
                 ]
