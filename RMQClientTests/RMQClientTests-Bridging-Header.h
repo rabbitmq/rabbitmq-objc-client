@@ -2,3 +2,4 @@
 #import "AMQURI.h"
 #import "RMQTCPSocketTransport.h"
 #import "AMQMethodFrame.h"
+#import "AMQEncoder.h"

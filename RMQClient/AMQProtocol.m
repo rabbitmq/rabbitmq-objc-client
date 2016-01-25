@@ -57,3 +57,37 @@
 }
 
 @end
+
+@interface AMQProtocolConnectionStartOk ()
+
+@property (nonnull, copy, nonatomic, readwrite) NSDictionary *clientProperties;
+@property (nonnull, copy, nonatomic, readwrite) NSString *mechanism;
+@property (nonnull, copy, nonatomic, readwrite) NSData *response;
+@property (nonnull, copy, nonatomic, readwrite) NSString *locale;
+
+@end
+
+@implementation AMQProtocolConnectionStartOk
+
+- (instancetype)initWithClientProperties:(NSDictionary *)clientProperties
+                               mechanism:(NSString *)mechanism
+                                response:(NSData *)response
+                                  locale:(NSString *)locale {
+    self = [super init];
+    if (self) {
+        self.clientProperties = clientProperties;
+        self.mechanism = mechanism;
+        self.response = response;
+        self.locale = locale;
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder {
+    [coder encodeObject:self.clientProperties forKey:@"10_11_client-properties"];
+    [coder encodeObject:self.mechanism forKey:@"10_11_mechanism"];
+    [coder encodeObject:self.response forKey:@"10_11_response"];
+    [coder encodeObject:self.locale forKey:@"10_11_locale"];
+}
+
+@end

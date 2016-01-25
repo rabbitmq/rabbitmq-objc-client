@@ -24,3 +24,12 @@
                                      locales:(nonnull NSString *)locales;
 
 @end
+
+@interface AMQProtocolConnectionStartOk : MTLModel<NSCoding>
+
+- (nonnull instancetype)initWithClientProperties:(nonnull NSDictionary *)clientProperties
+                                       mechanism:(nonnull NSString *)mechanism
+                                        response:(nonnull NSData *)response
+                                          locale:(nonnull NSString *)locale;
+
+@end

@@ -1,7 +1,7 @@
 @objc class FakeTransport: NSObject, RMQTransport {
     var connected = false
-
-    var myData: NSData = NSData()
+    var receivedData: NSData?
+    var outboundData: NSData = NSData()
 
     func connect() {
         connected = true
@@ -10,16 +10,21 @@
         connected = false
     }
     func write(data: NSData, onComplete complete: () -> Void) {
-        myData = data;
+        outboundData = data;
         complete()
     }
     func isConnected() -> Bool {
         return connected
     }
     func readFrame(complete: (NSData) -> Void) {
-        complete(Fixtures().connectionStart())
+        if (receivedData != nil) {
+            complete(receivedData!)
+        }
     }
     func lastWrite() -> String {
-        return String(data: myData, encoding: NSASCIIStringEncoding)!
+        return String(data: outboundData, encoding: NSASCIIStringEncoding)!
+    }
+    func receive(data: NSData) {
+        receivedData = data
     }
 }

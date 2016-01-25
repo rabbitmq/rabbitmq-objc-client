@@ -3,8 +3,6 @@
 #import "RMQTransport.h"
 
 @interface RMQConnection : NSObject
-@property (copy, nonatomic, readonly) NSString *user;
-@property (copy, nonatomic, readonly) NSString *password;
 @property (copy, nonatomic, readonly) NSString *vhost;
 
 - (instancetype)initWithUser:(NSString *)user
