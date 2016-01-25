@@ -120,8 +120,17 @@ class AMQEncodingTest: XCTestCase {
 
     func testFieldTableBecomesSeriesOfKeyValues() {
         let encoder = AMQEncoder()
+        let fieldTableLength             = "\u{31}\u{00}\u{00}\u{00}"
+        let cats                         = "\u{08}has_catst\u{01}"
+        let dogs                         = "\u{08}has_dogst\u{00}"
+        let massHysteriaKeyLength        = "\u{0D}"
+        let massHysteriaTableLength      = "\u{08}\u{00}\u{00}\u{00}"
+        let ghost                        = "\u{05}ghostt\u{00}"
         
-        let expectedData = "\u{31}\u{00}\u{00}\u{00}\u{08}has_catst\u{01}\u{08}has_dogst\u{00}\u{0D}mass_hysteriaF\u{08}\u{00}\u{00}\u{00}\u{05}ghostt\u{00}".dataUsingEncoding(NSASCIIStringEncoding)
+        let massHysteria = "\(massHysteriaKeyLength)mass_hysteriaF\(massHysteriaTableLength)\(ghost)"
+        
+        let fieldPairs = "\(cats)\(dogs)\(massHysteria)"
+        let expectedData = "\(fieldTableLength)\(fieldPairs)".dataUsingEncoding(NSASCIIStringEncoding)
         
         let fieldTableType = [
             "type" : "field-table",
