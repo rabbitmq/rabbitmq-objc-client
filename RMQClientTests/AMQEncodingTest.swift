@@ -1,6 +1,33 @@
 import XCTest
 
 class AMQEncodingTest: XCTestCase {
+
+    func testFraming() {
+        let encoder = AMQEncoder()
+        
+        let type = [0x01]
+        let channel = [0x00, 0x00]
+        let size = [0x00, 0x00, 0x00, 0x08]
+        let classID = [0x00, 0x0a]
+        let methodID = [0x00, 0x0b]
+        let shortString = "\u{03}foo".dataUsingEncoding(NSASCIIStringEncoding)
+        var frameEnd = 0xCE
+        let expectedFrame = NSMutableData()
+
+        for var b in type+channel+size+classID+methodID {
+            expectedFrame.appendBytes(&b, length: 1)
+        }
+        expectedFrame.appendData(shortString!)
+        expectedFrame.appendBytes(&frameEnd, length: 1)
+        
+        encoder.encodeObject(["type" : "short-string", "value" : "foo"], forKey: "baz")
+        let frame: NSData = encoder.frameForClassID(10, methodID: 11)
+        XCTAssertEqual(expectedFrame, frame,
+            
+            
+            "Bytes not equal:\n\(expectedFrame)\n\(frame)"
+        )
+    }
     
     func testLongStringBecomesLengthPlusChars() {
         let encoder = AMQEncoder()

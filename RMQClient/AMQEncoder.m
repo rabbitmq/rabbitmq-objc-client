@@ -17,6 +17,33 @@
     return self;
 }
 
+- (NSData *)frameForClassID:(NSNumber *)classID
+                   methodID:(NSNumber *)methodID {
+    NSMutableData *frame = [NSMutableData new];
+    
+    char type = 0x01;
+    char *channel = malloc(2);
+    channel[0] = channel[1] = 0x00;
+
+    NSMutableData *payload = [NSMutableData new];
+    
+    [payload appendData: [self encodeShortUInt:classID.integerValue]];
+    [payload appendData: [self encodeShortUInt:methodID.integerValue]];
+    [payload appendData:self.data];
+
+    NSData *size = [self encodeLongUInt:payload.length];
+    
+    char frameEnd = 0xCE;
+    
+    [frame appendBytes:&type length:1];
+    [frame appendBytes:channel length:2];
+    [frame appendData:size];
+    [frame appendData:payload];
+    [frame appendBytes:&frameEnd length:1];
+    
+    return frame;
+}
+
 - (void)encodeObject:(id)objv forKey:(NSString *)key {
     if ([key isEqualToString:@"10_11_response"]) {
         [self.data appendData:[self encodeCredentials:objv]];
@@ -101,7 +128,7 @@
 - (NSData *)encodeLongString:(NSString*)longString {
     NSMutableData *encoded = [NSMutableData new];
     NSData *value = [longString dataUsingEncoding:NSASCIIStringEncoding];
-    [encoded appendData:[self encodeLongUInt:value.length]];
+    [encoded appendData: [self encodeLongUInt:value.length]];
     [encoded appendData:value];
     return encoded;
 }
@@ -110,6 +137,13 @@
     NSMutableData *encoded = [NSMutableData new];
     uint32_t longVal = CFSwapInt32HostToBig((uint32_t)val);
     [encoded appendBytes:&longVal length:sizeof(uint32_t)];
+    return encoded;
+}
+
+- (NSData *)encodeShortUInt:(NSUInteger)val {
+    NSMutableData *encoded = [NSMutableData new];
+    uint16_t shortVal = CFSwapInt16HostToBig((uint16_t)val);
+    [encoded appendBytes:&shortVal length:sizeof(uint16_t)];
     return encoded;
 }
 
