@@ -1,4 +1,5 @@
 import Foundation
+import XCTest
 
 class TestHelper {
 
@@ -11,6 +12,10 @@ class TestHelper {
             }
         }
         return false
+    }
+    
+    static func assertEqualBytes(expected: NSData, actual: NSData) {
+        XCTAssertEqual(expected, actual, "Bytes not equal:\n\(expected)\n\(actual)")
     }
 
 }
