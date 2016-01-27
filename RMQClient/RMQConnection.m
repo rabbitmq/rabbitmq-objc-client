@@ -49,16 +49,8 @@
 
 - (void)start {
     [self.transport connect:^{
-        char *buffer = malloc(8);
-        memcpy(buffer, "AMQP", strlen("AMQP"));
-        buffer[4] = 0x00;
-        buffer[5] = 0x00;
-        buffer[6] = 0x09;
-        buffer[7] = 0x01;
         NSError *outerError = NULL;
-        
-        NSData *protocolHeader = [NSData dataWithBytesNoCopy:buffer length:8];
-        [self.transport write:protocolHeader
+        [self.transport write:self.protocolHeader
                         error:&outerError
                    onComplete:^{
                        [self.transport readFrame:^(NSData * _Nonnull startData) {
@@ -96,6 +88,16 @@
 
 - (RMQChannel *)createChannel {
     return [RMQChannel new];
+}
+
+- (NSData *)protocolHeader {
+    char *buffer = malloc(8);
+    memcpy(buffer, "AMQP", strlen("AMQP"));
+    buffer[4] = 0x00;
+    buffer[5] = 0x00;
+    buffer[6] = 0x09;
+    buffer[7] = 0x01;
+    return [NSData dataWithBytesNoCopy:buffer length:8];
 }
 
 @end
