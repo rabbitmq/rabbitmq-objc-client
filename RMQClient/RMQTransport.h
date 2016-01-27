@@ -1,8 +1,8 @@
 #import <Foundation/Foundation.h>
 
 @protocol RMQTransport
-- (void)connect;
-- (void)close;
+- (void)connect:(void (^ _Nonnull)())onConnect;
+- (void)close:(void (^ _Nonnull)())onClose;
 - (nullable NSString *)write:(nonnull NSData *)data
                        error:(NSError * _Nullable * _Nullable)error
                   onComplete:(void (^ _Nonnull)())complete;

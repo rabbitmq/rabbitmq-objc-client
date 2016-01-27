@@ -9,11 +9,13 @@ enum FakeTransportError: ErrorType {
     var receivedData: NSData?
     var outboundData: NSData = NSData()
 
-    func connect() {
+    func connect(onConnect: () -> Void) {
         connected = true
+        onConnect()
     }
-    func close() {
+    func close(onClose: () -> Void) {
         connected = false
+        onClose()
     }
     func write(data: NSData, onComplete complete: () -> Void) throws -> String {
         if (!connected) {

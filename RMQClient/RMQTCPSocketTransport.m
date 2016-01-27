@@ -6,6 +6,9 @@
 @property (nonatomic, readwrite) BOOL _isConnected;
 @property (nonnull, nonatomic, readwrite) GCDAsyncSocket *socket;
 @property (nonnull, nonatomic, readwrite) NSMutableDictionary *callbacks;
+@property (nonatomic, copy) void (^onConnectCallback)();
+@property (nonatomic, copy) void (^onCloseCallback)();
+
 @end
 
 @implementation RMQTCPSocketTransport
@@ -27,14 +30,17 @@
     return nil;
 }
 
-- (void)connect {
+- (void)connect:(void (^)())onConnect {
     NSError *error = nil;
+    self.onConnectCallback = onConnect;
     if (![self.socket connectToHost:self.host onPort:self.port.unsignedIntegerValue error:&error]) {
         NSLog(@"*************** Something is very wrong: %@", error);
+        self.onConnectCallback = nil;
     }
 }
 
-- (void)close {
+- (void)close:(void (^)())onClose {
+    self.onCloseCallback = onClose;
     [self.socket disconnectAfterReadingAndWriting];
 }
 
@@ -98,10 +104,12 @@ struct __attribute__((__packed__)) AMQPHeader {
 
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
     self._isConnected = true;
+    self.onConnectCallback();
 }
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err {
     self._isConnected = false;
+    self.onCloseCallback();
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag {
