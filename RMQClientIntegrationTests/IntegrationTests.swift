@@ -3,14 +3,17 @@ import XCTest
 class IntegrationTests: XCTestCase {
     
     func testIntegration() {
+        let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
+        
         let conn = RMQConnection(
             user: "guest",
             password: "guest",
             vhost: "/",
-            transport: RMQTCPSocketTransport(host: "localhost", port: 5672)
+            transport: transport
         )
         conn.start()
         defer { conn.close() }
+        XCTAssert(TestHelper.pollUntil { return transport.isConnected() }, "never connected")
         
 //        let ch = conn.createChannel()
 //        let q = ch.queue("rmqclient.examples.hello_world", autoDelete: true, exclusive: false)

@@ -1,6 +1,10 @@
 #import <Foundation/Foundation.h>
+@import Mantle;
 
-@interface AMQCredentials : NSObject<NSCoding>
+@interface AMQCredentials : MTLModel
+
+@property (nonatomic, readonly) NSString *username;
+@property (nonatomic, readonly) NSString *password;
 
 - (instancetype)initWithUsername:(NSString *)username
                         password:(NSString *)password;

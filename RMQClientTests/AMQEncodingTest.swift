@@ -103,6 +103,14 @@ class AMQEncodingTest: XCTestCase {
         XCTAssertEqual(expectedData, encoder.data)
     }
     
+    func testClass10Method11ResponseIsEncodedAsCredentialsRFC2595() {
+        let encoder = AMQEncoder()
+        let credentials = AMQCredentials(username: "fido🔫﷽", password: "2easy2break📵")
+        encoder.encodeObject(credentials, forKey: "10_11_response")
+        let expectedData = "\u{00}fido🔫﷽\u{00}2easy2break📵".dataUsingEncoding(NSUTF8StringEncoding)
+        XCTAssertEqual(expectedData, encoder.data)
+    }
+    
     func testFieldTableBecomesSeriesOfKeyValues() {
         let encoder = AMQEncoder()
         let fieldTableLength             = "\u{00}\u{00}\u{00}\u{31}"
@@ -115,49 +123,25 @@ class AMQEncodingTest: XCTestCase {
         let massHysteria = "\(massHysteriaKeyLength)mass_hysteriaF\(massHysteriaTableLength)\(ghost)"
         
         let fieldPairs = "\(cats)\(dogs)\(massHysteria)"
-        let expectedData = "\(fieldTableLength)\(fieldPairs)".dataUsingEncoding(NSASCIIStringEncoding)
+        let expectedData = "\(fieldTableLength)\(fieldPairs)".dataUsingEncoding(NSUTF8StringEncoding)
         
         let fieldTableType = [
             "type" : "field-table",
             "value" : [
-                [
-                    "type": "field-value-pair",
-                    "key": "has_cats",
+                "has_cats": ["type": "boolean", "value": true],
+                "has_dogs": ["type": "boolean", "value": false],
+                "mass_hysteria": [
+                    "type": "field-table",
                     "value": [
-                        "type": "boolean",
-                        "value": true
-                    ]
-                ],
-                [
-                    "type": "field-value-pair",
-                    "key": "has_dogs",
-                    "value-type": "boolean",
-                    "value": [
-                        "type": "boolean",
-                        "value": false
-                    ]
-                ],
-                [
-                    "type": "field-value-pair",
-                    "key": "mass_hysteria",
-                    "value": [
-                        "type" : "field-table",
-                        "value": [
-                            [
-                                "type": "field-value-pair",
-                                "key": "ghost",
-                                "value": [
-                                    "type": "boolean",
-                                    "value" :false
-                                ]
-                            ]
-                        ]
+                        "ghost": ["type": "boolean", "value": false],
                     ]
                 ]
             ]
         ]
         
         encoder.encodeObject(fieldTableType, forKey: "murray")
-        XCTAssertEqual(expectedData, encoder.data)
+        XCTAssertEqual(expectedData, encoder.data,
+        "We expected \(String(data: expectedData!, encoding: NSUTF8StringEncoding)!) but actually got: \(String(data: encoder.data, encoding: NSUTF8StringEncoding)!)"
+        )
     }
 }

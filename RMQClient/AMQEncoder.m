@@ -1,4 +1,5 @@
 #import "AMQEncoder.h"
+#import "AMQCredentials.h"
 
 @interface AMQEncoder ()
 
@@ -16,8 +17,24 @@
     return self;
 }
 
-- (void)encodeObject:(NSDictionary *)objv forKey:(NSString *)key {
-    [self.data appendData:[self encodeDictionary:objv]];
+- (void)encodeObject:(id)objv forKey:(NSString *)key {
+    if ([key isEqualToString:@"10_11_response"]) {
+        [self.data appendData:[self encodeCredentials:objv]];
+    } else {
+        [self.data appendData:[self encodeDictionary:objv]];
+    }
+}
+
+- (NSData *)encodeCredentials:(AMQCredentials *)credentials {
+    NSMutableData *encoded = [NSMutableData new];
+    NSData *username = [credentials.username dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *password = [credentials.password dataUsingEncoding:NSUTF8StringEncoding];
+    char zero = 0x00;
+    [encoded appendBytes:&zero length:1];
+    [encoded appendData:username];
+    [encoded appendBytes:&zero length:1];
+    [encoded appendData:password];
+    return encoded;
 }
 
 - (NSData *)encodeDictionary:(NSDictionary *)objv{
@@ -27,8 +44,6 @@
         return [self encodeShortString:objv[@"value"]];
     } else if ([objv[@"type"] isEqualToString:@"boolean"]) {
         return [self encodeBoolean:objv[@"value"]];
-    } else if ([objv[@"type"] isEqualToString:@"field-value-pair"]) {
-        return [self encodeFieldValuePair:objv];
     } else if ([objv[@"type"] isEqualToString:@"field-table"]) {
         return [self encodeFieldTable:objv[@"value"]];
     } else {
@@ -36,11 +51,15 @@
     }
 }
 
-- (NSData *)encodeFieldTable:(NSArray *)table {
+- (NSData *)encodeFieldTable:(NSDictionary *)table {
     NSMutableData *tableContents = [NSMutableData new];
+    NSArray *keys = [[table allKeys] sortedArrayUsingSelector:@selector(compare:)];
     
-    for (NSDictionary *fieldPair in table) {
-        [tableContents appendData:[self encodeFieldValuePair:fieldPair]];
+    for (NSString *key in keys) {
+        NSDictionary *value = table[key];
+        [tableContents appendData:[self encodeFieldValuePair:@{@"key": key,
+                                                               @"value": @{@"type": value[@"type"],
+                                                                           @"value": value[@"value"]}}]];
     }
     
     NSMutableData *fieldTable = [[self encodeLongUInt:tableContents.length] mutableCopy];

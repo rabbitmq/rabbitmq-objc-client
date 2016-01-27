@@ -38,11 +38,17 @@
     [self.socket disconnectAfterReadingAndWriting];
 }
 
-
-- (void)write:(NSData *)data onComplete:(void (^)())complete {
+- (NSString *)write:(NSData *)data error:(NSError *__autoreleasing  _Nullable *)error onComplete:(void (^)())complete {
+    if (!self._isConnected) {
+        *error = [NSError errorWithDomain:@"AMQ"
+                                     code:0
+                                 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Not connected", nil)}];
+        return nil;
+    }
     uint32_t tag = [self generateTag];
     [self.callbacks setObject:[complete copy] forKey:@(tag)];
     [self.socket writeData:data withTimeout:10 tag:tag];
+    return @"";
 }
 
 struct __attribute__((__packed__)) AMQPHeader {

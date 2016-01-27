@@ -1,6 +1,8 @@
 #import <Foundation/Foundation.h>
 @import Mantle;
 
+#import "AMQCredentials.h"
+
 @interface AMQProtocolBasicConsumeOk : NSObject
 @property (nonnull, copy, nonatomic, readonly) NSString *name;
 @property (nonnull, copy, nonatomic, readonly) NSString *consumerTag;
@@ -27,9 +29,9 @@
 
 @interface AMQProtocolConnectionStartOk : MTLModel<NSCoding>
 
-- (nonnull instancetype)initWithClientProperties:(nonnull NSDictionary *)clientProperties
+- (nonnull instancetype)initWithClientProperties:(nonnull NSDictionary<NSString *, id> *)clientProperties
                                        mechanism:(nonnull NSString *)mechanism
-                                        response:(nonnull NSData *)response
+                                        response:(nonnull AMQCredentials *)response
                                           locale:(nonnull NSString *)locale;
 
 @end

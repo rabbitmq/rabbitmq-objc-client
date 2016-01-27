@@ -3,27 +3,33 @@ import XCTest
 class RMQTransportContract: XCTestCase {
 
     func newTransport() -> RMQTransport {
-        return FakeTransport()
-    }
-    
-    func pollUntil(checker: () -> Bool) -> Bool {
-        for _ in 1...10 {
-            if checker() {
-                return true
-            } else {
-                NSRunLoop.currentRunLoop().runUntilDate(NSDate().dateByAddingTimeInterval(0.5))
-            }
-        }
-        return false
+        let fake = FakeTransport()
+        fake.receive(Fixtures().connectionStart())
+        return fake
     }
     
     func testConnectAndDisconnect() {
         let transport = newTransport()
         XCTAssertFalse(transport.isConnected())
         transport.connect()
-        XCTAssert(pollUntil { transport.isConnected() }, "didn't connect")
+        XCTAssert(TestHelper.pollUntil { return transport.isConnected() }, "didn't connect")
         transport.close()
-        XCTAssert(pollUntil { !transport.isConnected() }, "didn't disconnect")
+        XCTAssert(TestHelper.pollUntil { return !transport.isConnected() }, "didn't disconnect")
+    }
+    
+    func testThrowsWhenWritingButNotConnected() {
+        let transport = newTransport()
+        
+        do {
+            try transport.write(NSData()) {}
+            XCTFail("No error assigned")
+        }
+        catch _ as NSError {
+            XCTAssert(true)
+        }
+        catch {
+            XCTFail("Wrong error")
+        }
     }
     
     func testSendingPreambleStimulatesAConnectionStart() {
@@ -31,7 +37,7 @@ class RMQTransportContract: XCTestCase {
         transport.connect()
         defer { transport.close() }
         
-        XCTAssert(pollUntil { transport.isConnected() }, "didn't connect")
+        XCTAssert(TestHelper.pollUntil { return transport.isConnected() }, "didn't connect")
         
         let data = "AMQP".dataUsingEncoding(NSASCIIStringEncoding) as! NSMutableData
         let a = [0x00, 0x00, 0x09, 0x01]
@@ -40,17 +46,17 @@ class RMQTransportContract: XCTestCase {
         }
         
         var writeSent = false
-        transport.write(data) {
+        try! transport.write(data) {
             writeSent = true
         }
-        XCTAssert(pollUntil { writeSent }, "didn't send write")
+        XCTAssert(TestHelper.pollUntil { return writeSent }, "didn't send write")
         
         var readData: NSData = NSData()
         XCTAssertEqual(0, readData.length)
         transport.readFrame() { receivedData in
             readData = receivedData
         }
-        XCTAssert(pollUntil { readData.length > 0 }, "didn't read")
+        XCTAssert(TestHelper.pollUntil { return readData.length > 0 }, "didn't read")
         let connectionStart = AMQMethodFrame().parse(readData) as! AMQProtocolConnectionStart
         
         XCTAssertEqual(0, connectionStart.versionMajor)
