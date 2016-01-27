@@ -4,7 +4,7 @@ class RMQTransportContract: XCTestCase {
 
     func newTransport() -> RMQTransport {
         let fake = FakeTransport()
-        fake.receive(Fixtures().connectionStart())
+        fake.receive(Fixtures.connectionStart())
         return fake
     }
     

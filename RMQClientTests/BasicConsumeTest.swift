@@ -4,7 +4,7 @@ class BasicConsumeTest: XCTestCase {
     
     func testCarriesServerGeneratedConsumerTagWithBasicConsumeOK() {
         let fake = FakeTransport()
-        fake.receive(Fixtures().connectionStart())
+        fake.receive(Fixtures.connectionStart())
         let conn = RMQConnection(
             user: "rmqclient",
             password: "rmqclient_password",
@@ -31,7 +31,7 @@ class BasicConsumeTest: XCTestCase {
  
     func testAutomaticAcknowledgementMode() {
         let transport = FakeTransport()
-        transport.receive(Fixtures().connectionStart())
+        transport.receive(Fixtures.connectionStart())
         let conn = RMQConnection(user: "rmqclient", password: "rmqclient_password", vhost: "rmqclient_testbed", transport: transport)
         conn.start()
         

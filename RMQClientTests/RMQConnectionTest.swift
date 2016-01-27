@@ -6,7 +6,7 @@ class RMQConnectionTest: XCTestCase {
         let transport = FakeTransport()
         let conn = RMQConnection(user: "foo", password: "bar", vhost: "baz", transport: transport)
         
-        transport.receive(Fixtures().nothing())
+        transport.receive(Fixtures.nothing())
         conn.start()
         
         XCTAssertEqual("AMQP\0\0\u{09}\u{01}".dataUsingEncoding(NSUTF8StringEncoding), transport.lastWrite())
@@ -16,7 +16,7 @@ class RMQConnectionTest: XCTestCase {
         let transport = FakeTransport()
         let conn = RMQConnection(user: "egon", password: "spengler", vhost: "baz", transport: transport)
         
-        transport.receive(Fixtures().connectionStart())
+        transport.receive(Fixtures.connectionStart());
         conn.start()
         
         let coder = AMQEncoder()

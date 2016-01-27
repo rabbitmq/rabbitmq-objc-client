@@ -27,7 +27,7 @@ class AMQMethodFrameTest: XCTestCase {
             mechanisms: "AMQPLAIN PLAIN",
             locales: "en_US"
         )
-        let actual = AMQMethodFrame().parse(Fixtures().connectionStart()) as! AMQProtocolConnectionStart
+        let actual = AMQMethodFrame().parse(Fixtures.connectionStart()) as! AMQProtocolConnectionStart
         XCTAssertEqual(expected, actual)
     }
     
