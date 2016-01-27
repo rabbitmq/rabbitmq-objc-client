@@ -54,13 +54,18 @@
 
 - (NSData *)encodeCredentials:(AMQCredentials *)credentials {
     NSMutableData *encoded = [NSMutableData new];
+    NSMutableData *encodedContent = [NSMutableData new];
     NSData *username = [credentials.username dataUsingEncoding:NSUTF8StringEncoding];
     NSData *password = [credentials.password dataUsingEncoding:NSUTF8StringEncoding];
     char zero = 0x00;
-    [encoded appendBytes:&zero length:1];
-    [encoded appendData:username];
-    [encoded appendBytes:&zero length:1];
-    [encoded appendData:password];
+    [encodedContent appendBytes:&zero length:1];
+    [encodedContent appendData:username];
+    [encodedContent appendBytes:&zero length:1];
+    [encodedContent appendData:password];
+    
+    [encoded appendData:[self encodeLongUInt:encodedContent.length]];
+    [encoded appendData:encodedContent];
+    
     return encoded;
 }
 
@@ -99,7 +104,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[self encodeShortString:pair[@"key"]]];
     
-    NSDictionary *fieldValueTypes = @{@"boolean": @"t", @"field-table": @"F"};
+    NSDictionary *fieldValueTypes = @{@"boolean": @"t", @"field-table": @"F", @"long-string": @"S"};
     NSString *fieldValueType = fieldValueTypes[pair[@"value"][@"type"]];
     NSData *type = [fieldValueType dataUsingEncoding:NSASCIIStringEncoding];
     

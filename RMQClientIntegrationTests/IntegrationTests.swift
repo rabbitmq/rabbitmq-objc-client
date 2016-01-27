@@ -14,7 +14,7 @@ class IntegrationTests: XCTestCase {
         conn.start()
         defer { conn.close() }
         XCTAssert(TestHelper.pollUntil { return transport.isConnected() }, "never connected")
-        NSRunLoop.currentRunLoop().runUntilDate(NSDate().dateByAddingTimeInterval(10.0))
+        NSRunLoop.currentRunLoop().runUntilDate(NSDate().dateByAddingTimeInterval(1.0))
         
 //        let ch = conn.createChannel()
 //        let q = ch.queue("rmqclient.examples.hello_world", autoDelete: true, exclusive: false)

@@ -44,6 +44,6 @@ class RMQConnectionTest: XCTestCase {
             locale: "en_GB"
         )
         startOk.encodeWithCoder(coder)
-        TestHelper.assertEqualBytes(coder.data, actual: transport.lastWrite())
+        TestHelper.assertEqualBytes(coder.frameForClassID(10, methodID: 11), actual: transport.lastWrite())
     }
 }

@@ -126,8 +126,8 @@ class AMQEncodingTest: XCTestCase {
         let encoder = AMQEncoder()
         let credentials = AMQCredentials(username: "fido🔫﷽", password: "2easy2break📵")
         encoder.encodeObject(credentials, forKey: "10_11_response")
-        let expectedData = "\u{00}fido🔫﷽\u{00}2easy2break📵".dataUsingEncoding(NSUTF8StringEncoding)
-        XCTAssertEqual(expectedData, encoder.data)
+        let expectedData = "\u{00}\u{00}\u{00}\u{1c}\u{00}fido🔫﷽\u{00}2easy2break📵".dataUsingEncoding(NSUTF8StringEncoding)
+        TestHelper.assertEqualBytes(expectedData!, actual: encoder.data)
     }
     
     func testFieldTableBecomesSeriesOfKeyValues() {
