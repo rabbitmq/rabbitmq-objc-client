@@ -54,23 +54,8 @@
                         error:&outerError
                    onComplete:^{
                        [self.transport readFrame:^(NSData * _Nonnull startData) {
-                           NSError *innerError = NULL;
-
                            if ([self parseConnectionStart:startData]) {
-                               AMQEncoder *encoder = [AMQEncoder new];
-                               
-                               AMQProtocolConnectionStartOk *startOk = [[AMQProtocolConnectionStartOk alloc]
-                                                                        initWithClientProperties:self.clientProperties
-                                                                        mechanism:self.mechanism
-                                                                        response:self.credentials
-                                                                        locale:self.locale];
-                               
-                               [startOk encodeWithCoder:encoder];
-                               [self.transport write:encoder.data
-                                               error: &innerError
-                                          onComplete:^{
-                                              
-                                          }];
+                               [self sendConnectionStartOk];
                            }
                        }];
                    }];
@@ -88,6 +73,22 @@
 - (BOOL)parseConnectionStart:(NSData *)startData {
     AMQMethodFrame *frame = [AMQMethodFrame new];
     return !![frame parse:startData];
+}
+
+- (void)sendConnectionStartOk {
+    AMQEncoder *encoder = [AMQEncoder new];
+    AMQProtocolConnectionStartOk *startOk = [[AMQProtocolConnectionStartOk alloc]
+                                             initWithClientProperties:self.clientProperties
+                                             mechanism:self.mechanism
+                                             response:self.credentials
+                                             locale:self.locale];
+    [startOk encodeWithCoder:encoder];
+    NSError *innerError = NULL;
+    [self.transport write:encoder.data
+                    error: &innerError
+               onComplete:^{
+                   
+               }];
 }
 
 - (NSData *)protocolHeader {
