@@ -55,28 +55,23 @@
                    onComplete:^{
                        [self.transport readFrame:^(NSData * _Nonnull startData) {
                            NSError *innerError = NULL;
-                           
-                           AMQMethodFrame *frame = [AMQMethodFrame new];
-                           AMQProtocolConnectionStart *connectionStart = [frame parse:startData];
-                           
-                           if (!connectionStart) {
-                               return;
+
+                           if ([self parseConnectionStart:startData]) {
+                               AMQEncoder *encoder = [AMQEncoder new];
+                               
+                               AMQProtocolConnectionStartOk *startOk = [[AMQProtocolConnectionStartOk alloc]
+                                                                        initWithClientProperties:self.clientProperties
+                                                                        mechanism:self.mechanism
+                                                                        response:self.credentials
+                                                                        locale:self.locale];
+                               
+                               [startOk encodeWithCoder:encoder];
+                               [self.transport write:encoder.data
+                                               error: &innerError
+                                          onComplete:^{
+                                              
+                                          }];
                            }
-                           
-                           AMQEncoder *encoder = [AMQEncoder new];
-                           
-                           AMQProtocolConnectionStartOk *startOk = [[AMQProtocolConnectionStartOk alloc]
-                                                                    initWithClientProperties:self.clientProperties
-                                                                    mechanism:self.mechanism
-                                                                    response:self.credentials
-                                                                    locale:self.locale];
-                           
-                           [startOk encodeWithCoder:encoder];
-                           [self.transport write:encoder.data
-                                           error: &innerError
-                                      onComplete:^{
-                                          
-                                      }];
                        }];
                    }];
     }];
@@ -88,6 +83,11 @@
 
 - (RMQChannel *)createChannel {
     return [RMQChannel new];
+}
+
+- (BOOL)parseConnectionStart:(NSData *)startData {
+    AMQMethodFrame *frame = [AMQMethodFrame new];
+    return !![frame parse:startData];
 }
 
 - (NSData *)protocolHeader {
