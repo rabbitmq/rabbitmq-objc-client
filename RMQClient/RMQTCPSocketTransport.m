@@ -109,7 +109,9 @@ struct __attribute__((__packed__)) AMQPHeader {
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err {
     self._isConnected = false;
-    self.onCloseCallback();
+    if (self.onCloseCallback) {
+        self.onCloseCallback();
+    }
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag {

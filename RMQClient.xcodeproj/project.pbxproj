@@ -265,6 +265,7 @@
 				AEA45ED31C440FE400FE1F62 /* Sources */,
 				AEA45ED41C440FE400FE1F62 /* Frameworks */,
 				AEA45ED51C440FE400FE1F62 /* Resources */,
+				AEEB97A81C58E2890051C6A6 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -386,6 +387,20 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/CocoaAsyncSocket.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Mantle.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+		AEEB97A81C58E2890051C6A6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/CocoaAsyncSocket.framework",
 			);
 			outputPaths = (
 			);
