@@ -15,7 +15,7 @@ class TestHelper {
     }
     
     static func assertEqualBytes(expected: NSData, actual: NSData) {
-        XCTAssertEqual(expected, actual, "Bytes not equal:\n\(expected)\n\(actual)")
+        XCTAssertEqual(expected, actual, "\n\nBytes not equal:\n\(expected)\n\(actual)")
     }
 
 }

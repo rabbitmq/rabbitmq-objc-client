@@ -132,16 +132,16 @@ class AMQEncodingTest: XCTestCase {
     
     func testFieldTableBecomesSeriesOfKeyValues() {
         let encoder = AMQEncoder()
-        let fieldTableLength             = "\u{00}\u{00}\u{00}\u{31}"
+        let fieldTableLength             = "\u{00}\u{00}\u{00}\u{57}"
         let cats                         = "\u{08}has_catst\u{01}"
         let dogs                         = "\u{08}has_dogst\u{00}"
         let massHysteriaKeyLength        = "\u{0D}"
         let massHysteriaTableLength      = "\u{00}\u{00}\u{00}\u{08}"
         let ghost                        = "\u{05}ghostt\u{00}"
+        let sacrifice                    = "\u{09}sacrificeS\u{00}\u{00}\u{00}\u{17}forty years of darkness"
         
         let massHysteria = "\(massHysteriaKeyLength)mass_hysteriaF\(massHysteriaTableLength)\(ghost)"
-        
-        let fieldPairs = "\(cats)\(dogs)\(massHysteria)"
+        let fieldPairs = "\(cats)\(dogs)\(massHysteria)\(sacrifice)"
         let expectedData = "\(fieldTableLength)\(fieldPairs)".dataUsingEncoding(NSUTF8StringEncoding)
         
         let fieldTableType = [
@@ -154,13 +154,12 @@ class AMQEncodingTest: XCTestCase {
                     "value": [
                         "ghost": ["type": "boolean", "value": false],
                     ]
-                ]
+                ],
+                "sacrifice": ["type": "long-string", "value": "forty years of darkness"]
             ]
         ]
         
         encoder.encodeObject(fieldTableType, forKey: "murray")
-        XCTAssertEqual(expectedData, encoder.data,
-        "We expected \(String(data: expectedData!, encoding: NSUTF8StringEncoding)!) but actually got: \(String(data: encoder.data, encoding: NSUTF8StringEncoding)!)"
-        )
+        TestHelper.assertEqualBytes(expectedData!, actual: encoder.data)
     }
 }
