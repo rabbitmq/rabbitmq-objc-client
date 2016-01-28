@@ -20,11 +20,6 @@
 - (NSData *)frameForClassID:(NSNumber *)classID
                    methodID:(NSNumber *)methodID {
     NSMutableData *frame = [NSMutableData new];
-    
-    char type = 0x01;
-    char *channel = malloc(2);
-    channel[0] = channel[1] = 0x00;
-
     NSMutableData *payload = [NSMutableData new];
     
     [payload appendData: [self encodeShortUInt:classID.integerValue]];
@@ -32,11 +27,12 @@
     [payload appendData:self.data];
 
     NSData *size = [self encodeLongUInt:payload.length];
-    
+    char type = 0x01;
+    NSUInteger channel = 0;
     char frameEnd = 0xCE;
     
     [frame appendBytes:&type length:1];
-    [frame appendBytes:channel length:2];
+    [frame appendData:[self encodeShortUInt:channel]];
     [frame appendData:size];
     [frame appendData:payload];
     [frame appendBytes:&frameEnd length:1];
