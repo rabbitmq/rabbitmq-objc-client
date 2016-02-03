@@ -25,16 +25,17 @@
         self.vhost = vhost;
         self.transport = transport;
         self.clientProperties = @{@"capabilities" : @{
-                                          @"type": @"field-table",
-                                          @"value": @{
-                                                  @"publisher_confirms": @{@"type": @"boolean", @"value": @(YES)},
-                                                  @"consumer_cancel_notify": @{@"type": @"boolean", @"value": @(YES)},                                                  @"exchange_exchange_bindings": @{@"type": @"boolean", @"value": @(YES)},                                                  @"basic.nack": @{@"type": @"boolean", @"value": @(YES)},                                                  @"connection.blocked": @{@"type": @"boolean", @"value": @(YES)},                                                  @"authentication_failure_close": @{@"type": @"boolean", @"value": @(YES)},
-                                                  },
+                                          @"publisher_confirms": [AMQTrue new],
+                                          @"consumer_cancel_notify": [AMQTrue new],
+                                          @"exchange_exchange_bindings": [AMQTrue new],
+                                          @"basic.nack": [AMQTrue new],
+                                          @"connection.blocked": [AMQTrue new],
+                                          @"authentication_failure_close": [AMQTrue new],
                                           },
-                                  @"product"     : @{@"type": @"long-string", @"value": @"RMQClient"},
-                                  @"platform"    : @{@"type": @"long-string", @"value": @"iOS"},
-                                  @"version"     : @{@"type": @"long-string", @"value": @"0.0.1"},
-                                  @"information" : @{@"type": @"long-string", @"value": @"https://github.com/camelpunch/RMQClient"}};
+                                  @"product"     : @"RMQClient",
+                                  @"platform"    : @"iOS",
+                                  @"version"     : @"0.0.1",
+                                  @"information" : @"https://github.com/camelpunch/RMQClient"};
         self.mechanism = @"PLAIN";
         self.locale = @"en_GB";
     }

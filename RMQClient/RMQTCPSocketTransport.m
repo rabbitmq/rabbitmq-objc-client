@@ -50,16 +50,17 @@ long closeTag   = UINT32_MAX + 2;
 }
 
 - (id<RMQTransport>)write:(NSData *)data error:(NSError *__autoreleasing  _Nullable *)error onComplete:(void (^)())complete {
-    if (!self._isConnected) {
+    if (self._isConnected) {
+        [self.socket writeData:data
+                   withTimeout:10
+                           tag:[self storeCallback:complete]];
+        return self;
+    } else {
         *error = [NSError errorWithDomain:@"AMQ"
                                      code:0
                                  userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Not connected", nil)}];
         return nil;
     }
-    [self.socket writeData:data
-               withTimeout:10
-                       tag:[self storeCallback:complete]];
-    return self;
 }
 
 struct __attribute__((__packed__)) AMQPHeader {

@@ -16,7 +16,7 @@ class AMQEncodingTest: XCTestCase {
         let expectedFrame = unfinishedFrame.mutableCopy() as! NSMutableData
         expectedFrame.appendBytes(&frameEnd, length: 1)
 
-        encoder.encodeObject(["type" : "short-string", "value" : "foo"], forKey: "baz")
+        encoder.encodeObject(AMQShortString(string: "foo"), forKey: "baz")
         let frame: NSData = encoder.frameForClassID(10, methodID: 11)
         TestHelper.assertEqualBytes(expectedFrame, actual: frame)
     }
@@ -32,12 +32,7 @@ class AMQEncodingTest: XCTestCase {
         
         expectedData.appendData("abcdefg".dataUsingEncoding(NSASCIIStringEncoding)!)
         
-        let longString = [
-            "type": "long-string",
-            "value": "abcdefg",
-        ]
-        
-        encoder.encodeObject(longString, forKey: "foo")
+        encoder.encodeObject("abcdefg", forKey: "foo")
         XCTAssertEqual(expectedData, encoder.data)
     }
     
@@ -50,12 +45,7 @@ class AMQEncodingTest: XCTestCase {
         
         expectedData.appendData("abcdefg".dataUsingEncoding(NSASCIIStringEncoding)!)
         
-        let shortString = [
-            "type": "short-string",
-            "value": "abcdefg",
-        ]
-        
-        encoder.encodeObject(shortString, forKey: "foo")
+        encoder.encodeObject(AMQShortString(string: "abcdefg"), forKey: "foo")
         XCTAssertEqual(expectedData, encoder.data)
     }
     
@@ -74,15 +64,9 @@ class AMQEncodingTest: XCTestCase {
         }
         expectedData.appendData("defg".dataUsingEncoding(NSASCIIStringEncoding)!)
         
-        let shortString = [
-            "type": "short-string",
-            "value": "abc",
-        ]
-        let longString = [
-            "type": "long-string",
-            "value": "defg",
-        ]
-        
+        let shortString = AMQShortString(string: "abc")
+        let longString = "defg"
+
         encoder.encodeObject(shortString, forKey: "foo")
         encoder.encodeObject(longString, forKey: "bar")
         XCTAssertEqual(expectedData, encoder.data)
@@ -96,12 +80,7 @@ class AMQEncodingTest: XCTestCase {
         var trueVal = 0x01
         expectedData.appendBytes(&trueVal, length: 1)
         
-        let boolType = [
-            "type" : "boolean",
-            "value" : true,
-        ]
-        
-        encoder.encodeObject(boolType, forKey: "foo")
+        encoder.encodeObject(AMQTrue(), forKey: "foo")
         XCTAssertEqual(expectedData, encoder.data)
     }
     
@@ -113,12 +92,7 @@ class AMQEncodingTest: XCTestCase {
         var falseVal = 0x00
         expectedData.appendBytes(&falseVal, length: 1)
         
-        let boolType = [
-            "type" : "boolean",
-            "value" : false,
-        ]
-        
-        encoder.encodeObject(boolType, forKey: "foo")
+        encoder.encodeObject(AMQFalse(), forKey: "foo")
         XCTAssertEqual(expectedData, encoder.data)
     }
     
@@ -130,7 +104,7 @@ class AMQEncodingTest: XCTestCase {
         TestHelper.assertEqualBytes(expectedData!, actual: encoder.data)
     }
     
-    func testFieldTableBecomesSeriesOfKeyValues() {
+    func testDictionaryBecomesFieldTable() {
         let encoder = AMQEncoder()
         let fieldTableLength             = "\u{00}\u{00}\u{00}\u{57}"
         let cats                         = "\u{08}has_catst\u{01}"
@@ -144,22 +118,16 @@ class AMQEncodingTest: XCTestCase {
         let fieldPairs = "\(cats)\(dogs)\(massHysteria)\(sacrifice)"
         let expectedData = "\(fieldTableLength)\(fieldPairs)".dataUsingEncoding(NSUTF8StringEncoding)
         
-        let fieldTableType = [
-            "type" : "field-table",
-            "value" : [
-                "has_cats": ["type": "boolean", "value": true],
-                "has_dogs": ["type": "boolean", "value": false],
-                "mass_hysteria": [
-                    "type": "field-table",
-                    "value": [
-                        "ghost": ["type": "boolean", "value": false],
-                    ]
-                ],
-                "sacrifice": ["type": "long-string", "value": "forty years of darkness"]
-            ]
+        let fieldTable = [
+            "has_cats": AMQTrue(),
+            "has_dogs": AMQFalse(),
+            "mass_hysteria": [
+                "ghost": AMQFalse(),
+            ],
+            "sacrifice": "forty years of darkness"
         ]
-        
-        encoder.encodeObject(fieldTableType, forKey: "murray")
+
+        encoder.encodeObject(fieldTable, forKey: "murray")
         TestHelper.assertEqualBytes(expectedData!, actual: encoder.data)
     }
 }

@@ -22,20 +22,18 @@ class RMQConnectionTest: XCTestCase {
         let coder = AMQEncoder()
         let clientProperties = [
             "capabilities" : [
-                "type": "field-table",
-                "value": [
-                    "publisher_confirms": ["type": "boolean", "value": true],
-                    "consumer_cancel_notify": ["type": "boolean", "value": true],
-                    "exchange_exchange_bindings": ["type": "boolean", "value": true],
-                    "basic.nack": ["type": "boolean", "value": true],
-                    "connection.blocked": ["type": "boolean", "value": true],
-                    "authentication_failure_close": ["type": "boolean", "value": true],
-                ]
+                "publisher_confirms": AMQTrue(),
+                "consumer_cancel_notify": AMQTrue(),
+                "exchange_exchange_bindings": AMQTrue(),
+                "basic.nack": AMQTrue(),
+                "connection.blocked": AMQTrue(),
+                "authentication_failure_close": AMQTrue(),
             ],
-            "product"     : ["type": "long-string", "value": "RMQClient"],
-            "platform"    : ["type": "long-string", "value": "iOS"],
-            "version"     : ["type": "long-string", "value": "0.0.1"],
-            "information" : ["type": "long-string", "value": "https://github.com/camelpunch/RMQClient"]]
+            "product"     : "RMQClient",
+            "platform"    : "iOS",
+            "version"     : "0.0.1",
+            "information" : "https://github.com/camelpunch/RMQClient"
+        ]
         
         let startOk = AMQProtocolConnectionStartOk(
             clientProperties: clientProperties,

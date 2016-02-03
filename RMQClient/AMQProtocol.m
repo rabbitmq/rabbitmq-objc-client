@@ -84,8 +84,7 @@
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder {
-    [coder encodeObject:@{@"type": @"field-table",
-                          @"value": self.clientProperties}
+    [coder encodeObject:self.clientProperties
                  forKey:@"10_11_client-properties"];
     [coder encodeObject:@{@"type": @"short-string",
                           @"value": self.mechanism}
@@ -95,6 +94,40 @@
     [coder encodeObject:@{@"type": @"short-string",
                           @"value": self.locale}
                  forKey:@"10_11_locale"];
+}
+
+@end
+
+@implementation AMQTrue
+
+- (BOOL)boolValue {
+    return YES;
+}
+
+@end
+
+@implementation AMQFalse
+
+- (BOOL)boolValue {
+    return NO;
+}
+
+@end
+
+@interface AMQShortString ()
+
+@property (nonnull, nonatomic, copy, readwrite) NSString *stringValue;
+
+@end
+
+@implementation AMQShortString
+
+- (instancetype)initWithString:(NSString *)string {
+    self = [super init];
+    if (self) {
+        self.stringValue = string;
+    }
+    return self;
 }
 
 @end

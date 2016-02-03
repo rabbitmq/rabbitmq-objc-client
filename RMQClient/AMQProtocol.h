@@ -35,3 +35,21 @@
                                           locale:(nonnull NSString *)locale;
 
 @end
+
+@protocol AMQBoolean <NSObject>
+- (BOOL)boolValue;
+@end
+
+@interface AMQTrue : NSObject<AMQBoolean>
+@end
+
+@interface AMQFalse : NSObject<AMQBoolean>
+@end
+
+@interface AMQShortString : NSObject
+
+@property (nonnull, nonatomic, copy, readonly) NSString *stringValue;
+
+- (nonnull instancetype)initWithString:(nonnull NSString *)string;
+
+@end

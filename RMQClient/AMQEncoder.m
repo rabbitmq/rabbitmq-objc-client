@@ -1,5 +1,6 @@
 #import "AMQEncoder.h"
 #import "AMQCredentials.h"
+#import "AMQProtocol.h"
 
 @interface AMQEncoder ()
 
@@ -43,8 +44,16 @@
 - (void)encodeObject:(id)objv forKey:(NSString *)key {
     if ([key isEqualToString:@"10_11_response"]) {
         [self.data appendData:[self encodeCredentials:objv]];
+    } else if ([objv isKindOfClass:[NSDictionary class]]) {
+        [self.data appendData:[self encodeFieldTable:objv]];
+    } else if ([objv conformsToProtocol:@protocol(AMQBoolean)]) {
+        [self.data appendData:[self encodeBoolean:objv]];
+    } else if ([objv isKindOfClass:[NSString class]]) {
+        [self.data appendData:[self encodeLongString:objv]];
+    } else if ([objv isKindOfClass:[AMQShortString class]]) {
+        [self.data appendData:[self encodeShortString:[objv stringValue]]];
     } else {
-        [self.data appendData:[self encodeDictionary:objv]];
+        @throw @"not implemented!";
     }
 }
 
@@ -84,10 +93,22 @@
     NSArray *keys = [[table allKeys] sortedArrayUsingSelector:@selector(compare:)];
     
     for (NSString *key in keys) {
-        NSDictionary *value = table[key];
-        [tableContents appendData:[self encodeFieldValuePair:@{@"key": key,
-                                                               @"value": @{@"type": value[@"type"],
-                                                                           @"value": value[@"value"]}}]];
+        id value = table[key];
+        if ([value isKindOfClass:[NSDictionary class]]) {
+            [tableContents appendData:[self encodeFieldValuePair:@{@"key": key,
+                                                                   @"value": @{@"type": @"field-table",
+                                                                               @"value": value}}]];
+        } else if ([value conformsToProtocol:@protocol(AMQBoolean)]) {
+            [tableContents appendData:[self encodeFieldValuePair:@{@"key": key,
+                                                                   @"value": @{@"type": @"boolean",
+                                                                               @"value": value}}]];
+        } else if ([value isKindOfClass:[NSString class]]) {
+            [tableContents appendData:[self encodeFieldValuePair:@{@"key": key,
+                                                                   @"value": @{@"type": @"long-string",
+                                                                               @"value": value}}]];
+        } else {
+            @throw @"haven't implemented yet!";
+        }
     }
     
     NSMutableData *fieldTable = [[self encodeLongUInt:tableContents.length] mutableCopy];
@@ -110,8 +131,8 @@
     return encoded;
 }
 
-- (NSData *)encodeBoolean:(NSNumber *)boolVal {
-    BOOL val = boolVal.boolValue;
+- (NSData *)encodeBoolean:(id<AMQBoolean>)boolean {
+    BOOL val = boolean.boolValue;
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendBytes:&val length:1];
     return encoded;
