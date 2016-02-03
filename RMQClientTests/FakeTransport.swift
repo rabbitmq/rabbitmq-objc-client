@@ -17,13 +17,13 @@ enum FakeTransportError: ErrorType {
         connected = false
         onClose()
     }
-    func write(data: NSData, onComplete complete: () -> Void) throws -> String {
+    func write(data: NSData, onComplete complete: () -> Void) throws -> RMQTransport {
         if (!connected) {
             throw FakeTransportError.NotConnected(localizedDescription: "foo")
         }
         outboundData = data;
         complete()
-        return  ""
+        return self
     }
     func isConnected() -> Bool {
         return connected

@@ -44,7 +44,7 @@
     [self.socket disconnectAfterReadingAndWriting];
 }
 
-- (NSString *)write:(NSData *)data error:(NSError *__autoreleasing  _Nullable *)error onComplete:(void (^)())complete {
+- (id<RMQTransport>)write:(NSData *)data error:(NSError *__autoreleasing  _Nullable *)error onComplete:(void (^)())complete {
     if (!self._isConnected) {
         *error = [NSError errorWithDomain:@"AMQ"
                                      code:0
@@ -54,7 +54,7 @@
     uint32_t tag = [self generateTag];
     [self.callbacks setObject:[complete copy] forKey:@(tag)];
     [self.socket writeData:data withTimeout:10 tag:tag];
-    return @"";
+    return self;
 }
 
 struct __attribute__((__packed__)) AMQPHeader {
