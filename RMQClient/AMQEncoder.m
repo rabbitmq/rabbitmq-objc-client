@@ -19,16 +19,16 @@
 
 - (NSData *)frameForClassID:(NSNumber *)classID
                    methodID:(NSNumber *)methodID {
-    NSMutableData *frame = [NSMutableData new];
     AMQMethodPayload *payload = [[AMQMethodPayload alloc] initWithClassID:[[AMQShortUInt alloc] init:classID.integerValue]
                                                                  methodID:[[AMQShortUInt alloc] init:methodID.integerValue]
                                                                      data:self.data];
-    NSArray *wholeFrame = @[[[AMQOctet alloc] init:1],
-                            [[AMQShortUInt alloc] init:0],
-                            [[AMQLongUInt alloc] init:payload.amqEncoded.length],
-                            payload,
-                            [[AMQOctet alloc] init:0xCE]];
-    for (id<AMQEncoding> part in wholeFrame) {
+    NSMutableData *frame = [NSMutableData new];
+    NSArray *unencodedFrame = @[[[AMQOctet alloc] init:1],
+                                [[AMQShortUInt alloc] init:0],
+                                [[AMQLongUInt alloc] init:payload.amqEncoded.length],
+                                payload,
+                                [[AMQOctet alloc] init:0xCE]];
+    for (id<AMQEncoding> part in unencodedFrame) {
         [frame appendData:part.amqEncoded];
     }
     return frame;
