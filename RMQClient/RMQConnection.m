@@ -1,7 +1,6 @@
 #import "RMQConnection.h"
 #import "AMQMethodFrame.h"
 #import "AMQEncoder.h"
-#import "AMQCredentials.h"
 
 @interface RMQConnection ()
 @property (copy, nonatomic, readwrite) NSString *vhost;

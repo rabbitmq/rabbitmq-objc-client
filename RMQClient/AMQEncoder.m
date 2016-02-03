@@ -1,5 +1,4 @@
 #import "AMQEncoder.h"
-#import "AMQCredentials.h"
 #import "AMQProtocol.h"
 
 @interface AMQEncoder ()
@@ -27,7 +26,7 @@
     [payload appendData: [self encodeShortUInt:methodID.integerValue]];
     [payload appendData:self.data];
 
-    NSData *size = [self encodeLongUInt:payload.length];
+    NSData *size = [[AMQLongUInt alloc] init:payload.length].amqEncoded;
     char type = 0x01;
     NSUInteger channel = 0;
     char frameEnd = 0xCE;
@@ -42,9 +41,7 @@
 }
 
 - (void)encodeObject:(id)objv forKey:(NSString *)key {
-    if ([key isEqualToString:@"10_11_response"]) {
-        [self.data appendData:[self encodeCredentials:objv]];
-    } else if ([objv isKindOfClass:[NSDictionary class]]) {
+    if ([objv isKindOfClass:[NSDictionary class]]) {
         [self.data appendData:[self encodeFieldTable:objv]];
     } else if ([objv conformsToProtocol:@protocol(AMQBoolean)]) {
         [self.data appendData:[self encodeBoolean:objv]];
@@ -53,25 +50,9 @@
     } else if ([objv isKindOfClass:[AMQShortString class]]) {
         [self.data appendData:[self encodeShortString:[objv stringValue]]];
     } else {
-        @throw @"not implemented!";
+        id <AMQEncoding> o = objv;
+        [self.data appendData:o.amqEncoded];
     }
-}
-
-- (NSData *)encodeCredentials:(AMQCredentials *)credentials {
-    NSMutableData *encoded = [NSMutableData new];
-    NSMutableData *encodedContent = [NSMutableData new];
-    NSData *username = [credentials.username dataUsingEncoding:NSUTF8StringEncoding];
-    NSData *password = [credentials.password dataUsingEncoding:NSUTF8StringEncoding];
-    char zero = 0x00;
-    [encodedContent appendBytes:&zero length:1];
-    [encodedContent appendData:username];
-    [encodedContent appendBytes:&zero length:1];
-    [encodedContent appendData:password];
-    
-    [encoded appendData:[self encodeLongUInt:encodedContent.length]];
-    [encoded appendData:encodedContent];
-    
-    return encoded;
 }
 
 - (NSData *)encodeDictionary:(NSDictionary *)objv{
@@ -111,7 +92,7 @@
         }
     }
     
-    NSMutableData *fieldTable = [[self encodeLongUInt:tableContents.length] mutableCopy];
+    NSMutableData *fieldTable = [[[AMQLongUInt alloc] init:tableContents.length].amqEncoded mutableCopy];
     [fieldTable appendData:tableContents];
     
     return fieldTable;
@@ -150,15 +131,8 @@
 - (NSData *)encodeLongString:(NSString*)longString {
     NSMutableData *encoded = [NSMutableData new];
     NSData *value = [longString dataUsingEncoding:NSASCIIStringEncoding];
-    [encoded appendData: [self encodeLongUInt:value.length]];
+    [encoded appendData:[[AMQLongUInt alloc] init:value.length].amqEncoded];
     [encoded appendData:value];
-    return encoded;
-}
-
-- (NSData *)encodeLongUInt:(NSUInteger)val {
-    NSMutableData *encoded = [NSMutableData new];
-    uint32_t longVal = CFSwapInt32HostToBig((uint32_t)val);
-    [encoded appendBytes:&longVal length:sizeof(uint32_t)];
     return encoded;
 }
 
