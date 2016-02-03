@@ -11,6 +11,14 @@
 - (nonnull instancetype)init:(BOOL)boolean;
 @end
 
+@interface AMQShortUInt : NSObject<AMQEncoding>
+- (nonnull instancetype)init:(NSUInteger)val;
+@end
+
+@interface AMQLongUInt : NSObject<AMQEncoding>
+- (nonnull instancetype)init:(NSUInteger)val;
+@end
+
 @interface AMQShortString : NSObject<AMQEncoding>
 @property (nonnull, nonatomic, copy, readonly) NSString *stringValue;
 - (nonnull instancetype)init:(nonnull NSString *)string;
@@ -19,10 +27,6 @@
 @interface AMQLongString : NSObject<AMQEncoding>
 @property (nonnull, nonatomic, copy, readonly) NSString *stringValue;
 - (nonnull instancetype)init:(nonnull NSString *)string;
-@end
-
-@interface AMQLongUInt : NSObject<AMQEncoding>
-- (nonnull instancetype)init:(NSUInteger)val;
 @end
 
 @interface AMQCredentials : MTLModel<AMQEncoding>

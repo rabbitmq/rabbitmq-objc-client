@@ -20,6 +20,52 @@
 }
 @end
 
+@interface AMQShortUInt ()
+@property (nonatomic, readwrite) NSUInteger integerValue;
+@end
+
+@implementation AMQShortUInt
+
+- (instancetype)init:(NSUInteger)val {
+    self = [super init];
+    if (self) {
+        self.integerValue = val;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    NSMutableData *encoded = [NSMutableData new];
+    uint16_t shortVal = CFSwapInt16HostToBig((uint16_t)self.integerValue);
+    [encoded appendBytes:&shortVal length:sizeof(uint16_t)];
+    return encoded;
+}
+
+@end
+
+@interface AMQLongUInt ()
+@property (nonatomic, readwrite) NSUInteger integerValue;
+@end
+
+@implementation AMQLongUInt
+
+- (instancetype)init:(NSUInteger)val {
+    self = [super init];
+    if (self) {
+        self.integerValue = val;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    NSMutableData *encoded = [NSMutableData new];
+    uint32_t longVal = CFSwapInt32HostToBig((uint32_t)self.integerValue);
+    [encoded appendBytes:&longVal length:sizeof(uint32_t)];
+    return encoded;
+}
+
+@end
+
 @interface AMQShortString ()
 @property (nonnull, nonatomic, copy, readwrite) NSString *stringValue;
 @end
@@ -64,29 +110,6 @@
     NSData *value = [self.stringValue dataUsingEncoding:NSASCIIStringEncoding];
     [encoded appendData:[[AMQLongUInt alloc] init:value.length].amqEncoded];
     [encoded appendData:value];
-    return encoded;
-}
-
-@end
-
-@interface AMQLongUInt ()
-@property (nonatomic, readwrite) NSUInteger integerValue;
-@end
-
-@implementation AMQLongUInt
-
-- (instancetype)init:(NSUInteger)val {
-    self = [super init];
-    if (self) {
-        self.integerValue = val;
-    }
-    return self;
-}
-
-- (NSData *)amqEncoded {
-    NSMutableData *encoded = [NSMutableData new];
-    uint32_t longVal = CFSwapInt32HostToBig((uint32_t)self.integerValue);
-    [encoded appendBytes:&longVal length:sizeof(uint32_t)];
     return encoded;
 }
 

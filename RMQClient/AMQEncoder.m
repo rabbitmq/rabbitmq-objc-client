@@ -22,8 +22,8 @@
     NSMutableData *frame = [NSMutableData new];
     NSMutableData *payload = [NSMutableData new];
     
-    [payload appendData: [self encodeShortUInt:classID.integerValue]];
-    [payload appendData: [self encodeShortUInt:methodID.integerValue]];
+    [payload appendData:[[AMQShortUInt alloc] init:classID.integerValue].amqEncoded];
+    [payload appendData:[[AMQShortUInt alloc] init:methodID.integerValue].amqEncoded];
     [payload appendData:self.data];
 
     NSData *size = [[AMQLongUInt alloc] init:payload.length].amqEncoded;
@@ -32,7 +32,7 @@
     char frameEnd = 0xCE;
     
     [frame appendBytes:&type length:1];
-    [frame appendData:[self encodeShortUInt:channel]];
+    [frame appendData:[[AMQShortUInt alloc] init:channel].amqEncoded];
     [frame appendData:size];
     [frame appendData:payload];
     [frame appendBytes:&frameEnd length:1];
@@ -105,13 +105,6 @@
     [encoded appendData:type];
     [encoded appendData:[self encodeDictionary:pair[@"value"]]];
 
-    return encoded;
-}
-
-- (NSData *)encodeShortUInt:(NSUInteger)val {
-    NSMutableData *encoded = [NSMutableData new];
-    uint16_t shortVal = CFSwapInt16HostToBig((uint16_t)val);
-    [encoded appendBytes:&shortVal length:sizeof(uint16_t)];
     return encoded;
 }
 
