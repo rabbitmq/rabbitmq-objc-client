@@ -22,12 +22,12 @@ class RMQConnectionTest: XCTestCase {
         let coder = AMQEncoder()
         let clientProperties = [
             "capabilities" : [
-                "publisher_confirms": AMQTrue(),
-                "consumer_cancel_notify": AMQTrue(),
-                "exchange_exchange_bindings": AMQTrue(),
-                "basic.nack": AMQTrue(),
-                "connection.blocked": AMQTrue(),
-                "authentication_failure_close": AMQTrue(),
+                "publisher_confirms": AMQBoolean(true),
+                "consumer_cancel_notify": AMQBoolean(true),
+                "exchange_exchange_bindings": AMQBoolean(true),
+                "basic.nack": AMQBoolean(true),
+                "connection.blocked": AMQBoolean(true),
+                "authentication_failure_close": AMQBoolean(true),
             ],
             "product"     : "RMQClient",
             "platform"    : "iOS",

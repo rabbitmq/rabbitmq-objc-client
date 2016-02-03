@@ -1,11 +1,23 @@
 #import "AMQProtocol.h"
 
-@implementation AMQTrue
-- (BOOL)boolValue { return YES; }
+@interface AMQBoolean ()
+@property (nonatomic, readwrite) BOOL boolValue;
 @end
 
-@implementation AMQFalse
-- (BOOL)boolValue { return NO; }
+@implementation AMQBoolean
+- (instancetype)init:(BOOL)boolean {
+    self = [super init];
+    if (self) {
+        self.boolValue = boolean;
+    }
+    return self;
+}
+- (NSData *)amqEncoded {
+    BOOL val = self.boolValue;
+    NSMutableData *encoded = [NSMutableData new];
+    [encoded appendBytes:&val length:1];
+    return encoded;
+}
 @end
 
 @interface AMQShortString ()

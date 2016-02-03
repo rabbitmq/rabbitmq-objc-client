@@ -43,8 +43,6 @@
 - (void)encodeObject:(id)objv forKey:(NSString *)key {
     if ([objv isKindOfClass:[NSDictionary class]]) {
         [self.data appendData:[self encodeFieldTable:objv]];
-    } else if ([objv conformsToProtocol:@protocol(AMQBoolean)]) {
-        [self.data appendData:[self encodeBoolean:objv]];
     } else if ([objv isKindOfClass:[NSString class]]) {
         [self.data appendData:[self encodeLongString:objv]];
     } else if ([objv isKindOfClass:[AMQShortString class]]) {
@@ -60,12 +58,10 @@
         return [self encodeLongString:objv[@"value"]];
     } else if ([objv[@"type"] isEqualToString:@"short-string"]) {
         return [[AMQShortString alloc] init:objv[@"value"]].amqEncoded;
-    } else if ([objv[@"type"] isEqualToString:@"boolean"]) {
-        return [self encodeBoolean:objv[@"value"]];
     } else if ([objv[@"type"] isEqualToString:@"field-table"]) {
         return [self encodeFieldTable:objv[@"value"]];
     } else {
-        return [NSData data];
+        return [objv[@"value"] amqEncoded];
     }
 }
 
@@ -79,7 +75,7 @@
             [tableContents appendData:[self encodeFieldValuePair:@{@"key": key,
                                                                    @"value": @{@"type": @"field-table",
                                                                                @"value": value}}]];
-        } else if ([value conformsToProtocol:@protocol(AMQBoolean)]) {
+        } else if ([value isKindOfClass:[AMQBoolean class]]) {
             [tableContents appendData:[self encodeFieldValuePair:@{@"key": key,
                                                                    @"value": @{@"type": @"boolean",
                                                                                @"value": value}}]];
@@ -109,13 +105,6 @@
     [encoded appendData:type];
     [encoded appendData:[self encodeDictionary:pair[@"value"]]];
 
-    return encoded;
-}
-
-- (NSData *)encodeBoolean:(id<AMQBoolean>)boolean {
-    BOOL val = boolean.boolValue;
-    NSMutableData *encoded = [NSMutableData new];
-    [encoded appendBytes:&val length:1];
     return encoded;
 }
 

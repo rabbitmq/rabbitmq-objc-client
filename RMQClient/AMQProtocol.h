@@ -6,14 +6,9 @@
 - (nonnull NSData *)amqEncoded;
 @end
 
-@protocol AMQBoolean <NSObject>
-- (BOOL)boolValue;
-@end
-
-@interface AMQTrue : NSObject<AMQBoolean>
-@end
-
-@interface AMQFalse : NSObject<AMQBoolean>
+@interface AMQBoolean : NSObject<AMQEncoding>
+@property (nonatomic, readonly) BOOL boolValue;
+- (nonnull instancetype)init:(BOOL)boolean;
 @end
 
 @interface AMQShortString : NSObject<AMQEncoding>

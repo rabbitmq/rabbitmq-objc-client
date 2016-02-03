@@ -80,7 +80,7 @@ class AMQEncodingTest: XCTestCase {
         var trueVal = 0x01
         expectedData.appendBytes(&trueVal, length: 1)
         
-        encoder.encodeObject(AMQTrue(), forKey: "foo")
+        encoder.encodeObject(AMQBoolean(true), forKey: "foo")
         XCTAssertEqual(expectedData, encoder.data)
     }
     
@@ -92,7 +92,7 @@ class AMQEncodingTest: XCTestCase {
         var falseVal = 0x00
         expectedData.appendBytes(&falseVal, length: 1)
         
-        encoder.encodeObject(AMQFalse(), forKey: "foo")
+        encoder.encodeObject(AMQBoolean(false), forKey: "foo")
         XCTAssertEqual(expectedData, encoder.data)
     }
     
@@ -119,10 +119,10 @@ class AMQEncodingTest: XCTestCase {
         let expectedData = "\(fieldTableLength)\(fieldPairs)".dataUsingEncoding(NSUTF8StringEncoding)
         
         let fieldTable = [
-            "has_cats": AMQTrue(),
-            "has_dogs": AMQFalse(),
+            "has_cats": AMQBoolean(true),
+            "has_dogs": AMQBoolean(false),
             "mass_hysteria": [
-                "ghost": AMQFalse(),
+                "ghost": AMQBoolean(false),
             ],
             "sacrifice": "forty years of darkness"
         ]

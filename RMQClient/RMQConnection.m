@@ -24,12 +24,12 @@
         self.vhost = vhost;
         self.transport = transport;
         self.clientProperties = @{@"capabilities" : @{
-                                          @"publisher_confirms": [AMQTrue new],
-                                          @"consumer_cancel_notify": [AMQTrue new],
-                                          @"exchange_exchange_bindings": [AMQTrue new],
-                                          @"basic.nack": [AMQTrue new],
-                                          @"connection.blocked": [AMQTrue new],
-                                          @"authentication_failure_close": [AMQTrue new],
+                                          @"publisher_confirms": [[AMQBoolean alloc] init:YES],
+                                          @"consumer_cancel_notify": [[AMQBoolean alloc] init:YES],
+                                          @"exchange_exchange_bindings": [[AMQBoolean alloc] init:YES],
+                                          @"basic.nack": [[AMQBoolean alloc] init:YES],
+                                          @"connection.blocked": [[AMQBoolean alloc] init:YES],
+                                          @"authentication_failure_close": [[AMQBoolean alloc] init:YES],
                                           },
                                   @"product"     : @"RMQClient",
                                   @"platform"    : @"iOS",
