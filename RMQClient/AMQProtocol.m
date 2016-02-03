@@ -1,5 +1,98 @@
 #import "AMQProtocol.h"
 
+@implementation AMQTrue
+- (BOOL)boolValue { return YES; }
+@end
+
+@implementation AMQFalse
+- (BOOL)boolValue { return NO; }
+@end
+
+@interface AMQShortString ()
+@property (nonnull, nonatomic, copy, readwrite) NSString *stringValue;
+@end
+
+@implementation AMQShortString
+
+- (instancetype)init:(NSString *)string {
+    self = [super init];
+    if (self) {
+        self.stringValue = string;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    NSMutableData *encoded = [NSMutableData new];
+    NSData *value = [self.stringValue dataUsingEncoding:NSASCIIStringEncoding];
+    char len = (char)value.length;
+    [encoded appendBytes:&len length:1];
+    [encoded appendData:value];
+    return encoded;
+}
+
+@end
+
+@interface AMQLongUInt ()
+@property (nonatomic, readwrite) NSUInteger integerValue;
+@end
+
+@implementation AMQLongUInt
+
+- (instancetype)init:(NSUInteger)val {
+    self = [super init];
+    if (self) {
+        self.integerValue = val;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    NSMutableData *encoded = [NSMutableData new];
+    uint32_t longVal = CFSwapInt32HostToBig((uint32_t)self.integerValue);
+    [encoded appendBytes:&longVal length:sizeof(uint32_t)];
+    return encoded;
+}
+
+@end
+
+@interface AMQCredentials ()
+
+@property (nonatomic, readwrite) NSString *username;
+@property (nonatomic, readwrite) NSString *password;
+
+@end
+
+@implementation AMQCredentials
+
+- (instancetype)initWithUsername:(NSString *)username password:(NSString *)password {
+    self = [super init];
+    if (self) {
+        self.username = username;
+        self.password = password;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    NSMutableData *encoded = [NSMutableData new];
+    NSMutableData *encodedContent = [NSMutableData new];
+    NSData *username = [self.username dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *password = [self.password dataUsingEncoding:NSUTF8StringEncoding];
+    char zero = 0x00;
+    [encodedContent appendBytes:&zero length:1];
+    [encodedContent appendData:username];
+    [encodedContent appendBytes:&zero length:1];
+    [encodedContent appendData:password];
+
+    [encoded appendData:[[AMQLongUInt alloc] init:encodedContent.length].amqEncoded];
+    [encoded appendData:encodedContent];
+
+    return encoded;
+}
+
+@end
+
 @interface AMQProtocolBasicConsumeOk ()
 @property (copy, nonatomic, readwrite) NSString *name;
 @property (copy, nonatomic, readwrite) NSString *consumerTag;
@@ -94,107 +187,6 @@
     [coder encodeObject:@{@"type": @"short-string",
                           @"value": self.locale}
                  forKey:@"10_11_locale"];
-}
-
-@end
-
-@interface AMQCredentials ()
-
-@property (nonatomic, readwrite) NSString *username;
-@property (nonatomic, readwrite) NSString *password;
-
-@end
-
-@implementation AMQCredentials
-
-- (instancetype)initWithUsername:(NSString *)username password:(NSString *)password {
-    self = [super init];
-    if (self) {
-        self.username = username;
-        self.password = password;
-    }
-    return self;
-}
-
-- (NSData *)amqEncoded {
-    NSMutableData *encoded = [NSMutableData new];
-    NSMutableData *encodedContent = [NSMutableData new];
-    NSData *username = [self.username dataUsingEncoding:NSUTF8StringEncoding];
-    NSData *password = [self.password dataUsingEncoding:NSUTF8StringEncoding];
-    char zero = 0x00;
-    [encodedContent appendBytes:&zero length:1];
-    [encodedContent appendData:username];
-    [encodedContent appendBytes:&zero length:1];
-    [encodedContent appendData:password];
-
-    [encoded appendData:[[AMQLongUInt alloc] init:encodedContent.length].amqEncoded];
-    [encoded appendData:encodedContent];
-
-    return encoded;
-}
-
-@end
-
-@implementation AMQTrue
-
-- (BOOL)boolValue {
-    return YES;
-}
-
-@end
-
-@implementation AMQFalse
-
-- (BOOL)boolValue {
-    return NO;
-}
-
-@end
-
-@interface AMQShortString ()
-@property (nonnull, nonatomic, copy, readwrite) NSString *stringValue;
-@end
-
-@implementation AMQShortString
-
-- (instancetype)init:(NSString *)string {
-    self = [super init];
-    if (self) {
-        self.stringValue = string;
-    }
-    return self;
-}
-
-- (NSData *)amqEncoded {
-    NSMutableData *encoded = [NSMutableData new];
-    NSData *value = [self.stringValue dataUsingEncoding:NSASCIIStringEncoding];
-    char len = (char)value.length;
-    [encoded appendBytes:&len length:1];
-    [encoded appendData:value];
-    return encoded;
-}
-
-@end
-
-@interface AMQLongUInt ()
-@property (nonatomic, readwrite) NSUInteger integerValue;
-@end
-
-@implementation AMQLongUInt
-
-- (instancetype)init:(NSUInteger)val {
-    self = [super init];
-    if (self) {
-        self.integerValue = val;
-    }
-    return self;
-}
-
-- (NSData *)amqEncoded {
-    NSMutableData *encoded = [NSMutableData new];
-    uint32_t longVal = CFSwapInt32HostToBig((uint32_t)self.integerValue);
-    [encoded appendBytes:&longVal length:sizeof(uint32_t)];
-    return encoded;
 }
 
 @end
