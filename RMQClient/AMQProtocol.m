@@ -1,5 +1,28 @@
 #import "AMQProtocol.h"
 
+@interface AMQOctet ()
+@property (nonatomic, readwrite) char octet;
+@end
+
+@implementation AMQOctet
+
+- (instancetype)init:(char)octet {
+    self = [super init];
+    if (self) {
+        self.octet = octet;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    char val = self.octet;
+    NSMutableData *encoded = [NSMutableData new];
+    [encoded appendBytes:&val length:1];
+    return encoded;
+}
+
+@end
+
 @interface AMQBoolean ()
 @property (nonatomic, readwrite) BOOL boolValue;
 @end
@@ -228,6 +251,38 @@
 
     [encoded appendData:[[AMQLongUInt alloc] init:encodedContent.length].amqEncoded];
     [encoded appendData:encodedContent];
+
+    return encoded;
+}
+
+@end
+
+@interface AMQMethodPayload ()
+@property (nonatomic, copy, readwrite) AMQShortUInt *classID;
+@property (nonatomic, copy, readwrite) AMQShortUInt *methodID;
+@property (nonatomic, copy, readwrite) NSData *data;
+@end
+
+@implementation AMQMethodPayload
+
+- (instancetype)initWithClassID:(AMQShortUInt *)classID
+                       methodID:(AMQShortUInt *)methodID
+                           data:(NSData *)data {
+    self = [super init];
+    if (self) {
+        self.classID = classID;
+        self.methodID = methodID;
+        self.data = data;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    NSMutableData *encoded = [NSMutableData new];
+
+    [encoded appendData:self.classID.amqEncoded];
+    [encoded appendData:self.methodID.amqEncoded];
+    [encoded appendData:self.data];
 
     return encoded;
 }

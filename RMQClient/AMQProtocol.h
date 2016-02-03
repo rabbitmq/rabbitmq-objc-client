@@ -10,6 +10,10 @@
 - (nonnull NSData *)amqFieldValueType;
 @end
 
+@interface AMQOctet : MTLModel<AMQEncoding>
+- (nonnull instancetype)init:(char)octet;
+@end
+
 @interface AMQBoolean : MTLModel<AMQEncoding,AMQFieldValue>
 @property (nonatomic, readonly) BOOL boolValue;
 - (nonnull instancetype)init:(BOOL)boolean;
@@ -51,6 +55,13 @@
                                 password:(nonnull NSString *)password;
 
 @end
+
+@interface AMQMethodPayload : NSObject<AMQEncoding>
+- (nonnull instancetype)initWithClassID:(nonnull AMQShortUInt *)classID
+                               methodID:(nonnull AMQShortUInt *)methodID
+                                   data:(nonnull NSData *)data;
+@end
+
 
 @interface AMQProtocolHeader : NSObject<AMQEncoding>
 @end
