@@ -9,12 +9,12 @@ class RMQTransportContract: XCTestCase {
     func testConnectAndDisconnect() {
         let transport = newTransport()
         var connected = false
-        transport.connect(){
+        transport.connect() {
             connected = true
         }
         XCTAssert(TestHelper.pollUntil { return connected }, "didn't connect")
         
-        transport.close(){
+        transport.close() {
             connected = false
         }
         XCTAssert(TestHelper.pollUntil { return !connected }, "didn't disconnect")
