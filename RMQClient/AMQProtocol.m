@@ -172,12 +172,13 @@
 
 @interface AMQFieldValuePair ()
 @property (nonnull, nonatomic, copy) NSString *fieldName;
-@property (nonnull, nonatomic, copy) id<AMQEncoding> fieldValue;
+@property (nonnull, nonatomic, copy) id<AMQEncoding,AMQFieldValue> fieldValue;
 @end
 
 @implementation AMQFieldValuePair
 
-- (instancetype)initWithFieldName:(NSString *)fieldName fieldValue:(id<AMQEncoding>)fieldValue {
+- (instancetype)initWithFieldName:(NSString *)fieldName
+                       fieldValue:(id<AMQEncoding,AMQFieldValue>)fieldValue {
     self = [super init];
     if (self) {
         self.fieldName = fieldName;
@@ -192,10 +193,6 @@
     [encoded appendData:self.fieldValue.amqFieldValueType];
     [encoded appendData:self.fieldValue.amqEncoded];
     return encoded;
-}
-
-- (NSData *)amqFieldValueType {
-    return nil;
 }
 
 @end
@@ -235,7 +232,11 @@
     return encoded;
 }
 
-- (NSData *)amqFieldValueType {
+@end
+
+@implementation AMQProtocolHeader
+
+- (NSData *)amqEncoded {
     return nil;
 }
 
