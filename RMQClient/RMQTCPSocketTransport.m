@@ -1,25 +1,30 @@
 #import "RMQTCPSocketTransport.h"
 
+long connectTag = UINT32_MAX + 1;
+long closeTag   = UINT32_MAX + 2;
+
 @interface RMQTCPSocketTransport ()
+
 @property (nonnull, nonatomic, readwrite) NSString *host;
 @property (nonnull, nonatomic, readwrite) NSNumber *port;
 @property (nonatomic, readwrite) BOOL _isConnected;
 @property (nonnull, nonatomic, readwrite) GCDAsyncSocket *socket;
 @property (nonnull, nonatomic, readwrite) NSMutableDictionary *callbacks;
-@property (nonatomic, copy) void (^onConnectCallback)();
-@property (nonatomic, copy) void (^onCloseCallback)();
-
 @end
 
 @implementation RMQTCPSocketTransport
 
 - (instancetype)initWithHost:(NSString *)host port:(NSNumber *)port {
+    return [self initWithHost:host port:port callbackStorage:[NSMutableDictionary new]];
+}
+
+- (instancetype)initWithHost:(NSString *)host port:(NSNumber *)port callbackStorage:(NSMutableDictionary *)callbacks {
     self = [super init];
     if (self) {
         self.socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
         self.host = host;
         self.port = port;
-        self.callbacks = [NSMutableDictionary new];
+        self.callbacks = callbacks;
     }
     return self;
 }
@@ -32,15 +37,15 @@
 
 - (void)connect:(void (^)())onConnect {
     NSError *error = nil;
-    self.onConnectCallback = onConnect;
+    [self.callbacks setObject:[onConnect copy] forKey:@(connectTag)];
     if (![self.socket connectToHost:self.host onPort:self.port.unsignedIntegerValue error:&error]) {
         NSLog(@"*************** Something is very wrong: %@", error);
-        self.onConnectCallback = nil;
+        [self.callbacks removeObjectForKey:@(connectTag)];
     }
 }
 
 - (void)close:(void (^)())onClose {
-    self.onCloseCallback = onClose;
+    [self.callbacks setObject:[onClose copy] forKey:@(closeTag)];
     [self.socket disconnectAfterReadingAndWriting];
 }
 
@@ -51,9 +56,9 @@
                                  userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Not connected", nil)}];
         return nil;
     }
-    uint32_t tag = [self generateTag];
-    [self.callbacks setObject:[complete copy] forKey:@(tag)];
-    [self.socket writeData:data withTimeout:10 tag:tag];
+    [self.socket writeData:data
+               withTimeout:10
+                       tag:[self storeCallback:complete]];
     return self;
 }
 
@@ -81,42 +86,52 @@ struct __attribute__((__packed__)) AMQPHeader {
     }];
 }
 
-- (void)read:(NSUInteger)len complete:(void (^)(NSData * _Nonnull))complete {
-    uint32_t tag = [self generateTag];
-    [self.callbacks setObject:[complete copy] forKey:@(tag)];
-    [self.socket readDataToLength:len withTimeout:10 tag:tag];
-}
-
 - (BOOL)isConnected {
     return self._isConnected;
 }
 
-- (uint32_t)generateTag {
-    return arc4random_uniform(INT32_MAX);
+# pragma mark - Private
+
+- (void)read:(NSUInteger)len complete:(void (^)(NSData * _Nonnull))complete {
+    [self.socket readDataToLength:len
+                      withTimeout:10
+                              tag:[self storeCallback:complete]];
+}
+
+- (long)storeCallback:(id)callback {
+    uint32_t tag = arc4random_uniform(INT32_MAX);
+    [self.callbacks setObject:[callback copy] forKey:@(tag)];
+    return tag;
+}
+
+- (void)invokeZeroArityCallback:(long)tag {
+    void (^foundCallback)() = self.callbacks[@(tag)];
+    if (foundCallback) {
+        foundCallback();
+        [self.callbacks removeObjectForKey:@(tag)];
+    }
 }
 
 # pragma mark - GCDAsyncSocketDelegate
 
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
-    void (^foundCallback)() = [self.callbacks objectForKey:@(tag)];
+    void (^foundCallback)() = self.callbacks[@(tag)];
     foundCallback(data);
+    [self.callbacks removeObjectForKey:@(tag)];
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
     self._isConnected = true;
-    self.onConnectCallback();
+    [self invokeZeroArityCallback:connectTag];
 }
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err {
     self._isConnected = false;
-    if (self.onCloseCallback) {
-        self.onCloseCallback();
-    }
+    [self invokeZeroArityCallback:closeTag];
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag {
-    void (^foundCallback)() = [self.callbacks objectForKey:@(tag)];
-    foundCallback();
+    [self invokeZeroArityCallback:tag];
 }
 
 @end

@@ -13,4 +13,21 @@ class RMQTCPSocketTransportTest: RMQTransportContract {
         
         XCTAssertFalse(transport.isConnected());
     }
+
+    func testCallbacksAreRemovedAfterUse() {
+        let callbacks = [:] as NSMutableDictionary
+        let transport = RMQTCPSocketTransport(host: "localhost", port: 5672, callbackStorage: callbacks)
+
+        var finished = false
+        transport.connect {
+            try! transport.write(Fixtures.protocolHeader()) {
+                transport.readFrame({ (foo) -> Void in
+                    transport.close { finished = true }
+                })
+            }
+        }
+
+        XCTAssert(TestHelper.pollUntil { return finished }, "couldn't exercise all callbacks")
+        XCTAssertEqual(0, callbacks.count)
+    }
 }

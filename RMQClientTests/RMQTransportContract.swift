@@ -40,17 +40,11 @@ class RMQTransportContract: XCTestCase {
         
         defer { transport.close() {} }
         
-        let data = "AMQP".dataUsingEncoding(NSASCIIStringEncoding) as! NSMutableData
-        let a = [0x00, 0x00, 0x09, 0x01]
-        for var b in a {
-            data.appendBytes(&b, length: 1)
-        }
-        
         var readData: NSData = NSData()
         var connectionStart = AMQProtocolConnectionStart()
         
         transport.connect() {
-            try! transport.write(data) {
+            try! transport.write(Fixtures.protocolHeader()) {
                 XCTAssertEqual(0, readData.length)
                 transport.readFrame() { receivedData in
                     readData = receivedData
