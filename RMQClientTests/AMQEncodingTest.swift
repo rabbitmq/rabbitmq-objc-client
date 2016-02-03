@@ -16,7 +16,7 @@ class AMQEncodingTest: XCTestCase {
         let expectedFrame = unfinishedFrame.mutableCopy() as! NSMutableData
         expectedFrame.appendBytes(&frameEnd, length: 1)
 
-        encoder.encodeObject(AMQShortString(string: "foo"), forKey: "baz")
+        encoder.encodeObject(AMQShortString("foo"), forKey: "baz")
         let frame: NSData = encoder.frameForClassID(10, methodID: 11)
         TestHelper.assertEqualBytes(expectedFrame, actual: frame)
     }
@@ -45,7 +45,7 @@ class AMQEncodingTest: XCTestCase {
         
         expectedData.appendData("abcdefg".dataUsingEncoding(NSASCIIStringEncoding)!)
         
-        encoder.encodeObject(AMQShortString(string: "abcdefg"), forKey: "foo")
+        encoder.encodeObject(AMQShortString("abcdefg"), forKey: "foo")
         XCTAssertEqual(expectedData, encoder.data)
     }
     
@@ -64,7 +64,7 @@ class AMQEncodingTest: XCTestCase {
         }
         expectedData.appendData("defg".dataUsingEncoding(NSASCIIStringEncoding)!)
         
-        let shortString = AMQShortString(string: "abc")
+        let shortString = AMQShortString("abc")
         let longString = "defg"
 
         encoder.encodeObject(shortString, forKey: "foo")

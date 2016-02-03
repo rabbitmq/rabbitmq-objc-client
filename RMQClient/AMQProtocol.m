@@ -157,7 +157,7 @@
 
 @implementation AMQShortString
 
-- (instancetype)initWithString:(NSString *)string {
+- (instancetype)init:(NSString *)string {
     self = [super init];
     if (self) {
         self.stringValue = string;

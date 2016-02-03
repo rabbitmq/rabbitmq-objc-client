@@ -18,7 +18,7 @@
 
 @interface AMQShortString : NSObject
 @property (nonnull, nonatomic, copy, readonly) NSString *stringValue;
-- (nonnull instancetype)initWithString:(nonnull NSString *)string;
+- (nonnull instancetype)init:(nonnull NSString *)string;
 @end
 
 @interface AMQLongUInt : NSObject<AMQEncoding>
