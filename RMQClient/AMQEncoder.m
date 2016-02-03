@@ -40,9 +40,8 @@
     return frame;
 }
 
-- (void)encodeObject:(id)objv forKey:(NSString *)key {
-    id <AMQEncoding> o = objv;
-    [self.data appendData:o.amqEncoded];
+- (void)encodeObject:(id<AMQEncoding>)objv forKey:(NSString *)key {
+    [self.data appendData:objv.amqEncoded];
 }
 
 @end
