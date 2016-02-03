@@ -38,7 +38,8 @@ enum FakeTransportError: ErrorType {
     func lastWrite() -> NSData {
         return outboundData
     }
-    func receive(data: NSData) {
+    func receive(data: NSData) -> FakeTransport {
         receivedData = data
+        return self
     }
 }
