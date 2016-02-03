@@ -57,9 +57,6 @@
 @property (nonnull, copy, nonatomic, readonly) NSString *consumerTag;
 @end
 
-@protocol AMQProtocolFrame <NSObject>
-@end
-
 @interface AMQProtocolConnectionStart : MTLModel<NSCoding>
 
 @property (nonnull, copy, nonatomic, readonly) NSNumber *versionMajor;
