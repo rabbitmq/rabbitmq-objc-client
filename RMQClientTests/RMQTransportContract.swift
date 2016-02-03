@@ -44,7 +44,7 @@ class RMQTransportContract: XCTestCase {
         var connectionStart = AMQProtocolConnectionStart()
         
         transport.connect() {
-            try! transport.write(Fixtures.protocolHeader()) {
+            try! transport.write(AMQProtocolHeader().amqEncoded()) {
                 XCTAssertEqual(0, readData.length)
                 transport.readFrame() { receivedData in
                     readData = receivedData

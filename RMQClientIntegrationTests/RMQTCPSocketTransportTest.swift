@@ -20,7 +20,7 @@ class RMQTCPSocketTransportTest: RMQTransportContract {
 
         var finished = false
         transport.connect {
-            try! transport.write(Fixtures.protocolHeader()) {
+            try! transport.write(AMQProtocolHeader().amqEncoded()) {
                 transport.readFrame({ (foo) -> Void in
                     transport.close { finished = true }
                 })

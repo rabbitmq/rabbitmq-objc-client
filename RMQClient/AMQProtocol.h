@@ -52,6 +52,9 @@
 
 @end
 
+@interface AMQProtocolHeader : NSObject<AMQEncoding>
+@end
+
 @interface AMQProtocolBasicConsumeOk : NSObject
 @property (nonnull, copy, nonatomic, readonly) NSString *name;
 @property (nonnull, copy, nonatomic, readonly) NSString *consumerTag;

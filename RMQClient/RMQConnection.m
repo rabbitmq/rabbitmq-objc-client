@@ -50,7 +50,7 @@
 - (void)start {
     [self.transport connect:^{
         NSError *outerError = NULL;
-        [self.transport write:self.protocolHeader
+        [self.transport write:self.protocolHeader.amqEncoded
                         error:&outerError
                    onComplete:^{
                        [self.transport readFrame:^(NSData * _Nonnull startData) {
@@ -92,14 +92,8 @@
                }];
 }
 
-- (NSData *)protocolHeader {
-    char *buffer = malloc(8);
-    memcpy(buffer, "AMQP", strlen("AMQP"));
-    buffer[4] = 0x00;
-    buffer[5] = 0x00;
-    buffer[6] = 0x09;
-    buffer[7] = 0x01;
-    return [NSData dataWithBytesNoCopy:buffer length:8];
+- (AMQProtocolHeader *)protocolHeader {
+    return [AMQProtocolHeader new];
 }
 
 @end
