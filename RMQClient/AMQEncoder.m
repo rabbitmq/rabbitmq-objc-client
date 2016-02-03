@@ -48,7 +48,7 @@
     } else if ([objv isKindOfClass:[NSString class]]) {
         [self.data appendData:[self encodeLongString:objv]];
     } else if ([objv isKindOfClass:[AMQShortString class]]) {
-        [self.data appendData:[self encodeShortString:[objv stringValue]]];
+        [self.data appendData:[[AMQShortString alloc] init:[objv stringValue]].amqEncoded];
     } else {
         id <AMQEncoding> o = objv;
         [self.data appendData:o.amqEncoded];
@@ -59,7 +59,7 @@
     if ([objv[@"type"] isEqualToString:@"long-string"]) {
         return [self encodeLongString:objv[@"value"]];
     } else if ([objv[@"type"] isEqualToString:@"short-string"]) {
-        return [self encodeShortString:objv[@"value"]];
+        return [[AMQShortString alloc] init:objv[@"value"]].amqEncoded;
     } else if ([objv[@"type"] isEqualToString:@"boolean"]) {
         return [self encodeBoolean:objv[@"value"]];
     } else if ([objv[@"type"] isEqualToString:@"field-table"]) {
@@ -100,7 +100,7 @@
 
 - (NSData *)encodeFieldValuePair:(NSDictionary *)pair {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[self encodeShortString:pair[@"key"]]];
+    [encoded appendData:[[AMQShortString alloc] init:pair[@"key"]].amqEncoded];
     
     NSDictionary *fieldValueTypes = @{@"boolean": @"t", @"field-table": @"F", @"long-string": @"S"};
     NSString *fieldValueType = fieldValueTypes[pair[@"value"][@"type"]];
@@ -116,15 +116,6 @@
     BOOL val = boolean.boolValue;
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendBytes:&val length:1];
-    return encoded;
-}
-
-- (NSData *)encodeShortString:(NSString*)shortString {
-    NSMutableData *encoded = [NSMutableData new];
-    NSData *value = [shortString dataUsingEncoding:NSASCIIStringEncoding];
-    char len = (char)value.length;
-    [encoded appendBytes:&len length:1];
-    [encoded appendData:value];
     return encoded;
 }
 

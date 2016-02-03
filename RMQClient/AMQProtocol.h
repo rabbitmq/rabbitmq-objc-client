@@ -16,7 +16,7 @@
 @interface AMQFalse : NSObject<AMQBoolean>
 @end
 
-@interface AMQShortString : NSObject
+@interface AMQShortString : NSObject<AMQEncoding>
 @property (nonnull, nonatomic, copy, readonly) NSString *stringValue;
 - (nonnull instancetype)init:(nonnull NSString *)string;
 @end

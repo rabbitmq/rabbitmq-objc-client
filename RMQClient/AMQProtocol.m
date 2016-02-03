@@ -165,6 +165,15 @@
     return self;
 }
 
+- (NSData *)amqEncoded {
+    NSMutableData *encoded = [NSMutableData new];
+    NSData *value = [self.stringValue dataUsingEncoding:NSASCIIStringEncoding];
+    char len = (char)value.length;
+    [encoded appendBytes:&len length:1];
+    [encoded appendData:value];
+    return encoded;
+}
+
 @end
 
 @interface AMQLongUInt ()
