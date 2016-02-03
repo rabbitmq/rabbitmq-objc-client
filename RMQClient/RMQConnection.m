@@ -5,7 +5,7 @@
 @interface RMQConnection ()
 @property (copy, nonatomic, readwrite) NSString *vhost;
 @property (strong, nonatomic, readwrite) id <RMQTransport> transport;
-@property (nonatomic, readwrite) NSDictionary *clientProperties;
+@property (nonatomic, readwrite) AMQFieldTable *clientProperties;
 @property (nonatomic, readwrite) NSString *mechanism;
 @property (nonatomic, readwrite) NSString *locale;
 @property (nonatomic, readwrite) AMQCredentials *credentials;
@@ -23,18 +23,18 @@
                                                            password:password];
         self.vhost = vhost;
         self.transport = transport;
-        self.clientProperties = @{@"capabilities" : @{
-                                          @"publisher_confirms": [[AMQBoolean alloc] init:YES],
-                                          @"consumer_cancel_notify": [[AMQBoolean alloc] init:YES],
-                                          @"exchange_exchange_bindings": [[AMQBoolean alloc] init:YES],
-                                          @"basic.nack": [[AMQBoolean alloc] init:YES],
-                                          @"connection.blocked": [[AMQBoolean alloc] init:YES],
-                                          @"authentication_failure_close": [[AMQBoolean alloc] init:YES],
-                                          },
-                                  @"product"     : @"RMQClient",
-                                  @"platform"    : @"iOS",
-                                  @"version"     : @"0.0.1",
-                                  @"information" : @"https://github.com/camelpunch/RMQClient"};
+        AMQFieldTable *capabilities = [[AMQFieldTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
+                                                                    @"consumer_cancel_notify": [[AMQBoolean alloc] init:YES],
+                                                                    @"exchange_exchange_bindings": [[AMQBoolean alloc] init:YES],
+                                                                    @"basic.nack": [[AMQBoolean alloc] init:YES],
+                                                                    @"connection.blocked": [[AMQBoolean alloc] init:YES],
+                                                                    @"authentication_failure_close": [[AMQBoolean alloc] init:YES]}];
+        self.clientProperties = [[AMQFieldTable alloc] init:
+                                 @{@"capabilities" : capabilities,
+                                   @"product"     : [[AMQLongString alloc] init:@"RMQClient"],
+                                   @"platform"    : [[AMQLongString alloc] init:@"iOS"],
+                                   @"version"     : [[AMQLongString alloc] init:@"0.0.1"],
+                                   @"information" : [[AMQLongString alloc] init:@"https://github.com/camelpunch/RMQClient"]}];
         self.mechanism = @"PLAIN";
         self.locale = @"en_GB";
     }
@@ -63,7 +63,7 @@
 }
 
 - (void)close {
-    
+
 }
 
 - (RMQChannel *)createChannel {
@@ -88,7 +88,7 @@
                                           methodID:@(11)]
                     error: &innerError
                onComplete:^{
-                   
+
                }];
 }
 

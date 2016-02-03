@@ -4,29 +4,38 @@
 
 @protocol AMQEncoding <NSObject>
 - (nonnull NSData *)amqEncoded;
+- (nonnull NSData *)amqFieldValueType;
 @end
 
-@interface AMQBoolean : NSObject<AMQEncoding>
+@interface AMQBoolean : MTLModel<AMQEncoding>
 @property (nonatomic, readonly) BOOL boolValue;
 - (nonnull instancetype)init:(BOOL)boolean;
 @end
 
-@interface AMQShortUInt : NSObject<AMQEncoding>
+@interface AMQShortUInt : MTLModel<AMQEncoding>
 - (nonnull instancetype)init:(NSUInteger)val;
 @end
 
-@interface AMQLongUInt : NSObject<AMQEncoding>
+@interface AMQLongUInt : MTLModel<AMQEncoding>
 - (nonnull instancetype)init:(NSUInteger)val;
 @end
 
-@interface AMQShortString : NSObject<AMQEncoding>
+@interface AMQShortString : MTLModel<AMQEncoding>
 @property (nonnull, nonatomic, copy, readonly) NSString *stringValue;
 - (nonnull instancetype)init:(nonnull NSString *)string;
 @end
 
-@interface AMQLongString : NSObject<AMQEncoding>
+@interface AMQLongString : MTLModel<AMQEncoding>
 @property (nonnull, nonatomic, copy, readonly) NSString *stringValue;
 - (nonnull instancetype)init:(nonnull NSString *)string;
+@end
+
+@interface AMQFieldTable : MTLModel<AMQEncoding>
+- (nonnull instancetype)init:(nonnull NSDictionary *)dictionary;
+@end
+
+@interface AMQFieldValuePair : MTLModel<AMQEncoding>
+- (nonnull instancetype)initWithFieldName:(nonnull NSString *)fieldName fieldValue:(nonnull id <AMQEncoding>)fieldValue;
 @end
 
 @interface AMQCredentials : MTLModel<AMQEncoding>
@@ -65,7 +74,7 @@
 
 @interface AMQProtocolConnectionStartOk : MTLModel<NSCoding>
 
-- (nonnull instancetype)initWithClientProperties:(nonnull NSDictionary<NSString *, id> *)clientProperties
+- (nonnull instancetype)initWithClientProperties:(nonnull AMQFieldTable *)clientProperties
                                        mechanism:(nonnull NSString *)mechanism
                                         response:(nonnull AMQCredentials *)response
                                           locale:(nonnull NSString *)locale;

@@ -18,6 +18,9 @@
     [encoded appendBytes:&val length:1];
     return encoded;
 }
+- (NSData *)amqFieldValueType {
+    return [@"t" dataUsingEncoding:NSUTF8StringEncoding];
+}
 @end
 
 @interface AMQShortUInt ()
@@ -41,6 +44,10 @@
     return encoded;
 }
 
+- (NSData *)amqFieldValueType {
+    return [@"u" dataUsingEncoding:NSUTF8StringEncoding];
+}
+
 @end
 
 @interface AMQLongUInt ()
@@ -62,6 +69,10 @@
     uint32_t longVal = CFSwapInt32HostToBig((uint32_t)self.integerValue);
     [encoded appendBytes:&longVal length:sizeof(uint32_t)];
     return encoded;
+}
+
+- (NSData *)amqFieldValueType {
+    return [@"i" dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 @end
@@ -89,6 +100,9 @@
     return encoded;
 }
 
+- (NSData *)amqFieldValueType {
+    return [@"s" dataUsingEncoding:NSUTF8StringEncoding];
+}
 @end
 
 @interface AMQLongString ()
@@ -111,6 +125,77 @@
     [encoded appendData:[[AMQLongUInt alloc] init:value.length].amqEncoded];
     [encoded appendData:value];
     return encoded;
+}
+
+- (NSData *)amqFieldValueType {
+    return [@"S" dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+@end
+
+@interface AMQFieldTable ()
+@property (nonnull, nonatomic, copy, readwrite) NSDictionary *dictionary;
+@end
+
+@implementation AMQFieldTable
+
+- (instancetype)init:(NSDictionary *)dictionary {
+    self = [super init];
+    if (self) {
+        self.dictionary = dictionary;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    NSMutableData *tableContents = [NSMutableData new];
+    NSArray *keys = [[self.dictionary allKeys] sortedArrayUsingSelector:@selector(compare:)];
+
+    for (NSString *key in keys) {
+        id value = self.dictionary[key];
+        AMQFieldValuePair *pair = [[AMQFieldValuePair alloc] initWithFieldName:key
+                                                                    fieldValue:value];
+        [tableContents appendData:pair.amqEncoded];
+    }
+
+    NSMutableData *fieldTable = [[[AMQLongUInt alloc] init:tableContents.length].amqEncoded mutableCopy];
+    [fieldTable appendData:tableContents];
+
+    return fieldTable;
+}
+
+- (NSData *)amqFieldValueType {
+    return [@"F" dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+@end
+
+@interface AMQFieldValuePair ()
+@property (nonnull, nonatomic, copy) NSString *fieldName;
+@property (nonnull, nonatomic, copy) id<AMQEncoding> fieldValue;
+@end
+
+@implementation AMQFieldValuePair
+
+- (instancetype)initWithFieldName:(NSString *)fieldName fieldValue:(id<AMQEncoding>)fieldValue {
+    self = [super init];
+    if (self) {
+        self.fieldName = fieldName;
+        self.fieldValue = fieldValue;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    NSMutableData *encoded = [NSMutableData new];
+    [encoded appendData:[[AMQShortString alloc] init:self.fieldName].amqEncoded];
+    [encoded appendData:self.fieldValue.amqFieldValueType];
+    [encoded appendData:self.fieldValue.amqEncoded];
+    return encoded;
+}
+
+- (NSData *)amqFieldValueType {
+    return nil;
 }
 
 @end
@@ -148,6 +233,10 @@
     [encoded appendData:encodedContent];
 
     return encoded;
+}
+
+- (NSData *)amqFieldValueType {
+    return nil;
 }
 
 @end
@@ -212,7 +301,7 @@
 
 @interface AMQProtocolConnectionStartOk ()
 
-@property (nonnull, copy, nonatomic, readwrite) NSDictionary<NSString *, id> *clientProperties;
+@property (nonnull, copy, nonatomic, readwrite) AMQFieldTable *clientProperties;
 @property (nonnull, copy, nonatomic, readwrite) NSString *mechanism;
 @property (nonnull, copy, nonatomic, readwrite) AMQCredentials *response;
 @property (nonnull, copy, nonatomic, readwrite) NSString *locale;
@@ -221,7 +310,7 @@
 
 @implementation AMQProtocolConnectionStartOk
 
-- (instancetype)initWithClientProperties:(NSDictionary<NSString *, id> *)clientProperties
+- (instancetype)initWithClientProperties:(AMQFieldTable *)clientProperties
                                mechanism:(NSString *)mechanism
                                 response:(AMQCredentials *)response
                                   locale:(NSString *)locale {
@@ -238,13 +327,11 @@
 - (void)encodeWithCoder:(NSCoder *)coder {
     [coder encodeObject:self.clientProperties
                  forKey:@"10_11_client-properties"];
-    [coder encodeObject:@{@"type": @"short-string",
-                          @"value": self.mechanism}
+    [coder encodeObject:[[AMQShortString alloc] init:self.mechanism]
                  forKey:@"10_11_mechanism"];
     [coder encodeObject:self.response
                  forKey:@"10_11_response"];
-    [coder encodeObject:@{@"type": @"short-string",
-                          @"value": self.locale}
+    [coder encodeObject:[[AMQShortString alloc] init:self.locale]
                  forKey:@"10_11_locale"];
 }
 

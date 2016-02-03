@@ -41,71 +41,8 @@
 }
 
 - (void)encodeObject:(id)objv forKey:(NSString *)key {
-    if ([objv isKindOfClass:[NSDictionary class]]) {
-        [self.data appendData:[self encodeFieldTable:objv]];
-    } else if ([objv isKindOfClass:[NSString class]]) {
-        [self.data appendData:[[AMQLongString alloc] init:objv].amqEncoded];
-    } else if ([objv isKindOfClass:[AMQShortString class]]) {
-        [self.data appendData:[[AMQShortString alloc] init:[objv stringValue]].amqEncoded];
-    } else {
-        id <AMQEncoding> o = objv;
-        [self.data appendData:o.amqEncoded];
-    }
-}
-
-- (NSData *)encodeDictionary:(NSDictionary *)objv{
-    if ([objv[@"type"] isEqualToString:@"long-string"]) {
-        return [[AMQLongString alloc] init:objv[@"value"]].amqEncoded;
-    } else if ([objv[@"type"] isEqualToString:@"short-string"]) {
-        return [[AMQShortString alloc] init:objv[@"value"]].amqEncoded;
-    } else if ([objv[@"type"] isEqualToString:@"field-table"]) {
-        return [self encodeFieldTable:objv[@"value"]];
-    } else {
-        return [objv[@"value"] amqEncoded];
-    }
-}
-
-- (NSData *)encodeFieldTable:(NSDictionary *)table {
-    NSMutableData *tableContents = [NSMutableData new];
-    NSArray *keys = [[table allKeys] sortedArrayUsingSelector:@selector(compare:)];
-    
-    for (NSString *key in keys) {
-        id value = table[key];
-        if ([value isKindOfClass:[NSDictionary class]]) {
-            [tableContents appendData:[self encodeFieldValuePair:@{@"key": key,
-                                                                   @"value": @{@"type": @"field-table",
-                                                                               @"value": value}}]];
-        } else if ([value isKindOfClass:[AMQBoolean class]]) {
-            [tableContents appendData:[self encodeFieldValuePair:@{@"key": key,
-                                                                   @"value": @{@"type": @"boolean",
-                                                                               @"value": value}}]];
-        } else if ([value isKindOfClass:[NSString class]]) {
-            [tableContents appendData:[self encodeFieldValuePair:@{@"key": key,
-                                                                   @"value": @{@"type": @"long-string",
-                                                                               @"value": value}}]];
-        } else {
-            @throw @"haven't implemented yet!";
-        }
-    }
-    
-    NSMutableData *fieldTable = [[[AMQLongUInt alloc] init:tableContents.length].amqEncoded mutableCopy];
-    [fieldTable appendData:tableContents];
-    
-    return fieldTable;
-}
-
-- (NSData *)encodeFieldValuePair:(NSDictionary *)pair {
-    NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShortString alloc] init:pair[@"key"]].amqEncoded];
-    
-    NSDictionary *fieldValueTypes = @{@"boolean": @"t", @"field-table": @"F", @"long-string": @"S"};
-    NSString *fieldValueType = fieldValueTypes[pair[@"value"][@"type"]];
-    NSData *type = [fieldValueType dataUsingEncoding:NSASCIIStringEncoding];
-    
-    [encoded appendData:type];
-    [encoded appendData:[self encodeDictionary:pair[@"value"]]];
-
-    return encoded;
+    id <AMQEncoding> o = objv;
+    [self.data appendData:o.amqEncoded];
 }
 
 @end

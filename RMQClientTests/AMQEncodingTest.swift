@@ -32,7 +32,7 @@ class AMQEncodingTest: XCTestCase {
         
         expectedData.appendData("abcdefg".dataUsingEncoding(NSASCIIStringEncoding)!)
         
-        encoder.encodeObject("abcdefg", forKey: "foo")
+        encoder.encodeObject(AMQLongString("abcdefg"), forKey: "foo")
         XCTAssertEqual(expectedData, encoder.data)
     }
     
@@ -65,7 +65,7 @@ class AMQEncodingTest: XCTestCase {
         expectedData.appendData("defg".dataUsingEncoding(NSASCIIStringEncoding)!)
         
         let shortString = AMQShortString("abc")
-        let longString = "defg"
+        let longString = AMQLongString("defg")
 
         encoder.encodeObject(shortString, forKey: "foo")
         encoder.encodeObject(longString, forKey: "bar")
@@ -118,14 +118,14 @@ class AMQEncodingTest: XCTestCase {
         let fieldPairs = "\(cats)\(dogs)\(massHysteria)\(sacrifice)"
         let expectedData = "\(fieldTableLength)\(fieldPairs)".dataUsingEncoding(NSUTF8StringEncoding)
         
-        let fieldTable = [
+        let fieldTable = AMQFieldTable([
             "has_cats": AMQBoolean(true),
             "has_dogs": AMQBoolean(false),
-            "mass_hysteria": [
+            "mass_hysteria": AMQFieldTable([
                 "ghost": AMQBoolean(false),
-            ],
-            "sacrifice": "forty years of darkness"
-        ]
+            ]),
+            "sacrifice": AMQLongString("forty years of darkness"),
+        ])
 
         encoder.encodeObject(fieldTable, forKey: "murray")
         TestHelper.assertEqualBytes(expectedData!, actual: encoder.data)
