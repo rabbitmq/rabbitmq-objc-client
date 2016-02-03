@@ -16,6 +16,11 @@
 - (nonnull instancetype)init:(nonnull NSString *)string;
 @end
 
+@interface AMQLongString : NSObject<AMQEncoding>
+@property (nonnull, nonatomic, copy, readonly) NSString *stringValue;
+- (nonnull instancetype)init:(nonnull NSString *)string;
+@end
+
 @interface AMQLongUInt : NSObject<AMQEncoding>
 - (nonnull instancetype)init:(NSUInteger)val;
 @end

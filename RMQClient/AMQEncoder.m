@@ -44,7 +44,7 @@
     if ([objv isKindOfClass:[NSDictionary class]]) {
         [self.data appendData:[self encodeFieldTable:objv]];
     } else if ([objv isKindOfClass:[NSString class]]) {
-        [self.data appendData:[self encodeLongString:objv]];
+        [self.data appendData:[[AMQLongString alloc] init:objv].amqEncoded];
     } else if ([objv isKindOfClass:[AMQShortString class]]) {
         [self.data appendData:[[AMQShortString alloc] init:[objv stringValue]].amqEncoded];
     } else {
@@ -55,7 +55,7 @@
 
 - (NSData *)encodeDictionary:(NSDictionary *)objv{
     if ([objv[@"type"] isEqualToString:@"long-string"]) {
-        return [self encodeLongString:objv[@"value"]];
+        return [[AMQLongString alloc] init:objv[@"value"]].amqEncoded;
     } else if ([objv[@"type"] isEqualToString:@"short-string"]) {
         return [[AMQShortString alloc] init:objv[@"value"]].amqEncoded;
     } else if ([objv[@"type"] isEqualToString:@"field-table"]) {
@@ -105,14 +105,6 @@
     [encoded appendData:type];
     [encoded appendData:[self encodeDictionary:pair[@"value"]]];
 
-    return encoded;
-}
-
-- (NSData *)encodeLongString:(NSString*)longString {
-    NSMutableData *encoded = [NSMutableData new];
-    NSData *value = [longString dataUsingEncoding:NSASCIIStringEncoding];
-    [encoded appendData:[[AMQLongUInt alloc] init:value.length].amqEncoded];
-    [encoded appendData:value];
     return encoded;
 }
 

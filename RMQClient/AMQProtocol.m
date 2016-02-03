@@ -45,6 +45,30 @@
 
 @end
 
+@interface AMQLongString ()
+@property (nonnull, nonatomic, copy, readwrite) NSString *stringValue;
+@end
+
+@implementation AMQLongString
+
+- (instancetype)init:(NSString *)string {
+    self = [super init];
+    if (self) {
+        self.stringValue = string;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    NSMutableData *encoded = [NSMutableData new];
+    NSData *value = [self.stringValue dataUsingEncoding:NSASCIIStringEncoding];
+    [encoded appendData:[[AMQLongUInt alloc] init:value.length].amqEncoded];
+    [encoded appendData:value];
+    return encoded;
+}
+
+@end
+
 @interface AMQLongUInt ()
 @property (nonatomic, readwrite) NSUInteger integerValue;
 @end
