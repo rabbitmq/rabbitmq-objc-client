@@ -80,16 +80,25 @@
 @end
 
 @interface AMQProtocolConnectionStart : MTLModel<NSCoding,AMQIncoming>
-@property (nonnull, copy, nonatomic, readonly) NSNumber *versionMajor;
-@property (nonnull, copy, nonatomic, readonly) NSNumber *versionMinor;
-@property (nonnull, copy, nonatomic, readonly) NSDictionary<NSObject *, NSObject *> *serverProperties;
-@property (nonnull, copy, nonatomic, readonly) NSString *mechanisms;
-@property (nonnull, copy, nonatomic, readonly) NSString *locales;
+@property (nonnull, copy, nonatomic, readonly) AMQOctet *versionMajor;
+@property (nonnull, copy, nonatomic, readonly) AMQOctet *versionMinor;
+@property (nonnull, copy, nonatomic, readonly) AMQFieldTable *serverProperties;
+@property (nonnull, copy, nonatomic, readonly) AMQLongString *mechanisms;
+@property (nonnull, copy, nonatomic, readonly) AMQLongString *locales;
 @end
 
 @interface AMQProtocolConnectionStartOk : MTLModel<NSCoding,AMQOutgoing>
 - (nonnull instancetype)initWithClientProperties:(nonnull AMQFieldTable *)clientProperties
-                                       mechanism:(nonnull NSString *)mechanism
+                                       mechanism:(nonnull AMQShortString *)mechanism
                                         response:(nonnull AMQCredentials *)response
-                                          locale:(nonnull NSString *)locale;
+                                          locale:(nonnull AMQShortString *)locale;
+@end
+
+@interface AMQProtocolConnectionTune : MTLModel<NSCoding,AMQIncoming>
+@end
+
+@interface AMQProtocolConnectionTuneOk : MTLModel<NSCoding,AMQOutgoing>
+- (nonnull instancetype)initWithChannelMax:(nonnull AMQShortUInt *)channelMax
+                                  frameMax:(nonnull AMQLongUInt *)frameMax
+                                 heartbeat:(nonnull AMQShortUInt *)heartbeat;
 @end

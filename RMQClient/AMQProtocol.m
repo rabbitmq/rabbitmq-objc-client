@@ -290,24 +290,6 @@
 
 @end
 
-@implementation AMQProtocolHeader
-
-- (NSData *)amqEncoded {
-    char *buffer = malloc(8);
-    memcpy(buffer, "AMQP", strlen("AMQP"));
-    buffer[4] = 0x00;
-    buffer[5] = 0x00;
-    buffer[6] = 0x09;
-    buffer[7] = 0x01;
-    return [NSData dataWithBytesNoCopy:buffer length:8];
-}
-
-- (Class)expectedResponseClass {
-    return [AMQProtocolConnectionStart class];
-}
-
-@end
-
 @interface AMQProtocolBasicConsumeOk ()
 @property (copy, nonatomic, readwrite) NSString *name;
 @property (copy, nonatomic, readwrite) NSString *consumerTag;
@@ -326,12 +308,30 @@
 
 @end
 
+@implementation AMQProtocolHeader
+
+- (NSData *)amqEncoded {
+    char *buffer = malloc(8);
+    memcpy(buffer, "AMQP", strlen("AMQP"));
+    buffer[4] = 0x00;
+    buffer[5] = 0x00;
+    buffer[6] = 0x09;
+    buffer[7] = 0x01;
+    return [NSData dataWithBytesNoCopy:buffer length:8];
+}
+
+- (Class)expectedResponseClass {
+    return [AMQProtocolConnectionStart class];
+}
+
+@end
+
 @interface AMQProtocolConnectionStart ()
-@property (nonnull, copy, nonatomic, readwrite) NSNumber *versionMajor;
-@property (nonnull, copy, nonatomic, readwrite) NSNumber *versionMinor;
-@property (nonnull, copy, nonatomic, readwrite) NSDictionary<NSObject *, NSObject *> *serverProperties;
-@property (nonnull, copy, nonatomic, readwrite) NSString *mechanisms;
-@property (nonnull, copy, nonatomic, readwrite) NSString *locales;
+@property (nonnull, copy, nonatomic, readwrite) AMQOctet *versionMajor;
+@property (nonnull, copy, nonatomic, readwrite) AMQOctet *versionMinor;
+@property (nonnull, copy, nonatomic, readwrite) AMQFieldTable *serverProperties;
+@property (nonnull, copy, nonatomic, readwrite) AMQLongString *mechanisms;
+@property (nonnull, copy, nonatomic, readwrite) AMQLongString *locales;
 @end
 
 @implementation AMQProtocolConnectionStart
@@ -361,11 +361,11 @@
                                          @"platform"    : [[AMQLongString alloc] init:@"iOS"],
                                          @"version"     : [[AMQLongString alloc] init:@"0.0.1"],
                                          @"information" : [[AMQLongString alloc] init:@"https://github.com/camelpunch/RMQClient"]}];
-    return [[AMQProtocolConnectionStartOk alloc]
-            initWithClientProperties:clientProperties
-            mechanism:@"PLAIN"
-            response:context.credentials
-            locale:@"en_GB"];
+
+    return [[AMQProtocolConnectionStartOk alloc] initWithClientProperties:clientProperties
+                                                                mechanism:[[AMQShortString alloc] init:@"PLAIN"]
+                                                                 response:context.credentials
+                                                                   locale:[[AMQShortString alloc] init:@"en_GB"]];
 }
 
 @end
@@ -373,18 +373,18 @@
 @interface AMQProtocolConnectionStartOk ()
 
 @property (nonnull, copy, nonatomic, readwrite) AMQFieldTable *clientProperties;
-@property (nonnull, copy, nonatomic, readwrite) NSString *mechanism;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortString *mechanism;
 @property (nonnull, copy, nonatomic, readwrite) AMQCredentials *response;
-@property (nonnull, copy, nonatomic, readwrite) NSString *locale;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortString *locale;
 
 @end
 
 @implementation AMQProtocolConnectionStartOk
 
 - (instancetype)initWithClientProperties:(AMQFieldTable *)clientProperties
-                               mechanism:(NSString *)mechanism
+                               mechanism:(AMQShortString *)mechanism
                                 response:(AMQCredentials *)response
-                                  locale:(NSString *)locale {
+                                  locale:(AMQShortString *)locale {
     self = [super init];
     if (self) {
         self.clientProperties = clientProperties;
@@ -398,11 +398,11 @@
 - (void)encodeWithCoder:(NSCoder *)coder {
     [coder encodeObject:self.clientProperties
                  forKey:@"10_11_client-properties"];
-    [coder encodeObject:[[AMQShortString alloc] init:self.mechanism]
+    [coder encodeObject:self.mechanism
                  forKey:@"10_11_mechanism"];
     [coder encodeObject:self.response
                  forKey:@"10_11_response"];
-    [coder encodeObject:[[AMQShortString alloc] init:self.locale]
+    [coder encodeObject:self.locale
                  forKey:@"10_11_locale"];
 }
 
@@ -410,6 +410,73 @@
     AMQEncoder *encoder = [AMQEncoder new];
     [self encodeWithCoder:encoder];
     return [encoder frameForClassID:@(10) methodID:@(11)];
+}
+
+- (Class)expectedResponseClass {
+    return [AMQProtocolConnectionTune class];
+}
+
+@end
+
+@interface AMQProtocolConnectionTune ()
+@property (nonatomic, copy, readwrite) AMQShortUInt *channelMax;
+@property (nonatomic, copy, readwrite) AMQLongUInt *frameMax;
+@property (nonatomic, copy, readwrite) AMQShortUInt *heartbeat;
+@end
+
+@implementation AMQProtocolConnectionTune
+
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.channelMax = [coder decodeObjectForKey:@"10_30_channel-max"];
+        self.frameMax = [coder decodeObjectForKey:@"10_30_frame-max"];
+        self.heartbeat = [coder decodeObjectForKey:@"10_30_heartbeat"];
+    }
+    return self;
+}
+
+- (id<AMQOutgoing>)replyWithContext:(id<AMQReplyContext>)context {
+    return [[AMQProtocolConnectionTuneOk alloc] initWithChannelMax:self.channelMax
+                                                          frameMax:self.frameMax
+                                                         heartbeat:self.heartbeat];
+}
+
+@end
+
+@interface AMQProtocolConnectionTuneOk ()
+@property (nonatomic, copy, readwrite) AMQShortUInt *channelMax;
+@property (nonatomic, copy, readwrite) AMQLongUInt *frameMax;
+@property (nonatomic, copy, readwrite) AMQShortUInt *heartbeat;
+@end
+
+@implementation AMQProtocolConnectionTuneOk
+
+- (instancetype)initWithChannelMax:(AMQShortUInt *)channelMax
+                          frameMax:(AMQLongUInt *)frameMax
+                         heartbeat:(AMQShortUInt *)heartbeat {
+    self = [super init];
+    if (self) {
+        self.channelMax = channelMax;
+        self.frameMax = frameMax;
+        self.heartbeat = heartbeat;
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder {
+    [coder encodeObject:self.channelMax
+                 forKey:@"10_31_channel-max"];
+    [coder encodeObject:self.frameMax
+                 forKey:@"10_31_frame-max"];
+    [coder encodeObject:self.heartbeat
+                 forKey:@"10_31_heartbeat"];
+}
+
+- (NSData *)amqEncoded {
+    AMQEncoder *encoder = [AMQEncoder new];
+    [self encodeWithCoder:encoder];
+    return [encoder frameForClassID:@(10) methodID:@(31)];
 }
 
 - (Class)expectedResponseClass {

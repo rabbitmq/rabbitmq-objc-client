@@ -54,8 +54,8 @@ class RMQTransportContract: XCTestCase {
             }
         }
         XCTAssert(TestHelper.pollUntil { return readData.length > 0 }, "didn't read")
-        XCTAssertEqual(0, connectionStart.versionMajor)
-        XCTAssertEqual(9, connectionStart.versionMinor)
+        XCTAssertEqual(AMQOctet(0), connectionStart.versionMajor)
+        XCTAssertEqual(AMQOctet(9), connectionStart.versionMinor)
     }
 }
 

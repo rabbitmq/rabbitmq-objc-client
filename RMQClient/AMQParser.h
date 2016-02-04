@@ -11,4 +11,10 @@
 - (NSString *)parseLongString:(const char **)cursor
                           end:(const char *)end;
 
+- (UInt32)parseLongUInt:(const char **)cursor
+                    end:(const char *)end;
+
+- (UInt16)parseShortUInt:(const char **)cursor
+                     end:(const char *)end;
+
 @end

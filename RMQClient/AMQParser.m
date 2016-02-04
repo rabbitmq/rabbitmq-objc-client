@@ -48,6 +48,15 @@ enum AMQParserFieldValue {
     return value;
 }
 
+- (UInt16)parseShortUInt:(const char **)cursor
+                     end:(const char *)end {
+    UInt16 value;
+    value = CFSwapInt16BigToHost(*(UInt16 *)*cursor);
+    *cursor += sizeof(value);
+
+    return value;
+}
+
 - (NSNumber *)parseChar:(const char **)cursor
                     end:(const char *)end {
     return @(*((*cursor)++));

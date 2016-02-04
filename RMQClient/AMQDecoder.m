@@ -1,5 +1,6 @@
 #import "AMQDecoder.h"
 #import "AMQParser.h"
+#import "AMQProtocol.h"
 
 @interface AMQDecoder ()
 
@@ -29,16 +30,23 @@
                                @"10_10_version-minor"     : @"octet",
                                @"10_10_server-properties" : @"field-table",
                                @"10_10_mechanisms"        : @"longstr",
-                               @"10_10_locales"           : @"longstr"};
+                               @"10_10_locales"           : @"longstr",
+                               @"10_30_channel-max"       : @"short",
+                               @"10_30_frame-max"         : @"long",
+                               @"10_30_heartbeat"         : @"short"};
     NSString *keyType = keyTypes[key];
     if ([keyType isEqualToString:@"octet"]) {
-        return [self.parser parseChar:&_cursor end:self.end];
+        return [[AMQOctet alloc] init:[self.parser parseChar:&_cursor end:self.end].integerValue];
     } else if ([keyType isEqualToString:@"field-table"]) {
-        return [self.parser parseFieldTable:&_cursor end:self.end];
+        return [[AMQFieldTable alloc] init:[self.parser parseFieldTable:&_cursor end:self.end]];
     } else if ([keyType isEqualToString:@"longstr"]) {
-        return [self.parser parseLongString:&_cursor end:self.end];
+        return [[AMQLongString alloc] init:[self.parser parseLongString:&_cursor end:self.end]];
+    } else if ([keyType isEqualToString:@"short"]) {
+        return [[AMQShortUInt alloc] init:[self.parser parseShortUInt:&_cursor end:self.end]];
+    } else if ([keyType isEqualToString:@"long"]) {
+        return [[AMQLongUInt alloc] init:[self.parser parseLongUInt:&_cursor end:self.end]];
     } else {
-        return NSNull.null;
+        @throw [NSString stringWithFormat:@"No parse function for %@ (%@)!", key, keyType];
     }
 }
 

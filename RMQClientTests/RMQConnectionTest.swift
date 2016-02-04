@@ -43,12 +43,22 @@ class RMQConnectionTest: XCTestCase {
         ])
         let startOk = AMQProtocolConnectionStartOk(
             clientProperties: clientProperties,
-            mechanism: "PLAIN",
+            mechanism: AMQShortString("PLAIN"),
             response: AMQCredentials(username: "egon", password: "spengler"),
-            locale: "en_GB"
+            locale: AMQShortString("en_GB")
         )
-        let coder = AMQEncoder()
-        startOk.encodeWithCoder(coder)
-        TestHelper.assertEqualBytes(coder.frameForClassID(10, methodID: 11), actual: transport.sentFrame(1))
+        TestHelper.assertEqualBytes(startOk.amqEncoded(), actual: transport.sentFrame(1))
+    }
+
+    func testSendsTuneOK() {
+        let transport = FakeTransport()
+            .receive(Fixtures.connectionStart())
+            .receive(Fixtures.tune())
+            .receive(Fixtures.nothing())
+
+        RMQConnection(user: "egon", password: "spengler", vhost: "baz", transport: transport).start()
+
+        let tuneOk = AMQProtocolConnectionTuneOk(channelMax: AMQShortUInt(0), frameMax: AMQLongUInt(131072), heartbeat: AMQShortUInt(60))
+        TestHelper.assertEqualBytes(tuneOk.amqEncoded(), actual: transport.sentFrame(2))
     }
 }

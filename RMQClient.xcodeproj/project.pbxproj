@@ -204,14 +204,14 @@
 			children = (
 				AE607C671C3C0EAD00BE9AC4 /* RMQClientTests-Bridging-Header.h */,
 				AEE7FEA21C3BCA6000DF8C4F /* Info.plist */,
+				AE41C5521C4FC88F00129207 /* Fixtures.swift */,
+				AE47CF711C51A81D00BA2A9B /* FakeTransport.swift */,
+				AE111BD61C57B33300F88277 /* TestHelper.swift */,
 				AE898D571C3C2D2E00AA3BF1 /* AMQURIParse.swift */,
 				AEA45EC11C43BD4700FE1F62 /* BasicConsumeTest.swift */,
 				AEA45EC71C43CBBE00FE1F62 /* RMQConnectionTest.swift */,
-				AE41C5521C4FC88F00129207 /* Fixtures.swift */,
 				AE41C5621C51A2D500129207 /* RMQTransportContract.swift */,
-				AE47CF711C51A81D00BA2A9B /* FakeTransport.swift */,
 				AE3E0E371C56416F00186BA7 /* AMQEncodingTest.swift */,
-				AE111BD61C57B33300F88277 /* TestHelper.swift */,
 			);
 			path = RMQClientTests;
 			sourceTree = "<group>";
