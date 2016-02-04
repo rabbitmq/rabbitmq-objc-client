@@ -9,12 +9,4 @@
           exclusive:(BOOL)isExclusive;
 - (RMQExchange *)defaultExchange;
 - (void)close;
-- (AMQProtocolBasicConsumeOk *)basicConsume:(RMQQueue *)queue;
-- (AMQProtocolBasicConsumeOk *)basicConsume:(RMQQueue *)queue
-                                consumerTag:(NSString *)consumerTag
-                                        ack:(BOOL)shouldAck
-                                  exclusive:(BOOL)isExclusive
-                                 onDelivery:(void (^)(NSDictionary *deliveryInfo,
-                                                      NSDictionary *properties,
-                                                      NSData *deliveredData))onDelivery;
 @end

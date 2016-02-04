@@ -73,12 +73,6 @@
                                    data:(nonnull NSData *)data;
 @end
 
-
-@interface AMQProtocolBasicConsumeOk : NSObject
-@property (nonnull, copy, nonatomic, readonly) NSString *name;
-@property (nonnull, copy, nonatomic, readonly) NSString *consumerTag;
-@end
-
 @interface AMQProtocolHeader : NSObject<AMQOutgoing>
 @end
 
