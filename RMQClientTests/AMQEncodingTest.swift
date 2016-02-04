@@ -104,7 +104,7 @@ class AMQEncodingTest: XCTestCase {
         TestHelper.assertEqualBytes(expectedData!, actual: encoder.data)
     }
     
-    func testDictionaryBecomesFieldTable() {
+    func testFieldTableBecomesLengthPlusFieldPairs() {
         let encoder = AMQEncoder()
         let fieldTableLength             = "\u{00}\u{00}\u{00}\u{57}"
         let cats                         = "\u{08}has_catst\u{01}"
