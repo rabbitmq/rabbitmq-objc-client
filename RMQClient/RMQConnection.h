@@ -9,7 +9,7 @@
                     password:(NSString *)password
                        vhost:(NSString *)vhost
                    transport:(id <RMQTransport>)transport;
-- (void)start;
+- (RMQConnection *)start;
 - (void)close;
 - (RMQChannel *)createChannel;
 @end

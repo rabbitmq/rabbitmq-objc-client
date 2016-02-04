@@ -41,10 +41,11 @@
     return self;
 }
 
-- (void)start {
+- (RMQConnection *)start {
     [self.transport connect:^{
         [self send:[AMQProtocolHeader new]];
     }];
+    return self;
 }
 
 - (void)close {

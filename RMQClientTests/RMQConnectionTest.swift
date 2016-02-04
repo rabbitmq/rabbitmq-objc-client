@@ -3,12 +3,8 @@ import XCTest
 class RMQConnectionTest: XCTestCase {
     
     func testSendsPreambleToTransport() {
-        let transport = FakeTransport()
-        let conn = RMQConnection(user: "foo", password: "bar", vhost: "baz", transport: transport)
-        
-        transport.receive(Fixtures.nothing())
-        conn.start()
-        
+        let transport = FakeTransport().receive(Fixtures.nothing())
+        RMQConnection(user: "foo", password: "bar", vhost: "baz", transport: transport).start()
         XCTAssertEqual("AMQP\0\0\u{09}\u{01}".dataUsingEncoding(NSUTF8StringEncoding), transport.lastWrite())
     }
     
@@ -17,9 +13,8 @@ class RMQConnectionTest: XCTestCase {
             .receive(Fixtures.connectionStart())
             .receive(Fixtures.nothing());
 
-        let conn = RMQConnection(user: "egon", password: "spengler", vhost: "baz", transport: transport)
-        conn.start()
-        
+        RMQConnection(user: "egon", password: "spengler", vhost: "baz", transport: transport).start()
+
         let capabilities = AMQFieldTable([
             "publisher_confirms": AMQBoolean(true),
             "consumer_cancel_notify": AMQBoolean(true),
