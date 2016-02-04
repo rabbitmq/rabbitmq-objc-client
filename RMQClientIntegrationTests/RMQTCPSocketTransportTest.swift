@@ -11,7 +11,7 @@ class RMQTCPSocketTransportTest: RMQTransportContract {
         let error = NSError(domain: "", code: 0, userInfo: [:])
         transport.socketDidDisconnect(GCDAsyncSocket(), withError: error)
         
-        XCTAssertFalse(transport.isConnected());
+        XCTAssertFalse(transport.isConnected())
     }
 
     func testCallbacksAreRemovedAfterUse() {

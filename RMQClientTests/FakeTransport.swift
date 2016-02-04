@@ -21,7 +21,7 @@ enum FakeTransportError: ErrorType {
         if (!connected) {
             throw FakeTransportError.NotConnected(localizedDescription: "foo")
         }
-        outboundData = data;
+        outboundData = data
         complete()
         return self
     }

@@ -11,7 +11,7 @@ class RMQConnectionTest: XCTestCase {
     func testClosesTransport() {
         let transport = FakeTransport()
             .receive(Fixtures.connectionStart())
-            .receive(Fixtures.nothing());
+            .receive(Fixtures.nothing())
         let conn = RMQConnection(user: "egon", password: "spengler", vhost: "baz", transport: transport).start()
 
         XCTAssertTrue(transport.isConnected())
@@ -22,7 +22,7 @@ class RMQConnectionTest: XCTestCase {
     func testSendsConnectionStartOK() {
         let transport = FakeTransport()
             .receive(Fixtures.connectionStart())
-            .receive(Fixtures.nothing());
+            .receive(Fixtures.nothing())
 
         RMQConnection(user: "egon", password: "spengler", vhost: "baz", transport: transport).start()
 
