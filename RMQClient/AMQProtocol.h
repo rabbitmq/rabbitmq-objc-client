@@ -1,6 +1,5 @@
 #import <Foundation/Foundation.h>
 @import Mantle;
-#import "AMQProtocol.h"
 
 @protocol AMQEncoding <NSObject>
 - (nonnull NSData *)amqEncoded;
@@ -15,13 +14,10 @@
 @end
 
 @interface AMQCredentials : MTLModel<AMQEncoding>
-
 @property (nonnull, nonatomic, readonly) NSString *username;
 @property (nonnull, nonatomic, readonly) NSString *password;
-
 - (nonnull instancetype)initWithUsername:(nonnull NSString *)username
                                 password:(nonnull NSString *)password;
-
 @end
 
 @protocol AMQReplyContext <NSObject>
@@ -84,20 +80,16 @@
 @end
 
 @interface AMQProtocolConnectionStart : MTLModel<NSCoding,AMQIncoming>
-
 @property (nonnull, copy, nonatomic, readonly) NSNumber *versionMajor;
 @property (nonnull, copy, nonatomic, readonly) NSNumber *versionMinor;
 @property (nonnull, copy, nonatomic, readonly) NSDictionary<NSObject *, NSObject *> *serverProperties;
 @property (nonnull, copy, nonatomic, readonly) NSString *mechanisms;
 @property (nonnull, copy, nonatomic, readonly) NSString *locales;
-
 @end
 
 @interface AMQProtocolConnectionStartOk : MTLModel<NSCoding,AMQOutgoing>
-
 - (nonnull instancetype)initWithClientProperties:(nonnull AMQFieldTable *)clientProperties
                                        mechanism:(nonnull NSString *)mechanism
                                         response:(nonnull AMQCredentials *)response
                                           locale:(nonnull NSString *)locale;
-
 @end
