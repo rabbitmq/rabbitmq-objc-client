@@ -14,9 +14,10 @@ class RMQConnectionTest: XCTestCase {
     
     func testSendsConnectionStartOK() {
         let transport = FakeTransport()
+            .receive(Fixtures.connectionStart())
+            .receive(Fixtures.nothing());
+
         let conn = RMQConnection(user: "egon", password: "spengler", vhost: "baz", transport: transport)
-        
-        transport.receive(Fixtures.connectionStart());
         conn.start()
         
         let capabilities = AMQFieldTable([
@@ -34,7 +35,6 @@ class RMQConnectionTest: XCTestCase {
             "version"     : AMQLongString("0.0.1"),
             "information" : AMQLongString("https://github.com/camelpunch/RMQClient")
         ])
-
         let startOk = AMQProtocolConnectionStartOk(
             clientProperties: clientProperties,
             mechanism: "PLAIN",

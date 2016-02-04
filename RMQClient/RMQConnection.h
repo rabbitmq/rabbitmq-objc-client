@@ -2,7 +2,7 @@
 #import "RMQChannel.h"
 #import "RMQTransport.h"
 
-@interface RMQConnection : NSObject
+@interface RMQConnection : NSObject<AMQReplyContext>
 @property (copy, nonatomic, readonly) NSString *vhost;
 
 - (instancetype)initWithUser:(NSString *)user

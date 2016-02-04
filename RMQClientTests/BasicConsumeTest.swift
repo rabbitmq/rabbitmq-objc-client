@@ -3,13 +3,13 @@ import XCTest
 class BasicConsumeTest: XCTestCase {
     
     func testCarriesServerGeneratedConsumerTagWithBasicConsumeOK() {
-        let fake = FakeTransport()
-        fake.receive(Fixtures.connectionStart())
         let conn = RMQConnection(
             user: "rmqclient",
             password: "rmqclient_password",
             vhost: "rmqclient_testbed",
-            transport: fake
+            transport: FakeTransport()
+                .receive(Fixtures.connectionStart())
+                .receive(Fixtures.nothing())
         )
         conn.start()
         defer { conn.close() }
@@ -30,9 +30,14 @@ class BasicConsumeTest: XCTestCase {
     }
  
     func testAutomaticAcknowledgementMode() {
-        let transport = FakeTransport()
-        transport.receive(Fixtures.connectionStart())
-        let conn = RMQConnection(user: "rmqclient", password: "rmqclient_password", vhost: "rmqclient_testbed", transport: transport)
+        let conn = RMQConnection(
+            user: "rmqclient",
+            password: "rmqclient_password",
+            vhost: "rmqclient_testbed",
+            transport: FakeTransport()
+                .receive(Fixtures.connectionStart())
+                .receive(Fixtures.nothing())
+        )
         conn.start()
         
         let ch = conn.createChannel()

@@ -1,4 +1,5 @@
 #import "AMQProtocol.h"
+#import "AMQEncoder.h"
 
 @interface AMQOctet ()
 @property (nonatomic, readwrite) char octet;
@@ -301,6 +302,10 @@
     return [NSData dataWithBytesNoCopy:buffer length:8];
 }
 
+- (Class)expectedResponseClass {
+    return [AMQProtocolConnectionStart class];
+}
+
 @end
 
 @interface AMQProtocolBasicConsumeOk ()
@@ -359,6 +364,26 @@
     return self;
 }
 
+- (id<AMQOutgoing>)replyWithContext:(id<AMQReplyContext>)context {
+    AMQFieldTable *capabilities = [[AMQFieldTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
+                                                                @"consumer_cancel_notify": [[AMQBoolean alloc] init:YES],
+                                                                @"exchange_exchange_bindings": [[AMQBoolean alloc] init:YES],
+                                                                @"basic.nack": [[AMQBoolean alloc] init:YES],
+                                                                @"connection.blocked": [[AMQBoolean alloc] init:YES],
+                                                                @"authentication_failure_close": [[AMQBoolean alloc] init:YES]}];
+    AMQFieldTable *clientProperties = [[AMQFieldTable alloc] init:
+                                       @{@"capabilities" : capabilities,
+                                         @"product"     : [[AMQLongString alloc] init:@"RMQClient"],
+                                         @"platform"    : [[AMQLongString alloc] init:@"iOS"],
+                                         @"version"     : [[AMQLongString alloc] init:@"0.0.1"],
+                                         @"information" : [[AMQLongString alloc] init:@"https://github.com/camelpunch/RMQClient"]}];
+    return [[AMQProtocolConnectionStartOk alloc]
+            initWithClientProperties:clientProperties
+            mechanism:@"PLAIN"
+            response:context.credentials
+            locale:@"en_GB"];
+}
+
 @end
 
 @interface AMQProtocolConnectionStartOk ()
@@ -395,6 +420,16 @@
                  forKey:@"10_11_response"];
     [coder encodeObject:[[AMQShortString alloc] init:self.locale]
                  forKey:@"10_11_locale"];
+}
+
+- (NSData *)amqEncoded {
+    AMQEncoder *encoder = [AMQEncoder new];
+    [self encodeWithCoder:encoder];
+    return [encoder frameForClassID:@(10) methodID:@(11)];
+}
+
+- (Class)expectedResponseClass {
+    return nil;
 }
 
 @end

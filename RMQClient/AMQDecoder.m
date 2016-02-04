@@ -15,9 +15,10 @@
 - (instancetype)initWithData:(NSData *)data {
     self = [super init];
     if (self) {
-        self.data = data;
-        self.cursor = (const char *)data.bytes;
-        self.end = (const char *)data.bytes + data.length;
+        NSRange range = NSMakeRange(4, data.length - 4); // ignore classID and methodID for now
+        self.data = [data subdataWithRange:range];
+        self.cursor = (const char *)self.data.bytes;
+        self.end = (const char *)self.data.bytes + self.data.length;
         self.parser = [AMQParser new];
     }
     return self;

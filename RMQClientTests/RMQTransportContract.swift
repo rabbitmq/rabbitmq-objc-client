@@ -48,7 +48,8 @@ class RMQTransportContract: XCTestCase {
                 XCTAssertEqual(0, readData.length)
                 transport.readFrame() { receivedData in
                     readData = receivedData
-                    connectionStart = AMQMethodFrame().parse(readData) as! AMQProtocolConnectionStart
+                    let decoder = AMQDecoder(data: readData)
+                    connectionStart = AMQProtocolConnectionStart(coder: decoder)
                 }
             }
         }

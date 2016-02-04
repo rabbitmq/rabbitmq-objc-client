@@ -1,6 +1,6 @@
 #import "RMQConnection.h"
-#import "AMQMethodFrame.h"
 #import "AMQEncoder.h"
+#import "AMQDecoder.h"
 
 @interface RMQConnection ()
 @property (copy, nonatomic, readwrite) NSString *vhost;
@@ -41,24 +41,9 @@
     return self;
 }
 
-- (instancetype)init
-{
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
-}
-
 - (void)start {
     [self.transport connect:^{
-        NSError *outerError = NULL;
-        [self.transport write:self.protocolHeader.amqEncoded
-                        error:&outerError
-                   onComplete:^{
-                       [self.transport readFrame:^(NSData * _Nonnull startData) {
-                           if ([self parseConnectionStart:startData]) {
-                               [self sendConnectionStartOk];
-                           }
-                       }];
-                   }];
+        [self send:[AMQProtocolHeader new]];
     }];
 }
 
@@ -70,30 +55,28 @@
     return [RMQChannel new];
 }
 
-- (BOOL)parseConnectionStart:(NSData *)startData {
-    AMQMethodFrame *frame = [AMQMethodFrame new];
-    return !![frame parse:startData];
-}
+# pragma mark - Private
 
-- (void)sendConnectionStartOk {
-    AMQEncoder *encoder = [AMQEncoder new];
-    AMQProtocolConnectionStartOk *startOk = [[AMQProtocolConnectionStartOk alloc]
-                                             initWithClientProperties:self.clientProperties
-                                             mechanism:self.mechanism
-                                             response:self.credentials
-                                             locale:self.locale];
-    [startOk encodeWithCoder:encoder];
-    NSError *innerError = NULL;
-    [self.transport write:[encoder frameForClassID:@(10)
-                                          methodID:@(11)]
-                    error: &innerError
+- (void)send:(id<AMQOutgoing>)amqMethod {
+    NSError *error = NULL;
+    [self.transport write:amqMethod.amqEncoded
+                    error:&error
                onComplete:^{
-
+                   [self.transport readFrame:^(NSData * _Nonnull responseData) {
+                       if (responseData.length) {
+                           AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
+                           id<AMQIncoming> parsedResponse = [[amqMethod.expectedResponseClass alloc] initWithCoder:decoder];
+                           id<AMQOutgoing> nextRequest = [parsedResponse replyWithContext:self];
+                           [self send:nextRequest];
+                       }
+                   }];
                }];
 }
 
-- (AMQProtocolHeader *)protocolHeader {
-    return [AMQProtocolHeader new];
+- (instancetype)init
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 @end

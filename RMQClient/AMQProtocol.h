@@ -10,6 +10,28 @@
 - (nonnull NSData *)amqFieldValueType;
 @end
 
+@protocol AMQOutgoing <NSObject,AMQEncoding>
+- (nonnull Class)expectedResponseClass;
+@end
+
+@interface AMQCredentials : MTLModel<AMQEncoding>
+
+@property (nonnull, nonatomic, readonly) NSString *username;
+@property (nonnull, nonatomic, readonly) NSString *password;
+
+- (nonnull instancetype)initWithUsername:(nonnull NSString *)username
+                                password:(nonnull NSString *)password;
+
+@end
+
+@protocol AMQReplyContext <NSObject>
+- (nonnull AMQCredentials *)credentials;
+@end
+
+@protocol AMQIncoming <NSObject>
+- (nonnull id<AMQOutgoing>)replyWithContext:(nonnull id<AMQReplyContext>)context;
+@end
+
 @interface AMQOctet : MTLModel<AMQEncoding>
 - (nonnull instancetype)init:(char)octet;
 @end
@@ -46,16 +68,6 @@
                                fieldValue:(nonnull id <AMQEncoding,AMQFieldValue>)fieldValue;
 @end
 
-@interface AMQCredentials : MTLModel<AMQEncoding>
-
-@property (nonnull, nonatomic, readonly) NSString *username;
-@property (nonnull, nonatomic, readonly) NSString *password;
-
-- (nonnull instancetype)initWithUsername:(nonnull NSString *)username
-                                password:(nonnull NSString *)password;
-
-@end
-
 @interface AMQMethodPayload : NSObject<AMQEncoding>
 - (nonnull instancetype)initWithClassID:(nonnull AMQShortUInt *)classID
                                methodID:(nonnull AMQShortUInt *)methodID
@@ -63,7 +75,7 @@
 @end
 
 
-@interface AMQProtocolHeader : NSObject<AMQEncoding>
+@interface AMQProtocolHeader : NSObject<AMQOutgoing>
 @end
 
 @interface AMQProtocolBasicConsumeOk : NSObject
@@ -71,7 +83,7 @@
 @property (nonnull, copy, nonatomic, readonly) NSString *consumerTag;
 @end
 
-@interface AMQProtocolConnectionStart : MTLModel<NSCoding>
+@interface AMQProtocolConnectionStart : MTLModel<NSCoding,AMQIncoming>
 
 @property (nonnull, copy, nonatomic, readonly) NSNumber *versionMajor;
 @property (nonnull, copy, nonatomic, readonly) NSNumber *versionMinor;
@@ -87,7 +99,7 @@
 
 @end
 
-@interface AMQProtocolConnectionStartOk : MTLModel<NSCoding>
+@interface AMQProtocolConnectionStartOk : MTLModel<NSCoding,AMQOutgoing>
 
 - (nonnull instancetype)initWithClientProperties:(nonnull AMQFieldTable *)clientProperties
                                        mechanism:(nonnull NSString *)mechanism
