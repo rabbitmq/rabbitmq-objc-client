@@ -49,7 +49,7 @@
 }
 
 - (void)close {
-
+    [self.transport close:^{}];
 }
 
 - (RMQChannel *)createChannel {

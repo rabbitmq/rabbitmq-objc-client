@@ -7,6 +7,17 @@ class RMQConnectionTest: XCTestCase {
         RMQConnection(user: "foo", password: "bar", vhost: "baz", transport: transport).start()
         XCTAssertEqual("AMQP\0\0\u{09}\u{01}".dataUsingEncoding(NSUTF8StringEncoding), transport.lastWrite())
     }
+
+    func testClosesTransport() {
+        let transport = FakeTransport()
+            .receive(Fixtures.connectionStart())
+            .receive(Fixtures.nothing());
+        let conn = RMQConnection(user: "egon", password: "spengler", vhost: "baz", transport: transport).start()
+
+        XCTAssertTrue(transport.isConnected())
+        conn.close()
+        XCTAssertFalse(transport.isConnected())
+    }
     
     func testSendsConnectionStartOK() {
         let transport = FakeTransport()
