@@ -348,22 +348,6 @@
     return self;
 }
 
-- (instancetype)initWithVersionMajor:(NSNumber *)versionMajor
-                        versionMinor:(NSNumber *)versionMinor
-                    serverProperties:(NSDictionary<NSObject *,NSObject *> *)serverProperties
-                          mechanisms:(NSString *)mechanisms
-                             locales:(NSString *)locales {
-    self = [super init];
-    if (self) {
-        self.serverProperties = serverProperties;
-        self.versionMajor = versionMajor;
-        self.versionMinor = versionMinor;
-        self.mechanisms = mechanisms;
-        self.locales = locales;
-    }
-    return self;
-}
-
 - (id<AMQOutgoing>)replyWithContext:(id<AMQReplyContext>)context {
     AMQFieldTable *capabilities = [[AMQFieldTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
                                                                 @"consumer_cancel_notify": [[AMQBoolean alloc] init:YES],

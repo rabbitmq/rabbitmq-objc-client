@@ -91,12 +91,6 @@
 @property (nonnull, copy, nonatomic, readonly) NSString *mechanisms;
 @property (nonnull, copy, nonatomic, readonly) NSString *locales;
 
-- (nonnull instancetype)initWithVersionMajor:(nonnull NSNumber *)versionMajor
-                                versionMinor:(nonnull NSNumber *)versionMinor
-                            serverProperties:(nonnull NSDictionary<NSObject *, NSObject *> *)serverProperties
-                                  mechanisms:(nonnull NSString *)mechanisms
-                                     locales:(nonnull NSString *)locales;
-
 @end
 
 @interface AMQProtocolConnectionStartOk : MTLModel<NSCoding,AMQOutgoing>
