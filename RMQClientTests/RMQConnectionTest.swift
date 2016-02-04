@@ -5,7 +5,7 @@ class RMQConnectionTest: XCTestCase {
     func testSendsPreambleToTransport() {
         let transport = FakeTransport().receive(Fixtures.nothing())
         RMQConnection(user: "foo", password: "bar", vhost: "baz", transport: transport).start()
-        XCTAssertEqual("AMQP\0\0\u{09}\u{01}".dataUsingEncoding(NSUTF8StringEncoding), transport.lastWrite())
+        XCTAssertEqual("AMQP\0\0\u{09}\u{01}".dataUsingEncoding(NSUTF8StringEncoding), transport.sentFrame(0))
     }
 
     func testClosesTransport() {
@@ -49,6 +49,6 @@ class RMQConnectionTest: XCTestCase {
         )
         let coder = AMQEncoder()
         startOk.encodeWithCoder(coder)
-        TestHelper.assertEqualBytes(coder.frameForClassID(10, methodID: 11), actual: transport.lastWrite())
+        TestHelper.assertEqualBytes(coder.frameForClassID(10, methodID: 11), actual: transport.sentFrame(1))
     }
 }

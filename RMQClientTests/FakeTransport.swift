@@ -7,7 +7,7 @@ enum FakeTransportError: ErrorType {
 @objc class FakeTransport: NSObject, RMQTransport {
     var connected = false
     var receivedData: [NSData] = []
-    var outboundData: NSData = NSData()
+    var outboundData: [NSData] = []
 
     func connect(onConnect: () -> Void) {
         connected = true
@@ -21,7 +21,7 @@ enum FakeTransportError: ErrorType {
         if (!connected) {
             throw FakeTransportError.NotConnected(localizedDescription: "foo")
         }
-        outboundData = data
+        outboundData.append(data)
         complete()
         return self
     }
@@ -35,8 +35,8 @@ enum FakeTransportError: ErrorType {
             complete(receivedData.removeAtIndex(0))
         }
     }
-    func lastWrite() -> NSData {
-        return outboundData
+    func sentFrame(index: Int) -> NSData {
+        return outboundData[index]
     }
     func receive(data: NSData) -> FakeTransport {
         receivedData.append(data)
