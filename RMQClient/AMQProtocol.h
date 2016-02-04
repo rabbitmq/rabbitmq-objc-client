@@ -11,6 +11,9 @@
 
 @protocol AMQOutgoing <NSObject,AMQEncoding>
 - (nonnull Class)expectedResponseClass;
+
+@optional
+- (nonnull id<AMQOutgoing>)nextRequest;
 @end
 
 @interface AMQCredentials : MTLModel<AMQEncoding>
@@ -71,12 +74,12 @@
 @end
 
 
-@interface AMQProtocolHeader : NSObject<AMQOutgoing>
-@end
-
 @interface AMQProtocolBasicConsumeOk : NSObject
 @property (nonnull, copy, nonatomic, readonly) NSString *name;
 @property (nonnull, copy, nonatomic, readonly) NSString *consumerTag;
+@end
+
+@interface AMQProtocolHeader : NSObject<AMQOutgoing>
 @end
 
 @interface AMQProtocolConnectionStart : MTLModel<NSCoding,AMQIncoming>
@@ -101,4 +104,13 @@
 - (nonnull instancetype)initWithChannelMax:(nonnull AMQShortUInt *)channelMax
                                   frameMax:(nonnull AMQLongUInt *)frameMax
                                  heartbeat:(nonnull AMQShortUInt *)heartbeat;
+@end
+
+@interface AMQProtocolConnectionOpen : MTLModel<NSCoding,AMQOutgoing>
+- (nonnull instancetype)initWithVirtualHost:(nonnull AMQShortString *)vhost
+                               capabilities:(nonnull AMQShortString *)capabilities
+                                     insist:(nonnull AMQBoolean *)insist;
+@end
+
+@interface AMQProtocolConnectionOpenOk : MTLModel<NSCoding,AMQIncoming>
 @end

@@ -50,15 +50,17 @@ class RMQConnectionTest: XCTestCase {
         TestHelper.assertEqualBytes(startOk.amqEncoded(), actual: transport.sentFrame(1))
     }
 
-    func testSendsTuneOK() {
+    func testSendsTuneOKFollowedByOpen() {
         let transport = FakeTransport()
             .receive(Fixtures.connectionStart())
-            .receive(Fixtures.tune())
-            .receive(Fixtures.nothing())
+            .receive(Fixtures.connectionTune())
+            .receive(Fixtures.connectionOpenOk())
 
         RMQConnection(user: "egon", password: "spengler", vhost: "baz", transport: transport).start()
 
         let tuneOk = AMQProtocolConnectionTuneOk(channelMax: AMQShortUInt(0), frameMax: AMQLongUInt(131072), heartbeat: AMQShortUInt(60))
+        let open = AMQProtocolConnectionOpen(virtualHost: AMQShortString("/"), capabilities: AMQShortString(""), insist: AMQBoolean(false))
         TestHelper.assertEqualBytes(tuneOk.amqEncoded(), actual: transport.sentFrame(2))
+        TestHelper.assertEqualBytes(open.amqEncoded(), actual: transport.sentFrame(3))
     }
 }

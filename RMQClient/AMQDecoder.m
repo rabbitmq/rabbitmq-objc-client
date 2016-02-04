@@ -33,7 +33,8 @@
                                @"10_10_locales"           : @"longstr",
                                @"10_30_channel-max"       : @"short",
                                @"10_30_frame-max"         : @"long",
-                               @"10_30_heartbeat"         : @"short"};
+                               @"10_30_heartbeat"         : @"short",
+                               @"10_41_known-hosts"       : @"shortstr"};
     NSString *keyType = keyTypes[key];
     if ([keyType isEqualToString:@"octet"]) {
         return [[AMQOctet alloc] init:[self.parser parseChar:&_cursor end:self.end].integerValue];
@@ -41,6 +42,8 @@
         return [[AMQFieldTable alloc] init:[self.parser parseFieldTable:&_cursor end:self.end]];
     } else if ([keyType isEqualToString:@"longstr"]) {
         return [[AMQLongString alloc] init:[self.parser parseLongString:&_cursor end:self.end]];
+    } else if ([keyType isEqualToString:@"shortstr"]) {
+        return [[AMQShortString alloc] init:[self.parser parseShortString:&_cursor end:self.end]];
     } else if ([keyType isEqualToString:@"short"]) {
         return [[AMQShortUInt alloc] init:[self.parser parseShortUInt:&_cursor end:self.end]];
     } else if ([keyType isEqualToString:@"long"]) {

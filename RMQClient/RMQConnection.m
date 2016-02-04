@@ -63,14 +63,18 @@
     [self.transport write:amqMethod.amqEncoded
                     error:&error
                onComplete:^{
-                   [self.transport readFrame:^(NSData * _Nonnull responseData) {
-                       if (responseData.length) {
-                           AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
-                           id<AMQIncoming> parsedResponse = [[amqMethod.expectedResponseClass alloc] initWithCoder:decoder];
-                           id<AMQOutgoing> nextRequest = [parsedResponse replyWithContext:self];
-                           [self send:nextRequest];
-                       }
-                   }];
+                   if (amqMethod.expectedResponseClass) {
+                       [self.transport readFrame:^(NSData * _Nonnull responseData) {
+                           if (responseData.length) {
+                               AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
+                               id<AMQIncoming> parsedResponse = [[amqMethod.expectedResponseClass alloc] initWithCoder:decoder];
+                               id<AMQOutgoing> nextRequest = [parsedResponse replyWithContext:self];
+                               [self send:nextRequest];
+                           }
+                       }];
+                   } else if (amqMethod.nextRequest) {
+                       [self send:amqMethod.nextRequest];
+                   }
                }];
 }
 

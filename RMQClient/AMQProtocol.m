@@ -483,4 +483,71 @@
     return nil;
 }
 
+- (id<AMQOutgoing>)nextRequest {
+    return [[AMQProtocolConnectionOpen alloc] initWithVirtualHost:[[AMQShortString alloc] init:@"/"]
+                                                     capabilities:[[AMQShortString alloc] init:@""]
+                                                           insist:[[AMQBoolean alloc] init:false]];
+}
+
+@end
+
+@interface AMQProtocolConnectionOpen ()
+@property (nonatomic, copy, readwrite) AMQShortString *vhost;
+@property (nonatomic, copy, readwrite) AMQShortString *capabilities;
+@property (nonatomic, copy, readwrite) AMQBoolean *insist;
+@end
+
+@implementation AMQProtocolConnectionOpen
+
+- (instancetype)initWithVirtualHost:(AMQShortString *)vhost
+                       capabilities:(AMQShortString *)capabilities
+                             insist:(AMQBoolean *)insist {
+    self = [super init];
+    if (self) {
+        self.vhost = vhost;
+        self.capabilities = capabilities;
+        self.insist = insist;
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder {
+    [coder encodeObject:self.vhost
+                 forKey:@"10_40_virtual-host"];
+    [coder encodeObject:self.capabilities
+                 forKey:@"10_40_capabilities"];
+    [coder encodeObject:self.insist
+                 forKey:@"10_40_insist"];
+}
+
+- (NSData *)amqEncoded {
+    AMQEncoder *encoder = [AMQEncoder new];
+    [self encodeWithCoder:encoder];
+    return [encoder frameForClassID:@(10) methodID:@(40)];
+}
+
+- (Class)expectedResponseClass {
+    return [AMQProtocolConnectionOpenOk class];
+}
+
+@end
+
+@interface AMQProtocolConnectionOpenOk ()
+@property (nonatomic, copy, readwrite) AMQShortString *knownHosts;
+@end
+
+@implementation AMQProtocolConnectionOpenOk
+
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.knownHosts = [coder decodeObjectForKey:@"10_41_known-hosts"];
+    }
+    return self;
+}
+
+- (id<AMQOutgoing>)replyWithContext:(id<AMQReplyContext>)context {
+    return nil;
+}
+
 @end
