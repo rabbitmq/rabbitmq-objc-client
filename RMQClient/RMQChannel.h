@@ -9,4 +9,5 @@
           exclusive:(BOOL)isExclusive;
 - (RMQExchange *)defaultExchange;
 - (void)close;
+- (BOOL)isOpen;
 @end

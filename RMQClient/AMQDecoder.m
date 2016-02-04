@@ -34,7 +34,8 @@
                                @"10_30_channel-max"       : @"short",
                                @"10_30_frame-max"         : @"long",
                                @"10_30_heartbeat"         : @"short",
-                               @"10_41_known-hosts"       : @"shortstr"};
+                               @"10_41_known-hosts"       : @"shortstr",
+                               @"20_11_channel-id"        : @"longstr"};
     NSString *keyType = keyTypes[key];
     if ([keyType isEqualToString:@"octet"]) {
         return [[AMQOctet alloc] init:[self.parser parseChar:&_cursor end:self.end].integerValue];

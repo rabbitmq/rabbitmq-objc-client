@@ -108,3 +108,9 @@
 
 @interface AMQProtocolConnectionOpenOk : MTLModel<NSCoding,AMQIncoming>
 @end
+
+@interface AMQProtocolChannelOpen : MTLModel<NSCoding,AMQOutgoing>
+@end
+
+@interface AMQProtocolChannelOpenOk : MTLModel<NSCoding,AMQIncoming>
+@end

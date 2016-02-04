@@ -533,3 +533,41 @@
 }
 
 @end
+
+@implementation AMQProtocolChannelOpen
+
+- (void)encodeWithCoder:(NSCoder *)coder {
+    [coder encodeObject:[[AMQShortString alloc] init:@""] forKey:@"20_10_out-of-band"];
+}
+
+- (NSData *)amqEncoded {
+    AMQEncoder *encoder = [AMQEncoder new];
+    [self encodeWithCoder:encoder];
+    return [encoder frameForClassID:@(20) methodID:@(10)];
+}
+
+- (Class)expectedResponseClass {
+    return [AMQProtocolChannelOpenOk class];
+}
+
+@end
+
+@interface AMQProtocolChannelOpenOk ()
+@property (nonatomic, copy, readwrite) AMQLongString *channelID;
+@end
+
+@implementation AMQProtocolChannelOpenOk
+
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.channelID = [coder decodeObjectForKey:@"20_11_channel-id"];
+    }
+    return self;
+}
+
+- (id<AMQOutgoing>)replyWithContext:(id<AMQReplyContext>)context {
+    return nil;
+}
+
+@end

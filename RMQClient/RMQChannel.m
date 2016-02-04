@@ -12,4 +12,7 @@
 - (void)close {
     
 }
+- (BOOL)isOpen {
+    return YES;
+}
 @end

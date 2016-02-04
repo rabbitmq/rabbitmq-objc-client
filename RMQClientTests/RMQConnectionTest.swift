@@ -63,4 +63,19 @@ class RMQConnectionTest: XCTestCase {
         TestHelper.assertEqualBytes(tuneOk.amqEncoded(), actual: transport.sentFrame(2))
         TestHelper.assertEqualBytes(open.amqEncoded(), actual: transport.sentFrame(3))
     }
+
+    func testCreatingAChannelSendsAChannelOpenAndReceivesOpenOK() {
+        let transport = FakeTransport()
+            .receive(Fixtures.connectionStart())
+            .receive(Fixtures.connectionTune())
+            .receive(Fixtures.connectionOpenOk())
+        let conn = RMQConnection(user: "egon", password: "spengler", vhost: "baz", transport: transport)
+            .start()
+
+        transport.receive(Fixtures.channelOpenOk())
+        let ch = conn.createChannel()
+        XCTAssert(ch.isOpen())
+        let open = AMQProtocolChannelOpen()
+        TestHelper.assertEqualBytes(open.amqEncoded(), actual: transport.sentFrame(4))
+    }
 }

@@ -53,7 +53,9 @@
 }
 
 - (RMQChannel *)createChannel {
-    return [RMQChannel new];
+    RMQChannel *ch = [RMQChannel new];
+    [self send:[[AMQProtocolChannelOpen alloc] init]];
+    return ch;
 }
 
 # pragma mark - Private
@@ -68,8 +70,10 @@
                            if (responseData.length) {
                                AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
                                id<AMQIncoming> parsedResponse = [[amqMethod.expectedResponseClass alloc] initWithCoder:decoder];
-                               id<AMQOutgoing> nextRequest = [parsedResponse replyWithContext:self];
-                               [self send:nextRequest];
+                               id<AMQOutgoing> reply = [parsedResponse replyWithContext:self];
+                               if (reply) {
+                                   [self send:reply];
+                               }
                            }
                        }];
                    } else if (amqMethod.nextRequest) {

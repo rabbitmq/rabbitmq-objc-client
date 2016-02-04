@@ -30,7 +30,7 @@ enum FakeTransportError: ErrorType {
     }
     func readFrame(complete: (NSData) -> Void) {
         if (receivedData.isEmpty) {
-            XCTFail("You need to call receive() before readFrame() is called")
+            XCTFail("You need to set up an incoming frame with receive()\n\nOutgoing messages: \(outboundData)")
         } else{
             complete(receivedData.removeAtIndex(0))
         }
