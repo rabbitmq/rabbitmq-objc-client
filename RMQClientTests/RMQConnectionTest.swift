@@ -26,7 +26,7 @@ class RMQConnectionTest: XCTestCase {
 
         RMQConnection(user: "egon", password: "spengler", vhost: "baz", transport: transport).start()
 
-        let capabilities = AMQFieldTable([
+        let capabilities = AMQTable([
             "publisher_confirms": AMQBoolean(true),
             "consumer_cancel_notify": AMQBoolean(true),
             "exchange_exchange_bindings": AMQBoolean(true),
@@ -34,18 +34,18 @@ class RMQConnectionTest: XCTestCase {
             "connection.blocked": AMQBoolean(true),
             "authentication_failure_close": AMQBoolean(true),
             ])
-        let clientProperties = AMQFieldTable([
+        let clientProperties = AMQTable([
             "capabilities" : capabilities,
-            "product"     : AMQLongString("RMQClient"),
-            "platform"    : AMQLongString("iOS"),
-            "version"     : AMQLongString("0.0.1"),
-            "information" : AMQLongString("https://github.com/camelpunch/RMQClient")
+            "product"     : AMQLongstr("RMQClient"),
+            "platform"    : AMQLongstr("iOS"),
+            "version"     : AMQLongstr("0.0.1"),
+            "information" : AMQLongstr("https://github.com/camelpunch/RMQClient")
         ])
         let startOk = AMQProtocolConnectionStartOk(
             clientProperties: clientProperties,
-            mechanism: AMQShortString("PLAIN"),
+            mechanism: AMQShortstr("PLAIN"),
             response: AMQCredentials(username: "egon", password: "spengler"),
-            locale: AMQShortString("en_GB")
+            locale: AMQShortstr("en_GB")
         )
         TestHelper.assertEqualBytes(startOk.amqEncoded(), actual: transport.sentFrame(1))
     }
@@ -58,8 +58,8 @@ class RMQConnectionTest: XCTestCase {
 
         RMQConnection(user: "egon", password: "spengler", vhost: "baz", transport: transport).start()
 
-        let tuneOk = AMQProtocolConnectionTuneOk(channelMax: AMQShortUInt(0), frameMax: AMQLongUInt(131072), heartbeat: AMQShortUInt(60))
-        let open = AMQProtocolConnectionOpen(virtualHost: AMQShortString("/"), capabilities: AMQShortString(""), insist: AMQBoolean(false))
+        let tuneOk = AMQProtocolConnectionTuneOk(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
+        let open = AMQProtocolConnectionOpen(virtualHost: AMQShortstr("/"), capabilities: AMQShortstr(""), insist: AMQBoolean(false))
         TestHelper.assertEqualBytes(tuneOk.amqEncoded(), actual: transport.sentFrame(2))
         TestHelper.assertEqualBytes(open.amqEncoded(), actual: transport.sentFrame(3))
     }

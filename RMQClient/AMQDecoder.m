@@ -40,15 +40,15 @@
     if ([keyType isEqualToString:@"octet"]) {
         return [[AMQOctet alloc] init:[self.parser parseChar:&_cursor end:self.end].integerValue];
     } else if ([keyType isEqualToString:@"field-table"]) {
-        return [[AMQFieldTable alloc] init:[self.parser parseFieldTable:&_cursor end:self.end]];
+        return [[AMQTable alloc] init:[self.parser parseFieldTable:&_cursor end:self.end]];
     } else if ([keyType isEqualToString:@"longstr"]) {
-        return [[AMQLongString alloc] init:[self.parser parseLongString:&_cursor end:self.end]];
+        return [[AMQLongstr alloc] init:[self.parser parseLongString:&_cursor end:self.end]];
     } else if ([keyType isEqualToString:@"shortstr"]) {
-        return [[AMQShortString alloc] init:[self.parser parseShortString:&_cursor end:self.end]];
+        return [[AMQShortstr alloc] init:[self.parser parseShortString:&_cursor end:self.end]];
     } else if ([keyType isEqualToString:@"short"]) {
-        return [[AMQShortUInt alloc] init:[self.parser parseShortUInt:&_cursor end:self.end]];
+        return [[AMQShort alloc] init:[self.parser parseShortUInt:&_cursor end:self.end]];
     } else if ([keyType isEqualToString:@"long"]) {
-        return [[AMQLongUInt alloc] init:[self.parser parseLongUInt:&_cursor end:self.end]];
+        return [[AMQLong alloc] init:[self.parser parseLongUInt:&_cursor end:self.end]];
     } else {
         @throw [NSString stringWithFormat:@"No parse function for %@ (%@)!", key, keyType];
     }

@@ -47,11 +47,11 @@
 }
 @end
 
-@interface AMQShortUInt ()
+@interface AMQShort ()
 @property (nonatomic, readwrite) NSUInteger integerValue;
 @end
 
-@implementation AMQShortUInt
+@implementation AMQShort
 
 - (instancetype)init:(NSUInteger)val {
     self = [super init];
@@ -74,11 +74,11 @@
 
 @end
 
-@interface AMQLongUInt ()
+@interface AMQLong ()
 @property (nonatomic, readwrite) NSUInteger integerValue;
 @end
 
-@implementation AMQLongUInt
+@implementation AMQLong
 
 - (instancetype)init:(NSUInteger)val {
     self = [super init];
@@ -101,11 +101,11 @@
 
 @end
 
-@interface AMQShortString ()
+@interface AMQShortstr ()
 @property (nonnull, nonatomic, copy, readwrite) NSString *stringValue;
 @end
 
-@implementation AMQShortString
+@implementation AMQShortstr
 
 - (instancetype)init:(NSString *)string {
     self = [super init];
@@ -129,11 +129,11 @@
 }
 @end
 
-@interface AMQLongString ()
+@interface AMQLongstr ()
 @property (nonnull, nonatomic, copy, readwrite) NSString *stringValue;
 @end
 
-@implementation AMQLongString
+@implementation AMQLongstr
 
 - (instancetype)init:(NSString *)string {
     self = [super init];
@@ -146,7 +146,7 @@
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
     NSData *value = [self.stringValue dataUsingEncoding:NSASCIIStringEncoding];
-    [encoded appendData:[[AMQLongUInt alloc] init:value.length].amqEncoded];
+    [encoded appendData:[[AMQLong alloc] init:value.length].amqEncoded];
     [encoded appendData:value];
     return encoded;
 }
@@ -157,11 +157,11 @@
 
 @end
 
-@interface AMQFieldTable ()
+@interface AMQTable ()
 @property (nonnull, nonatomic, copy, readwrite) NSDictionary *dictionary;
 @end
 
-@implementation AMQFieldTable
+@implementation AMQTable
 
 - (instancetype)init:(NSDictionary *)dictionary {
     self = [super init];
@@ -182,7 +182,7 @@
         [tableContents appendData:pair.amqEncoded];
     }
 
-    NSMutableData *fieldTable = [[[AMQLongUInt alloc] init:tableContents.length].amqEncoded mutableCopy];
+    NSMutableData *fieldTable = [[[AMQLong alloc] init:tableContents.length].amqEncoded mutableCopy];
     [fieldTable appendData:tableContents];
 
     return fieldTable;
@@ -213,7 +213,7 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShortString alloc] init:self.fieldName].amqEncoded];
+    [encoded appendData:[[AMQShortstr alloc] init:self.fieldName].amqEncoded];
     [encoded appendData:self.fieldValue.amqFieldValueType];
     [encoded appendData:self.fieldValue.amqEncoded];
     return encoded;
@@ -250,7 +250,7 @@
     [encodedContent appendBytes:&zero length:1];
     [encodedContent appendData:password];
 
-    [encoded appendData:[[AMQLongUInt alloc] init:encodedContent.length].amqEncoded];
+    [encoded appendData:[[AMQLong alloc] init:encodedContent.length].amqEncoded];
     [encoded appendData:encodedContent];
 
     return encoded;
@@ -259,15 +259,15 @@
 @end
 
 @interface AMQMethodPayload ()
-@property (nonatomic, copy, readwrite) AMQShortUInt *classID;
-@property (nonatomic, copy, readwrite) AMQShortUInt *methodID;
+@property (nonatomic, copy, readwrite) AMQShort *classID;
+@property (nonatomic, copy, readwrite) AMQShort *methodID;
 @property (nonatomic, copy, readwrite) NSData *data;
 @end
 
 @implementation AMQMethodPayload
 
-- (instancetype)initWithClassID:(AMQShortUInt *)classID
-                       methodID:(AMQShortUInt *)methodID
+- (instancetype)initWithClassID:(AMQShort *)classID
+                       methodID:(AMQShort *)methodID
                            data:(NSData *)data {
     self = [super init];
     if (self) {
@@ -311,9 +311,9 @@
 @interface AMQProtocolConnectionStart ()
 @property (nonnull, copy, nonatomic, readwrite) AMQOctet *versionMajor;
 @property (nonnull, copy, nonatomic, readwrite) AMQOctet *versionMinor;
-@property (nonnull, copy, nonatomic, readwrite) AMQFieldTable *serverProperties;
-@property (nonnull, copy, nonatomic, readwrite) AMQLongString *mechanisms;
-@property (nonnull, copy, nonatomic, readwrite) AMQLongString *locales;
+@property (nonnull, copy, nonatomic, readwrite) AMQTable *serverProperties;
+@property (nonnull, copy, nonatomic, readwrite) AMQLongstr *mechanisms;
+@property (nonnull, copy, nonatomic, readwrite) AMQLongstr *locales;
 @end
 
 @implementation AMQProtocolConnectionStart
@@ -331,42 +331,42 @@
 }
 
 - (id<AMQOutgoing>)replyWithContext:(id<AMQReplyContext>)context {
-    AMQFieldTable *capabilities = [[AMQFieldTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
+    AMQTable *capabilities = [[AMQTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
                                                                 @"consumer_cancel_notify": [[AMQBoolean alloc] init:YES],
                                                                 @"exchange_exchange_bindings": [[AMQBoolean alloc] init:YES],
                                                                 @"basic.nack": [[AMQBoolean alloc] init:YES],
                                                                 @"connection.blocked": [[AMQBoolean alloc] init:YES],
                                                                 @"authentication_failure_close": [[AMQBoolean alloc] init:YES]}];
-    AMQFieldTable *clientProperties = [[AMQFieldTable alloc] init:
+    AMQTable *clientProperties = [[AMQTable alloc] init:
                                        @{@"capabilities" : capabilities,
-                                         @"product"     : [[AMQLongString alloc] init:@"RMQClient"],
-                                         @"platform"    : [[AMQLongString alloc] init:@"iOS"],
-                                         @"version"     : [[AMQLongString alloc] init:@"0.0.1"],
-                                         @"information" : [[AMQLongString alloc] init:@"https://github.com/camelpunch/RMQClient"]}];
+                                         @"product"     : [[AMQLongstr alloc] init:@"RMQClient"],
+                                         @"platform"    : [[AMQLongstr alloc] init:@"iOS"],
+                                         @"version"     : [[AMQLongstr alloc] init:@"0.0.1"],
+                                         @"information" : [[AMQLongstr alloc] init:@"https://github.com/camelpunch/RMQClient"]}];
 
     return [[AMQProtocolConnectionStartOk alloc] initWithClientProperties:clientProperties
-                                                                mechanism:[[AMQShortString alloc] init:@"PLAIN"]
+                                                                mechanism:[[AMQShortstr alloc] init:@"PLAIN"]
                                                                  response:context.credentials
-                                                                   locale:[[AMQShortString alloc] init:@"en_GB"]];
+                                                                   locale:[[AMQShortstr alloc] init:@"en_GB"]];
 }
 
 @end
 
 @interface AMQProtocolConnectionStartOk ()
 
-@property (nonnull, copy, nonatomic, readwrite) AMQFieldTable *clientProperties;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortString *mechanism;
+@property (nonnull, copy, nonatomic, readwrite) AMQTable *clientProperties;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *mechanism;
 @property (nonnull, copy, nonatomic, readwrite) AMQCredentials *response;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortString *locale;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *locale;
 
 @end
 
 @implementation AMQProtocolConnectionStartOk
 
-- (instancetype)initWithClientProperties:(AMQFieldTable *)clientProperties
-                               mechanism:(AMQShortString *)mechanism
+- (instancetype)initWithClientProperties:(AMQTable *)clientProperties
+                               mechanism:(AMQShortstr *)mechanism
                                 response:(AMQCredentials *)response
-                                  locale:(AMQShortString *)locale {
+                                  locale:(AMQShortstr *)locale {
     self = [super init];
     if (self) {
         self.clientProperties = clientProperties;
@@ -401,9 +401,9 @@
 @end
 
 @interface AMQProtocolConnectionTune ()
-@property (nonatomic, copy, readwrite) AMQShortUInt *channelMax;
-@property (nonatomic, copy, readwrite) AMQLongUInt *frameMax;
-@property (nonatomic, copy, readwrite) AMQShortUInt *heartbeat;
+@property (nonatomic, copy, readwrite) AMQShort *channelMax;
+@property (nonatomic, copy, readwrite) AMQLong *frameMax;
+@property (nonatomic, copy, readwrite) AMQShort *heartbeat;
 @end
 
 @implementation AMQProtocolConnectionTune
@@ -427,16 +427,16 @@
 @end
 
 @interface AMQProtocolConnectionTuneOk ()
-@property (nonatomic, copy, readwrite) AMQShortUInt *channelMax;
-@property (nonatomic, copy, readwrite) AMQLongUInt *frameMax;
-@property (nonatomic, copy, readwrite) AMQShortUInt *heartbeat;
+@property (nonatomic, copy, readwrite) AMQShort *channelMax;
+@property (nonatomic, copy, readwrite) AMQLong *frameMax;
+@property (nonatomic, copy, readwrite) AMQShort *heartbeat;
 @end
 
 @implementation AMQProtocolConnectionTuneOk
 
-- (instancetype)initWithChannelMax:(AMQShortUInt *)channelMax
-                          frameMax:(AMQLongUInt *)frameMax
-                         heartbeat:(AMQShortUInt *)heartbeat {
+- (instancetype)initWithChannelMax:(AMQShort *)channelMax
+                          frameMax:(AMQLong *)frameMax
+                         heartbeat:(AMQShort *)heartbeat {
     self = [super init];
     if (self) {
         self.channelMax = channelMax;
@@ -466,23 +466,23 @@
 }
 
 - (id<AMQOutgoing>)nextRequest {
-    return [[AMQProtocolConnectionOpen alloc] initWithVirtualHost:[[AMQShortString alloc] init:@"/"]
-                                                     capabilities:[[AMQShortString alloc] init:@""]
+    return [[AMQProtocolConnectionOpen alloc] initWithVirtualHost:[[AMQShortstr alloc] init:@"/"]
+                                                     capabilities:[[AMQShortstr alloc] init:@""]
                                                            insist:[[AMQBoolean alloc] init:false]];
 }
 
 @end
 
 @interface AMQProtocolConnectionOpen ()
-@property (nonatomic, copy, readwrite) AMQShortString *vhost;
-@property (nonatomic, copy, readwrite) AMQShortString *capabilities;
+@property (nonatomic, copy, readwrite) AMQShortstr *vhost;
+@property (nonatomic, copy, readwrite) AMQShortstr *capabilities;
 @property (nonatomic, copy, readwrite) AMQBoolean *insist;
 @end
 
 @implementation AMQProtocolConnectionOpen
 
-- (instancetype)initWithVirtualHost:(AMQShortString *)vhost
-                       capabilities:(AMQShortString *)capabilities
+- (instancetype)initWithVirtualHost:(AMQShortstr *)vhost
+                       capabilities:(AMQShortstr *)capabilities
                              insist:(AMQBoolean *)insist {
     self = [super init];
     if (self) {
@@ -515,7 +515,7 @@
 @end
 
 @interface AMQProtocolConnectionOpenOk ()
-@property (nonatomic, copy, readwrite) AMQShortString *knownHosts;
+@property (nonatomic, copy, readwrite) AMQShortstr *knownHosts;
 @end
 
 @implementation AMQProtocolConnectionOpenOk
@@ -537,7 +537,7 @@
 @implementation AMQProtocolChannelOpen
 
 - (void)encodeWithCoder:(NSCoder *)coder {
-    [coder encodeObject:[[AMQShortString alloc] init:@""] forKey:@"20_10_out-of-band"];
+    [coder encodeObject:[[AMQShortstr alloc] init:@""] forKey:@"20_10_out-of-band"];
 }
 
 - (NSData *)amqEncoded {
@@ -553,7 +553,7 @@
 @end
 
 @interface AMQProtocolChannelOpenOk ()
-@property (nonatomic, copy, readwrite) AMQLongString *channelID;
+@property (nonatomic, copy, readwrite) AMQLongstr *channelID;
 @end
 
 @implementation AMQProtocolChannelOpenOk

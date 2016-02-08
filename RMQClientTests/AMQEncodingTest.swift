@@ -16,7 +16,7 @@ class AMQEncodingTest: XCTestCase {
         let expectedFrame = unfinishedFrame.mutableCopy() as! NSMutableData
         expectedFrame.appendBytes(&frameEnd, length: 1)
 
-        encoder.encodeObject(AMQShortString("foo"), forKey: "baz")
+        encoder.encodeObject(AMQShortstr("foo"), forKey: "baz")
         let frame: NSData = encoder.frameForClassID(10, methodID: 11)
         TestHelper.assertEqualBytes(expectedFrame, actual: frame)
     }
@@ -32,7 +32,7 @@ class AMQEncodingTest: XCTestCase {
         
         expectedData.appendData("abcdefg".dataUsingEncoding(NSASCIIStringEncoding)!)
         
-        encoder.encodeObject(AMQLongString("abcdefg"), forKey: "foo")
+        encoder.encodeObject(AMQLongstr("abcdefg"), forKey: "foo")
         XCTAssertEqual(expectedData, encoder.data)
     }
     
@@ -45,7 +45,7 @@ class AMQEncodingTest: XCTestCase {
         
         expectedData.appendData("abcdefg".dataUsingEncoding(NSASCIIStringEncoding)!)
         
-        encoder.encodeObject(AMQShortString("abcdefg"), forKey: "foo")
+        encoder.encodeObject(AMQShortstr("abcdefg"), forKey: "foo")
         XCTAssertEqual(expectedData, encoder.data)
     }
     
@@ -64,8 +64,8 @@ class AMQEncodingTest: XCTestCase {
         }
         expectedData.appendData("defg".dataUsingEncoding(NSASCIIStringEncoding)!)
         
-        let shortString = AMQShortString("abc")
-        let longString = AMQLongString("defg")
+        let shortString = AMQShortstr("abc")
+        let longString = AMQLongstr("defg")
 
         encoder.encodeObject(shortString, forKey: "foo")
         encoder.encodeObject(longString, forKey: "bar")
@@ -118,13 +118,13 @@ class AMQEncodingTest: XCTestCase {
         let fieldPairs = "\(cats)\(dogs)\(massHysteria)\(sacrifice)"
         let expectedData = "\(fieldTableLength)\(fieldPairs)".dataUsingEncoding(NSUTF8StringEncoding)
         
-        let fieldTable = AMQFieldTable([
+        let fieldTable = AMQTable([
             "has_cats": AMQBoolean(true),
             "has_dogs": AMQBoolean(false),
-            "mass_hysteria": AMQFieldTable([
+            "mass_hysteria": AMQTable([
                 "ghost": AMQBoolean(false),
             ]),
-            "sacrifice": AMQLongString("forty years of darkness"),
+            "sacrifice": AMQLongstr("forty years of darkness"),
         ])
 
         encoder.encodeObject(fieldTable, forKey: "murray")

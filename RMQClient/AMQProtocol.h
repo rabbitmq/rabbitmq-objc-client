@@ -40,25 +40,25 @@
 - (nonnull instancetype)init:(BOOL)boolean;
 @end
 
-@interface AMQShortUInt : MTLModel<AMQEncoding,AMQFieldValue>
+@interface AMQShort : MTLModel<AMQEncoding,AMQFieldValue>
 - (nonnull instancetype)init:(NSUInteger)val;
 @end
 
-@interface AMQLongUInt : MTLModel<AMQEncoding,AMQFieldValue>
+@interface AMQLong : MTLModel<AMQEncoding,AMQFieldValue>
 - (nonnull instancetype)init:(NSUInteger)val;
 @end
 
-@interface AMQShortString : MTLModel<AMQEncoding,AMQFieldValue>
+@interface AMQShortstr : MTLModel<AMQEncoding,AMQFieldValue>
 @property (nonnull, nonatomic, copy, readonly) NSString *stringValue;
 - (nonnull instancetype)init:(nonnull NSString *)string;
 @end
 
-@interface AMQLongString : MTLModel<AMQEncoding,AMQFieldValue>
+@interface AMQLongstr : MTLModel<AMQEncoding,AMQFieldValue>
 @property (nonnull, nonatomic, copy, readonly) NSString *stringValue;
 - (nonnull instancetype)init:(nonnull NSString *)string;
 @end
 
-@interface AMQFieldTable : MTLModel<AMQEncoding,AMQFieldValue>
+@interface AMQTable : MTLModel<AMQEncoding,AMQFieldValue>
 - (nonnull instancetype)init:(nonnull NSDictionary *)dictionary;
 @end
 
@@ -68,8 +68,8 @@
 @end
 
 @interface AMQMethodPayload : NSObject<AMQEncoding>
-- (nonnull instancetype)initWithClassID:(nonnull AMQShortUInt *)classID
-                               methodID:(nonnull AMQShortUInt *)methodID
+- (nonnull instancetype)initWithClassID:(nonnull AMQShort *)classID
+                               methodID:(nonnull AMQShort *)methodID
                                    data:(nonnull NSData *)data;
 @end
 
@@ -79,30 +79,30 @@
 @interface AMQProtocolConnectionStart : MTLModel<NSCoding,AMQIncoming>
 @property (nonnull, copy, nonatomic, readonly) AMQOctet *versionMajor;
 @property (nonnull, copy, nonatomic, readonly) AMQOctet *versionMinor;
-@property (nonnull, copy, nonatomic, readonly) AMQFieldTable *serverProperties;
-@property (nonnull, copy, nonatomic, readonly) AMQLongString *mechanisms;
-@property (nonnull, copy, nonatomic, readonly) AMQLongString *locales;
+@property (nonnull, copy, nonatomic, readonly) AMQTable *serverProperties;
+@property (nonnull, copy, nonatomic, readonly) AMQLongstr *mechanisms;
+@property (nonnull, copy, nonatomic, readonly) AMQLongstr *locales;
 @end
 
 @interface AMQProtocolConnectionStartOk : MTLModel<NSCoding,AMQOutgoing>
-- (nonnull instancetype)initWithClientProperties:(nonnull AMQFieldTable *)clientProperties
-                                       mechanism:(nonnull AMQShortString *)mechanism
+- (nonnull instancetype)initWithClientProperties:(nonnull AMQTable *)clientProperties
+                                       mechanism:(nonnull AMQShortstr *)mechanism
                                         response:(nonnull AMQCredentials *)response
-                                          locale:(nonnull AMQShortString *)locale;
+                                          locale:(nonnull AMQShortstr *)locale;
 @end
 
 @interface AMQProtocolConnectionTune : MTLModel<NSCoding,AMQIncoming>
 @end
 
 @interface AMQProtocolConnectionTuneOk : MTLModel<NSCoding,AMQOutgoing>
-- (nonnull instancetype)initWithChannelMax:(nonnull AMQShortUInt *)channelMax
-                                  frameMax:(nonnull AMQLongUInt *)frameMax
-                                 heartbeat:(nonnull AMQShortUInt *)heartbeat;
+- (nonnull instancetype)initWithChannelMax:(nonnull AMQShort *)channelMax
+                                  frameMax:(nonnull AMQLong *)frameMax
+                                 heartbeat:(nonnull AMQShort *)heartbeat;
 @end
 
 @interface AMQProtocolConnectionOpen : MTLModel<NSCoding,AMQOutgoing>
-- (nonnull instancetype)initWithVirtualHost:(nonnull AMQShortString *)vhost
-                               capabilities:(nonnull AMQShortString *)capabilities
+- (nonnull instancetype)initWithVirtualHost:(nonnull AMQShortstr *)vhost
+                               capabilities:(nonnull AMQShortstr *)capabilities
                                      insist:(nonnull AMQBoolean *)insist;
 @end
 
