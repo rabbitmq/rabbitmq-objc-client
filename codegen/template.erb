@@ -1,0 +1,6 @@
+@interface AMQProtocol<%= class_name %><%= method_name %> : MTLModel<NSCoding>
+<%- fields.each do |f| -%>
+@property (nonnull, copy, nonatomic, readonly) AMQ<%= f[:type] %> *<%= f[:name] %>;
+<%- end -%>
+@end
+
