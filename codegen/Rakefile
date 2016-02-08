@@ -1,0 +1,13 @@
+require 'pathname'
+require 'nokogiri'
+require_relative 'generate_methods'
+
+dest_dir = Pathname(File.absolute_path('../RMQClient', __dir__))
+this_dir = Pathname(__dir__)
+xml = Nokogiri::XML(File.open(this_dir.join("amqp0-9-1.extended.xml")))
+
+task :generate_methods do
+  dest_dir.join('AMQProtocolMethods.h').write(GenerateMethods.new(xml).generate)
+end
+
+task default: :generate_methods

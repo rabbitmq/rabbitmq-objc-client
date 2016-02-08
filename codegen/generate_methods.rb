@@ -5,47 +5,51 @@ require 'active_support/inflector'
 require 'erb'
 require 'pathname'
 
-def type_for_domain(xml, domain)
-  domain = xml.xpath("/amqp/domain[@name='#{domain}']").first
-  if domain
-    domain[:type]
-  else
-    ""
+class GenerateMethods
+  attr_reader :xml
+
+  def initialize(xml)
+    @xml = xml
   end
-end
 
-def from_this_dir(path)
-  File.absolute_path(path, __dir__)
-end
+  def type_for_domain(xml, domain)
+    domain = xml.xpath("/amqp/domain[@name='#{domain}']").first
+    if domain
+      domain[:type]
+    else
+      ""
+    end
+  end
 
-def colon_aligned_name(first_line, name)
-  to_colon, _ = first_line.split(':')
-  "#{name}:".rjust(to_colon.length + 1)
-end
+  def colon_aligned_name(first_line, name)
+    to_colon, _ = first_line.split(':')
+    "#{name}:".rjust(to_colon.length + 1)
+  end
 
-def property_type_and_label(field)
-  "(nonnull #{field[:type]} *)#{field[:name]}"
-end
+  def property_type_and_label(field)
+    "(nonnull #{field[:type]} *)#{field[:name]}"
+  end
 
-def outgoing?(method)
-  method.xpath('chassis').first[:name] == 'server'
-end
+  def outgoing?(method)
+    method.xpath('chassis').first[:name] == 'server'
+  end
 
-File.open(from_this_dir("amqp0-9-1.extended.xml")) do |f|
-  xml = Nokogiri::XML(f)
-  template = ERB.new(File.read(from_this_dir('template.erb')), nil, '-')
-
-  puts <<-OBJC
+  def header
+    <<-OBJC
 // This file is generated. Do not edit.
 #import <Foundation/Foundation.h>
 @import Mantle;
 #import "AMQProtocolValues.h"
 
-  OBJC
+      OBJC
+  end
 
-  xml.xpath("/amqp/class").each do |klass|
-    class_name = klass[:name].capitalize
-    klass.xpath("method").each do |method|
+  def template
+    ERB.new(Pathname(__dir__).join('template.erb').read, nil, '-')
+  end
+
+  def generate
+    xml.xpath("//method").reduce(header) do |acc, method|
       method_name = method[:name].underscore.classify
       fields = method.xpath('field').map { |f|
         type = if f[:domain]
@@ -70,8 +74,9 @@ File.open(from_this_dir("amqp0-9-1.extended.xml")) do |f|
         end
 
       protocol = outgoing?(method) ? "AMQOutgoing" : "AMQIncoming"
+      class_name = method.xpath('..').first[:name].capitalize
 
-      puts template.result(binding)
+      acc + template.result(binding)
     end
   end
 end
