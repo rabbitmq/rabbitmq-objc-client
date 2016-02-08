@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'nokogiri'
 require 'active_support/inflector'
 require 'erb'
 require 'pathname'
