@@ -68,7 +68,7 @@
 @property (nonnull, nonatomic, readwrite) NSArray *frameArguments;
 @end
 
-@protocol AMQOutgoing <NSObject,AMQMethod,AMQEncoding>
+@protocol AMQOutgoing <NSObject,AMQEncoding>
 - (nonnull Class)expectedResponseClass;
 
 @optional

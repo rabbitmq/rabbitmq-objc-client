@@ -72,7 +72,7 @@ class GenerateMethods
           "#{([first_line] + constructor_rest).join("\n")};"
         end
 
-      protocol = outgoing?(method) ? "AMQOutgoing" : "AMQIncoming"
+      protocol = outgoing?(method) ? "AMQMethod,AMQOutgoing" : "AMQMethod,AMQIncoming"
       class_name = method.xpath('..').first[:name].capitalize
 
       acc + template.result(binding)

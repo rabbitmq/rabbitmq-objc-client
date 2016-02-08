@@ -2,9 +2,6 @@
 #import "AMQProtocolMethods.h"
 
 @implementation AMQProtocolHeader
-@synthesize classID;
-@synthesize methodID;
-@synthesize frameArguments;
 
 - (NSData *)amqEncoded {
     char *buffer = malloc(8);
