@@ -90,8 +90,7 @@
 }
 
 - (NSData *)amqEncoded {
-    AMQEncoder *encoder = [AMQEncoder new];
-    return [encoder encodeMethod:self];
+    return [[AMQEncoder new] encodeMethod:self];
 }
 
 - (Class)expectedResponseClass {
@@ -156,8 +155,7 @@
 }
 
 - (NSData *)amqEncoded {
-    AMQEncoder *encoder = [AMQEncoder new];
-    return [encoder encodeMethod:self];
+    return [[AMQEncoder new] encodeMethod:self];
 }
 
 - (Class)expectedResponseClass {
@@ -208,8 +206,7 @@
 }
 
 - (NSData *)amqEncoded {
-    AMQEncoder *encoder = [AMQEncoder new];
-    return [encoder encodeMethod:self];
+    return [[AMQEncoder new] encodeMethod:self];
 }
 
 - (Class)expectedResponseClass {
@@ -261,8 +258,7 @@
 }
 
 - (NSData *)amqEncoded {
-    AMQEncoder *encoder = [AMQEncoder new];
-    return [encoder encodeMethod:self];
+    return [[AMQEncoder new] encodeMethod:self];
 }
 
 - (Class)expectedResponseClass {
