@@ -14,6 +14,10 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    return [coder decodeObjectForKey:@"octet"];
+}
+
 - (NSData *)amqEncoded {
     char val = self.octet;
     NSMutableData *encoded = [NSMutableData new];
@@ -83,6 +87,10 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    return [coder decodeObjectForKey:@"short"];
+}
+
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
     uint16_t shortVal = CFSwapInt16HostToBig((uint16_t)self.integerValue);
@@ -108,6 +116,10 @@
         self.integerValue = val;
     }
     return self;
+}
+
+- (id)initWithCoder:(NSCoder *)coder {
+    return [coder decodeObjectForKey:@"long"];
 }
 
 - (NSData *)amqEncoded {
@@ -164,6 +176,10 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    return [coder decodeObjectForKey:@"shortstr"];
+}
+
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
     NSData *value = [self.stringValue dataUsingEncoding:NSASCIIStringEncoding];
@@ -192,6 +208,10 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    return [coder decodeObjectForKey:@"longstr"];
+}
+
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
     NSData *value = [self.stringValue dataUsingEncoding:NSUTF8StringEncoding];
@@ -218,6 +238,10 @@
         self.dictionary = dictionary;
     }
     return self;
+}
+
+- (id)initWithCoder:(NSCoder *)coder {
+    return [coder decodeObjectForKey:@"field-table"];
 }
 
 - (NSData *)amqEncoded {

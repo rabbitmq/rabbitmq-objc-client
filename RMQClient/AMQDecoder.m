@@ -26,31 +26,20 @@
 }
 
 - (id)decodeObjectForKey:(NSString *)key {
-    NSDictionary *keyTypes = @{@"10_10_version-major"     : @"octet",
-                               @"10_10_version-minor"     : @"octet",
-                               @"10_10_server-properties" : @"field-table",
-                               @"10_10_mechanisms"        : @"longstr",
-                               @"10_10_locales"           : @"longstr",
-                               @"10_30_channel-max"       : @"short",
-                               @"10_30_frame-max"         : @"long",
-                               @"10_30_heartbeat"         : @"short",
-                               @"10_41_known-hosts"       : @"shortstr",
-                               @"20_11_channel-id"        : @"longstr"};
-    NSString *keyType = keyTypes[key];
-    if ([keyType isEqualToString:@"octet"]) {
+    if ([key isEqualToString:@"octet"]) {
         return [[AMQOctet alloc] init:[self.parser parseChar:&_cursor end:self.end].integerValue];
-    } else if ([keyType isEqualToString:@"field-table"]) {
+    } else if ([key isEqualToString:@"field-table"]) {
         return [[AMQTable alloc] init:[self.parser parseFieldTable:&_cursor end:self.end]];
-    } else if ([keyType isEqualToString:@"longstr"]) {
-        return [[AMQLongstr alloc] init:[self.parser parseLongString:&_cursor end:self.end]];
-    } else if ([keyType isEqualToString:@"shortstr"]) {
+    } else if ([key isEqualToString:@"shortstr"]) {
         return [[AMQShortstr alloc] init:[self.parser parseShortString:&_cursor end:self.end]];
-    } else if ([keyType isEqualToString:@"short"]) {
+    } else if ([key isEqualToString:@"longstr"]) {
+        return [[AMQLongstr alloc] init:[self.parser parseLongString:&_cursor end:self.end]];
+    } else if ([key isEqualToString:@"short"]) {
         return [[AMQShort alloc] init:[self.parser parseShortUInt:&_cursor end:self.end]];
-    } else if ([keyType isEqualToString:@"long"]) {
+    } else if ([key isEqualToString:@"long"]) {
         return [[AMQLong alloc] init:[self.parser parseLongUInt:&_cursor end:self.end]];
     } else {
-        @throw [NSString stringWithFormat:@"No parse function for %@ (%@)!", key, keyType];
+        return @"Something very very bad happened";
     }
 }
 

@@ -17,11 +17,11 @@
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
     if (self) {
-        self.versionMajor = [coder decodeObjectForKey:@"10_10_version-major"];
-        self.versionMinor = [coder decodeObjectForKey:@"10_10_version-minor"];
-        self.serverProperties = [coder decodeObjectForKey:@"10_10_server-properties"];
-        self.mechanisms = [coder decodeObjectForKey:@"10_10_mechanisms"];
-        self.locales = [coder decodeObjectForKey:@"10_10_locales"];
+        self.versionMajor = [[AMQOctet alloc] initWithCoder:coder];
+        self.versionMinor = [[AMQOctet alloc] initWithCoder:coder];
+        self.serverProperties = [[AMQTable alloc] initWithCoder:coder];
+        self.mechanisms = [[AMQLongstr alloc] initWithCoder:coder];
+        self.locales = [[AMQLongstr alloc] initWithCoder:coder];
         self.frameArguments = @[self.versionMajor,
                                 self.versionMinor,
                                 self.serverProperties,
@@ -113,9 +113,9 @@
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
     if (self) {
-        self.channelMax = [coder decodeObjectForKey:@"10_30_channel-max"];
-        self.frameMax = [coder decodeObjectForKey:@"10_30_frame-max"];
-        self.heartbeat = [coder decodeObjectForKey:@"10_30_heartbeat"];
+        self.channelMax = [[AMQShort alloc] initWithCoder:coder];
+        self.frameMax = [[AMQLong alloc] initWithCoder:coder];
+        self.heartbeat = [[AMQShort alloc] initWithCoder:coder];
     }
     return self;
 }
@@ -196,15 +196,6 @@
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)coder {
-    [coder encodeObject:self.vhost
-                 forKey:@"10_40_virtual-host"];
-    [coder encodeObject:self.capabilities
-                 forKey:@"10_40_capabilities"];
-    [coder encodeObject:self.insist
-                 forKey:@"10_40_insist"];
-}
-
 - (NSData *)amqEncoded {
     return [[AMQEncoder new] encodeMethod:self];
 }
@@ -251,10 +242,6 @@
         self.frameArguments = @[];
     }
     return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)coder {
-    [coder encodeObject:[[AMQShortstr alloc] init:@""] forKey:@"20_10_out-of-band"];
 }
 
 - (NSData *)amqEncoded {
