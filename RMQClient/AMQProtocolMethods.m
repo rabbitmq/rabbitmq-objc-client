@@ -10,6 +10,9 @@
 @end
 
 @implementation AMQProtocolConnectionStart
+@synthesize frameArguments;
+@synthesize classID;
+@synthesize methodID;
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -19,6 +22,13 @@
         self.serverProperties = [coder decodeObjectForKey:@"10_10_server-properties"];
         self.mechanisms = [coder decodeObjectForKey:@"10_10_mechanisms"];
         self.locales = [coder decodeObjectForKey:@"10_10_locales"];
+        self.frameArguments = @[self.versionMajor,
+                                self.versionMinor,
+                                self.serverProperties,
+                                self.mechanisms,
+                                self.locales,];
+        self.classID = @(10);
+        self.methodID = @(10);
     }
     return self;
 }
@@ -55,6 +65,9 @@
 @end
 
 @implementation AMQProtocolConnectionStartOk
+@synthesize classID;
+@synthesize methodID;
+@synthesize frameArguments;
 
 - (instancetype)initWithClientProperties:(AMQTable *)clientProperties
                                mechanism:(AMQShortstr *)mechanism
@@ -66,25 +79,19 @@
         self.mechanism = mechanism;
         self.response = response;
         self.locale = locale;
+        self.classID = @(10);
+        self.methodID = @(11);
+        self.frameArguments = @[self.clientProperties,
+                                self.mechanism,
+                                self.response,
+                                self.locale];
     }
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)coder {
-    [coder encodeObject:self.clientProperties
-                 forKey:@"10_11_client-properties"];
-    [coder encodeObject:self.mechanism
-                 forKey:@"10_11_mechanism"];
-    [coder encodeObject:self.response
-                 forKey:@"10_11_response"];
-    [coder encodeObject:self.locale
-                 forKey:@"10_11_locale"];
-}
-
 - (NSData *)amqEncoded {
     AMQEncoder *encoder = [AMQEncoder new];
-    [self encodeWithCoder:encoder];
-    return [encoder frameForClassID:@(10) methodID:@(11)];
+    return [encoder encodeMethod:self];
 }
 
 - (Class)expectedResponseClass {
@@ -100,6 +107,9 @@
 @end
 
 @implementation AMQProtocolConnectionTune
+@synthesize classID;
+@synthesize methodID;
+@synthesize frameArguments;
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -126,6 +136,9 @@
 @end
 
 @implementation AMQProtocolConnectionTuneOk
+@synthesize classID;
+@synthesize methodID;
+@synthesize frameArguments;
 
 - (instancetype)initWithChannelMax:(AMQShort *)channelMax
                           frameMax:(AMQLong *)frameMax
@@ -135,23 +148,16 @@
         self.channelMax = channelMax;
         self.frameMax = frameMax;
         self.heartbeat = heartbeat;
+        self.classID = @(10);
+        self.methodID = @(31);
+        self.frameArguments = @[self.channelMax, self.frameMax, self.heartbeat];
     }
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)coder {
-    [coder encodeObject:self.channelMax
-                 forKey:@"10_31_channel-max"];
-    [coder encodeObject:self.frameMax
-                 forKey:@"10_31_frame-max"];
-    [coder encodeObject:self.heartbeat
-                 forKey:@"10_31_heartbeat"];
-}
-
 - (NSData *)amqEncoded {
     AMQEncoder *encoder = [AMQEncoder new];
-    [self encodeWithCoder:encoder];
-    return [encoder frameForClassID:@(10) methodID:@(31)];
+    return [encoder encodeMethod:self];
 }
 
 - (Class)expectedResponseClass {
@@ -173,6 +179,9 @@
 @end
 
 @implementation AMQProtocolConnectionOpen
+@synthesize classID;
+@synthesize methodID;
+@synthesize frameArguments;
 
 - (instancetype)initWithVirtualHost:(AMQShortstr *)vhost
                           reserved1:(AMQShortstr *)capabilities
@@ -212,6 +221,9 @@
 @end
 
 @implementation AMQProtocolConnectionOpenOk
+@synthesize classID;
+@synthesize methodID;
+@synthesize frameArguments;
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -228,6 +240,9 @@
 @end
 
 @implementation AMQProtocolChannelOpen
+@synthesize classID;
+@synthesize methodID;
+@synthesize frameArguments;
 
 - (instancetype)initWithReserved1:(AMQShortstr *)reserved1 {
     self = [super init];
@@ -258,6 +273,9 @@
 @end
 
 @implementation AMQProtocolChannelOpenOk
+@synthesize classID;
+@synthesize methodID;
+@synthesize frameArguments;
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];

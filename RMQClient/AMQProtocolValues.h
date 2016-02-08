@@ -9,13 +9,6 @@
 - (nonnull NSData *)amqFieldValueType;
 @end
 
-@protocol AMQOutgoing <NSObject,AMQEncoding>
-- (nonnull Class)expectedResponseClass;
-
-@optional
-- (nonnull id<AMQOutgoing>)nextRequest;
-@end
-
 @interface AMQOctet : MTLModel<AMQEncoding>
 - (nonnull instancetype)init:(char)octet;
 @end
@@ -69,7 +62,20 @@
 - (nonnull AMQCredentials *)credentials;
 @end
 
-@protocol AMQIncoming <NSObject>
+@protocol AMQMethod <NSObject>
+@property (nonnull, nonatomic, readwrite) NSNumber *classID;
+@property (nonnull, nonatomic, readwrite) NSNumber *methodID;
+@property (nonnull, nonatomic, readwrite) NSArray *frameArguments;
+@end
+
+@protocol AMQOutgoing <NSObject,AMQMethod,AMQEncoding>
+- (nonnull Class)expectedResponseClass;
+
+@optional
+- (nonnull id<AMQOutgoing>)nextRequest;
+@end
+
+@protocol AMQIncoming <NSObject,AMQMethod>
 - (nonnull id<AMQOutgoing>)replyWithContext:(nonnull id<AMQReplyContext>)context;
 @end
 
