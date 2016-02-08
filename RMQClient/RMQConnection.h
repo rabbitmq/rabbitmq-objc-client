@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "RMQChannel.h"
 #import "RMQTransport.h"
+#import "AMQProtocolValues.h"
 
 @interface RMQConnection : NSObject<AMQReplyContext>
 @property (copy, nonatomic, readonly) NSString *vhost;

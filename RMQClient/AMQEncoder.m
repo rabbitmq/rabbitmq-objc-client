@@ -1,5 +1,5 @@
 #import "AMQEncoder.h"
-#import "AMQProtocol.h"
+#import "AMQProtocolValues.h"
 
 @interface AMQEncoder ()
 

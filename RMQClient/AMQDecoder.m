@@ -1,6 +1,6 @@
 #import "AMQDecoder.h"
 #import "AMQParser.h"
-#import "AMQProtocol.h"
+#import "AMQProtocolValues.h"
 
 @interface AMQDecoder ()
 

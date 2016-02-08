@@ -1,6 +1,8 @@
 #import "RMQConnection.h"
 #import "AMQEncoder.h"
 #import "AMQDecoder.h"
+#import "AMQProtocolHeader.h"
+#import "AMQProtocolMethods.h"
 
 @interface RMQConnection ()
 @property (copy, nonatomic, readwrite) NSString *vhost;
