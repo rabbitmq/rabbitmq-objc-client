@@ -144,7 +144,7 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    NSData *value = [self.stringValue dataUsingEncoding:NSASCIIStringEncoding];
+    NSData *value = [self.stringValue dataUsingEncoding:NSUTF8StringEncoding];
     [encoded appendData:[[AMQLong alloc] init:value.length].amqEncoded];
     [encoded appendData:value];
     return encoded;
@@ -239,7 +239,6 @@
 }
 
 - (NSData *)amqEncoded {
-    NSMutableData *encoded = [NSMutableData new];
     NSMutableData *encodedContent = [NSMutableData new];
     NSData *username = [self.username dataUsingEncoding:NSUTF8StringEncoding];
     NSData *password = [self.password dataUsingEncoding:NSUTF8StringEncoding];
@@ -249,10 +248,9 @@
     [encodedContent appendBytes:&zero length:1];
     [encodedContent appendData:password];
 
-    [encoded appendData:[[AMQLong alloc] init:encodedContent.length].amqEncoded];
-    [encoded appendData:encodedContent];
-
-    return encoded;
+    NSString *s = [[NSString alloc] initWithData:encodedContent
+                                        encoding:NSUTF8StringEncoding];
+    return [[AMQLongstr alloc] init:s].amqEncoded;
 }
 
 @end
