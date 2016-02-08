@@ -49,6 +49,7 @@
 		AEE7FEBA1C3BD2B400DF8C4F /* RMQExchange.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE7FEB81C3BD2B400DF8C4F /* RMQExchange.m */; settings = {ASSET_TAGS = (); }; };
 		AEEEF0821C4F9BFA0056A5EB /* AMQDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = AEEEF0801C4F9BFA0056A5EB /* AMQDecoder.h */; settings = {ASSET_TAGS = (); }; };
 		AEEEF0831C4F9BFA0056A5EB /* AMQDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = AEEEF0811C4F9BFA0056A5EB /* AMQDecoder.m */; settings = {ASSET_TAGS = (); }; };
+		AEF38C911C68ABD800CDE441 /* AMQProtocolMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = AEF38C901C68ABD800CDE441 /* AMQProtocolMethods.h */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,6 +114,7 @@
 		AEE7FEB81C3BD2B400DF8C4F /* RMQExchange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQExchange.m; sourceTree = "<group>"; };
 		AEEEF0801C4F9BFA0056A5EB /* AMQDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQDecoder.h; sourceTree = "<group>"; };
 		AEEEF0811C4F9BFA0056A5EB /* AMQDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQDecoder.m; sourceTree = "<group>"; };
+		AEF38C901C68ABD800CDE441 /* AMQProtocolMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQProtocolMethods.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -235,6 +237,7 @@
 				AEA45ECA1C43D2B900FE1F62 /* RMQTransport.h in Headers */,
 				AEA45EC51C43C20F00FE1F62 /* AMQProtocolMethods.h in Headers */,
 				AEE7FEB11C3BCEBA00DF8C4F /* RMQChannel.h in Headers */,
+				AEF38C911C68ABD800CDE441 /* AMQProtocolMethods.h in Headers */,
 				AE898D5B1C3C30D100AA3BF1 /* AMQURI.h in Headers */,
 				AEA45ED11C43F4DC00FE1F62 /* RMQTCPSocketTransport.h in Headers */,
 				AE41C5501C4FB58500129207 /* AMQEncoder.h in Headers */,

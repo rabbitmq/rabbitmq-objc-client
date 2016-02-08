@@ -16,23 +16,12 @@
 - (nonnull id<AMQOutgoing>)nextRequest;
 @end
 
-@interface AMQCredentials : MTLModel<AMQEncoding>
-@property (nonnull, nonatomic, readonly) NSString *username;
-@property (nonnull, nonatomic, readonly) NSString *password;
-- (nonnull instancetype)initWithUsername:(nonnull NSString *)username
-                                password:(nonnull NSString *)password;
-@end
-
-@protocol AMQReplyContext <NSObject>
-- (nonnull AMQCredentials *)credentials;
-@end
-
-@protocol AMQIncoming <NSObject>
-- (nonnull id<AMQOutgoing>)replyWithContext:(nonnull id<AMQReplyContext>)context;
-@end
-
 @interface AMQOctet : MTLModel<AMQEncoding>
 - (nonnull instancetype)init:(char)octet;
+@end
+
+@interface AMQBit : MTLModel<AMQEncoding>
+- (nonnull instancetype)init:(char)bit;
 @end
 
 @interface AMQBoolean : MTLModel<AMQEncoding,AMQFieldValue>
@@ -45,6 +34,10 @@
 @end
 
 @interface AMQLong : MTLModel<AMQEncoding,AMQFieldValue>
+- (nonnull instancetype)init:(NSUInteger)val;
+@end
+
+@interface AMQLonglong : MTLModel<AMQEncoding,AMQFieldValue>
 - (nonnull instancetype)init:(NSUInteger)val;
 @end
 
@@ -65,6 +58,19 @@
 @interface AMQFieldValuePair : MTLModel<AMQEncoding>
 - (nonnull instancetype)initWithFieldName:(nonnull NSString *)fieldName
                                fieldValue:(nonnull id <AMQEncoding,AMQFieldValue>)fieldValue;
+@end
+
+@interface AMQCredentials : AMQLongstr
+- (nonnull instancetype)initWithUsername:(nonnull NSString *)username
+                                password:(nonnull NSString *)password;
+@end
+
+@protocol AMQReplyContext <NSObject>
+- (nonnull AMQCredentials *)credentials;
+@end
+
+@protocol AMQIncoming <NSObject>
+- (nonnull id<AMQOutgoing>)replyWithContext:(nonnull id<AMQReplyContext>)context;
 @end
 
 @interface AMQMethodPayload : NSObject<AMQEncoding>

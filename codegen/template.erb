@@ -1,4 +1,4 @@
-@interface AMQProtocol<%= class_name %><%= method_name %> : MTLModel<NSCoding>
+@interface AMQProtocol<%= class_name %><%= method_name %> : MTLModel<NSCoding,<%= protocol %>>
 <%- fields.each do |f| -%>
 @property (nonnull, copy, nonatomic, readonly) <%= f[:type] %> *<%= f[:name] %>;
 <%- end -%>

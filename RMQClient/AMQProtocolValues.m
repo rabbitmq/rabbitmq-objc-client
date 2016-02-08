@@ -23,6 +23,29 @@
 
 @end
 
+@interface AMQBit ()
+@property (nonatomic, readwrite) char bit;
+@end
+
+@implementation AMQBit
+
+- (instancetype)init:(char)bit {
+    self = [super init];
+    if (self) {
+        self.bit = bit;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    char val = self.bit;
+    NSMutableData *encoded = [NSMutableData new];
+    [encoded appendBytes:&val length:1];
+    return encoded;
+}
+
+@end
+
 @interface AMQBoolean ()
 @property (nonatomic, readwrite) BOOL boolValue;
 @end
@@ -96,6 +119,33 @@
 
 - (NSData *)amqFieldValueType {
     return [@"i" dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+@end
+
+@interface AMQLonglong ()
+@property (nonatomic, readwrite) NSUInteger integerValue;
+@end
+
+@implementation AMQLonglong
+
+- (instancetype)init:(NSUInteger)val {
+    self = [super init];
+    if (self) {
+        self.integerValue = val;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    NSMutableData *encoded = [NSMutableData new];
+    uint64_t longVal = CFSwapInt64HostToBig((uint64_t)self.integerValue);
+    [encoded appendBytes:&longVal length:sizeof(uint64_t)];
+    return encoded;
+}
+
+- (NSData *)amqFieldValueType {
+    return [@"l" dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 @end

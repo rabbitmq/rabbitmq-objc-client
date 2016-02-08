@@ -59,7 +59,7 @@ class RMQConnectionTest: XCTestCase {
         RMQConnection(user: "egon", password: "spengler", vhost: "baz", transport: transport).start()
 
         let tuneOk = AMQProtocolConnectionTuneOk(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
-        let open = AMQProtocolConnectionOpen(virtualHost: AMQShortstr("/"), capabilities: AMQShortstr(""), insist: AMQBoolean(false))
+        let open = AMQProtocolConnectionOpen(virtualHost: AMQShortstr("/"), reserved1: AMQShortstr(""), reserved2: AMQBit(0))
         TestHelper.assertEqualBytes(tuneOk.amqEncoded(), actual: transport.sentFrame(2))
         TestHelper.assertEqualBytes(open.amqEncoded(), actual: transport.sentFrame(3))
     }

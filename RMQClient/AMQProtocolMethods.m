@@ -49,7 +49,7 @@
 
 @property (nonnull, copy, nonatomic, readwrite) AMQTable *clientProperties;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *mechanism;
-@property (nonnull, copy, nonatomic, readwrite) AMQCredentials *response;
+@property (nonnull, copy, nonatomic, readwrite) AMQLongstr *response;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *locale;
 
 @end
@@ -58,7 +58,7 @@
 
 - (instancetype)initWithClientProperties:(AMQTable *)clientProperties
                                mechanism:(AMQShortstr *)mechanism
-                                response:(AMQCredentials *)response
+                                response:(AMQLongstr *)response
                                   locale:(AMQShortstr *)locale {
     self = [super init];
     if (self) {
@@ -160,8 +160,8 @@
 
 - (id<AMQOutgoing>)nextRequest {
     return [[AMQProtocolConnectionOpen alloc] initWithVirtualHost:[[AMQShortstr alloc] init:@"/"]
-                                                     capabilities:[[AMQShortstr alloc] init:@""]
-                                                           insist:[[AMQBoolean alloc] init:false]];
+                                                        reserved1:[[AMQShortstr alloc] init:@""]
+                                                        reserved2:[[AMQBit alloc] init:0]];
 }
 
 @end
@@ -169,14 +169,14 @@
 @interface AMQProtocolConnectionOpen ()
 @property (nonatomic, copy, readwrite) AMQShortstr *vhost;
 @property (nonatomic, copy, readwrite) AMQShortstr *capabilities;
-@property (nonatomic, copy, readwrite) AMQBoolean *insist;
+@property (nonatomic, copy, readwrite) AMQBit *insist;
 @end
 
 @implementation AMQProtocolConnectionOpen
 
 - (instancetype)initWithVirtualHost:(AMQShortstr *)vhost
-                       capabilities:(AMQShortstr *)capabilities
-                             insist:(AMQBoolean *)insist {
+                          reserved1:(AMQShortstr *)capabilities
+                          reserved2:(AMQBit *)insist {
     self = [super init];
     if (self) {
         self.vhost = vhost;
@@ -228,6 +228,14 @@
 @end
 
 @implementation AMQProtocolChannelOpen
+
+- (instancetype)initWithReserved1:(AMQShortstr *)reserved1 {
+    self = [super init];
+    if (self) {
+
+    }
+    return self;
+}
 
 - (void)encodeWithCoder:(NSCoder *)coder {
     [coder encodeObject:[[AMQShortstr alloc] init:@""] forKey:@"20_10_out-of-band"];
