@@ -1,5 +1,11 @@
 import XCTest
 
+@objc class EncodableMethod: NSObject, AMQMethod {
+    var classID: NSNumber = 10
+    var methodID: NSNumber = 11
+    var frameArguments: [AnyObject] = [AMQShortstr("foo")]
+}
+
 class AMQEncodingTest: XCTestCase {
 
     func testFraming() {
@@ -16,8 +22,9 @@ class AMQEncodingTest: XCTestCase {
         let expectedFrame = unfinishedFrame.mutableCopy() as! NSMutableData
         expectedFrame.appendBytes(&frameEnd, length: 1)
 
-        encoder.encodeObject(AMQShortstr("foo"), forKey: "baz")
-        let frame: NSData = encoder.frameForClassID(10, methodID: 11)
+        let encodableMethod = EncodableMethod()
+        let frame: NSData = encoder.encodeMethod(encodableMethod)
+
         TestHelper.assertEqualBytes(expectedFrame, actual: frame)
     }
     

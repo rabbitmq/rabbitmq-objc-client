@@ -191,6 +191,9 @@
         self.vhost = vhost;
         self.capabilities = capabilities;
         self.insist = insist;
+        self.classID = @(10);
+        self.methodID = @(40);
+        self.frameArguments = @[self.vhost, self.capabilities, self.insist];
     }
     return self;
 }
@@ -206,8 +209,7 @@
 
 - (NSData *)amqEncoded {
     AMQEncoder *encoder = [AMQEncoder new];
-    [self encodeWithCoder:encoder];
-    return [encoder frameForClassID:@(10) methodID:@(40)];
+    return [encoder encodeMethod:self];
 }
 
 - (Class)expectedResponseClass {
@@ -247,7 +249,9 @@
 - (instancetype)initWithReserved1:(AMQShortstr *)reserved1 {
     self = [super init];
     if (self) {
-
+        self.classID = @(20);
+        self.methodID = @(10);
+        self.frameArguments = @[];
     }
     return self;
 }
@@ -258,8 +262,7 @@
 
 - (NSData *)amqEncoded {
     AMQEncoder *encoder = [AMQEncoder new];
-    [self encodeWithCoder:encoder];
-    return [encoder frameForClassID:@(20) methodID:@(10)];
+    return [encoder encodeMethod:self];
 }
 
 - (Class)expectedResponseClass {
