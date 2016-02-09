@@ -79,6 +79,12 @@
 - (nonnull id<AMQOutgoing>)replyWithContext:(nonnull id<AMQReplyContext>)context;
 @end
 
+@interface AMQFrame : NSObject<AMQEncoding>
+- (nonnull instancetype)initWithType:(nonnull NSNumber *)frame
+                           channelID:(nonnull NSNumber *)channelID
+                              method:(nonnull id <AMQMethod>)method;
+@end
+
 @interface AMQMethodPayload : NSObject<AMQEncoding>
 - (nonnull instancetype)initWithClassID:(nonnull NSNumber *)classID
                                methodID:(nonnull NSNumber *)methodID

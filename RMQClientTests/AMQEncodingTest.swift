@@ -1,13 +1,16 @@
 import XCTest
 
-@objc class EncodableMethod: NSObject, AMQMethod {
+@objc class EncodableMethod: NSObject, AMQMethod, NSCopying {
+    var frameArguments: [AnyObject] = [AMQShortstr("foo")]
     static func classID() -> NSNumber {
         return 10
     }
     static func methodID() -> NSNumber {
         return 11
     }
-    var frameArguments: [AnyObject] = [AMQShortstr("foo")]
+    func copyWithZone(zone: NSZone) -> AnyObject {
+        return self
+    }
 }
 
 class AMQEncodingTest: XCTestCase {

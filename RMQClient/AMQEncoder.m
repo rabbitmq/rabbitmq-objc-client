@@ -18,19 +18,7 @@
 }
 
 - (NSData *)encodeMethod:(id<AMQMethod>)amqMethod {
-    AMQMethodPayload *payload = [[AMQMethodPayload alloc] initWithClassID:[amqMethod.class classID]
-                                                                 methodID:[amqMethod.class methodID]
-                                                                arguments:amqMethod.frameArguments];
-    NSMutableData *frame = [NSMutableData new];
-    NSArray *unencodedFrame = @[[[AMQOctet alloc] init:1],
-                                [[AMQShort alloc] init:0],
-                                [[AMQLong alloc] init:payload.amqEncoded.length],
-                                payload,
-                                [[AMQOctet alloc] init:0xCE]];
-    for (id<AMQEncoding> part in unencodedFrame) {
-        [frame appendData:part.amqEncoded];
-    }
-    return frame;
+    return [[AMQFrame alloc] initWithType:@(1) channelID:@(0) method:amqMethod].amqEncoded;
 }
 
 - (void)encodeObject:(id<AMQEncoding>)objv forKey:(NSString *)key {
