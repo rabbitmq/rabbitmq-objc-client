@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 require 'active_support/inflector'
 require 'erb'
 require 'pathname'
