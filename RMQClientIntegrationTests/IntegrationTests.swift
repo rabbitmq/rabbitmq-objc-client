@@ -18,6 +18,8 @@ class IntegrationTests: XCTestCase {
 
         let ch = conn.createChannel()
         XCTAssert(ch.isOpen())
+        NSRunLoop.currentRunLoop().runUntilDate(NSDate().dateByAddingTimeInterval(2))
+
 //        let ch = conn.createChannel()
 //        let q = ch.queue("rmqclient.examples.hello_world", autoDelete: true, exclusive: false)
 //        let x = ch.defaultExchange()

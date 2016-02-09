@@ -21,6 +21,12 @@ typedef NS_ENUM(NSUInteger, RMQChannelState) {
     return self;
 }
 
+- (instancetype)init
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 - (RMQQueue *)queue:(NSString *)queueName
          autoDelete:(BOOL)shouldAutoDelete
           exclusive:(BOOL)isExclusive {
