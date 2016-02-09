@@ -330,15 +330,15 @@
 @end
 
 @interface AMQMethodPayload ()
-@property (nonatomic, copy, readwrite) AMQShort *classID;
-@property (nonatomic, copy, readwrite) AMQShort *methodID;
+@property (nonatomic, copy, readwrite) NSNumber *classID;
+@property (nonatomic, copy, readwrite) NSNumber *methodID;
 @property (nonatomic, copy, readwrite) NSArray *arguments;
 @end
 
 @implementation AMQMethodPayload
 
-- (instancetype)initWithClassID:(AMQShort *)classID
-                       methodID:(AMQShort *)methodID
+- (instancetype)initWithClassID:(NSNumber *)classID
+                       methodID:(NSNumber *)methodID
                       arguments:(NSArray *)arguments {
     self = [super init];
     if (self) {
@@ -351,8 +351,8 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:self.classID.amqEncoded];
-    [encoded appendData:self.methodID.amqEncoded];
+    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
     for (id<AMQEncoding>arg in self.arguments) {
         [encoded appendData:arg.amqEncoded];
     }

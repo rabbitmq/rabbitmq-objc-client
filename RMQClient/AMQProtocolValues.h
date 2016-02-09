@@ -80,7 +80,7 @@
 @end
 
 @interface AMQMethodPayload : NSObject<AMQEncoding>
-- (nonnull instancetype)initWithClassID:(nonnull AMQShort *)classID
-                               methodID:(nonnull AMQShort *)methodID
+- (nonnull instancetype)initWithClassID:(nonnull NSNumber *)classID
+                               methodID:(nonnull NSNumber *)methodID
                               arguments:(nonnull NSArray *)arguments;
 @end
