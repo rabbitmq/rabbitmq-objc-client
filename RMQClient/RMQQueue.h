@@ -1,8 +1,8 @@
 #import <Foundation/Foundation.h>
+#import "RMQMessage.h"
 
 @interface RMQQueue : NSObject
 @property (nonatomic, readonly) NSString *name;
-- (void)subscribe:(void (^)(NSDictionary *info,
-                            NSDictionary *meta,
-                            NSDictionary *p))response;
+- (RMQQueue *)publish:(NSString *)message;
+- (RMQMessage *)pop;
 @end

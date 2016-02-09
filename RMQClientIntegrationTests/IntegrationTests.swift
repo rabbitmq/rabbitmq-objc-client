@@ -17,31 +17,13 @@ class IntegrationTests: XCTestCase {
         XCTAssert(TestHelper.pollUntil { return transport.isConnected() }, "never connected")
 
         let ch = conn.createChannel()
-        XCTAssert(ch.isOpen())
-        NSRunLoop.currentRunLoop().runUntilDate(NSDate().dateByAddingTimeInterval(2))
+        let q = ch.queue("rmqclient.examples.hello_world", autoDelete: true, exclusive: false)
+        q.publish("Hello!")
+        let message = q.pop()
 
-//        let ch = conn.createChannel()
-//        let q = ch.queue("rmqclient.examples.hello_world", autoDelete: true, exclusive: false)
-//        let x = ch.defaultExchange()
-//
-//        let expectedInfo = ["consumer_tag": "foo"]
-//        let expectedMeta = ["foo": "bar"]
-//        let expectedPayload = ["baz": "qux"]
-//
-//        var responseReceived = false
-//        q.subscribe { (info, meta, p) -> Void in
-//            if NSDictionary(dictionary: info).isEqualToDictionary(expectedInfo) &&
-//                NSDictionary(dictionary: meta).isEqualToDictionary(expectedMeta) &&
-//                NSDictionary(dictionary: p).isEqualToDictionary(expectedPayload) {
-//                    responseReceived = true
-//            } else {
-//                XCTFail("subscribe response unexpected")
-//            }
-//        }
-//        
-//        x.publish("Hello!", routingKey: q.name)
-//
-//        XCTAssert(TestHelper.pollUntil { return responseReceived }, "didn't receive message")
+        let expectedInfo = ["consumer_tag": "foo"]
+        let expectedMeta = ["foo": "bar"]
+        XCTAssertEqual(RMQMessage(deliveryInfo: expectedInfo, metadata: expectedMeta, content: "Hello!"), message)
     }
     
 }
