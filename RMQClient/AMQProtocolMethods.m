@@ -87,10 +87,6 @@
     return self;
 }
 
-- (NSData *)amqEncoded {
-    return [[AMQEncoder new] encodeMethod:self];
-}
-
 - (Class)expectedResponseClass {
     return [AMQProtocolConnectionTune class];
 }
@@ -152,10 +148,6 @@
     return self;
 }
 
-- (NSData *)amqEncoded {
-    return [[AMQEncoder new] encodeMethod:self];
-}
-
 - (Class)expectedResponseClass {
     return nil;
 }
@@ -191,10 +183,6 @@
         self.frameArguments = @[self.vhost, self.capabilities, self.insist];
     }
     return self;
-}
-
-- (NSData *)amqEncoded {
-    return [[AMQEncoder new] encodeMethod:self];
 }
 
 - (Class)expectedResponseClass {
@@ -239,10 +227,6 @@
         self.frameArguments = @[[[AMQShortstr alloc] init:@""]];
     }
     return self;
-}
-
-- (NSData *)amqEncoded {
-    return [[AMQEncoder new] encodeMethod:self];
 }
 
 - (Class)expectedResponseClass {

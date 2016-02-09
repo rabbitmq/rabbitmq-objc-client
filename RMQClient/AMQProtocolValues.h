@@ -68,7 +68,7 @@
 + (nonnull NSNumber *)methodID;
 @end
 
-@protocol AMQOutgoing <NSObject,AMQEncoding>
+@protocol AMQOutgoing <NSObject>
 - (nonnull Class)expectedResponseClass;
 
 @optional
