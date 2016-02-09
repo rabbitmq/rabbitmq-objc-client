@@ -9,16 +9,16 @@ enum AMQParserFieldValue {
 
 @implementation AMQParser
 
-- (NSDictionary *)parseFieldTable:(const char **)cursor
+- (AMQTable *)parseFieldTable:(const char **)cursor
                               end:(const char *)end {
     NSMutableDictionary *dict = [NSMutableDictionary new];
     const char *start = *cursor;
     
-    UInt32 tableLength = [self parseLongUInt:cursor end:end];
+    AMQLong *tableLength = [self parseLongUInt:cursor end:end];
     // if (*cursor + tableLength >= end) error
     
-    while (*cursor < start + tableLength && *cursor < end) {
-        NSString *key = [self parseShortString:cursor end:end];
+    while (*cursor < start + tableLength.integerValue && *cursor < end) {
+        AMQShortstr *key = [self parseShortString:cursor end:end];
         
         enum AMQParserFieldValue type = *((*cursor)++);
         switch (type) {
@@ -26,7 +26,7 @@ enum AMQParserFieldValue {
                 dict[key] = [self parseFieldTable:cursor end:end];
                 break;
             case AMQParserBoolean:
-                dict[key] = @([self parseBoolean:cursor end:end]);
+                dict[key] = [self parseBoolean:cursor end:end];
                 break;
             case AMQParserShortString:
                 dict[key] = [self parseShortString:cursor end:end];
@@ -36,43 +36,43 @@ enum AMQParserFieldValue {
                 break;
         }
     }
-    return dict;
+    return [[AMQTable alloc] init:dict];
 }
 
-- (UInt32)parseLongUInt:(const char **)cursor
-                    end:(const char *)end {
+- (AMQLong *)parseLongUInt:(const char **)cursor
+                       end:(const char *)end {
     UInt32 value;
     value = CFSwapInt32BigToHost(*(UInt32 *)*cursor);
     *cursor += sizeof(value);
 
-    return value;
+    return [[AMQLong alloc] init:value];
 }
 
-- (UInt16)parseShortUInt:(const char **)cursor
-                     end:(const char *)end {
+- (AMQShort *)parseShortUInt:(const char **)cursor
+                         end:(const char *)end {
     UInt16 value;
     value = CFSwapInt16BigToHost(*(UInt16 *)*cursor);
     *cursor += sizeof(value);
 
-    return value;
+    return [[AMQShort alloc] init:value];
 }
 
-- (NSNumber *)parseChar:(const char **)cursor
-                    end:(const char *)end {
-    return @(*((*cursor)++));
+- (AMQOctet *)parseOctet:(const char **)cursor
+                     end:(const char *)end {
+    return [[AMQOctet alloc] init:*((*cursor)++)];
 }
 
-- (NSString *)parseShortString:(const char **)cursor
-                           end:(const char *)end {
+- (AMQShortstr *)parseShortString:(const char **)cursor
+                              end:(const char *)end {
     unsigned int length = *((*cursor)++);
     NSString *string = [NSString stringWithFormat:@"%.*s", length, *cursor];
     *cursor += length;
     
-    return string;
+    return [[AMQShortstr alloc] init:string];
 }
 
-- (NSString *)parseLongString:(const char **)cursor
-                          end:(const char *)end {
+- (AMQLongstr *)parseLongString:(const char **)cursor
+                            end:(const char *)end {
     if (!cursor || !*cursor || *cursor + 4 > end) {
         // throw or something
     }
@@ -86,16 +86,16 @@ enum AMQParserFieldValue {
     NSString *string= [NSString stringWithFormat:@"%.*s", length, *cursor];
     *cursor += length;
     
-    return string;
+    return [[AMQLongstr alloc] init:string];
 }
 
-- (BOOL)parseBoolean:(const char **)cursor
-                 end:(const char *)end {
+- (AMQBoolean *)parseBoolean:(const char **)cursor
+                         end:(const char *)end {
     if (!cursor || !*cursor || *cursor + 1 > end) {
         // throw or something
     }
     
-    return *((*cursor)++) != 0;
+    return [[AMQBoolean alloc] init:*((*cursor)++) != 0];
 }
 
 @end

@@ -27,17 +27,17 @@
 
 - (id)decodeObjectForKey:(NSString *)key {
     if ([key isEqualToString:@"octet"]) {
-        return [[AMQOctet alloc] init:[self.parser parseChar:&_cursor end:self.end].integerValue];
+        return [self.parser parseOctet:&_cursor end:self.end];
     } else if ([key isEqualToString:@"field-table"]) {
-        return [[AMQTable alloc] init:[self.parser parseFieldTable:&_cursor end:self.end]];
+        return [self.parser parseFieldTable:&_cursor end:self.end];
     } else if ([key isEqualToString:@"shortstr"]) {
-        return [[AMQShortstr alloc] init:[self.parser parseShortString:&_cursor end:self.end]];
+        return [self.parser parseShortString:&_cursor end:self.end];
     } else if ([key isEqualToString:@"longstr"]) {
-        return [[AMQLongstr alloc] init:[self.parser parseLongString:&_cursor end:self.end]];
+        return [self.parser parseLongString:&_cursor end:self.end];
     } else if ([key isEqualToString:@"short"]) {
-        return [[AMQShort alloc] init:[self.parser parseShortUInt:&_cursor end:self.end]];
+        return [self.parser parseShortUInt:&_cursor end:self.end];
     } else if ([key isEqualToString:@"long"]) {
-        return [[AMQLong alloc] init:[self.parser parseLongUInt:&_cursor end:self.end]];
+        return [self.parser parseLongUInt:&_cursor end:self.end];
     } else {
         return @"Something very very bad happened";
     }

@@ -27,6 +27,7 @@
 @end
 
 @interface AMQLong : MTLModel<AMQEncoding,AMQFieldValue>
+@property (nonatomic, readonly) NSUInteger integerValue;
 - (nonnull instancetype)init:(NSUInteger)val;
 @end
 
