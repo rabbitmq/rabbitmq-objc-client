@@ -70,8 +70,9 @@
 
 @protocol AMQOutgoing <NSObject>
 - (nonnull Class)expectedResponseClass;
+@end
 
-@optional
+@protocol AMQOutgoingPrecursor <NSObject>
 - (nonnull id<AMQOutgoing,AMQMethod>)nextRequest;
 @end
 

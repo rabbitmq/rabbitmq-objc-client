@@ -6,3 +6,6 @@
 
 @interface AMQProtocolConnectionTune (Conversation) <AMQIncomingSync>
 @end
+
+@interface AMQProtocolConnectionTuneOk (Conversation) <AMQOutgoingPrecursor>
+@end

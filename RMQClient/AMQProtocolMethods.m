@@ -126,12 +126,6 @@
     return nil;
 }
 
-- (id<AMQOutgoing>)nextRequest {
-    return [[AMQProtocolConnectionOpen alloc] initWithVirtualHost:[[AMQShortstr alloc] init:@"/"]
-                                                        reserved1:[[AMQShortstr alloc] init:@""]
-                                                        reserved2:[[AMQBit alloc] init:0]];
-}
-
 @end
 
 @interface AMQProtocolConnectionOpen ()

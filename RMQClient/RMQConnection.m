@@ -91,8 +91,8 @@
                         expectedResponseClass:amqMethod.expectedResponseClass
                                       channel:channel];
                        }];
-                   } else if (amqMethod.nextRequest) {
-                       [self send:amqMethod.nextRequest channel:channel];
+                   } else if ([amqMethod conformsToProtocol:@protocol(AMQOutgoingPrecursor)]) {
+                       [self send:((id <AMQOutgoingPrecursor>)amqMethod).nextRequest channel:channel];
                    }
                }];
 }
