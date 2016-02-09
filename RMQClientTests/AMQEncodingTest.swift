@@ -30,7 +30,7 @@ class AMQEncodingTest: XCTestCase {
         expectedFrame.appendBytes(&frameEnd, length: 1)
 
         let encodableMethod = EncodableMethod()
-        let frame: NSData = encoder.encodeMethod(encodableMethod)
+        let frame: NSData = encoder.encodeMethod(encodableMethod, channel: RMQChannel(0))
 
         TestHelper.assertEqualBytes(expectedFrame, actual: frame)
     }

@@ -7,14 +7,16 @@ typedef NS_ENUM(NSUInteger, RMQChannelState) {
 
 @interface RMQChannel ()
 @property (nonatomic, readwrite) RMQChannelState state;
+@property (nonatomic, copy, readwrite) NSNumber *channelID;
 @end
 
 @implementation RMQChannel
 
-- (instancetype)init {
+- (instancetype)init:(NSNumber *)channelID {
     self = [super init];
     if (self) {
         self.state = RMQChannelStateClosed;
+        self.channelID = channelID;
     }
     return self;
 }

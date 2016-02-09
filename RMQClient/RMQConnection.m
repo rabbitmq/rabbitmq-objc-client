@@ -11,6 +11,8 @@
 @property (nonatomic, readwrite) NSString *mechanism;
 @property (nonatomic, readwrite) NSString *locale;
 @property (nonatomic, readwrite) AMQCredentials *credentials;
+@property (nonatomic, readwrite) RMQChannel *channelZero;
+@property (nonatomic, readwrite) id <RMQIDAllocator> idAllocator;
 @end
 
 @implementation RMQConnection
@@ -26,6 +28,7 @@
                                                            password:password];
         self.vhost = vhost;
         self.transport = transport;
+        self.idAllocator = idAllocator;
         AMQTable *capabilities = [[AMQTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
                                                                     @"consumer_cancel_notify": [[AMQBoolean alloc] init:YES],
                                                                     @"exchange_exchange_bindings": [[AMQBoolean alloc] init:YES],
@@ -40,6 +43,7 @@
                                    @"information" : [[AMQLongstr alloc] init:@"https://github.com/camelpunch/RMQClient"]}];
         self.mechanism = @"PLAIN";
         self.locale = @"en_GB";
+        self.channelZero = [[RMQChannel alloc] init:@(0)];
     }
     return self;
 }
@@ -51,7 +55,9 @@
                         error:&error
                    onComplete:^{
                        [self.transport readFrame:^(NSData * _Nonnull responseData) {
-                           [self readResponse:responseData expectedResponseClass:[AMQProtocolConnectionStart class]];
+                           [self readResponse:responseData
+                        expectedResponseClass:[AMQProtocolConnectionStart class]
+                                      channel:self.channelZero];
                        }];
                    }];
     }];
@@ -63,36 +69,43 @@
 }
 
 - (RMQChannel *)createChannel {
-    RMQChannel *ch = [[RMQChannel new] open];
-    [self send:[[AMQProtocolChannelOpen alloc] initWithReserved1:[[AMQShortstr alloc] init:@""]]];
+    RMQChannel *ch = [[[RMQChannel alloc] init:[self.idAllocator nextID]] open];
+    [self send:[[AMQProtocolChannelOpen alloc] initWithReserved1:[[AMQShortstr alloc] init:@""]]
+       channel:ch];
     return ch;
 }
 
 # pragma mark - Private
 
-- (void)send:(id<AMQOutgoing,AMQMethod>)amqMethod {
+- (void)send:(id<AMQOutgoing,AMQMethod>)amqMethod
+     channel:(RMQChannel *)channel {
     AMQEncoder *encoder = [AMQEncoder new];
     NSError *error = NULL;
-    [self.transport write:[encoder encodeMethod:amqMethod]
+    [self.transport write:[encoder encodeMethod:amqMethod
+                                        channel:channel]
                     error:&error
                onComplete:^{
                    if (amqMethod.expectedResponseClass) {
                        [self.transport readFrame:^(NSData * _Nonnull responseData) {
-                           [self readResponse:responseData expectedResponseClass:amqMethod.expectedResponseClass];
+                           [self readResponse:responseData
+                        expectedResponseClass:amqMethod.expectedResponseClass
+                                      channel:channel];
                        }];
                    } else if (amqMethod.nextRequest) {
-                       [self send:amqMethod.nextRequest];
+                       [self send:amqMethod.nextRequest channel:channel];
                    }
                }];
 }
 
-- (void)readResponse:(NSData *)responseData expectedResponseClass:(Class)expectedResponseClass {
+-  (void)readResponse:(NSData *)responseData
+expectedResponseClass:(Class)expectedResponseClass
+              channel:(RMQChannel *)channel {
     if (responseData.length) {
         AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
         id<AMQIncoming> parsedResponse = [[expectedResponseClass alloc] initWithCoder:decoder];
         id<AMQOutgoing,AMQMethod> reply = [parsedResponse replyWithContext:self];
         if (reply) {
-            [self send:reply];
+            [self send:reply channel:channel];
         }
     }
 }

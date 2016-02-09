@@ -3,11 +3,13 @@
 #import "RMQExchange.h"
 
 @interface RMQChannel : NSObject
-- (RMQQueue *)queue:(NSString *)queueName
+@property (nonnull, copy, nonatomic, readonly) NSNumber *channelID;
+- (nonnull instancetype)init:(nonnull NSNumber *)channelID;
+- (nonnull RMQQueue *)queue:(nonnull NSString *)queueName
          autoDelete:(BOOL)shouldAutoDelete
           exclusive:(BOOL)isExclusive;
-- (RMQExchange *)defaultExchange;
-- (RMQChannel *)open;
+- (nonnull RMQExchange *)defaultExchange;
+- (nonnull RMQChannel *)open;
 - (void)close;
 - (BOOL)isOpen;
 @end

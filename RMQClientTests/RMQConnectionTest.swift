@@ -56,7 +56,8 @@ class RMQConnectionTest: XCTestCase {
             response: AMQCredentials(username: "egon", password: "spengler"),
             locale: AMQShortstr("en_GB")
         )
-        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(startOk), actual: transport.sentFrame(1))
+        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(startOk, channel: RMQChannel(0)),
+            actual: transport.sentFrame(1))
     }
 
     func testSendsTuneOKFollowedByOpen() {
@@ -69,8 +70,8 @@ class RMQConnectionTest: XCTestCase {
 
         let tuneOk = AMQProtocolConnectionTuneOk(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
         let open = AMQProtocolConnectionOpen(virtualHost: AMQShortstr("/"), reserved1: AMQShortstr(""), reserved2: AMQBit(0))
-        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(tuneOk), actual: transport.sentFrame(2))
-        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(open), actual: transport.sentFrame(3))
+        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(tuneOk, channel: RMQChannel(0)), actual: transport.sentFrame(2))
+        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(open, channel: RMQChannel(0)), actual: transport.sentFrame(3))
     }
 
     func testCreatingAChannelSendsAChannelOpenAndReceivesOpenOK() {
@@ -84,6 +85,6 @@ class RMQConnectionTest: XCTestCase {
         let ch = conn.createChannel()
         XCTAssert(ch.isOpen())
         let open = AMQProtocolChannelOpen(reserved1: AMQShortstr(""))
-        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(open), actual: transport.sentFrame(4))
+        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(open, channel: RMQChannel(1)), actual: transport.sentFrame(4))
     }
 }
