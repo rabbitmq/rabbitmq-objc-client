@@ -20,11 +20,29 @@ class RMQConnectionTest: XCTestCase {
     func testClosesTransport() {
         let transport = FakeTransport()
             .receive(Fixtures.connectionStart())
-            .receive(Fixtures.nothing())
+            .receive(Fixtures.connectionCloseOk())
         let conn = startedConnection(transport)
 
         XCTAssertTrue(transport.isConnected())
         conn.close()
+        XCTAssertFalse(transport.isConnected())
+    }
+
+    func testClosesConnectionWithHandshake() {
+        let transport = FakeTransport()
+            .receive(Fixtures.connectionStart())
+            .receive(Fixtures.connectionCloseOk())
+        let conn = startedConnection(transport)
+
+        conn.close()
+
+        let expectedClose = AMQProtocolConnectionClose(
+            replyCode: AMQShort(200),
+            replyText: AMQShortstr("Goodbye"),
+            classId: AMQShort(0),
+            methodId: AMQShort(0)
+        )
+        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(expectedClose, channel: RMQChannel(0)), actual: transport.lastFrame())
         XCTAssertFalse(transport.isConnected())
     }
     

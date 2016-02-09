@@ -65,6 +65,11 @@
 }
 
 - (void)close {
+    [self send:[[AMQProtocolConnectionClose alloc] initWithReplyCode:[[AMQShort alloc] init:200]
+                                                           replyText:[[AMQShortstr alloc] init:@"Goodbye"]
+                                                             classId:[[AMQShort alloc] init:0]
+                                                            methodId:[[AMQShort alloc] init:0]]
+       channel:self.channelZero];
     [self.transport close:^{}];
 }
 
