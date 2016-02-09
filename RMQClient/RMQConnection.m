@@ -46,7 +46,14 @@
 
 - (RMQConnection *)start {
     [self.transport connect:^{
-        [self send:[AMQProtocolHeader new]];
+        NSError *error = NULL;
+        [self.transport write:[AMQProtocolHeader new].amqEncoded
+                        error:&error
+                   onComplete:^{
+                       [self.transport readFrame:^(NSData * _Nonnull responseData) {
+                           [self readResponse:responseData expectedResponseClass:[AMQProtocolConnectionStart class]];
+                       }];
+                   }];
     }];
     return self;
 }
@@ -63,26 +70,31 @@
 
 # pragma mark - Private
 
-- (void)send:(id<AMQOutgoing>)amqMethod {
+- (void)send:(id<AMQOutgoing,AMQMethod>)amqMethod {
+    AMQEncoder *encoder = [AMQEncoder new];
     NSError *error = NULL;
-    [self.transport write:amqMethod.amqEncoded
+    [self.transport write:[encoder encodeMethod:amqMethod]
                     error:&error
                onComplete:^{
                    if (amqMethod.expectedResponseClass) {
                        [self.transport readFrame:^(NSData * _Nonnull responseData) {
-                           if (responseData.length) {
-                               AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
-                               id<AMQIncoming> parsedResponse = [[amqMethod.expectedResponseClass alloc] initWithCoder:decoder];
-                               id<AMQOutgoing> reply = [parsedResponse replyWithContext:self];
-                               if (reply) {
-                                   [self send:reply];
-                               }
-                           }
+                           [self readResponse:responseData expectedResponseClass:amqMethod.expectedResponseClass];
                        }];
                    } else if (amqMethod.nextRequest) {
                        [self send:amqMethod.nextRequest];
                    }
                }];
+}
+
+- (void)readResponse:(NSData *)responseData expectedResponseClass:(Class)expectedResponseClass {
+    if (responseData.length) {
+        AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
+        id<AMQIncoming> parsedResponse = [[expectedResponseClass alloc] initWithCoder:decoder];
+        id<AMQOutgoing,AMQMethod> reply = [parsedResponse replyWithContext:self];
+        if (reply) {
+            [self send:reply];
+        }
+    }
 }
 
 - (instancetype)init

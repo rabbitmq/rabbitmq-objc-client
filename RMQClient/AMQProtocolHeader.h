@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
 #import "AMQProtocolValues.h"
 
-@interface AMQProtocolHeader : NSObject<AMQOutgoing>
+@interface AMQProtocolHeader : MTLModel<AMQOutgoing>
 @end

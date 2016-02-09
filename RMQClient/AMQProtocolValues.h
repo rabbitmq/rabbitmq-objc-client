@@ -72,11 +72,11 @@
 - (nonnull Class)expectedResponseClass;
 
 @optional
-- (nonnull id<AMQOutgoing>)nextRequest;
+- (nonnull id<AMQOutgoing,AMQMethod>)nextRequest;
 @end
 
 @protocol AMQIncoming <NSObject,AMQMethod>
-- (nonnull id<AMQOutgoing>)replyWithContext:(nonnull id<AMQReplyContext>)context;
+- (nonnull id<AMQOutgoing,AMQMethod>)replyWithContext:(nonnull id<AMQReplyContext>)context;
 @end
 
 @interface AMQFrame : NSObject<AMQEncoding>
