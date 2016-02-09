@@ -13,6 +13,10 @@ class Fixtures {
         return NSData(contentsOfURL: NSURL(string: "data:application/octet-stream;base64,AAoAKQA=")!)!
     }
 
+    static func connectionCloseOk() -> NSData {
+        return NSData(contentsOfURL: NSURL(string: "data:application/octet-stream;base64,ABQACwAAAAA=")!)!
+    }
+
     static func channelOpenOk() -> NSData {
         return NSData(contentsOfURL: NSURL(string: "data:application/octet-stream;base64,AAoAMgH4PUNIQU5ORUxfRVJST1IgLSB1bmV4cGVjdGVkIG1ldGhvZCBpbiBjb25uZWN0aW9uIHN0YXRlIHJ1bm5pbmcAFAAK")!)!
     }

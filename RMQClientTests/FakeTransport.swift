@@ -38,6 +38,9 @@ enum FakeTransportError: ErrorType {
     func sentFrame(index: Int) -> NSData {
         return outboundData[index]
     }
+    func lastFrame() -> NSData {
+        return outboundData[outboundData.endIndex - 1]
+    }
     func receive(data: NSData) -> FakeTransport {
         receivedData.append(data)
         return self

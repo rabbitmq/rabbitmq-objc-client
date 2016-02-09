@@ -215,6 +215,59 @@
 
 @end
 
+@interface AMQProtocolConnectionClose ()
+@property (nonatomic, copy, readwrite) AMQShort *replyCode;
+@property (nonatomic, copy, readwrite) AMQShortstr *replyText;
+@property (nonatomic, copy, readwrite) AMQShort *classId;
+@property (nonatomic, copy, readwrite) AMQShort *methodId;
+@end
+
+@implementation AMQProtocolConnectionClose
+@synthesize frameArguments;
+
++ (NSNumber *)classID { return @(10); }
++ (NSNumber *)methodID { return @(50); }
+
+- (instancetype)initWithReplyCode:(AMQShort *)replyCode
+                        replyText:(AMQShortstr *)replyText
+                          classId:(AMQShort *)classId
+                         methodId:(AMQShort *)methodId {
+    self = [super init];
+    if (self) {
+        self.replyCode = replyCode;
+        self.replyText = replyText;
+        self.classId = classId;
+        self.methodId = methodId;
+        self.frameArguments = @[self.replyCode,
+                                self.replyText,
+                                self.classId,
+                                self.methodId];
+    }
+    return self;
+}
+
+- (Class)expectedResponseClass {
+    return [AMQProtocolConnectionCloseOk class];
+}
+
+- (id<AMQOutgoing,AMQMethod>)replyWithContext:(id<AMQReplyContext>)context {
+    return nil;
+}
+
+@end
+
+@implementation AMQProtocolConnectionCloseOk
+@synthesize frameArguments;
++ (NSNumber *)classID { return @(10); }
++ (NSNumber *)methodID { return @(51); }
+- (id<AMQOutgoing,AMQMethod>)replyWithContext:(id<AMQReplyContext>)context {
+    return nil;
+}
+- (Class)expectedResponseClass {
+    return nil;
+}
+@end
+
 @implementation AMQProtocolChannelOpen
 @synthesize frameArguments;
 

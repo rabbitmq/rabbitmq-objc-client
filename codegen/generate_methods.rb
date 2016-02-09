@@ -29,8 +29,16 @@ class GenerateMethods
     "(nonnull #{field[:type]} *)#{field[:name]}"
   end
 
+  def chassis_names(method)
+    method.xpath('chassis').map {|c| c[:name]}
+  end
+
   def outgoing?(method)
-    method.xpath('chassis').first[:name] == 'server'
+    chassis_names(method).include?('server')
+  end
+
+  def incoming?(method)
+    chassis_names(method).include?('client')
   end
 
   def header
@@ -72,7 +80,9 @@ class GenerateMethods
           "#{([first_line] + constructor_rest).join("\n")};"
         end
 
-      protocol = outgoing?(method) ? "AMQMethod,AMQOutgoing" : "AMQMethod,AMQIncoming"
+      protocols = ["AMQMethod"]
+      protocols << ["AMQIncoming"] if incoming?(method)
+      protocols << ["AMQOutgoing"] if outgoing?(method)
       class_name = method.xpath('..').first[:name].capitalize
 
       acc + template.result(binding)
