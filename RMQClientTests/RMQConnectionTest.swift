@@ -1,10 +1,19 @@
 import XCTest
 
 class RMQConnectionTest: XCTestCase {
-    
+
+    func startedConnection(
+        transport: FakeTransport,
+        user: String = "foo",
+        password: String = "bar",
+        vhost: String = "baz"
+        ) -> RMQConnection {
+            return RMQConnection(user: user, password: password, vhost: vhost, transport: transport, idAllocator: RMQChannelIDAllocator()).start()
+    }
+
     func testSendsPreambleToTransport() {
         let transport = FakeTransport().receive(Fixtures.nothing())
-        RMQConnection(user: "foo", password: "bar", vhost: "baz", transport: transport).start()
+        startedConnection(transport)
         XCTAssertEqual("AMQP\0\0\u{09}\u{01}".dataUsingEncoding(NSUTF8StringEncoding), transport.sentFrame(0))
     }
 
@@ -12,7 +21,7 @@ class RMQConnectionTest: XCTestCase {
         let transport = FakeTransport()
             .receive(Fixtures.connectionStart())
             .receive(Fixtures.nothing())
-        let conn = RMQConnection(user: "egon", password: "spengler", vhost: "baz", transport: transport).start()
+        let conn = startedConnection(transport)
 
         XCTAssertTrue(transport.isConnected())
         conn.close()
@@ -24,7 +33,7 @@ class RMQConnectionTest: XCTestCase {
             .receive(Fixtures.connectionStart())
             .receive(Fixtures.nothing())
 
-        RMQConnection(user: "egon", password: "spengler", vhost: "baz", transport: transport).start()
+        startedConnection(transport, user: "egon", password: "spengler", vhost: "hq")
 
         let capabilities = AMQTable([
             "publisher_confirms": AMQBoolean(true),
@@ -56,7 +65,7 @@ class RMQConnectionTest: XCTestCase {
             .receive(Fixtures.connectionTune())
             .receive(Fixtures.connectionOpenOk())
 
-        RMQConnection(user: "egon", password: "spengler", vhost: "baz", transport: transport).start()
+        startedConnection(transport)
 
         let tuneOk = AMQProtocolConnectionTuneOk(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
         let open = AMQProtocolConnectionOpen(virtualHost: AMQShortstr("/"), reserved1: AMQShortstr(""), reserved2: AMQBit(0))
@@ -69,8 +78,7 @@ class RMQConnectionTest: XCTestCase {
             .receive(Fixtures.connectionStart())
             .receive(Fixtures.connectionTune())
             .receive(Fixtures.connectionOpenOk())
-        let conn = RMQConnection(user: "egon", password: "spengler", vhost: "baz", transport: transport)
-            .start()
+        let conn = startedConnection(transport)
 
         transport.receive(Fixtures.channelOpenOk())
         let ch = conn.createChannel()

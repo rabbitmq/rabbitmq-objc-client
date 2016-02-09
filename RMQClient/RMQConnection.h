@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "RMQChannel.h"
 #import "RMQTransport.h"
+#import "RMQIDAllocator.h"
 #import "AMQProtocolValues.h"
 
 @interface RMQConnection : NSObject<AMQReplyContext>
@@ -9,7 +10,8 @@
 - (instancetype)initWithUser:(NSString *)user
                     password:(NSString *)password
                        vhost:(NSString *)vhost
-                   transport:(id <RMQTransport>)transport;
+                   transport:(id <RMQTransport>)transport
+                 idAllocator:(id <RMQIDAllocator>)idAllocator;
 - (RMQConnection *)start;
 - (void)close;
 - (RMQChannel *)createChannel;

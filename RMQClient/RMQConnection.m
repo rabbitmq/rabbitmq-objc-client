@@ -18,7 +18,8 @@
 - (instancetype)initWithUser:(NSString *)user
                     password:(NSString *)password
                        vhost:(NSString *)vhost
-                   transport:(id<RMQTransport>)transport {
+                   transport:(id<RMQTransport>)transport
+                 idAllocator:(id<RMQIDAllocator>)idAllocator {
     self = [super init];
     if (self) {
         self.credentials = [[AMQCredentials alloc] initWithUsername:user

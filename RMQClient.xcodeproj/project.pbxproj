@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		AE05DA611C69E70D009E68C7 /* RMQChannelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE05DA601C69E70D009E68C7 /* RMQChannelTest.swift */; settings = {ASSET_TAGS = (); }; };
+		AE05DA641C69EB79009E68C7 /* RMQChannelIDAllocator.h in Headers */ = {isa = PBXBuildFile; fileRef = AE05DA621C69EB79009E68C7 /* RMQChannelIDAllocator.h */; settings = {ASSET_TAGS = (); }; };
+		AE05DA651C69EB79009E68C7 /* RMQChannelIDAllocator.m in Sources */ = {isa = PBXBuildFile; fileRef = AE05DA631C69EB79009E68C7 /* RMQChannelIDAllocator.m */; settings = {ASSET_TAGS = (); }; };
+		AE05DA681C69EC47009E68C7 /* RMQIDAllocator.h in Headers */ = {isa = PBXBuildFile; fileRef = AE05DA661C69EC47009E68C7 /* RMQIDAllocator.h */; settings = {ASSET_TAGS = (); }; };
 		AE111BD71C57B33300F88277 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE111BD61C57B33300F88277 /* TestHelper.swift */; settings = {ASSET_TAGS = (); }; };
 		AE111BD81C57B33300F88277 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE111BD61C57B33300F88277 /* TestHelper.swift */; settings = {ASSET_TAGS = (); }; };
 		AE254F5F1C51B4D000DEA468 /* FakeTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47CF711C51A81D00BA2A9B /* FakeTransport.swift */; settings = {ASSET_TAGS = (); }; };
@@ -72,6 +75,9 @@
 
 /* Begin PBXFileReference section */
 		AE05DA601C69E70D009E68C7 /* RMQChannelTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQChannelTest.swift; sourceTree = "<group>"; };
+		AE05DA621C69EB79009E68C7 /* RMQChannelIDAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQChannelIDAllocator.h; sourceTree = "<group>"; };
+		AE05DA631C69EB79009E68C7 /* RMQChannelIDAllocator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQChannelIDAllocator.m; sourceTree = "<group>"; };
+		AE05DA661C69EC47009E68C7 /* RMQIDAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQIDAllocator.h; sourceTree = "<group>"; };
 		AE111BD61C57B33300F88277 /* TestHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
 		AE39BD9C1C68B019000E7A77 /* AMQProtocolValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQProtocolValues.h; sourceTree = "<group>"; };
 		AE39BD9D1C68B019000E7A77 /* AMQProtocolValues.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQProtocolValues.m; sourceTree = "<group>"; };
@@ -188,6 +194,9 @@
 				AEE7FEAC1C3BCD0F00DF8C4F /* RMQConnection.m */,
 				AEE7FEAF1C3BCEBA00DF8C4F /* RMQChannel.h */,
 				AEE7FEB01C3BCEBA00DF8C4F /* RMQChannel.m */,
+				AE05DA661C69EC47009E68C7 /* RMQIDAllocator.h */,
+				AE05DA621C69EB79009E68C7 /* RMQChannelIDAllocator.h */,
+				AE05DA631C69EB79009E68C7 /* RMQChannelIDAllocator.m */,
 				AEE7FEB31C3BD16200DF8C4F /* RMQQueue.h */,
 				AEE7FEB41C3BD16200DF8C4F /* RMQQueue.m */,
 				AEE7FEB71C3BD2B400DF8C4F /* RMQExchange.h */,
@@ -241,6 +250,8 @@
 				AEA45EC51C43C20F00FE1F62 /* AMQProtocolMethods.h in Headers */,
 				AEE7FEB11C3BCEBA00DF8C4F /* RMQChannel.h in Headers */,
 				AEF38C911C68ABD800CDE441 /* AMQProtocolMethods.h in Headers */,
+				AE05DA681C69EC47009E68C7 /* RMQIDAllocator.h in Headers */,
+				AE05DA641C69EB79009E68C7 /* RMQChannelIDAllocator.h in Headers */,
 				AE898D5B1C3C30D100AA3BF1 /* AMQURI.h in Headers */,
 				AEA45ED11C43F4DC00FE1F62 /* RMQTCPSocketTransport.h in Headers */,
 				AE41C5501C4FB58500129207 /* AMQEncoder.h in Headers */,
@@ -432,6 +443,7 @@
 				AEE7FEBA1C3BD2B400DF8C4F /* RMQExchange.m in Sources */,
 				AEE7FEAE1C3BCD0F00DF8C4F /* RMQConnection.m in Sources */,
 				AEA45ED21C43F4DC00FE1F62 /* RMQTCPSocketTransport.m in Sources */,
+				AE05DA651C69EB79009E68C7 /* RMQChannelIDAllocator.m in Sources */,
 				AE39BD9F1C68B019000E7A77 /* AMQProtocolValues.m in Sources */,
 				AE898D5C1C3C30D100AA3BF1 /* AMQURI.m in Sources */,
 				AE80BAB41C4D47C100E6DFFD /* AMQParser.m in Sources */,
