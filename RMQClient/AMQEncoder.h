@@ -1,10 +1,6 @@
 #import <Foundation/Foundation.h>
-#import "AMQProtocolMethods.h"
+#import "AMQProtocolValues.h"
 
-@interface AMQEncoder : NSCoder
-
-@property (nonatomic, readonly) NSMutableData *data;
-
+@interface AMQEncoder : NSObject
 - (NSData *)encodeMethod:(id<AMQMethod>)amqMethod;
-
 @end
