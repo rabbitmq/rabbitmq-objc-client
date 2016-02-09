@@ -102,9 +102,9 @@ expectedResponseClass:(Class)expectedResponseClass
               channel:(RMQChannel *)channel {
     if (responseData.length) {
         AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
-        id<AMQIncoming> parsedResponse = [[expectedResponseClass alloc] initWithCoder:decoder];
-        id<AMQOutgoing,AMQMethod> reply = [parsedResponse replyWithContext:self];
-        if (reply) {
+        id parsedResponse = [[expectedResponseClass alloc] initWithCoder:decoder];
+        if ([parsedResponse conformsToProtocol:@protocol(AMQIncomingSync)]) {
+            id<AMQOutgoing,AMQMethod> reply = [parsedResponse replyWithContext:self];
             [self send:reply channel:channel];
         }
     }

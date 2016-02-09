@@ -38,10 +38,6 @@ class GenerateMethods
     chassis_names(method).include?('server')
   end
 
-  def incoming?(method)
-    chassis_names(method).include?('client')
-  end
-
   def header
     <<-OBJC
 #{header_start}
@@ -80,7 +76,6 @@ class GenerateMethods
         end
 
       protocols = ["AMQMethod"]
-      protocols << ["AMQIncoming"] if incoming?(method)
       protocols << ["AMQOutgoing"] if outgoing?(method)
 
       class_name = objc_class_name(method)

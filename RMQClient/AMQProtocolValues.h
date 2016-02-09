@@ -75,7 +75,7 @@
 - (nonnull id<AMQOutgoing,AMQMethod>)nextRequest;
 @end
 
-@protocol AMQIncoming <NSObject,AMQMethod>
+@protocol AMQIncomingSync <NSObject,AMQMethod>
 - (nonnull id<AMQOutgoing,AMQMethod>)replyWithContext:(nonnull id<AMQReplyContext>)context;
 @end
 

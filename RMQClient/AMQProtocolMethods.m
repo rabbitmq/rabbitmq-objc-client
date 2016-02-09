@@ -32,26 +32,6 @@
     return self;
 }
 
-- (id<AMQOutgoing>)replyWithContext:(id<AMQReplyContext>)context {
-    AMQTable *capabilities = [[AMQTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
-                                                      @"consumer_cancel_notify": [[AMQBoolean alloc] init:YES],
-                                                      @"exchange_exchange_bindings": [[AMQBoolean alloc] init:YES],
-                                                      @"basic.nack": [[AMQBoolean alloc] init:YES],
-                                                      @"connection.blocked": [[AMQBoolean alloc] init:YES],
-                                                      @"authentication_failure_close": [[AMQBoolean alloc] init:YES]}];
-    AMQTable *clientProperties = [[AMQTable alloc] init:
-                                       @{@"capabilities" : capabilities,
-                                         @"product"     : [[AMQLongstr alloc] init:@"RMQClient"],
-                                         @"platform"    : [[AMQLongstr alloc] init:@"iOS"],
-                                         @"version"     : [[AMQLongstr alloc] init:@"0.0.1"],
-                                         @"information" : [[AMQLongstr alloc] init:@"https://github.com/camelpunch/RMQClient"]}];
-
-    return [[AMQProtocolConnectionStartOk alloc] initWithClientProperties:clientProperties
-                                                                mechanism:[[AMQShortstr alloc] init:@"PLAIN"]
-                                                                 response:context.credentials
-                                                                   locale:[[AMQShortstr alloc] init:@"en_GB"]];
-}
-
 @end
 
 @interface AMQProtocolConnectionStartOk ()
@@ -113,12 +93,6 @@
         self.heartbeat = [[AMQShort alloc] initWithCoder:coder];
     }
     return self;
-}
-
-- (id<AMQOutgoing>)replyWithContext:(id<AMQReplyContext>)context {
-    return [[AMQProtocolConnectionTuneOk alloc] initWithChannelMax:self.channelMax
-                                                          frameMax:self.frameMax
-                                                         heartbeat:self.heartbeat];
 }
 
 @end
@@ -209,10 +183,6 @@
     return self;
 }
 
-- (id<AMQOutgoing>)replyWithContext:(id<AMQReplyContext>)context {
-    return nil;
-}
-
 @end
 
 @interface AMQProtocolConnectionClose ()
@@ -250,19 +220,12 @@
     return [AMQProtocolConnectionCloseOk class];
 }
 
-- (id<AMQOutgoing,AMQMethod>)replyWithContext:(id<AMQReplyContext>)context {
-    return nil;
-}
-
 @end
 
 @implementation AMQProtocolConnectionCloseOk
 @synthesize frameArguments;
 + (NSNumber *)classID { return @(10); }
 + (NSNumber *)methodID { return @(51); }
-- (id<AMQOutgoing,AMQMethod>)replyWithContext:(id<AMQReplyContext>)context {
-    return nil;
-}
 - (Class)expectedResponseClass {
     return nil;
 }
@@ -304,10 +267,6 @@
         self.channelID = [[AMQLongstr alloc] initWithCoder:coder];
     }
     return self;
-}
-
-- (id<AMQOutgoing>)replyWithContext:(id<AMQReplyContext>)context {
-    return nil;
 }
 
 @end
