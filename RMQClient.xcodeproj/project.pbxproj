@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AE05DA611C69E70D009E68C7 /* RMQChannelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE05DA601C69E70D009E68C7 /* RMQChannelTest.swift */; settings = {ASSET_TAGS = (); }; };
 		AE111BD71C57B33300F88277 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE111BD61C57B33300F88277 /* TestHelper.swift */; settings = {ASSET_TAGS = (); }; };
 		AE111BD81C57B33300F88277 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE111BD61C57B33300F88277 /* TestHelper.swift */; settings = {ASSET_TAGS = (); }; };
 		AE254F5F1C51B4D000DEA468 /* FakeTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47CF711C51A81D00BA2A9B /* FakeTransport.swift */; settings = {ASSET_TAGS = (); }; };
@@ -70,6 +71,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AE05DA601C69E70D009E68C7 /* RMQChannelTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQChannelTest.swift; sourceTree = "<group>"; };
 		AE111BD61C57B33300F88277 /* TestHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
 		AE39BD9C1C68B019000E7A77 /* AMQProtocolValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQProtocolValues.h; sourceTree = "<group>"; };
 		AE39BD9D1C68B019000E7A77 /* AMQProtocolValues.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQProtocolValues.m; sourceTree = "<group>"; };
@@ -221,6 +223,7 @@
 				AE111BD61C57B33300F88277 /* TestHelper.swift */,
 				AE898D571C3C2D2E00AA3BF1 /* AMQURIParse.swift */,
 				AEA45EC71C43CBBE00FE1F62 /* RMQConnectionTest.swift */,
+				AE05DA601C69E70D009E68C7 /* RMQChannelTest.swift */,
 				AE41C5621C51A2D500129207 /* RMQTransportContract.swift */,
 				AE3E0E371C56416F00186BA7 /* AMQEncodingTest.swift */,
 			);
@@ -448,6 +451,7 @@
 				AE898D581C3C2D2E00AA3BF1 /* AMQURIParse.swift in Sources */,
 				AE47CF721C51A81D00BA2A9B /* FakeTransport.swift in Sources */,
 				AE41C5531C4FC88F00129207 /* Fixtures.swift in Sources */,
+				AE05DA611C69E70D009E68C7 /* RMQChannelTest.swift in Sources */,
 				AE111BD71C57B33300F88277 /* TestHelper.swift in Sources */,
 				AE3E0E381C56416F00186BA7 /* AMQEncodingTest.swift in Sources */,
 				AEA45EC81C43CBBE00FE1F62 /* RMQConnectionTest.swift in Sources */,

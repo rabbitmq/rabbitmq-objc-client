@@ -15,7 +15,8 @@ class IntegrationTests: XCTestCase {
         defer { conn.close() }
         XCTAssert(TestHelper.pollUntil { return transport.isConnected() }, "never connected")
 
-        conn.createChannel()
+        let ch = conn.createChannel()
+        XCTAssert(ch.isOpen())
 //        let ch = conn.createChannel()
 //        let q = ch.queue("rmqclient.examples.hello_world", autoDelete: true, exclusive: false)
 //        let x = ch.defaultExchange()

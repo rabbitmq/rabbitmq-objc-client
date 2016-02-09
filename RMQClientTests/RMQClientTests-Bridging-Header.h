@@ -1,4 +1,5 @@
 #import "RMQConnection.h"
+#import "RMQChannel.h"
 #import "AMQURI.h"
 #import "RMQTCPSocketTransport.h"
 #import "AMQEncoder.h"

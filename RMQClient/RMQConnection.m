@@ -55,8 +55,8 @@
 }
 
 - (RMQChannel *)createChannel {
-    RMQChannel *ch = [RMQChannel new];
-    [self send:[[AMQProtocolChannelOpen alloc] init]];
+    RMQChannel *ch = [[RMQChannel new] open];
+    [self send:[[AMQProtocolChannelOpen alloc] initWithReserved1:[[AMQShortstr alloc] init:@""]]];
     return ch;
 }
 

@@ -75,7 +75,7 @@ class RMQConnectionTest: XCTestCase {
         transport.receive(Fixtures.channelOpenOk())
         let ch = conn.createChannel()
         XCTAssert(ch.isOpen())
-        let open = AMQProtocolChannelOpen()
+        let open = AMQProtocolChannelOpen(reserved1: AMQShortstr(""))
         TestHelper.assertEqualBytes(open.amqEncoded(), actual: transport.sentFrame(4))
     }
 }

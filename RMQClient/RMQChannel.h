@@ -7,6 +7,7 @@
          autoDelete:(BOOL)shouldAutoDelete
           exclusive:(BOOL)isExclusive;
 - (RMQExchange *)defaultExchange;
+- (RMQChannel *)open;
 - (void)close;
 - (BOOL)isOpen;
 @end

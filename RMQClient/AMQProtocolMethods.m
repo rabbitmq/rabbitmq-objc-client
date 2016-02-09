@@ -216,7 +216,7 @@
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
     if (self) {
-        self.knownHosts = [coder decodeObjectForKey:@"10_41_known-hosts"];
+        self.knownHosts = [[AMQShortstr alloc] initWithCoder:coder];
     }
     return self;
 }
@@ -236,7 +236,7 @@
 - (instancetype)initWithReserved1:(AMQShortstr *)reserved1 {
     self = [super init];
     if (self) {
-        self.frameArguments = @[];
+        self.frameArguments = @[[[AMQShortstr alloc] init:@""]];
     }
     return self;
 }
@@ -264,7 +264,7 @@
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
     if (self) {
-        self.channelID = [coder decodeObjectForKey:@"20_11_channel-id"];
+        self.channelID = [[AMQLongstr alloc] initWithCoder:coder];
     }
     return self;
 }
