@@ -54,7 +54,7 @@ class GenerateMethods
   end
 
   def generate
-    xml.xpath("//method").reduce(header) do |acc, method|
+    xml.xpath("//method").reduce(header) { |acc, method|
       method_name = method[:name].underscore.classify
       fields = method.xpath('field').map { |f|
         type = if f[:domain]
@@ -84,6 +84,6 @@ class GenerateMethods
       class_name = method.xpath('..').first[:name].capitalize
 
       acc + template.result(binding)
-    end
+    }
   end
 end
