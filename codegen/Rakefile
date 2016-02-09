@@ -1,13 +1,25 @@
 require 'pathname'
 require 'nokogiri'
 require_relative 'generate_methods'
+require_relative 'generate_method_map'
 
 dest_dir = Pathname(File.absolute_path('../RMQClient', __dir__))
 this_dir = Pathname(__dir__)
 xml = Nokogiri::XML(File.open(this_dir.join("amqp0-9-1.extended.xml")))
 
+desc "Generate AMQP method code"
 task :generate_methods do
   dest_dir.join('AMQProtocolMethods.h').write(GenerateMethods.new(xml).generate)
 end
 
-task default: :generate_methods
+desc "Generate mapping between [classID, methodID] to method classes"
+task :generate_method_map do
+  generator = GenerateMethodMap.new(xml)
+  dest_dir.join('AMQProtocolMethodMap.m').write(generator.generate_implementation)
+  dest_dir.join('AMQProtocolMethodMap.h').write(generator.generate_header)
+end
+
+desc "Generate everything (default)"
+multitask generate: [:generate_methods, :generate_method_map]
+
+task default: :generate

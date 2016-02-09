@@ -1,8 +1,11 @@
 require 'active_support/inflector'
 require 'erb'
 require 'pathname'
+require_relative 'codegen_helpers'
 
 class GenerateMethods
+  include CodegenHelpers
+
   attr_reader :xml
 
   def initialize(xml)
@@ -41,8 +44,7 @@ class GenerateMethods
 
   def header
     <<-OBJC
-// This file is generated. Do not edit.
-#import <Foundation/Foundation.h>
+#{header_start}
 @import Mantle;
 #import "AMQProtocolValues.h"
 
@@ -55,7 +57,6 @@ class GenerateMethods
 
   def generate
     xml.xpath("//method").reduce(header) { |acc, method|
-      method_name = method[:name].underscore.classify
       fields = method.xpath('field').map { |f|
         type = if f[:domain]
                  type_for_domain(xml, f[:domain]).underscore.camelize
@@ -81,7 +82,8 @@ class GenerateMethods
       protocols = ["AMQMethod"]
       protocols << ["AMQIncoming"] if incoming?(method)
       protocols << ["AMQOutgoing"] if outgoing?(method)
-      class_name = method.xpath('..').first[:name].capitalize
+
+      class_name = objc_class_name(method)
 
       acc + template.result(binding)
     }
