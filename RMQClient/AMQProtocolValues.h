@@ -63,9 +63,9 @@
 @end
 
 @protocol AMQMethod <NSObject>
-@property (nonnull, nonatomic, readwrite) NSNumber *classID;
-@property (nonnull, nonatomic, readwrite) NSNumber *methodID;
 @property (nonnull, nonatomic, readwrite) NSArray *frameArguments;
++ (nonnull NSNumber *)classID;
++ (nonnull NSNumber *)methodID;
 @end
 
 @protocol AMQOutgoing <NSObject,AMQEncoding>

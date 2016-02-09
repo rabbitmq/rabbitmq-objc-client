@@ -22,8 +22,8 @@
     for (id<AMQEncoding>arg in amqMethod.frameArguments) {
         [encodedArguments appendData:arg.amqEncoded];
     }
-    AMQMethodPayload *payload = [[AMQMethodPayload alloc] initWithClassID:[[AMQShort alloc] init:amqMethod.classID.integerValue]
-                                                                 methodID:[[AMQShort alloc] init:amqMethod.methodID.integerValue]
+    AMQMethodPayload *payload = [[AMQMethodPayload alloc] initWithClassID:[[AMQShort alloc] init:[amqMethod.class classID].integerValue]
+                                                                 methodID:[[AMQShort alloc] init:[amqMethod.class methodID].integerValue]
                                                                      data:encodedArguments];
     NSMutableData *frame = [NSMutableData new];
     NSArray *unencodedFrame = @[[[AMQOctet alloc] init:1],

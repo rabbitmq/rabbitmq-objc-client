@@ -11,8 +11,9 @@
 
 @implementation AMQProtocolConnectionStart
 @synthesize frameArguments;
-@synthesize classID;
-@synthesize methodID;
+
++ (NSNumber *)classID { return @(10); }
++ (NSNumber *)methodID { return @(10); }
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -27,8 +28,6 @@
                                 self.serverProperties,
                                 self.mechanisms,
                                 self.locales,];
-        self.classID = @(10);
-        self.methodID = @(10);
     }
     return self;
 }
@@ -65,9 +64,10 @@
 @end
 
 @implementation AMQProtocolConnectionStartOk
-@synthesize classID;
-@synthesize methodID;
 @synthesize frameArguments;
+
++ (NSNumber *)classID { return @(10); }
++ (NSNumber *)methodID { return @(11); }
 
 - (instancetype)initWithClientProperties:(AMQTable *)clientProperties
                                mechanism:(AMQShortstr *)mechanism
@@ -79,8 +79,6 @@
         self.mechanism = mechanism;
         self.response = response;
         self.locale = locale;
-        self.classID = @(10);
-        self.methodID = @(11);
         self.frameArguments = @[self.clientProperties,
                                 self.mechanism,
                                 self.response,
@@ -106,9 +104,10 @@
 @end
 
 @implementation AMQProtocolConnectionTune
-@synthesize classID;
-@synthesize methodID;
 @synthesize frameArguments;
+
++ (NSNumber *)classID { return @(10); }
++ (NSNumber *)methodID { return @(30); }
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -135,9 +134,10 @@
 @end
 
 @implementation AMQProtocolConnectionTuneOk
-@synthesize classID;
-@synthesize methodID;
 @synthesize frameArguments;
+
++ (NSNumber *)classID { return @(10); }
++ (NSNumber *)methodID { return @(31); }
 
 - (instancetype)initWithChannelMax:(AMQShort *)channelMax
                           frameMax:(AMQLong *)frameMax
@@ -147,8 +147,6 @@
         self.channelMax = channelMax;
         self.frameMax = frameMax;
         self.heartbeat = heartbeat;
-        self.classID = @(10);
-        self.methodID = @(31);
         self.frameArguments = @[self.channelMax, self.frameMax, self.heartbeat];
     }
     return self;
@@ -177,9 +175,10 @@
 @end
 
 @implementation AMQProtocolConnectionOpen
-@synthesize classID;
-@synthesize methodID;
 @synthesize frameArguments;
+
++ (NSNumber *)classID { return @(10); }
++ (NSNumber *)methodID { return @(40); }
 
 - (instancetype)initWithVirtualHost:(AMQShortstr *)vhost
                           reserved1:(AMQShortstr *)capabilities
@@ -189,8 +188,6 @@
         self.vhost = vhost;
         self.capabilities = capabilities;
         self.insist = insist;
-        self.classID = @(10);
-        self.methodID = @(40);
         self.frameArguments = @[self.vhost, self.capabilities, self.insist];
     }
     return self;
@@ -211,9 +208,10 @@
 @end
 
 @implementation AMQProtocolConnectionOpenOk
-@synthesize classID;
-@synthesize methodID;
 @synthesize frameArguments;
+
++ (NSNumber *)classID { return @(10); }
++ (NSNumber *)methodID { return @(41); }
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -230,15 +228,14 @@
 @end
 
 @implementation AMQProtocolChannelOpen
-@synthesize classID;
-@synthesize methodID;
 @synthesize frameArguments;
+
++ (NSNumber *)classID { return @(20); }
++ (NSNumber *)methodID { return @(10); }
 
 - (instancetype)initWithReserved1:(AMQShortstr *)reserved1 {
     self = [super init];
     if (self) {
-        self.classID = @(20);
-        self.methodID = @(10);
         self.frameArguments = @[];
     }
     return self;
@@ -259,9 +256,10 @@
 @end
 
 @implementation AMQProtocolChannelOpenOk
-@synthesize classID;
-@synthesize methodID;
 @synthesize frameArguments;
+
++ (NSNumber *)classID { return @(20); }
++ (NSNumber *)methodID { return @(11); }
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];

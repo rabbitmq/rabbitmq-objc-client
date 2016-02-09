@@ -1,8 +1,12 @@
 import XCTest
 
 @objc class EncodableMethod: NSObject, AMQMethod {
-    var classID: NSNumber = 10
-    var methodID: NSNumber = 11
+    static func classID() -> NSNumber {
+        return 10
+    }
+    static func methodID() -> NSNumber {
+        return 11
+    }
     var frameArguments: [AnyObject] = [AMQShortstr("foo")]
 }
 
