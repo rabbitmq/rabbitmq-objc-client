@@ -15,6 +15,27 @@
 + (NSNumber *)classID { return @(10); }
 + (NSNumber *)methodID { return @(10); }
 
+- (nonnull instancetype)initWithVersionMajor:(nonnull AMQOctet *)versionMajor
+                                versionMinor:(nonnull AMQOctet *)versionMinor
+                            serverProperties:(nonnull AMQTable *)serverProperties
+                                  mechanisms:(nonnull AMQLongstr *)mechanisms
+                                     locales:(nonnull AMQLongstr *)locales {
+    self = [super init];
+    if (self) {
+        self.versionMajor = versionMajor;
+        self.versionMinor = versionMinor;
+        self.serverProperties = serverProperties;
+        self.mechanisms = mechanisms;
+        self.locales = locales;
+        self.frameArguments = @[self.versionMajor,
+                                self.versionMinor,
+                                self.serverProperties,
+                                self.mechanisms,
+                                self.locales];
+    }
+    return self;
+}
+
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
     if (self) {
@@ -65,6 +86,21 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.clientProperties = [[AMQTable alloc] initWithCoder:coder];
+        self.mechanism = [[AMQShortstr alloc] initWithCoder:coder];
+        self.response = [[AMQLongstr alloc] initWithCoder:coder];
+        self.locale = [[AMQShortstr alloc] initWithCoder:coder];
+        self.frameArguments = @[self.clientProperties,
+                                self.mechanism,
+                                self.response,
+                                self.locale];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolConnectionSecure ()
@@ -76,6 +112,15 @@
 
 + (NSNumber *)classID { return @(10); }
 + (NSNumber *)methodID { return @(20); }
+
+- (nonnull instancetype)initWithChallenge:(nonnull AMQLongstr *)challenge {
+    self = [super init];
+    if (self) {
+        self.challenge = challenge;
+        self.frameArguments = @[self.challenge];
+    }
+    return self;
+}
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -107,6 +152,15 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.response = [[AMQLongstr alloc] initWithCoder:coder];
+        self.frameArguments = @[self.response];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolConnectionTune ()
@@ -120,6 +174,21 @@
 
 + (NSNumber *)classID { return @(10); }
 + (NSNumber *)methodID { return @(30); }
+
+- (nonnull instancetype)initWithChannelMax:(nonnull AMQShort *)channelMax
+                                  frameMax:(nonnull AMQLong *)frameMax
+                                 heartbeat:(nonnull AMQShort *)heartbeat {
+    self = [super init];
+    if (self) {
+        self.channelMax = channelMax;
+        self.frameMax = frameMax;
+        self.heartbeat = heartbeat;
+        self.frameArguments = @[self.channelMax,
+                                self.frameMax,
+                                self.heartbeat];
+    }
+    return self;
+}
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -163,6 +232,19 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.channelMax = [[AMQShort alloc] initWithCoder:coder];
+        self.frameMax = [[AMQLong alloc] initWithCoder:coder];
+        self.heartbeat = [[AMQShort alloc] initWithCoder:coder];
+        self.frameArguments = @[self.channelMax,
+                                self.frameMax,
+                                self.heartbeat];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolConnectionOpen ()
@@ -192,6 +274,19 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.virtualHost = [[AMQShortstr alloc] initWithCoder:coder];
+        self.reserved1 = [[AMQShortstr alloc] initWithCoder:coder];
+        self.reserved2 = [[AMQBit alloc] initWithCoder:coder];
+        self.frameArguments = @[self.virtualHost,
+                                self.reserved1,
+                                self.reserved2];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolConnectionOpenOk ()
@@ -203,6 +298,15 @@
 
 + (NSNumber *)classID { return @(10); }
 + (NSNumber *)methodID { return @(41); }
+
+- (nonnull instancetype)initWithReserved1:(nonnull AMQShortstr *)reserved1 {
+    self = [super init];
+    if (self) {
+        self.reserved1 = reserved1;
+        self.frameArguments = @[self.reserved1];
+    }
+    return self;
+}
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -246,6 +350,21 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.replyCode = [[AMQShort alloc] initWithCoder:coder];
+        self.replyText = [[AMQShortstr alloc] initWithCoder:coder];
+        self.classId = [[AMQShort alloc] initWithCoder:coder];
+        self.methodId = [[AMQShort alloc] initWithCoder:coder];
+        self.frameArguments = @[self.replyCode,
+                                self.replyText,
+                                self.classId,
+                                self.methodId];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolConnectionCloseOk ()
@@ -256,6 +375,7 @@
 
 + (NSNumber *)classID { return @(10); }
 + (NSNumber *)methodID { return @(51); }
+
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -286,6 +406,15 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.reason = [[AMQShortstr alloc] initWithCoder:coder];
+        self.frameArguments = @[self.reason];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolConnectionUnblocked ()
@@ -296,6 +425,7 @@
 
 + (NSNumber *)classID { return @(10); }
 + (NSNumber *)methodID { return @(61); }
+
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -326,6 +456,15 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.reserved1 = [[AMQShortstr alloc] initWithCoder:coder];
+        self.frameArguments = @[self.reserved1];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolChannelOpenOk ()
@@ -337,6 +476,15 @@
 
 + (NSNumber *)classID { return @(20); }
 + (NSNumber *)methodID { return @(11); }
+
+- (nonnull instancetype)initWithReserved1:(nonnull AMQLongstr *)reserved1 {
+    self = [super init];
+    if (self) {
+        self.reserved1 = reserved1;
+        self.frameArguments = @[self.reserved1];
+    }
+    return self;
+}
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -368,6 +516,15 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.active = [[AMQBit alloc] initWithCoder:coder];
+        self.frameArguments = @[self.active];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolChannelFlowOk ()
@@ -384,6 +541,15 @@
     self = [super init];
     if (self) {
         self.active = active;
+        self.frameArguments = @[self.active];
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.active = [[AMQBit alloc] initWithCoder:coder];
         self.frameArguments = @[self.active];
     }
     return self;
@@ -422,6 +588,21 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.replyCode = [[AMQShort alloc] initWithCoder:coder];
+        self.replyText = [[AMQShortstr alloc] initWithCoder:coder];
+        self.classId = [[AMQShort alloc] initWithCoder:coder];
+        self.methodId = [[AMQShort alloc] initWithCoder:coder];
+        self.frameArguments = @[self.replyCode,
+                                self.replyText,
+                                self.classId,
+                                self.methodId];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolChannelCloseOk ()
@@ -432,6 +613,7 @@
 
 + (NSNumber *)classID { return @(20); }
 + (NSNumber *)methodID { return @(41); }
+
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -494,6 +676,31 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.reserved1 = [[AMQShort alloc] initWithCoder:coder];
+        self.exchange = [[AMQShortstr alloc] initWithCoder:coder];
+        self.type = [[AMQShortstr alloc] initWithCoder:coder];
+        self.passive = [[AMQBit alloc] initWithCoder:coder];
+        self.durable = [[AMQBit alloc] initWithCoder:coder];
+        self.autoDelete = [[AMQBit alloc] initWithCoder:coder];
+        self.internal = [[AMQBit alloc] initWithCoder:coder];
+        self.noWait = [[AMQBit alloc] initWithCoder:coder];
+        self.arguments = [[AMQTable alloc] initWithCoder:coder];
+        self.frameArguments = @[self.reserved1,
+                                self.exchange,
+                                self.type,
+                                self.passive,
+                                self.durable,
+                                self.autoDelete,
+                                self.internal,
+                                self.noWait,
+                                self.arguments];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolExchangeDeclareOk ()
@@ -504,6 +711,7 @@
 
 + (NSNumber *)classID { return @(40); }
 + (NSNumber *)methodID { return @(11); }
+
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -546,6 +754,21 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.reserved1 = [[AMQShort alloc] initWithCoder:coder];
+        self.exchange = [[AMQShortstr alloc] initWithCoder:coder];
+        self.ifUnused = [[AMQBit alloc] initWithCoder:coder];
+        self.noWait = [[AMQBit alloc] initWithCoder:coder];
+        self.frameArguments = @[self.reserved1,
+                                self.exchange,
+                                self.ifUnused,
+                                self.noWait];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolExchangeDeleteOk ()
@@ -556,6 +779,7 @@
 
 + (NSNumber *)classID { return @(40); }
 + (NSNumber *)methodID { return @(21); }
+
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -606,6 +830,25 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.reserved1 = [[AMQShort alloc] initWithCoder:coder];
+        self.destination = [[AMQShortstr alloc] initWithCoder:coder];
+        self.source = [[AMQShortstr alloc] initWithCoder:coder];
+        self.routingKey = [[AMQShortstr alloc] initWithCoder:coder];
+        self.noWait = [[AMQBit alloc] initWithCoder:coder];
+        self.arguments = [[AMQTable alloc] initWithCoder:coder];
+        self.frameArguments = @[self.reserved1,
+                                self.destination,
+                                self.source,
+                                self.routingKey,
+                                self.noWait,
+                                self.arguments];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolExchangeBindOk ()
@@ -616,6 +859,7 @@
 
 + (NSNumber *)classID { return @(40); }
 + (NSNumber *)methodID { return @(31); }
+
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -666,6 +910,25 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.reserved1 = [[AMQShort alloc] initWithCoder:coder];
+        self.destination = [[AMQShortstr alloc] initWithCoder:coder];
+        self.source = [[AMQShortstr alloc] initWithCoder:coder];
+        self.routingKey = [[AMQShortstr alloc] initWithCoder:coder];
+        self.noWait = [[AMQBit alloc] initWithCoder:coder];
+        self.arguments = [[AMQTable alloc] initWithCoder:coder];
+        self.frameArguments = @[self.reserved1,
+                                self.destination,
+                                self.source,
+                                self.routingKey,
+                                self.noWait,
+                                self.arguments];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolExchangeUnbindOk ()
@@ -676,6 +939,7 @@
 
 + (NSNumber *)classID { return @(40); }
 + (NSNumber *)methodID { return @(51); }
+
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -734,6 +998,29 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.reserved1 = [[AMQShort alloc] initWithCoder:coder];
+        self.queue = [[AMQShortstr alloc] initWithCoder:coder];
+        self.passive = [[AMQBit alloc] initWithCoder:coder];
+        self.durable = [[AMQBit alloc] initWithCoder:coder];
+        self.exclusive = [[AMQBit alloc] initWithCoder:coder];
+        self.autoDelete = [[AMQBit alloc] initWithCoder:coder];
+        self.noWait = [[AMQBit alloc] initWithCoder:coder];
+        self.arguments = [[AMQTable alloc] initWithCoder:coder];
+        self.frameArguments = @[self.reserved1,
+                                self.queue,
+                                self.passive,
+                                self.durable,
+                                self.exclusive,
+                                self.autoDelete,
+                                self.noWait,
+                                self.arguments];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolQueueDeclareOk ()
@@ -747,6 +1034,21 @@
 
 + (NSNumber *)classID { return @(50); }
 + (NSNumber *)methodID { return @(11); }
+
+- (nonnull instancetype)initWithQueue:(nonnull AMQShortstr *)queue
+                         messageCount:(nonnull AMQLong *)messageCount
+                        consumerCount:(nonnull AMQLong *)consumerCount {
+    self = [super init];
+    if (self) {
+        self.queue = queue;
+        self.messageCount = messageCount;
+        self.consumerCount = consumerCount;
+        self.frameArguments = @[self.queue,
+                                self.messageCount,
+                                self.consumerCount];
+    }
+    return self;
+}
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -802,6 +1104,25 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.reserved1 = [[AMQShort alloc] initWithCoder:coder];
+        self.queue = [[AMQShortstr alloc] initWithCoder:coder];
+        self.exchange = [[AMQShortstr alloc] initWithCoder:coder];
+        self.routingKey = [[AMQShortstr alloc] initWithCoder:coder];
+        self.noWait = [[AMQBit alloc] initWithCoder:coder];
+        self.arguments = [[AMQTable alloc] initWithCoder:coder];
+        self.frameArguments = @[self.reserved1,
+                                self.queue,
+                                self.exchange,
+                                self.routingKey,
+                                self.noWait,
+                                self.arguments];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolQueueBindOk ()
@@ -812,6 +1133,7 @@
 
 + (NSNumber *)classID { return @(50); }
 + (NSNumber *)methodID { return @(21); }
+
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -858,6 +1180,23 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.reserved1 = [[AMQShort alloc] initWithCoder:coder];
+        self.queue = [[AMQShortstr alloc] initWithCoder:coder];
+        self.exchange = [[AMQShortstr alloc] initWithCoder:coder];
+        self.routingKey = [[AMQShortstr alloc] initWithCoder:coder];
+        self.arguments = [[AMQTable alloc] initWithCoder:coder];
+        self.frameArguments = @[self.reserved1,
+                                self.queue,
+                                self.exchange,
+                                self.routingKey,
+                                self.arguments];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolQueueUnbindOk ()
@@ -868,6 +1207,7 @@
 
 + (NSNumber *)classID { return @(50); }
 + (NSNumber *)methodID { return @(51); }
+
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -906,6 +1246,19 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.reserved1 = [[AMQShort alloc] initWithCoder:coder];
+        self.queue = [[AMQShortstr alloc] initWithCoder:coder];
+        self.noWait = [[AMQBit alloc] initWithCoder:coder];
+        self.frameArguments = @[self.reserved1,
+                                self.queue,
+                                self.noWait];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolQueuePurgeOk ()
@@ -917,6 +1270,15 @@
 
 + (NSNumber *)classID { return @(50); }
 + (NSNumber *)methodID { return @(31); }
+
+- (nonnull instancetype)initWithMessageCount:(nonnull AMQLong *)messageCount {
+    self = [super init];
+    if (self) {
+        self.messageCount = messageCount;
+        self.frameArguments = @[self.messageCount];
+    }
+    return self;
+}
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -964,6 +1326,23 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.reserved1 = [[AMQShort alloc] initWithCoder:coder];
+        self.queue = [[AMQShortstr alloc] initWithCoder:coder];
+        self.ifUnused = [[AMQBit alloc] initWithCoder:coder];
+        self.ifEmpty = [[AMQBit alloc] initWithCoder:coder];
+        self.noWait = [[AMQBit alloc] initWithCoder:coder];
+        self.frameArguments = @[self.reserved1,
+                                self.queue,
+                                self.ifUnused,
+                                self.ifEmpty,
+                                self.noWait];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolQueueDeleteOk ()
@@ -975,6 +1354,15 @@
 
 + (NSNumber *)classID { return @(50); }
 + (NSNumber *)methodID { return @(41); }
+
+- (nonnull instancetype)initWithMessageCount:(nonnull AMQLong *)messageCount {
+    self = [super init];
+    if (self) {
+        self.messageCount = messageCount;
+        self.frameArguments = @[self.messageCount];
+    }
+    return self;
+}
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -1014,6 +1402,19 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.prefetchSize = [[AMQLong alloc] initWithCoder:coder];
+        self.prefetchCount = [[AMQShort alloc] initWithCoder:coder];
+        self.global = [[AMQBit alloc] initWithCoder:coder];
+        self.frameArguments = @[self.prefetchSize,
+                                self.prefetchCount,
+                                self.global];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolBasicQosOk ()
@@ -1024,6 +1425,7 @@
 
 + (NSNumber *)classID { return @(60); }
 + (NSNumber *)methodID { return @(11); }
+
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -1082,6 +1484,29 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.reserved1 = [[AMQShort alloc] initWithCoder:coder];
+        self.queue = [[AMQShortstr alloc] initWithCoder:coder];
+        self.consumerTag = [[AMQShortstr alloc] initWithCoder:coder];
+        self.noLocal = [[AMQBit alloc] initWithCoder:coder];
+        self.noAck = [[AMQBit alloc] initWithCoder:coder];
+        self.exclusive = [[AMQBit alloc] initWithCoder:coder];
+        self.noWait = [[AMQBit alloc] initWithCoder:coder];
+        self.arguments = [[AMQTable alloc] initWithCoder:coder];
+        self.frameArguments = @[self.reserved1,
+                                self.queue,
+                                self.consumerTag,
+                                self.noLocal,
+                                self.noAck,
+                                self.exclusive,
+                                self.noWait,
+                                self.arguments];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolBasicConsumeOk ()
@@ -1093,6 +1518,15 @@
 
 + (NSNumber *)classID { return @(60); }
 + (NSNumber *)methodID { return @(21); }
+
+- (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag {
+    self = [super init];
+    if (self) {
+        self.consumerTag = consumerTag;
+        self.frameArguments = @[self.consumerTag];
+    }
+    return self;
+}
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -1128,6 +1562,17 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.consumerTag = [[AMQShortstr alloc] initWithCoder:coder];
+        self.noWait = [[AMQBit alloc] initWithCoder:coder];
+        self.frameArguments = @[self.consumerTag,
+                                self.noWait];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolBasicCancelOk ()
@@ -1144,6 +1589,15 @@
     self = [super init];
     if (self) {
         self.consumerTag = consumerTag;
+        self.frameArguments = @[self.consumerTag];
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.consumerTag = [[AMQShortstr alloc] initWithCoder:coder];
         self.frameArguments = @[self.consumerTag];
     }
     return self;
@@ -1186,6 +1640,23 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.reserved1 = [[AMQShort alloc] initWithCoder:coder];
+        self.exchange = [[AMQShortstr alloc] initWithCoder:coder];
+        self.routingKey = [[AMQShortstr alloc] initWithCoder:coder];
+        self.mandatory = [[AMQBit alloc] initWithCoder:coder];
+        self.immediate = [[AMQBit alloc] initWithCoder:coder];
+        self.frameArguments = @[self.reserved1,
+                                self.exchange,
+                                self.routingKey,
+                                self.mandatory,
+                                self.immediate];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolBasicReturn ()
@@ -1200,6 +1671,24 @@
 
 + (NSNumber *)classID { return @(60); }
 + (NSNumber *)methodID { return @(50); }
+
+- (nonnull instancetype)initWithReplyCode:(nonnull AMQShort *)replyCode
+                                replyText:(nonnull AMQShortstr *)replyText
+                                 exchange:(nonnull AMQShortstr *)exchange
+                               routingKey:(nonnull AMQShortstr *)routingKey {
+    self = [super init];
+    if (self) {
+        self.replyCode = replyCode;
+        self.replyText = replyText;
+        self.exchange = exchange;
+        self.routingKey = routingKey;
+        self.frameArguments = @[self.replyCode,
+                                self.replyText,
+                                self.exchange,
+                                self.routingKey];
+    }
+    return self;
+}
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -1231,6 +1720,27 @@
 
 + (NSNumber *)classID { return @(60); }
 + (NSNumber *)methodID { return @(60); }
+
+- (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag
+                                deliveryTag:(nonnull AMQLonglong *)deliveryTag
+                                redelivered:(nonnull AMQBit *)redelivered
+                                   exchange:(nonnull AMQShortstr *)exchange
+                                 routingKey:(nonnull AMQShortstr *)routingKey {
+    self = [super init];
+    if (self) {
+        self.consumerTag = consumerTag;
+        self.deliveryTag = deliveryTag;
+        self.redelivered = redelivered;
+        self.exchange = exchange;
+        self.routingKey = routingKey;
+        self.frameArguments = @[self.consumerTag,
+                                self.deliveryTag,
+                                self.redelivered,
+                                self.exchange,
+                                self.routingKey];
+    }
+    return self;
+}
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -1278,6 +1788,19 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.reserved1 = [[AMQShort alloc] initWithCoder:coder];
+        self.queue = [[AMQShortstr alloc] initWithCoder:coder];
+        self.noAck = [[AMQBit alloc] initWithCoder:coder];
+        self.frameArguments = @[self.reserved1,
+                                self.queue,
+                                self.noAck];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolBasicGetOk ()
@@ -1293,6 +1816,27 @@
 
 + (NSNumber *)classID { return @(60); }
 + (NSNumber *)methodID { return @(71); }
+
+- (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
+                                redelivered:(nonnull AMQBit *)redelivered
+                                   exchange:(nonnull AMQShortstr *)exchange
+                                 routingKey:(nonnull AMQShortstr *)routingKey
+                               messageCount:(nonnull AMQLong *)messageCount {
+    self = [super init];
+    if (self) {
+        self.deliveryTag = deliveryTag;
+        self.redelivered = redelivered;
+        self.exchange = exchange;
+        self.routingKey = routingKey;
+        self.messageCount = messageCount;
+        self.frameArguments = @[self.deliveryTag,
+                                self.redelivered,
+                                self.exchange,
+                                self.routingKey,
+                                self.messageCount];
+    }
+    return self;
+}
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -1322,6 +1866,15 @@
 
 + (NSNumber *)classID { return @(60); }
 + (NSNumber *)methodID { return @(72); }
+
+- (nonnull instancetype)initWithReserved1:(nonnull AMQShortstr *)reserved1 {
+    self = [super init];
+    if (self) {
+        self.reserved1 = reserved1;
+        self.frameArguments = @[self.reserved1];
+    }
+    return self;
+}
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -1357,6 +1910,17 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.deliveryTag = [[AMQLonglong alloc] initWithCoder:coder];
+        self.multiple = [[AMQBit alloc] initWithCoder:coder];
+        self.frameArguments = @[self.deliveryTag,
+                                self.multiple];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolBasicReject ()
@@ -1376,6 +1940,17 @@
     if (self) {
         self.deliveryTag = deliveryTag;
         self.requeue = requeue;
+        self.frameArguments = @[self.deliveryTag,
+                                self.requeue];
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.deliveryTag = [[AMQLonglong alloc] initWithCoder:coder];
+        self.requeue = [[AMQBit alloc] initWithCoder:coder];
         self.frameArguments = @[self.deliveryTag,
                                 self.requeue];
     }
@@ -1403,6 +1978,15 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.requeue = [[AMQBit alloc] initWithCoder:coder];
+        self.frameArguments = @[self.requeue];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolBasicRecover ()
@@ -1424,6 +2008,15 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.requeue = [[AMQBit alloc] initWithCoder:coder];
+        self.frameArguments = @[self.requeue];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolBasicRecoverOk ()
@@ -1434,6 +2027,7 @@
 
 + (NSNumber *)classID { return @(60); }
 + (NSNumber *)methodID { return @(111); }
+
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -1472,6 +2066,19 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.deliveryTag = [[AMQLonglong alloc] initWithCoder:coder];
+        self.multiple = [[AMQBit alloc] initWithCoder:coder];
+        self.requeue = [[AMQBit alloc] initWithCoder:coder];
+        self.frameArguments = @[self.deliveryTag,
+                                self.multiple,
+                                self.requeue];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolTxSelect ()
@@ -1482,6 +2089,7 @@
 
 + (NSNumber *)classID { return @(90); }
 + (NSNumber *)methodID { return @(10); }
+
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -1502,6 +2110,7 @@
 + (NSNumber *)classID { return @(90); }
 + (NSNumber *)methodID { return @(11); }
 
+
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
     if (self) {
@@ -1520,6 +2129,7 @@
 
 + (NSNumber *)classID { return @(90); }
 + (NSNumber *)methodID { return @(20); }
+
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -1540,6 +2150,7 @@
 + (NSNumber *)classID { return @(90); }
 + (NSNumber *)methodID { return @(21); }
 
+
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
     if (self) {
@@ -1559,6 +2170,7 @@
 + (NSNumber *)classID { return @(90); }
 + (NSNumber *)methodID { return @(30); }
 
+
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
     if (self) {
@@ -1577,6 +2189,7 @@
 
 + (NSNumber *)classID { return @(90); }
 + (NSNumber *)methodID { return @(31); }
+
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];
@@ -1607,6 +2220,15 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self.nowait = [[AMQBit alloc] initWithCoder:coder];
+        self.frameArguments = @[self.nowait];
+    }
+    return self;
+}
+
 @end
 
 @interface AMQProtocolConfirmSelectOk ()
@@ -1617,6 +2239,7 @@
 
 + (NSNumber *)classID { return @(85); }
 + (NSNumber *)methodID { return @(11); }
+
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super init];

@@ -71,7 +71,7 @@ class GenerateMethods
 
   def method_constructor(method)
     fields = method_fields(method)
-    if outgoing?(method) && fields.any?
+    if fields.any?
       first_field_name = "#{fields[0][:name][0].upcase}#{fields[0][:name][1..-1]}:"
       first_line = "- (nonnull instancetype)initWith#{first_field_name}#{property_type_and_label(fields[0])}"
       constructor_rest = fields[1..-1].map { |field|
