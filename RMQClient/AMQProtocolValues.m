@@ -332,30 +332,30 @@
 @interface AMQMethodPayload ()
 @property (nonatomic, copy, readwrite) AMQShort *classID;
 @property (nonatomic, copy, readwrite) AMQShort *methodID;
-@property (nonatomic, copy, readwrite) NSData *data;
+@property (nonatomic, copy, readwrite) NSArray *arguments;
 @end
 
 @implementation AMQMethodPayload
 
 - (instancetype)initWithClassID:(AMQShort *)classID
                        methodID:(AMQShort *)methodID
-                           data:(NSData *)data {
+                      arguments:(NSArray *)arguments {
     self = [super init];
     if (self) {
         self.classID = classID;
         self.methodID = methodID;
-        self.data = data;
+        self.arguments = arguments;
     }
     return self;
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-
     [encoded appendData:self.classID.amqEncoded];
     [encoded appendData:self.methodID.amqEncoded];
-    [encoded appendData:self.data];
-
+    for (id<AMQEncoding>arg in self.arguments) {
+        [encoded appendData:arg.amqEncoded];
+    }
     return encoded;
 }
 

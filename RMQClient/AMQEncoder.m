@@ -18,13 +18,9 @@
 }
 
 - (NSData *)encodeMethod:(id<AMQMethod>)amqMethod {
-    NSMutableData *encodedArguments = [NSMutableData new];
-    for (id<AMQEncoding>arg in amqMethod.frameArguments) {
-        [encodedArguments appendData:arg.amqEncoded];
-    }
     AMQMethodPayload *payload = [[AMQMethodPayload alloc] initWithClassID:[[AMQShort alloc] init:[amqMethod.class classID].integerValue]
                                                                  methodID:[[AMQShort alloc] init:[amqMethod.class methodID].integerValue]
-                                                                     data:encodedArguments];
+                                                                arguments:amqMethod.frameArguments];
     NSMutableData *frame = [NSMutableData new];
     NSArray *unencodedFrame = @[[[AMQOctet alloc] init:1],
                                 [[AMQShort alloc] init:0],
