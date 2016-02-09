@@ -85,10 +85,10 @@
                                         channel:channel]
                     error:&error
                onComplete:^{
-                   if ([amqMethod conformsToProtocol:@protocol(AMQExpectsResponse)]) {
+                   if ([amqMethod conformsToProtocol:@protocol(AMQOutgoingSync)]) {
                        [self.transport readFrame:^(NSData * _Nonnull responseData) {
                            [self readResponse:responseData
-                        expectedResponseClass:((id <AMQExpectsResponse>)amqMethod).expectedResponseClass
+                        expectedResponseClass:((id <AMQOutgoingSync>)amqMethod).expectedResponseClass
                                       channel:channel];
                        }];
                    } else if ([amqMethod conformsToProtocol:@protocol(AMQOutgoingPrecursor)]) {

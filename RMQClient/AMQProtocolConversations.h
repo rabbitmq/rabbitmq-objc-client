@@ -4,7 +4,7 @@
 @interface AMQProtocolConnectionStart (Conversation) <AMQIncomingSync>
 @end
 
-@interface AMQProtocolConnectionStartOk (Conversation) <AMQExpectsResponse>
+@interface AMQProtocolConnectionStartOk (Conversation) <AMQOutgoingSync>
 @end
 
 @interface AMQProtocolConnectionTune (Conversation) <AMQIncomingSync>

@@ -68,7 +68,7 @@
 + (nonnull NSNumber *)methodID;
 @end
 
-@protocol AMQExpectsResponse <NSObject>
+@protocol AMQOutgoingSync <NSObject>
 - (nonnull Class)expectedResponseClass;
 @end
 
