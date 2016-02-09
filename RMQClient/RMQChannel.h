@@ -6,8 +6,8 @@
 @property (nonnull, copy, nonatomic, readonly) NSNumber *channelID;
 - (nonnull instancetype)init:(nonnull NSNumber *)channelID;
 - (nonnull RMQQueue *)queue:(nonnull NSString *)queueName
-         autoDelete:(BOOL)shouldAutoDelete
-          exclusive:(BOOL)isExclusive;
+                 autoDelete:(BOOL)shouldAutoDelete
+                  exclusive:(BOOL)isExclusive;
 - (nonnull RMQExchange *)defaultExchange;
 - (nonnull RMQChannel *)open;
 - (void)close;
