@@ -12,7 +12,7 @@
 
 @end
 
-@interface AMQProtocolConnectionStartOk : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolConnectionStartOk : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQTable *clientProperties;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *mechanism;
 @property (nonnull, copy, nonatomic, readonly) AMQLongstr *response;
@@ -28,7 +28,7 @@
 
 @end
 
-@interface AMQProtocolConnectionSecureOk : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolConnectionSecureOk : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQLongstr *response;
 - (nonnull instancetype)initWithResponse:(nonnull AMQLongstr *)response;
 @end
@@ -40,7 +40,7 @@
 
 @end
 
-@interface AMQProtocolConnectionTuneOk : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolConnectionTuneOk : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShort *channelMax;
 @property (nonnull, copy, nonatomic, readonly) AMQLong *frameMax;
 @property (nonnull, copy, nonatomic, readonly) AMQShort *heartbeat;
@@ -49,7 +49,7 @@
                                  heartbeat:(nonnull AMQShort *)heartbeat;
 @end
 
-@interface AMQProtocolConnectionOpen : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolConnectionOpen : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *virtualHost;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *reserved1;
 @property (nonnull, copy, nonatomic, readonly) AMQBit *reserved2;
@@ -63,7 +63,7 @@
 
 @end
 
-@interface AMQProtocolConnectionClose : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolConnectionClose : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShort *replyCode;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *replyText;
 @property (nonnull, copy, nonatomic, readonly) AMQShort *classId;
@@ -74,20 +74,20 @@
                                  methodId:(nonnull AMQShort *)methodId;
 @end
 
-@interface AMQProtocolConnectionCloseOk : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolConnectionCloseOk : MTLModel <NSCoding, AMQMethod>
 
 @end
 
-@interface AMQProtocolConnectionBlocked : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolConnectionBlocked : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *reason;
 - (nonnull instancetype)initWithReason:(nonnull AMQShortstr *)reason;
 @end
 
-@interface AMQProtocolConnectionUnblocked : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolConnectionUnblocked : MTLModel <NSCoding, AMQMethod>
 
 @end
 
-@interface AMQProtocolChannelOpen : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolChannelOpen : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *reserved1;
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShortstr *)reserved1;
 @end
@@ -97,17 +97,17 @@
 
 @end
 
-@interface AMQProtocolChannelFlow : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolChannelFlow : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQBit *active;
 - (nonnull instancetype)initWithActive:(nonnull AMQBit *)active;
 @end
 
-@interface AMQProtocolChannelFlowOk : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolChannelFlowOk : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQBit *active;
 - (nonnull instancetype)initWithActive:(nonnull AMQBit *)active;
 @end
 
-@interface AMQProtocolChannelClose : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolChannelClose : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShort *replyCode;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *replyText;
 @property (nonnull, copy, nonatomic, readonly) AMQShort *classId;
@@ -118,11 +118,11 @@
                                  methodId:(nonnull AMQShort *)methodId;
 @end
 
-@interface AMQProtocolChannelCloseOk : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolChannelCloseOk : MTLModel <NSCoding, AMQMethod>
 
 @end
 
-@interface AMQProtocolExchangeDeclare : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolExchangeDeclare : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *exchange;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *type;
@@ -147,7 +147,7 @@
 
 @end
 
-@interface AMQProtocolExchangeDelete : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolExchangeDelete : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *exchange;
 @property (nonnull, copy, nonatomic, readonly) AMQBit *ifUnused;
@@ -162,7 +162,7 @@
 
 @end
 
-@interface AMQProtocolExchangeBind : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolExchangeBind : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *destination;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *source;
@@ -181,7 +181,7 @@
 
 @end
 
-@interface AMQProtocolExchangeUnbind : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolExchangeUnbind : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *destination;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *source;
@@ -200,7 +200,7 @@
 
 @end
 
-@interface AMQProtocolQueueDeclare : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolQueueDeclare : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *queue;
 @property (nonnull, copy, nonatomic, readonly) AMQBit *passive;
@@ -226,7 +226,7 @@
 
 @end
 
-@interface AMQProtocolQueueBind : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolQueueBind : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *queue;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *exchange;
@@ -245,7 +245,7 @@
 
 @end
 
-@interface AMQProtocolQueueUnbind : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolQueueUnbind : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *queue;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *exchange;
@@ -262,7 +262,7 @@
 
 @end
 
-@interface AMQProtocolQueuePurge : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolQueuePurge : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *queue;
 @property (nonnull, copy, nonatomic, readonly) AMQBit *noWait;
@@ -276,7 +276,7 @@
 
 @end
 
-@interface AMQProtocolQueueDelete : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolQueueDelete : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *queue;
 @property (nonnull, copy, nonatomic, readonly) AMQBit *ifUnused;
@@ -294,7 +294,7 @@
 
 @end
 
-@interface AMQProtocolBasicQo : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolBasicQo : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQLong *prefetchSize;
 @property (nonnull, copy, nonatomic, readonly) AMQShort *prefetchCount;
 @property (nonnull, copy, nonatomic, readonly) AMQBit *global;
@@ -307,7 +307,7 @@
 
 @end
 
-@interface AMQProtocolBasicConsume : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolBasicConsume : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *queue;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *consumerTag;
@@ -331,19 +331,19 @@
 
 @end
 
-@interface AMQProtocolBasicCancel : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolBasicCancel : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *consumerTag;
 @property (nonnull, copy, nonatomic, readonly) AMQBit *noWait;
 - (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag
                                      noWait:(nonnull AMQBit *)noWait;
 @end
 
-@interface AMQProtocolBasicCancelOk : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolBasicCancelOk : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *consumerTag;
 - (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag;
 @end
 
-@interface AMQProtocolBasicPublish : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolBasicPublish : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *exchange;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *routingKey;
@@ -373,7 +373,7 @@
 
 @end
 
-@interface AMQProtocolBasicGet : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolBasicGet : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *queue;
 @property (nonnull, copy, nonatomic, readonly) AMQBit *noAck;
@@ -396,26 +396,26 @@
 
 @end
 
-@interface AMQProtocolBasicAck : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolBasicAck : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQLonglong *deliveryTag;
 @property (nonnull, copy, nonatomic, readonly) AMQBit *multiple;
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
                                    multiple:(nonnull AMQBit *)multiple;
 @end
 
-@interface AMQProtocolBasicReject : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolBasicReject : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQLonglong *deliveryTag;
 @property (nonnull, copy, nonatomic, readonly) AMQBit *requeue;
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
                                     requeue:(nonnull AMQBit *)requeue;
 @end
 
-@interface AMQProtocolBasicRecoverAsync : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolBasicRecoverAsync : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQBit *requeue;
 - (nonnull instancetype)initWithRequeue:(nonnull AMQBit *)requeue;
 @end
 
-@interface AMQProtocolBasicRecover : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolBasicRecover : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQBit *requeue;
 - (nonnull instancetype)initWithRequeue:(nonnull AMQBit *)requeue;
 @end
@@ -424,7 +424,7 @@
 
 @end
 
-@interface AMQProtocolBasicNack : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolBasicNack : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQLonglong *deliveryTag;
 @property (nonnull, copy, nonatomic, readonly) AMQBit *multiple;
 @property (nonnull, copy, nonatomic, readonly) AMQBit *requeue;
@@ -433,7 +433,7 @@
                                     requeue:(nonnull AMQBit *)requeue;
 @end
 
-@interface AMQProtocolTxSelect : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolTxSelect : MTLModel <NSCoding, AMQMethod>
 
 @end
 
@@ -441,7 +441,7 @@
 
 @end
 
-@interface AMQProtocolTxCommit : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolTxCommit : MTLModel <NSCoding, AMQMethod>
 
 @end
 
@@ -449,7 +449,7 @@
 
 @end
 
-@interface AMQProtocolTxRollback : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolTxRollback : MTLModel <NSCoding, AMQMethod>
 
 @end
 
@@ -457,7 +457,7 @@
 
 @end
 
-@interface AMQProtocolConfirmSelect : MTLModel <NSCoding, AMQMethod, AMQOutgoing>
+@interface AMQProtocolConfirmSelect : MTLModel <NSCoding, AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQBit *nowait;
 - (nonnull instancetype)initWithNowait:(nonnull AMQBit *)nowait;
 @end

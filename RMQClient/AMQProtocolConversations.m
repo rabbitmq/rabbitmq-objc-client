@@ -2,7 +2,7 @@
 
 @implementation AMQProtocolConnectionStart (Conversation)
 
-- (id<AMQOutgoing>)replyWithContext:(id<AMQReplyContext>)context {
+- (id<AMQMethod>)replyWithContext:(id<AMQReplyContext>)context {
     AMQTable *capabilities = [[AMQTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
                                                       @"consumer_cancel_notify": [[AMQBoolean alloc] init:YES],
                                                       @"exchange_exchange_bindings": [[AMQBoolean alloc] init:YES],
@@ -24,9 +24,17 @@
 
 @end
 
+@implementation AMQProtocolConnectionStartOk (Conversation)
+
+- (Class)expectedResponseClass {
+    return [AMQProtocolConnectionTune class];
+}
+
+@end
+
 @implementation AMQProtocolConnectionTune (Conversation)
 
-- (id<AMQOutgoing>)replyWithContext:(id<AMQReplyContext>)context {
+- (id<AMQMethod>)replyWithContext:(id<AMQReplyContext>)context {
     return [[AMQProtocolConnectionTuneOk alloc] initWithChannelMax:self.channelMax
                                                           frameMax:self.frameMax
                                                          heartbeat:self.heartbeat];
@@ -36,7 +44,7 @@
 
 @implementation AMQProtocolConnectionTuneOk (Conversation)
 
-- (id<AMQOutgoing>)nextRequest {
+- (id<AMQMethod>)nextRequest {
     return [[AMQProtocolConnectionOpen alloc] initWithVirtualHost:[[AMQShortstr alloc] init:@"/"]
                                                         reserved1:[[AMQShortstr alloc] init:@""]
                                                         reserved2:[[AMQBit alloc] init:0]];

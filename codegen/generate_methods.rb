@@ -47,40 +47,59 @@ class GenerateMethods
       OBJC
   end
 
-  def template
-    ERB.new(Pathname(__dir__).join('template.erb').read, nil, '-')
+  def implementation
+    <<-OBJC
+#{implementation_start}
+#import "AMQProtocolMethods.h"
+
+    OBJC
   end
 
-  def generate
-    xml.xpath("//method").reduce(header) { |acc, method|
-      fields = method.xpath('field').map { |f|
-        type = if f[:domain]
-                 type_for_domain(xml, f[:domain]).underscore.camelize
-               else
-                 f[:type].underscore.camelize
-               end
-        {
-          type: "AMQ#{type}",
-          name: f[:name].underscore.camelize(:lower),
-        }
+  def method_fields(method)
+    method.xpath('field').map { |f|
+      type = if f[:domain]
+               type_for_domain(xml, f[:domain]).underscore.camelize
+             else
+               f[:type].underscore.camelize
+             end
+      {
+        type: "AMQ#{type}",
+        name: f[:name].underscore.camelize(:lower),
       }
+    }
+  end
 
-      constructor =
-        if outgoing?(method) && fields.any?
-          first_field_name = "#{fields[0][:name][0].upcase}#{fields[0][:name][1..-1]}:"
-          first_line = "- (nonnull instancetype)initWith#{first_field_name}#{property_type_and_label(fields[0])}"
-          constructor_rest = fields[1..-1].map { |field|
-            "#{colon_aligned_name(first_line, field[:name])}#{property_type_and_label(field)}"
-          }
-          "#{([first_line] + constructor_rest).join("\n")};"
-        end
+  def method_constructor(method)
+    fields = method_fields(method)
+    if outgoing?(method) && fields.any?
+      first_field_name = "#{fields[0][:name][0].upcase}#{fields[0][:name][1..-1]}:"
+      first_line = "- (nonnull instancetype)initWith#{first_field_name}#{property_type_and_label(fields[0])}"
+      constructor_rest = fields[1..-1].map { |field|
+        "#{colon_aligned_name(first_line, field[:name])}#{property_type_and_label(field)}"
+      }
+      "#{([first_line] + constructor_rest).join("\n")}"
+    end
+  end
 
+  def generate_header
+    xml.xpath("//method").reduce(header) { |acc, method|
+      fields = method_fields(method)
+      constructor = method_constructor(method)
       protocols = ["AMQMethod"]
-      protocols << ["AMQOutgoing"] if outgoing?(method)
-
       class_name = objc_class_name(method)
+      acc + template('methods_header_template').result(binding)
+    }
+  end
 
-      acc + template.result(binding)
+  def generate_implementation
+    xml.xpath("//method").reduce(implementation) { |acc, method|
+      fields = method_fields(method)
+      class_name = objc_class_name(method)
+      class_id = method.xpath('..').first[:index]
+      method_id = method[:index]
+      constructor = method_constructor(method)
+      class_part = method.xpath('..').first[:name].capitalize
+      acc + template('methods_implementation_template').result(binding)
     }
   end
 end

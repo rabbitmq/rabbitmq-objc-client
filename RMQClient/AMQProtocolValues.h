@@ -68,16 +68,16 @@
 + (nonnull NSNumber *)methodID;
 @end
 
-@protocol AMQOutgoing <NSObject>
+@protocol AMQExpectsResponse <NSObject>
 - (nonnull Class)expectedResponseClass;
 @end
 
 @protocol AMQOutgoingPrecursor <NSObject>
-- (nonnull id<AMQOutgoing,AMQMethod>)nextRequest;
+- (nonnull id<AMQMethod>)nextRequest;
 @end
 
 @protocol AMQIncomingSync <NSObject,AMQMethod>
-- (nonnull id<AMQOutgoing,AMQMethod>)replyWithContext:(nonnull id<AMQReplyContext>)context;
+- (nonnull id<AMQMethod>)replyWithContext:(nonnull id<AMQReplyContext>)context;
 @end
 
 @interface AMQFrame : NSObject<AMQEncoding>

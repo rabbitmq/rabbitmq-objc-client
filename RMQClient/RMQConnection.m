@@ -77,7 +77,7 @@
 
 # pragma mark - Private
 
-- (void)send:(id<AMQOutgoing,AMQMethod>)amqMethod
+- (void)send:(id<AMQMethod>)amqMethod
      channel:(RMQChannel *)channel {
     AMQEncoder *encoder = [AMQEncoder new];
     NSError *error = NULL;
@@ -85,10 +85,10 @@
                                         channel:channel]
                     error:&error
                onComplete:^{
-                   if (amqMethod.expectedResponseClass) {
+                   if ([amqMethod conformsToProtocol:@protocol(AMQExpectsResponse)]) {
                        [self.transport readFrame:^(NSData * _Nonnull responseData) {
                            [self readResponse:responseData
-                        expectedResponseClass:amqMethod.expectedResponseClass
+                        expectedResponseClass:((id <AMQExpectsResponse>)amqMethod).expectedResponseClass
                                       channel:channel];
                        }];
                    } else if ([amqMethod conformsToProtocol:@protocol(AMQOutgoingPrecursor)]) {
@@ -104,7 +104,7 @@ expectedResponseClass:(Class)expectedResponseClass
         AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
         id parsedResponse = [[expectedResponseClass alloc] initWithCoder:decoder];
         if ([parsedResponse conformsToProtocol:@protocol(AMQIncomingSync)]) {
-            id<AMQOutgoing,AMQMethod> reply = [parsedResponse replyWithContext:self];
+            id<AMQMethod> reply = [parsedResponse replyWithContext:self];
             [self send:reply channel:channel];
         }
     }

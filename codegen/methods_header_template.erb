@@ -2,6 +2,6 @@
 <%- fields.each do |f| -%>
 @property (nonnull, copy, nonatomic, readonly) <%= f[:type] %> *<%= f[:name] %>;
 <%- end -%>
-<%= constructor %>
+<%= constructor + ";" if constructor %>
 @end
 

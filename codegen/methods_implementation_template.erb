@@ -1,0 +1,38 @@
+@interface <%= class_name %> ()
+<%- fields.each do |f| -%>
+@property (nonnull, copy, nonatomic, readwrite) <%= f[:type] %> *<%= f[:name] %>;
+<%- end -%>
+@end
+
+@implementation <%= class_name %>
+@synthesize frameArguments;
+
++ (NSNumber *)classID { return @(<%= class_id %>); }
++ (NSNumber *)methodID { return @(<%= method_id %>); }
+
+<%- if constructor -%>
+<%= constructor %> {
+    self = [super init];
+    if (self) {
+        <%- fields.each do |f| -%>
+        self.<%= f[:name] %> = <%= f[:name] %>;
+        <%- end -%>
+        self.frameArguments = @[<%= fields.map {|f| "self.#{f[:name]}" }.join(",\n                                ") -%>];
+    }
+    return self;
+}
+<%- else -%>
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+      <%- fields.each do |f| -%>
+        self.<%= f[:name] %> = [[<%= f[:type] %> alloc] initWithCoder:coder];
+      <%- end -%>
+        self.frameArguments = @[<%= fields.map {|f| "self.#{f[:name]}" }.join(",\n                                ") -%>];
+    }
+    return self;
+}
+<%- end -%>
+
+@end
+

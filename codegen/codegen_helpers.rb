@@ -1,4 +1,8 @@
 module CodegenHelpers
+  def template(name)
+    ERB.new(Pathname(__dir__).join("#{name}.erb").read, nil, '-')
+  end
+
   def objc_class_name(method)
     class_name = method.xpath('..').first[:name].capitalize
     method_name = method[:name].underscore.classify
