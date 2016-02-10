@@ -42,7 +42,7 @@ class RMQConnectionTest: XCTestCase {
             classId: AMQShort(0),
             methodId: AMQShort(0)
         )
-        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(expectedClose, channel: RMQChannel(0)), actual: transport.lastFrame())
+        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(expectedClose, channelID: 0), actual: transport.lastFrame())
         XCTAssertFalse(transport.isConnected())
     }
     
@@ -74,7 +74,7 @@ class RMQConnectionTest: XCTestCase {
             response: AMQCredentials(username: "egon", password: "spengler"),
             locale: AMQShortstr("en_GB")
         )
-        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(startOk, channel: RMQChannel(0)),
+        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(startOk, channelID: 0),
             actual: transport.sentFrame(1))
     }
 
@@ -88,8 +88,8 @@ class RMQConnectionTest: XCTestCase {
 
         let tuneOk = AMQProtocolConnectionTuneOk(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
         let open = AMQProtocolConnectionOpen(virtualHost: AMQShortstr("/"), reserved1: AMQShortstr(""), reserved2: AMQBit(0))
-        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(tuneOk, channel: RMQChannel(0)), actual: transport.sentFrame(2))
-        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(open, channel: RMQChannel(0)), actual: transport.sentFrame(3))
+        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(tuneOk, channelID: 0), actual: transport.sentFrame(2))
+        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(open, channelID: 0), actual: transport.sentFrame(3))
     }
 
     func testCreatingAChannelSendsAChannelOpenAndReceivesOpenOK() {
@@ -103,6 +103,6 @@ class RMQConnectionTest: XCTestCase {
         let ch = conn.createChannel()
         XCTAssert(ch.isOpen())
         let open = AMQProtocolChannelOpen(reserved1: AMQShortstr(""))
-        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(open, channel: RMQChannel(1)), actual: transport.sentFrame(4))
+        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(open, channelID: 1), actual: transport.sentFrame(4))
     }
 }

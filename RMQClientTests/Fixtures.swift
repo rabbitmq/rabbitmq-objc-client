@@ -27,26 +27,26 @@ class Fixtures {
             mechanisms: AMQLongstr("AMQPLAIN PLAIN"),
             locales: AMQLongstr("en_US")
         )
-        return AMQEncoder().encodeMethod(start, channel: RMQChannel(0))
+        return AMQEncoder().encodeMethod(start, channelID: 0)
     }
 
     static func connectionTune() -> NSData {
         return AMQEncoder().encodeMethod(
             AMQProtocolConnectionTune(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60)),
-            channel: RMQChannel(0)
+            channelID: 0
         )
     }
 
     static func connectionOpenOk() -> NSData {
-        return AMQEncoder().encodeMethod(AMQProtocolConnectionOpenOk(reserved1: AMQShortstr("")), channel: RMQChannel(0))
+        return AMQEncoder().encodeMethod(AMQProtocolConnectionOpenOk(reserved1: AMQShortstr("")), channelID: 0)
     }
 
     static func connectionCloseOk() -> NSData {
-        return AMQEncoder().encodeMethod(AMQProtocolConnectionCloseOk(), channel: RMQChannel(0))
+        return AMQEncoder().encodeMethod(AMQProtocolConnectionCloseOk(), channelID: 0)
     }
 
     static func channelOpenOk() -> NSData {
-        return AMQEncoder().encodeMethod(AMQProtocolChannelOpenOk(reserved1: AMQLongstr("")), channel: RMQChannel(1))
+        return AMQEncoder().encodeMethod(AMQProtocolChannelOpenOk(reserved1: AMQLongstr("")), channelID: 1)
     }
 
     static func nothing() -> NSData {

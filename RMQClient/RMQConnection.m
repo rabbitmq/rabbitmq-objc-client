@@ -87,7 +87,7 @@
     AMQEncoder *encoder = [AMQEncoder new];
     NSError *error = NULL;
     [self.transport write:[encoder encodeMethod:amqMethod
-                                        channel:channel]
+                                      channelID:channel.channelID]
                     error:&error
                onComplete:^{
                    if ([amqMethod conformsToProtocol:@protocol(AMQOutgoingSync)]) {

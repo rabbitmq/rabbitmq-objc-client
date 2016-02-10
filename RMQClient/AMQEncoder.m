@@ -3,9 +3,9 @@
 @implementation AMQEncoder
 
 - (NSData *)encodeMethod:(id<AMQMethod>)amqMethod
-                 channel:(RMQChannel *)channel {
+               channelID:(NSNumber *)channelID {
     return [[AMQFrame alloc] initWithType:@(1)
-                                channelID:channel.channelID
+                                channelID:channelID
                                    method:amqMethod].amqEncoded;
 }
 

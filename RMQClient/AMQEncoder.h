@@ -4,5 +4,5 @@
 
 @interface AMQEncoder : NSObject
 - (NSData *)encodeMethod:(id<AMQMethod>)amqMethod
-                 channel:(RMQChannel *)channel;
+               channelID:(NSNumber *)channelID;
 @end
