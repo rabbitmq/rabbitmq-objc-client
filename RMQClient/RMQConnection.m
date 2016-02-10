@@ -74,7 +74,7 @@
 }
 
 - (RMQChannel *)createChannel {
-    RMQChannel *ch = [[[RMQChannel alloc] init:[self.idAllocator nextID]] open];
+    RMQChannel *ch = [[RMQChannel alloc] init:[self.idAllocator nextID]];
     [self send:[[AMQProtocolChannelOpen alloc] initWithReserved1:[[AMQShortstr alloc] init:@""]]
        channel:ch];
     return ch;
@@ -108,6 +108,9 @@ expectedResponseClass:(Class)expectedResponseClass
     if (responseData.length) {
         AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
         id parsedResponse = [[expectedResponseClass alloc] initWithCoder:decoder];
+        if ([parsedResponse conformsToProtocol:@protocol(AMQIncomingCallback)]) {
+            [parsedResponse didReceiveOnChannel:channel];
+        }
         if ([parsedResponse conformsToProtocol:@protocol(AMQIncomingSync)]) {
             id<AMQMethod> reply = [parsedResponse replyWithContext:self];
             [self send:reply channel:channel];

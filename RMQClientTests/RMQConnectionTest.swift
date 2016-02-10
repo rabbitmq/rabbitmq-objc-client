@@ -12,15 +12,13 @@ class RMQConnectionTest: XCTestCase {
     }
 
     func testSendsPreambleToTransport() {
-        let transport = FakeTransport().receive(Fixtures.nothing())
+        let transport = FakeTransport()
         startedConnection(transport)
         XCTAssertEqual("AMQP\0\0\u{09}\u{01}".dataUsingEncoding(NSUTF8StringEncoding), transport.sentFrame(0))
     }
 
     func testClosesTransport() {
         let transport = FakeTransport()
-            .receive(Fixtures.connectionStart())
-            .receive(Fixtures.connectionCloseOk())
         let conn = startedConnection(transport)
 
         XCTAssertTrue(transport.isConnected())
@@ -30,8 +28,6 @@ class RMQConnectionTest: XCTestCase {
 
     func testClosesConnectionWithHandshake() {
         let transport = FakeTransport()
-            .receive(Fixtures.connectionStart())
-            .receive(Fixtures.connectionCloseOk())
         let conn = startedConnection(transport)
 
         conn.close()
@@ -42,14 +38,12 @@ class RMQConnectionTest: XCTestCase {
             classId: AMQShort(0),
             methodId: AMQShort(0)
         )
-        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(expectedClose, channelID: 0), actual: transport.lastFrame())
+        transport.mustHaveSent(expectedClose, channelID: 0, frame: transport.lastFrameIndex())
         XCTAssertFalse(transport.isConnected())
     }
     
     func testSendsConnectionStartOK() {
         let transport = FakeTransport()
-            .receive(Fixtures.connectionStart())
-            .receive(Fixtures.nothing())
 
         startedConnection(transport, user: "egon", password: "spengler", vhost: "hq")
 
@@ -74,35 +68,43 @@ class RMQConnectionTest: XCTestCase {
             response: AMQCredentials(username: "egon", password: "spengler"),
             locale: AMQShortstr("en_GB")
         )
-        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(startOk, channelID: 0),
-            actual: transport.sentFrame(1))
+
+        transport
+            .serverRepliesWith(Fixtures.connectionStart())
+            .mustHaveSent(startOk, channelID: 0, frame: 1)
     }
 
     func testSendsTuneOKFollowedByOpen() {
         let transport = FakeTransport()
-            .receive(Fixtures.connectionStart())
-            .receive(Fixtures.connectionTune())
-            .receive(Fixtures.connectionOpenOk())
 
         startedConnection(transport)
 
         let tuneOk = AMQProtocolConnectionTuneOk(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
         let open = AMQProtocolConnectionOpen(virtualHost: AMQShortstr("/"), reserved1: AMQShortstr(""), reserved2: AMQBit(0))
-        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(tuneOk, channelID: 0), actual: transport.sentFrame(2))
-        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(open, channelID: 0), actual: transport.sentFrame(3))
+
+        transport
+            .serverRepliesWith(Fixtures.connectionStart())
+            .serverRepliesWith(Fixtures.connectionTune())
+
+        transport
+            .mustHaveSent(tuneOk, channelID: 0, frame: 2)
+            .mustHaveSent(open, channelID: 0, frame: 3)
     }
 
     func testCreatingAChannelSendsAChannelOpenAndReceivesOpenOK() {
         let transport = FakeTransport()
-            .receive(Fixtures.connectionStart())
-            .receive(Fixtures.connectionTune())
-            .receive(Fixtures.connectionOpenOk())
         let conn = startedConnection(transport)
 
-        transport.receive(Fixtures.channelOpenOk())
+        transport
+            .serverRepliesWith(Fixtures.connectionStart())
+            .serverRepliesWith(Fixtures.connectionTune())
+            .serverRepliesWith(Fixtures.connectionOpenOk())
+
         let ch = conn.createChannel()
-        XCTAssert(ch.isOpen())
-        let open = AMQProtocolChannelOpen(reserved1: AMQShortstr(""))
-        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(open, channelID: 1), actual: transport.sentFrame(4))
+        transport.mustHaveSent(AMQProtocolChannelOpen(reserved1: AMQShortstr("")), channelID: 1, frame: 4)
+
+        XCTAssertFalse(ch.isOpen())
+        transport.serverRepliesWith(Fixtures.channelOpenOk())
+        XCTAssertTrue(ch.isOpen())
     }
 }

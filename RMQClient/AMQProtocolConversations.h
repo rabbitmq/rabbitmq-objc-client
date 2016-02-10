@@ -12,3 +12,12 @@
 
 @interface AMQProtocolConnectionTuneOk (Conversation) <AMQOutgoingPrecursor>
 @end
+
+@interface AMQProtocolConnectionOpen (Conversation) <AMQOutgoingSync>
+@end
+
+@interface AMQProtocolChannelOpen (Conversation) <AMQOutgoingSync>
+@end
+
+@interface AMQProtocolChannelOpenOk (Conversation) <AMQIncomingCallback>
+@end

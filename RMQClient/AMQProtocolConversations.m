@@ -51,3 +51,27 @@
 }
 
 @end
+
+@implementation AMQProtocolConnectionOpen (Conversation)
+
+- (Class)expectedResponseClass {
+    return [AMQProtocolConnectionOpenOk class];
+}
+
+@end
+
+@implementation AMQProtocolChannelOpen (Conversation)
+
+- (Class)expectedResponseClass {
+    return [AMQProtocolChannelOpenOk class];
+}
+
+@end
+
+@implementation AMQProtocolChannelOpenOk (Conversation)
+
+- (void)didReceiveOnChannel:(RMQChannel *)channel {
+    [channel open];
+}
+
+@end

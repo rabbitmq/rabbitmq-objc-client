@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 @import Mantle;
+#import "RMQChannel.h"
 
 @protocol AMQEncoding <NSObject>
 - (nonnull NSData *)amqEncoded;
@@ -79,6 +80,10 @@
 
 @protocol AMQIncomingSync <NSObject,AMQMethod>
 - (nonnull id<AMQMethod>)replyWithContext:(nonnull id<AMQReplyContext>)context;
+@end
+
+@protocol AMQIncomingCallback <NSObject>
+- (void)didReceiveOnChannel:(nonnull RMQChannel *)channel;
 @end
 
 @interface AMQFrame : NSObject<AMQEncoding>

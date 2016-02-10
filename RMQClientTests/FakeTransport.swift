@@ -6,8 +6,9 @@ enum FakeTransportError: ErrorType {
 
 @objc class FakeTransport: NSObject, RMQTransport {
     var connected = false
-    var receivedData: [NSData] = []
+    var inboundData: [NSData] = []
     var outboundData: [NSData] = []
+    var callbacks: Array<(NSData) -> Void> = []
 
     func connect(onConnect: () -> Void) {
         connected = true
@@ -29,20 +30,28 @@ enum FakeTransportError: ErrorType {
         return connected
     }
     func readFrame(complete: (NSData) -> Void) {
-        if (receivedData.isEmpty) {
-            XCTFail("You need to set up an incoming frame with receive()\n\nOutgoing messages: \(outboundData)")
+        if (inboundData.isEmpty) {
+            callbacks.append(complete)
         } else {
-            complete(receivedData.removeAtIndex(0))
+            complete(inboundData.removeAtIndex(0))
         }
     }
     func sentFrame(index: Int) -> NSData {
         return outboundData[index]
     }
-    func lastFrame() -> NSData {
-        return outboundData[outboundData.endIndex - 1]
+    func lastFrameIndex() -> Int {
+        return outboundData.endIndex - 1
     }
-    func receive(data: NSData) -> FakeTransport {
-        receivedData.append(data)
+    func serverWillReplyWith(data: NSData) -> FakeTransport {
+        inboundData.append(data)
+        return self
+    }
+    func serverRepliesWith(data: NSData) -> FakeTransport {
+        callbacks.removeAtIndex(0)(data)
+        return self
+    }
+    func mustHaveSent(amqMethod: AMQMethod, channelID: Int, frame: Int) -> FakeTransport {
+        TestHelper.assertEqualBytes(AMQEncoder().encodeMethod(amqMethod, channelID: channelID), actual: self.sentFrame(frame))
         return self
     }
 }
