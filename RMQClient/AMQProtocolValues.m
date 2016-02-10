@@ -27,27 +27,7 @@
 
 @end
 
-@interface AMQBit ()
-@property (nonatomic, readwrite) char bit;
-@end
-
 @implementation AMQBit
-
-- (instancetype)init:(char)bit {
-    self = [super init];
-    if (self) {
-        self.bit = bit;
-    }
-    return self;
-}
-
-- (NSData *)amqEncoded {
-    char val = self.bit;
-    NSMutableData *encoded = [NSMutableData new];
-    [encoded appendBytes:&val length:1];
-    return encoded;
-}
-
 @end
 
 @interface AMQBoolean ()

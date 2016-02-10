@@ -14,8 +14,7 @@
 - (nonnull instancetype)init:(char)octet;
 @end
 
-@interface AMQBit : MTLModel<AMQEncoding>
-- (nonnull instancetype)init:(char)bit;
+@interface AMQBit : AMQOctet
 @end
 
 @interface AMQBoolean : MTLModel<AMQEncoding,AMQFieldValue>
