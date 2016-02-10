@@ -8,7 +8,13 @@ class RMQConnectionTest: XCTestCase {
         password: String = "bar",
         vhost: String = "baz"
         ) -> RMQConnection {
-            return RMQConnection(user: user, password: password, vhost: vhost, transport: transport, idAllocator: RMQChannelIDAllocator()).start()
+            return RMQConnection(
+                user: user,
+                password: password,
+                vhost: vhost,
+                transport: transport,
+                idAllocator: RMQChannelIDAllocator()
+                ).start()
     }
 
     func testSendsPreambleToTransport() {
