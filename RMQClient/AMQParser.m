@@ -18,7 +18,7 @@ enum AMQParserFieldValue {
     // if (*cursor + tableLength >= end) error
     
     while (*cursor < start + tableLength.integerValue && *cursor < end) {
-        AMQShortstr *key = [self parseShortString:cursor end:end];
+        NSString *key = [self parseShortString:cursor end:end].stringValue;
         
         enum AMQParserFieldValue type = *((*cursor)++);
         switch (type) {
