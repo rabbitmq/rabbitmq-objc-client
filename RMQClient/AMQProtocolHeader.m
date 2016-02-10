@@ -5,11 +5,7 @@
 
 - (NSData *)amqEncoded {
     char *buffer = malloc(8);
-    memcpy(buffer, "AMQP", strlen("AMQP"));
-    buffer[4] = 0;
-    buffer[5] = 0;
-    buffer[6] = 9;
-    buffer[7] = 1;
+    sprintf(buffer, "AMQP%c%c%c%c", 0, 0, 9, 1);
     return [NSData dataWithBytesNoCopy:buffer length:8];
 }
 
