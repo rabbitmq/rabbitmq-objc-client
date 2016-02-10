@@ -38,7 +38,7 @@ class Fixtures {
     }
 
     static func connectionOpenOk() -> NSData {
-        return AMQEncoder().encodeMethod(AMQProtocolConnectionOpenOk(), channel: RMQChannel(0))
+        return AMQEncoder().encodeMethod(AMQProtocolConnectionOpenOk(reserved1: AMQShortstr("")), channel: RMQChannel(0))
     }
 
     static func connectionCloseOk() -> NSData {
@@ -46,7 +46,7 @@ class Fixtures {
     }
 
     static func channelOpenOk() -> NSData {
-        return AMQEncoder().encodeMethod(AMQProtocolChannelOpenOk(), channel: RMQChannel(1))
+        return AMQEncoder().encodeMethod(AMQProtocolChannelOpenOk(reserved1: AMQLongstr("")), channel: RMQChannel(1))
     }
 
     static func nothing() -> NSData {
