@@ -15,6 +15,14 @@ import XCTest
 
 class AMQEncodingTest: XCTestCase {
 
+    func testRoundTrip() {
+        let method = AMQProtocolConnectionTune(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
+        let data = AMQEncoder().encodeMethod(method, channel: RMQChannel(0))
+        let decoder = AMQDecoder(data: data)
+        let hydratedMethod = AMQProtocolConnectionTune(coder: decoder)
+        XCTAssertEqual(method, hydratedMethod)
+    }
+
     func testFraming() {
         let encoder = AMQEncoder()
         

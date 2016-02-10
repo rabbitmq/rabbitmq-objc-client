@@ -1,6 +1,8 @@
 import XCTest
 import CocoaAsyncSocket
 
+// This test doesn't always run properly from Xcode.
+// Use: xctool -project RMQClient.xcodeproj -sdk iphonesimulator -scheme RMQClient test -only RMQClientIntegrationTests:RMQTCPSocketTransportTest
 class RMQTCPSocketTransportTest: RMQTransportContract {
     override func newTransport() -> RMQTransport {
         return RMQTCPSocketTransport(host: "localhost", port: 5672)

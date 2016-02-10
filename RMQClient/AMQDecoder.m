@@ -16,7 +16,10 @@
 - (instancetype)initWithData:(NSData *)data {
     self = [super init];
     if (self) {
-        NSRange range = NSMakeRange(4, data.length - 4); // ignore classID and methodID for now
+        NSUInteger headerLength = 1 + 2 + 4;
+        NSUInteger classIDPlusMethodIDLength = 4;
+        NSUInteger startIndex = headerLength + classIDPlusMethodIDLength;
+        NSRange range = NSMakeRange(startIndex, data.length - startIndex);
         self.data = [data subdataWithRange:range];
         self.cursor = (const char *)self.data.bytes;
         self.end = (const char *)self.data.bytes + self.data.length;

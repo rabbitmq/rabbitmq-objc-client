@@ -81,7 +81,9 @@ struct __attribute__((__packed__)) AMQPHeader {
         
         [self read:hostSize complete:^(NSData * _Nonnull payload) {
             [self read:AMQP_FINAL_OCTET_SIZE complete:^(NSData * _Nonnull frameEnd) {
-                complete(payload);
+                NSMutableData *allData = [data mutableCopy];
+                [allData appendData:payload];
+                complete(allData);
             }];
         }];
     }];
