@@ -17,18 +17,14 @@ class RMQConnectionTest: XCTestCase {
         XCTAssertEqual("AMQP\0\0\u{09}\u{01}".dataUsingEncoding(NSUTF8StringEncoding), transport.sentFrame(0))
     }
 
-    func testClosesTransport() {
-        let transport = FakeTransport()
-        let conn = startedConnection(transport)
-
-        XCTAssertTrue(transport.isConnected())
-        conn.close()
-        XCTAssertFalse(transport.isConnected())
-    }
-
     func testClosesConnectionWithHandshake() {
         let transport = FakeTransport()
         let conn = startedConnection(transport)
+
+        transport
+            .serverRepliesWith(Fixtures.connectionStart())
+            .serverRepliesWith(Fixtures.connectionTune())
+            .serverRepliesWith(Fixtures.connectionOpenOk())
 
         conn.close()
 
@@ -39,6 +35,8 @@ class RMQConnectionTest: XCTestCase {
             methodId: AMQShort(0)
         )
         transport.mustHaveSent(expectedClose, channelID: 0, frame: transport.lastFrameIndex())
+        XCTAssert(transport.isConnected())
+        transport.serverRepliesWith(Fixtures.connectionCloseOk())
         XCTAssertFalse(transport.isConnected())
     }
     

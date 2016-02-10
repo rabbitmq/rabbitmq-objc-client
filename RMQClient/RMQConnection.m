@@ -65,12 +65,20 @@
 }
 
 - (void)close {
-    [self send:[[AMQProtocolConnectionClose alloc] initWithReplyCode:[[AMQShort alloc] init:200]
-                                                           replyText:[[AMQShortstr alloc] init:@"Goodbye"]
-                                                             classId:[[AMQShort alloc] init:0]
-                                                            methodId:[[AMQShort alloc] init:0]]
-       channel:self.channelZero];
-    [self.transport close:^{}];
+    AMQProtocolConnectionClose *close = [[AMQProtocolConnectionClose alloc] initWithReplyCode:[[AMQShort alloc] init:200]
+                                                                                        replyText:[[AMQShortstr alloc] init:@"Goodbye"]
+                                                                                          classId:[[AMQShort alloc] init:0]
+                                                                                         methodId:[[AMQShort alloc] init:0]];
+
+    NSData *encoded = [[AMQEncoder new] encodeMethod:close channelID:self.channelZero.channelID];
+    NSError *error = NULL;
+    [self.transport write:encoded error:&error onComplete:^{
+        [self.transport readFrame:^(NSData * _Nonnull data) {
+            [self.transport close:^{
+
+            }];
+        }];
+    }];
 }
 
 - (RMQChannel *)createChannel {
