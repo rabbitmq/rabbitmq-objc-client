@@ -20,7 +20,7 @@ class RMQConnectionTest: XCTestCase {
     func testSendsPreambleToTransport() {
         let transport = FakeTransport()
         startedConnection(transport)
-        XCTAssertEqual("AMQP\0\0\u{09}\u{01}".dataUsingEncoding(NSUTF8StringEncoding), transport.sentFrame(0))
+        XCTAssertEqual("AMQP\u{0}\u{0}\u{9}\u{1}".dataUsingEncoding(NSUTF8StringEncoding), transport.sentFrame(0))
     }
 
     func testClosesConnectionWithHandshake() {
