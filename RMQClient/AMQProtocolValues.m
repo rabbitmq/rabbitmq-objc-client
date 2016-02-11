@@ -19,10 +19,8 @@
 }
 
 - (NSData *)amqEncoded {
-    char val = self.octet;
-    NSMutableData *encoded = [NSMutableData new];
-    [encoded appendBytes:&val length:1];
-    return encoded;
+    char buffer = self.octet;
+    return [NSData dataWithBytes:&buffer length:1];
 }
 
 @end
@@ -35,6 +33,7 @@
 @end
 
 @implementation AMQBoolean
+
 - (instancetype)init:(BOOL)boolean {
     self = [super init];
     if (self) {
@@ -42,15 +41,16 @@
     }
     return self;
 }
+
 - (NSData *)amqEncoded {
     BOOL val = self.boolValue;
-    NSMutableData *encoded = [NSMutableData new];
-    [encoded appendBytes:&val length:1];
-    return encoded;
+    return [NSData dataWithBytes:&val length:1];
 }
+
 - (NSData *)amqFieldValueType {
     return [@"t" dataUsingEncoding:NSUTF8StringEncoding];
 }
+
 @end
 
 @interface AMQShort ()
@@ -72,10 +72,8 @@
 }
 
 - (NSData *)amqEncoded {
-    NSMutableData *encoded = [NSMutableData new];
     uint16_t shortVal = CFSwapInt16HostToBig((uint16_t)self.integerValue);
-    [encoded appendBytes:&shortVal length:sizeof(uint16_t)];
-    return encoded;
+    return [NSData dataWithBytes:&shortVal length:sizeof(uint16_t)];
 }
 
 - (NSData *)amqFieldValueType {
@@ -103,10 +101,8 @@
 }
 
 - (NSData *)amqEncoded {
-    NSMutableData *encoded = [NSMutableData new];
     uint32_t longVal = CFSwapInt32HostToBig((uint32_t)self.integerValue);
-    [encoded appendBytes:&longVal length:sizeof(uint32_t)];
-    return encoded;
+    return [NSData dataWithBytes:&longVal length:sizeof(uint32_t)];
 }
 
 - (NSData *)amqFieldValueType {
@@ -130,10 +126,8 @@
 }
 
 - (NSData *)amqEncoded {
-    NSMutableData *encoded = [NSMutableData new];
     uint64_t longVal = CFSwapInt64HostToBig((uint64_t)self.integerValue);
-    [encoded appendBytes:&longVal length:sizeof(uint64_t)];
-    return encoded;
+    return [NSData dataWithBytes:&longVal length:sizeof(uint64_t)];
 }
 
 - (NSData *)amqFieldValueType {
@@ -162,7 +156,7 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    NSData *value = [self.stringValue dataUsingEncoding:NSASCIIStringEncoding];
+    NSData *value = [self.stringValue dataUsingEncoding:NSUTF8StringEncoding];
     char len = (char)value.length;
     [encoded appendBytes:&len length:1];
     [encoded appendData:value];
@@ -296,7 +290,7 @@
     NSMutableData *encodedContent = [NSMutableData new];
     NSData *username = [self.username dataUsingEncoding:NSUTF8StringEncoding];
     NSData *password = [self.password dataUsingEncoding:NSUTF8StringEncoding];
-    char zero = 0x00;
+    char zero = 0;
     [encodedContent appendBytes:&zero length:1];
     [encodedContent appendData:username];
     [encodedContent appendBytes:&zero length:1];

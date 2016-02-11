@@ -26,12 +26,12 @@ class AMQEncodingTest: XCTestCase {
     func testFraming() {
         let encoder = AMQEncoder()
         
-        let type = "\u{01}"
-        let channel = "\u{00}\u{00}"
-        let size = "\u{00}\u{00}\u{00}\u{08}"
-        let classID = "\u{00}\u{0A}"
-        let methodID = "\u{00}\u{0B}"
-        let payload = "\u{03}foo"
+        let type = "\u{1}"
+        let channel = "\u{0}\u{0}"
+        let size = "\u{0}\u{0}\u{0}\u{8}"
+        let classID = "\u{0}\u{A}"
+        let methodID = "\u{0}\u{B}"
+        let payload = "\u{3}foo"
         let unfinishedFrame = "\(type)\(channel)\(size)\(classID)\(methodID)\(payload)".dataUsingEncoding(NSUTF8StringEncoding)!
         var frameEnd = 0xce
         let expectedFrame = unfinishedFrame.mutableCopy() as! NSMutableData
