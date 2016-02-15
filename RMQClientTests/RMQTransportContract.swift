@@ -3,7 +3,7 @@ import XCTest
 class RMQTransportContract: XCTestCase {
 
     func newTransport() -> RMQTransport {
-        return FakeTransport().serverWillReplyWith(Fixtures.connectionStart())
+        return FakeTransport().serverWillReplyWith(DataFixtures.connectionStart())
     }
     
     func testConnectAndDisconnect() {

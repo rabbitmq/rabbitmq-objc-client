@@ -1,8 +1,6 @@
 import UIKit
 
-class Fixtures {
-    // MARK: Outgoing objects
-
+class MethodFixtures {
     static func connectionStartOk(user user: String = "foo", password: String = "bar") -> AMQProtocolConnectionStartOk {
         let capabilities = AMQTable([
             "publisher_confirms": AMQBoolean(true),
@@ -18,7 +16,7 @@ class Fixtures {
             "platform"    : AMQLongstr("iOS"),
             "version"     : AMQLongstr("0.0.1"),
             "information" : AMQLongstr("https://github.com/camelpunch/RMQClient")
-        ])
+            ])
         return AMQProtocolConnectionStartOk(
             clientProperties: clientProperties,
             mechanism: AMQShortstr("PLAIN"),
@@ -34,9 +32,9 @@ class Fixtures {
     static func connectionOpen() -> AMQProtocolConnectionOpen {
         return AMQProtocolConnectionOpen(virtualHost: AMQShortstr("/"), reserved1: AMQShortstr(""), reserved2: AMQBit(0))
     }
+}
 
-    // MARK: Incoming data
-
+class DataFixtures {
     static func connectionStart() -> NSData {
         let capabilities = AMQTable([
             "authentication_failure_close" : AMQBoolean(true),
@@ -84,8 +82,6 @@ class Fixtures {
     static func channelOpenOk() -> NSData {
         return AMQEncoder().encodeMethod(AMQProtocolChannelOpenOk(reserved1: AMQLongstr("")), channelID: 1)
     }
-
-    // MARK: General
 
     static func nothing() -> NSData {
         return "".dataUsingEncoding(NSUTF8StringEncoding)!

@@ -23,12 +23,12 @@ class RMQConnectionTest: XCTestCase {
 
         transport
             .clientSendsProtocolHeader()
-            .serverSends(Fixtures.connectionStart())
-            .clientSends(Fixtures.connectionStartOk(), channelID: 0)
-            .serverSends(Fixtures.connectionTune())
-            .clientSends(Fixtures.connectionTuneOk(), channelID: 0)
-            .clientSends(Fixtures.connectionOpen(), channelID: 0)
-            .serverSends(Fixtures.connectionOpenOk())
+            .serverSends(DataFixtures.connectionStart())
+            .clientSends(MethodFixtures.connectionStartOk(), channelID: 0)
+            .serverSends(DataFixtures.connectionTune())
+            .clientSends(MethodFixtures.connectionTuneOk(), channelID: 0)
+            .clientSends(MethodFixtures.connectionOpen(), channelID: 0)
+            .serverSends(DataFixtures.connectionOpenOk())
 
         conn.close()
 
@@ -42,7 +42,7 @@ class RMQConnectionTest: XCTestCase {
             channelID: 0
         )
         XCTAssert(transport.isConnected())
-        transport.serverSends(Fixtures.connectionCloseOk())
+        transport.serverSends(DataFixtures.connectionCloseOk())
         XCTAssertFalse(transport.isConnected())
     }
 
@@ -51,15 +51,15 @@ class RMQConnectionTest: XCTestCase {
         let conn = startedConnection(transport)
 
         transport
-            .serverSends(Fixtures.connectionStart())
-            .serverSends(Fixtures.connectionTune())
-            .serverSends(Fixtures.connectionOpenOk())
+            .serverSends(DataFixtures.connectionStart())
+            .serverSends(DataFixtures.connectionTune())
+            .serverSends(DataFixtures.connectionOpenOk())
 
         let ch = conn.createChannel()
         transport.mustHaveSent(AMQProtocolChannelOpen(reserved1: AMQShortstr("")), channelID: 1, frame: 4)
 
         XCTAssertFalse(ch.isOpen())
-        transport.serverSends(Fixtures.channelOpenOk())
+        transport.serverSends(DataFixtures.channelOpenOk())
         XCTAssertTrue(ch.isOpen())
     }
 }
