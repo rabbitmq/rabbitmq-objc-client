@@ -76,7 +76,7 @@
 }
 
 - (BOOL)shouldAwaitServerMethod:(id<AMQMethod>)amqMethod {
-    return [amqMethod conformsToProtocol:@protocol(AMQAwaitServer)];
+    return [amqMethod conformsToProtocol:@protocol(AMQAwaitServerMethod)];
 }
 
 - (BOOL)shouldSendNextRequest:(id<AMQMethod>)amqMethod {

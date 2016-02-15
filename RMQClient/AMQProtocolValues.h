@@ -73,10 +73,10 @@
 + (nonnull NSNumber *)methodID;
 @end
 
-@protocol AMQAwaitServer <NSObject>
+@protocol AMQAwaitServerMethod <NSObject>
 @end
 
-@protocol AMQOutgoingSync <NSObject, AMQAwaitServer>
+@protocol AMQOutgoingSync <NSObject, AMQAwaitServerMethod>
 @end
 
 @protocol AMQOutgoingPrecursor <NSObject>
