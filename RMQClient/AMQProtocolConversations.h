@@ -24,3 +24,6 @@
 
 @interface AMQProtocolConnectionCloseOk (Conversation) <AMQIncomingCallback>
 @end
+
+@interface AMQProtocolConnectionOpenOk (Conversation) <AMQAwaitServer>
+@end

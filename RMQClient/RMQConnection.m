@@ -85,7 +85,7 @@
                                       channelID:channel.channelID]
                     error:&error
                onComplete:^{
-                   if ([self shouldExpectReply:amqMethod]) {
+                   if ([self shouldAwaitServerMethod:amqMethod]) {
                        [self awaitServerMethod];
                    } else if ([self shouldSendNextRequest:amqMethod]) {
                        [self send:((id <AMQOutgoingPrecursor>)amqMethod).nextRequest channel:channel];
@@ -102,7 +102,7 @@
             if ([self shouldReply:parsedResponse]) {
                 id<AMQMethod> reply = [parsedResponse replyWithContext:self];
                 [self send:reply channel:channel];
-            } else if ([parsedResponse isKindOfClass:[AMQProtocolConnectionOpenOk class]]) {
+            } else if ([self shouldAwaitServerMethod:parsedResponse]) {
                 [self awaitServerMethod];
             }
             if ([self shouldTriggerCallback:parsedResponse]) {
@@ -116,8 +116,8 @@
     return [amqMethod conformsToProtocol:@protocol(AMQIncomingSync)];
 }
 
-- (BOOL)shouldExpectReply:(id<AMQMethod>)amqMethod {
-    return [amqMethod conformsToProtocol:@protocol(AMQOutgoingSync)];
+- (BOOL)shouldAwaitServerMethod:(id<AMQMethod>)amqMethod {
+    return [amqMethod conformsToProtocol:@protocol(AMQAwaitServer)];
 }
 
 - (BOOL)shouldSendNextRequest:(id<AMQMethod>)amqMethod {

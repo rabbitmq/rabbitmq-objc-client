@@ -53,6 +53,9 @@
 @implementation AMQProtocolChannelOpen (Conversation)
 @end
 
+@implementation AMQProtocolConnectionOpenOk (Conversation)
+@end
+
 @implementation AMQProtocolConnectionClose (Conversation)
 
 - (id<AMQMethod>)replyWithContext:(id<AMQReplyContext>)context {
