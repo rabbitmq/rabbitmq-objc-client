@@ -48,6 +48,12 @@
     return self;
 }
 
+- (instancetype)init
+{
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 - (RMQConnection *)start {
     [self.transport connect:^{
         NSError *error = NULL;
@@ -66,9 +72,9 @@
 
 - (void)close {
     AMQProtocolConnectionClose *close = [[AMQProtocolConnectionClose alloc] initWithReplyCode:[[AMQShort alloc] init:200]
-                                                                                        replyText:[[AMQShortstr alloc] init:@"Goodbye"]
-                                                                                          classId:[[AMQShort alloc] init:0]
-                                                                                         methodId:[[AMQShort alloc] init:0]];
+                                                                                    replyText:[[AMQShortstr alloc] init:@"Goodbye"]
+                                                                                      classId:[[AMQShort alloc] init:0]
+                                                                                     methodId:[[AMQShort alloc] init:0]];
 
     NSData *encoded = [[AMQEncoder new] encodeMethod:close channelID:self.channelZero.channelID];
     NSError *error = NULL;
@@ -98,13 +104,13 @@
                                       channelID:channel.channelID]
                     error:&error
                onComplete:^{
-                   if ([amqMethod conformsToProtocol:@protocol(AMQOutgoingSync)]) {
+                   if ([self shouldExpectReply:amqMethod]) {
                        [self.transport readFrame:^(NSData * _Nonnull responseData) {
                            [self readResponse:responseData
                         expectedResponseClass:((id <AMQOutgoingSync>)amqMethod).expectedResponseClass
                                       channel:channel];
                        }];
-                   } else if ([amqMethod conformsToProtocol:@protocol(AMQOutgoingPrecursor)]) {
+                   } else if ([self shouldSendNextRequest:amqMethod]) {
                        [self send:((id <AMQOutgoingPrecursor>)amqMethod).nextRequest channel:channel];
                    }
                }];
@@ -126,18 +132,20 @@ expectedResponseClass:(Class)expectedResponseClass
     }
 }
 
-- (instancetype)init
-{
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
+- (BOOL)shouldReply:(id<AMQMethod>)amqMethod {
+    return [amqMethod conformsToProtocol:@protocol(AMQIncomingSync)];
 }
 
-- (BOOL)shouldReply:(id<AMQMethod>)parsedResponse {
-    return [parsedResponse conformsToProtocol:@protocol(AMQIncomingSync)];
+- (BOOL)shouldExpectReply:(id<AMQMethod>)amqMethod {
+    return [amqMethod conformsToProtocol:@protocol(AMQOutgoingSync)];
 }
 
-- (BOOL)shouldTriggerCallback:(id<AMQMethod>)parsedResponse {
-    return [parsedResponse conformsToProtocol:@protocol(AMQIncomingCallback)];
+- (BOOL)shouldSendNextRequest:(id<AMQMethod>)amqMethod {
+    return [amqMethod conformsToProtocol:@protocol(AMQOutgoingPrecursor)];
+}
+
+- (BOOL)shouldTriggerCallback:(id<AMQMethod>)amqMethod {
+    return [amqMethod conformsToProtocol:@protocol(AMQIncomingCallback)];
 }
 
 @end
