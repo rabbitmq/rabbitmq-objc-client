@@ -71,14 +71,8 @@
 }
 
 - (void)close {
-    AMQProtocolConnectionClose *close = [[AMQProtocolConnectionClose alloc] initWithReplyCode:[[AMQShort alloc] init:200]
-                                                                                    replyText:[[AMQShortstr alloc] init:@"Goodbye"]
-                                                                                      classId:[[AMQShort alloc] init:0]
-                                                                                     methodId:[[AMQShort alloc] init:0]];
-
-    NSData *encoded = [[AMQEncoder new] encodeMethod:close channelID:self.channelZero.channelID];
     NSError *error = NULL;
-    [self.transport write:encoded error:&error onComplete:^{
+    [self.transport write:self.closeData error:&error onComplete:^{
         [self.transport readFrame:^(NSData * _Nonnull data) {
             [self.transport close:^{
 
@@ -146,6 +140,16 @@ expectedResponseClass:(Class)expectedResponseClass
 
 - (BOOL)shouldTriggerCallback:(id<AMQMethod>)amqMethod {
     return [amqMethod conformsToProtocol:@protocol(AMQIncomingCallback)];
+}
+
+# pragma mark Data
+
+- (NSData *)closeData {
+    AMQProtocolConnectionClose *close = [[AMQProtocolConnectionClose alloc] initWithReplyCode:[[AMQShort alloc] init:200]
+                                                                                    replyText:[[AMQShortstr alloc] init:@"Goodbye"]
+                                                                                      classId:[[AMQShort alloc] init:0]
+                                                                                     methodId:[[AMQShort alloc] init:0]];
+    return [[AMQEncoder new] encodeMethod:close channelID:self.channelZero.channelID];
 }
 
 @end
