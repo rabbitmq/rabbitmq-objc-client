@@ -1,12 +1,7 @@
 import XCTest
 
-enum TestDoubleTransportError: ErrorType {
-    case NotConnected(localizedDescription: String)
-}
-
-@objc class FakeTransport: NSObject, RMQTransport {
+@objc class ControlledInteractionTransport: NSObject, RMQTransport {
     var connected = false
-    var inboundData: [NSData] = []
     var outboundData: [NSData] = []
     var callbacks: Array<(NSData) -> Void> = []
 
@@ -30,30 +25,25 @@ enum TestDoubleTransportError: ErrorType {
         return connected
     }
     func readFrame(complete: (NSData) -> Void) {
-        if (inboundData.isEmpty) {
-            callbacks.append(complete)
-        } else {
-            complete(inboundData.removeAtIndex(0))
-        }
+        callbacks.append(complete)
     }
-    func lastFrameIndex() -> Int {
-        return outboundData.endIndex - 1
-    }
-    func serverWillReplyWith(data: NSData) -> FakeTransport {
-        inboundData.append(data)
-        return self
-    }
-    func serverRepliesWith(data: NSData) -> FakeTransport {
+    func serverRepliesWith(data: NSData) -> ControlledInteractionTransport {
         callbacks.removeAtIndex(0)(data)
         return self
     }
-    func sentFrame(index: Int) -> NSData {
-        return outboundData[index]
-    }
-    func mustHaveSent(amqMethod: AMQMethod, channelID: Int, frame: Int) -> FakeTransport {
+    func clientSends(amqMethod: AMQMethod, channelID: Int) -> ControlledInteractionTransport {
+        let actual = outboundData.removeAtIndex(0)
         TestHelper.assertEqualBytes(
             AMQEncoder().encodeMethod(amqMethod, channelID: channelID),
-            self.sentFrame(frame)
+            actual,
+            "Didn't send \(amqMethod)\n\nSent: \(actual)"
+        )
+        return self
+    }
+    func clientSendsProtocolHeader() -> ControlledInteractionTransport {
+        TestHelper.assertEqualBytes(
+            AMQProtocolHeader().amqEncoded(),
+            outboundData.removeAtIndex(0)
         )
         return self
     }

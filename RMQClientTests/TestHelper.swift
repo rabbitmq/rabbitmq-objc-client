@@ -18,8 +18,11 @@ class TestHelper {
         NSRunLoop.currentRunLoop().runUntilDate(NSDate().dateByAddingTimeInterval(time))
     }
 
-    static func assertEqualBytes(expected: NSData, actual: NSData) {
-        XCTAssertEqual(expected, actual, "\n\nBytes not equal:\n\(expected)\n\(actual)")
+    static func assertEqualBytes(expected: NSData, _ actual: NSData, _ message: String = "") {
+        if message == "" {
+            XCTAssertEqual(expected, actual, "\n\nBytes not equal:\n\(expected)\n\(actual)")
+        } else {
+            XCTAssertEqual(expected, actual, message)
+        }
     }
-
 }

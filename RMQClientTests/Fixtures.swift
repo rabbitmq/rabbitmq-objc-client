@@ -1,6 +1,42 @@
 import UIKit
 
 class Fixtures {
+    // MARK: Outgoing objects
+
+    static func connectionStartOk(user user: String = "foo", password: String = "bar") -> AMQProtocolConnectionStartOk {
+        let capabilities = AMQTable([
+            "publisher_confirms": AMQBoolean(true),
+            "consumer_cancel_notify": AMQBoolean(true),
+            "exchange_exchange_bindings": AMQBoolean(true),
+            "basic.nack": AMQBoolean(true),
+            "connection.blocked": AMQBoolean(true),
+            "authentication_failure_close": AMQBoolean(true),
+            ])
+        let clientProperties = AMQTable([
+            "capabilities" : capabilities,
+            "product"     : AMQLongstr("RMQClient"),
+            "platform"    : AMQLongstr("iOS"),
+            "version"     : AMQLongstr("0.0.1"),
+            "information" : AMQLongstr("https://github.com/camelpunch/RMQClient")
+        ])
+        return AMQProtocolConnectionStartOk(
+            clientProperties: clientProperties,
+            mechanism: AMQShortstr("PLAIN"),
+            response: AMQCredentials(username: user, password: password),
+            locale: AMQShortstr("en_GB")
+        )
+    }
+
+    static func connectionTuneOk() -> AMQProtocolConnectionTuneOk {
+        return AMQProtocolConnectionTuneOk(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
+    }
+
+    static func connectionOpen() -> AMQProtocolConnectionOpen {
+        return AMQProtocolConnectionOpen(virtualHost: AMQShortstr("/"), reserved1: AMQShortstr(""), reserved2: AMQBit(0))
+    }
+
+    // MARK: Incoming data
+
     static func connectionStart() -> NSData {
         let capabilities = AMQTable([
             "authentication_failure_close" : AMQBoolean(true),
@@ -48,6 +84,8 @@ class Fixtures {
     static func channelOpenOk() -> NSData {
         return AMQEncoder().encodeMethod(AMQProtocolChannelOpenOk(reserved1: AMQLongstr("")), channelID: 1)
     }
+
+    // MARK: General
 
     static func nothing() -> NSData {
         return "".dataUsingEncoding(NSUTF8StringEncoding)!

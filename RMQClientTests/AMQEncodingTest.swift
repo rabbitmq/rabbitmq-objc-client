@@ -40,7 +40,7 @@ class AMQEncodingTest: XCTestCase {
         let encodableMethod = EncodableMethod()
         let frame: NSData = encoder.encodeMethod(encodableMethod, channelID: 0)
 
-        TestHelper.assertEqualBytes(expectedFrame, actual: frame)
+        TestHelper.assertEqualBytes(expectedFrame, frame)
     }
     
     func testLongStringBecomesLengthPlusChars() {
@@ -86,7 +86,7 @@ class AMQEncodingTest: XCTestCase {
     func testCredentialsEncodedAsRFC2595() {
         let credentials = AMQCredentials(username: "fido🔫﷽", password: "2easy2break📵")
         let expectedData = "\u{00}\u{00}\u{00}\u{1c}\u{00}fido🔫﷽\u{00}2easy2break📵".dataUsingEncoding(NSUTF8StringEncoding)
-        TestHelper.assertEqualBytes(expectedData!, actual: credentials.amqEncoded())
+        TestHelper.assertEqualBytes(expectedData!, credentials.amqEncoded())
     }
     
     func testFieldTableBecomesLengthPlusFieldPairs() {
@@ -111,6 +111,6 @@ class AMQEncodingTest: XCTestCase {
             "sacrifice": AMQLongstr("forty years of darkness"),
         ])
 
-        TestHelper.assertEqualBytes(expectedData!, actual: fieldTable.amqEncoded())
+        TestHelper.assertEqualBytes(expectedData!, fieldTable.amqEncoded())
     }
 }
