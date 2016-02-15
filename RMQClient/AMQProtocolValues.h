@@ -23,6 +23,7 @@
 @end
 
 @interface AMQShort : MTLModel<AMQEncoding,AMQFieldValue>
+@property (nonatomic, readonly) NSUInteger integerValue;
 - (nonnull instancetype)init:(NSUInteger)val;
 @end
 
@@ -70,7 +71,6 @@
 @end
 
 @protocol AMQOutgoingSync <NSObject>
-- (nonnull Class)expectedResponseClass;
 @end
 
 @protocol AMQOutgoingPrecursor <NSObject>

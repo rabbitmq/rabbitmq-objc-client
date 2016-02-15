@@ -1,7 +1,9 @@
 #import <Foundation/Foundation.h>
+#import "AMQProtocolValues.h"
 
 @interface AMQDecoder : NSCoder
 
-- (instancetype)initWithData:(NSData *)data;
+- (nonnull instancetype)initWithData:(nonnull NSData *)data;
+- (nonnull id<AMQMethod>)decodedAMQMethod;
 
 @end

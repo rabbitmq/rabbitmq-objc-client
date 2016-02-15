@@ -25,11 +25,6 @@
 @end
 
 @implementation AMQProtocolConnectionStartOk (Conversation)
-
-- (Class)expectedResponseClass {
-    return [AMQProtocolConnectionTune class];
-}
-
 @end
 
 @implementation AMQProtocolConnectionTune (Conversation)
@@ -53,19 +48,9 @@
 @end
 
 @implementation AMQProtocolConnectionOpen (Conversation)
-
-- (Class)expectedResponseClass {
-    return [AMQProtocolConnectionOpenOk class];
-}
-
 @end
 
 @implementation AMQProtocolChannelOpen (Conversation)
-
-- (Class)expectedResponseClass {
-    return [AMQProtocolChannelOpenOk class];
-}
-
 @end
 
 @implementation AMQProtocolChannelOpenOk (Conversation)

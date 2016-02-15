@@ -62,7 +62,6 @@
                    onComplete:^{
                        [self.transport readFrame:^(NSData * _Nonnull responseData) {
                            [self readResponse:responseData
-                        expectedResponseClass:[AMQProtocolConnectionStart class]
                                       channel:self.channelZero];
                        }];
                    }];
@@ -101,7 +100,6 @@
                    if ([self shouldExpectReply:amqMethod]) {
                        [self.transport readFrame:^(NSData * _Nonnull responseData) {
                            [self readResponse:responseData
-                        expectedResponseClass:((id <AMQOutgoingSync>)amqMethod).expectedResponseClass
                                       channel:channel];
                        }];
                    } else if ([self shouldSendNextRequest:amqMethod]) {
@@ -111,11 +109,10 @@
 }
 
 -  (void)readResponse:(NSData *)responseData
-expectedResponseClass:(Class)expectedResponseClass
               channel:(RMQChannel *)channel {
     if (responseData.length) {
         AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
-        id parsedResponse = [[expectedResponseClass alloc] initWithCoder:decoder];
+        id parsedResponse = [decoder decodedAMQMethod];
         if ([self shouldTriggerCallback:parsedResponse]) {
             [parsedResponse didReceiveOnChannel:channel];
         }

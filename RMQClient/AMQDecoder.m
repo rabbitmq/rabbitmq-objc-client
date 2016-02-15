@@ -1,6 +1,7 @@
 #import "AMQDecoder.h"
 #import "AMQParser.h"
 #import "AMQProtocolValues.h"
+#import "AMQProtocolMethodMap.h"
 
 @interface AMQDecoder ()
 
@@ -8,6 +9,11 @@
 @property (nonatomic, readwrite) const char *cursor;
 @property (nonatomic, readwrite) const char *end;
 @property (nonatomic, readwrite) AMQParser *parser;
+@property (nonatomic, readwrite) AMQOctet *type;
+@property (nonatomic, readwrite) AMQShort *channel;
+@property (nonatomic, readwrite) AMQLong *size;
+@property (nonatomic, readwrite) NSNumber *classID;
+@property (nonatomic, readwrite) NSNumber *methodID;
 
 @end
 
@@ -16,16 +22,22 @@
 - (instancetype)initWithData:(NSData *)data {
     self = [super init];
     if (self) {
-        NSUInteger headerLength = 1 + 2 + 4;
-        NSUInteger classIDPlusMethodIDLength = 4;
-        NSUInteger startIndex = headerLength + classIDPlusMethodIDLength;
-        NSRange range = NSMakeRange(startIndex, data.length - startIndex);
-        self.data = [data subdataWithRange:range];
-        self.cursor = (const char *)self.data.bytes;
-        self.end = (const char *)self.data.bytes + self.data.length;
-        self.parser = [AMQParser new];
+        self.data     = data;
+        self.cursor   = (const char *)self.data.bytes;
+        self.end      = (const char *)self.data.bytes + self.data.length;
+        self.parser   = [AMQParser new];
+        self.type     = [self.parser parseOctet:&_cursor end:self.end];
+        self.channel  = [self.parser parseShortUInt:&_cursor end:self.end];
+        self.size     = [self.parser parseLongUInt:&_cursor end:self.end];
+        self.classID  = @([self.parser parseShortUInt:&_cursor end:self.end].integerValue);
+        self.methodID = @([self.parser parseShortUInt:&_cursor end:self.end].integerValue);
     }
     return self;
+}
+
+- (id<AMQMethod>)decodedAMQMethod {
+    Class methodClass = AMQProtocolMethodMap.methodMap[@[self.classID, self.methodID]];
+    return [[methodClass alloc] initWithCoder:self];
 }
 
 - (id)decodeObjectForKey:(NSString *)key {

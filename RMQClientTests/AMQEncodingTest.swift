@@ -19,7 +19,7 @@ class AMQEncodingTest: XCTestCase {
         let method = AMQProtocolConnectionTune(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
         let data = AMQEncoder().encodeMethod(method, channelID: 0)
         let decoder = AMQDecoder(data: data)
-        let hydratedMethod = AMQProtocolConnectionTune(coder: decoder)
+        let hydratedMethod = decoder.decodedAMQMethod() as! AMQProtocolConnectionTune
         XCTAssertEqual(method, hydratedMethod)
     }
 

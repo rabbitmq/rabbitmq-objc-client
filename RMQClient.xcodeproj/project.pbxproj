@@ -45,6 +45,8 @@
 		AEA45EE21C440FFD00FE1F62 /* IntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */; settings = {ASSET_TAGS = (); }; };
 		AEA45EE31C44100C00FE1F62 /* RMQTCPSocketTransportTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA45ECD1C43F44400FE1F62 /* RMQTCPSocketTransportTest.swift */; settings = {ASSET_TAGS = (); }; };
 		AEADA37E1C71D64A00012D61 /* ControlledInteractionTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEADA37D1C71D64A00012D61 /* ControlledInteractionTransport.swift */; settings = {ASSET_TAGS = (); }; };
+		AEADA3811C71F59A00012D61 /* AMQProtocolMethodMap.h in Headers */ = {isa = PBXBuildFile; fileRef = AEADA37F1C71F59A00012D61 /* AMQProtocolMethodMap.h */; settings = {ASSET_TAGS = (); }; };
+		AEADA3821C71F59A00012D61 /* AMQProtocolMethodMap.m in Sources */ = {isa = PBXBuildFile; fileRef = AEADA3801C71F59A00012D61 /* AMQProtocolMethodMap.m */; settings = {ASSET_TAGS = (); }; };
 		AED2B68D1C4D87D8005660D6 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED2B68C1C4D87D8005660D6 /* CocoaAsyncSocket.framework */; settings = {ASSET_TAGS = (); }; };
 		AEE7FE951C3BCA6000DF8C4F /* RMQClient.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE7FE941C3BCA6000DF8C4F /* RMQClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEE7FE9C1C3BCA6000DF8C4F /* RMQClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE7FE911C3BCA6000DF8C4F /* RMQClient.framework */; settings = {ASSET_TAGS = (); }; };
@@ -115,6 +117,8 @@
 		AEA45EDB1C440FE400FE1F62 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AEA45EE41C44111200FE1F62 /* RMQClientIntegrationTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RMQClientIntegrationTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		AEADA37D1C71D64A00012D61 /* ControlledInteractionTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlledInteractionTransport.swift; sourceTree = "<group>"; };
+		AEADA37F1C71F59A00012D61 /* AMQProtocolMethodMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQProtocolMethodMap.h; sourceTree = "<group>"; };
+		AEADA3801C71F59A00012D61 /* AMQProtocolMethodMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQProtocolMethodMap.m; sourceTree = "<group>"; };
 		AED2B68C1C4D87D8005660D6 /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/iOS/CocoaAsyncSocket.framework; sourceTree = "<group>"; };
 		AEE7FE911C3BCA6000DF8C4F /* RMQClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RMQClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEE7FE941C3BCA6000DF8C4F /* RMQClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMQClient.h; sourceTree = "<group>"; };
@@ -220,6 +224,8 @@
 				AE39BDA11C68B105000E7A77 /* AMQProtocolHeader.m */,
 				AE4E7F491C6A293D00A441EC /* AMQProtocolMethods.h */,
 				AEA45EC41C43C20F00FE1F62 /* AMQProtocolMethods.m */,
+				AEADA37F1C71F59A00012D61 /* AMQProtocolMethodMap.h */,
+				AEADA3801C71F59A00012D61 /* AMQProtocolMethodMap.m */,
 				AE4E7F4C1C6A2A8900A441EC /* AMQProtocolConversations.h */,
 				AE4E7F4D1C6A2A8900A441EC /* AMQProtocolConversations.m */,
 				AEEEF0801C4F9BFA0056A5EB /* AMQDecoder.h */,
@@ -261,6 +267,7 @@
 			files = (
 				AEA45ECA1C43D2B900FE1F62 /* RMQTransport.h in Headers */,
 				AEE7FEB11C3BCEBA00DF8C4F /* RMQChannel.h in Headers */,
+				AEADA3811C71F59A00012D61 /* AMQProtocolMethodMap.h in Headers */,
 				AE05DA681C69EC47009E68C7 /* RMQIDAllocator.h in Headers */,
 				AE05DA641C69EB79009E68C7 /* RMQChannelIDAllocator.h in Headers */,
 				AE898D5B1C3C30D100AA3BF1 /* AMQURI.h in Headers */,
@@ -454,6 +461,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AE4E7F4F1C6A2A8900A441EC /* AMQProtocolConversations.m in Sources */,
+				AEADA3821C71F59A00012D61 /* AMQProtocolMethodMap.m in Sources */,
 				AE4E7F4B1C6A297900A441EC /* AMQProtocolMethods.m in Sources */,
 				AE39BDA31C68B105000E7A77 /* AMQProtocolHeader.m in Sources */,
 				AEE7FEBA1C3BD2B400DF8C4F /* RMQExchange.m in Sources */,
