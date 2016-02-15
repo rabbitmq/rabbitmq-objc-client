@@ -27,11 +27,25 @@ import XCTest
     func readFrame(complete: (NSData) -> Void) {
         callbacks.append(complete)
     }
-    func serverSends(data: NSData) -> ControlledInteractionTransport {
+    func handshake() -> ControlledInteractionTransport {
+        return clientSendsProtocolHeader()
+            .serverSendsMethod(MethodFixtures.connectionStart(), channelID: 0)
+            .assertClientSendsMethod(MethodFixtures.connectionStartOk(), channelID: 0)
+            .serverSendsMethod(MethodFixtures.connectionTune(), channelID: 0)
+            .assertClientSendsMethod(MethodFixtures.connectionTuneOk(), channelID: 0)
+            .assertClientSendsMethod(MethodFixtures.connectionOpen(), channelID: 0)
+            .serverSendsMethod(MethodFixtures.connectionOpenOk(), channelID: 0)
+    }
+    func serverSendsData(data: NSData) -> ControlledInteractionTransport {
         callbacks.removeAtIndex(0)(data)
         return self
     }
-    func clientSends(amqMethod: AMQMethod, channelID: Int) -> ControlledInteractionTransport {
+    func serverSendsMethod(amqMethod: AMQMethod, channelID: Int) -> ControlledInteractionTransport {
+        let encoder = AMQEncoder()
+        serverSendsData(encoder.encodeMethod(amqMethod, channelID: channelID))
+        return self
+    }
+    func assertClientSendsMethod(amqMethod: AMQMethod, channelID: Int) -> ControlledInteractionTransport {
         let actual = outboundData.removeAtIndex(0)
         TestHelper.assertEqualBytes(
             AMQEncoder().encodeMethod(amqMethod, channelID: channelID),

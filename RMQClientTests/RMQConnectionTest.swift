@@ -20,19 +20,10 @@ class RMQConnectionTest: XCTestCase {
     func testHandshakingAndClientInitiatedClosing() {
         let transport = ControlledInteractionTransport()
         let conn = startedConnection(transport)
-
-        transport
-            .clientSendsProtocolHeader()
-            .serverSends(DataFixtures.connectionStart())
-            .clientSends(MethodFixtures.connectionStartOk(), channelID: 0)
-            .serverSends(DataFixtures.connectionTune())
-            .clientSends(MethodFixtures.connectionTuneOk(), channelID: 0)
-            .clientSends(MethodFixtures.connectionOpen(), channelID: 0)
-            .serverSends(DataFixtures.connectionOpenOk())
-
+        transport.handshake()
         conn.close()
 
-        transport.clientSends(
+        transport.assertClientSendsMethod(
             AMQProtocolConnectionClose(
                 replyCode: AMQShort(200),
                 replyText: AMQShortstr("Goodbye"),
@@ -42,7 +33,7 @@ class RMQConnectionTest: XCTestCase {
             channelID: 0
         )
         XCTAssert(transport.isConnected())
-        transport.serverSends(DataFixtures.connectionCloseOk())
+        transport.serverSendsMethod(MethodFixtures.connectionCloseOk(), channelID: 0)
         XCTAssertFalse(transport.isConnected())
     }
 
