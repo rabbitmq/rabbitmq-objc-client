@@ -35,7 +35,7 @@
     return self;
 }
 
-- (id<AMQMethod>)decodedAMQMethod {
+- (id)decode {
     Class methodClass = AMQProtocolMethodMap.methodMap[@[self.classID, self.methodID]];
     return [[methodClass alloc] initWithCoder:self];
 }

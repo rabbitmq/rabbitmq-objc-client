@@ -47,7 +47,7 @@
     [self.transport readFrame:^(NSData * _Nonnull responseData) {
         if (responseData.length) {
             AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
-            id parsedResponse = [decoder decodedAMQMethod];
+            id parsedResponse = [decoder decode];
             if ([self shouldReply:parsedResponse]) {
                 id<AMQMethod> reply = [parsedResponse replyWithContext:self.replyContext];
                 [self send:reply];
