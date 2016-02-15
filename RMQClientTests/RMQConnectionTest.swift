@@ -17,21 +17,7 @@ class RMQConnectionTest: XCTestCase {
                 ).start()
     }
 
-    func testConnectionHandshaking() {
-        let transport = ControlledInteractionTransport()
-
-        startedConnection(transport)
-
-        transport
-            .clientSendsProtocolHeader()
-            .serverSends(Fixtures.connectionStart())
-            .clientSends(Fixtures.connectionStartOk(), channelID: 0)
-            .serverSends(Fixtures.connectionTune())
-            .clientSends(Fixtures.connectionTuneOk(), channelID: 0)
-            .clientSends(Fixtures.connectionOpen(), channelID: 0)
-    }
-
-    func testClosesTransportWhenConnectionCloseOkReceived() {
+    func testHandshakingAndClientInitiatedClosing() {
         let transport = ControlledInteractionTransport()
         let conn = startedConnection(transport)
 
