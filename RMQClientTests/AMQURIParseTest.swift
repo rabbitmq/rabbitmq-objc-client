@@ -1,6 +1,6 @@
 import XCTest
 
-class AMQURIParse: XCTestCase {
+class AMQURIParseTest: XCTestCase {
     
     func testNonAMQPSchemesNotAllowed() {
         do {
