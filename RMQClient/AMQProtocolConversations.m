@@ -53,10 +53,26 @@
 @implementation AMQProtocolChannelOpen (Conversation)
 @end
 
-@implementation AMQProtocolChannelOpenOk (Conversation)
+@implementation AMQProtocolConnectionClose (Conversation)
 
-- (void)didReceiveOnChannel:(RMQChannel *)channel {
-    [channel open];
+- (id<AMQMethod>)replyWithContext:(id<AMQReplyContext>)context {
+    return [AMQProtocolConnectionCloseOk new];
+}
+
+- (void)didReceiveWithContext:(id<AMQIncomingCallbackContext>)context {
+    [context close:^{
+
+    }];
+}
+
+@end
+
+@implementation AMQProtocolConnectionCloseOk (Conversation)
+
+- (void)didReceiveWithContext:(id<AMQIncomingCallbackContext>)context {
+    [context close:^{
+
+    }];
 }
 
 @end

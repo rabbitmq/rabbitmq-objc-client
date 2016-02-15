@@ -37,6 +37,17 @@ class RMQConnectionTest: XCTestCase {
         XCTAssertFalse(transport.isConnected())
     }
 
+    func testServerInitiatedClosing() {
+        let transport = ControlledInteractionTransport()
+        startedConnection(transport)
+        transport.handshake()
+
+        XCTAssertTrue(transport.isConnected())
+        transport.serverSendsMethod(MethodFixtures.connectionClose(), channelID: 0)
+        XCTAssertFalse(transport.isConnected())
+        transport.assertClientSendsMethod(MethodFixtures.connectionCloseOk(), channelID: 0)
+    }
+
     func testCreatingAChannelSendsAChannelOpenAndReceivesOpenOK() {
         let transport = FakeTransport()
         let conn = startedConnection(transport)
@@ -46,11 +57,9 @@ class RMQConnectionTest: XCTestCase {
             .serverSends(DataFixtures.connectionTune())
             .serverSends(DataFixtures.connectionOpenOk())
 
-        let ch = conn.createChannel()
+        conn.createChannel()
         transport.mustHaveSent(AMQProtocolChannelOpen(reserved1: AMQShortstr("")), channelID: 1, frame: 4)
 
-        XCTAssertFalse(ch.isOpen())
         transport.serverSends(DataFixtures.channelOpenOk())
-        XCTAssertTrue(ch.isOpen())
     }
 }

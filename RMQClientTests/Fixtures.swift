@@ -69,6 +69,15 @@ class MethodFixtures {
         return AMQProtocolConnectionOpenOk(reserved1: AMQShortstr(""))
     }
 
+    static func connectionClose() -> AMQProtocolConnectionClose {
+        return AMQProtocolConnectionClose(
+            replyCode: AMQShort(200),
+            replyText: AMQShortstr("Goodbye"),
+            classId: AMQShort(0),
+            methodId: AMQShort(0)
+        )
+    }
+
     static func connectionCloseOk() -> AMQProtocolConnectionCloseOk {
         return AMQProtocolConnectionCloseOk()
     }

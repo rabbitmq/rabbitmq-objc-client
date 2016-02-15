@@ -19,5 +19,8 @@
 @interface AMQProtocolChannelOpen (Conversation) <AMQOutgoingSync>
 @end
 
-@interface AMQProtocolChannelOpenOk (Conversation) <AMQIncomingCallback>
+@interface AMQProtocolConnectionClose (Conversation) <AMQIncomingSync, AMQIncomingCallback>
+@end
+
+@interface AMQProtocolConnectionCloseOk (Conversation) <AMQIncomingCallback>
 @end

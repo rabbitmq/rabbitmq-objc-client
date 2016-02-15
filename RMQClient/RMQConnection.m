@@ -59,25 +59,13 @@
         NSError *error = NULL;
         [self.transport write:[AMQProtocolHeader new].amqEncoded
                         error:&error
-                   onComplete:^{
-                       [self.transport readFrame:^(NSData * _Nonnull responseData) {
-                           [self readResponse:responseData
-                                      channel:self.channelZero];
-                       }];
-                   }];
+                   onComplete:^{ [self awaitServerMethod]; }];
     }];
     return self;
 }
 
 - (void)close {
-    NSError *error = NULL;
-    [self.transport write:self.closeData error:&error onComplete:^{
-        [self.transport readFrame:^(NSData * _Nonnull data) {
-            [self.transport close:^{
-
-            }];
-        }];
-    }];
+    [self send:self.amqClose channel:self.channelZero];
 }
 
 - (RMQChannel *)createChannel {
@@ -98,29 +86,30 @@
                     error:&error
                onComplete:^{
                    if ([self shouldExpectReply:amqMethod]) {
-                       [self.transport readFrame:^(NSData * _Nonnull responseData) {
-                           [self readResponse:responseData
-                                      channel:channel];
-                       }];
+                       [self awaitServerMethod];
                    } else if ([self shouldSendNextRequest:amqMethod]) {
                        [self send:((id <AMQOutgoingPrecursor>)amqMethod).nextRequest channel:channel];
                    }
                }];
 }
 
--  (void)readResponse:(NSData *)responseData
-              channel:(RMQChannel *)channel {
-    if (responseData.length) {
-        AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
-        id parsedResponse = [decoder decodedAMQMethod];
-        if ([self shouldTriggerCallback:parsedResponse]) {
-            [parsedResponse didReceiveOnChannel:channel];
+- (void)awaitServerMethod {
+    [self.transport readFrame:^(NSData * _Nonnull responseData) {
+        if (responseData.length) {
+            AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
+            id parsedResponse = [decoder decodedAMQMethod];
+            RMQChannel *channel = [[RMQChannel alloc] init:decoder.channelID];
+            if ([self shouldReply:parsedResponse]) {
+                id<AMQMethod> reply = [parsedResponse replyWithContext:self];
+                [self send:reply channel:channel];
+            } else if ([parsedResponse isKindOfClass:[AMQProtocolConnectionOpenOk class]]) {
+                [self awaitServerMethod];
+            }
+            if ([self shouldTriggerCallback:parsedResponse]) {
+                [parsedResponse didReceiveWithContext:self.transport];
+            }
         }
-        if ([self shouldReply:parsedResponse]) {
-            id<AMQMethod> reply = [parsedResponse replyWithContext:self];
-            [self send:reply channel:channel];
-        }
-    }
+    }];
 }
 
 - (BOOL)shouldReply:(id<AMQMethod>)amqMethod {
@@ -141,12 +130,11 @@
 
 # pragma mark Data
 
-- (NSData *)closeData {
-    AMQProtocolConnectionClose *close = [[AMQProtocolConnectionClose alloc] initWithReplyCode:[[AMQShort alloc] init:200]
-                                                                                    replyText:[[AMQShortstr alloc] init:@"Goodbye"]
-                                                                                      classId:[[AMQShort alloc] init:0]
-                                                                                     methodId:[[AMQShort alloc] init:0]];
-    return [[AMQEncoder new] encodeMethod:close channelID:self.channelZero.channelID];
+- (AMQProtocolConnectionClose *)amqClose {
+    return [[AMQProtocolConnectionClose alloc] initWithReplyCode:[[AMQShort alloc] init:200]
+                                                       replyText:[[AMQShortstr alloc] init:@"Goodbye"]
+                                                         classId:[[AMQShort alloc] init:0]
+                                                        methodId:[[AMQShort alloc] init:0]];
 }
 
 @end

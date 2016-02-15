@@ -64,6 +64,10 @@
 - (nonnull AMQCredentials *)credentials;
 @end
 
+@protocol AMQIncomingCallbackContext <NSObject>
+- (void)close:(void (^ _Nonnull)())onClose;
+@end
+
 @protocol AMQMethod <NSObject>
 @property (nonnull, nonatomic, readwrite) NSArray *frameArguments;
 + (nonnull NSNumber *)classID;
@@ -82,7 +86,7 @@
 @end
 
 @protocol AMQIncomingCallback <NSObject>
-- (void)didReceiveOnChannel:(nonnull RMQChannel *)channel;
+- (void)didReceiveWithContext:(nonnull id<AMQIncomingCallbackContext>)context;
 @end
 
 @interface AMQFrame : NSObject<AMQEncoding>

@@ -10,7 +10,7 @@
 @property (nonatomic, readwrite) const char *end;
 @property (nonatomic, readwrite) AMQParser *parser;
 @property (nonatomic, readwrite) AMQOctet *type;
-@property (nonatomic, readwrite) AMQShort *channel;
+@property (nonatomic, readwrite) NSNumber *channelID;
 @property (nonatomic, readwrite) AMQLong *size;
 @property (nonatomic, readwrite) NSNumber *classID;
 @property (nonatomic, readwrite) NSNumber *methodID;
@@ -22,15 +22,15 @@
 - (instancetype)initWithData:(NSData *)data {
     self = [super init];
     if (self) {
-        self.data     = data;
-        self.cursor   = (const char *)self.data.bytes;
-        self.end      = (const char *)self.data.bytes + self.data.length;
-        self.parser   = [AMQParser new];
-        self.type     = [self.parser parseOctet:&_cursor end:self.end];
-        self.channel  = [self.parser parseShortUInt:&_cursor end:self.end];
-        self.size     = [self.parser parseLongUInt:&_cursor end:self.end];
-        self.classID  = @([self.parser parseShortUInt:&_cursor end:self.end].integerValue);
-        self.methodID = @([self.parser parseShortUInt:&_cursor end:self.end].integerValue);
+        self.data      = data;
+        self.cursor    = (const char *)self.data.bytes;
+        self.end       = (const char *)self.data.bytes + self.data.length;
+        self.parser    = [AMQParser new];
+        self.type      = [self.parser parseOctet:&_cursor end:self.end];
+        self.channelID = @([self.parser parseShortUInt:&_cursor end:self.end].integerValue);
+        self.size      = [self.parser parseLongUInt:&_cursor end:self.end];
+        self.classID   = @([self.parser parseShortUInt:&_cursor end:self.end].integerValue);
+        self.methodID  = @([self.parser parseShortUInt:&_cursor end:self.end].integerValue);
     }
     return self;
 }

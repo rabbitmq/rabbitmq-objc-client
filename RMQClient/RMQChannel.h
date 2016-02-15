@@ -9,7 +9,4 @@
                  autoDelete:(BOOL)shouldAutoDelete
                   exclusive:(BOOL)isExclusive;
 - (nonnull RMQExchange *)defaultExchange;
-- (nonnull RMQChannel *)open;
-- (void)close;
-- (BOOL)isOpen;
 @end

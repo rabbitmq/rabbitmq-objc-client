@@ -37,7 +37,11 @@ import XCTest
             .serverSendsMethod(MethodFixtures.connectionOpenOk(), channelID: 0)
     }
     func serverSendsData(data: NSData) -> ControlledInteractionTransport {
-        callbacks.removeAtIndex(0)(data)
+        if callbacks.isEmpty {
+            XCTFail("no read callbacks available")
+        } else {
+            callbacks.removeAtIndex(0)(data)
+        }
         return self
     }
     func serverSendsMethod(amqMethod: AMQMethod, channelID: Int) -> ControlledInteractionTransport {
@@ -46,12 +50,16 @@ import XCTest
         return self
     }
     func assertClientSendsMethod(amqMethod: AMQMethod, channelID: Int) -> ControlledInteractionTransport {
-        let actual = outboundData.removeAtIndex(0)
-        TestHelper.assertEqualBytes(
-            AMQEncoder().encodeMethod(amqMethod, channelID: channelID),
-            actual,
-            "Didn't send \(amqMethod)\n\nSent: \(actual)"
-        )
+        if outboundData.isEmpty {
+            XCTFail("nothing sent recently")
+        } else {
+            let actual = outboundData.removeAtIndex(0)
+            TestHelper.assertEqualBytes(
+                AMQEncoder().encodeMethod(amqMethod, channelID: channelID),
+                actual,
+                "Didn't send \(amqMethod)\n\nSent: \(actual)"
+            )
+        }
         return self
     }
     func clientSendsProtocolHeader() -> ControlledInteractionTransport {

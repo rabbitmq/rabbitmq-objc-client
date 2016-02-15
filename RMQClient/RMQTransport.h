@@ -1,8 +1,8 @@
 #import <Foundation/Foundation.h>
+#import "AMQProtocolValues.h"
 
-@protocol RMQTransport
+@protocol RMQTransport <AMQIncomingCallbackContext>
 - (void)connect:(void (^ _Nonnull)())onConnect;
-- (void)close:(void (^ _Nonnull)())onClose;
 - (_Nullable id<RMQTransport>)write:(nonnull NSData *)data
                               error:(NSError * _Nullable * _Nullable)error
                          onComplete:(void (^ _Nonnull)())complete;
