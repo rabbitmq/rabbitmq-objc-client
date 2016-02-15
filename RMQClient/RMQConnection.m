@@ -30,11 +30,11 @@
         self.transport = transport;
         self.idAllocator = idAllocator;
         AMQTable *capabilities = [[AMQTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
-                                                                    @"consumer_cancel_notify": [[AMQBoolean alloc] init:YES],
-                                                                    @"exchange_exchange_bindings": [[AMQBoolean alloc] init:YES],
-                                                                    @"basic.nack": [[AMQBoolean alloc] init:YES],
-                                                                    @"connection.blocked": [[AMQBoolean alloc] init:YES],
-                                                                    @"authentication_failure_close": [[AMQBoolean alloc] init:YES]}];
+                                                          @"consumer_cancel_notify": [[AMQBoolean alloc] init:YES],
+                                                          @"exchange_exchange_bindings": [[AMQBoolean alloc] init:YES],
+                                                          @"basic.nack": [[AMQBoolean alloc] init:YES],
+                                                          @"connection.blocked": [[AMQBoolean alloc] init:YES],
+                                                          @"authentication_failure_close": [[AMQBoolean alloc] init:YES]}];
         self.clientProperties = [[AMQTable alloc] init:
                                  @{@"capabilities" : capabilities,
                                    @"product"     : [[AMQLongstr alloc] init:@"RMQClient"],
