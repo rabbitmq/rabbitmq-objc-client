@@ -31,7 +31,7 @@ class RMQConnectionTest: XCTestCase {
             .clientSends(Fixtures.connectionOpen(), channelID: 0)
     }
 
-    func testClosesConnectionWithHandshake() {
+    func testClosesTransportWhenConnectionCloseOkReceived() {
         let transport = ControlledInteractionTransport()
         let conn = startedConnection(transport)
 
