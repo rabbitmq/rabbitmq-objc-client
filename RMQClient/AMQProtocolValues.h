@@ -1,6 +1,5 @@
 #import <Foundation/Foundation.h>
 @import Mantle;
-#import "RMQChannel.h"
 
 @protocol AMQEncoding <NSObject>
 - (nonnull NSData *)amqEncoded;

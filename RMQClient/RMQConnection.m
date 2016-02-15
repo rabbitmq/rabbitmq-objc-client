@@ -43,7 +43,9 @@
                                    @"information" : [[AMQLongstr alloc] init:@"https://github.com/camelpunch/RMQClient"]}];
         self.mechanism = @"PLAIN";
         self.locale = @"en_GB";
-        self.channelZero = [[RMQChannel alloc] init:@(0)];
+        self.channelZero = [[RMQChannel alloc] init:@(0)
+                                          transport:self.transport
+                                       replyContext:self];
     }
     return self;
 }
@@ -59,76 +61,28 @@
         NSError *error = NULL;
         [self.transport write:[AMQProtocolHeader new].amqEncoded
                         error:&error
-                   onComplete:^{ [self awaitServerMethod]; }];
+                   onComplete:^{ [self.channelZero awaitServerMethod]; }];
     }];
     return self;
 }
 
 - (void)close {
-    [self send:self.amqClose channel:self.channelZero];
+    [self.channelZero send:self.amqClose];
 }
 
 - (RMQChannel *)createChannel {
-    RMQChannel *ch = [[RMQChannel alloc] init:[self.idAllocator nextID]];
-    [self send:[[AMQProtocolChannelOpen alloc] initWithReserved1:[[AMQShortstr alloc] init:@""]]
-       channel:ch];
+    RMQChannel *ch = [[RMQChannel alloc] init:[self.idAllocator nextID]
+                                    transport:self.transport
+                                 replyContext:self];
+    [ch send:self.amqChannelOpen];
     return ch;
 }
 
 # pragma mark - Private
 
-- (void)send:(id<AMQMethod>)amqMethod
-     channel:(RMQChannel *)channel {
-    AMQEncoder *encoder = [AMQEncoder new];
-    NSError *error = NULL;
-    [self.transport write:[encoder encodeMethod:amqMethod
-                                      channelID:channel.channelID]
-                    error:&error
-               onComplete:^{
-                   if ([self shouldAwaitServerMethod:amqMethod]) {
-                       [self awaitServerMethod];
-                   } else if ([self shouldSendNextRequest:amqMethod]) {
-                       [self send:((id <AMQOutgoingPrecursor>)amqMethod).nextRequest channel:channel];
-                   }
-               }];
+- (AMQProtocolChannelOpen *)amqChannelOpen {
+    return [[AMQProtocolChannelOpen alloc] initWithReserved1:[[AMQShortstr alloc] init:@""]];
 }
-
-- (void)awaitServerMethod {
-    [self.transport readFrame:^(NSData * _Nonnull responseData) {
-        if (responseData.length) {
-            AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
-            id parsedResponse = [decoder decodedAMQMethod];
-            RMQChannel *channel = [[RMQChannel alloc] init:decoder.channelID];
-            if ([self shouldReply:parsedResponse]) {
-                id<AMQMethod> reply = [parsedResponse replyWithContext:self];
-                [self send:reply channel:channel];
-            } else if ([self shouldAwaitServerMethod:parsedResponse]) {
-                [self awaitServerMethod];
-            }
-            if ([self shouldTriggerCallback:parsedResponse]) {
-                [parsedResponse didReceiveWithContext:self.transport];
-            }
-        }
-    }];
-}
-
-- (BOOL)shouldReply:(id<AMQMethod>)amqMethod {
-    return [amqMethod conformsToProtocol:@protocol(AMQIncomingSync)];
-}
-
-- (BOOL)shouldAwaitServerMethod:(id<AMQMethod>)amqMethod {
-    return [amqMethod conformsToProtocol:@protocol(AMQAwaitServer)];
-}
-
-- (BOOL)shouldSendNextRequest:(id<AMQMethod>)amqMethod {
-    return [amqMethod conformsToProtocol:@protocol(AMQOutgoingPrecursor)];
-}
-
-- (BOOL)shouldTriggerCallback:(id<AMQMethod>)amqMethod {
-    return [amqMethod conformsToProtocol:@protocol(AMQIncomingCallback)];
-}
-
-# pragma mark Data
 
 - (AMQProtocolConnectionClose *)amqClose {
     return [[AMQProtocolConnectionClose alloc] initWithReplyCode:[[AMQShort alloc] init:200]
