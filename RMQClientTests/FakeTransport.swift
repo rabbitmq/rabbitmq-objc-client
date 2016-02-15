@@ -43,7 +43,7 @@ enum TestDoubleTransportError: ErrorType {
         inboundData.append(data)
         return self
     }
-    func serverRepliesWith(data: NSData) -> FakeTransport {
+    func serverSends(data: NSData) -> FakeTransport {
         callbacks.removeAtIndex(0)(data)
         return self
     }

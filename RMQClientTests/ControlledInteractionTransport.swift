@@ -27,7 +27,7 @@ import XCTest
     func readFrame(complete: (NSData) -> Void) {
         callbacks.append(complete)
     }
-    func serverRepliesWith(data: NSData) -> ControlledInteractionTransport {
+    func serverSends(data: NSData) -> ControlledInteractionTransport {
         callbacks.removeAtIndex(0)(data)
         return self
     }

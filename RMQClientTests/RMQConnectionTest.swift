@@ -24,9 +24,9 @@ class RMQConnectionTest: XCTestCase {
 
         transport
             .clientSendsProtocolHeader()
-            .serverRepliesWith(Fixtures.connectionStart())
+            .serverSends(Fixtures.connectionStart())
             .clientSends(Fixtures.connectionStartOk(), channelID: 0)
-            .serverRepliesWith(Fixtures.connectionTune())
+            .serverSends(Fixtures.connectionTune())
             .clientSends(Fixtures.connectionTuneOk(), channelID: 0)
             .clientSends(Fixtures.connectionOpen(), channelID: 0)
     }
@@ -37,12 +37,12 @@ class RMQConnectionTest: XCTestCase {
 
         transport
             .clientSendsProtocolHeader()
-            .serverRepliesWith(Fixtures.connectionStart())
+            .serverSends(Fixtures.connectionStart())
             .clientSends(Fixtures.connectionStartOk(), channelID: 0)
-            .serverRepliesWith(Fixtures.connectionTune())
+            .serverSends(Fixtures.connectionTune())
             .clientSends(Fixtures.connectionTuneOk(), channelID: 0)
             .clientSends(Fixtures.connectionOpen(), channelID: 0)
-            .serverRepliesWith(Fixtures.connectionOpenOk())
+            .serverSends(Fixtures.connectionOpenOk())
 
         conn.close()
 
@@ -56,7 +56,7 @@ class RMQConnectionTest: XCTestCase {
             channelID: 0
         )
         XCTAssert(transport.isConnected())
-        transport.serverRepliesWith(Fixtures.connectionCloseOk())
+        transport.serverSends(Fixtures.connectionCloseOk())
         XCTAssertFalse(transport.isConnected())
     }
 
@@ -65,15 +65,15 @@ class RMQConnectionTest: XCTestCase {
         let conn = startedConnection(transport)
 
         transport
-            .serverRepliesWith(Fixtures.connectionStart())
-            .serverRepliesWith(Fixtures.connectionTune())
-            .serverRepliesWith(Fixtures.connectionOpenOk())
+            .serverSends(Fixtures.connectionStart())
+            .serverSends(Fixtures.connectionTune())
+            .serverSends(Fixtures.connectionOpenOk())
 
         let ch = conn.createChannel()
         transport.mustHaveSent(AMQProtocolChannelOpen(reserved1: AMQShortstr("")), channelID: 1, frame: 4)
 
         XCTAssertFalse(ch.isOpen())
-        transport.serverRepliesWith(Fixtures.channelOpenOk())
+        transport.serverSends(Fixtures.channelOpenOk())
         XCTAssertTrue(ch.isOpen())
     }
 }
