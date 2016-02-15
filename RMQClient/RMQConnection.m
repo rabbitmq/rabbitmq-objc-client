@@ -116,10 +116,10 @@ expectedResponseClass:(Class)expectedResponseClass
     if (responseData.length) {
         AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
         id parsedResponse = [[expectedResponseClass alloc] initWithCoder:decoder];
-        if ([parsedResponse conformsToProtocol:@protocol(AMQIncomingCallback)]) {
+        if ([self shouldTriggerCallback:parsedResponse]) {
             [parsedResponse didReceiveOnChannel:channel];
         }
-        if ([parsedResponse conformsToProtocol:@protocol(AMQIncomingSync)]) {
+        if ([self shouldReply:parsedResponse]) {
             id<AMQMethod> reply = [parsedResponse replyWithContext:self];
             [self send:reply channel:channel];
         }
@@ -130,6 +130,14 @@ expectedResponseClass:(Class)expectedResponseClass
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
+}
+
+- (BOOL)shouldReply:(id<AMQMethod>)parsedResponse {
+    return [parsedResponse conformsToProtocol:@protocol(AMQIncomingSync)];
+}
+
+- (BOOL)shouldTriggerCallback:(id<AMQMethod>)parsedResponse {
+    return [parsedResponse conformsToProtocol:@protocol(AMQIncomingCallback)];
 }
 
 @end
