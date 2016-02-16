@@ -94,9 +94,16 @@
 - (void)didReceiveWithContext:(nonnull id<AMQIncomingCallbackContext>)context;
 @end
 
-@interface AMQFrameset : MTLModel<AMQEncoding>
+@interface AMQFrameset : MTLModel
 @property (nonnull, nonatomic, copy, readonly) id<AMQMethod>method;
 @property (nonnull, nonatomic, copy, readonly) NSNumber *channelID;
+@property (nonnull, nonatomic, readonly) NSArray *frames;
+- (nonnull instancetype)initWithTypeID:(nonnull NSNumber *)typeID
+                             channelID:(nonnull NSNumber *)channelID
+                                method:(nonnull id<AMQMethod>)method;
+@end
+
+@interface AMQMethodFrame : MTLModel<AMQEncoding>
 - (nonnull instancetype)initWithTypeID:(nonnull NSNumber *)typeID
                              channelID:(nonnull NSNumber *)channelID
                                 method:(nonnull id<AMQMethod>)method;

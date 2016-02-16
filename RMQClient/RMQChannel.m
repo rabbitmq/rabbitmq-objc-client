@@ -1,7 +1,7 @@
 #import "RMQChannel.h"
-#import "AMQEncoder.h"
 #import "AMQDecoder.h"
 #import "RMQQueue.h"
+#import "AMQProtocolValues.h"
 
 @interface RMQChannel ()
 @property (nonatomic, copy, readwrite) NSNumber *channelID;
@@ -30,10 +30,8 @@
 }
 
 - (void)send:(id<AMQMethod>)amqMethod {
-    AMQEncoder *encoder = [AMQEncoder new];
     NSError *error = NULL;
-    [self.transport write:[encoder encodeMethod:amqMethod
-                                      channelID:self.channelID]
+    [self.transport write:[[AMQMethodFrame alloc] initWithTypeID:@1 channelID:self.channelID method:amqMethod].amqEncoded
                     error:&error
                onComplete:^{
                    if ([self shouldAwaitServerMethod:amqMethod]) {

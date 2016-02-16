@@ -309,9 +309,33 @@
 @property (nonatomic, copy, readwrite) NSNumber *typeID;
 @property (nonatomic, copy, readwrite) NSNumber *channelID;
 @property (nonatomic, copy, readwrite) id<AMQMethod> method;
+@property (nonatomic, readwrite) NSArray *frames;
 @end
 
 @implementation AMQFrameset
+
+- (instancetype)initWithTypeID:(NSNumber *)typeID
+                     channelID:(NSNumber *)channelID
+                        method:(id<AMQMethod>)method {
+    self = [super init];
+    if (self) {
+        self.typeID = typeID;
+        self.channelID = channelID;
+        self.method = method;
+        self.frames = @[];
+    }
+    return self;
+}
+
+@end
+
+@interface AMQMethodFrame ()
+@property (nonatomic, copy, readwrite) NSNumber *typeID;
+@property (nonatomic, copy, readwrite) NSNumber *channelID;
+@property (nonatomic, copy, readwrite) id<AMQMethod> method;
+@end
+
+@implementation AMQMethodFrame
 
 - (instancetype)initWithTypeID:(NSNumber *)typeID
                      channelID:(NSNumber *)channelID
