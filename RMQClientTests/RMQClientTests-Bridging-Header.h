@@ -7,5 +7,6 @@
 #import "AMQDecoder.h"
 #import "AMQProtocolHeader.h"
 #import "AMQProtocolValues.h"
+#import "AMQProtocolBasicProperties.h"
 #import "AMQProtocolMethods.h"
 #import "RMQReaderLoop.h"

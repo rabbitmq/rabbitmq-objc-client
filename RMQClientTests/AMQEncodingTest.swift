@@ -29,6 +29,36 @@ class AMQEncodingTest: XCTestCase {
         XCTAssertEqual(method, hydratedMethod)
     }
 
+    func testEncodeContentHeaderPayload() {
+        let classID = AMQShort(60)
+        let weight = AMQShort(0)
+        let bodySize = AMQLonglong(2)
+        let timestamp = AMQBasicTimestamp(NSDate())
+        let contentType = AMQBasicContentType("text/plain")
+        let contentEncoding = AMQBasicContentEncoding("foo")
+        let unsortedProperties: [AMQBasicValue] = [
+            timestamp,
+            contentEncoding,
+            contentType,
+        ]
+        let payload = AMQHeaderPayload(
+            classID: classID.integerValue,
+            bodySize: Int(bodySize.integerValue),
+            properties: unsortedProperties
+        )
+
+        let expectedData = NSMutableData()
+        expectedData.appendData(classID.amqEncoded())
+        expectedData.appendData(weight.amqEncoded())
+        expectedData.appendData(bodySize.amqEncoded())
+        expectedData.appendData(AMQShort(contentType.flagBit() | contentEncoding.flagBit() | timestamp.flagBit()).amqEncoded())
+        expectedData.appendData(contentType.amqEncoded())
+        expectedData.appendData(contentEncoding.amqEncoded())
+        expectedData.appendData(timestamp.amqEncoded())
+
+        TestHelper.assertEqualBytes(expectedData, payload.amqEncoded())
+    }
+
     func testFraming() {
         let type = "\u{1}"
         let channel = "\u{0}\u{0}"
@@ -119,9 +149,9 @@ class AMQEncodingTest: XCTestCase {
     }
 
     func testTimestampBecomes64BitPOSIX() {
-        let date = NSDate(timeIntervalSince1970: 1)
+        let date = NSDate.distantFuture()
         let timestamp = AMQTimestamp(date)
-        let expected = AMQLonglong(1)
+        let expected = AMQLonglong(UInt64(date.timeIntervalSince1970))
 
         TestHelper.assertEqualBytes(expected.amqEncoded(), timestamp.amqEncoded())
     }

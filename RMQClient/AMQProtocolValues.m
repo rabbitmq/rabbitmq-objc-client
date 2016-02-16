@@ -1,4 +1,5 @@
 #import "AMQProtocolValues.h"
+#import "AMQProtocolBasicProperties.h"
 
 @interface AMQOctet ()
 @property (nonatomic, readwrite) char octet;
@@ -114,12 +115,12 @@
 @end
 
 @interface AMQLonglong ()
-@property (nonatomic, readwrite) NSUInteger integerValue;
+@property (nonatomic, readwrite) uint64_t integerValue;
 @end
 
 @implementation AMQLonglong
 
-- (instancetype)init:(NSUInteger)val {
+- (instancetype)init:(uint64_t)val {
     self = [super init];
     if (self) {
         self.integerValue = val;
@@ -128,7 +129,7 @@
 }
 
 - (NSData *)amqEncoded {
-    uint64_t longVal = CFSwapInt64HostToBig((uint64_t)self.integerValue);
+    uint64_t longVal = CFSwapInt64HostToBig(self.integerValue);
     return [NSData dataWithBytes:&longVal length:sizeof(uint64_t)];
 }
 
@@ -420,6 +421,61 @@
     for (id<AMQEncoding>arg in self.arguments) {
         [encoded appendData:arg.amqEncoded];
     }
+    return encoded;
+}
+
+@end
+
+@interface AMQHeaderFrame ()
+@end
+
+@implementation AMQHeaderFrame
+- (NSData *)amqEncoded {
+    return [NSData data];
+}
+@end
+
+@interface AMQHeaderPayload ()
+@property (nonatomic, copy, readwrite) NSNumber *classID;
+@property (nonatomic, copy, readwrite) NSNumber *weight;
+@property (nonatomic, copy, readwrite) NSNumber *bodySize;
+@property (nonatomic, copy, readwrite) NSArray *properties;
+@end
+
+@implementation AMQHeaderPayload
+
+- (instancetype)initWithClassID:(NSNumber *)classID
+                       bodySize:(NSNumber *)bodySize
+                     properties:(NSArray<AMQBasicValue> *)properties {
+    self = [super init];
+    if (self) {
+        self.classID = classID;
+        self.weight = @0;
+        self.bodySize = bodySize;
+        self.properties = properties;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    NSMutableData *encoded = [NSMutableData new];
+    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[AMQShort alloc] init:self.weight.integerValue].amqEncoded];
+    [encoded appendData:[[AMQLonglong alloc] init:self.bodySize.integerValue].amqEncoded];
+
+    NSSortDescriptor *byFlagBit = [[NSSortDescriptor alloc] initWithKey:@"flagBit" ascending:NO];
+    NSArray *sortedProperties = [self.properties sortedArrayUsingDescriptors:@[byFlagBit]];
+
+    NSUInteger flags = 0;
+    for (id <AMQBasicValue> property in sortedProperties) {
+        flags |= property.flagBit;
+    }
+    [encoded appendData:[[AMQShort alloc] init:flags].amqEncoded];
+
+    for (id <AMQBasicValue> property in sortedProperties) {
+        [encoded appendData:property.amqEncoded];
+    }
+
     return encoded;
 }
 

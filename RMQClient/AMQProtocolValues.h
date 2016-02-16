@@ -33,7 +33,8 @@
 @end
 
 @interface AMQLonglong : MTLModel<AMQEncoding,AMQFieldValue>
-- (nonnull instancetype)init:(NSUInteger)val;
+@property (nonatomic, readonly) uint64_t integerValue;
+- (nonnull instancetype)init:(uint64_t)val;
 @end
 
 @interface AMQShortstr : MTLModel<AMQEncoding,AMQFieldValue>
@@ -108,7 +109,7 @@
 @end
 
 @interface AMQMethodFrame : MTLModel<AMQEncoding>
-- (nonnull instancetype)initWithTypeID:(nonnull NSNumber *)typeID
+- (nonnull instancetype)initWithTypeID:(nonnull NSNumber *)typeID // TODO: remove typeID, since it's always 1
                              channelID:(nonnull NSNumber *)channelID
                                 method:(nonnull id<AMQMethod>)method;
 @end
@@ -117,4 +118,15 @@
 - (nonnull instancetype)initWithClassID:(nonnull NSNumber *)classID
                                methodID:(nonnull NSNumber *)methodID
                               arguments:(nonnull NSArray *)arguments;
+@end
+
+@interface AMQHeaderFrame : MTLModel<AMQEncoding>
+@end
+
+@protocol AMQBasicValue;
+
+@interface AMQHeaderPayload : NSObject<AMQEncoding>
+- (nonnull instancetype)initWithClassID:(nonnull NSNumber *)classID
+                               bodySize:(nonnull NSNumber *)bodySize
+                             properties:(nonnull NSArray<AMQBasicValue> *)properties;
 @end
