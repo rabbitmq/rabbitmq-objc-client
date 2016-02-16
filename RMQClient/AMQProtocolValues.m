@@ -364,12 +364,11 @@
 
 @implementation AMQMethodFrame
 
-- (instancetype)initWithTypeID:(NSNumber *)typeID
-                     channelID:(NSNumber *)channelID
-                        method:(id<AMQMethod>)method {
+- (instancetype)initWithChannelID:(NSNumber *)channelID
+                           method:(id<AMQMethod>)method {
     self = [super init];
     if (self) {
-        self.typeID = typeID;
+        self.typeID = @1;
         self.channelID = channelID;
         self.method = method;
     }

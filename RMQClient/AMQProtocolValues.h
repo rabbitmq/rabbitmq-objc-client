@@ -109,9 +109,8 @@
 @end
 
 @interface AMQMethodFrame : MTLModel<AMQEncoding>
-- (nonnull instancetype)initWithTypeID:(nonnull NSNumber *)typeID // TODO: remove typeID, since it's always 1
-                             channelID:(nonnull NSNumber *)channelID
-                                method:(nonnull id<AMQMethod>)method;
+- (nonnull instancetype)initWithChannelID:(nonnull NSNumber *)channelID
+                                   method:(nonnull id<AMQMethod>)method;
 @end
 
 @interface AMQMethodPayload : NSObject<AMQEncoding>

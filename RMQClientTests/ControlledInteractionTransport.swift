@@ -45,7 +45,7 @@ import XCTest
         return self
     }
     func serverSendsMethod(amqMethod: AMQMethod, channelID: Int) -> ControlledInteractionTransport {
-        serverSendsData(AMQMethodFrame(typeID: 1, channelID: channelID, method: amqMethod).amqEncoded())
+        serverSendsData(AMQMethodFrame(channelID: channelID, method: amqMethod).amqEncoded())
         return self
     }
     func assertClientSendsMethod(amqMethod: AMQMethod, channelID: Int) -> ControlledInteractionTransport {
@@ -54,7 +54,7 @@ import XCTest
         } else {
             let actual = outboundData.removeAtIndex(0)
             TestHelper.assertEqualBytes(
-                AMQMethodFrame(typeID: 1, channelID: channelID, method: amqMethod).amqEncoded(),
+                AMQMethodFrame(channelID: channelID, method: amqMethod).amqEncoded(),
                 actual,
                 "Didn't send \(amqMethod)\n\nSent: \(actual)"
             )

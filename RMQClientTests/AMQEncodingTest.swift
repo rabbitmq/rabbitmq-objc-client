@@ -23,7 +23,7 @@ class AMQEncodingTest: XCTestCase {
 
     func testRoundTrip() {
         let method = AMQProtocolConnectionTune(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
-        let data = AMQMethodFrame(typeID: 1, channelID: 42, method: method).amqEncoded()
+        let data = AMQMethodFrame(channelID: 42, method: method).amqEncoded()
         let decoder = AMQDecoder(data: data)
         let hydratedMethod = decoder.decode() as! AMQProtocolConnectionTune
         XCTAssertEqual(method, hydratedMethod)
@@ -72,7 +72,7 @@ class AMQEncodingTest: XCTestCase {
         expectedFrame.appendBytes(&frameEnd, length: 1)
 
         let encodableMethod = EncodableMethod()
-        let frame: NSData = AMQMethodFrame(typeID: 1, channelID: 0, method: encodableMethod).amqEncoded()
+        let frame: NSData = AMQMethodFrame(channelID: 0, method: encodableMethod).amqEncoded()
 
         TestHelper.assertEqualBytes(expectedFrame, frame)
     }

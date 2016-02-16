@@ -110,12 +110,11 @@ class DataFixtures {
             mechanisms: AMQLongstr("AMQPLAIN PLAIN"),
             locales: AMQLongstr("en_US")
         )
-        return AMQMethodFrame(typeID: 1, channelID: 0, method: start).amqEncoded()
+        return AMQMethodFrame(channelID: 0, method: start).amqEncoded()
     }
 
     static func connectionTune() -> NSData {
         return AMQMethodFrame(
-            typeID: 1,
             channelID: 0,
             method: AMQProtocolConnectionTune(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
         ).amqEncoded()
@@ -123,7 +122,6 @@ class DataFixtures {
 
     static func connectionOpenOk() -> NSData {
         return AMQMethodFrame(
-            typeID: 1,
             channelID: 0,
             method: AMQProtocolConnectionOpenOk(reserved1: AMQShortstr(""))
         ).amqEncoded()
@@ -131,7 +129,6 @@ class DataFixtures {
 
     static func connectionCloseOk() -> NSData {
         return AMQMethodFrame(
-            typeID: 1,
             channelID: 0,
             method: AMQProtocolConnectionCloseOk()
         ).amqEncoded()
@@ -139,7 +136,6 @@ class DataFixtures {
 
     static func channelOpenOk() -> NSData {
         return AMQMethodFrame(
-            typeID: 1,
             channelID: 0,
             method: AMQProtocolChannelOpenOk(reserved1: AMQLongstr(""))
         ).amqEncoded()
