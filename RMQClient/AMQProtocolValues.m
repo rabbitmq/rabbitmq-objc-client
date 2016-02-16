@@ -243,6 +243,32 @@
 
 @end
 
+@interface AMQTimestamp ()
+@property (nonatomic, copy, readwrite) NSDate *date;
+@end
+
+@implementation AMQTimestamp
+
+- (instancetype)init:(NSDate *)date {
+    self = [super init];
+    if (self) {
+        self.date = date;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    NSTimeInterval interval = self.date.timeIntervalSince1970;
+    AMQLonglong *numeric = [[AMQLonglong alloc] init:interval];
+    return numeric.amqEncoded;
+}
+
+- (NSData *)amqFieldValueType {
+    return [@"T" dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+@end
+
 @interface AMQFieldValuePair ()
 @property (nonnull, nonatomic, copy) NSString *fieldName;
 @property (nonnull, nonatomic, copy) id<AMQEncoding,AMQFieldValue> fieldValue;

@@ -50,6 +50,10 @@
 - (nonnull instancetype)init:(nonnull NSDictionary *)dictionary;
 @end
 
+@interface AMQTimestamp : MTLModel<AMQEncoding,AMQFieldValue>
+- (nonnull instancetype)init:(nonnull NSDate *)date;
+@end
+
 @interface AMQFieldValuePair : MTLModel<AMQEncoding>
 - (nonnull instancetype)initWithFieldName:(nonnull NSString *)fieldName
                                fieldValue:(nonnull id <AMQEncoding,AMQFieldValue>)fieldValue;

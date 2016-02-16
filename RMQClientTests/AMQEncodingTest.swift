@@ -117,4 +117,12 @@ class AMQEncodingTest: XCTestCase {
 
         TestHelper.assertEqualBytes(expectedData!, fieldTable.amqEncoded())
     }
+
+    func testTimestampBecomes64BitPOSIX() {
+        let date = NSDate(timeIntervalSince1970: 1)
+        let timestamp = AMQTimestamp(date)
+        let expected = AMQLonglong(1)
+
+        TestHelper.assertEqualBytes(expected.amqEncoded(), timestamp.amqEncoded())
+    }
 }
