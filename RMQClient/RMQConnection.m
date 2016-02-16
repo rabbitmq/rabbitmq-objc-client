@@ -79,7 +79,7 @@
     return ch;
 }
 
-- (void)handleFrameset:(AMQFrame *)frameset {
+- (void)handleFrameset:(AMQFrameset *)frameset {
     id method = frameset.method;
     if ([self shouldReply:method]) {
         id<AMQMethod> reply = [method replyWithContext:self];

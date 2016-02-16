@@ -22,7 +22,7 @@
     [self.transport readFrame:^(NSData * _Nonnull responseData) {
         AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
         id<AMQMethod> method = [decoder decode];
-        AMQFrame *frameset = [[AMQFrame alloc] initWithType:@1 channelID:@42 method:method];
+        AMQFrameset *frameset = [[AMQFrameset alloc] initWithType:@1 channelID:@42 method:method];
         [self.frameHandler handleFrameset:frameset];
     }];
 }

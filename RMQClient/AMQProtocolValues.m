@@ -303,13 +303,13 @@
 
 @end
 
-@interface AMQFrame ()
+@interface AMQFrameset ()
 @property (nonatomic, copy, readwrite) NSNumber *frame;
 @property (nonatomic, copy, readwrite) NSNumber *channelID;
 @property (nonatomic, copy, readwrite) id<AMQMethod> method;
 @end
 
-@implementation AMQFrame
+@implementation AMQFrameset
 
 - (instancetype)initWithType:(NSNumber *)frame
                    channelID:(NSNumber *)channelID

@@ -1,13 +1,13 @@
 import XCTest
 
 @objc class FakeFrameHandler : NSObject, RMQFrameHandler {
-    var receivedFrames: [AMQFrame] = []
+    var receivedFrames: [AMQFrameset] = []
 
-    func handleFrameset(frameset: AMQFrame!) {
+    func handleFrameset(frameset: AMQFrameset!) {
         receivedFrames.append(frameset)
     }
 
-    func lastReceivedFrame() -> AMQFrame? {
+    func lastReceivedFrame() -> AMQFrameset? {
         return receivedFrames.last
     }
 }
@@ -19,7 +19,7 @@ class RMQReaderLoopTest: XCTestCase {
         let frameHandler = FakeFrameHandler()
         let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
         let method = MethodFixtures.connectionStart()
-        let expectedFrame = AMQFrame(type: 1, channelID: 42, method: method)
+        let expectedFrame = AMQFrameset(type: 1, channelID: 42, method: method)
 
         readerLoop.runOnce()
 
