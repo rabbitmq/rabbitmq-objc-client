@@ -19,11 +19,14 @@ class IntegrationTests: XCTestCase {
         let ch = conn.createChannel()
         let q = ch.queue("rmqclient.examples.hello_world", autoDelete: true, exclusive: false)
         q.publish("Hello!")
-        let message = q.pop()
+        let message = q.pop() as! RMQContentMessage
 
         let expectedInfo = ["consumer_tag": "foo"]
         let expectedMeta = ["foo": "bar"]
-        XCTAssertEqual(RMQMessage(deliveryInfo: expectedInfo, metadata: expectedMeta, content: "Hello!"), message)
+
+        let expected = RMQContentMessage(deliveryInfo: expectedInfo, metadata: expectedMeta, content: "Hello!")
+
+        XCTAssertEqual(expected, message)
     }
     
 }

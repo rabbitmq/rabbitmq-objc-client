@@ -1,6 +1,7 @@
 #import "RMQChannel.h"
 #import "AMQEncoder.h"
 #import "AMQDecoder.h"
+#import "RMQQueue.h"
 
 @interface RMQChannel ()
 @property (nonatomic, copy, readwrite) NSNumber *channelID;
@@ -64,7 +65,7 @@
 - (RMQQueue *)queue:(NSString *)queueName
          autoDelete:(BOOL)shouldAutoDelete
           exclusive:(BOOL)isExclusive {
-    return [RMQQueue new];
+    return [[RMQQueue alloc] initWithChannel:self];
 }
 
 - (RMQExchange *)defaultExchange {
