@@ -1,6 +1,7 @@
 #import "RMQConnection.h"
 #import "AMQProtocolHeader.h"
 #import "AMQProtocolMethods.h"
+#import "RMQReaderLoop.h"
 
 @interface RMQConnection ()
 @property (copy, nonatomic, readwrite) NSString *vhost;
@@ -10,6 +11,7 @@
 @property (nonatomic, readwrite) NSString *locale;
 @property (nonatomic, readwrite) AMQCredentials *credentials;
 @property (nonatomic, readwrite) RMQChannel *channelZero;
+@property (nonatomic, readwrite) RMQReaderLoop *readerLoop;
 @property (nonatomic, readwrite) id <RMQIDAllocator> idAllocator;
 @end
 
@@ -41,6 +43,7 @@
                                    @"information" : [[AMQLongstr alloc] init:@"https://github.com/camelpunch/RMQClient"]}];
         self.mechanism = @"PLAIN";
         self.locale = @"en_GB";
+        self.readerLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport frameHandler:self];
         self.channelZero = [[RMQChannel alloc] init:@(0)
                                           transport:self.transport
                                        replyContext:self];
@@ -59,7 +62,7 @@
         NSError *error = NULL;
         [self.transport write:[AMQProtocolHeader new].amqEncoded
                         error:&error
-                   onComplete:^{ [self.channelZero awaitServerMethod]; }];
+                   onComplete:^{ [self.readerLoop runOnce]; }];
     }];
     return self;
 }
@@ -76,6 +79,19 @@
     return ch;
 }
 
+- (void)handleFrameset:(AMQFrame *)frameset {
+    id method = frameset.method;
+    if ([self shouldReply:method]) {
+        id<AMQMethod> reply = [method replyWithContext:self];
+        [self.channelZero send:reply];
+    } else if ([self shouldAwaitServerMethod:method]) {
+        [self.channelZero awaitServerMethod];
+    }
+    if ([self shouldTriggerCallback:method]) {
+        [method didReceiveWithContext:self.transport];
+    }
+}
+
 # pragma mark - Private
 
 - (AMQProtocolChannelOpen *)amqChannelOpen {
@@ -87,6 +103,22 @@
                                                        replyText:[[AMQShortstr alloc] init:@"Goodbye"]
                                                          classId:[[AMQShort alloc] init:0]
                                                         methodId:[[AMQShort alloc] init:0]];
+}
+
+- (BOOL)shouldReply:(id<AMQMethod>)amqMethod {
+    return [amqMethod conformsToProtocol:@protocol(AMQIncomingSync)];
+}
+
+- (BOOL)shouldAwaitServerMethod:(id<AMQMethod>)amqMethod {
+    return [amqMethod conformsToProtocol:@protocol(AMQAwaitServerMethod)];
+}
+
+- (BOOL)shouldSendNextRequest:(id<AMQMethod>)amqMethod {
+    return [amqMethod conformsToProtocol:@protocol(AMQOutgoingPrecursor)];
+}
+
+- (BOOL)shouldTriggerCallback:(id<AMQMethod>)amqMethod {
+    return [amqMethod conformsToProtocol:@protocol(AMQIncomingCallback)];
 }
 
 @end

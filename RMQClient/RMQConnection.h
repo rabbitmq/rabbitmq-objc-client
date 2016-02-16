@@ -3,8 +3,9 @@
 #import "RMQTransport.h"
 #import "RMQIDAllocator.h"
 #import "AMQProtocolValues.h"
+#import "RMQFrameHandler.h"
 
-@interface RMQConnection : NSObject<AMQReplyContext>
+@interface RMQConnection : NSObject<AMQReplyContext, RMQFrameHandler>
 @property (copy, nonatomic, readonly) NSString *vhost;
 
 - (instancetype)initWithUser:(NSString *)user
