@@ -10,7 +10,7 @@
 @property (nonatomic, readwrite) NSString *mechanism;
 @property (nonatomic, readwrite) NSString *locale;
 @property (nonatomic, readwrite) AMQCredentials *credentials;
-@property (nonatomic, readwrite) RMQChannel *channelZero;
+@property (nonatomic, readwrite) NSDictionary *channels;
 @property (nonatomic, readwrite) RMQReaderLoop *readerLoop;
 @property (nonatomic, readwrite) id <RMQIDAllocator> idAllocator;
 @end
@@ -44,9 +44,9 @@
         self.mechanism = @"PLAIN";
         self.locale = @"en_GB";
         self.readerLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport frameHandler:self];
-        self.channelZero = [[RMQChannel alloc] init:@(0)
-                                          transport:self.transport
-                                       replyContext:self];
+        self.channels = @{@0 : [[RMQChannel alloc] init:@0
+                                              transport:self.transport
+                                           replyContext:self]};
     }
     return self;
 }
@@ -68,7 +68,7 @@
 }
 
 - (void)close {
-    [self.channelZero send:self.amqClose];
+    [self.channels[@0] send:self.amqClose];
 }
 
 - (RMQChannel *)createChannel {
@@ -83,9 +83,9 @@
     id method = frameset.method;
     if ([self shouldReply:method]) {
         id<AMQMethod> reply = [method replyWithContext:self];
-        [self.channelZero send:reply];
+        [self.channels[frameset.channelID] send:reply];
     } else if ([self shouldAwaitServerMethod:method]) {
-        [self.channelZero awaitServerMethod];
+        [self.channels[frameset.channelID] awaitServerMethod];
     }
     if ([self shouldTriggerCallback:method]) {
         [method didReceiveWithContext:self.transport];

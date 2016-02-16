@@ -10,6 +10,7 @@
 @end
 
 @interface AMQOctet : MTLModel<AMQEncoding>
+@property (nonatomic, readonly) NSUInteger integerValue;
 - (nonnull instancetype)init:(char)octet;
 @end
 
@@ -95,9 +96,10 @@
 
 @interface AMQFrameset : MTLModel<AMQEncoding>
 @property (nonnull, nonatomic, copy, readonly) id<AMQMethod>method;
-- (nonnull instancetype)initWithType:(nonnull NSNumber *)frame
-                           channelID:(nonnull NSNumber *)channelID
-                              method:(nonnull id<AMQMethod>)method;
+@property (nonnull, nonatomic, copy, readonly) NSNumber *channelID;
+- (nonnull instancetype)initWithTypeID:(nonnull NSNumber *)typeID
+                             channelID:(nonnull NSNumber *)channelID
+                                method:(nonnull id<AMQMethod>)method;
 @end
 
 @interface AMQMethodPayload : NSObject<AMQEncoding>

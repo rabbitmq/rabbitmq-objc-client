@@ -2,6 +2,7 @@
 
 @interface AMQOctet ()
 @property (nonatomic, readwrite) char octet;
+@property (nonatomic, readwrite) NSUInteger integerValue;
 @end
 
 @implementation AMQOctet
@@ -10,6 +11,7 @@
     self = [super init];
     if (self) {
         self.octet = octet;
+        self.integerValue = (NSUInteger)octet;
     }
     return self;
 }
@@ -304,19 +306,19 @@
 @end
 
 @interface AMQFrameset ()
-@property (nonatomic, copy, readwrite) NSNumber *frame;
+@property (nonatomic, copy, readwrite) NSNumber *typeID;
 @property (nonatomic, copy, readwrite) NSNumber *channelID;
 @property (nonatomic, copy, readwrite) id<AMQMethod> method;
 @end
 
 @implementation AMQFrameset
 
-- (instancetype)initWithType:(NSNumber *)frame
-                   channelID:(NSNumber *)channelID
-                      method:(id<AMQMethod>)method {
+- (instancetype)initWithTypeID:(NSNumber *)typeID
+                     channelID:(NSNumber *)channelID
+                        method:(id<AMQMethod>)method {
     self = [super init];
     if (self) {
-        self.frame = frame;
+        self.typeID = typeID;
         self.channelID = channelID;
         self.method = method;
     }
@@ -328,7 +330,7 @@
                                                                  methodID:[self.method.class methodID]
                                                                 arguments:self.method.frameArguments];
     NSMutableData *frameData = [NSMutableData new];
-    NSArray *unencodedFrame = @[[[AMQOctet alloc] init:self.frame.integerValue],
+    NSArray *unencodedFrame = @[[[AMQOctet alloc] init:self.typeID.integerValue],
                                 [[AMQShort alloc] init:self.channelID.integerValue],
                                 [[AMQLong alloc] init:payload.amqEncoded.length],
                                 payload,

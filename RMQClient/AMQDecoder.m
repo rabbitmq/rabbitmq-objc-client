@@ -9,7 +9,7 @@
 @property (nonatomic, readwrite) const char *cursor;
 @property (nonatomic, readwrite) const char *end;
 @property (nonatomic, readwrite) AMQParser *parser;
-@property (nonatomic, readwrite) AMQOctet *type;
+@property (nonatomic, readwrite) NSNumber *typeID;
 @property (nonatomic, readwrite) NSNumber *channelID;
 @property (nonatomic, readwrite) AMQLong *size;
 @property (nonatomic, readwrite) NSNumber *classID;
@@ -26,7 +26,7 @@
         self.cursor    = (const char *)self.data.bytes;
         self.end       = (const char *)self.data.bytes + self.data.length;
         self.parser    = [AMQParser new];
-        self.type      = [self.parser parseOctet:&_cursor end:self.end];
+        self.typeID    = @([self.parser parseOctet:&_cursor end:self.end].integerValue);
         self.channelID = @([self.parser parseShortUInt:&_cursor end:self.end].integerValue);
         self.size      = [self.parser parseLongUInt:&_cursor end:self.end];
         self.classID   = @([self.parser parseShortUInt:&_cursor end:self.end].integerValue);

@@ -4,9 +4,9 @@
 
 - (NSData *)encodeMethod:(id<AMQMethod>)amqMethod
                channelID:(NSNumber *)channelID {
-    return [[AMQFrameset alloc] initWithType:@(1)
-                                   channelID:channelID
-                                      method:amqMethod].amqEncoded;
+    return [[AMQFrameset alloc] initWithTypeID:@(1)
+                                     channelID:channelID
+                                        method:amqMethod].amqEncoded;
 }
 
 @end
