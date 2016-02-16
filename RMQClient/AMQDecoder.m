@@ -37,7 +37,15 @@
 
 - (id)decode {
     Class methodClass = AMQProtocolMethodMap.methodMap[@[self.classID, self.methodID]];
-    return [[methodClass alloc] initWithCoder:self];
+    NSArray *frames = [methodClass frames];
+    NSArray *firstFrame = frames[0];
+    NSMutableArray *decodedFrames = [NSMutableArray new];
+    decodedFrames[0] = [NSMutableArray new];
+    for (int i = 0; i < firstFrame.count; i++) {
+        Class propertyClass = firstFrame[i];
+        decodedFrames[0][i] = [[propertyClass alloc] initWithCoder:self];
+    }
+    return [(id <AMQMethod>)[methodClass alloc] initWithDecodedFrames:decodedFrames];
 }
 
 - (id)decodeObjectForKey:(NSString *)key {

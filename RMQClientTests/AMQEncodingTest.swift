@@ -8,6 +8,12 @@ import XCTest
     static func methodID() -> NSNumber {
         return 11
     }
+    static func frames() -> [AnyObject] {
+        return [[]]
+    }
+    required convenience init(decodedFrames frames: [AnyObject]) {
+        self.init()
+    }
     func copyWithZone(zone: NSZone) -> AnyObject {
         return self
     }

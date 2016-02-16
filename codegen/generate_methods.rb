@@ -81,6 +81,16 @@ class GenerateMethods
     end
   end
 
+  def method_selector(method)
+    field_names = method_fields(method).map {|f| f[:name]}
+    selector_fields = field_names.join(':')
+    if selector_fields.empty?
+      "init"
+    else
+      "initWith#{selector_fields.slice(0, 1).capitalize + selector_fields.slice(1..-1)}:"
+    end
+  end
+
   def generate_header
     xml.xpath("//method").reduce(header) { |acc, method|
       fields = method_fields(method)
@@ -98,6 +108,7 @@ class GenerateMethods
       class_id = method.xpath('..').first[:index]
       method_id = method[:index]
       constructor = method_constructor(method)
+      selector = method_selector(method)
       class_part = method.xpath('..').first[:name].capitalize
       acc + template('methods_implementation_template').result(binding)
     }

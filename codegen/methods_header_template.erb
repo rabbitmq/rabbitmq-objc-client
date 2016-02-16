@@ -1,4 +1,4 @@
-@interface <%= class_name %> : MTLModel <NSCoding, <%= protocols.join(", ") %>>
+@interface <%= class_name %> : MTLModel <<%= protocols.join(", ") %>>
 <%- fields.each do |f| -%>
 @property (nonnull, copy, nonatomic, readonly) <%= f[:type] %> *<%= f[:name] %>;
 <%- end -%>

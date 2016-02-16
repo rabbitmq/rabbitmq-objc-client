@@ -9,6 +9,9 @@
 
 + (NSNumber *)classID { return @(<%= class_id %>); }
 + (NSNumber *)methodID { return @(<%= method_id %>); }
++ (NSArray *)frames {
+    return @[@[<%= fields.map {|f| "[#{f[:type]} class]"}.join(",\n               ") -%>]];
+}
 
 <%- if constructor -%>
 <%= constructor %> {
@@ -23,11 +26,11 @@
 }
 <%- end -%>
 
-- (id)initWithCoder:(NSCoder *)coder {
+- (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-      <%- fields.each do |f| -%>
-        self.<%= f[:name] %> = [[<%= f[:type] %> alloc] initWithCoder:coder];
+      <%- fields.each_with_index do |f, idx| -%>
+        self.<%= f[:name] %> = frames[0][<%= idx %>];
       <%- end -%>
         self.frameArguments = @[<%= fields.map {|f| "self.#{f[:name]}" }.join(",\n                                ") -%>];
     }

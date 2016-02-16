@@ -71,6 +71,8 @@
 @property (nonnull, nonatomic, readwrite) NSArray *frameArguments;
 + (nonnull NSNumber *)classID;
 + (nonnull NSNumber *)methodID;
++ (nonnull NSArray *)frames;
+- (nonnull instancetype)initWithDecodedFrames:(nonnull NSArray *)frames;
 @end
 
 @protocol AMQAwaitServerMethod <NSObject>
