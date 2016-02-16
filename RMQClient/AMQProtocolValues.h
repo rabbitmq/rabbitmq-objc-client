@@ -93,7 +93,7 @@
 - (void)didReceiveWithContext:(nonnull id<AMQIncomingCallbackContext>)context;
 @end
 
-@interface AMQFrame : NSObject<AMQEncoding>
+@interface AMQFrame : MTLModel<AMQEncoding>
 - (nonnull instancetype)initWithType:(nonnull NSNumber *)frame
                            channelID:(nonnull NSNumber *)channelID
                               method:(nonnull id <AMQMethod>)method;
