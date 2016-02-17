@@ -376,51 +376,16 @@
 }
 
 - (NSData *)amqEncoded {
-    AMQMethodPayload *payload = [[AMQMethodPayload alloc] initWithClassID:[self.method.class classID]
-                                                                 methodID:[self.method.class methodID]
-                                                                arguments:self.method.frameArguments];
     NSMutableData *frameData = [NSMutableData new];
     NSArray *unencodedFrame = @[[[AMQOctet alloc] init:self.typeID.integerValue],
                                 [[AMQShort alloc] init:self.channelID.integerValue],
-                                [[AMQLong alloc] init:payload.amqEncoded.length],
-                                payload,
+                                [[AMQLong alloc] init:self.method.amqEncoded.length],
+                                self.method,
                                 [[AMQOctet alloc] init:0xCE]];
     for (id<AMQEncoding> part in unencodedFrame) {
         [frameData appendData:part.amqEncoded];
     }
     return frameData;
-}
-
-@end
-
-@interface AMQMethodPayload ()
-@property (nonatomic, copy, readwrite) NSNumber *classID;
-@property (nonatomic, copy, readwrite) NSNumber *methodID;
-@property (nonatomic, copy, readwrite) NSArray *arguments;
-@end
-
-@implementation AMQMethodPayload
-
-- (instancetype)initWithClassID:(NSNumber *)classID
-                       methodID:(NSNumber *)methodID
-                      arguments:(NSArray *)arguments {
-    self = [super init];
-    if (self) {
-        self.classID = classID;
-        self.methodID = methodID;
-        self.arguments = arguments;
-    }
-    return self;
-}
-
-- (NSData *)amqEncoded {
-    NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.arguments) {
-        [encoded appendData:arg.amqEncoded];
-    }
-    return encoded;
 }
 
 @end

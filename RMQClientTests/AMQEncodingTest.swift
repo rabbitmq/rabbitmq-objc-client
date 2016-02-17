@@ -1,13 +1,6 @@
 import XCTest
 
 @objc class EncodableMethod: NSObject, AMQMethod, NSCopying {
-    var frameArguments: [AnyObject] = [AMQShortstr("foo")]
-    static func classID() -> NSNumber {
-        return 10
-    }
-    static func methodID() -> NSNumber {
-        return 11
-    }
     static func frames() -> [AnyObject] {
         return [[]]
     }
@@ -16,6 +9,13 @@ import XCTest
     }
     func copyWithZone(zone: NSZone) -> AnyObject {
         return self
+    }
+    func amqEncoded() -> NSData {
+        let data = NSMutableData()
+        data.appendData(AMQShort(10).amqEncoded())
+        data.appendData(AMQShort(11).amqEncoded())
+        data.appendData(AMQShortstr("foo").amqEncoded())
+        return data
     }
 }
 

@@ -73,10 +73,7 @@
 - (void)close:(void (^ _Nonnull)())onClose;
 @end
 
-@protocol AMQMethod <NSObject>
-@property (nonnull, nonatomic, readwrite) NSArray *frameArguments;
-+ (nonnull NSNumber *)classID;
-+ (nonnull NSNumber *)methodID;
+@protocol AMQMethod <NSObject, AMQEncoding>
 + (nonnull NSArray *)frames;
 - (nonnull instancetype)initWithDecodedFrames:(nonnull NSArray *)frames;
 @end
@@ -111,12 +108,6 @@
 @interface AMQMethodFrame : MTLModel<AMQEncoding>
 - (nonnull instancetype)initWithChannelID:(nonnull NSNumber *)channelID
                                    method:(nonnull id<AMQMethod>)method;
-@end
-
-@interface AMQMethodPayload : NSObject<AMQEncoding>
-- (nonnull instancetype)initWithClassID:(nonnull NSNumber *)classID
-                               methodID:(nonnull NSNumber *)methodID
-                              arguments:(nonnull NSArray *)arguments;
 @end
 
 @interface AMQHeaderFrame : MTLModel<AMQEncoding>

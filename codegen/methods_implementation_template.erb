@@ -1,17 +1,17 @@
 @interface <%= class_name %> ()
 <%- fields.each do |f| -%>
-@property (nonnull, copy, nonatomic, readwrite) <%= f[:type] %> *<%= f[:name] %>;
+@property (copy, nonatomic, readwrite) <%= f[:type] %> *<%= f[:name] %>;
 <%- end -%>
+@property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
 @implementation <%= class_name %>
-@synthesize frameArguments;
 
-+ (NSNumber *)classID { return @(<%= class_id %>); }
-+ (NSNumber *)methodID { return @(<%= method_id %>); }
 + (NSArray *)frames {
     return @[@[<%= fields.map {|f| "[#{f[:type]} class]"}.join(",\n               ") -%>]];
 }
+- (NSNumber *)classID { return @(<%= class_id %>); }
+- (NSNumber *)methodID { return @(<%= method_id %>); }
 
 <%- if constructor -%>
 <%= constructor %> {
@@ -20,7 +20,7 @@
         <%- fields.each do |f| -%>
         self.<%= f[:name] %> = <%= f[:name] %>;
         <%- end -%>
-        self.frameArguments = @[<%= fields.map {|f| "self.#{f[:name]}" }.join(",\n                                ") -%>];
+        self.payloadArguments = @[<%= fields.map {|f| "self.#{f[:name]}" }.join(",\n                                  ") -%>];
     }
     return self;
 }
@@ -32,9 +32,19 @@
       <%- fields.each_with_index do |f, idx| -%>
         self.<%= f[:name] %> = frames[0][<%= idx %>];
       <%- end -%>
-        self.frameArguments = @[<%= fields.map {|f| "self.#{f[:name]}" }.join(",\n                                ") -%>];
+        self.payloadArguments = @[<%= fields.map {|f| "self.#{f[:name]}" }.join(",\n                                ") -%>];
     }
     return self;
+}
+
+- (NSData *)amqEncoded {
+    NSMutableData *encoded = [NSMutableData new];
+    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<AMQEncoding>arg in self.payloadArguments) {
+        [encoded appendData:arg.amqEncoded];
+    }
+    return encoded;
 }
 
 @end

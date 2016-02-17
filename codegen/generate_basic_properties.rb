@@ -16,7 +16,7 @@ class GenerateBasicProperties
 #{do_not_edit}
 #import "AMQProtocolValues.h"
 
-@protocol AMQBasicValue <NSObject>
+@protocol AMQBasicValue <NSObject, AMQEncoding>
 - (NSUInteger)flagBit;
 @end
 
