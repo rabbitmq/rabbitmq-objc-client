@@ -1,26 +1,20 @@
 #import "RMQChannel.h"
 #import "AMQDecoder.h"
 #import "AMQProtocolValues.h"
+#import "AMQProtocolMethods.h"
 
 @interface RMQChannel ()
 @property (nonatomic, copy, readwrite) NSNumber *channelID;
-@property (weak, nonatomic, readwrite) id<RMQTransport> transport;
-@property (nonatomic, readwrite) id<AMQReplyContext> replyContext;
-@property (nonatomic, readwrite) RMQQueueFactory *queueFactory;
+@property (nonatomic, readwrite) id <RMQSender> sender;
 @end
 
 @implementation RMQChannel
 
-- (instancetype)init:(NSNumber *)channelID
-           transport:(id<RMQTransport>)transport
-        replyContext:(id<AMQReplyContext>)replyContext
-        queueFactory:(RMQQueueFactory *)queueFactory {
+- (instancetype)init:(NSNumber *)channelID sender:(id<RMQSender>)sender {
     self = [super init];
     if (self) {
         self.channelID = channelID;
-        self.transport = transport;
-        self.replyContext = replyContext;
-        self.queueFactory = queueFactory;
+        self.sender = sender;
     }
     return self;
 }
@@ -34,7 +28,20 @@
 - (RMQQueue *)queue:(NSString *)queueName
          autoDelete:(BOOL)shouldAutoDelete
           exclusive:(BOOL)isExclusive {
-    return [self.queueFactory createWithChannel:self];
+    AMQShort *ticket          = [[AMQShort alloc] init:0];
+    AMQShortstr *amqQueueName = [[AMQShortstr alloc] init:queueName];
+    AMQTable *arguments       = [[AMQTable alloc] init:@{}];
+
+    AMQProtocolQueueDeclareOptions options = AMQProtocolQueueDeclareDurable;
+    if (isExclusive)            { options |= AMQProtocolQueueDeclareExclusive; }
+    if (shouldAutoDelete)       { options |= AMQProtocolQueueDeclareAutoDelete; }
+
+    AMQProtocolQueueDeclare *method = [[AMQProtocolQueueDeclare alloc] initWithReserved1:ticket
+                                                                                   queue:amqQueueName
+                                                                                 options:options
+                                                                               arguments:arguments];
+    [self.sender sendMethod:method channelID:self.channelID];
+    return [[RMQQueue alloc] initWithChannelID:self.channelID sender:self.sender];
 }
 
 - (RMQExchange *)defaultExchange {

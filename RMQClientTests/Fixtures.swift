@@ -86,6 +86,15 @@ class MethodFixtures {
         return AMQProtocolChannelOpen(reserved1: AMQShortstr(""))
     }
 
+    static func queueDeclare(name: String) -> AMQProtocolQueueDeclare {
+        return AMQProtocolQueueDeclare(
+            reserved1: AMQShort(0),
+            queue: AMQShortstr(name),
+            options: AMQProtocolQueueDeclareOptions.Durable,
+            arguments: AMQTable([:])
+        )
+    }
+
     static func basicGet() -> AMQProtocolBasicGet {
         return AMQProtocolBasicGet(reserved1: AMQShort(0), queue: AMQShortstr("my.queue"), options: AMQProtocolBasicGetOptions.NoOptions)
     }

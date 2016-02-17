@@ -1,14 +1,12 @@
 #import <Foundation/Foundation.h>
 #import "RMQMessage.h"
-
-@class RMQConnection;
-@class RMQChannel;
+#import "RMQSender.h"
 
 @interface RMQQueue : NSObject
 @property (nonnull, nonatomic, readonly) NSString *name;
 
-- (nonnull instancetype)initWithConnection:(nonnull RMQConnection *)connection
-                                   channel:(nonnull RMQChannel *)channel;
+- (nonnull instancetype)initWithChannelID:(nonnull NSNumber *)channelID
+                                   sender:(nonnull id <RMQSender>)sender;
 
 - (nonnull RMQQueue *)publish:(nonnull NSString *)message;
 - (nonnull id<RMQMessage>)pop;

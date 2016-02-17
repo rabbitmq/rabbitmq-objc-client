@@ -56,8 +56,7 @@ import XCTest
             let actual = outboundData.removeAtIndex(0)
             TestHelper.assertEqualBytes(
                 AMQFrame(channelID: channelID, payload: amqMethod).amqEncoded(),
-                actual,
-                "Didn't send \(amqMethod)\n\nSent: \(actual)"
+                actual
             )
         }
         return self

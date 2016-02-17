@@ -156,13 +156,13 @@ typedef NS_OPTIONS(NSUInteger, AMQProtocolExchangeDeclareOptions) {
 @property (nonnull, copy, nonatomic, readonly) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *exchange;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *type;
-@property (nonnull, copy, nonatomic, readonly) AMQTable *arguments;
 @property (nonatomic, readonly) AMQProtocolExchangeDeclareOptions options;
+@property (nonnull, copy, nonatomic, readonly) AMQTable *arguments;
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                  exchange:(nonnull AMQShortstr *)exchange
                                      type:(nonnull AMQShortstr *)type
-                                arguments:(nonnull AMQTable *)arguments
-                                  options:(AMQProtocolExchangeDeclareOptions)options;
+                                  options:(AMQProtocolExchangeDeclareOptions)options
+                                arguments:(nonnull AMQTable *)arguments;
 @end
 
 @interface AMQProtocolExchangeDeclareOk : MTLModel <AMQMethod>
@@ -198,14 +198,14 @@ typedef NS_OPTIONS(NSUInteger, AMQProtocolExchangeBindOptions) {
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *destination;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *source;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *routingKey;
-@property (nonnull, copy, nonatomic, readonly) AMQTable *arguments;
 @property (nonatomic, readonly) AMQProtocolExchangeBindOptions options;
+@property (nonnull, copy, nonatomic, readonly) AMQTable *arguments;
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                               destination:(nonnull AMQShortstr *)destination
                                    source:(nonnull AMQShortstr *)source
                                routingKey:(nonnull AMQShortstr *)routingKey
-                                arguments:(nonnull AMQTable *)arguments
-                                  options:(AMQProtocolExchangeBindOptions)options;
+                                  options:(AMQProtocolExchangeBindOptions)options
+                                arguments:(nonnull AMQTable *)arguments;
 @end
 
 @interface AMQProtocolExchangeBindOk : MTLModel <AMQMethod>
@@ -222,14 +222,14 @@ typedef NS_OPTIONS(NSUInteger, AMQProtocolExchangeUnbindOptions) {
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *destination;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *source;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *routingKey;
-@property (nonnull, copy, nonatomic, readonly) AMQTable *arguments;
 @property (nonatomic, readonly) AMQProtocolExchangeUnbindOptions options;
+@property (nonnull, copy, nonatomic, readonly) AMQTable *arguments;
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                               destination:(nonnull AMQShortstr *)destination
                                    source:(nonnull AMQShortstr *)source
                                routingKey:(nonnull AMQShortstr *)routingKey
-                                arguments:(nonnull AMQTable *)arguments
-                                  options:(AMQProtocolExchangeUnbindOptions)options;
+                                  options:(AMQProtocolExchangeUnbindOptions)options
+                                arguments:(nonnull AMQTable *)arguments;
 @end
 
 @interface AMQProtocolExchangeUnbindOk : MTLModel <AMQMethod>
@@ -248,12 +248,12 @@ typedef NS_OPTIONS(NSUInteger, AMQProtocolQueueDeclareOptions) {
 @interface AMQProtocolQueueDeclare : MTLModel <AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *queue;
-@property (nonnull, copy, nonatomic, readonly) AMQTable *arguments;
 @property (nonatomic, readonly) AMQProtocolQueueDeclareOptions options;
+@property (nonnull, copy, nonatomic, readonly) AMQTable *arguments;
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
-                                arguments:(nonnull AMQTable *)arguments
-                                  options:(AMQProtocolQueueDeclareOptions)options;
+                                  options:(AMQProtocolQueueDeclareOptions)options
+                                arguments:(nonnull AMQTable *)arguments;
 @end
 
 @interface AMQProtocolQueueDeclareOk : MTLModel <AMQMethod>
@@ -275,14 +275,14 @@ typedef NS_OPTIONS(NSUInteger, AMQProtocolQueueBindOptions) {
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *queue;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *exchange;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *routingKey;
-@property (nonnull, copy, nonatomic, readonly) AMQTable *arguments;
 @property (nonatomic, readonly) AMQProtocolQueueBindOptions options;
+@property (nonnull, copy, nonatomic, readonly) AMQTable *arguments;
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
                                  exchange:(nonnull AMQShortstr *)exchange
                                routingKey:(nonnull AMQShortstr *)routingKey
-                                arguments:(nonnull AMQTable *)arguments
-                                  options:(AMQProtocolQueueBindOptions)options;
+                                  options:(AMQProtocolQueueBindOptions)options
+                                arguments:(nonnull AMQTable *)arguments;
 @end
 
 @interface AMQProtocolQueueBindOk : MTLModel <AMQMethod>
@@ -376,13 +376,13 @@ typedef NS_OPTIONS(NSUInteger, AMQProtocolBasicConsumeOptions) {
 @property (nonnull, copy, nonatomic, readonly) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *queue;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *consumerTag;
-@property (nonnull, copy, nonatomic, readonly) AMQTable *arguments;
 @property (nonatomic, readonly) AMQProtocolBasicConsumeOptions options;
+@property (nonnull, copy, nonatomic, readonly) AMQTable *arguments;
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
                               consumerTag:(nonnull AMQShortstr *)consumerTag
-                                arguments:(nonnull AMQTable *)arguments
-                                  options:(AMQProtocolBasicConsumeOptions)options;
+                                  options:(AMQProtocolBasicConsumeOptions)options
+                                arguments:(nonnull AMQTable *)arguments;
 @end
 
 @interface AMQProtocolBasicConsumeOk : MTLModel <AMQMethod>
@@ -443,14 +443,14 @@ typedef NS_OPTIONS(NSUInteger, AMQProtocolBasicDeliverOptions) {
 @interface AMQProtocolBasicDeliver : MTLModel <AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *consumerTag;
 @property (nonnull, copy, nonatomic, readonly) AMQLonglong *deliveryTag;
+@property (nonatomic, readonly) AMQProtocolBasicDeliverOptions options;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *exchange;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *routingKey;
-@property (nonatomic, readonly) AMQProtocolBasicDeliverOptions options;
 - (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag
                                 deliveryTag:(nonnull AMQLonglong *)deliveryTag
+                                    options:(AMQProtocolBasicDeliverOptions)options
                                    exchange:(nonnull AMQShortstr *)exchange
-                                 routingKey:(nonnull AMQShortstr *)routingKey
-                                    options:(AMQProtocolBasicDeliverOptions)options;
+                                 routingKey:(nonnull AMQShortstr *)routingKey;
 @end
 
 typedef NS_OPTIONS(NSUInteger, AMQProtocolBasicGetOptions) {
@@ -474,15 +474,15 @@ typedef NS_OPTIONS(NSUInteger, AMQProtocolBasicGetOkOptions) {
 
 @interface AMQProtocolBasicGetOk : MTLModel <AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQLonglong *deliveryTag;
+@property (nonatomic, readonly) AMQProtocolBasicGetOkOptions options;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *exchange;
 @property (nonnull, copy, nonatomic, readonly) AMQShortstr *routingKey;
 @property (nonnull, copy, nonatomic, readonly) AMQLong *messageCount;
-@property (nonatomic, readonly) AMQProtocolBasicGetOkOptions options;
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
+                                    options:(AMQProtocolBasicGetOkOptions)options
                                    exchange:(nonnull AMQShortstr *)exchange
                                  routingKey:(nonnull AMQShortstr *)routingKey
-                               messageCount:(nonnull AMQLong *)messageCount
-                                    options:(AMQProtocolBasicGetOkOptions)options;
+                               messageCount:(nonnull AMQLong *)messageCount;
 @end
 
 @interface AMQProtocolBasicGetEmpty : MTLModel <AMQMethod>

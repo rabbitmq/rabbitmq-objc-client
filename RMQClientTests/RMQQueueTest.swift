@@ -52,6 +52,7 @@ class RMQQueueTest: XCTestCase, AMQReplyContext {
             autoDelete: false,
             exclusive: false
         )
+        transport.assertClientSendsMethod(MethodFixtures.queueDeclare("cool.queue"), channelID: 1)
 
         queue.publish("my great message")
 
@@ -62,7 +63,16 @@ class RMQQueueTest: XCTestCase, AMQReplyContext {
             options: AMQProtocolBasicPublishOptions.NoOptions
         )
         let bodyData = "my great message".dataUsingEncoding(NSUTF8StringEncoding)!
-        let header = AMQContentHeader(classID: 60, bodySize: bodyData.length, properties: [])
+
+        let persistent = AMQBasicDeliveryMode(2)
+        let contentTypeOctetStream = AMQBasicContentType("application/octet-stream")
+        let lowPriority = AMQBasicPriority(0)
+
+        let header = AMQContentHeader(
+            classID: 60,
+            bodySize: bodyData.length,
+            properties: [persistent, contentTypeOctetStream, lowPriority]
+        )
 
         let body = AMQContentBody(data: bodyData)
 

@@ -38,23 +38,35 @@ class GenerateMethods
   end
 
   def bits_and_fields(method)
-    bits, fields = camelized_fields(method.xpath('field')).partition {|f| f[:type] == "AMQBit"}
-    if bits.any?
+    original_fields = camelized_fields(method.xpath('field'))
+    bits = original_fields.select {|f| f[:type] == "AMQBit"}
+    if bits.empty?
+      [[], original_fields]
+    else
       type = objc_class_name(method) + "Options"
       bit_name_lengths = bits.map {|b| b[:name].length}
-      [bits.map {|bit| bit.merge(name: bit[:name].camelize.ljust(bit_name_lengths.max))},
-       fields + [{
-        base_property_options: %w(nonatomic),
-        decode_object: "[AMQOctet class]",
-        decode_type: "AMQOctet *",
-        decode_property_call: ".integerValue",
-        name: "options",
-        payload_argument: "[[AMQOctet alloc] init:self.options]",
-        pointer_type: type + " ",
-        type: type,
-      }]]
-    else
-      [[], fields]
+      [
+        bits.map {|bit| bit.merge(name: bit[:name].camelize.ljust(bit_name_lengths.max))},
+        original_fields.slice_when {|before, after|
+          before[:type] != "AMQBit" && after[:type] == "AMQBit" ||
+            before[:type] == "AMQBit" && after[:type] != "AMQBit"
+        }.reduce([]) {|acc, field_group|
+          if field_group.first[:type] == "AMQBit"
+            acc + [{
+              base_property_options: %w(nonatomic),
+              decode_object: "[AMQOctet class]",
+              decode_type: "AMQOctet *",
+              decode_property_call: ".integerValue",
+              name: "options",
+              payload_argument: "[[AMQOctet alloc] init:self.options]",
+              pointer_type: type + " ",
+              type: type,
+            }]
+          else
+            acc + field_group
+          end
+        }
+      ]
     end
   end
 

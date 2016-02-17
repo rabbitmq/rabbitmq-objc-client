@@ -13,7 +13,6 @@
 @property (nonatomic, readwrite) NSDictionary *channels;
 @property (nonatomic, readwrite) RMQReaderLoop *readerLoop;
 @property (nonatomic, readwrite) id <RMQIDAllocator> idAllocator;
-@property (nonatomic, readwrite) RMQQueueFactory *queueFactory;
 @end
 
 @implementation RMQConnection
@@ -45,11 +44,7 @@
         self.mechanism = @"PLAIN";
         self.locale = @"en_GB";
         self.readerLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport frameHandler:self];
-        self.queueFactory = [[RMQQueueFactory alloc] initWithConnection:self];
-        self.channels = @{@0 : [[RMQChannel alloc] init:@0
-                                              transport:self.transport
-                                           replyContext:self
-                                           queueFactory:self.queueFactory]};
+        self.channels = @{@0 : [[RMQChannel alloc] init:@0 sender:self]};
     }
     return self;
 }
@@ -78,10 +73,7 @@
 }
 
 - (RMQChannel *)createChannel {
-    RMQChannel *ch = [[RMQChannel alloc] init:[self.idAllocator nextID]
-                                    transport:self.transport
-                                 replyContext:self
-                                 queueFactory:self.queueFactory];
+    RMQChannel *ch = [[RMQChannel alloc] init:[self.idAllocator nextID] sender:self];
     AMQFrame *frame = [[AMQFrame alloc] initWithChannelID:ch.channelID payload:self.amqChannelOpen];
     NSError *error = NULL;
     [self.transport write:frame.amqEncoded error:&error onComplete:^{}];

@@ -147,12 +147,12 @@ class AMQEncodingTest: XCTestCase {
         let method = AMQProtocolQueueDeclare(
             reserved1: AMQShort(0),
             queue: AMQShortstr("queuename"),
-            arguments: AMQTable([:]),
-            options: optionsSet
+            options: optionsSet,
+            arguments: AMQTable([:])
         )
         let actual = method.amqEncoded()
-        let lastByte = actual.subdataWithRange(NSMakeRange(actual.length - 1, 1))
-        TestHelper.assertEqualBytes("\u{03}".dataUsingEncoding(NSUTF8StringEncoding)!, lastByte)
+        let optionsByte = actual.subdataWithRange(NSMakeRange(actual.length - AMQTable([:]).amqEncoded().length - 1, 1))
+        TestHelper.assertEqualBytes("\u{03}".dataUsingEncoding(NSUTF8StringEncoding)!, optionsByte)
     }
     
     func testCredentialsEncodedAsRFC2595() {
@@ -184,6 +184,12 @@ class AMQEncodingTest: XCTestCase {
         ])
 
         TestHelper.assertEqualBytes(expectedData!, fieldTable.amqEncoded())
+    }
+
+    func testEmptyFieldTableBecomesFourZeroBytes() {
+        let expectedData = "\u{00}\u{00}\u{00}\u{00}".dataUsingEncoding(NSUTF8StringEncoding)!
+        let fieldTable = AMQTable([:])
+        TestHelper.assertEqualBytes(expectedData, fieldTable.amqEncoded())
     }
 
     func testTimestampBecomes64BitPOSIX() {
