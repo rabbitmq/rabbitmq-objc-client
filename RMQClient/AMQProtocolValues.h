@@ -14,10 +14,6 @@
 - (nonnull instancetype)init:(char)octet;
 @end
 
-@interface AMQOptions : MTLModel<AMQEncoding>
-- (nonnull instancetype)init:(NSUInteger)options;
-@end
-
 @interface AMQBoolean : MTLModel<AMQEncoding,AMQFieldValue>
 @property (nonatomic, readonly) BOOL boolValue;
 - (nonnull instancetype)init:(BOOL)boolean;

@@ -28,27 +28,6 @@
 
 @end
 
-@interface AMQOptions ()
-@property (nonatomic, readwrite) NSUInteger options;
-@end
-
-@implementation AMQOptions
-
-- (instancetype)init:(NSUInteger)options {
-    self = [super init];
-    if (self) {
-        self.options = options;
-    }
-    return self;
-}
-
-- (NSData *)amqEncoded {
-    NSMutableData *encoded = [NSMutableData new];
-    return encoded;
-}
-
-@end
-
 @interface AMQBoolean ()
 @property (nonatomic, readwrite) BOOL boolValue;
 @end
