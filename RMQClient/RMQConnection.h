@@ -14,6 +14,8 @@
                    transport:(id <RMQTransport>)transport
                  idAllocator:(id <RMQIDAllocator>)idAllocator;
 - (RMQConnection *)start;
+- (void)sendMethod:(id<AMQMethod>)amqMethod channelID:(NSNumber *)channelID;
+- (void)send:(id<AMQEncoding>)encodable;
 - (void)close;
 - (RMQChannel *)createChannel;
 @end

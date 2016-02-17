@@ -10,8 +10,9 @@
 + (NSArray *)frames {
     return @[@[<%= fields.map {|f| "[#{f[:type]} class]"}.join(",\n               ") -%>]];
 }
-- (NSNumber *)classID { return @(<%= class_id %>); }
-- (NSNumber *)methodID { return @(<%= method_id %>); }
+- (NSNumber *)classID     { return @<%= class_id %>; }
+- (NSNumber *)methodID    { return @<%= method_id %>; }
+- (NSNumber *)frameTypeID { return @1; }
 
 <%- if constructor -%>
 <%= constructor %> {

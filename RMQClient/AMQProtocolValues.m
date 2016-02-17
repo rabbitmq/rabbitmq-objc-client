@@ -332,69 +332,14 @@
 
 @end
 
-@interface AMQFrameset ()
-@property (nonatomic, copy, readwrite) NSNumber *channelID;
-@property (nonatomic, copy, readwrite) id<AMQMethod> method;
-@property (nonatomic, readwrite) NSArray *frames;
-@end
-
-@implementation AMQFrameset
-
-- (instancetype)initWithChannelID:(NSNumber *)channelID
-                           method:(id<AMQMethod>)method {
-    self = [super init];
-    if (self) {
-        self.channelID = channelID;
-        self.method = method;
-        self.frames = @[];
-    }
-    return self;
-}
-
-@end
-
-@interface AMQFrame ()
-@property (nonatomic, copy, readwrite) NSNumber *typeID;
-@property (nonatomic, copy, readwrite) NSNumber *channelID;
-@property (nonatomic, copy, readwrite) id<AMQEncoding> payload;
-@end
-
-@implementation AMQFrame
-
-- (instancetype)initWithChannelID:(NSNumber *)channelID
-                          payload:(id<AMQEncoding>)payload {
-    self = [super init];
-    if (self) {
-        self.typeID = @1;
-        self.channelID = channelID;
-        self.payload = payload;
-    }
-    return self;
-}
-
-- (NSData *)amqEncoded {
-    NSMutableData *frameData = [NSMutableData new];
-    NSArray *unencodedFrame = @[[[AMQOctet alloc] init:self.typeID.integerValue],
-                                [[AMQShort alloc] init:self.channelID.integerValue],
-                                [[AMQLong alloc] init:self.payload.amqEncoded.length],
-                                self.payload,
-                                [[AMQOctet alloc] init:0xCE]];
-    for (id<AMQEncoding> part in unencodedFrame) {
-        [frameData appendData:part.amqEncoded];
-    }
-    return frameData;
-}
-
-@end
-
-@interface AMQHeader ()
+@interface AMQContentHeader ()
 @property (nonatomic, copy, readwrite) NSNumber *classID;
 @property (nonatomic, copy, readwrite) NSNumber *weight;
 @property (nonatomic, copy, readwrite) NSNumber *bodySize;
 @property (nonatomic, copy, readwrite) NSArray *properties;
 @end
 
-@implementation AMQHeader
+@implementation AMQContentHeader
 
 - (instancetype)initWithClassID:(NSNumber *)classID
                        bodySize:(NSNumber *)bodySize
@@ -408,6 +353,8 @@
     }
     return self;
 }
+
+- (NSNumber *)frameTypeID { return @2; }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
@@ -429,6 +376,95 @@
     }
 
     return encoded;
+}
+
+@end
+
+@interface AMQContentBody ()
+@property (nonatomic, readwrite) NSData *data;
+@end
+
+@implementation AMQContentBody
+
+- (instancetype)initWithData:(NSData *)data {
+    self = [super init];
+    if (self) {
+        self.data = data;
+    }
+    return self;
+}
+
+- (NSNumber *)frameTypeID { return @3; }
+
+- (NSData *)amqEncoded {
+    return self.data;
+}
+
+@end
+
+@interface AMQFrameset ()
+@property (nonatomic, copy, readwrite) NSNumber *channelID;
+@property (nonatomic, readwrite) id<AMQMethod> method;
+@property (nonatomic, readwrite) AMQContentHeader *contentHeader;
+@property (nonatomic, readwrite) NSArray *contentBodies;
+@end
+
+@implementation AMQFrameset
+
+- (instancetype)initWithChannelID:(NSNumber *)channelID
+                           method:(id<AMQMethod>)method
+                    contentHeader:(AMQContentHeader *)contentHeader
+                    contentBodies:(NSArray *)contentBodies {
+    self = [super init];
+    if (self) {
+        self.channelID = channelID;
+        self.method = method;
+        self.contentHeader = contentHeader;
+        self.contentBodies = contentBodies;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    NSMutableData *encoded = [NSMutableData new];
+    [encoded appendData:[[AMQFrame alloc] initWithChannelID:self.channelID payload:self.method].amqEncoded];
+    [encoded appendData:[[AMQFrame alloc] initWithChannelID:self.channelID payload:self.contentHeader].amqEncoded];
+    for (AMQContentBody *body in self.contentBodies) {
+        [encoded appendData:[[AMQFrame alloc] initWithChannelID:self.channelID payload:body].amqEncoded];
+    }
+    return encoded;
+}
+
+@end
+
+@interface AMQFrame ()
+@property (nonatomic, copy, readwrite) NSNumber *channelID;
+@property (nonatomic, readwrite) id<AMQPayload> payload;
+@end
+
+@implementation AMQFrame
+
+- (instancetype)initWithChannelID:(NSNumber *)channelID
+                          payload:(id<AMQPayload>)payload {
+    self = [super init];
+    if (self) {
+        self.channelID = channelID;
+        self.payload = payload;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    NSMutableData *frameData = [NSMutableData new];
+    NSArray *unencodedFrame = @[[[AMQOctet alloc] init:self.payload.frameTypeID.integerValue],
+                                [[AMQShort alloc] init:self.channelID.integerValue],
+                                [[AMQLong alloc] init:self.payload.amqEncoded.length],
+                                self.payload,
+                                [[AMQOctet alloc] init:0xCE]];
+    for (id<AMQEncoding> part in unencodedFrame) {
+        [frameData appendData:part.amqEncoded];
+    }
+    return frameData;
 }
 
 @end

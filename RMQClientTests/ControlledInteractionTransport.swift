@@ -62,15 +62,14 @@ import XCTest
         }
         return self
     }
-    func assertClientSendsContentHeader(header: AMQHeader, channelID: Int) -> ControlledInteractionTransport {
+    func assertClientSendsFrameset(frameset: AMQFrameset) -> ControlledInteractionTransport {
         if outboundData.isEmpty {
             XCTFail("nothing sent recently")
         } else {
             let actual = outboundData.removeAtIndex(0)
             TestHelper.assertEqualBytes(
-                AMQFrame(channelID: channelID, payload: header).amqEncoded(),
-                actual,
-                "Didn't send \(header)\n\nSent: \(actual)"
+                frameset.amqEncoded(),
+                actual
             )
         }
         return self

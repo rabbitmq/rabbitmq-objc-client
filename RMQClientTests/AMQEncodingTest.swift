@@ -10,6 +10,9 @@ import XCTest
     func copyWithZone(zone: NSZone) -> AnyObject {
         return self
     }
+    func frameTypeID() -> NSNumber {
+        return 1
+    }
     func amqEncoded() -> NSData {
         let data = NSMutableData()
         data.appendData(AMQShort(10).amqEncoded())
@@ -41,7 +44,7 @@ class AMQEncodingTest: XCTestCase {
             contentEncoding,
             contentType,
         ]
-        let payload = AMQHeader(
+        let payload = AMQContentHeader(
             classID: classID.integerValue,
             bodySize: Int(bodySize.integerValue),
             properties: unsortedProperties
@@ -77,10 +80,26 @@ class AMQEncodingTest: XCTestCase {
         TestHelper.assertEqualBytes(expectedFrame, frame)
     }
 
-//    func testFramesetEncoding() {
-//        let frameset = AMQFrameset(channelID: <#T##NSNumber#>, method: <#T##AMQMethod#>)
-//    }
-//    
+    func testFramesetEncoding() {
+        let method = MethodFixtures.basicGet()
+        let header = AMQContentHeader(classID: 60, bodySize: 123, properties: [AMQBasicContentType("text/plain")])
+        let body1 = AMQContentBody(data: "some body".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let body2 = AMQContentBody(data: "another body".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let frameset = AMQFrameset(
+            channelID: 1,
+            method: method,
+            contentHeader: header,
+            contentBodies: [body1, body2]
+        )
+        let expected = NSMutableData()
+        expected.appendData(AMQFrame(channelID: 1, payload: method).amqEncoded())
+        expected.appendData(AMQFrame(channelID: 1, payload: header).amqEncoded())
+        expected.appendData(AMQFrame(channelID: 1, payload: body1).amqEncoded())
+        expected.appendData(AMQFrame(channelID: 1, payload: body2).amqEncoded())
+        let actual = frameset.amqEncoded();
+        TestHelper.assertEqualBytes(expected, actual)
+    }
+
     func testLongStringBecomesLengthPlusChars() {
         let expectedData = NSMutableData()
         let a = [0x00, 0x00, 0x00, 0x07]

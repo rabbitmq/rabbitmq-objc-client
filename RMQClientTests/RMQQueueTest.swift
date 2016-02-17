@@ -39,31 +39,42 @@ class RMQQueueTest: XCTestCase, AMQReplyContext {
 //        XCTAssertEqual(RMQEmptyMessage(), queue.pop())
 //    }
 //
-//    func testPublishOnDefaultExchange() {
-//        let transport = ControlledInteractionTransport()
-//        transport.connect {}
-//        
-//        let ch = RMQChannel(42, transport: transport, replyContext: self)
-//        let queue = ch.queue(
-//            "cool.queue",
-//            autoDelete: false,
-//            exclusive: false
-//        )
-//
-//        let publish = AMQProtocolBasicPublish(
-//            reserved1: AMQShort(0),
-//            exchange: AMQShortstr(""),
-//            routingKey: AMQShortstr(""),
-//            mandatory: AMQBit(0),
-//            immediate: AMQBit(0)
-//        )
-//
-//        queue.publish("my great message")
-//
-//        let header = AMQHeader(classID: 60, bodySize: 123, properties: [])
-//        transport
-//            .assertClientSendsFrameset(publish, channelID: 42)
-//            .assertClientSendsContentHeader(header, channelID: 42)
+    func testPublishOnDefaultExchange() {
+        let transport = ControlledInteractionTransport()
+        let connection = RMQConnection(user: "", password: "", vhost: "", transport: transport, idAllocator: RMQChannelIDAllocator())
+        transport.connect {}
+        
+        let ch = connection.createChannel()
+        transport.assertClientSendsMethod(MethodFixtures.channelOpen(), channelID: 1)
+        
+        let queue = ch.queue(
+            "cool.queue",
+            autoDelete: false,
+            exclusive: false
+        )
+
+        queue.publish("my great message")
+
+        let publish = AMQProtocolBasicPublish(
+            reserved1: AMQShort(0),
+            exchange: AMQShortstr(""),
+            routingKey: AMQShortstr(""),
+            mandatory: AMQBit(0),
+            immediate: AMQBit(0)
+        )
+        let bodyData = "my great message".dataUsingEncoding(NSUTF8StringEncoding)!
+        let header = AMQContentHeader(classID: 60, bodySize: bodyData.length, properties: [])
+
+        let body = AMQContentBody(data: bodyData)
+
+        let publishFrameset = AMQFrameset(
+            channelID: 1,
+            method: publish,
+            contentHeader: header,
+            contentBodies: [body]
+        )
+        transport
+            .assertClientSendsFrameset(publishFrameset)
 
 //        queue.pop()
 //
@@ -85,6 +96,6 @@ class RMQQueueTest: XCTestCase, AMQReplyContext {
 //            .serverSendsContentHeader()
 //
 //        XCTAssertEqual("my great message", queue.pop().content)
-//    }
+    }
 
 }

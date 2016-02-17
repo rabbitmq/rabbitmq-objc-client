@@ -23,7 +23,9 @@
         AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
         id<AMQMethod> method = [decoder decode];
         AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:decoder.channelID
-                                                                method:method];
+                                                                method:method
+                                                         contentHeader:[AMQContentHeader new]
+                                                         contentBodies:@[]];
         [self.frameHandler handleFrameset:frameset];
     }];
 }

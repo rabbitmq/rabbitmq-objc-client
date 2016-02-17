@@ -19,8 +19,9 @@
                [AMQLongstr class],
                [AMQLongstr class]]];
 }
-- (NSNumber *)classID { return @(10); }
-- (NSNumber *)methodID { return @(10); }
+- (NSNumber *)classID     { return @10; }
+- (NSNumber *)methodID    { return @10; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithVersionMajor:(nonnull AMQOctet *)versionMajor
                                 versionMinor:(nonnull AMQOctet *)versionMinor
@@ -88,8 +89,9 @@
                [AMQLongstr class],
                [AMQShortstr class]]];
 }
-- (NSNumber *)classID { return @(10); }
-- (NSNumber *)methodID { return @(11); }
+- (NSNumber *)classID     { return @10; }
+- (NSNumber *)methodID    { return @11; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithClientProperties:(nonnull AMQTable *)clientProperties
                                        mechanism:(nonnull AMQShortstr *)mechanism
@@ -146,8 +148,9 @@
 + (NSArray *)frames {
     return @[@[[AMQLongstr class]]];
 }
-- (NSNumber *)classID { return @(10); }
-- (NSNumber *)methodID { return @(20); }
+- (NSNumber *)classID     { return @10; }
+- (NSNumber *)methodID    { return @20; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithChallenge:(nonnull AMQLongstr *)challenge {
     self = [super init];
@@ -189,8 +192,9 @@
 + (NSArray *)frames {
     return @[@[[AMQLongstr class]]];
 }
-- (NSNumber *)classID { return @(10); }
-- (NSNumber *)methodID { return @(21); }
+- (NSNumber *)classID     { return @10; }
+- (NSNumber *)methodID    { return @21; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithResponse:(nonnull AMQLongstr *)response {
     self = [super init];
@@ -236,8 +240,9 @@
                [AMQLong class],
                [AMQShort class]]];
 }
-- (NSNumber *)classID { return @(10); }
-- (NSNumber *)methodID { return @(30); }
+- (NSNumber *)classID     { return @10; }
+- (NSNumber *)methodID    { return @30; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithChannelMax:(nonnull AMQShort *)channelMax
                                   frameMax:(nonnull AMQLong *)frameMax
@@ -293,8 +298,9 @@
                [AMQLong class],
                [AMQShort class]]];
 }
-- (NSNumber *)classID { return @(10); }
-- (NSNumber *)methodID { return @(31); }
+- (NSNumber *)classID     { return @10; }
+- (NSNumber *)methodID    { return @31; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithChannelMax:(nonnull AMQShort *)channelMax
                                   frameMax:(nonnull AMQLong *)frameMax
@@ -350,8 +356,9 @@
                [AMQShortstr class],
                [AMQBit class]]];
 }
-- (NSNumber *)classID { return @(10); }
-- (NSNumber *)methodID { return @(40); }
+- (NSNumber *)classID     { return @10; }
+- (NSNumber *)methodID    { return @40; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithVirtualHost:(nonnull AMQShortstr *)virtualHost
                                   reserved1:(nonnull AMQShortstr *)reserved1
@@ -403,8 +410,9 @@
 + (NSArray *)frames {
     return @[@[[AMQShortstr class]]];
 }
-- (NSNumber *)classID { return @(10); }
-- (NSNumber *)methodID { return @(41); }
+- (NSNumber *)classID     { return @10; }
+- (NSNumber *)methodID    { return @41; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShortstr *)reserved1 {
     self = [super init];
@@ -452,8 +460,9 @@
                [AMQShort class],
                [AMQShort class]]];
 }
-- (NSNumber *)classID { return @(10); }
-- (NSNumber *)methodID { return @(50); }
+- (NSNumber *)classID     { return @10; }
+- (NSNumber *)methodID    { return @50; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReplyCode:(nonnull AMQShort *)replyCode
                                 replyText:(nonnull AMQShortstr *)replyText
@@ -509,8 +518,9 @@
 + (NSArray *)frames {
     return @[@[]];
 }
-- (NSNumber *)classID { return @(10); }
-- (NSNumber *)methodID { return @(51); }
+- (NSNumber *)classID     { return @10; }
+- (NSNumber *)methodID    { return @51; }
+- (NSNumber *)frameTypeID { return @1; }
 
 
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
@@ -543,8 +553,9 @@
 + (NSArray *)frames {
     return @[@[[AMQShortstr class]]];
 }
-- (NSNumber *)classID { return @(10); }
-- (NSNumber *)methodID { return @(60); }
+- (NSNumber *)classID     { return @10; }
+- (NSNumber *)methodID    { return @60; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReason:(nonnull AMQShortstr *)reason {
     self = [super init];
@@ -585,8 +596,9 @@
 + (NSArray *)frames {
     return @[@[]];
 }
-- (NSNumber *)classID { return @(10); }
-- (NSNumber *)methodID { return @(61); }
+- (NSNumber *)classID     { return @10; }
+- (NSNumber *)methodID    { return @61; }
+- (NSNumber *)frameTypeID { return @1; }
 
 
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
@@ -619,8 +631,9 @@
 + (NSArray *)frames {
     return @[@[[AMQShortstr class]]];
 }
-- (NSNumber *)classID { return @(20); }
-- (NSNumber *)methodID { return @(10); }
+- (NSNumber *)classID     { return @20; }
+- (NSNumber *)methodID    { return @10; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShortstr *)reserved1 {
     self = [super init];
@@ -662,8 +675,9 @@
 + (NSArray *)frames {
     return @[@[[AMQLongstr class]]];
 }
-- (NSNumber *)classID { return @(20); }
-- (NSNumber *)methodID { return @(11); }
+- (NSNumber *)classID     { return @20; }
+- (NSNumber *)methodID    { return @11; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQLongstr *)reserved1 {
     self = [super init];
@@ -705,8 +719,9 @@
 + (NSArray *)frames {
     return @[@[[AMQBit class]]];
 }
-- (NSNumber *)classID { return @(20); }
-- (NSNumber *)methodID { return @(20); }
+- (NSNumber *)classID     { return @20; }
+- (NSNumber *)methodID    { return @20; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithActive:(nonnull AMQBit *)active {
     self = [super init];
@@ -748,8 +763,9 @@
 + (NSArray *)frames {
     return @[@[[AMQBit class]]];
 }
-- (NSNumber *)classID { return @(20); }
-- (NSNumber *)methodID { return @(21); }
+- (NSNumber *)classID     { return @20; }
+- (NSNumber *)methodID    { return @21; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithActive:(nonnull AMQBit *)active {
     self = [super init];
@@ -797,8 +813,9 @@
                [AMQShort class],
                [AMQShort class]]];
 }
-- (NSNumber *)classID { return @(20); }
-- (NSNumber *)methodID { return @(40); }
+- (NSNumber *)classID     { return @20; }
+- (NSNumber *)methodID    { return @40; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReplyCode:(nonnull AMQShort *)replyCode
                                 replyText:(nonnull AMQShortstr *)replyText
@@ -854,8 +871,9 @@
 + (NSArray *)frames {
     return @[@[]];
 }
-- (NSNumber *)classID { return @(20); }
-- (NSNumber *)methodID { return @(41); }
+- (NSNumber *)classID     { return @20; }
+- (NSNumber *)methodID    { return @41; }
+- (NSNumber *)frameTypeID { return @1; }
 
 
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
@@ -904,8 +922,9 @@
                [AMQBit class],
                [AMQTable class]]];
 }
-- (NSNumber *)classID { return @(40); }
-- (NSNumber *)methodID { return @(10); }
+- (NSNumber *)classID     { return @40; }
+- (NSNumber *)methodID    { return @10; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                  exchange:(nonnull AMQShortstr *)exchange
@@ -986,8 +1005,9 @@
 + (NSArray *)frames {
     return @[@[]];
 }
-- (NSNumber *)classID { return @(40); }
-- (NSNumber *)methodID { return @(11); }
+- (NSNumber *)classID     { return @40; }
+- (NSNumber *)methodID    { return @11; }
+- (NSNumber *)frameTypeID { return @1; }
 
 
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
@@ -1026,8 +1046,9 @@
                [AMQBit class],
                [AMQBit class]]];
 }
-- (NSNumber *)classID { return @(40); }
-- (NSNumber *)methodID { return @(20); }
+- (NSNumber *)classID     { return @40; }
+- (NSNumber *)methodID    { return @20; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                  exchange:(nonnull AMQShortstr *)exchange
@@ -1083,8 +1104,9 @@
 + (NSArray *)frames {
     return @[@[]];
 }
-- (NSNumber *)classID { return @(40); }
-- (NSNumber *)methodID { return @(21); }
+- (NSNumber *)classID     { return @40; }
+- (NSNumber *)methodID    { return @21; }
+- (NSNumber *)frameTypeID { return @1; }
 
 
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
@@ -1127,8 +1149,9 @@
                [AMQBit class],
                [AMQTable class]]];
 }
-- (NSNumber *)classID { return @(40); }
-- (NSNumber *)methodID { return @(30); }
+- (NSNumber *)classID     { return @40; }
+- (NSNumber *)methodID    { return @30; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                               destination:(nonnull AMQShortstr *)destination
@@ -1194,8 +1217,9 @@
 + (NSArray *)frames {
     return @[@[]];
 }
-- (NSNumber *)classID { return @(40); }
-- (NSNumber *)methodID { return @(31); }
+- (NSNumber *)classID     { return @40; }
+- (NSNumber *)methodID    { return @31; }
+- (NSNumber *)frameTypeID { return @1; }
 
 
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
@@ -1238,8 +1262,9 @@
                [AMQBit class],
                [AMQTable class]]];
 }
-- (NSNumber *)classID { return @(40); }
-- (NSNumber *)methodID { return @(40); }
+- (NSNumber *)classID     { return @40; }
+- (NSNumber *)methodID    { return @40; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                               destination:(nonnull AMQShortstr *)destination
@@ -1305,8 +1330,9 @@
 + (NSArray *)frames {
     return @[@[]];
 }
-- (NSNumber *)classID { return @(40); }
-- (NSNumber *)methodID { return @(51); }
+- (NSNumber *)classID     { return @40; }
+- (NSNumber *)methodID    { return @51; }
+- (NSNumber *)frameTypeID { return @1; }
 
 
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
@@ -1353,8 +1379,9 @@
                [AMQBit class],
                [AMQTable class]]];
 }
-- (NSNumber *)classID { return @(50); }
-- (NSNumber *)methodID { return @(10); }
+- (NSNumber *)classID     { return @50; }
+- (NSNumber *)methodID    { return @10; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
@@ -1435,8 +1462,9 @@
                [AMQLong class],
                [AMQLong class]]];
 }
-- (NSNumber *)classID { return @(50); }
-- (NSNumber *)methodID { return @(11); }
+- (NSNumber *)classID     { return @50; }
+- (NSNumber *)methodID    { return @11; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithQueue:(nonnull AMQShortstr *)queue
                          messageCount:(nonnull AMQLong *)messageCount
@@ -1498,8 +1526,9 @@
                [AMQBit class],
                [AMQTable class]]];
 }
-- (NSNumber *)classID { return @(50); }
-- (NSNumber *)methodID { return @(20); }
+- (NSNumber *)classID     { return @50; }
+- (NSNumber *)methodID    { return @20; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
@@ -1565,8 +1594,9 @@
 + (NSArray *)frames {
     return @[@[]];
 }
-- (NSNumber *)classID { return @(50); }
-- (NSNumber *)methodID { return @(21); }
+- (NSNumber *)classID     { return @50; }
+- (NSNumber *)methodID    { return @21; }
+- (NSNumber *)frameTypeID { return @1; }
 
 
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
@@ -1607,8 +1637,9 @@
                [AMQShortstr class],
                [AMQTable class]]];
 }
-- (NSNumber *)classID { return @(50); }
-- (NSNumber *)methodID { return @(50); }
+- (NSNumber *)classID     { return @50; }
+- (NSNumber *)methodID    { return @50; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
@@ -1669,8 +1700,9 @@
 + (NSArray *)frames {
     return @[@[]];
 }
-- (NSNumber *)classID { return @(50); }
-- (NSNumber *)methodID { return @(51); }
+- (NSNumber *)classID     { return @50; }
+- (NSNumber *)methodID    { return @51; }
+- (NSNumber *)frameTypeID { return @1; }
 
 
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
@@ -1707,8 +1739,9 @@
                [AMQShortstr class],
                [AMQBit class]]];
 }
-- (NSNumber *)classID { return @(50); }
-- (NSNumber *)methodID { return @(30); }
+- (NSNumber *)classID     { return @50; }
+- (NSNumber *)methodID    { return @30; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
@@ -1760,8 +1793,9 @@
 + (NSArray *)frames {
     return @[@[[AMQLong class]]];
 }
-- (NSNumber *)classID { return @(50); }
-- (NSNumber *)methodID { return @(31); }
+- (NSNumber *)classID     { return @50; }
+- (NSNumber *)methodID    { return @31; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithMessageCount:(nonnull AMQLong *)messageCount {
     self = [super init];
@@ -1811,8 +1845,9 @@
                [AMQBit class],
                [AMQBit class]]];
 }
-- (NSNumber *)classID { return @(50); }
-- (NSNumber *)methodID { return @(40); }
+- (NSNumber *)classID     { return @50; }
+- (NSNumber *)methodID    { return @40; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
@@ -1874,8 +1909,9 @@
 + (NSArray *)frames {
     return @[@[[AMQLong class]]];
 }
-- (NSNumber *)classID { return @(50); }
-- (NSNumber *)methodID { return @(41); }
+- (NSNumber *)classID     { return @50; }
+- (NSNumber *)methodID    { return @41; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithMessageCount:(nonnull AMQLong *)messageCount {
     self = [super init];
@@ -1921,8 +1957,9 @@
                [AMQShort class],
                [AMQBit class]]];
 }
-- (NSNumber *)classID { return @(60); }
-- (NSNumber *)methodID { return @(10); }
+- (NSNumber *)classID     { return @60; }
+- (NSNumber *)methodID    { return @10; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithPrefetchSize:(nonnull AMQLong *)prefetchSize
                                prefetchCount:(nonnull AMQShort *)prefetchCount
@@ -1973,8 +2010,9 @@
 + (NSArray *)frames {
     return @[@[]];
 }
-- (NSNumber *)classID { return @(60); }
-- (NSNumber *)methodID { return @(11); }
+- (NSNumber *)classID     { return @60; }
+- (NSNumber *)methodID    { return @11; }
+- (NSNumber *)frameTypeID { return @1; }
 
 
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
@@ -2021,8 +2059,9 @@
                [AMQBit class],
                [AMQTable class]]];
 }
-- (NSNumber *)classID { return @(60); }
-- (NSNumber *)methodID { return @(20); }
+- (NSNumber *)classID     { return @60; }
+- (NSNumber *)methodID    { return @20; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
@@ -2099,8 +2138,9 @@
 + (NSArray *)frames {
     return @[@[[AMQShortstr class]]];
 }
-- (NSNumber *)classID { return @(60); }
-- (NSNumber *)methodID { return @(21); }
+- (NSNumber *)classID     { return @60; }
+- (NSNumber *)methodID    { return @21; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag {
     self = [super init];
@@ -2144,8 +2184,9 @@
     return @[@[[AMQShortstr class],
                [AMQBit class]]];
 }
-- (NSNumber *)classID { return @(60); }
-- (NSNumber *)methodID { return @(30); }
+- (NSNumber *)classID     { return @60; }
+- (NSNumber *)methodID    { return @30; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag
                                      noWait:(nonnull AMQBit *)noWait {
@@ -2192,8 +2233,9 @@
 + (NSArray *)frames {
     return @[@[[AMQShortstr class]]];
 }
-- (NSNumber *)classID { return @(60); }
-- (NSNumber *)methodID { return @(31); }
+- (NSNumber *)classID     { return @60; }
+- (NSNumber *)methodID    { return @31; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag {
     self = [super init];
@@ -2243,8 +2285,9 @@
                [AMQBit class],
                [AMQBit class]]];
 }
-- (NSNumber *)classID { return @(60); }
-- (NSNumber *)methodID { return @(40); }
+- (NSNumber *)classID     { return @60; }
+- (NSNumber *)methodID    { return @40; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                  exchange:(nonnull AMQShortstr *)exchange
@@ -2312,8 +2355,9 @@
                [AMQShortstr class],
                [AMQShortstr class]]];
 }
-- (NSNumber *)classID { return @(60); }
-- (NSNumber *)methodID { return @(50); }
+- (NSNumber *)classID     { return @60; }
+- (NSNumber *)methodID    { return @50; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReplyCode:(nonnull AMQShort *)replyCode
                                 replyText:(nonnull AMQShortstr *)replyText
@@ -2378,8 +2422,9 @@
                [AMQShortstr class],
                [AMQShortstr class]]];
 }
-- (NSNumber *)classID { return @(60); }
-- (NSNumber *)methodID { return @(60); }
+- (NSNumber *)classID     { return @60; }
+- (NSNumber *)methodID    { return @60; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag
                                 deliveryTag:(nonnull AMQLonglong *)deliveryTag
@@ -2445,8 +2490,9 @@
                [AMQShortstr class],
                [AMQBit class]]];
 }
-- (NSNumber *)classID { return @(60); }
-- (NSNumber *)methodID { return @(70); }
+- (NSNumber *)classID     { return @60; }
+- (NSNumber *)methodID    { return @70; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
@@ -2506,8 +2552,9 @@
                [AMQShortstr class],
                [AMQLong class]]];
 }
-- (NSNumber *)classID { return @(60); }
-- (NSNumber *)methodID { return @(71); }
+- (NSNumber *)classID     { return @60; }
+- (NSNumber *)methodID    { return @71; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
                                 redelivered:(nonnull AMQBit *)redelivered
@@ -2569,8 +2616,9 @@
 + (NSArray *)frames {
     return @[@[[AMQShortstr class]]];
 }
-- (NSNumber *)classID { return @(60); }
-- (NSNumber *)methodID { return @(72); }
+- (NSNumber *)classID     { return @60; }
+- (NSNumber *)methodID    { return @72; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShortstr *)reserved1 {
     self = [super init];
@@ -2614,8 +2662,9 @@
     return @[@[[AMQLonglong class],
                [AMQBit class]]];
 }
-- (NSNumber *)classID { return @(60); }
-- (NSNumber *)methodID { return @(80); }
+- (NSNumber *)classID     { return @60; }
+- (NSNumber *)methodID    { return @80; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
                                    multiple:(nonnull AMQBit *)multiple {
@@ -2664,8 +2713,9 @@
     return @[@[[AMQLonglong class],
                [AMQBit class]]];
 }
-- (NSNumber *)classID { return @(60); }
-- (NSNumber *)methodID { return @(90); }
+- (NSNumber *)classID     { return @60; }
+- (NSNumber *)methodID    { return @90; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
                                     requeue:(nonnull AMQBit *)requeue {
@@ -2712,8 +2762,9 @@
 + (NSArray *)frames {
     return @[@[[AMQBit class]]];
 }
-- (NSNumber *)classID { return @(60); }
-- (NSNumber *)methodID { return @(100); }
+- (NSNumber *)classID     { return @60; }
+- (NSNumber *)methodID    { return @100; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithRequeue:(nonnull AMQBit *)requeue {
     self = [super init];
@@ -2755,8 +2806,9 @@
 + (NSArray *)frames {
     return @[@[[AMQBit class]]];
 }
-- (NSNumber *)classID { return @(60); }
-- (NSNumber *)methodID { return @(110); }
+- (NSNumber *)classID     { return @60; }
+- (NSNumber *)methodID    { return @110; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithRequeue:(nonnull AMQBit *)requeue {
     self = [super init];
@@ -2797,8 +2849,9 @@
 + (NSArray *)frames {
     return @[@[]];
 }
-- (NSNumber *)classID { return @(60); }
-- (NSNumber *)methodID { return @(111); }
+- (NSNumber *)classID     { return @60; }
+- (NSNumber *)methodID    { return @111; }
+- (NSNumber *)frameTypeID { return @1; }
 
 
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
@@ -2835,8 +2888,9 @@
                [AMQBit class],
                [AMQBit class]]];
 }
-- (NSNumber *)classID { return @(60); }
-- (NSNumber *)methodID { return @(120); }
+- (NSNumber *)classID     { return @60; }
+- (NSNumber *)methodID    { return @120; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
                                    multiple:(nonnull AMQBit *)multiple
@@ -2887,8 +2941,9 @@
 + (NSArray *)frames {
     return @[@[]];
 }
-- (NSNumber *)classID { return @(90); }
-- (NSNumber *)methodID { return @(10); }
+- (NSNumber *)classID     { return @90; }
+- (NSNumber *)methodID    { return @10; }
+- (NSNumber *)frameTypeID { return @1; }
 
 
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
@@ -2920,8 +2975,9 @@
 + (NSArray *)frames {
     return @[@[]];
 }
-- (NSNumber *)classID { return @(90); }
-- (NSNumber *)methodID { return @(11); }
+- (NSNumber *)classID     { return @90; }
+- (NSNumber *)methodID    { return @11; }
+- (NSNumber *)frameTypeID { return @1; }
 
 
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
@@ -2953,8 +3009,9 @@
 + (NSArray *)frames {
     return @[@[]];
 }
-- (NSNumber *)classID { return @(90); }
-- (NSNumber *)methodID { return @(20); }
+- (NSNumber *)classID     { return @90; }
+- (NSNumber *)methodID    { return @20; }
+- (NSNumber *)frameTypeID { return @1; }
 
 
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
@@ -2986,8 +3043,9 @@
 + (NSArray *)frames {
     return @[@[]];
 }
-- (NSNumber *)classID { return @(90); }
-- (NSNumber *)methodID { return @(21); }
+- (NSNumber *)classID     { return @90; }
+- (NSNumber *)methodID    { return @21; }
+- (NSNumber *)frameTypeID { return @1; }
 
 
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
@@ -3019,8 +3077,9 @@
 + (NSArray *)frames {
     return @[@[]];
 }
-- (NSNumber *)classID { return @(90); }
-- (NSNumber *)methodID { return @(30); }
+- (NSNumber *)classID     { return @90; }
+- (NSNumber *)methodID    { return @30; }
+- (NSNumber *)frameTypeID { return @1; }
 
 
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
@@ -3052,8 +3111,9 @@
 + (NSArray *)frames {
     return @[@[]];
 }
-- (NSNumber *)classID { return @(90); }
-- (NSNumber *)methodID { return @(31); }
+- (NSNumber *)classID     { return @90; }
+- (NSNumber *)methodID    { return @31; }
+- (NSNumber *)frameTypeID { return @1; }
 
 
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
@@ -3086,8 +3146,9 @@
 + (NSArray *)frames {
     return @[@[[AMQBit class]]];
 }
-- (NSNumber *)classID { return @(85); }
-- (NSNumber *)methodID { return @(10); }
+- (NSNumber *)classID     { return @85; }
+- (NSNumber *)methodID    { return @10; }
+- (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithNowait:(nonnull AMQBit *)nowait {
     self = [super init];
@@ -3128,8 +3189,9 @@
 + (NSArray *)frames {
     return @[@[]];
 }
-- (NSNumber *)classID { return @(85); }
-- (NSNumber *)methodID { return @(11); }
+- (NSNumber *)classID     { return @85; }
+- (NSNumber *)methodID    { return @11; }
+- (NSNumber *)frameTypeID { return @1; }
 
 
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {

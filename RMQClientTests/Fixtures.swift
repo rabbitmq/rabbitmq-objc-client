@@ -81,6 +81,14 @@ class MethodFixtures {
     static func connectionCloseOk() -> AMQProtocolConnectionCloseOk {
         return AMQProtocolConnectionCloseOk()
     }
+
+    static func channelOpen() -> AMQProtocolChannelOpen {
+        return AMQProtocolChannelOpen(reserved1: AMQShortstr(""))
+    }
+
+    static func basicGet() -> AMQProtocolBasicGet {
+        return AMQProtocolBasicGet(reserved1: AMQShort(0), queue: AMQShortstr("my.queue"), noAck: AMQBit(0))
+    }
 }
 
 class DataFixtures {

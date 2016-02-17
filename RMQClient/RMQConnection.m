@@ -13,6 +13,7 @@
 @property (nonatomic, readwrite) NSDictionary *channels;
 @property (nonatomic, readwrite) RMQReaderLoop *readerLoop;
 @property (nonatomic, readwrite) id <RMQIDAllocator> idAllocator;
+@property (nonatomic, readwrite) RMQQueueFactory *queueFactory;
 @end
 
 @implementation RMQConnection
@@ -44,9 +45,11 @@
         self.mechanism = @"PLAIN";
         self.locale = @"en_GB";
         self.readerLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport frameHandler:self];
+        self.queueFactory = [[RMQQueueFactory alloc] initWithConnection:self];
         self.channels = @{@0 : [[RMQChannel alloc] init:@0
                                               transport:self.transport
-                                           replyContext:self]};
+                                           replyContext:self
+                                           queueFactory:self.queueFactory]};
     }
     return self;
 }
@@ -77,18 +80,33 @@
 - (RMQChannel *)createChannel {
     RMQChannel *ch = [[RMQChannel alloc] init:[self.idAllocator nextID]
                                     transport:self.transport
-                                 replyContext:self];
+                                 replyContext:self
+                                 queueFactory:self.queueFactory];
     AMQFrame *frame = [[AMQFrame alloc] initWithChannelID:ch.channelID payload:self.amqChannelOpen];
     NSError *error = NULL;
     [self.transport write:frame.amqEncoded error:&error onComplete:^{}];
     return ch;
 }
 
+- (void)sendMethod:(id<AMQMethod>)amqMethod channelID:(NSNumber *)channelID {
+    [self send:[[AMQFrame alloc] initWithChannelID:channelID payload:amqMethod]];
+    if ([self shouldSendNextRequest:amqMethod]) {
+        [self sendMethod:[(id <AMQOutgoingPrecursor>)amqMethod nextRequest] channelID:channelID];
+    }
+}
+
+- (void)send:(id<AMQEncoding>)encodable {
+    NSError *error = NULL;
+    [self.transport write:encodable.amqEncoded
+                    error:&error
+               onComplete:^{}];
+}
+
 - (void)handleFrameset:(AMQFrameset *)frameset {
     id method = frameset.method;
     if ([self shouldReply:method]) {
         id<AMQMethod> reply = [method replyWithContext:self];
-        [self send:reply channelID:frameset.channelID];
+        [self sendMethod:reply channelID:frameset.channelID];
     }
     if ([self shouldTriggerCallback:method]) {
         [method didReceiveWithContext:self.transport];
@@ -97,16 +115,6 @@
 }
 
 # pragma mark - Private
-
-- (void)send:(id<AMQMethod>)amqMethod channelID:(NSNumber *)channelID {
-    NSError *error = NULL;
-    [self.transport write:[[AMQFrame alloc] initWithChannelID:channelID payload:amqMethod].amqEncoded
-                    error:&error
-               onComplete:^{}];
-    if ([self shouldSendNextRequest:amqMethod]) {
-        [self send:[(id <AMQOutgoingPrecursor>)amqMethod nextRequest] channelID:channelID];
-    }
-}
 
 - (AMQProtocolChannelOpen *)amqChannelOpen {
     return [[AMQProtocolChannelOpen alloc] initWithReserved1:[[AMQShortstr alloc] init:@""]];
