@@ -28,7 +28,7 @@ import XCTest
         callbacks.append(complete)
     }
     func handshake() -> ControlledInteractionTransport {
-        return clientSendsProtocolHeader()
+        return assertClientSendsProtocolHeader()
             .serverSendsMethod(MethodFixtures.connectionStart(), channelID: 0)
             .assertClientSendsMethod(MethodFixtures.connectionStartOk(), channelID: 0)
             .serverSendsMethod(MethodFixtures.connectionTune(), channelID: 0)
@@ -61,7 +61,7 @@ import XCTest
         }
         return self
     }
-    func clientSendsProtocolHeader() -> ControlledInteractionTransport {
+    func assertClientSendsProtocolHeader() -> ControlledInteractionTransport {
         TestHelper.assertEqualBytes(
             AMQProtocolHeader().amqEncoded(),
             outboundData.removeAtIndex(0)
