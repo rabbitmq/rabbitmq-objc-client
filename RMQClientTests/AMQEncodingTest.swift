@@ -139,6 +139,21 @@ class AMQEncodingTest: XCTestCase {
         
         XCTAssertEqual(expectedData, AMQBoolean(false).amqEncoded())
     }
+
+    func testOptionsBecomeBitfieldOctet() {
+        var optionsSet: AMQProtocolQueueDeclareOptions = []
+        optionsSet.insert(.Passive)
+        optionsSet.insert(.Durable)
+        let method = AMQProtocolQueueDeclare(
+            reserved1: AMQShort(0),
+            queue: AMQShortstr("queuename"),
+            arguments: AMQTable([:]),
+            options: optionsSet
+        )
+        let actual = method.amqEncoded()
+        let lastByte = actual.subdataWithRange(NSMakeRange(actual.length - 1, 1))
+        TestHelper.assertEqualBytes("\u{03}".dataUsingEncoding(NSUTF8StringEncoding)!, lastByte)
+    }
     
     func testCredentialsEncodedAsRFC2595() {
         let credentials = AMQCredentials(username: "fido🔫﷽", password: "2easy2break📵")

@@ -2,11 +2,11 @@
 #import "AMQProtocolMethods.h"
 
 @interface AMQProtocolConnectionStart ()
-@property (copy, nonatomic, readwrite) AMQOctet *versionMajor;
-@property (copy, nonatomic, readwrite) AMQOctet *versionMinor;
-@property (copy, nonatomic, readwrite) AMQTable *serverProperties;
-@property (copy, nonatomic, readwrite) AMQLongstr *mechanisms;
-@property (copy, nonatomic, readwrite) AMQLongstr *locales;
+@property (nonnull, copy, nonatomic, readwrite) AMQOctet *versionMajor;
+@property (nonnull, copy, nonatomic, readwrite) AMQOctet *versionMinor;
+@property (nonnull, copy, nonatomic, readwrite) AMQTable *serverProperties;
+@property (nonnull, copy, nonatomic, readwrite) AMQLongstr *mechanisms;
+@property (nonnull, copy, nonatomic, readwrite) AMQLongstr *locales;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -47,11 +47,11 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.versionMajor = frames[0][0];
-        self.versionMinor = frames[0][1];
-        self.serverProperties = frames[0][2];
-        self.mechanisms = frames[0][3];
-        self.locales = frames[0][4];
+        self.versionMajor = ((AMQOctet *)frames[0][0]);
+        self.versionMinor = ((AMQOctet *)frames[0][1]);
+        self.serverProperties = ((AMQTable *)frames[0][2]);
+        self.mechanisms = ((AMQLongstr *)frames[0][3]);
+        self.locales = ((AMQLongstr *)frames[0][4]);
         self.payloadArguments = @[self.versionMajor,
                                   self.versionMinor,
                                   self.serverProperties,
@@ -74,10 +74,10 @@
 @end
 
 @interface AMQProtocolConnectionStartOk ()
-@property (copy, nonatomic, readwrite) AMQTable *clientProperties;
-@property (copy, nonatomic, readwrite) AMQShortstr *mechanism;
-@property (copy, nonatomic, readwrite) AMQLongstr *response;
-@property (copy, nonatomic, readwrite) AMQShortstr *locale;
+@property (nonnull, copy, nonatomic, readwrite) AMQTable *clientProperties;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *mechanism;
+@property (nonnull, copy, nonatomic, readwrite) AMQLongstr *response;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *locale;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -114,10 +114,10 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.clientProperties = frames[0][0];
-        self.mechanism = frames[0][1];
-        self.response = frames[0][2];
-        self.locale = frames[0][3];
+        self.clientProperties = ((AMQTable *)frames[0][0]);
+        self.mechanism = ((AMQShortstr *)frames[0][1]);
+        self.response = ((AMQLongstr *)frames[0][2]);
+        self.locale = ((AMQShortstr *)frames[0][3]);
         self.payloadArguments = @[self.clientProperties,
                                   self.mechanism,
                                   self.response,
@@ -139,7 +139,7 @@
 @end
 
 @interface AMQProtocolConnectionSecure ()
-@property (copy, nonatomic, readwrite) AMQLongstr *challenge;
+@property (nonnull, copy, nonatomic, readwrite) AMQLongstr *challenge;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -164,7 +164,7 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.challenge = frames[0][0];
+        self.challenge = ((AMQLongstr *)frames[0][0]);
         self.payloadArguments = @[self.challenge];
     }
     return self;
@@ -183,7 +183,7 @@
 @end
 
 @interface AMQProtocolConnectionSecureOk ()
-@property (copy, nonatomic, readwrite) AMQLongstr *response;
+@property (nonnull, copy, nonatomic, readwrite) AMQLongstr *response;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -208,7 +208,7 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.response = frames[0][0];
+        self.response = ((AMQLongstr *)frames[0][0]);
         self.payloadArguments = @[self.response];
     }
     return self;
@@ -227,9 +227,9 @@
 @end
 
 @interface AMQProtocolConnectionTune ()
-@property (copy, nonatomic, readwrite) AMQShort *channelMax;
-@property (copy, nonatomic, readwrite) AMQLong *frameMax;
-@property (copy, nonatomic, readwrite) AMQShort *heartbeat;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *channelMax;
+@property (nonnull, copy, nonatomic, readwrite) AMQLong *frameMax;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *heartbeat;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -262,9 +262,9 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.channelMax = frames[0][0];
-        self.frameMax = frames[0][1];
-        self.heartbeat = frames[0][2];
+        self.channelMax = ((AMQShort *)frames[0][0]);
+        self.frameMax = ((AMQLong *)frames[0][1]);
+        self.heartbeat = ((AMQShort *)frames[0][2]);
         self.payloadArguments = @[self.channelMax,
                                   self.frameMax,
                                   self.heartbeat];
@@ -285,9 +285,9 @@
 @end
 
 @interface AMQProtocolConnectionTuneOk ()
-@property (copy, nonatomic, readwrite) AMQShort *channelMax;
-@property (copy, nonatomic, readwrite) AMQLong *frameMax;
-@property (copy, nonatomic, readwrite) AMQShort *heartbeat;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *channelMax;
+@property (nonnull, copy, nonatomic, readwrite) AMQLong *frameMax;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *heartbeat;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -320,9 +320,9 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.channelMax = frames[0][0];
-        self.frameMax = frames[0][1];
-        self.heartbeat = frames[0][2];
+        self.channelMax = ((AMQShort *)frames[0][0]);
+        self.frameMax = ((AMQLong *)frames[0][1]);
+        self.heartbeat = ((AMQShort *)frames[0][2]);
         self.payloadArguments = @[self.channelMax,
                                   self.frameMax,
                                   self.heartbeat];
@@ -343,9 +343,9 @@
 @end
 
 @interface AMQProtocolConnectionOpen ()
-@property (copy, nonatomic, readwrite) AMQShortstr *virtualHost;
-@property (copy, nonatomic, readwrite) AMQShortstr *reserved1;
-@property (copy, nonatomic, readwrite) AMQBit *reserved2;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *virtualHost;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reserved1;
+@property (nonatomic, readwrite) AMQProtocolConnectionOpenOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -354,7 +354,7 @@
 + (NSArray *)frames {
     return @[@[[AMQShortstr class],
                [AMQShortstr class],
-               [AMQBit class]]];
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @40; }
@@ -362,15 +362,15 @@
 
 - (nonnull instancetype)initWithVirtualHost:(nonnull AMQShortstr *)virtualHost
                                   reserved1:(nonnull AMQShortstr *)reserved1
-                                  reserved2:(nonnull AMQBit *)reserved2 {
+                                    options:(AMQProtocolConnectionOpenOptions)options {
     self = [super init];
     if (self) {
         self.virtualHost = virtualHost;
         self.reserved1 = reserved1;
-        self.reserved2 = reserved2;
+        self.options = options;
         self.payloadArguments = @[self.virtualHost,
                                   self.reserved1,
-                                  self.reserved2];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -378,12 +378,12 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.virtualHost = frames[0][0];
-        self.reserved1 = frames[0][1];
-        self.reserved2 = frames[0][2];
+        self.virtualHost = ((AMQShortstr *)frames[0][0]);
+        self.reserved1 = ((AMQShortstr *)frames[0][1]);
+        self.options = ((AMQOctet *)frames[0][2]).integerValue;
         self.payloadArguments = @[self.virtualHost,
                                   self.reserved1,
-                                  self.reserved2];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -401,7 +401,7 @@
 @end
 
 @interface AMQProtocolConnectionOpenOk ()
-@property (copy, nonatomic, readwrite) AMQShortstr *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reserved1;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -426,7 +426,7 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.reserved1 = frames[0][0];
+        self.reserved1 = ((AMQShortstr *)frames[0][0]);
         self.payloadArguments = @[self.reserved1];
     }
     return self;
@@ -445,10 +445,10 @@
 @end
 
 @interface AMQProtocolConnectionClose ()
-@property (copy, nonatomic, readwrite) AMQShort *replyCode;
-@property (copy, nonatomic, readwrite) AMQShortstr *replyText;
-@property (copy, nonatomic, readwrite) AMQShort *classId;
-@property (copy, nonatomic, readwrite) AMQShort *methodId;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *replyCode;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *replyText;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *classId;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *methodId;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -485,10 +485,10 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.replyCode = frames[0][0];
-        self.replyText = frames[0][1];
-        self.classId = frames[0][2];
-        self.methodId = frames[0][3];
+        self.replyCode = ((AMQShort *)frames[0][0]);
+        self.replyText = ((AMQShortstr *)frames[0][1]);
+        self.classId = ((AMQShort *)frames[0][2]);
+        self.methodId = ((AMQShort *)frames[0][3]);
         self.payloadArguments = @[self.replyCode,
                                   self.replyText,
                                   self.classId,
@@ -544,7 +544,7 @@
 @end
 
 @interface AMQProtocolConnectionBlocked ()
-@property (copy, nonatomic, readwrite) AMQShortstr *reason;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reason;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -569,7 +569,7 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.reason = frames[0][0];
+        self.reason = ((AMQShortstr *)frames[0][0]);
         self.payloadArguments = @[self.reason];
     }
     return self;
@@ -622,7 +622,7 @@
 @end
 
 @interface AMQProtocolChannelOpen ()
-@property (copy, nonatomic, readwrite) AMQShortstr *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reserved1;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -647,7 +647,7 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.reserved1 = frames[0][0];
+        self.reserved1 = ((AMQShortstr *)frames[0][0]);
         self.payloadArguments = @[self.reserved1];
     }
     return self;
@@ -666,7 +666,7 @@
 @end
 
 @interface AMQProtocolChannelOpenOk ()
-@property (copy, nonatomic, readwrite) AMQLongstr *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) AMQLongstr *reserved1;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -691,7 +691,7 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.reserved1 = frames[0][0];
+        self.reserved1 = ((AMQLongstr *)frames[0][0]);
         self.payloadArguments = @[self.reserved1];
     }
     return self;
@@ -710,24 +710,24 @@
 @end
 
 @interface AMQProtocolChannelFlow ()
-@property (copy, nonatomic, readwrite) AMQBit *active;
+@property (nonatomic, readwrite) AMQProtocolChannelFlowOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
 @implementation AMQProtocolChannelFlow
 
 + (NSArray *)frames {
-    return @[@[[AMQBit class]]];
+    return @[@[[AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @20; }
 - (NSNumber *)methodID    { return @20; }
 - (NSNumber *)frameTypeID { return @1; }
 
-- (nonnull instancetype)initWithActive:(nonnull AMQBit *)active {
+- (nonnull instancetype)initWithOptions:(AMQProtocolChannelFlowOptions)options {
     self = [super init];
     if (self) {
-        self.active = active;
-        self.payloadArguments = @[self.active];
+        self.options = options;
+        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -735,8 +735,8 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.active = frames[0][0];
-        self.payloadArguments = @[self.active];
+        self.options = ((AMQOctet *)frames[0][0]).integerValue;
+        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -754,24 +754,24 @@
 @end
 
 @interface AMQProtocolChannelFlowOk ()
-@property (copy, nonatomic, readwrite) AMQBit *active;
+@property (nonatomic, readwrite) AMQProtocolChannelFlowOkOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
 @implementation AMQProtocolChannelFlowOk
 
 + (NSArray *)frames {
-    return @[@[[AMQBit class]]];
+    return @[@[[AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @20; }
 - (NSNumber *)methodID    { return @21; }
 - (NSNumber *)frameTypeID { return @1; }
 
-- (nonnull instancetype)initWithActive:(nonnull AMQBit *)active {
+- (nonnull instancetype)initWithOptions:(AMQProtocolChannelFlowOkOptions)options {
     self = [super init];
     if (self) {
-        self.active = active;
-        self.payloadArguments = @[self.active];
+        self.options = options;
+        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -779,8 +779,8 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.active = frames[0][0];
-        self.payloadArguments = @[self.active];
+        self.options = ((AMQOctet *)frames[0][0]).integerValue;
+        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -798,10 +798,10 @@
 @end
 
 @interface AMQProtocolChannelClose ()
-@property (copy, nonatomic, readwrite) AMQShort *replyCode;
-@property (copy, nonatomic, readwrite) AMQShortstr *replyText;
-@property (copy, nonatomic, readwrite) AMQShort *classId;
-@property (copy, nonatomic, readwrite) AMQShort *methodId;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *replyCode;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *replyText;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *classId;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *methodId;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -838,10 +838,10 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.replyCode = frames[0][0];
-        self.replyText = frames[0][1];
-        self.classId = frames[0][2];
-        self.methodId = frames[0][3];
+        self.replyCode = ((AMQShort *)frames[0][0]);
+        self.replyText = ((AMQShortstr *)frames[0][1]);
+        self.classId = ((AMQShort *)frames[0][2]);
+        self.methodId = ((AMQShort *)frames[0][3]);
         self.payloadArguments = @[self.replyCode,
                                   self.replyText,
                                   self.classId,
@@ -897,15 +897,11 @@
 @end
 
 @interface AMQProtocolExchangeDeclare ()
-@property (copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (copy, nonatomic, readwrite) AMQShortstr *exchange;
-@property (copy, nonatomic, readwrite) AMQShortstr *type;
-@property (copy, nonatomic, readwrite) AMQBit *passive;
-@property (copy, nonatomic, readwrite) AMQBit *durable;
-@property (copy, nonatomic, readwrite) AMQBit *autoDelete;
-@property (copy, nonatomic, readwrite) AMQBit *internal;
-@property (copy, nonatomic, readwrite) AMQBit *noWait;
-@property (copy, nonatomic, readwrite) AMQTable *arguments;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *type;
+@property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
+@property (nonatomic, readwrite) AMQProtocolExchangeDeclareOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -915,12 +911,8 @@
     return @[@[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
-               [AMQBit class],
-               [AMQBit class],
-               [AMQBit class],
-               [AMQBit class],
-               [AMQBit class],
-               [AMQTable class]]];
+               [AMQTable class],
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @10; }
@@ -929,32 +921,20 @@
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                  exchange:(nonnull AMQShortstr *)exchange
                                      type:(nonnull AMQShortstr *)type
-                                  passive:(nonnull AMQBit *)passive
-                                  durable:(nonnull AMQBit *)durable
-                               autoDelete:(nonnull AMQBit *)autoDelete
-                                 internal:(nonnull AMQBit *)internal
-                                   noWait:(nonnull AMQBit *)noWait
-                                arguments:(nonnull AMQTable *)arguments {
+                                arguments:(nonnull AMQTable *)arguments
+                                  options:(AMQProtocolExchangeDeclareOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
         self.exchange = exchange;
         self.type = type;
-        self.passive = passive;
-        self.durable = durable;
-        self.autoDelete = autoDelete;
-        self.internal = internal;
-        self.noWait = noWait;
         self.arguments = arguments;
+        self.options = options;
         self.payloadArguments = @[self.reserved1,
                                   self.exchange,
                                   self.type,
-                                  self.passive,
-                                  self.durable,
-                                  self.autoDelete,
-                                  self.internal,
-                                  self.noWait,
-                                  self.arguments];
+                                  self.arguments,
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -962,24 +942,16 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.reserved1 = frames[0][0];
-        self.exchange = frames[0][1];
-        self.type = frames[0][2];
-        self.passive = frames[0][3];
-        self.durable = frames[0][4];
-        self.autoDelete = frames[0][5];
-        self.internal = frames[0][6];
-        self.noWait = frames[0][7];
-        self.arguments = frames[0][8];
+        self.reserved1 = ((AMQShort *)frames[0][0]);
+        self.exchange = ((AMQShortstr *)frames[0][1]);
+        self.type = ((AMQShortstr *)frames[0][2]);
+        self.arguments = ((AMQTable *)frames[0][3]);
+        self.options = ((AMQOctet *)frames[0][4]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.exchange,
                                   self.type,
-                                  self.passive,
-                                  self.durable,
-                                  self.autoDelete,
-                                  self.internal,
-                                  self.noWait,
-                                  self.arguments];
+                                  self.arguments,
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1031,10 +1003,9 @@
 @end
 
 @interface AMQProtocolExchangeDelete ()
-@property (copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (copy, nonatomic, readwrite) AMQShortstr *exchange;
-@property (copy, nonatomic, readwrite) AMQBit *ifUnused;
-@property (copy, nonatomic, readwrite) AMQBit *noWait;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
+@property (nonatomic, readwrite) AMQProtocolExchangeDeleteOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -1043,8 +1014,7 @@
 + (NSArray *)frames {
     return @[@[[AMQShort class],
                [AMQShortstr class],
-               [AMQBit class],
-               [AMQBit class]]];
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @20; }
@@ -1052,18 +1022,15 @@
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                  exchange:(nonnull AMQShortstr *)exchange
-                                 ifUnused:(nonnull AMQBit *)ifUnused
-                                   noWait:(nonnull AMQBit *)noWait {
+                                  options:(AMQProtocolExchangeDeleteOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
         self.exchange = exchange;
-        self.ifUnused = ifUnused;
-        self.noWait = noWait;
+        self.options = options;
         self.payloadArguments = @[self.reserved1,
                                   self.exchange,
-                                  self.ifUnused,
-                                  self.noWait];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1071,14 +1038,12 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.reserved1 = frames[0][0];
-        self.exchange = frames[0][1];
-        self.ifUnused = frames[0][2];
-        self.noWait = frames[0][3];
+        self.reserved1 = ((AMQShort *)frames[0][0]);
+        self.exchange = ((AMQShortstr *)frames[0][1]);
+        self.options = ((AMQOctet *)frames[0][2]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.exchange,
-                                  self.ifUnused,
-                                  self.noWait];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1130,12 +1095,12 @@
 @end
 
 @interface AMQProtocolExchangeBind ()
-@property (copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (copy, nonatomic, readwrite) AMQShortstr *destination;
-@property (copy, nonatomic, readwrite) AMQShortstr *source;
-@property (copy, nonatomic, readwrite) AMQShortstr *routingKey;
-@property (copy, nonatomic, readwrite) AMQBit *noWait;
-@property (copy, nonatomic, readwrite) AMQTable *arguments;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *destination;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *source;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
+@property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
+@property (nonatomic, readwrite) AMQProtocolExchangeBindOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -1146,8 +1111,8 @@
                [AMQShortstr class],
                [AMQShortstr class],
                [AMQShortstr class],
-               [AMQBit class],
-               [AMQTable class]]];
+               [AMQTable class],
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @30; }
@@ -1157,22 +1122,22 @@
                               destination:(nonnull AMQShortstr *)destination
                                    source:(nonnull AMQShortstr *)source
                                routingKey:(nonnull AMQShortstr *)routingKey
-                                   noWait:(nonnull AMQBit *)noWait
-                                arguments:(nonnull AMQTable *)arguments {
+                                arguments:(nonnull AMQTable *)arguments
+                                  options:(AMQProtocolExchangeBindOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
         self.destination = destination;
         self.source = source;
         self.routingKey = routingKey;
-        self.noWait = noWait;
         self.arguments = arguments;
+        self.options = options;
         self.payloadArguments = @[self.reserved1,
                                   self.destination,
                                   self.source,
                                   self.routingKey,
-                                  self.noWait,
-                                  self.arguments];
+                                  self.arguments,
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1180,18 +1145,18 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.reserved1 = frames[0][0];
-        self.destination = frames[0][1];
-        self.source = frames[0][2];
-        self.routingKey = frames[0][3];
-        self.noWait = frames[0][4];
-        self.arguments = frames[0][5];
+        self.reserved1 = ((AMQShort *)frames[0][0]);
+        self.destination = ((AMQShortstr *)frames[0][1]);
+        self.source = ((AMQShortstr *)frames[0][2]);
+        self.routingKey = ((AMQShortstr *)frames[0][3]);
+        self.arguments = ((AMQTable *)frames[0][4]);
+        self.options = ((AMQOctet *)frames[0][5]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.destination,
                                   self.source,
                                   self.routingKey,
-                                  self.noWait,
-                                  self.arguments];
+                                  self.arguments,
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1243,12 +1208,12 @@
 @end
 
 @interface AMQProtocolExchangeUnbind ()
-@property (copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (copy, nonatomic, readwrite) AMQShortstr *destination;
-@property (copy, nonatomic, readwrite) AMQShortstr *source;
-@property (copy, nonatomic, readwrite) AMQShortstr *routingKey;
-@property (copy, nonatomic, readwrite) AMQBit *noWait;
-@property (copy, nonatomic, readwrite) AMQTable *arguments;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *destination;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *source;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
+@property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
+@property (nonatomic, readwrite) AMQProtocolExchangeUnbindOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -1259,8 +1224,8 @@
                [AMQShortstr class],
                [AMQShortstr class],
                [AMQShortstr class],
-               [AMQBit class],
-               [AMQTable class]]];
+               [AMQTable class],
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @40; }
@@ -1270,22 +1235,22 @@
                               destination:(nonnull AMQShortstr *)destination
                                    source:(nonnull AMQShortstr *)source
                                routingKey:(nonnull AMQShortstr *)routingKey
-                                   noWait:(nonnull AMQBit *)noWait
-                                arguments:(nonnull AMQTable *)arguments {
+                                arguments:(nonnull AMQTable *)arguments
+                                  options:(AMQProtocolExchangeUnbindOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
         self.destination = destination;
         self.source = source;
         self.routingKey = routingKey;
-        self.noWait = noWait;
         self.arguments = arguments;
+        self.options = options;
         self.payloadArguments = @[self.reserved1,
                                   self.destination,
                                   self.source,
                                   self.routingKey,
-                                  self.noWait,
-                                  self.arguments];
+                                  self.arguments,
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1293,18 +1258,18 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.reserved1 = frames[0][0];
-        self.destination = frames[0][1];
-        self.source = frames[0][2];
-        self.routingKey = frames[0][3];
-        self.noWait = frames[0][4];
-        self.arguments = frames[0][5];
+        self.reserved1 = ((AMQShort *)frames[0][0]);
+        self.destination = ((AMQShortstr *)frames[0][1]);
+        self.source = ((AMQShortstr *)frames[0][2]);
+        self.routingKey = ((AMQShortstr *)frames[0][3]);
+        self.arguments = ((AMQTable *)frames[0][4]);
+        self.options = ((AMQOctet *)frames[0][5]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.destination,
                                   self.source,
                                   self.routingKey,
-                                  self.noWait,
-                                  self.arguments];
+                                  self.arguments,
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1356,14 +1321,10 @@
 @end
 
 @interface AMQProtocolQueueDeclare ()
-@property (copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (copy, nonatomic, readwrite) AMQBit *passive;
-@property (copy, nonatomic, readwrite) AMQBit *durable;
-@property (copy, nonatomic, readwrite) AMQBit *exclusive;
-@property (copy, nonatomic, readwrite) AMQBit *autoDelete;
-@property (copy, nonatomic, readwrite) AMQBit *noWait;
-@property (copy, nonatomic, readwrite) AMQTable *arguments;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
+@property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
+@property (nonatomic, readwrite) AMQProtocolQueueDeclareOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -1372,12 +1333,8 @@
 + (NSArray *)frames {
     return @[@[[AMQShort class],
                [AMQShortstr class],
-               [AMQBit class],
-               [AMQBit class],
-               [AMQBit class],
-               [AMQBit class],
-               [AMQBit class],
-               [AMQTable class]]];
+               [AMQTable class],
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @10; }
@@ -1385,30 +1342,18 @@
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
-                                  passive:(nonnull AMQBit *)passive
-                                  durable:(nonnull AMQBit *)durable
-                                exclusive:(nonnull AMQBit *)exclusive
-                               autoDelete:(nonnull AMQBit *)autoDelete
-                                   noWait:(nonnull AMQBit *)noWait
-                                arguments:(nonnull AMQTable *)arguments {
+                                arguments:(nonnull AMQTable *)arguments
+                                  options:(AMQProtocolQueueDeclareOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
         self.queue = queue;
-        self.passive = passive;
-        self.durable = durable;
-        self.exclusive = exclusive;
-        self.autoDelete = autoDelete;
-        self.noWait = noWait;
         self.arguments = arguments;
+        self.options = options;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
-                                  self.passive,
-                                  self.durable,
-                                  self.exclusive,
-                                  self.autoDelete,
-                                  self.noWait,
-                                  self.arguments];
+                                  self.arguments,
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1416,22 +1361,14 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.reserved1 = frames[0][0];
-        self.queue = frames[0][1];
-        self.passive = frames[0][2];
-        self.durable = frames[0][3];
-        self.exclusive = frames[0][4];
-        self.autoDelete = frames[0][5];
-        self.noWait = frames[0][6];
-        self.arguments = frames[0][7];
+        self.reserved1 = ((AMQShort *)frames[0][0]);
+        self.queue = ((AMQShortstr *)frames[0][1]);
+        self.arguments = ((AMQTable *)frames[0][2]);
+        self.options = ((AMQOctet *)frames[0][3]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
-                                  self.passive,
-                                  self.durable,
-                                  self.exclusive,
-                                  self.autoDelete,
-                                  self.noWait,
-                                  self.arguments];
+                                  self.arguments,
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1449,9 +1386,9 @@
 @end
 
 @interface AMQProtocolQueueDeclareOk ()
-@property (copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (copy, nonatomic, readwrite) AMQLong *messageCount;
-@property (copy, nonatomic, readwrite) AMQLong *consumerCount;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
+@property (nonnull, copy, nonatomic, readwrite) AMQLong *messageCount;
+@property (nonnull, copy, nonatomic, readwrite) AMQLong *consumerCount;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -1484,9 +1421,9 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.queue = frames[0][0];
-        self.messageCount = frames[0][1];
-        self.consumerCount = frames[0][2];
+        self.queue = ((AMQShortstr *)frames[0][0]);
+        self.messageCount = ((AMQLong *)frames[0][1]);
+        self.consumerCount = ((AMQLong *)frames[0][2]);
         self.payloadArguments = @[self.queue,
                                   self.messageCount,
                                   self.consumerCount];
@@ -1507,12 +1444,12 @@
 @end
 
 @interface AMQProtocolQueueBind ()
-@property (copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (copy, nonatomic, readwrite) AMQShortstr *exchange;
-@property (copy, nonatomic, readwrite) AMQShortstr *routingKey;
-@property (copy, nonatomic, readwrite) AMQBit *noWait;
-@property (copy, nonatomic, readwrite) AMQTable *arguments;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
+@property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
+@property (nonatomic, readwrite) AMQProtocolQueueBindOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -1523,8 +1460,8 @@
                [AMQShortstr class],
                [AMQShortstr class],
                [AMQShortstr class],
-               [AMQBit class],
-               [AMQTable class]]];
+               [AMQTable class],
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @20; }
@@ -1534,22 +1471,22 @@
                                     queue:(nonnull AMQShortstr *)queue
                                  exchange:(nonnull AMQShortstr *)exchange
                                routingKey:(nonnull AMQShortstr *)routingKey
-                                   noWait:(nonnull AMQBit *)noWait
-                                arguments:(nonnull AMQTable *)arguments {
+                                arguments:(nonnull AMQTable *)arguments
+                                  options:(AMQProtocolQueueBindOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
         self.queue = queue;
         self.exchange = exchange;
         self.routingKey = routingKey;
-        self.noWait = noWait;
         self.arguments = arguments;
+        self.options = options;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   self.exchange,
                                   self.routingKey,
-                                  self.noWait,
-                                  self.arguments];
+                                  self.arguments,
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1557,18 +1494,18 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.reserved1 = frames[0][0];
-        self.queue = frames[0][1];
-        self.exchange = frames[0][2];
-        self.routingKey = frames[0][3];
-        self.noWait = frames[0][4];
-        self.arguments = frames[0][5];
+        self.reserved1 = ((AMQShort *)frames[0][0]);
+        self.queue = ((AMQShortstr *)frames[0][1]);
+        self.exchange = ((AMQShortstr *)frames[0][2]);
+        self.routingKey = ((AMQShortstr *)frames[0][3]);
+        self.arguments = ((AMQTable *)frames[0][4]);
+        self.options = ((AMQOctet *)frames[0][5]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   self.exchange,
                                   self.routingKey,
-                                  self.noWait,
-                                  self.arguments];
+                                  self.arguments,
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1620,11 +1557,11 @@
 @end
 
 @interface AMQProtocolQueueUnbind ()
-@property (copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (copy, nonatomic, readwrite) AMQShortstr *exchange;
-@property (copy, nonatomic, readwrite) AMQShortstr *routingKey;
-@property (copy, nonatomic, readwrite) AMQTable *arguments;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
+@property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -1665,11 +1602,11 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.reserved1 = frames[0][0];
-        self.queue = frames[0][1];
-        self.exchange = frames[0][2];
-        self.routingKey = frames[0][3];
-        self.arguments = frames[0][4];
+        self.reserved1 = ((AMQShort *)frames[0][0]);
+        self.queue = ((AMQShortstr *)frames[0][1]);
+        self.exchange = ((AMQShortstr *)frames[0][2]);
+        self.routingKey = ((AMQShortstr *)frames[0][3]);
+        self.arguments = ((AMQTable *)frames[0][4]);
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   self.exchange,
@@ -1726,9 +1663,9 @@
 @end
 
 @interface AMQProtocolQueuePurge ()
-@property (copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (copy, nonatomic, readwrite) AMQBit *noWait;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
+@property (nonatomic, readwrite) AMQProtocolQueuePurgeOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -1737,7 +1674,7 @@
 + (NSArray *)frames {
     return @[@[[AMQShort class],
                [AMQShortstr class],
-               [AMQBit class]]];
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @30; }
@@ -1745,15 +1682,15 @@
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
-                                   noWait:(nonnull AMQBit *)noWait {
+                                  options:(AMQProtocolQueuePurgeOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
         self.queue = queue;
-        self.noWait = noWait;
+        self.options = options;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
-                                  self.noWait];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1761,12 +1698,12 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.reserved1 = frames[0][0];
-        self.queue = frames[0][1];
-        self.noWait = frames[0][2];
+        self.reserved1 = ((AMQShort *)frames[0][0]);
+        self.queue = ((AMQShortstr *)frames[0][1]);
+        self.options = ((AMQOctet *)frames[0][2]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
-                                  self.noWait];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1784,7 +1721,7 @@
 @end
 
 @interface AMQProtocolQueuePurgeOk ()
-@property (copy, nonatomic, readwrite) AMQLong *messageCount;
+@property (nonnull, copy, nonatomic, readwrite) AMQLong *messageCount;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -1809,7 +1746,7 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.messageCount = frames[0][0];
+        self.messageCount = ((AMQLong *)frames[0][0]);
         self.payloadArguments = @[self.messageCount];
     }
     return self;
@@ -1828,11 +1765,9 @@
 @end
 
 @interface AMQProtocolQueueDelete ()
-@property (copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (copy, nonatomic, readwrite) AMQBit *ifUnused;
-@property (copy, nonatomic, readwrite) AMQBit *ifEmpty;
-@property (copy, nonatomic, readwrite) AMQBit *noWait;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
+@property (nonatomic, readwrite) AMQProtocolQueueDeleteOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -1841,9 +1776,7 @@
 + (NSArray *)frames {
     return @[@[[AMQShort class],
                [AMQShortstr class],
-               [AMQBit class],
-               [AMQBit class],
-               [AMQBit class]]];
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @40; }
@@ -1851,21 +1784,15 @@
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
-                                 ifUnused:(nonnull AMQBit *)ifUnused
-                                  ifEmpty:(nonnull AMQBit *)ifEmpty
-                                   noWait:(nonnull AMQBit *)noWait {
+                                  options:(AMQProtocolQueueDeleteOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
         self.queue = queue;
-        self.ifUnused = ifUnused;
-        self.ifEmpty = ifEmpty;
-        self.noWait = noWait;
+        self.options = options;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
-                                  self.ifUnused,
-                                  self.ifEmpty,
-                                  self.noWait];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1873,16 +1800,12 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.reserved1 = frames[0][0];
-        self.queue = frames[0][1];
-        self.ifUnused = frames[0][2];
-        self.ifEmpty = frames[0][3];
-        self.noWait = frames[0][4];
+        self.reserved1 = ((AMQShort *)frames[0][0]);
+        self.queue = ((AMQShortstr *)frames[0][1]);
+        self.options = ((AMQOctet *)frames[0][2]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
-                                  self.ifUnused,
-                                  self.ifEmpty,
-                                  self.noWait];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1900,7 +1823,7 @@
 @end
 
 @interface AMQProtocolQueueDeleteOk ()
-@property (copy, nonatomic, readwrite) AMQLong *messageCount;
+@property (nonnull, copy, nonatomic, readwrite) AMQLong *messageCount;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -1925,7 +1848,7 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.messageCount = frames[0][0];
+        self.messageCount = ((AMQLong *)frames[0][0]);
         self.payloadArguments = @[self.messageCount];
     }
     return self;
@@ -1944,9 +1867,9 @@
 @end
 
 @interface AMQProtocolBasicQos ()
-@property (copy, nonatomic, readwrite) AMQLong *prefetchSize;
-@property (copy, nonatomic, readwrite) AMQShort *prefetchCount;
-@property (copy, nonatomic, readwrite) AMQBit *global;
+@property (nonnull, copy, nonatomic, readwrite) AMQLong *prefetchSize;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *prefetchCount;
+@property (nonatomic, readwrite) AMQProtocolBasicQosOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -1955,7 +1878,7 @@
 + (NSArray *)frames {
     return @[@[[AMQLong class],
                [AMQShort class],
-               [AMQBit class]]];
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @10; }
@@ -1963,15 +1886,15 @@
 
 - (nonnull instancetype)initWithPrefetchSize:(nonnull AMQLong *)prefetchSize
                                prefetchCount:(nonnull AMQShort *)prefetchCount
-                                      global:(nonnull AMQBit *)global {
+                                     options:(AMQProtocolBasicQosOptions)options {
     self = [super init];
     if (self) {
         self.prefetchSize = prefetchSize;
         self.prefetchCount = prefetchCount;
-        self.global = global;
+        self.options = options;
         self.payloadArguments = @[self.prefetchSize,
                                   self.prefetchCount,
-                                  self.global];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1979,12 +1902,12 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.prefetchSize = frames[0][0];
-        self.prefetchCount = frames[0][1];
-        self.global = frames[0][2];
+        self.prefetchSize = ((AMQLong *)frames[0][0]);
+        self.prefetchCount = ((AMQShort *)frames[0][1]);
+        self.options = ((AMQOctet *)frames[0][2]).integerValue;
         self.payloadArguments = @[self.prefetchSize,
                                   self.prefetchCount,
-                                  self.global];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2036,14 +1959,11 @@
 @end
 
 @interface AMQProtocolBasicConsume ()
-@property (copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (copy, nonatomic, readwrite) AMQShortstr *consumerTag;
-@property (copy, nonatomic, readwrite) AMQBit *noLocal;
-@property (copy, nonatomic, readwrite) AMQBit *noAck;
-@property (copy, nonatomic, readwrite) AMQBit *exclusive;
-@property (copy, nonatomic, readwrite) AMQBit *noWait;
-@property (copy, nonatomic, readwrite) AMQTable *arguments;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *consumerTag;
+@property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
+@property (nonatomic, readwrite) AMQProtocolBasicConsumeOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -2053,11 +1973,8 @@
     return @[@[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
-               [AMQBit class],
-               [AMQBit class],
-               [AMQBit class],
-               [AMQBit class],
-               [AMQTable class]]];
+               [AMQTable class],
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @20; }
@@ -2066,29 +1983,20 @@
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
                               consumerTag:(nonnull AMQShortstr *)consumerTag
-                                  noLocal:(nonnull AMQBit *)noLocal
-                                    noAck:(nonnull AMQBit *)noAck
-                                exclusive:(nonnull AMQBit *)exclusive
-                                   noWait:(nonnull AMQBit *)noWait
-                                arguments:(nonnull AMQTable *)arguments {
+                                arguments:(nonnull AMQTable *)arguments
+                                  options:(AMQProtocolBasicConsumeOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
         self.queue = queue;
         self.consumerTag = consumerTag;
-        self.noLocal = noLocal;
-        self.noAck = noAck;
-        self.exclusive = exclusive;
-        self.noWait = noWait;
         self.arguments = arguments;
+        self.options = options;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   self.consumerTag,
-                                  self.noLocal,
-                                  self.noAck,
-                                  self.exclusive,
-                                  self.noWait,
-                                  self.arguments];
+                                  self.arguments,
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2096,22 +2004,16 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.reserved1 = frames[0][0];
-        self.queue = frames[0][1];
-        self.consumerTag = frames[0][2];
-        self.noLocal = frames[0][3];
-        self.noAck = frames[0][4];
-        self.exclusive = frames[0][5];
-        self.noWait = frames[0][6];
-        self.arguments = frames[0][7];
+        self.reserved1 = ((AMQShort *)frames[0][0]);
+        self.queue = ((AMQShortstr *)frames[0][1]);
+        self.consumerTag = ((AMQShortstr *)frames[0][2]);
+        self.arguments = ((AMQTable *)frames[0][3]);
+        self.options = ((AMQOctet *)frames[0][4]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   self.consumerTag,
-                                  self.noLocal,
-                                  self.noAck,
-                                  self.exclusive,
-                                  self.noWait,
-                                  self.arguments];
+                                  self.arguments,
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2129,7 +2031,7 @@
 @end
 
 @interface AMQProtocolBasicConsumeOk ()
-@property (copy, nonatomic, readwrite) AMQShortstr *consumerTag;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *consumerTag;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -2154,7 +2056,7 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.consumerTag = frames[0][0];
+        self.consumerTag = ((AMQShortstr *)frames[0][0]);
         self.payloadArguments = @[self.consumerTag];
     }
     return self;
@@ -2173,8 +2075,8 @@
 @end
 
 @interface AMQProtocolBasicCancel ()
-@property (copy, nonatomic, readwrite) AMQShortstr *consumerTag;
-@property (copy, nonatomic, readwrite) AMQBit *noWait;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *consumerTag;
+@property (nonatomic, readwrite) AMQProtocolBasicCancelOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -2182,20 +2084,20 @@
 
 + (NSArray *)frames {
     return @[@[[AMQShortstr class],
-               [AMQBit class]]];
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @30; }
 - (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag
-                                     noWait:(nonnull AMQBit *)noWait {
+                                    options:(AMQProtocolBasicCancelOptions)options {
     self = [super init];
     if (self) {
         self.consumerTag = consumerTag;
-        self.noWait = noWait;
+        self.options = options;
         self.payloadArguments = @[self.consumerTag,
-                                  self.noWait];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2203,10 +2105,10 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.consumerTag = frames[0][0];
-        self.noWait = frames[0][1];
+        self.consumerTag = ((AMQShortstr *)frames[0][0]);
+        self.options = ((AMQOctet *)frames[0][1]).integerValue;
         self.payloadArguments = @[self.consumerTag,
-                                  self.noWait];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2224,7 +2126,7 @@
 @end
 
 @interface AMQProtocolBasicCancelOk ()
-@property (copy, nonatomic, readwrite) AMQShortstr *consumerTag;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *consumerTag;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -2249,7 +2151,7 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.consumerTag = frames[0][0];
+        self.consumerTag = ((AMQShortstr *)frames[0][0]);
         self.payloadArguments = @[self.consumerTag];
     }
     return self;
@@ -2268,11 +2170,10 @@
 @end
 
 @interface AMQProtocolBasicPublish ()
-@property (copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (copy, nonatomic, readwrite) AMQShortstr *exchange;
-@property (copy, nonatomic, readwrite) AMQShortstr *routingKey;
-@property (copy, nonatomic, readwrite) AMQBit *mandatory;
-@property (copy, nonatomic, readwrite) AMQBit *immediate;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
+@property (nonatomic, readwrite) AMQProtocolBasicPublishOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -2282,8 +2183,7 @@
     return @[@[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
-               [AMQBit class],
-               [AMQBit class]]];
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @40; }
@@ -2292,20 +2192,17 @@
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                  exchange:(nonnull AMQShortstr *)exchange
                                routingKey:(nonnull AMQShortstr *)routingKey
-                                mandatory:(nonnull AMQBit *)mandatory
-                                immediate:(nonnull AMQBit *)immediate {
+                                  options:(AMQProtocolBasicPublishOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
         self.exchange = exchange;
         self.routingKey = routingKey;
-        self.mandatory = mandatory;
-        self.immediate = immediate;
+        self.options = options;
         self.payloadArguments = @[self.reserved1,
                                   self.exchange,
                                   self.routingKey,
-                                  self.mandatory,
-                                  self.immediate];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2313,16 +2210,14 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.reserved1 = frames[0][0];
-        self.exchange = frames[0][1];
-        self.routingKey = frames[0][2];
-        self.mandatory = frames[0][3];
-        self.immediate = frames[0][4];
+        self.reserved1 = ((AMQShort *)frames[0][0]);
+        self.exchange = ((AMQShortstr *)frames[0][1]);
+        self.routingKey = ((AMQShortstr *)frames[0][2]);
+        self.options = ((AMQOctet *)frames[0][3]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.exchange,
                                   self.routingKey,
-                                  self.mandatory,
-                                  self.immediate];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2340,10 +2235,10 @@
 @end
 
 @interface AMQProtocolBasicReturn ()
-@property (copy, nonatomic, readwrite) AMQShort *replyCode;
-@property (copy, nonatomic, readwrite) AMQShortstr *replyText;
-@property (copy, nonatomic, readwrite) AMQShortstr *exchange;
-@property (copy, nonatomic, readwrite) AMQShortstr *routingKey;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *replyCode;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *replyText;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -2380,10 +2275,10 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.replyCode = frames[0][0];
-        self.replyText = frames[0][1];
-        self.exchange = frames[0][2];
-        self.routingKey = frames[0][3];
+        self.replyCode = ((AMQShort *)frames[0][0]);
+        self.replyText = ((AMQShortstr *)frames[0][1]);
+        self.exchange = ((AMQShortstr *)frames[0][2]);
+        self.routingKey = ((AMQShortstr *)frames[0][3]);
         self.payloadArguments = @[self.replyCode,
                                   self.replyText,
                                   self.exchange,
@@ -2405,11 +2300,11 @@
 @end
 
 @interface AMQProtocolBasicDeliver ()
-@property (copy, nonatomic, readwrite) AMQShortstr *consumerTag;
-@property (copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
-@property (copy, nonatomic, readwrite) AMQBit *redelivered;
-@property (copy, nonatomic, readwrite) AMQShortstr *exchange;
-@property (copy, nonatomic, readwrite) AMQShortstr *routingKey;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *consumerTag;
+@property (nonnull, copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
+@property (nonatomic, readwrite) AMQProtocolBasicDeliverOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -2418,9 +2313,9 @@
 + (NSArray *)frames {
     return @[@[[AMQShortstr class],
                [AMQLonglong class],
-               [AMQBit class],
                [AMQShortstr class],
-               [AMQShortstr class]]];
+               [AMQShortstr class],
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @60; }
@@ -2428,21 +2323,21 @@
 
 - (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag
                                 deliveryTag:(nonnull AMQLonglong *)deliveryTag
-                                redelivered:(nonnull AMQBit *)redelivered
                                    exchange:(nonnull AMQShortstr *)exchange
-                                 routingKey:(nonnull AMQShortstr *)routingKey {
+                                 routingKey:(nonnull AMQShortstr *)routingKey
+                                    options:(AMQProtocolBasicDeliverOptions)options {
     self = [super init];
     if (self) {
         self.consumerTag = consumerTag;
         self.deliveryTag = deliveryTag;
-        self.redelivered = redelivered;
         self.exchange = exchange;
         self.routingKey = routingKey;
+        self.options = options;
         self.payloadArguments = @[self.consumerTag,
                                   self.deliveryTag,
-                                  self.redelivered,
                                   self.exchange,
-                                  self.routingKey];
+                                  self.routingKey,
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2450,16 +2345,16 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.consumerTag = frames[0][0];
-        self.deliveryTag = frames[0][1];
-        self.redelivered = frames[0][2];
-        self.exchange = frames[0][3];
-        self.routingKey = frames[0][4];
+        self.consumerTag = ((AMQShortstr *)frames[0][0]);
+        self.deliveryTag = ((AMQLonglong *)frames[0][1]);
+        self.exchange = ((AMQShortstr *)frames[0][2]);
+        self.routingKey = ((AMQShortstr *)frames[0][3]);
+        self.options = ((AMQOctet *)frames[0][4]).integerValue;
         self.payloadArguments = @[self.consumerTag,
                                   self.deliveryTag,
-                                  self.redelivered,
                                   self.exchange,
-                                  self.routingKey];
+                                  self.routingKey,
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2477,9 +2372,9 @@
 @end
 
 @interface AMQProtocolBasicGet ()
-@property (copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (copy, nonatomic, readwrite) AMQBit *noAck;
+@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
+@property (nonatomic, readwrite) AMQProtocolBasicGetOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -2488,7 +2383,7 @@
 + (NSArray *)frames {
     return @[@[[AMQShort class],
                [AMQShortstr class],
-               [AMQBit class]]];
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @70; }
@@ -2496,15 +2391,15 @@
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
-                                    noAck:(nonnull AMQBit *)noAck {
+                                  options:(AMQProtocolBasicGetOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
         self.queue = queue;
-        self.noAck = noAck;
+        self.options = options;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
-                                  self.noAck];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2512,12 +2407,12 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.reserved1 = frames[0][0];
-        self.queue = frames[0][1];
-        self.noAck = frames[0][2];
+        self.reserved1 = ((AMQShort *)frames[0][0]);
+        self.queue = ((AMQShortstr *)frames[0][1]);
+        self.options = ((AMQOctet *)frames[0][2]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
-                                  self.noAck];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2535,11 +2430,11 @@
 @end
 
 @interface AMQProtocolBasicGetOk ()
-@property (copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
-@property (copy, nonatomic, readwrite) AMQBit *redelivered;
-@property (copy, nonatomic, readwrite) AMQShortstr *exchange;
-@property (copy, nonatomic, readwrite) AMQShortstr *routingKey;
-@property (copy, nonatomic, readwrite) AMQLong *messageCount;
+@property (nonnull, copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
+@property (nonnull, copy, nonatomic, readwrite) AMQLong *messageCount;
+@property (nonatomic, readwrite) AMQProtocolBasicGetOkOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -2547,32 +2442,32 @@
 
 + (NSArray *)frames {
     return @[@[[AMQLonglong class],
-               [AMQBit class],
                [AMQShortstr class],
                [AMQShortstr class],
-               [AMQLong class]]];
+               [AMQLong class],
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @71; }
 - (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
-                                redelivered:(nonnull AMQBit *)redelivered
                                    exchange:(nonnull AMQShortstr *)exchange
                                  routingKey:(nonnull AMQShortstr *)routingKey
-                               messageCount:(nonnull AMQLong *)messageCount {
+                               messageCount:(nonnull AMQLong *)messageCount
+                                    options:(AMQProtocolBasicGetOkOptions)options {
     self = [super init];
     if (self) {
         self.deliveryTag = deliveryTag;
-        self.redelivered = redelivered;
         self.exchange = exchange;
         self.routingKey = routingKey;
         self.messageCount = messageCount;
+        self.options = options;
         self.payloadArguments = @[self.deliveryTag,
-                                  self.redelivered,
                                   self.exchange,
                                   self.routingKey,
-                                  self.messageCount];
+                                  self.messageCount,
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2580,16 +2475,16 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.deliveryTag = frames[0][0];
-        self.redelivered = frames[0][1];
-        self.exchange = frames[0][2];
-        self.routingKey = frames[0][3];
-        self.messageCount = frames[0][4];
+        self.deliveryTag = ((AMQLonglong *)frames[0][0]);
+        self.exchange = ((AMQShortstr *)frames[0][1]);
+        self.routingKey = ((AMQShortstr *)frames[0][2]);
+        self.messageCount = ((AMQLong *)frames[0][3]);
+        self.options = ((AMQOctet *)frames[0][4]).integerValue;
         self.payloadArguments = @[self.deliveryTag,
-                                  self.redelivered,
                                   self.exchange,
                                   self.routingKey,
-                                  self.messageCount];
+                                  self.messageCount,
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2607,7 +2502,7 @@
 @end
 
 @interface AMQProtocolBasicGetEmpty ()
-@property (copy, nonatomic, readwrite) AMQShortstr *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reserved1;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -2632,7 +2527,7 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.reserved1 = frames[0][0];
+        self.reserved1 = ((AMQShortstr *)frames[0][0]);
         self.payloadArguments = @[self.reserved1];
     }
     return self;
@@ -2651,8 +2546,8 @@
 @end
 
 @interface AMQProtocolBasicAck ()
-@property (copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
-@property (copy, nonatomic, readwrite) AMQBit *multiple;
+@property (nonnull, copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
+@property (nonatomic, readwrite) AMQProtocolBasicAckOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -2660,20 +2555,20 @@
 
 + (NSArray *)frames {
     return @[@[[AMQLonglong class],
-               [AMQBit class]]];
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @80; }
 - (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
-                                   multiple:(nonnull AMQBit *)multiple {
+                                    options:(AMQProtocolBasicAckOptions)options {
     self = [super init];
     if (self) {
         self.deliveryTag = deliveryTag;
-        self.multiple = multiple;
+        self.options = options;
         self.payloadArguments = @[self.deliveryTag,
-                                  self.multiple];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2681,10 +2576,10 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.deliveryTag = frames[0][0];
-        self.multiple = frames[0][1];
+        self.deliveryTag = ((AMQLonglong *)frames[0][0]);
+        self.options = ((AMQOctet *)frames[0][1]).integerValue;
         self.payloadArguments = @[self.deliveryTag,
-                                  self.multiple];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2702,8 +2597,8 @@
 @end
 
 @interface AMQProtocolBasicReject ()
-@property (copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
-@property (copy, nonatomic, readwrite) AMQBit *requeue;
+@property (nonnull, copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
+@property (nonatomic, readwrite) AMQProtocolBasicRejectOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -2711,20 +2606,20 @@
 
 + (NSArray *)frames {
     return @[@[[AMQLonglong class],
-               [AMQBit class]]];
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @90; }
 - (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
-                                    requeue:(nonnull AMQBit *)requeue {
+                                    options:(AMQProtocolBasicRejectOptions)options {
     self = [super init];
     if (self) {
         self.deliveryTag = deliveryTag;
-        self.requeue = requeue;
+        self.options = options;
         self.payloadArguments = @[self.deliveryTag,
-                                  self.requeue];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2732,10 +2627,10 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.deliveryTag = frames[0][0];
-        self.requeue = frames[0][1];
+        self.deliveryTag = ((AMQLonglong *)frames[0][0]);
+        self.options = ((AMQOctet *)frames[0][1]).integerValue;
         self.payloadArguments = @[self.deliveryTag,
-                                  self.requeue];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2753,24 +2648,24 @@
 @end
 
 @interface AMQProtocolBasicRecoverAsync ()
-@property (copy, nonatomic, readwrite) AMQBit *requeue;
+@property (nonatomic, readwrite) AMQProtocolBasicRecoverAsyncOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
 @implementation AMQProtocolBasicRecoverAsync
 
 + (NSArray *)frames {
-    return @[@[[AMQBit class]]];
+    return @[@[[AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @100; }
 - (NSNumber *)frameTypeID { return @1; }
 
-- (nonnull instancetype)initWithRequeue:(nonnull AMQBit *)requeue {
+- (nonnull instancetype)initWithOptions:(AMQProtocolBasicRecoverAsyncOptions)options {
     self = [super init];
     if (self) {
-        self.requeue = requeue;
-        self.payloadArguments = @[self.requeue];
+        self.options = options;
+        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2778,8 +2673,8 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.requeue = frames[0][0];
-        self.payloadArguments = @[self.requeue];
+        self.options = ((AMQOctet *)frames[0][0]).integerValue;
+        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2797,24 +2692,24 @@
 @end
 
 @interface AMQProtocolBasicRecover ()
-@property (copy, nonatomic, readwrite) AMQBit *requeue;
+@property (nonatomic, readwrite) AMQProtocolBasicRecoverOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
 @implementation AMQProtocolBasicRecover
 
 + (NSArray *)frames {
-    return @[@[[AMQBit class]]];
+    return @[@[[AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @110; }
 - (NSNumber *)frameTypeID { return @1; }
 
-- (nonnull instancetype)initWithRequeue:(nonnull AMQBit *)requeue {
+- (nonnull instancetype)initWithOptions:(AMQProtocolBasicRecoverOptions)options {
     self = [super init];
     if (self) {
-        self.requeue = requeue;
-        self.payloadArguments = @[self.requeue];
+        self.options = options;
+        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2822,8 +2717,8 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.requeue = frames[0][0];
-        self.payloadArguments = @[self.requeue];
+        self.options = ((AMQOctet *)frames[0][0]).integerValue;
+        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2875,9 +2770,8 @@
 @end
 
 @interface AMQProtocolBasicNack ()
-@property (copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
-@property (copy, nonatomic, readwrite) AMQBit *multiple;
-@property (copy, nonatomic, readwrite) AMQBit *requeue;
+@property (nonnull, copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
+@property (nonatomic, readwrite) AMQProtocolBasicNackOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
@@ -2885,24 +2779,20 @@
 
 + (NSArray *)frames {
     return @[@[[AMQLonglong class],
-               [AMQBit class],
-               [AMQBit class]]];
+               [AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @120; }
 - (NSNumber *)frameTypeID { return @1; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
-                                   multiple:(nonnull AMQBit *)multiple
-                                    requeue:(nonnull AMQBit *)requeue {
+                                    options:(AMQProtocolBasicNackOptions)options {
     self = [super init];
     if (self) {
         self.deliveryTag = deliveryTag;
-        self.multiple = multiple;
-        self.requeue = requeue;
+        self.options = options;
         self.payloadArguments = @[self.deliveryTag,
-                                  self.multiple,
-                                  self.requeue];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2910,12 +2800,10 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.deliveryTag = frames[0][0];
-        self.multiple = frames[0][1];
-        self.requeue = frames[0][2];
+        self.deliveryTag = ((AMQLonglong *)frames[0][0]);
+        self.options = ((AMQOctet *)frames[0][1]).integerValue;
         self.payloadArguments = @[self.deliveryTag,
-                                  self.multiple,
-                                  self.requeue];
+                                  [[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -3137,24 +3025,24 @@
 @end
 
 @interface AMQProtocolConfirmSelect ()
-@property (copy, nonatomic, readwrite) AMQBit *nowait;
+@property (nonatomic, readwrite) AMQProtocolConfirmSelectOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
 @implementation AMQProtocolConfirmSelect
 
 + (NSArray *)frames {
-    return @[@[[AMQBit class]]];
+    return @[@[[AMQOctet class]]];
 }
 - (NSNumber *)classID     { return @85; }
 - (NSNumber *)methodID    { return @10; }
 - (NSNumber *)frameTypeID { return @1; }
 
-- (nonnull instancetype)initWithNowait:(nonnull AMQBit *)nowait {
+- (nonnull instancetype)initWithOptions:(AMQProtocolConfirmSelectOptions)options {
     self = [super init];
     if (self) {
-        self.nowait = nowait;
-        self.payloadArguments = @[self.nowait];
+        self.options = options;
+        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -3162,8 +3050,8 @@
 - (instancetype)initWithDecodedFrames:(NSArray *)frames {
     self = [super init];
     if (self) {
-        self.nowait = frames[0][0];
-        self.payloadArguments = @[self.nowait];
+        self.options = ((AMQOctet *)frames[0][0]).integerValue;
+        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
     }
     return self;
 }

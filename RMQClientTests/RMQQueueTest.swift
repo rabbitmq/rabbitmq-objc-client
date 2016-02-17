@@ -59,8 +59,7 @@ class RMQQueueTest: XCTestCase, AMQReplyContext {
             reserved1: AMQShort(0),
             exchange: AMQShortstr(""),
             routingKey: AMQShortstr(""),
-            mandatory: AMQBit(0),
-            immediate: AMQBit(0)
+            options: AMQProtocolBasicPublishOptions.NoOptions
         )
         let bodyData = "my great message".dataUsingEncoding(NSUTF8StringEncoding)!
         let header = AMQContentHeader(classID: 60, bodySize: bodyData.length, properties: [])

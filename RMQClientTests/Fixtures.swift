@@ -62,7 +62,7 @@ class MethodFixtures {
     }
 
     static func connectionOpen() -> AMQProtocolConnectionOpen {
-        return AMQProtocolConnectionOpen(virtualHost: AMQShortstr("/"), reserved1: AMQShortstr(""), reserved2: AMQBit(0))
+        return AMQProtocolConnectionOpen(virtualHost: AMQShortstr("/"), reserved1: AMQShortstr(""), options: AMQProtocolConnectionOpenOptions.NoOptions)
     }
 
     static func connectionOpenOk() -> AMQProtocolConnectionOpenOk {
@@ -87,7 +87,7 @@ class MethodFixtures {
     }
 
     static func basicGet() -> AMQProtocolBasicGet {
-        return AMQProtocolBasicGet(reserved1: AMQShort(0), queue: AMQShortstr("my.queue"), noAck: AMQBit(0))
+        return AMQProtocolBasicGet(reserved1: AMQShort(0), queue: AMQShortstr("my.queue"), options: AMQProtocolBasicGetOptions.NoOptions)
     }
 }
 

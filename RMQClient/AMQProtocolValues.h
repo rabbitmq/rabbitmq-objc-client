@@ -14,7 +14,8 @@
 - (nonnull instancetype)init:(char)octet;
 @end
 
-@interface AMQBit : AMQOctet
+@interface AMQOptions : MTLModel<AMQEncoding>
+- (nonnull instancetype)init:(NSUInteger)options;
 @end
 
 @interface AMQBoolean : MTLModel<AMQEncoding,AMQFieldValue>

@@ -35,7 +35,11 @@ module CodegenHelpers
   end
 
   def property_type_and_label(field)
-    "(nonnull #{field[:type]} *)#{field[:name]}"
+    if field[:base_property_options].include?('nonnull')
+      "(nonnull #{field[:pointer_type].strip})#{field[:name]}"
+    else
+      "(#{field[:pointer_type].strip})#{field[:name]}"
+    end
   end
 
   def colon_aligned_name(first_line, name)
@@ -50,9 +54,15 @@ module CodegenHelpers
              else
                f[:type].underscore.camelize
              end
+      camelized_name = f[:name].underscore.camelize(:lower)
       {
+        base_property_options: %w(nonnull copy nonatomic),
+        decode_object: "[AMQ#{type} class]",
+        decode_type: "AMQ#{type} *",
+        name: camelized_name,
+        payload_argument: "self.#{camelized_name}",
+        pointer_type: "AMQ#{type} *",
         type: "AMQ#{type}",
-        name: f[:name].underscore.camelize(:lower),
       }
     }
   end

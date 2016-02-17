@@ -1,6 +1,6 @@
 @interface <%= class_name %> ()
 <%- fields.each do |f| -%>
-@property (copy, nonatomic, readwrite) <%= f[:type] %> *<%= f[:name] %>;
+@property (<%= f[:base_property_options].join(", ") %>, readwrite) <%= f[:pointer_type] %><%= f[:name] %>;
 <%- end -%>
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
@@ -8,7 +8,7 @@
 @implementation <%= class_name %>
 
 + (NSArray *)frames {
-    return @[@[<%= fields.map {|f| "[#{f[:type]} class]"}.join(",\n               ") -%>]];
+    return @[@[<%= fields.map {|f| f[:decode_object]}.join(",\n               ") -%>]];
 }
 - (NSNumber *)classID     { return @<%= class_id %>; }
 - (NSNumber *)methodID    { return @<%= method_id %>; }
@@ -21,7 +21,7 @@
         <%- fields.each do |f| -%>
         self.<%= f[:name] %> = <%= f[:name] %>;
         <%- end -%>
-        self.payloadArguments = @[<%= fields.map {|f| "self.#{f[:name]}" }.join(",\n                                  ") -%>];
+        self.payloadArguments = @[<%= fields.map {|f| f[:payload_argument]}.join(",\n                                  ") -%>];
     }
     return self;
 }
@@ -31,9 +31,9 @@
     self = [super init];
     if (self) {
       <%- fields.each_with_index do |f, idx| -%>
-        self.<%= f[:name] %> = frames[0][<%= idx %>];
+        self.<%= f[:name] %> = ((<%= f[:decode_type] %>)frames[0][<%= idx %>])<%= f[:decode_property_call] %>;
       <%- end -%>
-        self.payloadArguments = @[<%= fields.map {|f| "self.#{f[:name]}" }.join(",\n                                  ") -%>];
+        self.payloadArguments = @[<%= fields.map {|f| f[:payload_argument]}.join(",\n                                  ") -%>];
     }
     return self;
 }

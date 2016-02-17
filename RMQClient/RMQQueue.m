@@ -24,8 +24,7 @@
     AMQProtocolBasicPublish *method = [[AMQProtocolBasicPublish alloc] initWithReserved1:[[AMQShort alloc] init:0]
                                                                                 exchange:[[AMQShortstr alloc] init:@""]
                                                                               routingKey:[[AMQShortstr alloc] init:@""]
-                                                                               mandatory:[[AMQBit alloc] init:0]
-                                                                               immediate:[[AMQBit alloc] init:0]];
+                                                                                 options:0];
     NSData *contentBodyData = [message dataUsingEncoding:NSUTF8StringEncoding];
     AMQContentBody *contentBody = [[AMQContentBody alloc] initWithData:contentBodyData];
     AMQContentHeader *contentHeader = [[AMQContentHeader alloc] initWithClassID:@60
@@ -49,8 +48,7 @@
     return [[AMQProtocolBasicPublish alloc] initWithReserved1:[[AMQShort alloc] init:0]
                                                      exchange:[[AMQShortstr alloc] init:@""]
                                                    routingKey:[[AMQShortstr alloc] init:@""]
-                                                    mandatory:[[AMQBit alloc] init:0]
-                                                    immediate:[[AMQBit alloc] init:0]];
+                                                      options:0];
 }
 
 @end
