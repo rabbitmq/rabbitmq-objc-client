@@ -109,12 +109,9 @@
                                   payload:(nonnull id<AMQEncoding>)payload;
 @end
 
-@interface AMQHeaderFrame : MTLModel<AMQEncoding>
-@end
-
 @protocol AMQBasicValue;
 
-@interface AMQHeaderPayload : NSObject<AMQEncoding>
+@interface AMQHeader : NSObject<AMQEncoding>
 - (nonnull instancetype)initWithClassID:(nonnull NSNumber *)classID
                                bodySize:(nonnull NSNumber *)bodySize
                              properties:(nonnull NSArray<AMQBasicValue> *)properties;

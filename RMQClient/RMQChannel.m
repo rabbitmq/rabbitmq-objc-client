@@ -29,37 +29,6 @@
     return nil;
 }
 
-- (void)send:(id<AMQMethod>)amqMethod {
-    NSError *error = NULL;
-    [self.transport write:[[AMQFrame alloc] initWithChannelID:self.channelID payload:amqMethod].amqEncoded
-                    error:&error
-               onComplete:^{
-                   if ([self shouldAwaitServerMethod:amqMethod]) {
-                       [self awaitServerMethod];
-                   } else if ([self shouldSendNextRequest:amqMethod]) {
-                       [self send:((id <AMQOutgoingPrecursor>)amqMethod).nextRequest];
-                   }
-               }];
-}
-
-- (void)awaitServerMethod {
-    [self.transport readFrame:^(NSData * _Nonnull responseData) {
-        if (responseData.length) {
-            AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
-            id parsedResponse = [decoder decode];
-            if ([self shouldReply:parsedResponse]) {
-                id<AMQMethod> reply = [parsedResponse replyWithContext:self.replyContext];
-                [self send:reply];
-            } else if ([self shouldAwaitServerMethod:parsedResponse]) {
-                [self awaitServerMethod];
-            }
-            if ([self shouldTriggerCallback:parsedResponse]) {
-                [parsedResponse didReceiveWithContext:self.transport];
-            }
-        }
-    }];
-}
-
 - (RMQQueue *)queue:(NSString *)queueName
          autoDelete:(BOOL)shouldAutoDelete
           exclusive:(BOOL)isExclusive {
@@ -68,21 +37,5 @@
 
 - (RMQExchange *)defaultExchange {
     return [RMQExchange new];
-}
-
-- (BOOL)shouldReply:(id<AMQMethod>)amqMethod {
-    return [amqMethod conformsToProtocol:@protocol(AMQIncomingSync)];
-}
-
-- (BOOL)shouldAwaitServerMethod:(id<AMQMethod>)amqMethod {
-    return [amqMethod conformsToProtocol:@protocol(AMQAwaitServerMethod)];
-}
-
-- (BOOL)shouldSendNextRequest:(id<AMQMethod>)amqMethod {
-    return [amqMethod conformsToProtocol:@protocol(AMQOutgoingPrecursor)];
-}
-
-- (BOOL)shouldTriggerCallback:(id<AMQMethod>)amqMethod {
-    return [amqMethod conformsToProtocol:@protocol(AMQIncomingCallback)];
 }
 @end

@@ -10,8 +10,6 @@
 - (nonnull instancetype)init:(nonnull NSNumber *)channelID
                    transport:(nonnull id<RMQTransport>)transport
                 replyContext:(nonnull id<AMQReplyContext>)replyContext;
-- (void)send:(nonnull id<AMQMethod>)amqMethod;
-- (void)awaitServerMethod;
 - (nonnull RMQQueue *)queue:(nonnull NSString *)queueName
                  autoDelete:(BOOL)shouldAutoDelete
                   exclusive:(BOOL)isExclusive;

@@ -41,7 +41,7 @@ class AMQEncodingTest: XCTestCase {
             contentEncoding,
             contentType,
         ]
-        let payload = AMQHeaderPayload(
+        let payload = AMQHeader(
             classID: classID.integerValue,
             bodySize: Int(bodySize.integerValue),
             properties: unsortedProperties
@@ -76,7 +76,11 @@ class AMQEncodingTest: XCTestCase {
 
         TestHelper.assertEqualBytes(expectedFrame, frame)
     }
-    
+
+//    func testFramesetEncoding() {
+//        let frameset = AMQFrameset(channelID: <#T##NSNumber#>, method: <#T##AMQMethod#>)
+//    }
+//    
     func testLongStringBecomesLengthPlusChars() {
         let expectedData = NSMutableData()
         let a = [0x00, 0x00, 0x00, 0x07]

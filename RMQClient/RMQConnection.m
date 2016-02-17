@@ -68,14 +68,19 @@
 }
 
 - (void)close {
-    [self.channels[@0] send:self.amqClose];
+    AMQProtocolConnectionClose *method = self.amqClose;
+    AMQFrame *frame = [[AMQFrame alloc] initWithChannelID:@0 payload:method];
+    NSError *error = NULL;
+    [self.transport write:frame.amqEncoded error:&error onComplete:^{}];
 }
 
 - (RMQChannel *)createChannel {
     RMQChannel *ch = [[RMQChannel alloc] init:[self.idAllocator nextID]
                                     transport:self.transport
                                  replyContext:self];
-    [ch send:self.amqChannelOpen];
+    AMQFrame *frame = [[AMQFrame alloc] initWithChannelID:ch.channelID payload:self.amqChannelOpen];
+    NSError *error = NULL;
+    [self.transport write:frame.amqEncoded error:&error onComplete:^{}];
     return ch;
 }
 
@@ -83,16 +88,25 @@
     id method = frameset.method;
     if ([self shouldReply:method]) {
         id<AMQMethod> reply = [method replyWithContext:self];
-        [self.channels[frameset.channelID] send:reply];
-    } else if ([self shouldAwaitServerMethod:method]) {
-        [self.channels[frameset.channelID] awaitServerMethod];
+        [self send:reply channelID:frameset.channelID];
     }
     if ([self shouldTriggerCallback:method]) {
         [method didReceiveWithContext:self.transport];
     }
+    [self.readerLoop runOnce];
 }
 
 # pragma mark - Private
+
+- (void)send:(id<AMQMethod>)amqMethod channelID:(NSNumber *)channelID {
+    NSError *error = NULL;
+    [self.transport write:[[AMQFrame alloc] initWithChannelID:channelID payload:amqMethod].amqEncoded
+                    error:&error
+               onComplete:^{}];
+    if ([self shouldSendNextRequest:amqMethod]) {
+        [self send:[(id <AMQOutgoingPrecursor>)amqMethod nextRequest] channelID:channelID];
+    }
+}
 
 - (AMQProtocolChannelOpen *)amqChannelOpen {
     return [[AMQProtocolChannelOpen alloc] initWithReserved1:[[AMQShortstr alloc] init:@""]];
@@ -107,10 +121,6 @@
 
 - (BOOL)shouldReply:(id<AMQMethod>)amqMethod {
     return [amqMethod conformsToProtocol:@protocol(AMQIncomingSync)];
-}
-
-- (BOOL)shouldAwaitServerMethod:(id<AMQMethod>)amqMethod {
-    return [amqMethod conformsToProtocol:@protocol(AMQAwaitServerMethod)];
 }
 
 - (BOOL)shouldSendNextRequest:(id<AMQMethod>)amqMethod {

@@ -28,13 +28,14 @@ import XCTest
         callbacks.append(complete)
     }
     func handshake() -> ControlledInteractionTransport {
-        return assertClientSendsProtocolHeader()
-            .serverSendsMethod(MethodFixtures.connectionStart(), channelID: 0)
-            .assertClientSendsMethod(MethodFixtures.connectionStartOk(), channelID: 0)
-            .serverSendsMethod(MethodFixtures.connectionTune(), channelID: 0)
-            .assertClientSendsMethod(MethodFixtures.connectionTuneOk(), channelID: 0)
-            .assertClientSendsMethod(MethodFixtures.connectionOpen(), channelID: 0)
-            .serverSendsMethod(MethodFixtures.connectionOpenOk(), channelID: 0)
+        assertClientSendsProtocolHeader()
+        serverSendsMethod(MethodFixtures.connectionStart(), channelID: 0)
+        assertClientSendsMethod(MethodFixtures.connectionStartOk(), channelID: 0)
+        serverSendsMethod(MethodFixtures.connectionTune(), channelID: 0)
+        assertClientSendsMethod(MethodFixtures.connectionTuneOk(), channelID: 0)
+        assertClientSendsMethod(MethodFixtures.connectionOpen(), channelID: 0)
+        serverSendsMethod(MethodFixtures.connectionOpenOk(), channelID: 0)
+        return self
     }
     func serverSendsData(data: NSData) -> ControlledInteractionTransport {
         if callbacks.isEmpty {
@@ -57,6 +58,19 @@ import XCTest
                 AMQFrame(channelID: channelID, payload: amqMethod).amqEncoded(),
                 actual,
                 "Didn't send \(amqMethod)\n\nSent: \(actual)"
+            )
+        }
+        return self
+    }
+    func assertClientSendsContentHeader(header: AMQHeader, channelID: Int) -> ControlledInteractionTransport {
+        if outboundData.isEmpty {
+            XCTFail("nothing sent recently")
+        } else {
+            let actual = outboundData.removeAtIndex(0)
+            TestHelper.assertEqualBytes(
+                AMQFrame(channelID: channelID, payload: header).amqEncoded(),
+                actual,
+                "Didn't send \(header)\n\nSent: \(actual)"
             )
         }
         return self

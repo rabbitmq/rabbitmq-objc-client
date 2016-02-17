@@ -16,7 +16,6 @@
 }
 
 - (RMQQueue *)publish:(NSString *)message {
-    [self.channel send:self.amqPublish];
     return self;
 }
 

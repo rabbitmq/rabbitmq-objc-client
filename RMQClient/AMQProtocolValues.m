@@ -387,23 +387,14 @@
 
 @end
 
-@interface AMQHeaderFrame ()
-@end
-
-@implementation AMQHeaderFrame
-- (NSData *)amqEncoded {
-    return [NSData data];
-}
-@end
-
-@interface AMQHeaderPayload ()
+@interface AMQHeader ()
 @property (nonatomic, copy, readwrite) NSNumber *classID;
 @property (nonatomic, copy, readwrite) NSNumber *weight;
 @property (nonatomic, copy, readwrite) NSNumber *bodySize;
 @property (nonatomic, copy, readwrite) NSArray *properties;
 @end
 
-@implementation AMQHeaderPayload
+@implementation AMQHeader
 
 - (instancetype)initWithClassID:(NSNumber *)classID
                        bodySize:(NSNumber *)bodySize

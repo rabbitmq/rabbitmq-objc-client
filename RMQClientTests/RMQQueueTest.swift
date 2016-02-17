@@ -59,8 +59,12 @@ class RMQQueueTest: XCTestCase, AMQReplyContext {
 //        )
 //
 //        queue.publish("my great message")
-//        transport.assertClientSendsMethod(publish, channelID: 42)
 //
+//        let header = AMQHeader(classID: 60, bodySize: 123, properties: [])
+//        transport
+//            .assertClientSendsFrameset(publish, channelID: 42)
+//            .assertClientSendsContentHeader(header, channelID: 42)
+
 //        queue.pop()
 //
 //        let get = AMQProtocolBasicGet(
