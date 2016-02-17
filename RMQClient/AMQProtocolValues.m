@@ -356,21 +356,21 @@
 
 @end
 
-@interface AMQMethodFrame ()
+@interface AMQFrame ()
 @property (nonatomic, copy, readwrite) NSNumber *typeID;
 @property (nonatomic, copy, readwrite) NSNumber *channelID;
-@property (nonatomic, copy, readwrite) id<AMQMethod> method;
+@property (nonatomic, copy, readwrite) id<AMQEncoding> payload;
 @end
 
-@implementation AMQMethodFrame
+@implementation AMQFrame
 
 - (instancetype)initWithChannelID:(NSNumber *)channelID
-                           method:(id<AMQMethod>)method {
+                          payload:(id<AMQEncoding>)payload {
     self = [super init];
     if (self) {
         self.typeID = @1;
         self.channelID = channelID;
-        self.method = method;
+        self.payload = payload;
     }
     return self;
 }
@@ -379,8 +379,8 @@
     NSMutableData *frameData = [NSMutableData new];
     NSArray *unencodedFrame = @[[[AMQOctet alloc] init:self.typeID.integerValue],
                                 [[AMQShort alloc] init:self.channelID.integerValue],
-                                [[AMQLong alloc] init:self.method.amqEncoded.length],
-                                self.method,
+                                [[AMQLong alloc] init:self.payload.amqEncoded.length],
+                                self.payload,
                                 [[AMQOctet alloc] init:0xCE]];
     for (id<AMQEncoding> part in unencodedFrame) {
         [frameData appendData:part.amqEncoded];

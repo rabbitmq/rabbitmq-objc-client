@@ -52,7 +52,7 @@ enum TestDoubleTransportError: ErrorType {
     }
     func mustHaveSent(amqMethod: AMQMethod, channelID: Int, frame: Int) -> FakeTransport {
         TestHelper.assertEqualBytes(
-            AMQMethodFrame(channelID: channelID, method: amqMethod).amqEncoded(),
+            AMQFrame(channelID: channelID, payload: amqMethod).amqEncoded(),
             self.sentFrame(frame)
         )
         return self

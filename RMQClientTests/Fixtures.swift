@@ -110,34 +110,34 @@ class DataFixtures {
             mechanisms: AMQLongstr("AMQPLAIN PLAIN"),
             locales: AMQLongstr("en_US")
         )
-        return AMQMethodFrame(channelID: 0, method: start).amqEncoded()
+        return AMQFrame(channelID: 0, payload: start).amqEncoded()
     }
 
     static func connectionTune() -> NSData {
-        return AMQMethodFrame(
+        return AMQFrame(
             channelID: 0,
-            method: AMQProtocolConnectionTune(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
+            payload: AMQProtocolConnectionTune(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
         ).amqEncoded()
     }
 
     static func connectionOpenOk() -> NSData {
-        return AMQMethodFrame(
+        return AMQFrame(
             channelID: 0,
-            method: AMQProtocolConnectionOpenOk(reserved1: AMQShortstr(""))
+            payload: AMQProtocolConnectionOpenOk(reserved1: AMQShortstr(""))
         ).amqEncoded()
     }
 
     static func connectionCloseOk() -> NSData {
-        return AMQMethodFrame(
+        return AMQFrame(
             channelID: 0,
-            method: AMQProtocolConnectionCloseOk()
+            payload: AMQProtocolConnectionCloseOk()
         ).amqEncoded()
     }
 
     static func channelOpenOk() -> NSData {
-        return AMQMethodFrame(
+        return AMQFrame(
             channelID: 0,
-            method: AMQProtocolChannelOpenOk(reserved1: AMQLongstr(""))
+            payload: AMQProtocolChannelOpenOk(reserved1: AMQLongstr(""))
         ).amqEncoded()
     }
 

@@ -31,7 +31,7 @@
 
 - (void)send:(id<AMQMethod>)amqMethod {
     NSError *error = NULL;
-    [self.transport write:[[AMQMethodFrame alloc] initWithChannelID:self.channelID method:amqMethod].amqEncoded
+    [self.transport write:[[AMQFrame alloc] initWithChannelID:self.channelID payload:amqMethod].amqEncoded
                     error:&error
                onComplete:^{
                    if ([self shouldAwaitServerMethod:amqMethod]) {

@@ -105,9 +105,9 @@
                                 method:(nonnull id<AMQMethod>)method;
 @end
 
-@interface AMQMethodFrame : MTLModel<AMQEncoding>
+@interface AMQFrame : MTLModel<AMQEncoding>
 - (nonnull instancetype)initWithChannelID:(nonnull NSNumber *)channelID
-                                   method:(nonnull id<AMQMethod>)method;
+                                  payload:(nonnull id<AMQEncoding>)payload;
 @end
 
 @interface AMQHeaderFrame : MTLModel<AMQEncoding>
