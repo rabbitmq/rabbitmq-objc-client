@@ -33,7 +33,7 @@
       <%- fields.each_with_index do |f, idx| -%>
         self.<%= f[:name] %> = frames[0][<%= idx %>];
       <%- end -%>
-        self.payloadArguments = @[<%= fields.map {|f| "self.#{f[:name]}" }.join(",\n                                ") -%>];
+        self.payloadArguments = @[<%= fields.map {|f| "self.#{f[:name]}" }.join(",\n                                  ") -%>];
     }
     return self;
 }

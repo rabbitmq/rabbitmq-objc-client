@@ -53,10 +53,10 @@
         self.mechanisms = frames[0][3];
         self.locales = frames[0][4];
         self.payloadArguments = @[self.versionMajor,
-                                self.versionMinor,
-                                self.serverProperties,
-                                self.mechanisms,
-                                self.locales];
+                                  self.versionMinor,
+                                  self.serverProperties,
+                                  self.mechanisms,
+                                  self.locales];
     }
     return self;
 }
@@ -119,9 +119,9 @@
         self.response = frames[0][2];
         self.locale = frames[0][3];
         self.payloadArguments = @[self.clientProperties,
-                                self.mechanism,
-                                self.response,
-                                self.locale];
+                                  self.mechanism,
+                                  self.response,
+                                  self.locale];
     }
     return self;
 }
@@ -266,8 +266,8 @@
         self.frameMax = frames[0][1];
         self.heartbeat = frames[0][2];
         self.payloadArguments = @[self.channelMax,
-                                self.frameMax,
-                                self.heartbeat];
+                                  self.frameMax,
+                                  self.heartbeat];
     }
     return self;
 }
@@ -324,8 +324,8 @@
         self.frameMax = frames[0][1];
         self.heartbeat = frames[0][2];
         self.payloadArguments = @[self.channelMax,
-                                self.frameMax,
-                                self.heartbeat];
+                                  self.frameMax,
+                                  self.heartbeat];
     }
     return self;
 }
@@ -382,8 +382,8 @@
         self.reserved1 = frames[0][1];
         self.reserved2 = frames[0][2];
         self.payloadArguments = @[self.virtualHost,
-                                self.reserved1,
-                                self.reserved2];
+                                  self.reserved1,
+                                  self.reserved2];
     }
     return self;
 }
@@ -490,9 +490,9 @@
         self.classId = frames[0][2];
         self.methodId = frames[0][3];
         self.payloadArguments = @[self.replyCode,
-                                self.replyText,
-                                self.classId,
-                                self.methodId];
+                                  self.replyText,
+                                  self.classId,
+                                  self.methodId];
     }
     return self;
 }
@@ -843,9 +843,9 @@
         self.classId = frames[0][2];
         self.methodId = frames[0][3];
         self.payloadArguments = @[self.replyCode,
-                                self.replyText,
-                                self.classId,
-                                self.methodId];
+                                  self.replyText,
+                                  self.classId,
+                                  self.methodId];
     }
     return self;
 }
@@ -972,14 +972,14 @@
         self.noWait = frames[0][7];
         self.arguments = frames[0][8];
         self.payloadArguments = @[self.reserved1,
-                                self.exchange,
-                                self.type,
-                                self.passive,
-                                self.durable,
-                                self.autoDelete,
-                                self.internal,
-                                self.noWait,
-                                self.arguments];
+                                  self.exchange,
+                                  self.type,
+                                  self.passive,
+                                  self.durable,
+                                  self.autoDelete,
+                                  self.internal,
+                                  self.noWait,
+                                  self.arguments];
     }
     return self;
 }
@@ -1076,9 +1076,9 @@
         self.ifUnused = frames[0][2];
         self.noWait = frames[0][3];
         self.payloadArguments = @[self.reserved1,
-                                self.exchange,
-                                self.ifUnused,
-                                self.noWait];
+                                  self.exchange,
+                                  self.ifUnused,
+                                  self.noWait];
     }
     return self;
 }
@@ -1187,11 +1187,11 @@
         self.noWait = frames[0][4];
         self.arguments = frames[0][5];
         self.payloadArguments = @[self.reserved1,
-                                self.destination,
-                                self.source,
-                                self.routingKey,
-                                self.noWait,
-                                self.arguments];
+                                  self.destination,
+                                  self.source,
+                                  self.routingKey,
+                                  self.noWait,
+                                  self.arguments];
     }
     return self;
 }
@@ -1300,11 +1300,11 @@
         self.noWait = frames[0][4];
         self.arguments = frames[0][5];
         self.payloadArguments = @[self.reserved1,
-                                self.destination,
-                                self.source,
-                                self.routingKey,
-                                self.noWait,
-                                self.arguments];
+                                  self.destination,
+                                  self.source,
+                                  self.routingKey,
+                                  self.noWait,
+                                  self.arguments];
     }
     return self;
 }
@@ -1425,13 +1425,13 @@
         self.noWait = frames[0][6];
         self.arguments = frames[0][7];
         self.payloadArguments = @[self.reserved1,
-                                self.queue,
-                                self.passive,
-                                self.durable,
-                                self.exclusive,
-                                self.autoDelete,
-                                self.noWait,
-                                self.arguments];
+                                  self.queue,
+                                  self.passive,
+                                  self.durable,
+                                  self.exclusive,
+                                  self.autoDelete,
+                                  self.noWait,
+                                  self.arguments];
     }
     return self;
 }
@@ -1488,8 +1488,8 @@
         self.messageCount = frames[0][1];
         self.consumerCount = frames[0][2];
         self.payloadArguments = @[self.queue,
-                                self.messageCount,
-                                self.consumerCount];
+                                  self.messageCount,
+                                  self.consumerCount];
     }
     return self;
 }
@@ -1564,11 +1564,11 @@
         self.noWait = frames[0][4];
         self.arguments = frames[0][5];
         self.payloadArguments = @[self.reserved1,
-                                self.queue,
-                                self.exchange,
-                                self.routingKey,
-                                self.noWait,
-                                self.arguments];
+                                  self.queue,
+                                  self.exchange,
+                                  self.routingKey,
+                                  self.noWait,
+                                  self.arguments];
     }
     return self;
 }
@@ -1671,10 +1671,10 @@
         self.routingKey = frames[0][3];
         self.arguments = frames[0][4];
         self.payloadArguments = @[self.reserved1,
-                                self.queue,
-                                self.exchange,
-                                self.routingKey,
-                                self.arguments];
+                                  self.queue,
+                                  self.exchange,
+                                  self.routingKey,
+                                  self.arguments];
     }
     return self;
 }
@@ -1765,8 +1765,8 @@
         self.queue = frames[0][1];
         self.noWait = frames[0][2];
         self.payloadArguments = @[self.reserved1,
-                                self.queue,
-                                self.noWait];
+                                  self.queue,
+                                  self.noWait];
     }
     return self;
 }
@@ -1879,10 +1879,10 @@
         self.ifEmpty = frames[0][3];
         self.noWait = frames[0][4];
         self.payloadArguments = @[self.reserved1,
-                                self.queue,
-                                self.ifUnused,
-                                self.ifEmpty,
-                                self.noWait];
+                                  self.queue,
+                                  self.ifUnused,
+                                  self.ifEmpty,
+                                  self.noWait];
     }
     return self;
 }
@@ -1983,8 +1983,8 @@
         self.prefetchCount = frames[0][1];
         self.global = frames[0][2];
         self.payloadArguments = @[self.prefetchSize,
-                                self.prefetchCount,
-                                self.global];
+                                  self.prefetchCount,
+                                  self.global];
     }
     return self;
 }
@@ -2105,13 +2105,13 @@
         self.noWait = frames[0][6];
         self.arguments = frames[0][7];
         self.payloadArguments = @[self.reserved1,
-                                self.queue,
-                                self.consumerTag,
-                                self.noLocal,
-                                self.noAck,
-                                self.exclusive,
-                                self.noWait,
-                                self.arguments];
+                                  self.queue,
+                                  self.consumerTag,
+                                  self.noLocal,
+                                  self.noAck,
+                                  self.exclusive,
+                                  self.noWait,
+                                  self.arguments];
     }
     return self;
 }
@@ -2206,7 +2206,7 @@
         self.consumerTag = frames[0][0];
         self.noWait = frames[0][1];
         self.payloadArguments = @[self.consumerTag,
-                                self.noWait];
+                                  self.noWait];
     }
     return self;
 }
@@ -2319,10 +2319,10 @@
         self.mandatory = frames[0][3];
         self.immediate = frames[0][4];
         self.payloadArguments = @[self.reserved1,
-                                self.exchange,
-                                self.routingKey,
-                                self.mandatory,
-                                self.immediate];
+                                  self.exchange,
+                                  self.routingKey,
+                                  self.mandatory,
+                                  self.immediate];
     }
     return self;
 }
@@ -2385,9 +2385,9 @@
         self.exchange = frames[0][2];
         self.routingKey = frames[0][3];
         self.payloadArguments = @[self.replyCode,
-                                self.replyText,
-                                self.exchange,
-                                self.routingKey];
+                                  self.replyText,
+                                  self.exchange,
+                                  self.routingKey];
     }
     return self;
 }
@@ -2456,10 +2456,10 @@
         self.exchange = frames[0][3];
         self.routingKey = frames[0][4];
         self.payloadArguments = @[self.consumerTag,
-                                self.deliveryTag,
-                                self.redelivered,
-                                self.exchange,
-                                self.routingKey];
+                                  self.deliveryTag,
+                                  self.redelivered,
+                                  self.exchange,
+                                  self.routingKey];
     }
     return self;
 }
@@ -2516,8 +2516,8 @@
         self.queue = frames[0][1];
         self.noAck = frames[0][2];
         self.payloadArguments = @[self.reserved1,
-                                self.queue,
-                                self.noAck];
+                                  self.queue,
+                                  self.noAck];
     }
     return self;
 }
@@ -2586,10 +2586,10 @@
         self.routingKey = frames[0][3];
         self.messageCount = frames[0][4];
         self.payloadArguments = @[self.deliveryTag,
-                                self.redelivered,
-                                self.exchange,
-                                self.routingKey,
-                                self.messageCount];
+                                  self.redelivered,
+                                  self.exchange,
+                                  self.routingKey,
+                                  self.messageCount];
     }
     return self;
 }
@@ -2684,7 +2684,7 @@
         self.deliveryTag = frames[0][0];
         self.multiple = frames[0][1];
         self.payloadArguments = @[self.deliveryTag,
-                                self.multiple];
+                                  self.multiple];
     }
     return self;
 }
@@ -2735,7 +2735,7 @@
         self.deliveryTag = frames[0][0];
         self.requeue = frames[0][1];
         self.payloadArguments = @[self.deliveryTag,
-                                self.requeue];
+                                  self.requeue];
     }
     return self;
 }
@@ -2914,8 +2914,8 @@
         self.multiple = frames[0][1];
         self.requeue = frames[0][2];
         self.payloadArguments = @[self.deliveryTag,
-                                self.multiple,
-                                self.requeue];
+                                  self.multiple,
+                                  self.requeue];
     }
     return self;
 }
