@@ -100,9 +100,8 @@
 @property (nonnull, nonatomic, copy, readonly) id<AMQMethod>method;
 @property (nonnull, nonatomic, copy, readonly) NSNumber *channelID;
 @property (nonnull, nonatomic, readonly) NSArray *frames;
-- (nonnull instancetype)initWithTypeID:(nonnull NSNumber *)typeID
-                             channelID:(nonnull NSNumber *)channelID
-                                method:(nonnull id<AMQMethod>)method;
+- (nonnull instancetype)initWithChannelID:(nonnull NSNumber *)channelID
+                                   method:(nonnull id<AMQMethod>)method;
 @end
 
 @interface AMQFrame : MTLModel<AMQEncoding>

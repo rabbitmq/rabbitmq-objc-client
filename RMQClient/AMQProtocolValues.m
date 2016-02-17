@@ -333,7 +333,6 @@
 @end
 
 @interface AMQFrameset ()
-@property (nonatomic, copy, readwrite) NSNumber *typeID;
 @property (nonatomic, copy, readwrite) NSNumber *channelID;
 @property (nonatomic, copy, readwrite) id<AMQMethod> method;
 @property (nonatomic, readwrite) NSArray *frames;
@@ -341,12 +340,10 @@
 
 @implementation AMQFrameset
 
-- (instancetype)initWithTypeID:(NSNumber *)typeID
-                     channelID:(NSNumber *)channelID
-                        method:(id<AMQMethod>)method {
+- (instancetype)initWithChannelID:(NSNumber *)channelID
+                           method:(id<AMQMethod>)method {
     self = [super init];
     if (self) {
-        self.typeID = typeID;
         self.channelID = channelID;
         self.method = method;
         self.frames = @[];
