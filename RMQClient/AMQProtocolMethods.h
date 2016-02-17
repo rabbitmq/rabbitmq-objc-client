@@ -302,7 +302,7 @@
 - (nonnull instancetype)initWithMessageCount:(nonnull AMQLong *)messageCount;
 @end
 
-@interface AMQProtocolBasicQo : MTLModel <AMQMethod>
+@interface AMQProtocolBasicQos : MTLModel <AMQMethod>
 @property (nonnull, copy, nonatomic, readonly) AMQLong *prefetchSize;
 @property (nonnull, copy, nonatomic, readonly) AMQShort *prefetchCount;
 @property (nonnull, copy, nonatomic, readonly) AMQBit *global;

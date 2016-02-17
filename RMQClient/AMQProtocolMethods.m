@@ -1943,14 +1943,14 @@
 
 @end
 
-@interface AMQProtocolBasicQo ()
+@interface AMQProtocolBasicQos ()
 @property (copy, nonatomic, readwrite) AMQLong *prefetchSize;
 @property (copy, nonatomic, readwrite) AMQShort *prefetchCount;
 @property (copy, nonatomic, readwrite) AMQBit *global;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @end
 
-@implementation AMQProtocolBasicQo
+@implementation AMQProtocolBasicQos
 
 + (NSArray *)frames {
     return @[@[[AMQLong class],

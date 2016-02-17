@@ -40,7 +40,7 @@
              @[@(50), @(31)] : [AMQProtocolQueuePurgeOk class],
              @[@(50), @(40)] : [AMQProtocolQueueDelete class],
              @[@(50), @(41)] : [AMQProtocolQueueDeleteOk class],
-             @[@(60), @(10)] : [AMQProtocolBasicQo class],
+             @[@(60), @(10)] : [AMQProtocolBasicQos class],
              @[@(60), @(11)] : [AMQProtocolBasicQosOk class],
              @[@(60), @(20)] : [AMQProtocolBasicConsume class],
              @[@(60), @(21)] : [AMQProtocolBasicConsumeOk class],
