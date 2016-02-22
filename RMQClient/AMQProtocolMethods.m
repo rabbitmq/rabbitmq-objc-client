@@ -13,12 +13,12 @@
 
 @implementation AMQProtocolConnectionStart
 
-+ (NSArray *)frames {
-    return @[@[[AMQOctet class],
++ (NSArray *)frame {
+    return @[[AMQOctet class],
                [AMQOctet class],
                [AMQTable class],
                [AMQLongstr class],
-               [AMQLongstr class]]];
+               [AMQLongstr class]];
 }
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @10; }
@@ -46,14 +46,14 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.versionMajor = ((AMQOctet *)frames[0][0]);
-        self.versionMinor = ((AMQOctet *)frames[0][1]);
-        self.serverProperties = ((AMQTable *)frames[0][2]);
-        self.mechanisms = ((AMQLongstr *)frames[0][3]);
-        self.locales = ((AMQLongstr *)frames[0][4]);
+        self.versionMajor = ((AMQOctet *)frame[0]);
+        self.versionMinor = ((AMQOctet *)frame[1]);
+        self.serverProperties = ((AMQTable *)frame[2]);
+        self.mechanisms = ((AMQLongstr *)frame[3]);
+        self.locales = ((AMQLongstr *)frame[4]);
         self.payloadArguments = @[self.versionMajor,
                                   self.versionMinor,
                                   self.serverProperties,
@@ -86,11 +86,11 @@
 
 @implementation AMQProtocolConnectionStartOk
 
-+ (NSArray *)frames {
-    return @[@[[AMQTable class],
++ (NSArray *)frame {
+    return @[[AMQTable class],
                [AMQShortstr class],
                [AMQLongstr class],
-               [AMQShortstr class]]];
+               [AMQShortstr class]];
 }
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @11; }
@@ -115,13 +115,13 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.clientProperties = ((AMQTable *)frames[0][0]);
-        self.mechanism = ((AMQShortstr *)frames[0][1]);
-        self.response = ((AMQLongstr *)frames[0][2]);
-        self.locale = ((AMQShortstr *)frames[0][3]);
+        self.clientProperties = ((AMQTable *)frame[0]);
+        self.mechanism = ((AMQShortstr *)frame[1]);
+        self.response = ((AMQLongstr *)frame[2]);
+        self.locale = ((AMQShortstr *)frame[3]);
         self.payloadArguments = @[self.clientProperties,
                                   self.mechanism,
                                   self.response,
@@ -150,8 +150,8 @@
 
 @implementation AMQProtocolConnectionSecure
 
-+ (NSArray *)frames {
-    return @[@[[AMQLongstr class]]];
++ (NSArray *)frame {
+    return @[[AMQLongstr class]];
 }
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @20; }
@@ -167,10 +167,10 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.challenge = ((AMQLongstr *)frames[0][0]);
+        self.challenge = ((AMQLongstr *)frame[0]);
         self.payloadArguments = @[self.challenge];
     }
     return self;
@@ -196,8 +196,8 @@
 
 @implementation AMQProtocolConnectionSecureOk
 
-+ (NSArray *)frames {
-    return @[@[[AMQLongstr class]]];
++ (NSArray *)frame {
+    return @[[AMQLongstr class]];
 }
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @21; }
@@ -213,10 +213,10 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.response = ((AMQLongstr *)frames[0][0]);
+        self.response = ((AMQLongstr *)frame[0]);
         self.payloadArguments = @[self.response];
     }
     return self;
@@ -244,10 +244,10 @@
 
 @implementation AMQProtocolConnectionTune
 
-+ (NSArray *)frames {
-    return @[@[[AMQShort class],
++ (NSArray *)frame {
+    return @[[AMQShort class],
                [AMQLong class],
-               [AMQShort class]]];
+               [AMQShort class]];
 }
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @30; }
@@ -269,12 +269,12 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.channelMax = ((AMQShort *)frames[0][0]);
-        self.frameMax = ((AMQLong *)frames[0][1]);
-        self.heartbeat = ((AMQShort *)frames[0][2]);
+        self.channelMax = ((AMQShort *)frame[0]);
+        self.frameMax = ((AMQLong *)frame[1]);
+        self.heartbeat = ((AMQShort *)frame[2]);
         self.payloadArguments = @[self.channelMax,
                                   self.frameMax,
                                   self.heartbeat];
@@ -304,10 +304,10 @@
 
 @implementation AMQProtocolConnectionTuneOk
 
-+ (NSArray *)frames {
-    return @[@[[AMQShort class],
++ (NSArray *)frame {
+    return @[[AMQShort class],
                [AMQLong class],
-               [AMQShort class]]];
+               [AMQShort class]];
 }
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @31; }
@@ -329,12 +329,12 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.channelMax = ((AMQShort *)frames[0][0]);
-        self.frameMax = ((AMQLong *)frames[0][1]);
-        self.heartbeat = ((AMQShort *)frames[0][2]);
+        self.channelMax = ((AMQShort *)frame[0]);
+        self.frameMax = ((AMQLong *)frame[1]);
+        self.heartbeat = ((AMQShort *)frame[2]);
         self.payloadArguments = @[self.channelMax,
                                   self.frameMax,
                                   self.heartbeat];
@@ -364,10 +364,10 @@
 
 @implementation AMQProtocolConnectionOpen
 
-+ (NSArray *)frames {
-    return @[@[[AMQShortstr class],
++ (NSArray *)frame {
+    return @[[AMQShortstr class],
                [AMQShortstr class],
-               [AMQOctet class]]];
+               [AMQOctet class]];
 }
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @40; }
@@ -389,12 +389,12 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.virtualHost = ((AMQShortstr *)frames[0][0]);
-        self.reserved1 = ((AMQShortstr *)frames[0][1]);
-        self.options = ((AMQOctet *)frames[0][2]).integerValue;
+        self.virtualHost = ((AMQShortstr *)frame[0]);
+        self.reserved1 = ((AMQShortstr *)frame[1]);
+        self.options = ((AMQOctet *)frame[2]).integerValue;
         self.payloadArguments = @[self.virtualHost,
                                   self.reserved1,
                                   [[AMQOctet alloc] init:self.options]];
@@ -422,8 +422,8 @@
 
 @implementation AMQProtocolConnectionOpenOk
 
-+ (NSArray *)frames {
-    return @[@[[AMQShortstr class]]];
++ (NSArray *)frame {
+    return @[[AMQShortstr class]];
 }
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @41; }
@@ -439,10 +439,10 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShortstr *)frames[0][0]);
+        self.reserved1 = ((AMQShortstr *)frame[0]);
         self.payloadArguments = @[self.reserved1];
     }
     return self;
@@ -471,11 +471,11 @@
 
 @implementation AMQProtocolConnectionClose
 
-+ (NSArray *)frames {
-    return @[@[[AMQShort class],
++ (NSArray *)frame {
+    return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShort class],
-               [AMQShort class]]];
+               [AMQShort class]];
 }
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @50; }
@@ -500,13 +500,13 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.replyCode = ((AMQShort *)frames[0][0]);
-        self.replyText = ((AMQShortstr *)frames[0][1]);
-        self.classId = ((AMQShort *)frames[0][2]);
-        self.methodId = ((AMQShort *)frames[0][3]);
+        self.replyCode = ((AMQShort *)frame[0]);
+        self.replyText = ((AMQShortstr *)frame[1]);
+        self.classId = ((AMQShort *)frame[2]);
+        self.methodId = ((AMQShort *)frame[3]);
         self.payloadArguments = @[self.replyCode,
                                   self.replyText,
                                   self.classId,
@@ -534,15 +534,15 @@
 
 @implementation AMQProtocolConnectionCloseOk
 
-+ (NSArray *)frames {
-    return @[@[]];
++ (NSArray *)frame {
+    return @[];
 }
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @51; }
 - (NSNumber *)frameTypeID { return @1; }
 
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
         self.payloadArguments = @[];
@@ -570,8 +570,8 @@
 
 @implementation AMQProtocolConnectionBlocked
 
-+ (NSArray *)frames {
-    return @[@[[AMQShortstr class]]];
++ (NSArray *)frame {
+    return @[[AMQShortstr class]];
 }
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @60; }
@@ -587,10 +587,10 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reason = ((AMQShortstr *)frames[0][0]);
+        self.reason = ((AMQShortstr *)frame[0]);
         self.payloadArguments = @[self.reason];
     }
     return self;
@@ -615,15 +615,15 @@
 
 @implementation AMQProtocolConnectionUnblocked
 
-+ (NSArray *)frames {
-    return @[@[]];
++ (NSArray *)frame {
+    return @[];
 }
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @61; }
 - (NSNumber *)frameTypeID { return @1; }
 
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
         self.payloadArguments = @[];
@@ -651,8 +651,8 @@
 
 @implementation AMQProtocolChannelOpen
 
-+ (NSArray *)frames {
-    return @[@[[AMQShortstr class]]];
++ (NSArray *)frame {
+    return @[[AMQShortstr class]];
 }
 - (NSNumber *)classID     { return @20; }
 - (NSNumber *)methodID    { return @10; }
@@ -668,10 +668,10 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShortstr *)frames[0][0]);
+        self.reserved1 = ((AMQShortstr *)frame[0]);
         self.payloadArguments = @[self.reserved1];
     }
     return self;
@@ -697,8 +697,8 @@
 
 @implementation AMQProtocolChannelOpenOk
 
-+ (NSArray *)frames {
-    return @[@[[AMQLongstr class]]];
++ (NSArray *)frame {
+    return @[[AMQLongstr class]];
 }
 - (NSNumber *)classID     { return @20; }
 - (NSNumber *)methodID    { return @11; }
@@ -714,10 +714,10 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQLongstr *)frames[0][0]);
+        self.reserved1 = ((AMQLongstr *)frame[0]);
         self.payloadArguments = @[self.reserved1];
     }
     return self;
@@ -743,8 +743,8 @@
 
 @implementation AMQProtocolChannelFlow
 
-+ (NSArray *)frames {
-    return @[@[[AMQOctet class]]];
++ (NSArray *)frame {
+    return @[[AMQOctet class]];
 }
 - (NSNumber *)classID     { return @20; }
 - (NSNumber *)methodID    { return @20; }
@@ -760,10 +760,10 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.options = ((AMQOctet *)frames[0][0]).integerValue;
+        self.options = ((AMQOctet *)frame[0]).integerValue;
         self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
     }
     return self;
@@ -789,8 +789,8 @@
 
 @implementation AMQProtocolChannelFlowOk
 
-+ (NSArray *)frames {
-    return @[@[[AMQOctet class]]];
++ (NSArray *)frame {
+    return @[[AMQOctet class]];
 }
 - (NSNumber *)classID     { return @20; }
 - (NSNumber *)methodID    { return @21; }
@@ -806,10 +806,10 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.options = ((AMQOctet *)frames[0][0]).integerValue;
+        self.options = ((AMQOctet *)frame[0]).integerValue;
         self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
     }
     return self;
@@ -838,11 +838,11 @@
 
 @implementation AMQProtocolChannelClose
 
-+ (NSArray *)frames {
-    return @[@[[AMQShort class],
++ (NSArray *)frame {
+    return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShort class],
-               [AMQShort class]]];
+               [AMQShort class]];
 }
 - (NSNumber *)classID     { return @20; }
 - (NSNumber *)methodID    { return @40; }
@@ -867,13 +867,13 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.replyCode = ((AMQShort *)frames[0][0]);
-        self.replyText = ((AMQShortstr *)frames[0][1]);
-        self.classId = ((AMQShort *)frames[0][2]);
-        self.methodId = ((AMQShort *)frames[0][3]);
+        self.replyCode = ((AMQShort *)frame[0]);
+        self.replyText = ((AMQShortstr *)frame[1]);
+        self.classId = ((AMQShort *)frame[2]);
+        self.methodId = ((AMQShort *)frame[3]);
         self.payloadArguments = @[self.replyCode,
                                   self.replyText,
                                   self.classId,
@@ -901,15 +901,15 @@
 
 @implementation AMQProtocolChannelCloseOk
 
-+ (NSArray *)frames {
-    return @[@[]];
++ (NSArray *)frame {
+    return @[];
 }
 - (NSNumber *)classID     { return @20; }
 - (NSNumber *)methodID    { return @41; }
 - (NSNumber *)frameTypeID { return @1; }
 
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
         self.payloadArguments = @[];
@@ -941,12 +941,12 @@
 
 @implementation AMQProtocolExchangeDeclare
 
-+ (NSArray *)frames {
-    return @[@[[AMQShort class],
++ (NSArray *)frame {
+    return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
                [AMQOctet class],
-               [AMQTable class]]];
+               [AMQTable class]];
 }
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @10; }
@@ -974,14 +974,14 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frames[0][0]);
-        self.exchange = ((AMQShortstr *)frames[0][1]);
-        self.type = ((AMQShortstr *)frames[0][2]);
-        self.options = ((AMQOctet *)frames[0][3]).integerValue;
-        self.arguments = ((AMQTable *)frames[0][4]);
+        self.reserved1 = ((AMQShort *)frame[0]);
+        self.exchange = ((AMQShortstr *)frame[1]);
+        self.type = ((AMQShortstr *)frame[2]);
+        self.options = ((AMQOctet *)frame[3]).integerValue;
+        self.arguments = ((AMQTable *)frame[4]);
         self.payloadArguments = @[self.reserved1,
                                   self.exchange,
                                   self.type,
@@ -1010,15 +1010,15 @@
 
 @implementation AMQProtocolExchangeDeclareOk
 
-+ (NSArray *)frames {
-    return @[@[]];
++ (NSArray *)frame {
+    return @[];
 }
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @11; }
 - (NSNumber *)frameTypeID { return @1; }
 
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
         self.payloadArguments = @[];
@@ -1048,10 +1048,10 @@
 
 @implementation AMQProtocolExchangeDelete
 
-+ (NSArray *)frames {
-    return @[@[[AMQShort class],
++ (NSArray *)frame {
+    return @[[AMQShort class],
                [AMQShortstr class],
-               [AMQOctet class]]];
+               [AMQOctet class]];
 }
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @20; }
@@ -1073,12 +1073,12 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frames[0][0]);
-        self.exchange = ((AMQShortstr *)frames[0][1]);
-        self.options = ((AMQOctet *)frames[0][2]).integerValue;
+        self.reserved1 = ((AMQShort *)frame[0]);
+        self.exchange = ((AMQShortstr *)frame[1]);
+        self.options = ((AMQOctet *)frame[2]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.exchange,
                                   [[AMQOctet alloc] init:self.options]];
@@ -1105,15 +1105,15 @@
 
 @implementation AMQProtocolExchangeDeleteOk
 
-+ (NSArray *)frames {
-    return @[@[]];
++ (NSArray *)frame {
+    return @[];
 }
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @21; }
 - (NSNumber *)frameTypeID { return @1; }
 
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
         self.payloadArguments = @[];
@@ -1146,13 +1146,13 @@
 
 @implementation AMQProtocolExchangeBind
 
-+ (NSArray *)frames {
-    return @[@[[AMQShort class],
++ (NSArray *)frame {
+    return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
                [AMQShortstr class],
                [AMQOctet class],
-               [AMQTable class]]];
+               [AMQTable class]];
 }
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @30; }
@@ -1183,15 +1183,15 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frames[0][0]);
-        self.destination = ((AMQShortstr *)frames[0][1]);
-        self.source = ((AMQShortstr *)frames[0][2]);
-        self.routingKey = ((AMQShortstr *)frames[0][3]);
-        self.options = ((AMQOctet *)frames[0][4]).integerValue;
-        self.arguments = ((AMQTable *)frames[0][5]);
+        self.reserved1 = ((AMQShort *)frame[0]);
+        self.destination = ((AMQShortstr *)frame[1]);
+        self.source = ((AMQShortstr *)frame[2]);
+        self.routingKey = ((AMQShortstr *)frame[3]);
+        self.options = ((AMQOctet *)frame[4]).integerValue;
+        self.arguments = ((AMQTable *)frame[5]);
         self.payloadArguments = @[self.reserved1,
                                   self.destination,
                                   self.source,
@@ -1221,15 +1221,15 @@
 
 @implementation AMQProtocolExchangeBindOk
 
-+ (NSArray *)frames {
-    return @[@[]];
++ (NSArray *)frame {
+    return @[];
 }
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @31; }
 - (NSNumber *)frameTypeID { return @1; }
 
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
         self.payloadArguments = @[];
@@ -1262,13 +1262,13 @@
 
 @implementation AMQProtocolExchangeUnbind
 
-+ (NSArray *)frames {
-    return @[@[[AMQShort class],
++ (NSArray *)frame {
+    return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
                [AMQShortstr class],
                [AMQOctet class],
-               [AMQTable class]]];
+               [AMQTable class]];
 }
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @40; }
@@ -1299,15 +1299,15 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frames[0][0]);
-        self.destination = ((AMQShortstr *)frames[0][1]);
-        self.source = ((AMQShortstr *)frames[0][2]);
-        self.routingKey = ((AMQShortstr *)frames[0][3]);
-        self.options = ((AMQOctet *)frames[0][4]).integerValue;
-        self.arguments = ((AMQTable *)frames[0][5]);
+        self.reserved1 = ((AMQShort *)frame[0]);
+        self.destination = ((AMQShortstr *)frame[1]);
+        self.source = ((AMQShortstr *)frame[2]);
+        self.routingKey = ((AMQShortstr *)frame[3]);
+        self.options = ((AMQOctet *)frame[4]).integerValue;
+        self.arguments = ((AMQTable *)frame[5]);
         self.payloadArguments = @[self.reserved1,
                                   self.destination,
                                   self.source,
@@ -1337,15 +1337,15 @@
 
 @implementation AMQProtocolExchangeUnbindOk
 
-+ (NSArray *)frames {
-    return @[@[]];
++ (NSArray *)frame {
+    return @[];
 }
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @51; }
 - (NSNumber *)frameTypeID { return @1; }
 
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
         self.payloadArguments = @[];
@@ -1376,11 +1376,11 @@
 
 @implementation AMQProtocolQueueDeclare
 
-+ (NSArray *)frames {
-    return @[@[[AMQShort class],
++ (NSArray *)frame {
+    return @[[AMQShort class],
                [AMQShortstr class],
                [AMQOctet class],
-               [AMQTable class]]];
+               [AMQTable class]];
 }
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @10; }
@@ -1405,13 +1405,13 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frames[0][0]);
-        self.queue = ((AMQShortstr *)frames[0][1]);
-        self.options = ((AMQOctet *)frames[0][2]).integerValue;
-        self.arguments = ((AMQTable *)frames[0][3]);
+        self.reserved1 = ((AMQShort *)frame[0]);
+        self.queue = ((AMQShortstr *)frame[1]);
+        self.options = ((AMQOctet *)frame[2]).integerValue;
+        self.arguments = ((AMQTable *)frame[3]);
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   [[AMQOctet alloc] init:self.options],
@@ -1442,10 +1442,10 @@
 
 @implementation AMQProtocolQueueDeclareOk
 
-+ (NSArray *)frames {
-    return @[@[[AMQShortstr class],
++ (NSArray *)frame {
+    return @[[AMQShortstr class],
                [AMQLong class],
-               [AMQLong class]]];
+               [AMQLong class]];
 }
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @11; }
@@ -1467,12 +1467,12 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.queue = ((AMQShortstr *)frames[0][0]);
-        self.messageCount = ((AMQLong *)frames[0][1]);
-        self.consumerCount = ((AMQLong *)frames[0][2]);
+        self.queue = ((AMQShortstr *)frame[0]);
+        self.messageCount = ((AMQLong *)frame[1]);
+        self.consumerCount = ((AMQLong *)frame[2]);
         self.payloadArguments = @[self.queue,
                                   self.messageCount,
                                   self.consumerCount];
@@ -1505,13 +1505,13 @@
 
 @implementation AMQProtocolQueueBind
 
-+ (NSArray *)frames {
-    return @[@[[AMQShort class],
++ (NSArray *)frame {
+    return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
                [AMQShortstr class],
                [AMQOctet class],
-               [AMQTable class]]];
+               [AMQTable class]];
 }
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @20; }
@@ -1542,15 +1542,15 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frames[0][0]);
-        self.queue = ((AMQShortstr *)frames[0][1]);
-        self.exchange = ((AMQShortstr *)frames[0][2]);
-        self.routingKey = ((AMQShortstr *)frames[0][3]);
-        self.options = ((AMQOctet *)frames[0][4]).integerValue;
-        self.arguments = ((AMQTable *)frames[0][5]);
+        self.reserved1 = ((AMQShort *)frame[0]);
+        self.queue = ((AMQShortstr *)frame[1]);
+        self.exchange = ((AMQShortstr *)frame[2]);
+        self.routingKey = ((AMQShortstr *)frame[3]);
+        self.options = ((AMQOctet *)frame[4]).integerValue;
+        self.arguments = ((AMQTable *)frame[5]);
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   self.exchange,
@@ -1580,15 +1580,15 @@
 
 @implementation AMQProtocolQueueBindOk
 
-+ (NSArray *)frames {
-    return @[@[]];
++ (NSArray *)frame {
+    return @[];
 }
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @21; }
 - (NSNumber *)frameTypeID { return @1; }
 
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
         self.payloadArguments = @[];
@@ -1620,12 +1620,12 @@
 
 @implementation AMQProtocolQueueUnbind
 
-+ (NSArray *)frames {
-    return @[@[[AMQShort class],
++ (NSArray *)frame {
+    return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
                [AMQShortstr class],
-               [AMQTable class]]];
+               [AMQTable class]];
 }
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @50; }
@@ -1653,14 +1653,14 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frames[0][0]);
-        self.queue = ((AMQShortstr *)frames[0][1]);
-        self.exchange = ((AMQShortstr *)frames[0][2]);
-        self.routingKey = ((AMQShortstr *)frames[0][3]);
-        self.arguments = ((AMQTable *)frames[0][4]);
+        self.reserved1 = ((AMQShort *)frame[0]);
+        self.queue = ((AMQShortstr *)frame[1]);
+        self.exchange = ((AMQShortstr *)frame[2]);
+        self.routingKey = ((AMQShortstr *)frame[3]);
+        self.arguments = ((AMQTable *)frame[4]);
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   self.exchange,
@@ -1689,15 +1689,15 @@
 
 @implementation AMQProtocolQueueUnbindOk
 
-+ (NSArray *)frames {
-    return @[@[]];
++ (NSArray *)frame {
+    return @[];
 }
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @51; }
 - (NSNumber *)frameTypeID { return @1; }
 
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
         self.payloadArguments = @[];
@@ -1727,10 +1727,10 @@
 
 @implementation AMQProtocolQueuePurge
 
-+ (NSArray *)frames {
-    return @[@[[AMQShort class],
++ (NSArray *)frame {
+    return @[[AMQShort class],
                [AMQShortstr class],
-               [AMQOctet class]]];
+               [AMQOctet class]];
 }
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @30; }
@@ -1752,12 +1752,12 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frames[0][0]);
-        self.queue = ((AMQShortstr *)frames[0][1]);
-        self.options = ((AMQOctet *)frames[0][2]).integerValue;
+        self.reserved1 = ((AMQShort *)frame[0]);
+        self.queue = ((AMQShortstr *)frame[1]);
+        self.options = ((AMQOctet *)frame[2]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   [[AMQOctet alloc] init:self.options]];
@@ -1785,8 +1785,8 @@
 
 @implementation AMQProtocolQueuePurgeOk
 
-+ (NSArray *)frames {
-    return @[@[[AMQLong class]]];
++ (NSArray *)frame {
+    return @[[AMQLong class]];
 }
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @31; }
@@ -1802,10 +1802,10 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.messageCount = ((AMQLong *)frames[0][0]);
+        self.messageCount = ((AMQLong *)frame[0]);
         self.payloadArguments = @[self.messageCount];
     }
     return self;
@@ -1833,10 +1833,10 @@
 
 @implementation AMQProtocolQueueDelete
 
-+ (NSArray *)frames {
-    return @[@[[AMQShort class],
++ (NSArray *)frame {
+    return @[[AMQShort class],
                [AMQShortstr class],
-               [AMQOctet class]]];
+               [AMQOctet class]];
 }
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @40; }
@@ -1858,12 +1858,12 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frames[0][0]);
-        self.queue = ((AMQShortstr *)frames[0][1]);
-        self.options = ((AMQOctet *)frames[0][2]).integerValue;
+        self.reserved1 = ((AMQShort *)frame[0]);
+        self.queue = ((AMQShortstr *)frame[1]);
+        self.options = ((AMQOctet *)frame[2]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   [[AMQOctet alloc] init:self.options]];
@@ -1891,8 +1891,8 @@
 
 @implementation AMQProtocolQueueDeleteOk
 
-+ (NSArray *)frames {
-    return @[@[[AMQLong class]]];
++ (NSArray *)frame {
+    return @[[AMQLong class]];
 }
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @41; }
@@ -1908,10 +1908,10 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.messageCount = ((AMQLong *)frames[0][0]);
+        self.messageCount = ((AMQLong *)frame[0]);
         self.payloadArguments = @[self.messageCount];
     }
     return self;
@@ -1939,10 +1939,10 @@
 
 @implementation AMQProtocolBasicQos
 
-+ (NSArray *)frames {
-    return @[@[[AMQLong class],
++ (NSArray *)frame {
+    return @[[AMQLong class],
                [AMQShort class],
-               [AMQOctet class]]];
+               [AMQOctet class]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @10; }
@@ -1964,12 +1964,12 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.prefetchSize = ((AMQLong *)frames[0][0]);
-        self.prefetchCount = ((AMQShort *)frames[0][1]);
-        self.options = ((AMQOctet *)frames[0][2]).integerValue;
+        self.prefetchSize = ((AMQLong *)frame[0]);
+        self.prefetchCount = ((AMQShort *)frame[1]);
+        self.options = ((AMQOctet *)frame[2]).integerValue;
         self.payloadArguments = @[self.prefetchSize,
                                   self.prefetchCount,
                                   [[AMQOctet alloc] init:self.options]];
@@ -1996,15 +1996,15 @@
 
 @implementation AMQProtocolBasicQosOk
 
-+ (NSArray *)frames {
-    return @[@[]];
++ (NSArray *)frame {
+    return @[];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @11; }
 - (NSNumber *)frameTypeID { return @1; }
 
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
         self.payloadArguments = @[];
@@ -2036,12 +2036,12 @@
 
 @implementation AMQProtocolBasicConsume
 
-+ (NSArray *)frames {
-    return @[@[[AMQShort class],
++ (NSArray *)frame {
+    return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
                [AMQOctet class],
-               [AMQTable class]]];
+               [AMQTable class]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @20; }
@@ -2069,14 +2069,14 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frames[0][0]);
-        self.queue = ((AMQShortstr *)frames[0][1]);
-        self.consumerTag = ((AMQShortstr *)frames[0][2]);
-        self.options = ((AMQOctet *)frames[0][3]).integerValue;
-        self.arguments = ((AMQTable *)frames[0][4]);
+        self.reserved1 = ((AMQShort *)frame[0]);
+        self.queue = ((AMQShortstr *)frame[1]);
+        self.consumerTag = ((AMQShortstr *)frame[2]);
+        self.options = ((AMQOctet *)frame[3]).integerValue;
+        self.arguments = ((AMQTable *)frame[4]);
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   self.consumerTag,
@@ -2106,8 +2106,8 @@
 
 @implementation AMQProtocolBasicConsumeOk
 
-+ (NSArray *)frames {
-    return @[@[[AMQShortstr class]]];
++ (NSArray *)frame {
+    return @[[AMQShortstr class]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @21; }
@@ -2123,10 +2123,10 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.consumerTag = ((AMQShortstr *)frames[0][0]);
+        self.consumerTag = ((AMQShortstr *)frame[0]);
         self.payloadArguments = @[self.consumerTag];
     }
     return self;
@@ -2153,9 +2153,9 @@
 
 @implementation AMQProtocolBasicCancel
 
-+ (NSArray *)frames {
-    return @[@[[AMQShortstr class],
-               [AMQOctet class]]];
++ (NSArray *)frame {
+    return @[[AMQShortstr class],
+               [AMQOctet class]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @30; }
@@ -2174,11 +2174,11 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.consumerTag = ((AMQShortstr *)frames[0][0]);
-        self.options = ((AMQOctet *)frames[0][1]).integerValue;
+        self.consumerTag = ((AMQShortstr *)frame[0]);
+        self.options = ((AMQOctet *)frame[1]).integerValue;
         self.payloadArguments = @[self.consumerTag,
                                   [[AMQOctet alloc] init:self.options]];
     }
@@ -2205,8 +2205,8 @@
 
 @implementation AMQProtocolBasicCancelOk
 
-+ (NSArray *)frames {
-    return @[@[[AMQShortstr class]]];
++ (NSArray *)frame {
+    return @[[AMQShortstr class]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @31; }
@@ -2222,10 +2222,10 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.consumerTag = ((AMQShortstr *)frames[0][0]);
+        self.consumerTag = ((AMQShortstr *)frame[0]);
         self.payloadArguments = @[self.consumerTag];
     }
     return self;
@@ -2254,11 +2254,11 @@
 
 @implementation AMQProtocolBasicPublish
 
-+ (NSArray *)frames {
-    return @[@[[AMQShort class],
++ (NSArray *)frame {
+    return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
-               [AMQOctet class]]];
+               [AMQOctet class]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @40; }
@@ -2283,13 +2283,13 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frames[0][0]);
-        self.exchange = ((AMQShortstr *)frames[0][1]);
-        self.routingKey = ((AMQShortstr *)frames[0][2]);
-        self.options = ((AMQOctet *)frames[0][3]).integerValue;
+        self.reserved1 = ((AMQShort *)frame[0]);
+        self.exchange = ((AMQShortstr *)frame[1]);
+        self.routingKey = ((AMQShortstr *)frame[2]);
+        self.options = ((AMQOctet *)frame[3]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.exchange,
                                   self.routingKey,
@@ -2321,11 +2321,11 @@
 
 @implementation AMQProtocolBasicReturn
 
-+ (NSArray *)frames {
-    return @[@[[AMQShort class],
++ (NSArray *)frame {
+    return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
-               [AMQShortstr class]]];
+               [AMQShortstr class]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @50; }
@@ -2350,13 +2350,13 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.replyCode = ((AMQShort *)frames[0][0]);
-        self.replyText = ((AMQShortstr *)frames[0][1]);
-        self.exchange = ((AMQShortstr *)frames[0][2]);
-        self.routingKey = ((AMQShortstr *)frames[0][3]);
+        self.replyCode = ((AMQShort *)frame[0]);
+        self.replyText = ((AMQShortstr *)frame[1]);
+        self.exchange = ((AMQShortstr *)frame[2]);
+        self.routingKey = ((AMQShortstr *)frame[3]);
         self.payloadArguments = @[self.replyCode,
                                   self.replyText,
                                   self.exchange,
@@ -2389,12 +2389,12 @@
 
 @implementation AMQProtocolBasicDeliver
 
-+ (NSArray *)frames {
-    return @[@[[AMQShortstr class],
++ (NSArray *)frame {
+    return @[[AMQShortstr class],
                [AMQLonglong class],
                [AMQOctet class],
                [AMQShortstr class],
-               [AMQShortstr class]]];
+               [AMQShortstr class]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @60; }
@@ -2422,14 +2422,14 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.consumerTag = ((AMQShortstr *)frames[0][0]);
-        self.deliveryTag = ((AMQLonglong *)frames[0][1]);
-        self.options = ((AMQOctet *)frames[0][2]).integerValue;
-        self.exchange = ((AMQShortstr *)frames[0][3]);
-        self.routingKey = ((AMQShortstr *)frames[0][4]);
+        self.consumerTag = ((AMQShortstr *)frame[0]);
+        self.deliveryTag = ((AMQLonglong *)frame[1]);
+        self.options = ((AMQOctet *)frame[2]).integerValue;
+        self.exchange = ((AMQShortstr *)frame[3]);
+        self.routingKey = ((AMQShortstr *)frame[4]);
         self.payloadArguments = @[self.consumerTag,
                                   self.deliveryTag,
                                   [[AMQOctet alloc] init:self.options],
@@ -2461,10 +2461,10 @@
 
 @implementation AMQProtocolBasicGet
 
-+ (NSArray *)frames {
-    return @[@[[AMQShort class],
++ (NSArray *)frame {
+    return @[[AMQShort class],
                [AMQShortstr class],
-               [AMQOctet class]]];
+               [AMQOctet class]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @70; }
@@ -2486,12 +2486,12 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frames[0][0]);
-        self.queue = ((AMQShortstr *)frames[0][1]);
-        self.options = ((AMQOctet *)frames[0][2]).integerValue;
+        self.reserved1 = ((AMQShort *)frame[0]);
+        self.queue = ((AMQShortstr *)frame[1]);
+        self.options = ((AMQOctet *)frame[2]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   [[AMQOctet alloc] init:self.options]];
@@ -2523,12 +2523,12 @@
 
 @implementation AMQProtocolBasicGetOk
 
-+ (NSArray *)frames {
-    return @[@[[AMQLonglong class],
++ (NSArray *)frame {
+    return @[[AMQLonglong class],
                [AMQOctet class],
                [AMQShortstr class],
                [AMQShortstr class],
-               [AMQLong class]]];
+               [AMQLong class]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @71; }
@@ -2556,14 +2556,14 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.deliveryTag = ((AMQLonglong *)frames[0][0]);
-        self.options = ((AMQOctet *)frames[0][1]).integerValue;
-        self.exchange = ((AMQShortstr *)frames[0][2]);
-        self.routingKey = ((AMQShortstr *)frames[0][3]);
-        self.messageCount = ((AMQLong *)frames[0][4]);
+        self.deliveryTag = ((AMQLonglong *)frame[0]);
+        self.options = ((AMQOctet *)frame[1]).integerValue;
+        self.exchange = ((AMQShortstr *)frame[2]);
+        self.routingKey = ((AMQShortstr *)frame[3]);
+        self.messageCount = ((AMQLong *)frame[4]);
         self.payloadArguments = @[self.deliveryTag,
                                   [[AMQOctet alloc] init:self.options],
                                   self.exchange,
@@ -2593,8 +2593,8 @@
 
 @implementation AMQProtocolBasicGetEmpty
 
-+ (NSArray *)frames {
-    return @[@[[AMQShortstr class]]];
++ (NSArray *)frame {
+    return @[[AMQShortstr class]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @72; }
@@ -2610,10 +2610,10 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShortstr *)frames[0][0]);
+        self.reserved1 = ((AMQShortstr *)frame[0]);
         self.payloadArguments = @[self.reserved1];
     }
     return self;
@@ -2640,9 +2640,9 @@
 
 @implementation AMQProtocolBasicAck
 
-+ (NSArray *)frames {
-    return @[@[[AMQLonglong class],
-               [AMQOctet class]]];
++ (NSArray *)frame {
+    return @[[AMQLonglong class],
+               [AMQOctet class]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @80; }
@@ -2661,11 +2661,11 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.deliveryTag = ((AMQLonglong *)frames[0][0]);
-        self.options = ((AMQOctet *)frames[0][1]).integerValue;
+        self.deliveryTag = ((AMQLonglong *)frame[0]);
+        self.options = ((AMQOctet *)frame[1]).integerValue;
         self.payloadArguments = @[self.deliveryTag,
                                   [[AMQOctet alloc] init:self.options]];
     }
@@ -2693,9 +2693,9 @@
 
 @implementation AMQProtocolBasicReject
 
-+ (NSArray *)frames {
-    return @[@[[AMQLonglong class],
-               [AMQOctet class]]];
++ (NSArray *)frame {
+    return @[[AMQLonglong class],
+               [AMQOctet class]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @90; }
@@ -2714,11 +2714,11 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.deliveryTag = ((AMQLonglong *)frames[0][0]);
-        self.options = ((AMQOctet *)frames[0][1]).integerValue;
+        self.deliveryTag = ((AMQLonglong *)frame[0]);
+        self.options = ((AMQOctet *)frame[1]).integerValue;
         self.payloadArguments = @[self.deliveryTag,
                                   [[AMQOctet alloc] init:self.options]];
     }
@@ -2745,8 +2745,8 @@
 
 @implementation AMQProtocolBasicRecoverAsync
 
-+ (NSArray *)frames {
-    return @[@[[AMQOctet class]]];
++ (NSArray *)frame {
+    return @[[AMQOctet class]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @100; }
@@ -2762,10 +2762,10 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.options = ((AMQOctet *)frames[0][0]).integerValue;
+        self.options = ((AMQOctet *)frame[0]).integerValue;
         self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
     }
     return self;
@@ -2791,8 +2791,8 @@
 
 @implementation AMQProtocolBasicRecover
 
-+ (NSArray *)frames {
-    return @[@[[AMQOctet class]]];
++ (NSArray *)frame {
+    return @[[AMQOctet class]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @110; }
@@ -2808,10 +2808,10 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.options = ((AMQOctet *)frames[0][0]).integerValue;
+        self.options = ((AMQOctet *)frame[0]).integerValue;
         self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
     }
     return self;
@@ -2836,15 +2836,15 @@
 
 @implementation AMQProtocolBasicRecoverOk
 
-+ (NSArray *)frames {
-    return @[@[]];
++ (NSArray *)frame {
+    return @[];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @111; }
 - (NSNumber *)frameTypeID { return @1; }
 
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
         self.payloadArguments = @[];
@@ -2873,9 +2873,9 @@
 
 @implementation AMQProtocolBasicNack
 
-+ (NSArray *)frames {
-    return @[@[[AMQLonglong class],
-               [AMQOctet class]]];
++ (NSArray *)frame {
+    return @[[AMQLonglong class],
+               [AMQOctet class]];
 }
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @120; }
@@ -2894,11 +2894,11 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.deliveryTag = ((AMQLonglong *)frames[0][0]);
-        self.options = ((AMQOctet *)frames[0][1]).integerValue;
+        self.deliveryTag = ((AMQLonglong *)frame[0]);
+        self.options = ((AMQOctet *)frame[1]).integerValue;
         self.payloadArguments = @[self.deliveryTag,
                                   [[AMQOctet alloc] init:self.options]];
     }
@@ -2924,15 +2924,15 @@
 
 @implementation AMQProtocolTxSelect
 
-+ (NSArray *)frames {
-    return @[@[]];
++ (NSArray *)frame {
+    return @[];
 }
 - (NSNumber *)classID     { return @90; }
 - (NSNumber *)methodID    { return @10; }
 - (NSNumber *)frameTypeID { return @1; }
 
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
         self.payloadArguments = @[];
@@ -2959,15 +2959,15 @@
 
 @implementation AMQProtocolTxSelectOk
 
-+ (NSArray *)frames {
-    return @[@[]];
++ (NSArray *)frame {
+    return @[];
 }
 - (NSNumber *)classID     { return @90; }
 - (NSNumber *)methodID    { return @11; }
 - (NSNumber *)frameTypeID { return @1; }
 
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
         self.payloadArguments = @[];
@@ -2994,15 +2994,15 @@
 
 @implementation AMQProtocolTxCommit
 
-+ (NSArray *)frames {
-    return @[@[]];
++ (NSArray *)frame {
+    return @[];
 }
 - (NSNumber *)classID     { return @90; }
 - (NSNumber *)methodID    { return @20; }
 - (NSNumber *)frameTypeID { return @1; }
 
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
         self.payloadArguments = @[];
@@ -3029,15 +3029,15 @@
 
 @implementation AMQProtocolTxCommitOk
 
-+ (NSArray *)frames {
-    return @[@[]];
++ (NSArray *)frame {
+    return @[];
 }
 - (NSNumber *)classID     { return @90; }
 - (NSNumber *)methodID    { return @21; }
 - (NSNumber *)frameTypeID { return @1; }
 
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
         self.payloadArguments = @[];
@@ -3064,15 +3064,15 @@
 
 @implementation AMQProtocolTxRollback
 
-+ (NSArray *)frames {
-    return @[@[]];
++ (NSArray *)frame {
+    return @[];
 }
 - (NSNumber *)classID     { return @90; }
 - (NSNumber *)methodID    { return @30; }
 - (NSNumber *)frameTypeID { return @1; }
 
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
         self.payloadArguments = @[];
@@ -3099,15 +3099,15 @@
 
 @implementation AMQProtocolTxRollbackOk
 
-+ (NSArray *)frames {
-    return @[@[]];
++ (NSArray *)frame {
+    return @[];
 }
 - (NSNumber *)classID     { return @90; }
 - (NSNumber *)methodID    { return @31; }
 - (NSNumber *)frameTypeID { return @1; }
 
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
         self.payloadArguments = @[];
@@ -3135,8 +3135,8 @@
 
 @implementation AMQProtocolConfirmSelect
 
-+ (NSArray *)frames {
-    return @[@[[AMQOctet class]]];
++ (NSArray *)frame {
+    return @[[AMQOctet class]];
 }
 - (NSNumber *)classID     { return @85; }
 - (NSNumber *)methodID    { return @10; }
@@ -3152,10 +3152,10 @@
     return self;
 }
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.options = ((AMQOctet *)frames[0][0]).integerValue;
+        self.options = ((AMQOctet *)frame[0]).integerValue;
         self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
     }
     return self;
@@ -3180,15 +3180,15 @@
 
 @implementation AMQProtocolConfirmSelectOk
 
-+ (NSArray *)frames {
-    return @[@[]];
++ (NSArray *)frame {
+    return @[];
 }
 - (NSNumber *)classID     { return @85; }
 - (NSNumber *)methodID    { return @11; }
 - (NSNumber *)frameTypeID { return @1; }
 
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
         self.payloadArguments = @[];

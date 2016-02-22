@@ -2,10 +2,10 @@ import XCTest
 
 @objc class EncodableMethod: NSObject, AMQMethod, NSCopying {
     var hasContent = false
-    static func frames() -> [AnyObject] {
-        return [[]]
+    static func frame() -> [AnyObject] {
+        return []
     }
-    required convenience init(decodedFrames frames: [AnyObject]) {
+    required convenience init(decodedFrame frame: [AnyObject]) {
         self.init()
     }
     func copyWithZone(zone: NSZone) -> AnyObject {

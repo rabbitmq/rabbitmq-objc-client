@@ -8,8 +8,8 @@
 
 @implementation <%= class_name %>
 
-+ (NSArray *)frames {
-    return @[@[<%= fields.map {|f| f[:decode_object]}.join(",\n               ") -%>]];
++ (NSArray *)frame {
+    return @[<%= fields.map {|f| f[:decode_object]}.join(",\n               ") -%>];
 }
 - (NSNumber *)classID     { return @<%= class_id %>; }
 - (NSNumber *)methodID    { return @<%= method_id %>; }
@@ -29,11 +29,11 @@
 }
 <%- end -%>
 
-- (instancetype)initWithDecodedFrames:(NSArray *)frames {
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
       <%- fields.each_with_index do |f, idx| -%>
-        self.<%= f[:name] %> = ((<%= f[:decode_type] %>)frames[0][<%= idx %>])<%= f[:decode_property_call] %>;
+        self.<%= f[:name] %> = ((<%= f[:decode_type] %>)frame[<%= idx %>])<%= f[:decode_property_call] %>;
       <%- end -%>
         self.payloadArguments = @[<%= fields.map {|f| f[:payload_argument]}.join(",\n                                  ") -%>];
     }
