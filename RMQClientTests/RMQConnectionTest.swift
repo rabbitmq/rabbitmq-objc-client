@@ -33,7 +33,7 @@ class RMQConnectionTest: XCTestCase {
             channelID: 0
         )
         XCTAssert(transport.isConnected())
-        transport.serverSendsMethod(MethodFixtures.connectionCloseOk(), channelID: 0)
+        transport.serverSendsPayload(MethodFixtures.connectionCloseOk(), channelID: 0)
         XCTAssertFalse(transport.isConnected())
     }
 
@@ -43,7 +43,7 @@ class RMQConnectionTest: XCTestCase {
         transport.handshake()
 
         XCTAssertTrue(transport.isConnected())
-        transport.serverSendsMethod(MethodFixtures.connectionClose(), channelID: 0)
+        transport.serverSendsPayload(MethodFixtures.connectionClose(), channelID: 0)
         XCTAssertFalse(transport.isConnected())
         transport.assertClientSentMethod(MethodFixtures.connectionCloseOk(), channelID: 0)
     }

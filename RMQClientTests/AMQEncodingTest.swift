@@ -1,7 +1,6 @@
 import XCTest
 
 @objc class EncodableMethod: NSObject, AMQMethod, NSCopying {
-    var hasContent = false
     static func frame() -> [AnyObject] {
         return []
     }
@@ -14,6 +13,9 @@ import XCTest
     func frameTypeID() -> NSNumber {
         return 1
     }
+    func hasContent() -> Bool {
+        return false
+    }
     func amqEncoded() -> NSData {
         let data = NSMutableData()
         data.appendData(AMQShort(10).amqEncoded())
@@ -25,12 +27,46 @@ import XCTest
 
 class AMQEncodingTest: XCTestCase {
 
-    func testRoundTrip() {
-        let method = AMQProtocolConnectionTune(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
-        let data = AMQFrame(channelID: 42, payload: method).amqEncoded()
+    func testRoundTripMethod() {
+        let payload = AMQProtocolConnectionStart(
+            versionMajor: AMQOctet(0),
+            versionMinor: AMQOctet(9),
+            serverProperties: AMQTable(["foo": AMQTable(["bar": AMQShortstr("baz")])]),
+            mechanisms: AMQLongstr("PLAIN_JANE"),
+            locales: AMQLongstr("en_PIRATE")
+        )
+        let data = AMQFrame(channelID: 42, payload: payload).amqEncoded()
         let decoder = AMQDecoder(data: data)
-        let hydratedMethod = decoder.decode() as! AMQProtocolConnectionTune
-        XCTAssertEqual(method, hydratedMethod)
+        let hydrated = decoder.decode() as! AMQProtocolConnectionStart
+        XCTAssertEqual(payload, hydrated)
+    }
+
+    func testRoundTripContentHeader() {
+        let properties: [AnyObject] = [
+            AMQBasicContentType("somecontentype"),
+            AMQBasicContentEncoding("somecontentencoding"),
+            AMQBasicHeaders(["foo": AMQShortstr("bar")]),
+            AMQBasicDeliveryMode(3),
+            AMQBasicPriority(4),
+            AMQBasicCorrelationId("asdf"),
+            AMQBasicReplyTo("meplease"),
+            AMQBasicExpiration("NEVER!"),
+            AMQBasicMessageId("my-message"),
+            AMQBasicTimestamp(NSDate.distantFuture()),
+            AMQBasicType("mytype"),
+            AMQBasicUserId("fred"),
+            AMQBasicAppId("appy"),
+            AMQBasicReserved(""),
+        ]
+        let payload = AMQContentHeader(
+            classID: 2,
+            bodySize: 23,
+            properties: properties
+        )
+        let data = AMQFrame(channelID: 42, payload: payload).amqEncoded()
+        let parser = AMQParser(data: data)
+        let hydrated = AMQContentHeader(parser: parser)
+        XCTAssertEqual(payload, hydrated)
     }
 
     func testEncodeContentHeaderPayload() {
@@ -81,7 +117,7 @@ class AMQEncodingTest: XCTestCase {
         TestHelper.assertEqualBytes(expectedFrame, frame)
     }
 
-    func testFramesetEncoding() {
+    func testFramesetEncodingWithContent() {
         let method = MethodFixtures.basicGet()
         let header = AMQContentHeader(classID: 60, bodySize: 123, properties: [AMQBasicContentType("text/plain")])
         let body1 = AMQContentBody(data: "some body".dataUsingEncoding(NSUTF8StringEncoding)!)
@@ -97,6 +133,21 @@ class AMQEncodingTest: XCTestCase {
         expected.appendData(AMQFrame(channelID: 1, payload: header).amqEncoded())
         expected.appendData(AMQFrame(channelID: 1, payload: body1).amqEncoded())
         expected.appendData(AMQFrame(channelID: 1, payload: body2).amqEncoded())
+        let actual = frameset.amqEncoded();
+        TestHelper.assertEqualBytes(expected, actual)
+    }
+
+    func testFramesetEncodingWithoutContent() {
+        let method = MethodFixtures.basicGet()
+        let header = AMQContentHeaderNone()
+        let ignoredBody = AMQContentBody(data: "some body".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let frameset = AMQFrameset(
+            channelID: 1,
+            method: method,
+            contentHeader: header,
+            contentBodies: [ignoredBody]
+        )
+        let expected = AMQFrame(channelID: 1, payload: method).amqEncoded()
         let actual = frameset.amqEncoded();
         TestHelper.assertEqualBytes(expected, actual)
     }

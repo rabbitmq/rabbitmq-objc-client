@@ -12,5 +12,6 @@
 - (NSNumber *)parseLongLongUInt;
 - (NSNumber *)parseShortUInt;
 - (BOOL)parseBoolean;
+- (NSData *)dataWithLength:(NSUInteger)length;
 
 @end

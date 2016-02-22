@@ -80,9 +80,9 @@
 @end
 
 @protocol AMQMethod <NSObject, AMQPayload>
-@property (nonatomic, readonly) BOOL hasContent;
 + (nonnull NSArray *)frame;
 - (nonnull instancetype)initWithDecodedFrame:(nonnull NSArray *)frame;
+- (BOOL)hasContent;
 @end
 
 @protocol AMQAwaitServerMethod <NSObject>
@@ -103,14 +103,22 @@
 - (void)didReceiveWithContext:(nonnull id<AMQIncomingCallbackContext>)context;
 @end
 
-@interface AMQContentHeader : NSObject<AMQPayload>
+@protocol AMQContentHeader <NSObject,AMQPayload>
+@end
+
+@interface AMQContentHeader : MTLModel<AMQContentHeader>
 - (nonnull instancetype)initWithClassID:(nonnull NSNumber *)classID
                                bodySize:(nonnull NSNumber *)bodySize
                              properties:(nonnull NSArray *)properties;
+- (nonnull instancetype)initWithParser:(nonnull AMQParser *)parser;
 @end
 
-@interface AMQContentBody : NSObject<AMQPayload>
+@interface AMQContentHeaderNone : MTLModel<AMQContentHeader>
+@end
+
+@interface AMQContentBody : MTLModel<AMQPayload>
 - (nonnull instancetype)initWithData:(nonnull NSData *)data;
+- (nonnull instancetype)initWithParser:(nonnull AMQParser *)parser;
 @end
 
 @interface AMQFrameset : MTLModel<AMQEncoding>
@@ -119,7 +127,7 @@
 @property (nonnull, nonatomic, readonly) NSArray *frames;
 - (nonnull instancetype)initWithChannelID:(nonnull NSNumber *)channelID
                                    method:(nonnull id<AMQMethod>)method
-                            contentHeader:(nonnull AMQContentHeader *)contentHeader
+                            contentHeader:(nonnull id<AMQContentHeader>)contentHeader
                             contentBodies:(nonnull NSArray *)contentBodies;
 @end
 

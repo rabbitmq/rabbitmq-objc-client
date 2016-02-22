@@ -99,6 +99,10 @@ class MethodFixtures {
     static func basicGet() -> AMQProtocolBasicGet {
         return AMQProtocolBasicGet(reserved1: AMQShort(0), queue: AMQShortstr("my.queue"), options: AMQProtocolBasicGetOptions.NoOptions)
     }
+
+    static func basicGetOk(queueName: String) -> AMQProtocolBasicGetOk {
+        return AMQProtocolBasicGetOk(deliveryTag: AMQLonglong(0), options: AMQProtocolBasicGetOkOptions.NoOptions, exchange: AMQShortstr(""), routingKey: AMQShortstr(queueName), messageCount: AMQLong(0))
+    }
 }
 
 class DataFixtures {

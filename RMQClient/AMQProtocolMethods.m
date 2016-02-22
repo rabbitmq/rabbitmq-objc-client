@@ -23,6 +23,7 @@
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @10; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithVersionMajor:(nonnull AMQOctet *)versionMajor
                                 versionMinor:(nonnull AMQOctet *)versionMinor
@@ -41,7 +42,6 @@
                                   self.serverProperties,
                                   self.mechanisms,
                                   self.locales];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -95,6 +95,7 @@
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @11; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithClientProperties:(nonnull AMQTable *)clientProperties
                                        mechanism:(nonnull AMQShortstr *)mechanism
@@ -110,7 +111,6 @@
                                   self.mechanism,
                                   self.response,
                                   self.locale];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -156,13 +156,13 @@
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @20; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithChallenge:(nonnull AMQLongstr *)challenge {
     self = [super init];
     if (self) {
         self.challenge = challenge;
         self.payloadArguments = @[self.challenge];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -202,13 +202,13 @@
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @21; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithResponse:(nonnull AMQLongstr *)response {
     self = [super init];
     if (self) {
         self.response = response;
         self.payloadArguments = @[self.response];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -252,6 +252,7 @@
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @30; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithChannelMax:(nonnull AMQShort *)channelMax
                                   frameMax:(nonnull AMQLong *)frameMax
@@ -264,7 +265,6 @@
         self.payloadArguments = @[self.channelMax,
                                   self.frameMax,
                                   self.heartbeat];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -312,6 +312,7 @@
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @31; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithChannelMax:(nonnull AMQShort *)channelMax
                                   frameMax:(nonnull AMQLong *)frameMax
@@ -324,7 +325,6 @@
         self.payloadArguments = @[self.channelMax,
                                   self.frameMax,
                                   self.heartbeat];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -372,6 +372,7 @@
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @40; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithVirtualHost:(nonnull AMQShortstr *)virtualHost
                                   reserved1:(nonnull AMQShortstr *)reserved1
@@ -384,7 +385,6 @@
         self.payloadArguments = @[self.virtualHost,
                                   self.reserved1,
                                   [[AMQOctet alloc] init:self.options]];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -428,13 +428,13 @@
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @41; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShortstr *)reserved1 {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
         self.payloadArguments = @[self.reserved1];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -480,6 +480,7 @@
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @50; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithReplyCode:(nonnull AMQShort *)replyCode
                                 replyText:(nonnull AMQShortstr *)replyText
@@ -495,7 +496,6 @@
                                   self.replyText,
                                   self.classId,
                                   self.methodId];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -540,6 +540,7 @@
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @51; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -576,13 +577,13 @@
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @60; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithReason:(nonnull AMQShortstr *)reason {
     self = [super init];
     if (self) {
         self.reason = reason;
         self.payloadArguments = @[self.reason];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -621,6 +622,7 @@
 - (NSNumber *)classID     { return @10; }
 - (NSNumber *)methodID    { return @61; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -657,13 +659,13 @@
 - (NSNumber *)classID     { return @20; }
 - (NSNumber *)methodID    { return @10; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShortstr *)reserved1 {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
         self.payloadArguments = @[self.reserved1];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -703,13 +705,13 @@
 - (NSNumber *)classID     { return @20; }
 - (NSNumber *)methodID    { return @11; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQLongstr *)reserved1 {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
         self.payloadArguments = @[self.reserved1];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -749,13 +751,13 @@
 - (NSNumber *)classID     { return @20; }
 - (NSNumber *)methodID    { return @20; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithOptions:(AMQProtocolChannelFlowOptions)options {
     self = [super init];
     if (self) {
         self.options = options;
         self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -795,13 +797,13 @@
 - (NSNumber *)classID     { return @20; }
 - (NSNumber *)methodID    { return @21; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithOptions:(AMQProtocolChannelFlowOkOptions)options {
     self = [super init];
     if (self) {
         self.options = options;
         self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -847,6 +849,7 @@
 - (NSNumber *)classID     { return @20; }
 - (NSNumber *)methodID    { return @40; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithReplyCode:(nonnull AMQShort *)replyCode
                                 replyText:(nonnull AMQShortstr *)replyText
@@ -862,7 +865,6 @@
                                   self.replyText,
                                   self.classId,
                                   self.methodId];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -907,6 +909,7 @@
 - (NSNumber *)classID     { return @20; }
 - (NSNumber *)methodID    { return @41; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -951,6 +954,7 @@
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @10; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                  exchange:(nonnull AMQShortstr *)exchange
@@ -969,7 +973,6 @@
                                   self.type,
                                   [[AMQOctet alloc] init:self.options],
                                   self.arguments];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -1016,6 +1019,7 @@
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @11; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -1056,6 +1060,7 @@
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @20; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                  exchange:(nonnull AMQShortstr *)exchange
@@ -1068,7 +1073,6 @@
         self.payloadArguments = @[self.reserved1,
                                   self.exchange,
                                   [[AMQOctet alloc] init:self.options]];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -1111,6 +1115,7 @@
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @21; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -1157,6 +1162,7 @@
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @30; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                               destination:(nonnull AMQShortstr *)destination
@@ -1178,7 +1184,6 @@
                                   self.routingKey,
                                   [[AMQOctet alloc] init:self.options],
                                   self.arguments];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -1227,6 +1232,7 @@
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @31; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -1273,6 +1279,7 @@
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @40; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                               destination:(nonnull AMQShortstr *)destination
@@ -1294,7 +1301,6 @@
                                   self.routingKey,
                                   [[AMQOctet alloc] init:self.options],
                                   self.arguments];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -1343,6 +1349,7 @@
 - (NSNumber *)classID     { return @40; }
 - (NSNumber *)methodID    { return @51; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -1385,6 +1392,7 @@
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @10; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
@@ -1400,7 +1408,6 @@
                                   self.queue,
                                   [[AMQOctet alloc] init:self.options],
                                   self.arguments];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -1450,6 +1457,7 @@
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @11; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithQueue:(nonnull AMQShortstr *)queue
                          messageCount:(nonnull AMQLong *)messageCount
@@ -1462,7 +1470,6 @@
         self.payloadArguments = @[self.queue,
                                   self.messageCount,
                                   self.consumerCount];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -1516,6 +1523,7 @@
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @20; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
@@ -1537,7 +1545,6 @@
                                   self.routingKey,
                                   [[AMQOctet alloc] init:self.options],
                                   self.arguments];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -1586,6 +1593,7 @@
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @21; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -1630,6 +1638,7 @@
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @50; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
@@ -1648,7 +1657,6 @@
                                   self.exchange,
                                   self.routingKey,
                                   self.arguments];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -1695,6 +1703,7 @@
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @51; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -1735,6 +1744,7 @@
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @30; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
@@ -1747,7 +1757,6 @@
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   [[AMQOctet alloc] init:self.options]];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -1791,13 +1800,13 @@
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @31; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithMessageCount:(nonnull AMQLong *)messageCount {
     self = [super init];
     if (self) {
         self.messageCount = messageCount;
         self.payloadArguments = @[self.messageCount];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -1841,6 +1850,7 @@
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @40; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
@@ -1853,7 +1863,6 @@
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   [[AMQOctet alloc] init:self.options]];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -1897,13 +1906,13 @@
 - (NSNumber *)classID     { return @50; }
 - (NSNumber *)methodID    { return @41; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithMessageCount:(nonnull AMQLong *)messageCount {
     self = [super init];
     if (self) {
         self.messageCount = messageCount;
         self.payloadArguments = @[self.messageCount];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -1947,6 +1956,7 @@
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @10; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithPrefetchSize:(nonnull AMQLong *)prefetchSize
                                prefetchCount:(nonnull AMQShort *)prefetchCount
@@ -1959,7 +1969,6 @@
         self.payloadArguments = @[self.prefetchSize,
                                   self.prefetchCount,
                                   [[AMQOctet alloc] init:self.options]];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -2002,6 +2011,7 @@
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @11; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -2046,6 +2056,7 @@
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @20; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
@@ -2064,7 +2075,6 @@
                                   self.consumerTag,
                                   [[AMQOctet alloc] init:self.options],
                                   self.arguments];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -2112,13 +2122,13 @@
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @21; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag {
     self = [super init];
     if (self) {
         self.consumerTag = consumerTag;
         self.payloadArguments = @[self.consumerTag];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -2160,6 +2170,7 @@
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @30; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag
                                     options:(AMQProtocolBasicCancelOptions)options {
@@ -2169,7 +2180,6 @@
         self.options = options;
         self.payloadArguments = @[self.consumerTag,
                                   [[AMQOctet alloc] init:self.options]];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -2211,13 +2221,13 @@
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @31; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag {
     self = [super init];
     if (self) {
         self.consumerTag = consumerTag;
         self.payloadArguments = @[self.consumerTag];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -2263,6 +2273,7 @@
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @40; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return YES; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                  exchange:(nonnull AMQShortstr *)exchange
@@ -2278,7 +2289,6 @@
                                   self.exchange,
                                   self.routingKey,
                                   [[AMQOctet alloc] init:self.options]];
-        self.hasContent = YES;
     }
     return self;
 }
@@ -2330,6 +2340,7 @@
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @50; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return YES; }
 
 - (nonnull instancetype)initWithReplyCode:(nonnull AMQShort *)replyCode
                                 replyText:(nonnull AMQShortstr *)replyText
@@ -2345,7 +2356,6 @@
                                   self.replyText,
                                   self.exchange,
                                   self.routingKey];
-        self.hasContent = YES;
     }
     return self;
 }
@@ -2399,6 +2409,7 @@
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @60; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return YES; }
 
 - (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag
                                 deliveryTag:(nonnull AMQLonglong *)deliveryTag
@@ -2417,7 +2428,6 @@
                                   [[AMQOctet alloc] init:self.options],
                                   self.exchange,
                                   self.routingKey];
-        self.hasContent = YES;
     }
     return self;
 }
@@ -2469,6 +2479,7 @@
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @70; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
@@ -2481,7 +2492,6 @@
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   [[AMQOctet alloc] init:self.options]];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -2533,6 +2543,7 @@
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @71; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return YES; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
                                     options:(AMQProtocolBasicGetOkOptions)options
@@ -2551,7 +2562,6 @@
                                   self.exchange,
                                   self.routingKey,
                                   self.messageCount];
-        self.hasContent = YES;
     }
     return self;
 }
@@ -2599,13 +2609,13 @@
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @72; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShortstr *)reserved1 {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
         self.payloadArguments = @[self.reserved1];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -2647,6 +2657,7 @@
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @80; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
                                     options:(AMQProtocolBasicAckOptions)options {
@@ -2656,7 +2667,6 @@
         self.options = options;
         self.payloadArguments = @[self.deliveryTag,
                                   [[AMQOctet alloc] init:self.options]];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -2700,6 +2710,7 @@
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @90; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
                                     options:(AMQProtocolBasicRejectOptions)options {
@@ -2709,7 +2720,6 @@
         self.options = options;
         self.payloadArguments = @[self.deliveryTag,
                                   [[AMQOctet alloc] init:self.options]];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -2751,13 +2761,13 @@
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @100; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithOptions:(AMQProtocolBasicRecoverAsyncOptions)options {
     self = [super init];
     if (self) {
         self.options = options;
         self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -2797,13 +2807,13 @@
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @110; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithOptions:(AMQProtocolBasicRecoverOptions)options {
     self = [super init];
     if (self) {
         self.options = options;
         self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -2842,6 +2852,7 @@
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @111; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -2880,6 +2891,7 @@
 - (NSNumber *)classID     { return @60; }
 - (NSNumber *)methodID    { return @120; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
                                     options:(AMQProtocolBasicNackOptions)options {
@@ -2889,7 +2901,6 @@
         self.options = options;
         self.payloadArguments = @[self.deliveryTag,
                                   [[AMQOctet alloc] init:self.options]];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -2930,6 +2941,7 @@
 - (NSNumber *)classID     { return @90; }
 - (NSNumber *)methodID    { return @10; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -2965,6 +2977,7 @@
 - (NSNumber *)classID     { return @90; }
 - (NSNumber *)methodID    { return @11; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -3000,6 +3013,7 @@
 - (NSNumber *)classID     { return @90; }
 - (NSNumber *)methodID    { return @20; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -3035,6 +3049,7 @@
 - (NSNumber *)classID     { return @90; }
 - (NSNumber *)methodID    { return @21; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -3070,6 +3085,7 @@
 - (NSNumber *)classID     { return @90; }
 - (NSNumber *)methodID    { return @30; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -3105,6 +3121,7 @@
 - (NSNumber *)classID     { return @90; }
 - (NSNumber *)methodID    { return @31; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -3141,13 +3158,13 @@
 - (NSNumber *)classID     { return @85; }
 - (NSNumber *)methodID    { return @10; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 - (nonnull instancetype)initWithOptions:(AMQProtocolConfirmSelectOptions)options {
     self = [super init];
     if (self) {
         self.options = options;
         self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
-        self.hasContent = NO;
     }
     return self;
 }
@@ -3186,6 +3203,7 @@
 - (NSNumber *)classID     { return @85; }
 - (NSNumber *)methodID    { return @11; }
 - (NSNumber *)frameTypeID { return @1; }
+- (BOOL)hasContent        { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {

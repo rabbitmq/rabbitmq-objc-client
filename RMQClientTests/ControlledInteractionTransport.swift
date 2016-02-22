@@ -29,12 +29,12 @@ import XCTest
     }
     func handshake() -> ControlledInteractionTransport {
         assertClientSentProtocolHeader()
-        serverSendsMethod(MethodFixtures.connectionStart(), channelID: 0)
+        serverSendsPayload(MethodFixtures.connectionStart(), channelID: 0)
         assertClientSentMethod(MethodFixtures.connectionStartOk(), channelID: 0)
-        serverSendsMethod(MethodFixtures.connectionTune(), channelID: 0)
+        serverSendsPayload(MethodFixtures.connectionTune(), channelID: 0)
         assertClientSentMethod(MethodFixtures.connectionTuneOk(), channelID: 0)
         assertClientSentMethod(MethodFixtures.connectionOpen(), channelID: 0)
-        serverSendsMethod(MethodFixtures.connectionOpenOk(), channelID: 0)
+        serverSendsPayload(MethodFixtures.connectionOpenOk(), channelID: 0)
         return self
     }
     func serverSendsData(data: NSData) -> ControlledInteractionTransport {
@@ -45,8 +45,8 @@ import XCTest
         }
         return self
     }
-    func serverSendsMethod(amqMethod: AMQMethod, channelID: Int) -> ControlledInteractionTransport {
-        serverSendsData(AMQFrame(channelID: channelID, payload: amqMethod).amqEncoded())
+    func serverSendsPayload(payload: AMQPayload, channelID: Int) -> ControlledInteractionTransport {
+        serverSendsData(AMQFrame(channelID: channelID, payload: payload).amqEncoded())
         return self
     }
     func assertClientSentMethod(amqMethod: AMQMethod, channelID: Int) -> ControlledInteractionTransport {

@@ -20,13 +20,23 @@ class GenerateBasicProperties
 - (NSUInteger)flagBit;
 @end
 
+@interface AMQBasicProperties : NSObject
++ (NSArray *)properties;
+@end
+
     OBJC
   end
 
-  def implementation
+  def implementation(fields)
     <<-OBJC
 #{implementation_start}
 #import "AMQProtocolBasicProperties.h"
+
+@implementation AMQBasicProperties
++ (NSArray *)properties {
+    return @[#{fields.map {|f| "[#{basic_field_class(f)} class]"}.join(",\n             ")}];
+}
+@end
 
     OBJC
   end
@@ -46,7 +56,7 @@ class GenerateBasicProperties
 
   def generate_implementation
     fields = camelized_fields(xml.xpath("/amqp/class[@name='basic']/field"))
-    fields.each_with_index.reduce(implementation) { |acc, (field, index)|
+    fields.each_with_index.reduce(implementation(fields)) { |acc, (field, index)|
       class_name = basic_field_class(field)
       superclass = field[:type]
       bit = 15 - index

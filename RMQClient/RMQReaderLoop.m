@@ -1,5 +1,6 @@
 #import "RMQReaderLoop.h"
 #import "AMQProtocolMethods.h"
+#import "AMQProtocolValues.h"
 #import "AMQDecoder.h"
 
 @interface RMQReaderLoop ()
@@ -19,14 +20,32 @@
 }
 
 - (void)runOnce {
-    [self.transport readFrame:^(NSData * _Nonnull responseData) {
-        AMQDecoder *decoder = [[AMQDecoder alloc] initWithData:responseData];
-        id<AMQMethod> method = [decoder decode];
-        AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:decoder.channelID
-                                                                method:method
-                                                         contentHeader:[AMQContentHeader new]
-                                                         contentBodies:@[]];
-        [self.frameHandler handleFrameset:frameset];
+    [self.transport readFrame:^(NSData * _Nonnull methodData) {
+        AMQDecoder *methodDecoder = [[AMQDecoder alloc] initWithData:methodData];
+        id<AMQMethod> method = [methodDecoder decode];
+
+        if (method.hasContent) {
+            [self.transport readFrame:^(NSData * _Nonnull headerData) {
+                AMQParser *headerParser  = [[AMQParser alloc] initWithData:headerData];
+                AMQContentHeader *header = [[AMQContentHeader alloc] initWithParser:headerParser];
+
+                [self.transport readFrame:^(NSData * _Nonnull bodyData) {
+                    AMQParser *bodyParser = [[AMQParser alloc] initWithData:bodyData];
+                    AMQContentBody *body  = [[AMQContentBody alloc] initWithParser:bodyParser];
+                    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:methodDecoder.channelID
+                                                                            method:method
+                                                                     contentHeader:header
+                                                                     contentBodies:@[body]];
+                    [self.frameHandler handleFrameset:frameset];
+                }];
+            }];
+        } else {
+            AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:methodDecoder.channelID
+                                                                    method:method
+                                                             contentHeader:[AMQContentHeaderNone new]
+                                                             contentBodies:@[]];
+            [self.frameHandler handleFrameset:frameset];
+        }
     }];
 }
 

@@ -1,6 +1,25 @@
 // This file is generated. Do not edit.
 #import "AMQProtocolBasicProperties.h"
 
+@implementation AMQBasicProperties
++ (NSArray *)properties {
+    return @[[AMQBasicContentType class],
+             [AMQBasicContentEncoding class],
+             [AMQBasicHeaders class],
+             [AMQBasicDeliveryMode class],
+             [AMQBasicPriority class],
+             [AMQBasicCorrelationId class],
+             [AMQBasicReplyTo class],
+             [AMQBasicExpiration class],
+             [AMQBasicMessageId class],
+             [AMQBasicTimestamp class],
+             [AMQBasicType class],
+             [AMQBasicUserId class],
+             [AMQBasicAppId class],
+             [AMQBasicReserved class]];
+}
+@end
+
 @implementation AMQBasicContentType
 - (NSUInteger)flagBit { return 32768; }
 @end

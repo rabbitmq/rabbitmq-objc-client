@@ -363,6 +363,29 @@
     return self;
 }
 
+- (instancetype)initWithParser:(AMQParser *)parser {
+    [parser parseOctet];
+    [parser parseShortUInt];
+    [parser parseLongUInt];
+
+    NSNumber *classID = @([parser parseShortUInt].integerValue);
+    [parser parseShortUInt]; // weight
+    NSNumber *bodySize = [parser parseLongLongUInt];
+    NSNumber *flags = [parser parseShortUInt];
+
+    NSMutableArray *properties = [NSMutableArray new];
+    int i = 0;
+    for (Class propertyClass in [[AMQBasicProperties class] properties]) {
+        NSUInteger flagBit = [[propertyClass new] flagBit];
+        if (flags.integerValue & flagBit) { // TODO: move flagBit to class
+            properties[i] = [[propertyClass alloc] initWithParser:parser];
+        }
+        i++;
+    }
+
+    return [self initWithClassID:classID bodySize:bodySize properties:properties];
+}
+
 - (NSNumber *)frameTypeID { return @2; }
 
 - (NSData *)amqEncoded {
@@ -389,6 +412,18 @@
 
 @end
 
+@implementation AMQContentHeaderNone
+
+- (NSNumber *)frameTypeID {
+    return nil;
+}
+
+- (NSData *)amqEncoded {
+    return [NSData data];
+}
+
+@end
+
 @interface AMQContentBody ()
 @property (nonatomic, readwrite) NSData *data;
 @end
@@ -403,6 +438,14 @@
     return self;
 }
 
+- (instancetype)initWithParser:(AMQParser *)parser {
+    [parser parseOctet];
+    [parser parseShortUInt];
+    NSNumber *size = [parser parseLongUInt];
+
+    return [self initWithData:[parser dataWithLength:size.integerValue]];
+}
+
 - (NSNumber *)frameTypeID { return @3; }
 
 - (NSData *)amqEncoded {
@@ -414,7 +457,7 @@
 @interface AMQFrameset ()
 @property (nonatomic, copy, readwrite) NSNumber *channelID;
 @property (nonatomic, readwrite) id<AMQMethod> method;
-@property (nonatomic, readwrite) AMQContentHeader *contentHeader;
+@property (nonatomic, readwrite) id<AMQContentHeader> contentHeader;
 @property (nonatomic, readwrite) NSArray *contentBodies;
 @end
 
@@ -422,7 +465,7 @@
 
 - (instancetype)initWithChannelID:(NSNumber *)channelID
                            method:(id<AMQMethod>)method
-                    contentHeader:(AMQContentHeader *)contentHeader
+                    contentHeader:(id<AMQContentHeader>)contentHeader
                     contentBodies:(NSArray *)contentBodies {
     self = [super init];
     if (self) {
@@ -437,9 +480,12 @@
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQFrame alloc] initWithChannelID:self.channelID payload:self.method].amqEncoded];
-    [encoded appendData:[[AMQFrame alloc] initWithChannelID:self.channelID payload:self.contentHeader].amqEncoded];
-    for (AMQContentBody *body in self.contentBodies) {
-        [encoded appendData:[[AMQFrame alloc] initWithChannelID:self.channelID payload:body].amqEncoded];
+    NSData *contentHeaderEncoded = self.contentHeader.amqEncoded;
+    if (contentHeaderEncoded.length) {
+        [encoded appendData:[[AMQFrame alloc] initWithChannelID:self.channelID payload:self.contentHeader].amqEncoded];
+        for (AMQContentBody *body in self.contentBodies) {
+            [encoded appendData:[[AMQFrame alloc] initWithChannelID:self.channelID payload:body].amqEncoded];
+        }
     }
     return encoded;
 }

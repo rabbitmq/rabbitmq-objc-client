@@ -37,7 +37,7 @@ enum AMQParserFieldValue {
         enum AMQParserFieldValue type = *((self.cursor)++);
         switch (type) {
             case AMQParserFieldTable:
-                dict[key] = [self parseFieldTable];
+                dict[key] = [[AMQTable alloc] init:[self parseFieldTable]];
                 break;
             case AMQParserBoolean:
                 dict[key] = [[AMQBoolean alloc] init:[self parseBoolean]];
@@ -112,6 +112,10 @@ enum AMQParserFieldValue {
     }
 
     return *((self.cursor)++) != 0;
+}
+
+- (NSData *)dataWithLength:(NSUInteger)length {
+    return [NSData dataWithBytes:(void *)self.cursor length:length];
 }
 
 @end

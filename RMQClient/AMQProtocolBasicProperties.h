@@ -5,6 +5,10 @@
 - (NSUInteger)flagBit;
 @end
 
+@interface AMQBasicProperties : NSObject
++ (NSArray *)properties;
+@end
+
 @interface AMQBasicContentType : AMQShortstr <AMQBasicValue>
 @end
 
