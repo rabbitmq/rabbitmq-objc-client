@@ -8,6 +8,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQLongstr *mechanisms;
 @property (nonnull, copy, nonatomic, readwrite) AMQLongstr *locales;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolConnectionStart
@@ -40,6 +41,7 @@
                                   self.serverProperties,
                                   self.mechanisms,
                                   self.locales];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -79,6 +81,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQLongstr *response;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *locale;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolConnectionStartOk
@@ -107,6 +110,7 @@
                                   self.mechanism,
                                   self.response,
                                   self.locale];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -141,6 +145,7 @@
 @interface AMQProtocolConnectionSecure ()
 @property (nonnull, copy, nonatomic, readwrite) AMQLongstr *challenge;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolConnectionSecure
@@ -157,6 +162,7 @@
     if (self) {
         self.challenge = challenge;
         self.payloadArguments = @[self.challenge];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -185,6 +191,7 @@
 @interface AMQProtocolConnectionSecureOk ()
 @property (nonnull, copy, nonatomic, readwrite) AMQLongstr *response;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolConnectionSecureOk
@@ -201,6 +208,7 @@
     if (self) {
         self.response = response;
         self.payloadArguments = @[self.response];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -231,6 +239,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQLong *frameMax;
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *heartbeat;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolConnectionTune
@@ -255,6 +264,7 @@
         self.payloadArguments = @[self.channelMax,
                                   self.frameMax,
                                   self.heartbeat];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -289,6 +299,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQLong *frameMax;
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *heartbeat;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolConnectionTuneOk
@@ -313,6 +324,7 @@
         self.payloadArguments = @[self.channelMax,
                                   self.frameMax,
                                   self.heartbeat];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -347,6 +359,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reserved1;
 @property (nonatomic, readwrite) AMQProtocolConnectionOpenOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolConnectionOpen
@@ -371,6 +384,7 @@
         self.payloadArguments = @[self.virtualHost,
                                   self.reserved1,
                                   [[AMQOctet alloc] init:self.options]];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -403,6 +417,7 @@
 @interface AMQProtocolConnectionOpenOk ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reserved1;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolConnectionOpenOk
@@ -419,6 +434,7 @@
     if (self) {
         self.reserved1 = reserved1;
         self.payloadArguments = @[self.reserved1];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -450,6 +466,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *classId;
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *methodId;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolConnectionClose
@@ -478,6 +495,7 @@
                                   self.replyText,
                                   self.classId,
                                   self.methodId];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -511,6 +529,7 @@
 
 @interface AMQProtocolConnectionCloseOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolConnectionCloseOk
@@ -546,6 +565,7 @@
 @interface AMQProtocolConnectionBlocked ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reason;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolConnectionBlocked
@@ -562,6 +582,7 @@
     if (self) {
         self.reason = reason;
         self.payloadArguments = @[self.reason];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -589,6 +610,7 @@
 
 @interface AMQProtocolConnectionUnblocked ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolConnectionUnblocked
@@ -624,6 +646,7 @@
 @interface AMQProtocolChannelOpen ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reserved1;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolChannelOpen
@@ -640,6 +663,7 @@
     if (self) {
         self.reserved1 = reserved1;
         self.payloadArguments = @[self.reserved1];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -668,6 +692,7 @@
 @interface AMQProtocolChannelOpenOk ()
 @property (nonnull, copy, nonatomic, readwrite) AMQLongstr *reserved1;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolChannelOpenOk
@@ -684,6 +709,7 @@
     if (self) {
         self.reserved1 = reserved1;
         self.payloadArguments = @[self.reserved1];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -712,6 +738,7 @@
 @interface AMQProtocolChannelFlow ()
 @property (nonatomic, readwrite) AMQProtocolChannelFlowOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolChannelFlow
@@ -728,6 +755,7 @@
     if (self) {
         self.options = options;
         self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -756,6 +784,7 @@
 @interface AMQProtocolChannelFlowOk ()
 @property (nonatomic, readwrite) AMQProtocolChannelFlowOkOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolChannelFlowOk
@@ -772,6 +801,7 @@
     if (self) {
         self.options = options;
         self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -803,6 +833,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *classId;
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *methodId;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolChannelClose
@@ -831,6 +862,7 @@
                                   self.replyText,
                                   self.classId,
                                   self.methodId];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -864,6 +896,7 @@
 
 @interface AMQProtocolChannelCloseOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolChannelCloseOk
@@ -903,6 +936,7 @@
 @property (nonatomic, readwrite) AMQProtocolExchangeDeclareOptions options;
 @property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolExchangeDeclare
@@ -935,6 +969,7 @@
                                   self.type,
                                   [[AMQOctet alloc] init:self.options],
                                   self.arguments];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -970,6 +1005,7 @@
 
 @interface AMQProtocolExchangeDeclareOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolExchangeDeclareOk
@@ -1007,6 +1043,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
 @property (nonatomic, readwrite) AMQProtocolExchangeDeleteOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolExchangeDelete
@@ -1031,6 +1068,7 @@
         self.payloadArguments = @[self.reserved1,
                                   self.exchange,
                                   [[AMQOctet alloc] init:self.options]];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -1062,6 +1100,7 @@
 
 @interface AMQProtocolExchangeDeleteOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolExchangeDeleteOk
@@ -1102,6 +1141,7 @@
 @property (nonatomic, readwrite) AMQProtocolExchangeBindOptions options;
 @property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolExchangeBind
@@ -1138,6 +1178,7 @@
                                   self.routingKey,
                                   [[AMQOctet alloc] init:self.options],
                                   self.arguments];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -1175,6 +1216,7 @@
 
 @interface AMQProtocolExchangeBindOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolExchangeBindOk
@@ -1215,6 +1257,7 @@
 @property (nonatomic, readwrite) AMQProtocolExchangeUnbindOptions options;
 @property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolExchangeUnbind
@@ -1251,6 +1294,7 @@
                                   self.routingKey,
                                   [[AMQOctet alloc] init:self.options],
                                   self.arguments];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -1288,6 +1332,7 @@
 
 @interface AMQProtocolExchangeUnbindOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolExchangeUnbindOk
@@ -1326,6 +1371,7 @@
 @property (nonatomic, readwrite) AMQProtocolQueueDeclareOptions options;
 @property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolQueueDeclare
@@ -1354,6 +1400,7 @@
                                   self.queue,
                                   [[AMQOctet alloc] init:self.options],
                                   self.arguments];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -1390,6 +1437,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQLong *messageCount;
 @property (nonnull, copy, nonatomic, readwrite) AMQLong *consumerCount;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolQueueDeclareOk
@@ -1414,6 +1462,7 @@
         self.payloadArguments = @[self.queue,
                                   self.messageCount,
                                   self.consumerCount];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -1451,6 +1500,7 @@
 @property (nonatomic, readwrite) AMQProtocolQueueBindOptions options;
 @property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolQueueBind
@@ -1487,6 +1537,7 @@
                                   self.routingKey,
                                   [[AMQOctet alloc] init:self.options],
                                   self.arguments];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -1524,6 +1575,7 @@
 
 @interface AMQProtocolQueueBindOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolQueueBindOk
@@ -1563,6 +1615,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
 @property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolQueueUnbind
@@ -1595,6 +1648,7 @@
                                   self.exchange,
                                   self.routingKey,
                                   self.arguments];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -1630,6 +1684,7 @@
 
 @interface AMQProtocolQueueUnbindOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolQueueUnbindOk
@@ -1667,6 +1722,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
 @property (nonatomic, readwrite) AMQProtocolQueuePurgeOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolQueuePurge
@@ -1691,6 +1747,7 @@
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   [[AMQOctet alloc] init:self.options]];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -1723,6 +1780,7 @@
 @interface AMQProtocolQueuePurgeOk ()
 @property (nonnull, copy, nonatomic, readwrite) AMQLong *messageCount;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolQueuePurgeOk
@@ -1739,6 +1797,7 @@
     if (self) {
         self.messageCount = messageCount;
         self.payloadArguments = @[self.messageCount];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -1769,6 +1828,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
 @property (nonatomic, readwrite) AMQProtocolQueueDeleteOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolQueueDelete
@@ -1793,6 +1853,7 @@
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   [[AMQOctet alloc] init:self.options]];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -1825,6 +1886,7 @@
 @interface AMQProtocolQueueDeleteOk ()
 @property (nonnull, copy, nonatomic, readwrite) AMQLong *messageCount;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolQueueDeleteOk
@@ -1841,6 +1903,7 @@
     if (self) {
         self.messageCount = messageCount;
         self.payloadArguments = @[self.messageCount];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -1871,6 +1934,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *prefetchCount;
 @property (nonatomic, readwrite) AMQProtocolBasicQosOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolBasicQos
@@ -1895,6 +1959,7 @@
         self.payloadArguments = @[self.prefetchSize,
                                   self.prefetchCount,
                                   [[AMQOctet alloc] init:self.options]];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -1926,6 +1991,7 @@
 
 @interface AMQProtocolBasicQosOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolBasicQosOk
@@ -1965,6 +2031,7 @@
 @property (nonatomic, readwrite) AMQProtocolBasicConsumeOptions options;
 @property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolBasicConsume
@@ -1997,6 +2064,7 @@
                                   self.consumerTag,
                                   [[AMQOctet alloc] init:self.options],
                                   self.arguments];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -2033,6 +2101,7 @@
 @interface AMQProtocolBasicConsumeOk ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *consumerTag;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolBasicConsumeOk
@@ -2049,6 +2118,7 @@
     if (self) {
         self.consumerTag = consumerTag;
         self.payloadArguments = @[self.consumerTag];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -2078,6 +2148,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *consumerTag;
 @property (nonatomic, readwrite) AMQProtocolBasicCancelOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolBasicCancel
@@ -2098,6 +2169,7 @@
         self.options = options;
         self.payloadArguments = @[self.consumerTag,
                                   [[AMQOctet alloc] init:self.options]];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -2128,6 +2200,7 @@
 @interface AMQProtocolBasicCancelOk ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *consumerTag;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolBasicCancelOk
@@ -2144,6 +2217,7 @@
     if (self) {
         self.consumerTag = consumerTag;
         self.payloadArguments = @[self.consumerTag];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -2175,6 +2249,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
 @property (nonatomic, readwrite) AMQProtocolBasicPublishOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolBasicPublish
@@ -2203,6 +2278,7 @@
                                   self.exchange,
                                   self.routingKey,
                                   [[AMQOctet alloc] init:self.options]];
+        self.hasContent = YES;
     }
     return self;
 }
@@ -2240,6 +2316,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolBasicReturn
@@ -2268,6 +2345,7 @@
                                   self.replyText,
                                   self.exchange,
                                   self.routingKey];
+        self.hasContent = YES;
     }
     return self;
 }
@@ -2306,6 +2384,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolBasicDeliver
@@ -2338,6 +2417,7 @@
                                   [[AMQOctet alloc] init:self.options],
                                   self.exchange,
                                   self.routingKey];
+        self.hasContent = YES;
     }
     return self;
 }
@@ -2376,6 +2456,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
 @property (nonatomic, readwrite) AMQProtocolBasicGetOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolBasicGet
@@ -2400,6 +2481,7 @@
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   [[AMQOctet alloc] init:self.options]];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -2436,6 +2518,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
 @property (nonnull, copy, nonatomic, readwrite) AMQLong *messageCount;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolBasicGetOk
@@ -2468,6 +2551,7 @@
                                   self.exchange,
                                   self.routingKey,
                                   self.messageCount];
+        self.hasContent = YES;
     }
     return self;
 }
@@ -2504,6 +2588,7 @@
 @interface AMQProtocolBasicGetEmpty ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reserved1;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolBasicGetEmpty
@@ -2520,6 +2605,7 @@
     if (self) {
         self.reserved1 = reserved1;
         self.payloadArguments = @[self.reserved1];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -2549,6 +2635,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
 @property (nonatomic, readwrite) AMQProtocolBasicAckOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolBasicAck
@@ -2569,6 +2656,7 @@
         self.options = options;
         self.payloadArguments = @[self.deliveryTag,
                                   [[AMQOctet alloc] init:self.options]];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -2600,6 +2688,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
 @property (nonatomic, readwrite) AMQProtocolBasicRejectOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolBasicReject
@@ -2620,6 +2709,7 @@
         self.options = options;
         self.payloadArguments = @[self.deliveryTag,
                                   [[AMQOctet alloc] init:self.options]];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -2650,6 +2740,7 @@
 @interface AMQProtocolBasicRecoverAsync ()
 @property (nonatomic, readwrite) AMQProtocolBasicRecoverAsyncOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolBasicRecoverAsync
@@ -2666,6 +2757,7 @@
     if (self) {
         self.options = options;
         self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -2694,6 +2786,7 @@
 @interface AMQProtocolBasicRecover ()
 @property (nonatomic, readwrite) AMQProtocolBasicRecoverOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolBasicRecover
@@ -2710,6 +2803,7 @@
     if (self) {
         self.options = options;
         self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -2737,6 +2831,7 @@
 
 @interface AMQProtocolBasicRecoverOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolBasicRecoverOk
@@ -2773,6 +2868,7 @@
 @property (nonnull, copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
 @property (nonatomic, readwrite) AMQProtocolBasicNackOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolBasicNack
@@ -2793,6 +2889,7 @@
         self.options = options;
         self.payloadArguments = @[self.deliveryTag,
                                   [[AMQOctet alloc] init:self.options]];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -2822,6 +2919,7 @@
 
 @interface AMQProtocolTxSelect ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolTxSelect
@@ -2856,6 +2954,7 @@
 
 @interface AMQProtocolTxSelectOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolTxSelectOk
@@ -2890,6 +2989,7 @@
 
 @interface AMQProtocolTxCommit ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolTxCommit
@@ -2924,6 +3024,7 @@
 
 @interface AMQProtocolTxCommitOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolTxCommitOk
@@ -2958,6 +3059,7 @@
 
 @interface AMQProtocolTxRollback ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolTxRollback
@@ -2992,6 +3094,7 @@
 
 @interface AMQProtocolTxRollbackOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolTxRollbackOk
@@ -3027,6 +3130,7 @@
 @interface AMQProtocolConfirmSelect ()
 @property (nonatomic, readwrite) AMQProtocolConfirmSelectOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolConfirmSelect
@@ -3043,6 +3147,7 @@
     if (self) {
         self.options = options;
         self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
+        self.hasContent = NO;
     }
     return self;
 }
@@ -3070,6 +3175,7 @@
 
 @interface AMQProtocolConfirmSelectOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation AMQProtocolConfirmSelectOk

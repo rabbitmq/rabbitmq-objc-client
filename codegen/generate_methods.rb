@@ -30,6 +30,7 @@ class GenerateMethods
       method_id = method[:index]
       constructor = constructor(fields)
       class_part = method.xpath('..').first[:name].capitalize
+      has_content_value = method[:content] == "1" ? "YES" : "NO"
       acc + template('methods_implementation_template').result(binding)
     }
   end

@@ -3,6 +3,7 @@
 @property (<%= f[:base_property_options].join(", ") %>, readwrite) <%= f[:pointer_type] %><%= f[:name] %>;
 <%- end -%>
 @property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
 @end
 
 @implementation <%= class_name %>
@@ -22,6 +23,7 @@
         self.<%= f[:name] %> = <%= f[:name] %>;
         <%- end -%>
         self.payloadArguments = @[<%= fields.map {|f| f[:payload_argument]}.join(",\n                                  ") -%>];
+        self.hasContent = <%= has_content_value %>;
     }
     return self;
 }

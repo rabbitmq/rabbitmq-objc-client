@@ -11,6 +11,7 @@ typedef NS_OPTIONS(NSUInteger, <%= class_name %>Options) {
 <%- fields.each do |f| -%>
 @property (<%= f[:base_property_options].join(", ") %>, readonly) <%= f[:pointer_type] %><%= f[:name] %>;
 <%- end -%>
+@property (nonatomic, readonly) BOOL hasContent;
 <%= constructor + ";" if constructor %>
 @end
 
