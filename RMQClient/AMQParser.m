@@ -7,95 +7,102 @@ enum AMQParserFieldValue {
     AMQParserLongString = 'S',
 };
 
+@interface AMQParser ()
+@property (nonatomic, readwrite) const char *cursor;
+@property (nonatomic, readwrite) const char *end;
+@end
+
 @implementation AMQParser
 
-- (AMQTable *)parseFieldTable:(const char **)cursor
-                              end:(const char *)end {
+- (instancetype)initWithData:(NSData *)data {
+    self = [super init];
+    if (self) {
+        self.cursor = (const char *)data.bytes;
+        self.end    = (const char *)data.bytes + data.length;
+    }
+    return self;
+}
+
+- (AMQTable *)parseFieldTable {
     NSMutableDictionary *dict = [NSMutableDictionary new];
-    const char *start = *cursor;
+    const char *start = self.cursor;
     
-    AMQLong *tableLength = [self parseLongUInt:cursor end:end];
+    AMQLong *tableLength = [self parseLongUInt];
     // if (*cursor + tableLength >= end) error
     
-    while (*cursor < start + tableLength.integerValue && *cursor < end) {
-        NSString *key = [self parseShortString:cursor end:end].stringValue;
+    while (self.cursor < start + tableLength.integerValue && self.cursor < self.end) {
+        NSString *key = [self parseShortString].stringValue;
         
-        enum AMQParserFieldValue type = *((*cursor)++);
+        enum AMQParserFieldValue type = *((self.cursor)++);
         switch (type) {
             case AMQParserFieldTable:
-                dict[key] = [self parseFieldTable:cursor end:end];
+                dict[key] = [self parseFieldTable];
                 break;
             case AMQParserBoolean:
-                dict[key] = [self parseBoolean:cursor end:end];
+                dict[key] = [self parseBoolean];
                 break;
             case AMQParserShortString:
-                dict[key] = [self parseShortString:cursor end:end];
+                dict[key] = [self parseShortString];
                 break;
             case AMQParserLongString:
-                dict[key] = [self parseLongString:cursor end:end];
+                dict[key] = [self parseLongString];
                 break;
         }
     }
     return [[AMQTable alloc] init:dict];
 }
 
-- (AMQLong *)parseLongUInt:(const char **)cursor
-                       end:(const char *)end {
+- (AMQLong *)parseLongUInt {
     UInt32 value;
-    value = CFSwapInt32BigToHost(*(UInt32 *)*cursor);
-    *cursor += sizeof(value);
+    value = CFSwapInt32BigToHost(*(UInt32 *)self.cursor);
+    self.cursor += sizeof(value);
 
     return [[AMQLong alloc] init:value];
 }
 
-- (AMQShort *)parseShortUInt:(const char **)cursor
-                         end:(const char *)end {
+- (AMQShort *)parseShortUInt {
     UInt16 value;
-    value = CFSwapInt16BigToHost(*(UInt16 *)*cursor);
-    *cursor += sizeof(value);
+    value = CFSwapInt16BigToHost(*(UInt16 *)self.cursor);
+    self.cursor += sizeof(value);
 
     return [[AMQShort alloc] init:value];
 }
 
-- (AMQOctet *)parseOctet:(const char **)cursor
-                     end:(const char *)end {
-    return [[AMQOctet alloc] init:*((*cursor)++)];
+- (AMQOctet *)parseOctet {
+    return [[AMQOctet alloc] init:*((self.cursor)++)];
 }
 
-- (AMQShortstr *)parseShortString:(const char **)cursor
-                              end:(const char *)end {
-    unsigned int length = *((*cursor)++);
-    NSString *string = [NSString stringWithFormat:@"%.*s", length, *cursor];
-    *cursor += length;
+- (AMQShortstr *)parseShortString {
+    unsigned int length = *((self.cursor)++);
+    NSString *string = [NSString stringWithFormat:@"%.*s", length, self.cursor];
+    self.cursor += length;
     
     return [[AMQShortstr alloc] init:string];
 }
 
-- (AMQLongstr *)parseLongString:(const char **)cursor
-                            end:(const char *)end {
-    if (!cursor || !*cursor || *cursor + 4 > end) {
+- (AMQLongstr *)parseLongString {
+    if (!self.cursor || self.cursor + 4 > self.end) {
         // throw or something
     }
     
-    unsigned int length = CFSwapInt32BigToHost(*(UInt32 *)*cursor);
-    *cursor += sizeof(length);
+    unsigned int length = CFSwapInt32BigToHost(*(UInt32 *)self.cursor);
+    self.cursor += sizeof(length);
     
-    if (*cursor + length > end) {
+    if (self.cursor + length > self.end) {
         // TODO: What to do if length == 4GiB
     }
-    NSString *string= [NSString stringWithFormat:@"%.*s", length, *cursor];
-    *cursor += length;
+    NSString *string= [NSString stringWithFormat:@"%.*s", length, self.cursor];
+    self.cursor += length;
     
     return [[AMQLongstr alloc] init:string];
 }
 
-- (AMQBoolean *)parseBoolean:(const char **)cursor
-                         end:(const char *)end {
-    if (!cursor || !*cursor || *cursor + 1 > end) {
+- (AMQBoolean *)parseBoolean {
+    if (!self.cursor || self.cursor + 1 > self.end) {
         // throw or something
     }
     
-    return [[AMQBoolean alloc] init:*((*cursor)++) != 0];
+    return [[AMQBoolean alloc] init:*((self.cursor)++) != 0];
 }
 
 @end

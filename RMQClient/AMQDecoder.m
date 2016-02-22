@@ -23,14 +23,12 @@
     self = [super init];
     if (self) {
         self.data      = data;
-        self.cursor    = (const char *)self.data.bytes;
-        self.end       = (const char *)self.data.bytes + self.data.length;
-        self.parser    = [AMQParser new];
-        self.typeID    = @([self.parser parseOctet:&_cursor end:self.end].integerValue);
-        self.channelID = @([self.parser parseShortUInt:&_cursor end:self.end].integerValue);
-        self.size      = [self.parser parseLongUInt:&_cursor end:self.end];
-        self.classID   = @([self.parser parseShortUInt:&_cursor end:self.end].integerValue);
-        self.methodID  = @([self.parser parseShortUInt:&_cursor end:self.end].integerValue);
+        self.parser    = [[AMQParser alloc] initWithData:self.data];
+        self.typeID    = @([self.parser parseOctet].integerValue);
+        self.channelID = @([self.parser parseShortUInt].integerValue);
+        self.size      = [self.parser parseLongUInt];
+        self.classID   = @([self.parser parseShortUInt].integerValue);
+        self.methodID  = @([self.parser parseShortUInt].integerValue);
     }
     return self;
 }
@@ -48,17 +46,17 @@
 
 - (id)decodeObjectForKey:(NSString *)key {
     if ([key isEqualToString:@"octet"]) {
-        return [self.parser parseOctet:&_cursor end:self.end];
+        return [self.parser parseOctet];
     } else if ([key isEqualToString:@"field-table"]) {
-        return [self.parser parseFieldTable:&_cursor end:self.end];
+        return [self.parser parseFieldTable];
     } else if ([key isEqualToString:@"shortstr"]) {
-        return [self.parser parseShortString:&_cursor end:self.end];
+        return [self.parser parseShortString];
     } else if ([key isEqualToString:@"longstr"]) {
-        return [self.parser parseLongString:&_cursor end:self.end];
+        return [self.parser parseLongString];
     } else if ([key isEqualToString:@"short"]) {
-        return [self.parser parseShortUInt:&_cursor end:self.end];
+        return [self.parser parseShortUInt];
     } else if ([key isEqualToString:@"long"]) {
-        return [self.parser parseLongUInt:&_cursor end:self.end];
+        return [self.parser parseLongUInt];
     } else {
         return @"Something very very bad happened";
     }
