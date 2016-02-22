@@ -27,13 +27,13 @@ enum AMQParserFieldValue {
 - (NSDictionary *)parseFieldTable {
     NSMutableDictionary *dict = [NSMutableDictionary new];
     const char *start = self.cursor;
-    
+
     NSNumber *tableLength = [self parseLongUInt];
     // if (*cursor + tableLength >= end) error
-    
+
     while (self.cursor < start + tableLength.integerValue && self.cursor < self.end) {
         NSString *key = [self parseShortString];
-        
+
         enum AMQParserFieldValue type = *((self.cursor)++);
         switch (type) {
             case AMQParserFieldTable:
@@ -85,7 +85,7 @@ enum AMQParserFieldValue {
     unsigned int length = *((self.cursor)++);
     NSString *string = [NSString stringWithFormat:@"%.*s", length, self.cursor];
     self.cursor += length;
-    
+
     return string;
 }
 
@@ -93,16 +93,16 @@ enum AMQParserFieldValue {
     if (!self.cursor || self.cursor + 4 > self.end) {
         // throw or something
     }
-    
+
     unsigned int length = CFSwapInt32BigToHost(*(UInt32 *)self.cursor);
     self.cursor += sizeof(length);
-    
+
     if (self.cursor + length > self.end) {
         // TODO: What to do if length == 4GiB
     }
     NSString *string= [NSString stringWithFormat:@"%.*s", length, self.cursor];
     self.cursor += length;
-    
+
     return string;
 }
 
@@ -110,7 +110,7 @@ enum AMQParserFieldValue {
     if (!self.cursor || self.cursor + 1 > self.end) {
         // throw or something
     }
-    
+
     return *((self.cursor)++) != 0;
 }
 
