@@ -1,15 +1,16 @@
 #import <Foundation/Foundation.h>
-#import "AMQProtocolValues.h"
 
 @interface AMQParser : NSObject
 
 - (instancetype)initWithData:(NSData *)data;
 
-- (AMQTable *)parseFieldTable;
-- (AMQOctet *)parseOctet;
-- (AMQLongstr *)parseLongString;
-- (AMQShortstr *)parseShortString;
-- (AMQLong *)parseLongUInt;
-- (AMQShort *)parseShortUInt;
+- (NSDictionary *)parseFieldTable;
+- (char)parseOctet;
+- (NSString *)parseLongString;
+- (NSString *)parseShortString;
+- (NSNumber *)parseLongUInt;
+- (NSNumber *)parseLongLongUInt;
+- (NSNumber *)parseShortUInt;
+- (BOOL)parseBoolean;
 
 @end

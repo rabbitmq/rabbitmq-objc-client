@@ -1,54 +1,59 @@
 #import <Foundation/Foundation.h>
 @import Mantle;
+#import "AMQParser.h"
 
 @protocol AMQEncoding <NSObject>
 - (nonnull NSData *)amqEncoded;
 @end
 
-@protocol AMQFieldValue <NSObject>
+@protocol AMQParseable <NSObject>
+- (nonnull instancetype)initWithParser:(nonnull AMQParser *)parser;
+@end
+
+@protocol AMQFieldValue <NSObject,AMQEncoding,AMQParseable>
 - (nonnull NSData *)amqFieldValueType;
 @end
 
-@interface AMQOctet : MTLModel<AMQEncoding>
+@interface AMQOctet : MTLModel<AMQEncoding,AMQParseable>
 @property (nonatomic, readonly) NSUInteger integerValue;
 - (nonnull instancetype)init:(char)octet;
 @end
 
-@interface AMQBoolean : MTLModel<AMQEncoding,AMQFieldValue>
+@interface AMQBoolean : MTLModel<AMQEncoding,AMQFieldValue,AMQParseable>
 @property (nonatomic, readonly) BOOL boolValue;
 - (nonnull instancetype)init:(BOOL)boolean;
 @end
 
-@interface AMQShort : MTLModel<AMQEncoding,AMQFieldValue>
+@interface AMQShort : MTLModel<AMQFieldValue>
 @property (nonatomic, readonly) NSUInteger integerValue;
 - (nonnull instancetype)init:(NSUInteger)val;
 @end
 
-@interface AMQLong : MTLModel<AMQEncoding,AMQFieldValue>
+@interface AMQLong : MTLModel<AMQFieldValue>
 @property (nonatomic, readonly) NSUInteger integerValue;
 - (nonnull instancetype)init:(NSUInteger)val;
 @end
 
-@interface AMQLonglong : MTLModel<AMQEncoding,AMQFieldValue>
+@interface AMQLonglong : MTLModel<AMQFieldValue>
 @property (nonatomic, readonly) uint64_t integerValue;
 - (nonnull instancetype)init:(uint64_t)val;
 @end
 
-@interface AMQShortstr : MTLModel<AMQEncoding,AMQFieldValue>
+@interface AMQShortstr : MTLModel<AMQFieldValue>
 @property (nonnull, nonatomic, copy, readonly) NSString *stringValue;
 - (nonnull instancetype)init:(nonnull NSString *)string;
 @end
 
-@interface AMQLongstr : MTLModel<AMQEncoding,AMQFieldValue>
+@interface AMQLongstr : MTLModel<AMQFieldValue>
 @property (nonnull, nonatomic, copy, readonly) NSString *stringValue;
 - (nonnull instancetype)init:(nonnull NSString *)string;
 @end
 
-@interface AMQTable : MTLModel<AMQEncoding,AMQFieldValue>
+@interface AMQTable : MTLModel<AMQFieldValue>
 - (nonnull instancetype)init:(nonnull NSDictionary *)dictionary;
 @end
 
-@interface AMQTimestamp : MTLModel<AMQEncoding,AMQFieldValue>
+@interface AMQTimestamp : MTLModel<AMQFieldValue>
 - (nonnull instancetype)init:(nonnull NSDate *)date;
 @end
 

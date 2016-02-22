@@ -2,7 +2,7 @@ import UIKit
 
 class MethodFixtures {
     static func connectionStart() -> AMQProtocolConnectionStart {
-        let capabilities = AMQTable([
+        let dict: [String : AMQBoolean] = [
             "authentication_failure_close" : AMQBoolean(true),
             "basic.nack"                   : AMQBoolean(true),
             "connection.blocked"           : AMQBoolean(true),
@@ -11,7 +11,8 @@ class MethodFixtures {
             "exchange_exchange_bindings"   : AMQBoolean(true),
             "per_consumer_qos"             : AMQBoolean(true),
             "publisher_confirms"           : AMQBoolean(true)
-            ])
+        ]
+        let capabilities = AMQTable(dict)
         return AMQProtocolConnectionStart(
             versionMajor: AMQOctet(0),
             versionMinor: AMQOctet(9),
@@ -102,7 +103,7 @@ class MethodFixtures {
 
 class DataFixtures {
     static func connectionStart() -> NSData {
-        let capabilities = AMQTable([
+        let dict: [String : AMQBoolean] = [
             "authentication_failure_close" : AMQBoolean(true),
             "basic.nack"                   : AMQBoolean(true),
             "connection.blocked"           : AMQBoolean(true),
@@ -111,7 +112,8 @@ class DataFixtures {
             "exchange_exchange_bindings"   : AMQBoolean(true),
             "per_consumer_qos"             : AMQBoolean(true),
             "publisher_confirms"           : AMQBoolean(true)
-            ])
+        ]
+        let capabilities = AMQTable(dict)
         let start = AMQProtocolConnectionStart(
             versionMajor: AMQOctet(0),
             versionMinor: AMQOctet(9),

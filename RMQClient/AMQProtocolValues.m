@@ -17,8 +17,8 @@
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)coder {
-    return [coder decodeObjectForKey:@"octet"];
+- (instancetype)initWithParser:(AMQParser *)parser {
+    return [self init:[parser parseOctet]];
 }
 
 - (NSData *)amqEncoded {
@@ -40,6 +40,10 @@
         self.boolValue = boolean;
     }
     return self;
+}
+
+- (instancetype)initWithParser:(AMQParser *)parser {
+    return [self init:[parser parseBoolean]];
 }
 
 - (NSData *)amqEncoded {
@@ -67,8 +71,8 @@
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)coder {
-    return [coder decodeObjectForKey:@"short"];
+- (instancetype)initWithParser:(AMQParser *)parser {
+    return [self init:[parser parseShortUInt].integerValue];
 }
 
 - (NSData *)amqEncoded {
@@ -96,8 +100,8 @@
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)coder {
-    return [coder decodeObjectForKey:@"long"];
+- (instancetype)initWithParser:(AMQParser *)parser {
+    return [self init:[parser parseLongUInt].integerValue];
 }
 
 - (NSData *)amqEncoded {
@@ -125,6 +129,10 @@
     return self;
 }
 
+- (instancetype)initWithParser:(AMQParser *)parser {
+    return [self init:[parser parseLongLongUInt].integerValue];
+}
+
 - (NSData *)amqEncoded {
     uint64_t longVal = CFSwapInt64HostToBig(self.integerValue);
     return [NSData dataWithBytes:&longVal length:sizeof(uint64_t)];
@@ -150,8 +158,8 @@
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)coder {
-    return [coder decodeObjectForKey:@"shortstr"];
+- (instancetype)initWithParser:(AMQParser *)parser {
+    return [self init:[parser parseShortString]];
 }
 
 - (NSData *)amqEncoded {
@@ -182,8 +190,8 @@
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)coder {
-    return [coder decodeObjectForKey:@"longstr"];
+- (instancetype)initWithParser:(AMQParser *)parser {
+    return [self init:[parser parseLongString]];
 }
 
 - (NSData *)amqEncoded {
@@ -214,8 +222,8 @@
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)coder {
-    return [coder decodeObjectForKey:@"field-table"];
+- (instancetype)initWithParser:(AMQParser *)parser {
+    return [self init:[parser parseFieldTable]];
 }
 
 - (NSData *)amqEncoded {
@@ -253,6 +261,10 @@
         self.date = date;
     }
     return self;
+}
+
+- (instancetype)initWithParser:(AMQParser *)parser {
+    return [self init:[NSDate dateWithTimeIntervalSince1970:[parser parseLongLongUInt].integerValue]];
 }
 
 - (NSData *)amqEncoded {
