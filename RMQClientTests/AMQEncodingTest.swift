@@ -65,7 +65,7 @@ class AMQEncodingTest: XCTestCase {
         )
         let data = AMQFrame(channelID: 42, payload: payload).amqEncoded()
         let parser = AMQParser(data: data)
-        let hydrated = AMQContentHeader(parser: parser)
+        let hydrated = AMQFrame(parser: parser).payload as! AMQContentHeader
         XCTAssertEqual(payload, hydrated)
     }
 

@@ -364,10 +364,6 @@
 }
 
 - (instancetype)initWithParser:(AMQParser *)parser {
-    [parser parseOctet];
-    [parser parseShortUInt];
-    [parser parseLongUInt];
-
     NSNumber *classID = @([parser parseShortUInt].integerValue);
     [parser parseShortUInt]; // weight
     NSNumber *bodySize = [parser parseLongLongUInt];
@@ -457,7 +453,7 @@
 @interface AMQFrameset ()
 @property (nonatomic, copy, readwrite) NSNumber *channelID;
 @property (nonatomic, readwrite) id<AMQMethod> method;
-@property (nonatomic, readwrite) id<AMQContentHeader> contentHeader;
+@property (nonatomic, readwrite) id<AMQPayload> contentHeader;
 @property (nonatomic, readwrite) NSArray *contentBodies;
 @end
 
@@ -465,7 +461,7 @@
 
 - (instancetype)initWithChannelID:(NSNumber *)channelID
                            method:(id<AMQMethod>)method
-                    contentHeader:(id<AMQContentHeader>)contentHeader
+                    contentHeader:(id<AMQPayload>)contentHeader
                     contentBodies:(NSArray *)contentBodies {
     self = [super init];
     if (self) {
@@ -497,6 +493,12 @@
 @property (nonatomic, readwrite) id<AMQPayload> payload;
 @end
 
+typedef NS_ENUM(char, AMQFrameType) {
+    AMQFrameTypeMethod = 1,
+    AMQFrameTypeContentHeader,
+    AMQFrameTypeContentBody,
+};
+
 @implementation AMQFrame
 
 - (instancetype)initWithChannelID:(NSNumber *)channelID
@@ -507,6 +509,24 @@
         self.payload = payload;
     }
     return self;
+}
+
+- (instancetype)initWithParser:(AMQParser *)parser {
+    char typeID = [parser parseOctet];
+    NSNumber *channelID = [parser parseShortUInt];
+    NSNumber *payloadSize = [parser parseLongUInt];
+
+    id <AMQPayload> payload;
+    switch (typeID) {
+        case AMQFrameTypeContentHeader:
+            payload = [[AMQContentHeader alloc] initWithParser:parser];
+            break;
+
+        default:
+            break;
+    }
+
+    return [self initWithChannelID:channelID payload:payload];
 }
 
 - (NSData *)amqEncoded {

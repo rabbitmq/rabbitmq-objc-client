@@ -27,14 +27,14 @@
         if (method.hasContent) {
             [self.transport readFrame:^(NSData * _Nonnull headerData) {
                 AMQParser *headerParser  = [[AMQParser alloc] initWithData:headerData];
-                AMQContentHeader *header = [[AMQContentHeader alloc] initWithParser:headerParser];
+                AMQFrame *header = [[AMQFrame alloc] initWithParser:headerParser];
 
                 [self.transport readFrame:^(NSData * _Nonnull bodyData) {
                     AMQParser *bodyParser = [[AMQParser alloc] initWithData:bodyData];
                     AMQContentBody *body  = [[AMQContentBody alloc] initWithParser:bodyParser];
                     AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:methodDecoder.channelID
                                                                             method:method
-                                                                     contentHeader:header
+                                                                     contentHeader:header.payload
                                                                      contentBodies:@[body]];
                     [self.frameHandler handleFrameset:frameset];
                 }];
