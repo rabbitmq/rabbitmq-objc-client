@@ -1,6 +1,7 @@
 import XCTest
 
 @objc class EncodableMethod: NSObject, AMQMethod, NSCopying {
+    var hasContent = false
     static func frames() -> [AnyObject] {
         return [[]]
     }

@@ -75,6 +75,7 @@
 @end
 
 @protocol AMQMethod <NSObject, AMQPayload>
+@property (nonatomic, readonly) BOOL hasContent;
 + (nonnull NSArray *)frames;
 - (nonnull instancetype)initWithDecodedFrames:(nonnull NSArray *)frames;
 @end
