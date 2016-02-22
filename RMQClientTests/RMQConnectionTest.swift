@@ -23,7 +23,7 @@ class RMQConnectionTest: XCTestCase {
         transport.handshake()
         conn.close()
 
-        transport.assertClientSendsMethod(
+        transport.assertClientSentMethod(
             AMQProtocolConnectionClose(
                 replyCode: AMQShort(200),
                 replyText: AMQShortstr("Goodbye"),
@@ -45,7 +45,7 @@ class RMQConnectionTest: XCTestCase {
         XCTAssertTrue(transport.isConnected())
         transport.serverSendsMethod(MethodFixtures.connectionClose(), channelID: 0)
         XCTAssertFalse(transport.isConnected())
-        transport.assertClientSendsMethod(MethodFixtures.connectionCloseOk(), channelID: 0)
+        transport.assertClientSentMethod(MethodFixtures.connectionCloseOk(), channelID: 0)
     }
 
     func testCreatingAChannelSendsAChannelOpenAndReceivesOpenOK() {

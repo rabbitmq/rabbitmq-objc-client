@@ -45,14 +45,14 @@ class RMQQueueTest: XCTestCase, AMQReplyContext {
         transport.connect {}
         
         let ch = connection.createChannel()
-        transport.assertClientSendsMethod(MethodFixtures.channelOpen(), channelID: 1)
+        transport.assertClientSentMethod(MethodFixtures.channelOpen(), channelID: 1)
         
         let queue = ch.queue(
             "cool.queue",
             autoDelete: false,
             exclusive: false
         )
-        transport.assertClientSendsMethod(MethodFixtures.queueDeclare("cool.queue"), channelID: 1)
+        transport.assertClientSentMethod(MethodFixtures.queueDeclare("cool.queue"), channelID: 1)
 
         queue.publish("my great message")
 
@@ -83,7 +83,7 @@ class RMQQueueTest: XCTestCase, AMQReplyContext {
             contentBodies: [body]
         )
         transport
-            .assertClientSendsFrameset(publishFrameset)
+            .assertClientSentFrameset(publishFrameset)
 
 //        queue.pop()
 //

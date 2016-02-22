@@ -28,12 +28,12 @@ import XCTest
         callbacks.append(complete)
     }
     func handshake() -> ControlledInteractionTransport {
-        assertClientSendsProtocolHeader()
+        assertClientSentProtocolHeader()
         serverSendsMethod(MethodFixtures.connectionStart(), channelID: 0)
-        assertClientSendsMethod(MethodFixtures.connectionStartOk(), channelID: 0)
+        assertClientSentMethod(MethodFixtures.connectionStartOk(), channelID: 0)
         serverSendsMethod(MethodFixtures.connectionTune(), channelID: 0)
-        assertClientSendsMethod(MethodFixtures.connectionTuneOk(), channelID: 0)
-        assertClientSendsMethod(MethodFixtures.connectionOpen(), channelID: 0)
+        assertClientSentMethod(MethodFixtures.connectionTuneOk(), channelID: 0)
+        assertClientSentMethod(MethodFixtures.connectionOpen(), channelID: 0)
         serverSendsMethod(MethodFixtures.connectionOpenOk(), channelID: 0)
         return self
     }
@@ -49,7 +49,7 @@ import XCTest
         serverSendsData(AMQFrame(channelID: channelID, payload: amqMethod).amqEncoded())
         return self
     }
-    func assertClientSendsMethod(amqMethod: AMQMethod, channelID: Int) -> ControlledInteractionTransport {
+    func assertClientSentMethod(amqMethod: AMQMethod, channelID: Int) -> ControlledInteractionTransport {
         if outboundData.isEmpty {
             XCTFail("nothing sent recently")
         } else {
@@ -61,7 +61,7 @@ import XCTest
         }
         return self
     }
-    func assertClientSendsFrameset(frameset: AMQFrameset) -> ControlledInteractionTransport {
+    func assertClientSentFrameset(frameset: AMQFrameset) -> ControlledInteractionTransport {
         if outboundData.isEmpty {
             XCTFail("nothing sent recently")
         } else {
@@ -73,7 +73,7 @@ import XCTest
         }
         return self
     }
-    func assertClientSendsProtocolHeader() -> ControlledInteractionTransport {
+    func assertClientSentProtocolHeader() -> ControlledInteractionTransport {
         TestHelper.assertEqualBytes(
             AMQProtocolHeader().amqEncoded(),
             outboundData.removeAtIndex(0)
