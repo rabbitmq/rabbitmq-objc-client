@@ -59,7 +59,7 @@ class RMQQueueTest: XCTestCase, AMQReplyContext {
         let publish = AMQProtocolBasicPublish(
             reserved1: AMQShort(0),
             exchange: AMQShortstr(""),
-            routingKey: AMQShortstr(""),
+            routingKey: AMQShortstr("cool.queue"),
             options: AMQProtocolBasicPublishOptions.NoOptions
         )
         let bodyData = "my great message".dataUsingEncoding(NSUTF8StringEncoding)!

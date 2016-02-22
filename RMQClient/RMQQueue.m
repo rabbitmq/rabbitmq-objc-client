@@ -4,15 +4,19 @@
 #import "AMQProtocolBasicProperties.h"
 
 @interface RMQQueue ()
+@property (nonatomic, copy, readwrite) NSString *name;
 @property (weak, nonatomic, readwrite) id <RMQSender> sender;
 @property (weak, nonatomic, readwrite) NSNumber *channelID;
 @end
 
 @implementation RMQQueue
 
-- (instancetype)initWithChannelID:(NSNumber *)channelID sender:(id<RMQSender>)sender {
+- (instancetype)initWithName:(NSString *)name
+                   channelID:(NSNumber *)channelID
+                      sender:(id<RMQSender>)sender {
     self = [super init];
     if (self) {
+        self.name = name;
         self.channelID = channelID;
         self.sender = sender;
     }
@@ -22,7 +26,7 @@
 - (RMQQueue *)publish:(NSString *)message {
     AMQProtocolBasicPublish *method = [[AMQProtocolBasicPublish alloc] initWithReserved1:[[AMQShort alloc] init:0]
                                                                                 exchange:[[AMQShortstr alloc] init:@""]
-                                                                              routingKey:[[AMQShortstr alloc] init:@""]
+                                                                              routingKey:[[AMQShortstr alloc] init:self.name]
                                                                                  options:0];
     NSData *contentBodyData = [message dataUsingEncoding:NSUTF8StringEncoding];
     AMQContentBody *contentBody = [[AMQContentBody alloc] initWithData:contentBodyData];
