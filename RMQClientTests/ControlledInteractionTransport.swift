@@ -27,7 +27,7 @@ import XCTest
     func readFrame(complete: (NSData) -> Void) {
         callbacks.append(complete)
     }
-    func handshake() -> ControlledInteractionTransport {
+    func assertHandshake() -> ControlledInteractionTransport {
         assertClientSentProtocolHeader()
         serverSendsPayload(MethodFixtures.connectionStart(), channelID: 0)
         assertClientSentMethod(MethodFixtures.connectionStartOk(), channelID: 0)
@@ -35,6 +35,13 @@ import XCTest
         assertClientSentMethod(MethodFixtures.connectionTuneOk(), channelID: 0)
         assertClientSentMethod(MethodFixtures.connectionOpen(), channelID: 0)
         serverSendsPayload(MethodFixtures.connectionOpenOk(), channelID: 0)
+        return self
+    }
+    func handshake() -> ControlledInteractionTransport {
+        serverSendsPayload(MethodFixtures.connectionStart(), channelID: 0)
+        serverSendsPayload(MethodFixtures.connectionTune(), channelID: 0)
+        serverSendsPayload(MethodFixtures.connectionOpenOk(), channelID: 0)
+        outboundData = []
         return self
     }
     func serverSendsData(data: NSData) -> ControlledInteractionTransport {
@@ -54,9 +61,11 @@ import XCTest
             XCTFail("nothing sent recently")
         } else {
             let actual = outboundData.removeAtIndex(0)
+            let decoder = AMQMethodDecoder(data: actual)
             TestHelper.assertEqualBytes(
                 AMQFrame(channelID: channelID, payload: amqMethod).amqEncoded(),
-                actual
+                actual,
+                "\nExpected:\n\(amqMethod.dynamicType)\nGot:\n\(decoder.decode().dynamicType)"
             )
         }
         return self

@@ -13,6 +13,9 @@
 @property (nonatomic, readwrite) NSDictionary *channels;
 @property (nonatomic, readwrite) RMQReaderLoop *readerLoop;
 @property (nonatomic, readwrite) id <RMQIDAllocator> idAllocator;
+@property (nonatomic, readwrite) NSMutableArray *watchedIncomingMethods;
+@property (nonatomic, readwrite) dispatch_semaphore_t methodSemaphore;
+@property (atomic, readwrite) AMQFrameset *lastWaitedUponFrameset;
 @end
 
 @implementation RMQConnection
@@ -45,6 +48,9 @@
         self.locale = @"en_GB";
         self.readerLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport frameHandler:self];
         self.channels = @{@0 : [[RMQChannel alloc] init:@0 sender:self]};
+        self.watchedIncomingMethods = [NSMutableArray new];
+        self.methodSemaphore = dispatch_semaphore_create(0);
+        self.lastWaitedUponFrameset = nil;
     }
     return self;
 }
@@ -80,6 +86,8 @@
     return ch;
 }
 
+# pragma mark - RMQSender
+
 - (void)sendMethod:(id<AMQMethod>)amqMethod channelID:(NSNumber *)channelID {
     [self send:[[AMQFrame alloc] initWithChannelID:channelID payload:amqMethod]];
     if ([self shouldSendNextRequest:amqMethod]) {
@@ -94,8 +102,34 @@
                onComplete:^{}];
 }
 
+- (BOOL)waitOnMethod:(Class)amqMethodClass
+           channelID:(NSNumber *)channelID
+               error:(NSError *__autoreleasing  _Nullable *)error {
+    [self.watchedIncomingMethods addObject:@[channelID, amqMethodClass]];
+    
+    char delay = 2;
+    dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC);
+    if (dispatch_semaphore_wait(self.methodSemaphore, timeout) == 0) {
+        return YES;
+    } else {
+        NSString *errorMessage = @"Timeout";
+        *error = [NSError errorWithDomain:@"com.rabbitmq.rmqconnection"
+                                     code:0
+                                 userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
+        return NO;
+    }
+}
+
+# pragma mark - RMQFrameHandler
+
 - (void)handleFrameset:(AMQFrameset *)frameset {
     id method = frameset.method;
+    NSArray *watchedMethod = @[frameset.channelID, [method class]];
+    if ([self.watchedIncomingMethods containsObject:watchedMethod]) {
+        [self.watchedIncomingMethods removeObject:watchedMethod];
+        self.lastWaitedUponFrameset = frameset;
+        dispatch_semaphore_signal(self.methodSemaphore);
+    }
     if ([self shouldReply:method]) {
         id<AMQMethod> reply = [method replyWithContext:self];
         [self sendMethod:reply channelID:frameset.channelID];

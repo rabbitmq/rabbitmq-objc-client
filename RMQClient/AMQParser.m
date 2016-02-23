@@ -19,7 +19,7 @@ enum AMQParserFieldValue {
     self = [super init];
     if (self) {
         self.cursor = (const char *)data.bytes;
-        self.end    = (const char *)data.bytes + data.length;
+        self.end    = (const char *)data.bytes + data.length - 1;
     }
     return self;
 }
@@ -115,8 +115,7 @@ enum AMQParserFieldValue {
 }
 
 - (NSData *)rest {
-    char endByte = 0xce;
-    NSUInteger length = self.end - self.cursor - sizeof(endByte);
+    NSUInteger length = self.end - self.cursor;
     return [NSData dataWithBytes:(void *)self.cursor length:length];
 }
 

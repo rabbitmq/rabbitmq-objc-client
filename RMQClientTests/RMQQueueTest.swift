@@ -6,39 +6,6 @@ class RMQQueueTest: XCTestCase, AMQReplyContext {
         return AMQCredentials()
     }
 
-//    func testGetEmptyMessage() {
-//        let transport = ControlledInteractionTransport()
-//        transport.connect {}
-//
-//        let ch = RMQChannel(42, transport: transport, replyContext: self)
-//        let queue = ch.queue(
-//            "cool.queue",
-//            autoDelete: false,
-//            exclusive: false
-//        )
-//
-//        queue.pop()
-//
-//        let get = AMQProtocolBasicGet(
-//            reserved1: AMQShort(0),
-//            queue: AMQShortstr("cool.queue"),
-//            noAck: AMQBit(1) // TODO: replace with 0 and test acks too
-//        )
-//        let getOk = AMQProtocolBasicGetOk(
-//            deliveryTag: AMQLonglong(1234),
-//            redelivered: AMQBit(0),
-//            exchange: AMQShortstr(""),
-//            routingKey: AMQShortstr(""),
-//            messageCount: AMQLong(1)
-//        )
-//        transport
-//            .assertClientSendsMethod(get, channelID: 42)
-//            .serverSendsMethod(getOk, channelID: 42)
-//            .serverSendsContentHeader(classID: 60, bodySize: 0, properties: [:])
-//
-//        XCTAssertEqual(RMQEmptyMessage(), queue.pop())
-//    }
-//
     func testPublishOnDefaultExchange() {
         let transport = ControlledInteractionTransport()
         let connection = RMQConnection(user: "", password: "", vhost: "", transport: transport, idAllocator: RMQChannelIDAllocator())
@@ -82,29 +49,53 @@ class RMQQueueTest: XCTestCase, AMQReplyContext {
             contentHeader: header,
             contentBodies: [body]
         )
-        transport
-            .assertClientSentFrameset(publishFrameset)
+        transport.assertClientSentFrameset(publishFrameset)
+    }
 
-//        queue.pop()
-//
-//        let get = AMQProtocolBasicGet(
-//            reserved1: AMQShort(0),
-//            queue: AMQShortstr("cool.queue"),
-//            noAck: AMQBit(1) // TODO: replace with 0 and test acks too
-//        )
-//        let getOk = AMQProtocolBasicGetOk(
-//            deliveryTag: AMQLonglong(1234),
-//            redelivered: AMQBit(0),
-//            exchange: AMQShortstr(""),
-//            routingKey: AMQShortstr(""),
-//            messageCount: AMQLong(1)
-//        )
-//        transport
-//            .assertClientSendsMethod(get, channelID: 42)
-//            .serverSendsMethod(getOk, channelID: 42)
-//            .serverSendsContentHeader()
-//
-//        XCTAssertEqual("my great message", queue.pop().content)
+    func testPop() {
+        let transport = ControlledInteractionTransport()
+        let connection = RMQConnection(user: "", password: "", vhost: "", transport: transport, idAllocator: RMQChannelIDAllocator())
+        connection.start()
+
+        transport.handshake()
+
+        let ch = connection.createChannel()
+        transport.assertClientSentMethod(MethodFixtures.channelOpen(), channelID: 1)
+
+        let queue = ch.queue(
+            "cool.queue",
+            autoDelete: false,
+            exclusive: false
+        )
+        transport.assertClientSentMethod(MethodFixtures.queueDeclare("cool.queue"), channelID: 1)
+
+        let get = AMQProtocolBasicGet(
+            reserved1: AMQShort(0),
+            queue: AMQShortstr("cool.queue"),
+            options: AMQProtocolBasicGetOptions.NoOptions
+        )
+        let getOk = AMQProtocolBasicGetOk(
+            deliveryTag: AMQLonglong(1234),
+            options: AMQProtocolBasicGetOkOptions.NoOptions,
+            exchange: AMQShortstr(""),
+            routingKey: AMQShortstr("cool.queue"),
+            messageCount: AMQLong(0)
+        )
+        let contentHeader = AMQContentHeader(classID: getOk.classID(), bodySize: 23, properties: [])
+        let contentBody = AMQContentBody(data: "message without special chars".dataUsingEncoding(NSUTF8StringEncoding)!)
+
+        let halfSecond = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
+        dispatch_after(halfSecond, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            transport
+                .assertClientSentMethod(get, channelID: 1)
+                .serverSendsPayload(getOk, channelID: 1)
+                .serverSendsPayload(contentHeader, channelID: 1)
+                .serverSendsPayload(contentBody, channelID: 1)
+        }
+
+        let message = queue.pop()
+
+        XCTAssertEqual("message without special chars", message.content)
     }
 
 }

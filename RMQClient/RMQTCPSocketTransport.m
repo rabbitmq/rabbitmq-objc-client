@@ -21,7 +21,8 @@ long closeTag   = UINT32_MAX + 2;
 - (instancetype)initWithHost:(NSString *)host port:(NSNumber *)port callbackStorage:(NSMutableDictionary *)callbacks {
     self = [super init];
     if (self) {
-        self.socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+        self.socket = [[GCDAsyncSocket alloc] initWithDelegate:self
+                                                 delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)];
         self.host = host;
         self.port = port;
         self.callbacks = callbacks;

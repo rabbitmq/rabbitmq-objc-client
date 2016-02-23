@@ -17,14 +17,21 @@ class IntegrationTests: XCTestCase {
         XCTAssert(TestHelper.pollUntil { return transport.isConnected() }, "never connected")
 
         let ch = conn.createChannel()
-        let q = ch.queue("rmqclient.examples.hello_world", autoDelete: true, exclusive: false)
-        q.publish("Hello!")
+        let qname = "rmqclient.integration-tests.\(NSProcessInfo.processInfo().globallyUniqueString)"
+        let q = ch.queue(qname, autoDelete: true, exclusive: false)
+
+        q.publish("message will be truncated")
+
         let message = q.pop() as! RMQContentMessage
 
         let expectedInfo = ["consumer_tag": "foo"]
         let expectedMeta = ["foo": "bar"]
 
-        let expected = RMQContentMessage(deliveryInfo: expectedInfo, metadata: expectedMeta, content: "Hello!")
+        let expected = RMQContentMessage(
+            deliveryInfo: expectedInfo,
+            metadata: expectedMeta,
+            content: "message will be truncate"
+        )
 
         XCTAssertEqual(expected, message)
     }

@@ -47,9 +47,31 @@
 }
 
 - (id<RMQMessage>)pop {
+    AMQProtocolBasicGet *get = [[AMQProtocolBasicGet alloc] initWithReserved1:[[AMQShort alloc] init:0]
+                                                                        queue:[[AMQShortstr alloc] init:self.name]
+                                                                      options:AMQProtocolBasicGetNoOptions];
+    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:self.channelID
+                                                            method:get
+                                                     contentHeader:[AMQContentHeaderNone new]
+                                                     contentBodies:@[]];
+    [self.sender send:frameset];
+
+    NSError *error = NULL;
+    [self.sender waitOnMethod:[AMQProtocolBasicGetOk class]
+                    channelID:self.channelID
+                        error:&error];
+
+    if (error) {
+        NSLog(@"%@", error);
+    }
+
+    AMQFrameset *getOk = self.sender.lastWaitedUponFrameset;
+    AMQContentBody *body = getOk.contentBodies[0];
+    NSString *content = [[NSString alloc] initWithData:body.data encoding:NSASCIIStringEncoding];
+
     return [[RMQContentMessage alloc] initWithDeliveryInfo:@{@"consumer_tag": @"foo"}
                                                   metadata:@{@"foo": @"bar"}
-                                                   content:@"Hello!"];
+                                                   content:content];
 }
 
 - (AMQProtocolBasicPublish *)amqPublish {

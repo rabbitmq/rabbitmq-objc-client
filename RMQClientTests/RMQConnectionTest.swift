@@ -20,7 +20,7 @@ class RMQConnectionTest: XCTestCase {
     func testHandshakingAndClientInitiatedClosing() {
         let transport = ControlledInteractionTransport()
         let conn = startedConnection(transport)
-        transport.handshake()
+        transport.assertHandshake()
         conn.close()
 
         transport.assertClientSentMethod(
@@ -61,5 +61,35 @@ class RMQConnectionTest: XCTestCase {
         transport.mustHaveSent(AMQProtocolChannelOpen(reserved1: AMQShortstr("")), channelID: 1, frame: 4)
 
         transport.serverSends(DataFixtures.channelOpenOk())
+    }
+
+    func testWaitingOnAServerMessageWithSuccess() {
+        let transport = ControlledInteractionTransport()
+        let conn = startedConnection(transport)
+
+        let halfSecond = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
+
+        dispatch_after(halfSecond, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            transport.serverSendsPayload(MethodFixtures.connectionStart(), channelID: 42)
+        }
+
+        try! conn.waitOnMethod(AMQProtocolConnectionStart.self, channelID: 42)
+    }
+
+    func testWaitingOnAServerMethodWithFailure() {
+        let transport = ControlledInteractionTransport()
+        let conn = startedConnection(transport)
+
+        var error: NSError = NSError(domain: "", code: 0, userInfo: [:])
+        do {
+            try conn.waitOnMethod(AMQProtocolConnectionStart.self, channelID: 42)
+        }
+        catch let e as NSError {
+            error = e
+        }
+        catch {
+            XCTFail("Wrong error")
+        }
+        XCTAssertEqual("Timeout", error.localizedDescription)
     }
 }
