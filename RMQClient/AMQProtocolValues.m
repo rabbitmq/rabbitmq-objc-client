@@ -72,7 +72,7 @@
 }
 
 - (instancetype)initWithParser:(AMQParser *)parser {
-    return [self init:[parser parseShortUInt].integerValue];
+    return [self init:[parser parseShortUInt]];
 }
 
 - (NSData *)amqEncoded {
@@ -365,16 +365,16 @@
 }
 
 - (instancetype)initWithParser:(AMQParser *)parser {
-    NSNumber *classID = @([parser parseShortUInt].integerValue);
+    NSNumber *classID = @([parser parseShortUInt]);
     [parser parseShortUInt]; // weight
     UInt64 bodySize = [parser parseLongLongUInt];
-    NSNumber *flags = [parser parseShortUInt];
+    UInt16 flags = [parser parseShortUInt];
 
     NSMutableArray *properties = [NSMutableArray new];
     int i = 0;
     for (Class propertyClass in [[AMQBasicProperties class] properties]) {
         NSUInteger flagBit = [[propertyClass new] flagBit];
-        if (flags.integerValue & flagBit) { // TODO: move flagBit to class
+        if (flags & flagBit) { // TODO: move flagBit to class
             properties[i] = [[propertyClass alloc] initWithParser:parser];
         }
         i++;
@@ -510,7 +510,7 @@ typedef NS_ENUM(char, AMQFrameType) {
 
 - (instancetype)initWithParser:(AMQParser *)parser {
     char typeID = [parser parseOctet];
-    NSNumber *channelID = [parser parseShortUInt];
+    NSNumber *channelID = @([parser parseShortUInt]);
     [parser parseLongUInt]; // payload size
 
     id <AMQPayload> payload;

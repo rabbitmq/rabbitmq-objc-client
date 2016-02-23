@@ -10,7 +10,7 @@
 - (NSString *)parseShortString;
 - (UInt32)parseLongUInt;
 - (UInt64)parseLongLongUInt;
-- (NSNumber *)parseShortUInt;
+- (UInt16)parseShortUInt;
 - (BOOL)parseBoolean;
 - (NSData *)rest;
 

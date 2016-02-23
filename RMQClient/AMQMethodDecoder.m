@@ -21,15 +21,15 @@
     if (self) {
         self.parser    = [[AMQParser alloc] initWithData:data];
         self.typeID    = @([self.parser parseOctet]);
-        self.channelID = [self.parser parseShortUInt];
+        self.channelID = @([self.parser parseShortUInt]);
         self.size      = @([self.parser parseLongUInt]);
     }
     return self;
 }
 
 - (id)decode {
-    NSNumber *classID   = @([self.parser parseShortUInt].integerValue);
-    NSNumber *methodID  = @([self.parser parseShortUInt].integerValue);
+    NSNumber *classID   = @([self.parser parseShortUInt]);
+    NSNumber *methodID  = @([self.parser parseShortUInt]);
     Class methodClass = AMQProtocolMethodMap.methodMap[@[classID, methodID]];
     NSArray *frame = [methodClass frame];
     NSMutableArray *decodedFrame = [NSMutableArray new];
