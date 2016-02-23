@@ -24,22 +24,22 @@
 }
 
 - (RMQQueue *)publish:(NSString *)message {
-    AMQProtocolBasicPublish *method = [[AMQProtocolBasicPublish alloc] initWithReserved1:[[AMQShort alloc] init:0]
-                                                                                exchange:[[AMQShortstr alloc] init:@""]
-                                                                              routingKey:[[AMQShortstr alloc] init:self.name]
-                                                                                 options:0];
+    AMQProtocolBasicPublish *publish = [[AMQProtocolBasicPublish alloc] initWithReserved1:[[AMQShort alloc] init:0]
+                                                                                 exchange:[[AMQShortstr alloc] init:@""]
+                                                                               routingKey:[[AMQShortstr alloc] init:self.name]
+                                                                                  options:AMQProtocolBasicPublishNoOptions];
     NSData *contentBodyData = [message dataUsingEncoding:NSUTF8StringEncoding];
     AMQContentBody *contentBody = [[AMQContentBody alloc] initWithData:contentBodyData];
 
     AMQBasicDeliveryMode *persistent = [[AMQBasicDeliveryMode alloc] init:2];
-    AMQBasicContentType *contentTypeOctetStream = [[AMQBasicContentType alloc] init:@"application/octet-stream"];
+    AMQBasicContentType *octetStream = [[AMQBasicContentType alloc] init:@"application/octet-stream"];
     AMQBasicPriority *lowPriority = [[AMQBasicPriority alloc] init:0];
 
-    AMQContentHeader *contentHeader = [[AMQContentHeader alloc] initWithClassID:@60
+    AMQContentHeader *contentHeader = [[AMQContentHeader alloc] initWithClassID:publish.classID
                                                                        bodySize:@(contentBodyData.length)
-                                                                     properties:@[persistent, contentTypeOctetStream, lowPriority]];
+                                                                     properties:@[persistent, octetStream, lowPriority]];
     AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:self.channelID
-                                                            method:method
+                                                            method:publish
                                                      contentHeader:contentHeader
                                                      contentBodies:@[contentBody]];
     [self.sender send:frameset];

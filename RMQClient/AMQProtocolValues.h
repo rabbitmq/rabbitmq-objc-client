@@ -83,6 +83,7 @@
 + (nonnull NSArray *)frame;
 - (nonnull instancetype)initWithDecodedFrame:(nonnull NSArray *)frame;
 - (BOOL)hasContent;
+- (nonnull NSNumber *)classID;
 @end
 
 @protocol AMQAwaitServerMethod <NSObject>

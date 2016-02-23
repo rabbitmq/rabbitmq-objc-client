@@ -13,6 +13,9 @@ import XCTest
     func frameTypeID() -> NSNumber {
         return 1
     }
+    func classID() -> NSNumber {
+        return 999
+    }
     func hasContent() -> Bool {
         return false
     }
