@@ -31,11 +31,11 @@
 
                 [self.transport readFrame:^(NSData * _Nonnull bodyData) {
                     AMQParser *bodyParser = [[AMQParser alloc] initWithData:bodyData];
-                    AMQContentBody *body  = [[AMQContentBody alloc] initWithParser:bodyParser];
+                    AMQFrame *body = [[AMQFrame alloc] initWithParser:bodyParser];
                     AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:methodDecoder.channelID
                                                                             method:method
                                                                      contentHeader:header.payload
-                                                                     contentBodies:@[body]];
+                                                                     contentBodies:@[body.payload]];
                     [self.frameHandler handleFrameset:frameset];
                 }];
             }];

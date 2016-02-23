@@ -101,7 +101,7 @@
 }
 
 - (instancetype)initWithParser:(AMQParser *)parser {
-    return [self init:[parser parseLongUInt].integerValue];
+    return [self init:[parser parseLongUInt]];
 }
 
 - (NSData *)amqEncoded {
@@ -130,7 +130,7 @@
 }
 
 - (instancetype)initWithParser:(AMQParser *)parser {
-    return [self init:[parser parseLongLongUInt].integerValue];
+    return [self init:[parser parseLongLongUInt]];
 }
 
 - (NSData *)amqEncoded {
@@ -264,7 +264,8 @@
 }
 
 - (instancetype)initWithParser:(AMQParser *)parser {
-    return [self init:[NSDate dateWithTimeIntervalSince1970:[parser parseLongLongUInt].integerValue]];
+    NSTimeInterval interval = [parser parseLongLongUInt];
+    return [self init:[NSDate dateWithTimeIntervalSince1970:interval]];
 }
 
 - (NSData *)amqEncoded {
@@ -366,7 +367,7 @@
 - (instancetype)initWithParser:(AMQParser *)parser {
     NSNumber *classID = @([parser parseShortUInt].integerValue);
     [parser parseShortUInt]; // weight
-    NSNumber *bodySize = [parser parseLongLongUInt];
+    UInt64 bodySize = [parser parseLongLongUInt];
     NSNumber *flags = [parser parseShortUInt];
 
     NSMutableArray *properties = [NSMutableArray new];
@@ -379,7 +380,7 @@
         i++;
     }
 
-    return [self initWithClassID:classID bodySize:bodySize properties:properties];
+    return [self initWithClassID:classID bodySize:@(bodySize) properties:properties];
 }
 
 - (NSNumber *)frameTypeID { return @2; }
@@ -435,11 +436,7 @@
 }
 
 - (instancetype)initWithParser:(AMQParser *)parser {
-    [parser parseOctet];
-    [parser parseShortUInt];
-    NSNumber *size = [parser parseLongUInt];
-
-    return [self initWithData:[parser dataWithLength:size.integerValue]];
+    return [self initWithData:[parser rest]];
 }
 
 - (NSNumber *)frameTypeID { return @3; }
@@ -514,12 +511,16 @@ typedef NS_ENUM(char, AMQFrameType) {
 - (instancetype)initWithParser:(AMQParser *)parser {
     char typeID = [parser parseOctet];
     NSNumber *channelID = [parser parseShortUInt];
-    NSNumber *payloadSize = [parser parseLongUInt];
+    [parser parseLongUInt]; // payload size
 
     id <AMQPayload> payload;
     switch (typeID) {
         case AMQFrameTypeContentHeader:
             payload = [[AMQContentHeader alloc] initWithParser:parser];
+            break;
+
+        case AMQFrameTypeContentBody:
+            payload = [[AMQContentBody alloc] initWithParser:parser];
             break;
 
         default:

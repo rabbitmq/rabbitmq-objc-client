@@ -22,7 +22,7 @@
         self.parser    = [[AMQParser alloc] initWithData:data];
         self.typeID    = @([self.parser parseOctet]);
         self.channelID = [self.parser parseShortUInt];
-        self.size      = [self.parser parseLongUInt];
+        self.size      = @([self.parser parseLongUInt]);
     }
     return self;
 }

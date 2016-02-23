@@ -8,10 +8,10 @@
 - (char)parseOctet;
 - (NSString *)parseLongString;
 - (NSString *)parseShortString;
-- (NSNumber *)parseLongUInt;
-- (NSNumber *)parseLongLongUInt;
+- (UInt32)parseLongUInt;
+- (UInt64)parseLongLongUInt;
 - (NSNumber *)parseShortUInt;
 - (BOOL)parseBoolean;
-- (NSData *)dataWithLength:(NSUInteger)length;
+- (NSData *)rest;
 
 @end

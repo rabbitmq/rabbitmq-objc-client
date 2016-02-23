@@ -28,7 +28,7 @@ enum AMQParserFieldValue {
     NSMutableDictionary *dict = [NSMutableDictionary new];
     const char *start = self.cursor;
 
-    NSNumber *tableLength = [self parseLongUInt];
+    NSNumber *tableLength = @([self parseLongUInt]);
     // if (*cursor + tableLength >= end) error
 
     while (self.cursor < start + tableLength.integerValue && self.cursor < self.end) {
@@ -53,20 +53,20 @@ enum AMQParserFieldValue {
     return dict;
 }
 
-- (NSNumber *)parseLongUInt {
+- (UInt32)parseLongUInt {
     UInt32 value;
     value = CFSwapInt32BigToHost(*(UInt32 *)self.cursor);
     self.cursor += sizeof(value);
 
-    return @(value);
+    return value;
 }
 
-- (NSNumber *)parseLongLongUInt {
+- (UInt64)parseLongLongUInt {
     UInt64 value;
     value = CFSwapInt64BigToHost(*(UInt64 *)self.cursor);
     self.cursor += sizeof(value);
 
-    return @(value);
+    return value;
 }
 
 - (NSNumber *)parseShortUInt {
@@ -114,7 +114,9 @@ enum AMQParserFieldValue {
     return *((self.cursor)++) != 0;
 }
 
-- (NSData *)dataWithLength:(NSUInteger)length {
+- (NSData *)rest {
+    char endByte = 0xce;
+    NSUInteger length = self.end - self.cursor - sizeof(endByte);
     return [NSData dataWithBytes:(void *)self.cursor length:length];
 }
 
