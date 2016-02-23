@@ -4,7 +4,7 @@
 #import "RMQQueue.h"
 #import "AMQURI.h"
 #import "RMQTCPSocketTransport.h"
-#import "AMQDecoder.h"
+#import "AMQMethodDecoder.h"
 #import "AMQProtocolHeader.h"
 #import "AMQProtocolValues.h"
 #import "AMQProtocolBasicProperties.h"

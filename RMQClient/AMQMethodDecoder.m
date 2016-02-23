@@ -1,9 +1,9 @@
-#import "AMQDecoder.h"
+#import "AMQMethodDecoder.h"
 #import "AMQParser.h"
 #import "AMQProtocolValues.h"
 #import "AMQProtocolMethodMap.h"
 
-@interface AMQDecoder ()
+@interface AMQMethodDecoder ()
 
 @property (nonatomic, readwrite) AMQParser *parser;
 @property (nonatomic, readwrite) NSNumber *typeID;
@@ -14,7 +14,7 @@
 
 @end
 
-@implementation AMQDecoder
+@implementation AMQMethodDecoder
 
 - (instancetype)initWithData:(NSData *)data {
     self = [super init];

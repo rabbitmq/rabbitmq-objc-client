@@ -1,5 +1,5 @@
 #import "RMQChannel.h"
-#import "AMQDecoder.h"
+#import "AMQMethodDecoder.h"
 #import "AMQProtocolValues.h"
 #import "AMQProtocolMethods.h"
 

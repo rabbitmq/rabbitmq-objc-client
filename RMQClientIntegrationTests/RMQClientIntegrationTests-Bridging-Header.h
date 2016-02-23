@@ -1,7 +1,7 @@
 #import "RMQConnection.h"
 #import "RMQQueue.h"
 #import "RMQTCPSocketTransport.h"
-#import "AMQDecoder.h"
+#import "AMQMethodDecoder.h"
 #import "AMQProtocolHeader.h"
 #import "AMQProtocolMethods.h"
 #import "RMQChannelIDAllocator.h"

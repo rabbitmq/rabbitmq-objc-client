@@ -1,7 +1,7 @@
 #import "RMQReaderLoop.h"
 #import "AMQProtocolMethods.h"
 #import "AMQProtocolValues.h"
-#import "AMQDecoder.h"
+#import "AMQMethodDecoder.h"
 
 @interface RMQReaderLoop ()
 @property (nonatomic, readwrite) id<RMQTransport>transport;
@@ -21,7 +21,7 @@
 
 - (void)runOnce {
     [self.transport readFrame:^(NSData * _Nonnull methodData) {
-        AMQDecoder *methodDecoder = [[AMQDecoder alloc] initWithData:methodData];
+        AMQMethodDecoder *methodDecoder = [[AMQMethodDecoder alloc] initWithData:methodData];
         id<AMQMethod> method = [methodDecoder decode];
 
         if (method.hasContent) {
