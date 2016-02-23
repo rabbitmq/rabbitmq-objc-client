@@ -372,11 +372,8 @@
 
     NSMutableArray *properties = [NSMutableArray new];
     int i = 0;
-    for (Class propertyClass in [[AMQBasicProperties class] properties]) {
-        NSUInteger flagBit = [[propertyClass new] flagBit];
-        if (flags & flagBit) { // TODO: move flagBit to class
-            properties[i] = [[propertyClass alloc] initWithParser:parser];
-        }
+    for (Class propertyClass in [self propertyClassesWithFlags:flags]) {
+        properties[i] = [[propertyClass alloc] initWithParser:parser];
         i++;
     }
 
@@ -405,6 +402,13 @@
     }
 
     return encoded;
+}
+
+- (NSArray *)propertyClassesWithFlags:(UInt16)flags {
+    NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id <AMQBasicValue> _Nonnull propertyClass, NSDictionary<NSString *,id> * _Nullable bindings) {
+        return (flags & [propertyClass flagBit]) != 0;
+    }];
+    return [[[AMQBasicProperties class] properties] filteredArrayUsingPredicate:pred];
 }
 
 @end

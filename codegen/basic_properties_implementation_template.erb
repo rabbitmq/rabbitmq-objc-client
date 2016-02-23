@@ -1,4 +1,5 @@
 @implementation <%= class_name %>
-- (NSUInteger)flagBit { return <%= flag_bit %>; }
++ (NSUInteger)flagBit { return <%= flag_bit %>; }
+- (NSUInteger)flagBit { return [self class].flagBit; }
 @end
 
