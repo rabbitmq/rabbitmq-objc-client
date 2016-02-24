@@ -1,13 +1,13 @@
 import XCTest
 
-class RMQTransportContract: XCTestCase {
+class RMQTransportContract {
+    var transport: RMQTransport
 
-    func newTransport() -> RMQTransport {
-        return FakeTransport().serverWillReplyWith(DataFixtures.connectionStart())
+    init(_ aTransport: RMQTransport) {
+        transport = aTransport
     }
     
-    func testConnectAndDisconnect() {
-        let transport = newTransport()
+    func connectAndDisconnect() -> RMQTransportContract {
         var connected = false
         transport.connect() {
             connected = true
@@ -18,11 +18,11 @@ class RMQTransportContract: XCTestCase {
             connected = false
         }
         XCTAssert(TestHelper.pollUntil { return !connected }, "didn't disconnect")
+
+        return self
     }
     
-    func testThrowsWhenWritingButNotConnected() {
-        let transport = newTransport()
-        
+    func throwsWhenWritingButNotConnected() -> RMQTransportContract {
         do {
             try transport.write(NSData()) {}
             XCTFail("No error assigned")
@@ -33,29 +33,32 @@ class RMQTransportContract: XCTestCase {
         catch {
             XCTFail("Wrong error")
         }
+
+        return self
     }
     
-    func testSendingPreambleStimulatesAConnectionStart() {
-        let transport = newTransport()
-        
+    func sendingPreambleStimulatesAConnectionStart() -> RMQTransportContract {
         defer { transport.close() {} }
         
         var readData: NSData = NSData()
         var connectionStart = AMQProtocolConnectionStart()
-        
+
         transport.connect() {
             try! transport.write(AMQProtocolHeader().amqEncoded()) {
                 XCTAssertEqual(0, readData.length)
-                transport.readFrame() { receivedData in
+                self.transport.readFrame() { receivedData in
                     readData = receivedData
                     let decoder = AMQMethodDecoder(data: readData)
                     connectionStart = decoder.decode() as! AMQProtocolConnectionStart
                 }
             }
         }
+
         XCTAssert(TestHelper.pollUntil { return readData.length > 0 }, "didn't read")
         XCTAssertEqual(AMQOctet(0), connectionStart.versionMajor)
         XCTAssertEqual(AMQOctet(9), connectionStart.versionMinor)
+
+        return self
     }
 }
 

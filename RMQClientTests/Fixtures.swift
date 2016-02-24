@@ -87,6 +87,10 @@ class MethodFixtures {
         return AMQProtocolChannelOpen(reserved1: AMQShortstr(""))
     }
 
+    static func channelOpenOk() -> AMQProtocolChannelOpenOk {
+        return AMQProtocolChannelOpenOk(reserved1: AMQLongstr(""))
+    }
+
     static func queueDeclare(name: String) -> AMQProtocolQueueDeclare {
         return AMQProtocolQueueDeclare(
             reserved1: AMQShort(0),

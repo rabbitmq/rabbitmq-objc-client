@@ -1,5 +1,9 @@
 import XCTest
 
+enum TestDoubleTransportError: ErrorType {
+    case NotConnected(localizedDescription: String)
+}
+
 @objc class ControlledInteractionTransport: NSObject, RMQTransport {
     var connected = false
     var outboundData: [NSData] = []
@@ -32,8 +36,7 @@ import XCTest
         serverSendsPayload(MethodFixtures.connectionStart(), channelID: 0)
         assertClientSentMethod(MethodFixtures.connectionStartOk(), channelID: 0)
         serverSendsPayload(MethodFixtures.connectionTune(), channelID: 0)
-        assertClientSentMethod(MethodFixtures.connectionTuneOk(), channelID: 0)
-        assertClientSentMethod(MethodFixtures.connectionOpen(), channelID: 0)
+        assertClientSentMethods([MethodFixtures.connectionTuneOk(), MethodFixtures.connectionOpen()], channelID: 0)
         serverSendsPayload(MethodFixtures.connectionOpenOk(), channelID: 0)
         return self
     }
@@ -41,14 +44,13 @@ import XCTest
         serverSendsPayload(MethodFixtures.connectionStart(), channelID: 0)
         serverSendsPayload(MethodFixtures.connectionTune(), channelID: 0)
         serverSendsPayload(MethodFixtures.connectionOpenOk(), channelID: 0)
-        outboundData = []
         return self
     }
     func serverSendsData(data: NSData) -> ControlledInteractionTransport {
         if callbacks.isEmpty {
             XCTFail("no read callbacks available")
         } else {
-            callbacks.removeAtIndex(0)(data)
+            callbacks.last!(data)
         }
         return self
     }
@@ -58,9 +60,9 @@ import XCTest
     }
     func assertClientSentMethod(amqMethod: AMQMethod, channelID: Int) -> ControlledInteractionTransport {
         if outboundData.isEmpty {
-            XCTFail("nothing sent recently")
+            XCTFail("nothing sent")
         } else {
-            let actual = outboundData.removeAtIndex(0)
+            let actual = outboundData.last!
             let decoder = AMQMethodDecoder(data: actual)
             TestHelper.assertEqualBytes(
                 AMQFrame(channelID: channelID, payload: amqMethod).amqEncoded(),
@@ -70,11 +72,30 @@ import XCTest
         }
         return self
     }
+    func assertClientSentMethods(methods: [AMQMethod], channelID: Int) -> ControlledInteractionTransport {
+        if outboundData.isEmpty {
+            XCTFail("nothing sent")
+        } else {
+            let lastIndex = outboundData.count - 1
+            let startIndex = lastIndex - methods.count + 1
+            let actual = Array(outboundData[startIndex...lastIndex])
+            let decoded = outboundData.map { (data) -> String in
+                let decoder = AMQMethodDecoder(data: data)
+                let decoded = decoder.decode() as? AMQMethod
+                return "\(decoded?.dynamicType)"
+            }
+            let expected = methods.map { (method) -> NSData in
+                return AMQFrame(channelID: channelID, payload: method).amqEncoded()
+            }
+            XCTAssertEqual(expected, actual, "\nAll outgoing methods: \(decoded)")
+        }
+        return self
+    }
     func assertClientSentFrameset(frameset: AMQFrameset) -> ControlledInteractionTransport {
         if outboundData.isEmpty {
-            XCTFail("nothing sent recently")
+            XCTFail("nothing sent")
         } else {
-            let actual = outboundData.removeAtIndex(0)
+            let actual = outboundData.last!
             TestHelper.assertEqualBytes(
                 frameset.amqEncoded(),
                 actual
@@ -83,9 +104,10 @@ import XCTest
         return self
     }
     func assertClientSentProtocolHeader() -> ControlledInteractionTransport {
+        TestHelper.pollUntil { return self.outboundData.count > 0 }
         TestHelper.assertEqualBytes(
             AMQProtocolHeader().amqEncoded(),
-            outboundData.removeAtIndex(0)
+            outboundData.last!
         )
         return self
     }

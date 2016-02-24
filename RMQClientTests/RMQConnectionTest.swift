@@ -49,18 +49,16 @@ class RMQConnectionTest: XCTestCase {
     }
 
     func testCreatingAChannelSendsAChannelOpenAndReceivesOpenOK() {
-        let transport = FakeTransport()
+        let transport = ControlledInteractionTransport()
         let conn = startedConnection(transport)
 
-        transport
-            .serverSends(DataFixtures.connectionStart())
-            .serverSends(DataFixtures.connectionTune())
-            .serverSends(DataFixtures.connectionOpenOk())
+        transport.handshake()
 
         conn.createChannel()
-        transport.mustHaveSent(AMQProtocolChannelOpen(reserved1: AMQShortstr("")), channelID: 1, frame: 4)
 
-        transport.serverSends(DataFixtures.channelOpenOk())
+        transport
+            .assertClientSentMethod(MethodFixtures.channelOpen(), channelID: 1)
+            .serverSendsPayload(MethodFixtures.channelOpenOk(), channelID: 1)
     }
 
     func testWaitingOnAServerMessageWithSuccess() {

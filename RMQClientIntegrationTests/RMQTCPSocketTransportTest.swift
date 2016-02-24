@@ -1,25 +1,17 @@
 import XCTest
 import CocoaAsyncSocket
 
-class RMQTCPSocketTransportTest: RMQTransportContract {
-    override func newTransport() -> RMQTransport {
-        return RMQTCPSocketTransport(host: "localhost", port: 5672)
-    }
+class RMQTCPSocketTransportTest: XCTestCase {
+    var transport: RMQTCPSocketTransport = RMQTCPSocketTransport(host: "localhost", port: 5672)
 
-    override func testConnectAndDisconnect() {
-        super.testConnectAndDisconnect()
-    }
-
-    override func testThrowsWhenWritingButNotConnected() {
-        super.testThrowsWhenWritingButNotConnected()
-    }
-
-    override func testSendingPreambleStimulatesAConnectionStart() {
-        super.testSendingPreambleStimulatesAConnectionStart()
+    func testObeysContract() {
+        RMQTransportContract(transport)
+            .connectAndDisconnect()
+            .throwsWhenWritingButNotConnected()
+            .sendingPreambleStimulatesAConnectionStart()
     }
 
     func testIsNotConnectedWhenSocketDisconnectedOutsideOfCloseBlock() {
-        let transport: RMQTCPSocketTransport = newTransport() as! RMQTCPSocketTransport
         let error = NSError(domain: "", code: 0, userInfo: [:])
         transport.socketDidDisconnect(GCDAsyncSocket(), withError: error)
         
@@ -28,7 +20,7 @@ class RMQTCPSocketTransportTest: RMQTransportContract {
 
     func testCallbacksAreRemovedAfterUse() {
         let callbacks = [:] as NSMutableDictionary
-        let transport = RMQTCPSocketTransport(host: "localhost", port: 5672, callbackStorage: callbacks)
+        transport = RMQTCPSocketTransport(host: "localhost", port: 5672, callbackStorage: callbacks)
 
         var finished = false
         transport.connect {

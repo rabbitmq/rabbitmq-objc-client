@@ -1,26 +1,20 @@
 import XCTest
 
-class ControlledInteractionTransportTest: RMQTransportContract {
-    var transport = ControlledInteractionTransport()
+class ControlledInteractionTransportTest: XCTestCase {
+    func testObeysContract() {
+        let transport = ControlledInteractionTransport()
+        let contract = RMQTransportContract(transport)
+        
+        contract
+            .connectAndDisconnect()
+            .throwsWhenWritingButNotConnected()
 
-    override func newTransport() -> RMQTransport {
-        return transport
-    }
-
-    override func testConnectAndDisconnect() {
-        super.testConnectAndDisconnect()
-    }
-
-    override func testThrowsWhenWritingButNotConnected() {
-        super.testThrowsWhenWritingButNotConnected()
-    }
-
-    override func testSendingPreambleStimulatesAConnectionStart() {
-        let tenthOfSecond = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC)))
-        dispatch_after(tenthOfSecond, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            self.transport.serverSendsPayload(MethodFixtures.connectionStart(), channelID: 1)
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
+        dispatch_after(delayTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            transport
+                .assertClientSentProtocolHeader()
+                .serverSendsPayload(MethodFixtures.connectionStart(), channelID: 1)
         }
-
-        super.testSendingPreambleStimulatesAConnectionStart()
+        contract.sendingPreambleStimulatesAConnectionStart()
     }
 }
