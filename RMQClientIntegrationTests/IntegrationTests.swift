@@ -6,11 +6,11 @@ class IntegrationTests: XCTestCase {
         let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
         
         let conn = RMQConnection(
+            transport: transport,
+            idAllocator: RMQChannelIDAllocator(),
             user: "guest",
             password: "guest",
             vhost: "/",
-            transport: transport,
-            idAllocator: RMQChannelIDAllocator(),
             channelMax: 65535,
             frameMax: 131072,
             heartbeat: 0

@@ -9,11 +9,11 @@ class RMQConnectionTest: XCTestCase {
         vhost: String = "baz"
         ) -> RMQConnection {
             return RMQConnection(
+                transport: transport,
+                idAllocator: RMQChannelIDAllocator(),
                 user: user,
                 password: password,
                 vhost: vhost,
-                transport: transport,
-                idAllocator: RMQChannelIDAllocator(),
                 channelMax: 65535,
                 frameMax: 131072,
                 heartbeat: 0
