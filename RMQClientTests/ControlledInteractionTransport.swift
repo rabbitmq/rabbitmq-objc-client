@@ -82,18 +82,6 @@ enum TestDoubleTransportError: ErrorType {
         }
         return self
     }
-    func assertClientSentFrameset(frameset: AMQFrameset) -> ControlledInteractionTransport {
-        if outboundData.isEmpty {
-            XCTFail("nothing sent")
-        } else {
-            let actual = outboundData.last!
-            TestHelper.assertEqualBytes(
-                frameset.amqEncoded(),
-                actual
-            )
-        }
-        return self
-    }
     func assertClientSentProtocolHeader() -> ControlledInteractionTransport {
         TestHelper.pollUntil { return self.outboundData.count > 0 }
         TestHelper.assertEqualBytes(
