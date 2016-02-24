@@ -38,13 +38,13 @@ class RMQTransportContract {
     }
     
     func sendingPreambleStimulatesAConnectionStart() -> RMQTransportContract {
-        defer { transport.close() {} }
+        defer { self.transport.close() {} }
         
         var readData: NSData = NSData()
         var connectionStart = AMQProtocolConnectionStart()
 
-        transport.connect() {
-            try! transport.write(AMQProtocolHeader().amqEncoded()) {
+        self.transport.connect() {
+            try! self.transport.write(AMQProtocolHeader().amqEncoded()) {
                 XCTAssertEqual(0, readData.length)
                 self.transport.readFrame() { receivedData in
                     readData = receivedData
