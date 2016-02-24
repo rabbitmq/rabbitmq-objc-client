@@ -6,7 +6,7 @@
 @interface RMQQueue ()
 @property (nonatomic, copy, readwrite) NSString *name;
 @property (weak, nonatomic, readwrite) id <RMQSender> sender;
-@property (weak, nonatomic, readwrite) NSNumber *channelID;
+@property (nonatomic, readwrite) NSNumber *channelID;
 @end
 
 @implementation RMQQueue
@@ -36,7 +36,7 @@
     AMQBasicPriority *lowPriority = [[AMQBasicPriority alloc] init:0];
 
     AMQContentHeader *contentHeader = [[AMQContentHeader alloc] initWithClassID:publish.classID
-                                                                       bodySize:@(contentBodyData.length)
+                                                                       bodySize:@(contentBody.amqEncoded.length)
                                                                      properties:@[persistent, octetStream, lowPriority]];
     AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:self.channelID
                                                             method:publish
@@ -67,7 +67,7 @@
 
     AMQFrameset *getOk = self.sender.lastWaitedUponFrameset;
     AMQContentBody *body = getOk.contentBodies[0];
-    NSString *content = [[NSString alloc] initWithData:body.data encoding:NSASCIIStringEncoding];
+    NSString *content = [[NSString alloc] initWithData:body.data encoding:NSUTF8StringEncoding];
 
     return [[RMQContentMessage alloc] initWithDeliveryInfo:@{@"consumer_tag": @"foo"}
                                                   metadata:@{@"foo": @"bar"}

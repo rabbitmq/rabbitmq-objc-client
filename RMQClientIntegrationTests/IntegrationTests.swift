@@ -20,7 +20,7 @@ class IntegrationTests: XCTestCase {
         let qname = "rmqclient.integration-tests.\(NSProcessInfo.processInfo().globallyUniqueString)"
         let q = ch.queue(qname, autoDelete: true, exclusive: false)
 
-        q.publish("message will be truncated")
+        q.publish("my lovely message 🃏")
 
         let message = q.pop() as! RMQContentMessage
 
@@ -30,7 +30,7 @@ class IntegrationTests: XCTestCase {
         let expected = RMQContentMessage(
             deliveryInfo: expectedInfo,
             metadata: expectedMeta,
-            content: "message will be truncate"
+            content: "my lovely message 🃏"
         )
 
         XCTAssertEqual(expected, message)

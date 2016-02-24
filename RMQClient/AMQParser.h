@@ -2,16 +2,16 @@
 
 @interface AMQParser : NSObject
 
-- (instancetype)initWithData:(NSData *)data;
+- (nonnull instancetype)initWithData:(nonnull NSData *)data;
 
-- (NSDictionary *)parseFieldTable;
+- (nonnull NSDictionary *)parseFieldTable;
 - (char)parseOctet;
-- (NSString *)parseLongString;
-- (NSString *)parseShortString;
+- (nonnull NSString *)parseLongString;
+- (nonnull NSString *)parseShortString;
 - (UInt32)parseLongUInt;
 - (UInt64)parseLongLongUInt;
 - (UInt16)parseShortUInt;
 - (BOOL)parseBoolean;
-- (NSData *)rest;
+- (nonnull NSData *)parseLength:(UInt32)length;
 
 @end

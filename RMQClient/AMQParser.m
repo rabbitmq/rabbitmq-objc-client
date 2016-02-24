@@ -114,8 +114,7 @@ enum AMQParserFieldValue {
     return *((self.cursor)++) != 0;
 }
 
-- (NSData *)rest {
-    NSUInteger length = self.end - self.cursor;
+- (NSData *)parseLength:(UInt32)length {
     return [NSData dataWithBytes:(void *)self.cursor length:length];
 }
 

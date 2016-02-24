@@ -1,14 +1,14 @@
 import XCTest
 
 @objc class FakeFrameHandler : NSObject, RMQFrameHandler {
-    var receivedFrames: [AMQFrameset] = []
+    var receivedFramesets: [AMQFrameset] = []
 
     func handleFrameset(frameset: AMQFrameset!) {
-        receivedFrames.append(frameset)
+        receivedFramesets.append(frameset)
     }
 
-    func lastReceivedFrame() -> AMQFrameset? {
-        return receivedFrames.last
+    func lastReceivedFrameset() -> AMQFrameset? {
+        return receivedFramesets.last
     }
 }
 
@@ -27,8 +27,8 @@ class RMQReaderLoopTest: XCTestCase {
 
         XCTAssertEqual(
             expectedFrameset,
-            frameHandler.lastReceivedFrame()!,
-            "\n\nExpected: \(method)\n\nGot: \(frameHandler.lastReceivedFrame()!.method)"
+            frameHandler.lastReceivedFrameset()!,
+            "\n\nExpected: \(method)\n\nGot: \(frameHandler.lastReceivedFrameset()!.method)"
         )
     }
     
@@ -37,7 +37,7 @@ class RMQReaderLoopTest: XCTestCase {
         let frameHandler = FakeFrameHandler()
         let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
         let method = MethodFixtures.basicGetOk("my.great.queue")
-        let body1 = AMQContentBody(data: "Hi there".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let body1 = AMQContentBody(data: "aaaaaaa".dataUsingEncoding(NSUTF8StringEncoding)!)
         let contentHeader = AMQContentHeader(
             classID: 10,
             bodySize: body1.amqEncoded().length,
@@ -54,7 +54,7 @@ class RMQReaderLoopTest: XCTestCase {
             .serverSendsPayload(contentHeader, channelID: 42)
             .serverSendsPayload(body1, channelID: 42)
 
-        XCTAssertEqual(expectedFrameset, frameHandler.lastReceivedFrame()!)
+        XCTAssertEqual(expectedFrameset, frameHandler.lastReceivedFrameset()!)
     }
 
 }

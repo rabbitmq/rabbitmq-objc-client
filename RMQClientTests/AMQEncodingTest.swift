@@ -72,6 +72,24 @@ class AMQEncodingTest: XCTestCase {
         XCTAssertEqual(payload, hydrated)
     }
 
+    func testRoundTripContentBodyThroughFrame() {
+        let payload = AMQContentBody(data: "cyclist's string 🚴🏿".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let data = AMQFrame(channelID: 321, payload: payload).amqEncoded()
+        let parser = AMQParser(data: data)
+        let hydrated = AMQFrame(parser: parser).payload as! AMQContentBody
+        TestHelper.assertEqualBytes(payload.data, hydrated.data)
+    }
+
+    func testParserCanReturnLengthOfData() {
+        let data = "Ho ho ho 🏈".dataUsingEncoding(NSUTF8StringEncoding)!
+        let parser = AMQParser(data: data)
+
+        parser.parseOctet()
+        let length = UInt32(data.length) - 1
+        let actual = NSString(data: parser.parseLength(length), encoding: NSUTF8StringEncoding)
+        XCTAssertEqual("o ho ho 🏈", actual)
+    }
+
     func testEncodeContentHeaderPayload() {
         let classID = AMQShort(60)
         let weight = AMQShort(0)
@@ -102,6 +120,12 @@ class AMQEncodingTest: XCTestCase {
         TestHelper.assertEqualBytes(expectedData, payload.amqEncoded())
     }
 
+    func testEncodeContentBodyPayloadIsNoOp() {
+        let data = "foo".dataUsingEncoding(NSUTF8StringEncoding)!
+        let payload = AMQContentBody(data: data)
+        TestHelper.assertEqualBytes(data, payload.amqEncoded())
+    }
+    
     func testFraming() {
         let type = "\u{1}"
         let channel = "\u{0}\u{0}"

@@ -117,7 +117,8 @@
 @interface AMQContentBody : MTLModel<AMQPayload>
 @property (nonnull, nonatomic, readonly) NSData *data;
 - (nonnull instancetype)initWithData:(nonnull NSData *)data;
-- (nonnull instancetype)initWithParser:(nonnull AMQParser *)parser;
+- (nonnull instancetype)initWithParser:(nonnull AMQParser *)parser
+                           payloadSize:(UInt32)payloadSize;
 @end
 
 @interface AMQFrameset : MTLModel<AMQEncoding>

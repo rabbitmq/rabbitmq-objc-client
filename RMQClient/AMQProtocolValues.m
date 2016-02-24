@@ -439,14 +439,18 @@
     return self;
 }
 
-- (instancetype)initWithParser:(AMQParser *)parser {
-    return [self initWithData:[parser rest]];
+- (instancetype)initWithParser:(AMQParser *)parser payloadSize:(UInt32)payloadSize {
+    return [self initWithData:[parser parseLength:payloadSize]];
 }
 
 - (NSNumber *)frameTypeID { return @3; }
 
 - (NSData *)amqEncoded {
     return self.data;
+}
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"Body: %@", self.data];
 }
 
 @end
@@ -515,7 +519,7 @@ typedef NS_ENUM(char, AMQFrameType) {
 - (instancetype)initWithParser:(AMQParser *)parser {
     char typeID = [parser parseOctet];
     NSNumber *channelID = @([parser parseShortUInt]);
-    [parser parseLongUInt]; // payload size
+    UInt32 payloadSize = [parser parseLongUInt];
 
     id <AMQPayload> payload;
     switch (typeID) {
@@ -524,7 +528,7 @@ typedef NS_ENUM(char, AMQFrameType) {
             break;
 
         case AMQFrameTypeContentBody:
-            payload = [[AMQContentBody alloc] initWithParser:parser];
+            payload = [[AMQContentBody alloc] initWithParser:parser payloadSize:payloadSize];
             break;
 
         default:
