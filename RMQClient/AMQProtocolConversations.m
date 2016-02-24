@@ -30,9 +30,27 @@
 @implementation AMQProtocolConnectionTune (Conversation)
 
 - (id<AMQMethod>)replyWithContext:(id<AMQReplyContext>)context {
-    return [[AMQProtocolConnectionTuneOk alloc] initWithChannelMax:self.channelMax
-                                                          frameMax:self.frameMax
-                                                         heartbeat:self.heartbeat];
+    id <AMQReplyContext> client = context;
+    AMQProtocolConnectionTune *server = self;
+
+    NSNumber *channelMax = [self negotiateBetweenClientValue:client.channelMax
+                                                 serverValue:@(server.channelMax.integerValue)];
+    NSNumber *frameMax   = [self negotiateBetweenClientValue:client.frameMax
+                                                 serverValue:@(server.frameMax.integerValue)];
+    NSNumber *heartbeat  = [self negotiateBetweenClientValue:client.heartbeat
+                                                 serverValue:@(server.heartbeat.integerValue)];
+    return [[AMQProtocolConnectionTuneOk alloc] initWithChannelMax:[[AMQShort alloc] init:channelMax.integerValue]
+                                                          frameMax:[[AMQLong alloc] init:frameMax.integerValue]
+                                                         heartbeat:[[AMQShort alloc] init:heartbeat.integerValue]];
+}
+
+- (NSNumber *)negotiateBetweenClientValue:(NSNumber *)client
+                              serverValue:(NSNumber *)server {
+    if ([client isEqualToNumber:@0] || [server isEqualToNumber:@0]) {
+        return client.integerValue > server.integerValue ? client : server;
+    } else {
+        return client.integerValue < server.integerValue ? client : server;
+    }
 }
 
 @end

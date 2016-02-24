@@ -59,7 +59,7 @@ class MethodFixtures {
     }
 
     static func connectionTuneOk() -> AMQProtocolConnectionTuneOk {
-        return AMQProtocolConnectionTuneOk(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
+        return AMQProtocolConnectionTuneOk(channelMax: AMQShort(65535), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
     }
 
     static func connectionOpen() -> AMQProtocolConnectionOpen {

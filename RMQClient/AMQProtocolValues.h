@@ -68,6 +68,9 @@
 @end
 
 @protocol AMQReplyContext <NSObject>
+@property (nonnull, nonatomic, readonly) NSNumber *channelMax;
+@property (nonnull, nonatomic, readonly) NSNumber *frameMax;
+@property (nonnull, nonatomic, readonly) NSNumber *heartbeat;
 - (nonnull AMQCredentials *)credentials;
 @end
 

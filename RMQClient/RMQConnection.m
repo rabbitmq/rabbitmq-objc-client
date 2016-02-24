@@ -16,6 +16,9 @@
 @property (nonatomic, readwrite) NSMutableArray *watchedIncomingMethods;
 @property (nonatomic, readwrite) dispatch_semaphore_t methodSemaphore;
 @property (atomic, readwrite) AMQFrameset *lastWaitedUponFrameset;
+@property (nonatomic, readwrite) NSNumber *channelMax;
+@property (nonatomic, readwrite) NSNumber *frameMax;
+@property (nonatomic, readwrite) NSNumber *heartbeat;
 @end
 
 @implementation RMQConnection
@@ -24,7 +27,10 @@
                     password:(NSString *)password
                        vhost:(NSString *)vhost
                    transport:(id<RMQTransport>)transport
-                 idAllocator:(id<RMQIDAllocator>)idAllocator {
+                 idAllocator:(id<RMQIDAllocator>)idAllocator
+                  channelMax:(NSNumber *)channelMax
+                    frameMax:(NSNumber *)frameMax
+                   heartbeat:(NSNumber *)heartbeat {
     self = [super init];
     if (self) {
         self.credentials = [[AMQCredentials alloc] initWithUsername:user
@@ -51,8 +57,27 @@
         self.watchedIncomingMethods = [NSMutableArray new];
         self.methodSemaphore = dispatch_semaphore_create(0);
         self.lastWaitedUponFrameset = nil;
+
+        self.channelMax = channelMax;
+        self.frameMax = frameMax;
+        self.heartbeat = heartbeat;
     }
     return self;
+}
+
+- (instancetype)initWithUser:(NSString *)user
+                    password:(NSString *)password
+                       vhost:(NSString *)vhost
+                   transport:(id<RMQTransport>)transport
+                 idAllocator:(id<RMQIDAllocator>)idAllocator {
+    return [self initWithUser:user
+                     password:password
+                        vhost:vhost
+                    transport:transport
+                  idAllocator:idAllocator
+                   channelMax:@(65535)
+                     frameMax:@(131072)
+                    heartbeat:@(0)];
 }
 
 - (instancetype)init
