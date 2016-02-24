@@ -65,6 +65,7 @@
 		AEE7FEBA1C3BD2B400DF8C4F /* RMQExchange.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE7FEB81C3BD2B400DF8C4F /* RMQExchange.m */; settings = {ASSET_TAGS = (); }; };
 		AEEB8B4A1C7DC0A5002D3FCE /* FakeSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB8B491C7DC0A5002D3FCE /* FakeSender.swift */; settings = {ASSET_TAGS = (); }; };
 		AEEB8B4D1C7DD4FA002D3FCE /* FakeFrameHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB8B4C1C7DD4FA002D3FCE /* FakeFrameHandler.swift */; settings = {ASSET_TAGS = (); }; };
+		AEEB8B4F1C7DD617002D3FCE /* ControlledInteractionTransportTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB8B4E1C7DD617002D3FCE /* ControlledInteractionTransportTest.swift */; settings = {ASSET_TAGS = (); }; };
 		AEEEF0821C4F9BFA0056A5EB /* AMQMethodDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = AEEEF0801C4F9BFA0056A5EB /* AMQMethodDecoder.h */; settings = {ASSET_TAGS = (); }; };
 		AEEEF0831C4F9BFA0056A5EB /* AMQMethodDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = AEEEF0811C4F9BFA0056A5EB /* AMQMethodDecoder.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
@@ -147,6 +148,7 @@
 		AEE7FEB81C3BD2B400DF8C4F /* RMQExchange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQExchange.m; sourceTree = "<group>"; };
 		AEEB8B491C7DC0A5002D3FCE /* FakeSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeSender.swift; sourceTree = "<group>"; };
 		AEEB8B4C1C7DD4FA002D3FCE /* FakeFrameHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeFrameHandler.swift; sourceTree = "<group>"; };
+		AEEB8B4E1C7DD617002D3FCE /* ControlledInteractionTransportTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlledInteractionTransportTest.swift; sourceTree = "<group>"; };
 		AEEEF0801C4F9BFA0056A5EB /* AMQMethodDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQMethodDecoder.h; sourceTree = "<group>"; };
 		AEEEF0811C4F9BFA0056A5EB /* AMQMethodDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQMethodDecoder.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -283,6 +285,7 @@
 				AEEB8B4C1C7DD4FA002D3FCE /* FakeFrameHandler.swift */,
 				AEEB8B491C7DC0A5002D3FCE /* FakeSender.swift */,
 				AE47CF711C51A81D00BA2A9B /* FakeTransport.swift */,
+				AEEB8B4E1C7DD617002D3FCE /* ControlledInteractionTransportTest.swift */,
 			);
 			name = "Test Doubles";
 			sourceTree = "<group>";
@@ -528,6 +531,7 @@
 				AEEB8B4D1C7DD4FA002D3FCE /* FakeFrameHandler.swift in Sources */,
 				AEEB8B4A1C7DC0A5002D3FCE /* FakeSender.swift in Sources */,
 				AEA45EC81C43CBBE00FE1F62 /* RMQConnectionTest.swift in Sources */,
+				AEEB8B4F1C7DD617002D3FCE /* ControlledInteractionTransportTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
