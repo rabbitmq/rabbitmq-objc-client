@@ -10,7 +10,10 @@ class IntegrationTests: XCTestCase {
             password: "guest",
             vhost: "/",
             transport: transport,
-            idAllocator: RMQChannelIDAllocator()
+            idAllocator: RMQChannelIDAllocator(),
+            channelMax: 65535,
+            frameMax: 131072,
+            heartbeat: 0
         )
         conn.start()
         defer { conn.close() }

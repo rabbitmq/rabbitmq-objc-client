@@ -65,21 +65,6 @@
     return self;
 }
 
-- (instancetype)initWithUser:(NSString *)user
-                    password:(NSString *)password
-                       vhost:(NSString *)vhost
-                   transport:(id<RMQTransport>)transport
-                 idAllocator:(id<RMQIDAllocator>)idAllocator {
-    return [self initWithUser:user
-                     password:password
-                        vhost:vhost
-                    transport:transport
-                  idAllocator:idAllocator
-                   channelMax:@(65535)
-                     frameMax:@(131072)
-                    heartbeat:@(0)];
-}
-
 - (instancetype)init
 {
     [self doesNotRecognizeSelector:_cmd];
