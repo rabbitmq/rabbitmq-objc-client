@@ -16,8 +16,8 @@ class ControlledInteractionTransportTest: RMQTransportContract {
     }
 
     override func testSendingPreambleStimulatesAConnectionStart() {
-        let halfSecond = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
-        dispatch_after(halfSecond, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+        let tenthOfSecond = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC)))
+        dispatch_after(tenthOfSecond, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             transport.serverSendsPayload(MethodFixtures.connectionStart(), channelID: 1)
         }
 
