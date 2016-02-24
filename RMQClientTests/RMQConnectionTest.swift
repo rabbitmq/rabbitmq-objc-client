@@ -17,10 +17,22 @@ class RMQConnectionTest: XCTestCase {
                 ).start()
     }
 
-    func testHandshakingAndClientInitiatedClosing() {
+    func testHandshaking() {
+        let transport = ControlledInteractionTransport()
+        startedConnection(transport)
+        transport
+            .assertClientSentProtocolHeader()
+            .serverSendsPayload(MethodFixtures.connectionStart(), channelID: 0)
+            .assertClientSentMethod(MethodFixtures.connectionStartOk(), channelID: 0)
+            .serverSendsPayload(MethodFixtures.connectionTune(), channelID: 0)
+            .assertClientSentMethods([MethodFixtures.connectionTuneOk(), MethodFixtures.connectionOpen()], channelID: 0)
+            .serverSendsPayload(MethodFixtures.connectionOpenOk(), channelID: 0)
+    }
+
+    func testClientInitiatedClosing() {
         let transport = ControlledInteractionTransport()
         let conn = startedConnection(transport)
-        transport.assertHandshake()
+        transport.handshake()
         conn.close()
 
         transport.assertClientSentMethod(

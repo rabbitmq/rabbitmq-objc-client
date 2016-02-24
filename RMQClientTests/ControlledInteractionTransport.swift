@@ -31,15 +31,6 @@ enum TestDoubleTransportError: ErrorType {
     func readFrame(complete: (NSData) -> Void) {
         callbacks.append(complete)
     }
-    func assertHandshake() -> ControlledInteractionTransport {
-        assertClientSentProtocolHeader()
-        serverSendsPayload(MethodFixtures.connectionStart(), channelID: 0)
-        assertClientSentMethod(MethodFixtures.connectionStartOk(), channelID: 0)
-        serverSendsPayload(MethodFixtures.connectionTune(), channelID: 0)
-        assertClientSentMethods([MethodFixtures.connectionTuneOk(), MethodFixtures.connectionOpen()], channelID: 0)
-        serverSendsPayload(MethodFixtures.connectionOpenOk(), channelID: 0)
-        return self
-    }
     func handshake() -> ControlledInteractionTransport {
         serverSendsPayload(MethodFixtures.connectionStart(), channelID: 0)
         serverSendsPayload(MethodFixtures.connectionTune(), channelID: 0)
