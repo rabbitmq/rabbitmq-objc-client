@@ -20,16 +20,16 @@
 }
 
 - (void)runOnce {
-    [self.transport readFrame:^(NSData * _Nonnull methodData) {
+    [self.transport readFrame].then(^(NSData * _Nonnull methodData) {
         AMQMethodDecoder *methodDecoder = [[AMQMethodDecoder alloc] initWithData:methodData];
         id<AMQMethod> method = [methodDecoder decode];
 
         if (method.hasContent) {
-            [self.transport readFrame:^(NSData * _Nonnull headerData) {
+            [self.transport readFrame].then(^(NSData * _Nonnull headerData) {
                 AMQParser *headerParser  = [[AMQParser alloc] initWithData:headerData];
                 AMQFrame *header = [[AMQFrame alloc] initWithParser:headerParser];
 
-                [self.transport readFrame:^(NSData * _Nonnull bodyData) {
+                [self.transport readFrame].then(^(NSData * _Nonnull bodyData) {
                     AMQParser *bodyParser = [[AMQParser alloc] initWithData:bodyData];
                     AMQFrame *body = [[AMQFrame alloc] initWithParser:bodyParser];
                     AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:methodDecoder.channelID
@@ -37,8 +37,8 @@
                                                                      contentHeader:header.payload
                                                                      contentBodies:@[body.payload]];
                     [self.frameHandler handleFrameset:frameset];
-                }];
-            }];
+                });
+            });
         } else {
             AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:methodDecoder.channelID
                                                                     method:method
@@ -46,7 +46,7 @@
                                                              contentBodies:@[]];
             [self.frameHandler handleFrameset:frameset];
         }
-    }];
+    });
 }
 
 @end

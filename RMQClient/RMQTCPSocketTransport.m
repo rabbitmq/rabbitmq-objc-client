@@ -73,18 +73,20 @@ struct __attribute__((__packed__)) AMQPHeader {
 #define AMQP_HEADER_SIZE 7
 #define AMQP_FINAL_OCTET_SIZE 1
 
-- (void)readFrame:(void (^)(NSData * _Nonnull))complete {
-    [self read:AMQP_HEADER_SIZE complete:^(NSData * _Nonnull data) {
-        const struct AMQPHeader *header;
-        header = (const struct AMQPHeader *)data.bytes;
-        
-        UInt32 hostSize = CFSwapInt32BigToHost(header->size);
-        
-        [self read:hostSize complete:^(NSData * _Nonnull payload) {
-            [self read:AMQP_FINAL_OCTET_SIZE complete:^(NSData * _Nonnull frameEnd) {
-                NSMutableData *allData = [data mutableCopy];
-                [allData appendData:payload];
-                complete(allData);
+- (AnyPromise *)readFrame {
+    return [AnyPromise promiseWithResolverBlock:^(PMKResolver  _Nonnull resolve) {
+        [self read:AMQP_HEADER_SIZE complete:^(NSData * _Nonnull data) {
+            const struct AMQPHeader *header;
+            header = (const struct AMQPHeader *)data.bytes;
+
+            UInt32 hostSize = CFSwapInt32BigToHost(header->size);
+
+            [self read:hostSize complete:^(NSData * _Nonnull payload) {
+                [self read:AMQP_FINAL_OCTET_SIZE complete:^(NSData * _Nonnull frameEnd) {
+                    NSMutableData *allData = [data mutableCopy];
+                    [allData appendData:payload];
+                    resolve(allData);
+                }];
             }];
         }];
     }];

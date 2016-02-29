@@ -46,10 +46,13 @@ class RMQTransportContract {
         self.transport.connect() {
             try! self.transport.write(AMQProtocolHeader().amqEncoded()) {
                 XCTAssertEqual(0, readData.length)
-                self.transport.readFrame() { receivedData in
-                    readData = receivedData
+                self.transport.readFrame().then { receivedData in
+                    readData = receivedData as! NSData
                     let decoder = AMQMethodDecoder(data: readData)
                     connectionStart = decoder.decode() as! AMQProtocolConnectionStart
+
+                    let (promise, _, _) = Promise<NSData>.pendingPromise()
+                    return AnyPromise(bound: promise)
                 }
             }
         }

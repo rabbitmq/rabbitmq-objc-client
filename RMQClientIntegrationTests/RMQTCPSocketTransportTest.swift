@@ -25,9 +25,9 @@ class RMQTCPSocketTransportTest: XCTestCase {
         var finished = false
         transport.connect {
             try! transport.write(AMQProtocolHeader().amqEncoded()) {
-                transport.readFrame({ (foo) -> Void in
+                transport.readFrame().then { foo in
                     transport.close { finished = true }
-                })
+                }
             }
         }
 

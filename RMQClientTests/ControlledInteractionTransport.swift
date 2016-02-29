@@ -28,8 +28,13 @@ enum TestDoubleTransportError: ErrorType {
     func isConnected() -> Bool {
         return connected
     }
-    func readFrame(complete: (NSData) -> Void) {
-        callbacks.append(complete)
+    func readFrameSwift() -> Promise<NSData> {
+        let (promise, fulfill, _) = Promise<NSData>.pendingPromise()
+        callbacks.append(fulfill)
+        return promise
+    }
+    func readFrame() -> AnyPromise {
+        return AnyPromise(bound: readFrameSwift())
     }
     func handshake() -> ControlledInteractionTransport {
         serverSendsPayload(MethodFixtures.connectionStart(), channelID: 0)
