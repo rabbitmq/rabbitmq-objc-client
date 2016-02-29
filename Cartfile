@@ -1,2 +1,3 @@
 github "robbiehanson/CocoaAsyncSocket" "master"
 github "Mantle/Mantle" "master"
+github "mxcl/PromiseKit" ~> 3.0

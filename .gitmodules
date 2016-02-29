@@ -4,3 +4,9 @@
 [submodule "Carthage/Checkouts/Mantle"]
 	path = Carthage/Checkouts/Mantle
 	url = https://github.com/Mantle/Mantle.git
+[submodule "Carthage/Checkouts/OMGHTTPURLRQ"]
+	path = Carthage/Checkouts/OMGHTTPURLRQ
+	url = https://github.com/mxcl/OMGHTTPURLRQ.git
+[submodule "Carthage/Checkouts/PromiseKit"]
+	path = Carthage/Checkouts/PromiseKit
+	url = https://github.com/mxcl/PromiseKit.git

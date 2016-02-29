@@ -1,2 +1,4 @@
-github "robbiehanson/CocoaAsyncSocket" "6e018ddf7c456106f898efae66ea5e5c94737a96"
-github "Mantle/Mantle" "6a4141363f2c0170b11e41e375ae485038e2e9db"
+github "robbiehanson/CocoaAsyncSocket" "562bae6af6dbd7e1891293dae20b9f79a2fd7228"
+github "Mantle/Mantle" "51e4f70224f15e92914217f004d972f98a3f6acc"
+github "mxcl/OMGHTTPURLRQ" "3.1.1"
+github "mxcl/PromiseKit" "3.0.2"

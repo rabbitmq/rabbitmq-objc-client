@@ -454,6 +454,7 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/CocoaAsyncSocket.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Mantle.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/PromiseKit.framework",
 			);
 			outputPaths = (
 			);
