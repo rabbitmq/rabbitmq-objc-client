@@ -3,10 +3,11 @@ import XCTest
 class RMQQueueTest: XCTestCase {
 
     func testPublishSendsABasicPublish() {
-        let sender = FakeSender()
+        let sender = FakeSender(frameMax: 4)
         let queue = RMQQueue(name: "my.q", channelID: 123, sender: sender)
+        let messageContent = "my great message yo"
 
-        queue.publish("my great message 🚮")
+        queue.publish(messageContent)
 
         let publish = AMQProtocolBasicPublish(
             reserved1: AMQShort(0),
@@ -14,7 +15,7 @@ class RMQQueueTest: XCTestCase {
             routingKey: AMQShortstr("my.q"),
             options: AMQProtocolBasicPublishOptions.NoOptions
         )
-        let expectedBodyData = "my great message 🚮".dataUsingEncoding(NSUTF8StringEncoding)!
+        let expectedBodyData = messageContent.dataUsingEncoding(NSUTF8StringEncoding)!
 
         let persistent = AMQBasicDeliveryMode(2)
         let contentTypeOctetStream = AMQBasicContentType("application/octet-stream")
@@ -26,18 +27,68 @@ class RMQQueueTest: XCTestCase {
             properties: [persistent, contentTypeOctetStream, lowPriority]
         )
 
-        let expectedBody = AMQContentBody(data: expectedBodyData)
+        let expectedBodies = [
+            AMQContentBody(data: "my g".dataUsingEncoding(NSUTF8StringEncoding)!),
+            AMQContentBody(data: "reat".dataUsingEncoding(NSUTF8StringEncoding)!),
+            AMQContentBody(data: " mes".dataUsingEncoding(NSUTF8StringEncoding)!),
+            AMQContentBody(data: "sage".dataUsingEncoding(NSUTF8StringEncoding)!),
+            AMQContentBody(data: " yo".dataUsingEncoding(NSUTF8StringEncoding)!),
+        ]
 
         let expectedFrameset = AMQFrameset(
             channelID: 123,
             method: publish,
             contentHeader: expectedHeader,
-            contentBodies: [expectedBody]
+            contentBodies: expectedBodies
         )
 
+        XCTAssertEqual(5, sender.lastSentFrameset.contentBodies.count)
+        XCTAssertEqual(expectedBodies, sender.lastSentFrameset.contentBodies)
         XCTAssertEqual(expectedFrameset, sender.lastSentFrameset)
     }
 
+    func testPublishWhenContentLengthIsMultipleOfFrameMax() {
+        let sender = FakeSender(frameMax: 4)
+        let queue = RMQQueue(name: "my.q", channelID: 123, sender: sender)
+        let messageContent = "12345678"
+
+        queue.publish(messageContent)
+
+        let expectedMethod = AMQProtocolBasicPublish(
+            reserved1: AMQShort(0),
+            exchange: AMQShortstr(""),
+            routingKey: AMQShortstr("my.q"),
+            options: AMQProtocolBasicPublishOptions.NoOptions
+        )
+
+        let expectedBodyData = messageContent.dataUsingEncoding(NSUTF8StringEncoding)!
+        let persistent = AMQBasicDeliveryMode(2)
+        let contentTypeOctetStream = AMQBasicContentType("application/octet-stream")
+        let lowPriority = AMQBasicPriority(0)
+
+        let expectedHeader = AMQContentHeader(
+            classID: 60,
+            bodySize: expectedBodyData.length,
+            properties: [persistent, contentTypeOctetStream, lowPriority]
+        )
+
+        let expectedBodies = [
+            AMQContentBody(data: "1234".dataUsingEncoding(NSUTF8StringEncoding)!),
+            AMQContentBody(data: "5678".dataUsingEncoding(NSUTF8StringEncoding)!),
+        ]
+
+        let expectedFrameset = AMQFrameset(
+            channelID: 123,
+            method: expectedMethod,
+            contentHeader: expectedHeader,
+            contentBodies: expectedBodies
+        )
+
+        XCTAssertEqual(2, sender.lastSentFrameset.contentBodies.count)
+        XCTAssertEqual(expectedBodies, sender.lastSentFrameset.contentBodies)
+        XCTAssertEqual(expectedFrameset, sender.lastSentFrameset)
+    }
+    
     func testPopSendsAGet() {
         let sender = FakeSender()
         let queue = RMQQueue(name: "great.queue", channelID: 42, sender: sender)

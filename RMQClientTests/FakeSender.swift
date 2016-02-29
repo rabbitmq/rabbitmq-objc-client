@@ -5,6 +5,11 @@
     var lastSentFrameset: AMQFrameset = NothingSentYet()
     var methodWaitedUpon: String = "nothing waited upon yet!"
     var channelWaitedUpon: NSNumber = -1
+    var frameMax: NSNumber
+
+    init(frameMax aFrameMax: Int = 131072) {
+        frameMax = aFrameMax
+    }
 
     func send(encodable: AMQEncoding) {
         lastSentFrameset = encodable as! AMQFrameset

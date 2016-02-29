@@ -35,15 +35,36 @@
     AMQBasicContentType *octetStream = [[AMQBasicContentType alloc] init:@"application/octet-stream"];
     AMQBasicPriority *lowPriority = [[AMQBasicPriority alloc] init:0];
 
+    NSData *bodyData = contentBody.amqEncoded;
     AMQContentHeader *contentHeader = [[AMQContentHeader alloc] initWithClassID:publish.classID
-                                                                       bodySize:@(contentBody.amqEncoded.length)
+                                                                       bodySize:@(bodyData.length)
                                                                      properties:@[persistent, octetStream, lowPriority]];
+
+    NSArray *contentBodies = [self contentBodiesFromData:bodyData
+                                              inChunksOf:self.sender.frameMax.integerValue];
     AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:self.channelID
                                                             method:publish
                                                      contentHeader:contentHeader
-                                                     contentBodies:@[contentBody]];
+                                                     contentBodies:contentBodies];
     [self.sender send:frameset];
     return self;
+}
+
+- (NSArray *)contentBodiesFromData:(NSData *)data inChunksOf:(NSUInteger)chunkSize {
+    NSMutableArray *bodies = [NSMutableArray new];
+    NSUInteger chunkCount = data.length / chunkSize;
+    for (int i = 0; i < chunkCount; i++) {
+        NSUInteger offset = i * chunkSize;
+        NSData *subData = [data subdataWithRange:NSMakeRange(offset, chunkSize)];
+        AMQContentBody *body = [[AMQContentBody alloc] initWithData:subData];
+        [bodies addObject:body];
+    }
+    NSUInteger lastChunkSize = data.length % chunkSize;
+    if (lastChunkSize > 0) {
+        NSData *lastData = [data subdataWithRange:NSMakeRange(data.length - lastChunkSize, lastChunkSize)];
+        [bodies addObject:[[AMQContentBody alloc] initWithData:lastData]];
+    }
+    return bodies;
 }
 
 - (id<RMQMessage>)pop {

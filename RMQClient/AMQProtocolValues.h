@@ -126,7 +126,7 @@
 
 @interface AMQFrameset : MTLModel<AMQEncoding>
 @property (nonnull, nonatomic, copy, readonly) id<AMQMethod>method;
-@property (nonnull, nonatomic, readonly) NSArray *contentBodies;
+@property (nonnull, nonatomic, readonly) NSArray<AMQContentBody *> *contentBodies;
 @property (nonnull, nonatomic, copy, readonly) NSNumber *channelID;
 @property (nonnull, nonatomic, readonly) NSArray *frames;
 - (nonnull instancetype)initWithChannelID:(nonnull NSNumber *)channelID
