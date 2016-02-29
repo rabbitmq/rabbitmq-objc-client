@@ -90,6 +90,19 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		AE0FF7831C849F0E00003A71 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				AE0FF7841C849F1700003A71 /* RMQClient.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		AE05DA621C69EB79009E68C7 /* RMQChannelIDAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQChannelIDAllocator.h; sourceTree = "<group>"; };
 		AE05DA631C69EB79009E68C7 /* RMQChannelIDAllocator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQChannelIDAllocator.m; sourceTree = "<group>"; };
@@ -377,6 +390,7 @@
 				AEE7FE971C3BCA6000DF8C4F /* Sources */,
 				AEE7FE981C3BCA6000DF8C4F /* Frameworks */,
 				AEE7FE991C3BCA6000DF8C4F /* Resources */,
+				AE0FF7831C849F0E00003A71 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -714,7 +728,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = RMQClientTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks @executable_path/Frameworks/RMQClient.framework/Frameworks @loader_path/Frameworks/RMQClient.framework/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClientTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RMQClientTests/RMQClientTests-Bridging-Header.h";
@@ -731,7 +745,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = RMQClientTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks @executable_path/Frameworks/RMQClient.framework/Frameworks @loader_path/Frameworks/RMQClient.framework/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClientTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RMQClientTests/RMQClientTests-Bridging-Header.h";
