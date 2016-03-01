@@ -415,6 +415,18 @@
 
 @implementation AMQContentHeaderNone
 
+- (instancetype)initWithClassID:(NSNumber *)classID
+                       bodySize:(NSNumber *)bodySize
+                     properties:(NSArray<AMQBasicValue> *)properties {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (instancetype)initWithParser:(AMQParser *)parser {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
 - (NSNumber *)frameTypeID {
     return nil;
 }
@@ -427,6 +439,7 @@
 
 @interface AMQContentBody ()
 @property (nonatomic, readwrite) NSData *data;
+@property (nonatomic, readwrite) NSUInteger length;
 @end
 
 @implementation AMQContentBody
@@ -435,6 +448,7 @@
     self = [super init];
     if (self) {
         self.data = data;
+        self.length = data.length;
     }
     return self;
 }
@@ -451,104 +465,6 @@
 
 - (NSString *)description {
     return [NSString stringWithFormat:@"Body: %@", self.data];
-}
-
-@end
-
-@interface AMQFrameset ()
-@property (nonatomic, copy, readwrite) NSNumber *channelID;
-@property (nonatomic, readwrite) id<AMQMethod> method;
-@property (nonatomic, readwrite) id<AMQPayload> contentHeader;
-@property (nonatomic, readwrite) NSArray *contentBodies;
-@end
-
-@implementation AMQFrameset
-
-- (instancetype)initWithChannelID:(NSNumber *)channelID
-                           method:(id<AMQMethod>)method
-                    contentHeader:(id<AMQPayload>)contentHeader
-                    contentBodies:(NSArray *)contentBodies {
-    self = [super init];
-    if (self) {
-        self.channelID = channelID;
-        self.method = method;
-        self.contentHeader = contentHeader;
-        self.contentBodies = contentBodies;
-    }
-    return self;
-}
-
-- (NSData *)amqEncoded {
-    NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQFrame alloc] initWithChannelID:self.channelID payload:self.method].amqEncoded];
-    NSData *contentHeaderEncoded = self.contentHeader.amqEncoded;
-    if (contentHeaderEncoded.length) {
-        [encoded appendData:[[AMQFrame alloc] initWithChannelID:self.channelID payload:self.contentHeader].amqEncoded];
-        for (AMQContentBody *body in self.contentBodies) {
-            [encoded appendData:[[AMQFrame alloc] initWithChannelID:self.channelID payload:body].amqEncoded];
-        }
-    }
-    return encoded;
-}
-
-@end
-
-@interface AMQFrame ()
-@property (nonatomic, copy, readwrite) NSNumber *channelID;
-@property (nonatomic, readwrite) id<AMQPayload> payload;
-@end
-
-typedef NS_ENUM(char, AMQFrameType) {
-    AMQFrameTypeMethod = 1,
-    AMQFrameTypeContentHeader,
-    AMQFrameTypeContentBody,
-};
-
-@implementation AMQFrame
-
-- (instancetype)initWithChannelID:(NSNumber *)channelID
-                          payload:(id<AMQPayload>)payload {
-    self = [super init];
-    if (self) {
-        self.channelID = channelID;
-        self.payload = payload;
-    }
-    return self;
-}
-
-- (instancetype)initWithParser:(AMQParser *)parser {
-    char typeID = [parser parseOctet];
-    NSNumber *channelID = @([parser parseShortUInt]);
-    UInt32 payloadSize = [parser parseLongUInt];
-
-    id <AMQPayload> payload;
-    switch (typeID) {
-        case AMQFrameTypeContentHeader:
-            payload = [[AMQContentHeader alloc] initWithParser:parser];
-            break;
-
-        case AMQFrameTypeContentBody:
-            payload = [[AMQContentBody alloc] initWithParser:parser payloadSize:payloadSize];
-            break;
-
-        default:
-            break;
-    }
-
-    return [self initWithChannelID:channelID payload:payload];
-}
-
-- (NSData *)amqEncoded {
-    NSMutableData *frameData = [NSMutableData new];
-    NSArray *unencodedFrame = @[[[AMQOctet alloc] init:self.payload.frameTypeID.integerValue],
-                                [[AMQShort alloc] init:self.channelID.integerValue],
-                                [[AMQLong alloc] init:self.payload.amqEncoded.length],
-                                self.payload,
-                                [[AMQOctet alloc] init:0xCE]];
-    for (id<AMQEncoding> part in unencodedFrame) {
-        [frameData appendData:part.amqEncoded];
-    }
-    return frameData;
 }
 
 @end

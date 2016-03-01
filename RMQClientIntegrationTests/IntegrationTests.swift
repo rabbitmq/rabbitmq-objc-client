@@ -4,7 +4,14 @@ class IntegrationTests: XCTestCase {
     
     func testIntegration() {
         let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
-        
+        let frameMaxRequiringTwoFrames = 4096
+        let metaDataBytes = 8
+        var messageContent = ""
+        for _ in 1...(frameMaxRequiringTwoFrames - metaDataBytes) {
+            messageContent += "a"
+        }
+        messageContent += "bbb"
+
         let conn = RMQConnection(
             transport: transport,
             idAllocator: RMQChannelIDAllocator(),
@@ -12,7 +19,7 @@ class IntegrationTests: XCTestCase {
             password: "guest",
             vhost: "/",
             channelMax: 65535,
-            frameMax: 131072,
+            frameMax: frameMaxRequiringTwoFrames,
             heartbeat: 0
         )
         conn.start()
@@ -23,7 +30,7 @@ class IntegrationTests: XCTestCase {
         let qname = "rmqclient.integration-tests.\(NSProcessInfo.processInfo().globallyUniqueString)"
         let q = ch.queue(qname, autoDelete: true, exclusive: false)
 
-        q.publish("my lovely message 🃏")
+        q.publish(messageContent)
 
         let message = q.pop() as! RMQContentMessage
 
@@ -33,7 +40,7 @@ class IntegrationTests: XCTestCase {
         let expected = RMQContentMessage(
             deliveryInfo: expectedInfo,
             metadata: expectedMeta,
-            content: "my lovely message 🃏"
+            content: messageContent
         )
 
         XCTAssertEqual(expected, message)

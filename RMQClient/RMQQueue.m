@@ -83,12 +83,13 @@
                         error:&error];
 
     if (error) {
-        NSLog(@"%@", error);
+        NSLog(@"\n**** ERROR WAITING FOR GET-OK %@", error);
     }
 
     AMQFrameset *getOk = self.sender.lastWaitedUponFrameset;
-    AMQContentBody *body = getOk.contentBodies[0];
-    NSString *content = [[NSString alloc] initWithData:body.data encoding:NSUTF8StringEncoding];
+
+    NSString *content = [[NSString alloc] initWithData:getOk.contentData
+                                              encoding:NSUTF8StringEncoding];
 
     return [[RMQContentMessage alloc] initWithDeliveryInfo:@{@"consumer_tag": @"foo"}
                                                   metadata:@{@"foo": @"bar"}

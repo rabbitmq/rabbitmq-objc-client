@@ -132,13 +132,14 @@ class RMQQueueTest: XCTestCase {
             messageCount: AMQLong(0)
         )
         let header = AMQContentHeader(classID: 123, bodySize: 321, properties: [])
-        let body = AMQContentBody(data: "totally expected message".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let body1 = AMQContentBody(data: "totally expected ".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let body2 = AMQContentBody(data: "message".dataUsingEncoding(NSUTF8StringEncoding)!)
 
         sender.lastWaitedUponFrameset = AMQFrameset(
             channelID: 42,
             method: method,
             contentHeader: header,
-            contentBodies: [body]
+            contentBodies: [body1, body2]
         )
 
         XCTAssertEqual("totally expected message", queue.pop().content)

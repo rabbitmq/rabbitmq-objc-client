@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import "AMQProtocolValues.h"
+#import "AMQFrameset.h"
 
 @protocol RMQSender <NSObject>
 @property (nonnull, nonatomic, readonly) AMQFrameset *lastWaitedUponFrameset;

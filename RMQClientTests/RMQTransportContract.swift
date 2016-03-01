@@ -48,8 +48,9 @@ class RMQTransportContract {
                 XCTAssertEqual(0, readData.length)
                 self.transport.readFrame() { receivedData in
                     readData = receivedData
-                    let decoder = AMQMethodDecoder(data: readData)
-                    connectionStart = decoder.decode() as! AMQProtocolConnectionStart
+                    let parser = AMQParser(data: readData)
+                    let frame = AMQFrame(parser: parser)
+                    connectionStart = frame.payload as! AMQProtocolConnectionStart
                 }
             }
         }

@@ -108,35 +108,20 @@
 @end
 
 @interface AMQContentHeader : MTLModel<AMQPayload>
+@property (nonnull, nonatomic, copy, readonly) NSNumber *bodySize;
 - (nonnull instancetype)initWithClassID:(nonnull NSNumber *)classID
                                bodySize:(nonnull NSNumber *)bodySize
                              properties:(nonnull NSArray *)properties;
 - (nonnull instancetype)initWithParser:(nonnull AMQParser *)parser;
 @end
 
-@interface AMQContentHeaderNone : MTLModel<AMQPayload>
+@interface AMQContentHeaderNone : AMQContentHeader
 @end
 
 @interface AMQContentBody : MTLModel<AMQPayload>
 @property (nonnull, nonatomic, readonly) NSData *data;
+@property (nonatomic, readonly) NSUInteger length;
 - (nonnull instancetype)initWithData:(nonnull NSData *)data;
 - (nonnull instancetype)initWithParser:(nonnull AMQParser *)parser
                            payloadSize:(UInt32)payloadSize;
-@end
-
-@interface AMQFrameset : MTLModel<AMQEncoding>
-@property (nonnull, nonatomic, copy, readonly) id<AMQMethod>method;
-@property (nonnull, nonatomic, readonly) NSArray<AMQContentBody *> *contentBodies;
-@property (nonnull, nonatomic, copy, readonly) NSNumber *channelID;
-@property (nonnull, nonatomic, readonly) NSArray *frames;
-- (nonnull instancetype)initWithChannelID:(nonnull NSNumber *)channelID
-                                   method:(nonnull id<AMQMethod>)method
-                            contentHeader:(nonnull id<AMQPayload>)contentHeader
-                            contentBodies:(nonnull NSArray *)contentBodies;
-@end
-
-@interface AMQFrame : MTLModel<AMQEncoding,AMQParseable>
-@property (nonnull, nonatomic, readonly) id<AMQPayload> payload;
-- (nonnull instancetype)initWithChannelID:(nonnull NSNumber *)channelID
-                                  payload:(nonnull id<AMQEncoding>)payload;
 @end

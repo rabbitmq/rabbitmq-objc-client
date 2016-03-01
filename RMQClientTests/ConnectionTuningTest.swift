@@ -85,7 +85,8 @@ class ConnectionTuningTest: XCTestCase {
             .serverSendsPayload(MethodFixtures.connectionStart(), channelID: 0)
             .serverSendsPayload(tune, channelID: 0)
 
-        let decoder = AMQMethodDecoder(data: transport.outboundData[transport.outboundData.count - 2])
-        return decoder.decode() as! AMQProtocolConnectionTuneOk
+        let parser = AMQParser(data: transport.outboundData[transport.outboundData.count - 2])
+        let frame = AMQFrame(parser: parser)
+        return frame.payload as! AMQProtocolConnectionTuneOk
     }
 }

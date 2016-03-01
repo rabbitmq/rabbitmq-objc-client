@@ -26,6 +26,10 @@
 		AE4E7F4E1C6A2A8900A441EC /* AMQProtocolConversations.h in Headers */ = {isa = PBXBuildFile; fileRef = AE4E7F4C1C6A2A8900A441EC /* AMQProtocolConversations.h */; settings = {ASSET_TAGS = (); }; };
 		AE4E7F4F1C6A2A8900A441EC /* AMQProtocolConversations.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4E7F4D1C6A2A8900A441EC /* AMQProtocolConversations.m */; settings = {ASSET_TAGS = (); }; };
 		AE541F431C7E132700C17932 /* ConnectionTuningTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE541F421C7E132700C17932 /* ConnectionTuningTest.swift */; settings = {ASSET_TAGS = (); }; };
+		AE744E331C85A1B000A4C2FA /* AMQFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = AE744E311C85A1B000A4C2FA /* AMQFrame.h */; settings = {ASSET_TAGS = (); }; };
+		AE744E341C85A1B000A4C2FA /* AMQFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = AE744E321C85A1B000A4C2FA /* AMQFrame.m */; settings = {ASSET_TAGS = (); }; };
+		AE744E371C85A20700A4C2FA /* AMQFrameset.h in Headers */ = {isa = PBXBuildFile; fileRef = AE744E351C85A20700A4C2FA /* AMQFrameset.h */; settings = {ASSET_TAGS = (); }; };
+		AE744E381C85A20700A4C2FA /* AMQFrameset.m in Sources */ = {isa = PBXBuildFile; fileRef = AE744E361C85A20700A4C2FA /* AMQFrameset.m */; settings = {ASSET_TAGS = (); }; };
 		AE80BAB31C4D47C100E6DFFD /* AMQParser.h in Headers */ = {isa = PBXBuildFile; fileRef = AE80BAB11C4D47C100E6DFFD /* AMQParser.h */; settings = {ASSET_TAGS = (); }; };
 		AE80BAB41C4D47C100E6DFFD /* AMQParser.m in Sources */ = {isa = PBXBuildFile; fileRef = AE80BAB21C4D47C100E6DFFD /* AMQParser.m */; settings = {ASSET_TAGS = (); }; };
 		AE898D581C3C2D2E00AA3BF1 /* AMQURIParseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE898D571C3C2D2E00AA3BF1 /* AMQURIParseTest.swift */; settings = {ASSET_TAGS = (); }; };
@@ -107,6 +111,10 @@
 		AE541F421C7E132700C17932 /* ConnectionTuningTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionTuningTest.swift; sourceTree = "<group>"; };
 		AE607C671C3C0EAD00BE9AC4 /* RMQClientTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RMQClientTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegrationTests.swift; sourceTree = "<group>"; };
+		AE744E311C85A1B000A4C2FA /* AMQFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQFrame.h; sourceTree = "<group>"; };
+		AE744E321C85A1B000A4C2FA /* AMQFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQFrame.m; sourceTree = "<group>"; };
+		AE744E351C85A20700A4C2FA /* AMQFrameset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQFrameset.h; sourceTree = "<group>"; };
+		AE744E361C85A20700A4C2FA /* AMQFrameset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQFrameset.m; sourceTree = "<group>"; };
 		AE80BAB11C4D47C100E6DFFD /* AMQParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQParser.h; sourceTree = "<group>"; };
 		AE80BAB21C4D47C100E6DFFD /* AMQParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQParser.m; sourceTree = "<group>"; };
 		AE898D571C3C2D2E00AA3BF1 /* AMQURIParseTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AMQURIParseTest.swift; sourceTree = "<group>"; };
@@ -242,6 +250,12 @@
 				AEA45ED01C43F4DC00FE1F62 /* RMQTCPSocketTransport.m */,
 				AE39BD9C1C68B019000E7A77 /* AMQProtocolValues.h */,
 				AE39BD9D1C68B019000E7A77 /* AMQProtocolValues.m */,
+				AE744E311C85A1B000A4C2FA /* AMQFrame.h */,
+				AE744E321C85A1B000A4C2FA /* AMQFrame.m */,
+				AEEEF0801C4F9BFA0056A5EB /* AMQMethodDecoder.h */,
+				AEEEF0811C4F9BFA0056A5EB /* AMQMethodDecoder.m */,
+				AE744E351C85A20700A4C2FA /* AMQFrameset.h */,
+				AE744E361C85A20700A4C2FA /* AMQFrameset.m */,
 				AEE445E91C7373BF0082132C /* AMQProtocolBasicProperties.h */,
 				AEE445EA1C7373BF0082132C /* AMQProtocolBasicProperties.m */,
 				AE4E7F491C6A293D00A441EC /* AMQProtocolMethods.h */,
@@ -250,8 +264,6 @@
 				AEADA3801C71F59A00012D61 /* AMQProtocolMethodMap.m */,
 				AE39BDA01C68B105000E7A77 /* AMQProtocolHeader.h */,
 				AE39BDA11C68B105000E7A77 /* AMQProtocolHeader.m */,
-				AEEEF0801C4F9BFA0056A5EB /* AMQMethodDecoder.h */,
-				AEEEF0811C4F9BFA0056A5EB /* AMQMethodDecoder.m */,
 				AE80BAB11C4D47C100E6DFFD /* AMQParser.h */,
 				AE80BAB21C4D47C100E6DFFD /* AMQParser.m */,
 				AE898D591C3C30D100AA3BF1 /* AMQURI.h */,
@@ -306,6 +318,7 @@
 				AEE445E51C7341CB0082132C /* RMQFrameHandler.h in Headers */,
 				AEC4D1D71C74C1AC00D7D585 /* RMQSender.h in Headers */,
 				AEA45ED11C43F4DC00FE1F62 /* RMQTCPSocketTransport.h in Headers */,
+				AE744E371C85A20700A4C2FA /* AMQFrameset.h in Headers */,
 				AEE7FEAD1C3BCD0F00DF8C4F /* RMQConnection.h in Headers */,
 				AEE7FEB51C3BD16200DF8C4F /* RMQQueue.h in Headers */,
 				AE80BAB31C4D47C100E6DFFD /* AMQParser.h in Headers */,
@@ -317,6 +330,7 @@
 				AE39BDA21C68B105000E7A77 /* AMQProtocolHeader.h in Headers */,
 				AE05DA6C1C6A0848009E68C7 /* RMQMessage.h in Headers */,
 				AEE7FEB91C3BD2B400DF8C4F /* RMQExchange.h in Headers */,
+				AE744E331C85A1B000A4C2FA /* AMQFrame.h in Headers */,
 				AEE445E11C7338FE0082132C /* RMQReaderLoop.h in Headers */,
 				AE39BD9E1C68B019000E7A77 /* AMQProtocolValues.h in Headers */,
 			);
@@ -508,8 +522,10 @@
 				AE898D5C1C3C30D100AA3BF1 /* AMQURI.m in Sources */,
 				AEE445EC1C7373BF0082132C /* AMQProtocolBasicProperties.m in Sources */,
 				AE80BAB41C4D47C100E6DFFD /* AMQParser.m in Sources */,
+				AE744E381C85A20700A4C2FA /* AMQFrameset.m in Sources */,
 				AE05DA6D1C6A0848009E68C7 /* RMQMessage.m in Sources */,
 				AEE7FEB61C3BD16200DF8C4F /* RMQQueue.m in Sources */,
+				AE744E341C85A1B000A4C2FA /* AMQFrame.m in Sources */,
 				AEEEF0831C4F9BFA0056A5EB /* AMQMethodDecoder.m in Sources */,
 				AEE7FEB21C3BCEBA00DF8C4F /* RMQChannel.m in Sources */,
 			);

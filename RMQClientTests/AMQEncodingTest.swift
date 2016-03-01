@@ -39,8 +39,9 @@ class AMQEncodingTest: XCTestCase {
             locales: AMQLongstr("en_PIRATE")
         )
         let data = AMQFrame(channelID: 42, payload: payload).amqEncoded()
-        let decoder = AMQMethodDecoder(data: data)
-        let hydrated = decoder.decode() as! AMQProtocolConnectionStart
+        let parser = AMQParser(data: data)
+        let frame = AMQFrame(parser: parser)
+        let hydrated = frame.payload as! AMQProtocolConnectionStart
         XCTAssertEqual(payload, hydrated)
     }
 

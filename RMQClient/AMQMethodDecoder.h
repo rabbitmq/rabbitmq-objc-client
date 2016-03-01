@@ -1,12 +1,10 @@
 #import <Foundation/Foundation.h>
 #import "AMQProtocolValues.h"
+#import "AMQParser.h"
 
 @interface AMQMethodDecoder : NSObject
 
-@property (nonnull, nonatomic, readonly) NSNumber *channelID;
-@property (nonnull, nonatomic, readonly) NSNumber *typeID;
-
-- (nonnull instancetype)initWithData:(nonnull NSData *)data;
+- (nonnull instancetype)initWithParser:(nonnull AMQParser *)parser;
 - (nonnull id)decode;
 
 @end

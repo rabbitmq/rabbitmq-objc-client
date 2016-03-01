@@ -4,4 +4,6 @@
 #import "AMQMethodDecoder.h"
 #import "AMQProtocolHeader.h"
 #import "AMQProtocolMethods.h"
+#import "AMQFrameset.h"
+#import "AMQFrame.h"
 #import "RMQChannelIDAllocator.h"

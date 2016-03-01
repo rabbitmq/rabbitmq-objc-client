@@ -8,6 +8,7 @@ enum TestDoubleTransportError: ErrorType {
     var connected = false
     var outboundData: [NSData] = []
     var callbacks: Array<(NSData) -> Void> = []
+    var callbackIndexToRunNext = 0
 
     func connect(onConnect: () -> Void) {
         connected = true
@@ -39,9 +40,12 @@ enum TestDoubleTransportError: ErrorType {
     }
     func serverSendsData(data: NSData) -> ControlledInteractionTransport {
         if callbacks.isEmpty {
-            XCTFail("no read callbacks available")
-        } else {
+            XCTFail("No read callbacks stored!")
+        } else if callbackIndexToRunNext == callbacks.count - 1 {
             callbacks.last!(data)
+            callbackIndexToRunNext++
+        } else {
+            XCTFail("No callbacks left to run!")
         }
         return self
     }
@@ -54,11 +58,12 @@ enum TestDoubleTransportError: ErrorType {
             XCTFail("nothing sent")
         } else {
             let actual = outboundData.last!
-            let decoder = AMQMethodDecoder(data: actual)
+            let parser = AMQParser(data: actual)
+            let frame = AMQFrame(parser: parser)
             TestHelper.assertEqualBytes(
                 AMQFrame(channelID: channelID, payload: amqMethod).amqEncoded(),
                 actual,
-                "\nExpected:\n\(amqMethod.dynamicType)\nGot:\n\(decoder.decode().dynamicType)"
+                "\nExpected:\n\(amqMethod.dynamicType)\nGot:\n\(frame.payload.dynamicType)"
             )
         }
         return self
@@ -71,8 +76,9 @@ enum TestDoubleTransportError: ErrorType {
             let startIndex = lastIndex - methods.count + 1
             let actual = Array(outboundData[startIndex...lastIndex])
             let decoded = outboundData.map { (data) -> String in
-                let decoder = AMQMethodDecoder(data: data)
-                let decoded = decoder.decode() as? AMQMethod
+                let parser = AMQParser(data: data)
+                let frame = AMQFrame(parser: parser)
+                let decoded = frame.payload as? AMQMethod
                 return "\(decoded?.dynamicType)"
             }
             let expected = methods.map { (method) -> NSData in
