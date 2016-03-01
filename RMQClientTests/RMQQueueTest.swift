@@ -4,7 +4,7 @@ class RMQQueueTest: XCTestCase {
 
     func testPublishSendsABasicPublish() {
         let sender = SenderSpy(frameMax: 4)
-        let queue = RMQQueue(name: "my.q", channelID: 123, sender: sender)
+        let queue = RMQQueue(name: "my.q", channel: RMQChannel(123, sender: sender), sender: sender)
         let messageContent = "my great message yo"
 
         queue.publish(messageContent)
@@ -49,7 +49,7 @@ class RMQQueueTest: XCTestCase {
 
     func testPublishWhenContentLengthIsMultipleOfFrameMax() {
         let sender = SenderSpy(frameMax: 4)
-        let queue = RMQQueue(name: "my.q", channelID: 123, sender: sender)
+        let queue = RMQQueue(name: "my.q", channel: RMQChannel(123, sender: sender), sender: sender)
         let messageContent = "12345678"
 
         queue.publish(messageContent)
@@ -91,7 +91,7 @@ class RMQQueueTest: XCTestCase {
     
     func testPopSendsAGet() {
         let sender = SenderSpy()
-        let queue = RMQQueue(name: "great.queue", channelID: 42, sender: sender)
+        let queue = RMQQueue(name: "great.queue", channel: RMQChannel(42, sender: sender), sender: sender)
 
         queue.pop()
 
@@ -112,7 +112,7 @@ class RMQQueueTest: XCTestCase {
 
     func testPopWaitsOnNextGetOk() {
         let sender = SenderSpy()
-        let queue = RMQQueue(name: "great.queue", channelID: 42, sender: sender)
+        let queue = RMQQueue(name: "great.queue", channel: RMQChannel(42, sender: sender), sender: sender)
 
         queue.pop()
 
@@ -122,7 +122,7 @@ class RMQQueueTest: XCTestCase {
 
     func testPopReturnsMessageBasedOnLastFramesetWaitedUpon() {
         let sender = SenderSpy()
-        let queue = RMQQueue(name: "great.queue", channelID: 42, sender: sender)
+        let queue = RMQQueue(name: "great.queue", channel: RMQChannel(42, sender: sender), sender: sender)
 
         let method = AMQProtocolBasicGetOk(
             deliveryTag: AMQLonglong(0),

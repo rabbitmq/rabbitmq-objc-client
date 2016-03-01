@@ -41,7 +41,7 @@
                                                                                  options:options
                                                                                arguments:arguments];
     [self.sender sendMethod:method channelID:self.channelID];
-    return [[RMQQueue alloc] initWithName:queueName channelID:self.channelID sender:self.sender];
+    return [[RMQQueue alloc] initWithName:queueName channel:self sender:self.sender];
 }
 
 - (RMQExchange *)defaultExchange {

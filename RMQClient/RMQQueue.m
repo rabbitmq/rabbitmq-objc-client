@@ -12,12 +12,12 @@
 @implementation RMQQueue
 
 - (instancetype)initWithName:(NSString *)name
-                   channelID:(NSNumber *)channelID
+                     channel:(RMQChannel *)channel
                       sender:(id<RMQSender>)sender {
-    self = [super init];
+   self = [super init];
     if (self) {
         self.name = name;
-        self.channelID = channelID;
+        self.channelID = channel.channelID;
         self.sender = sender;
     }
     return self;
