@@ -45,7 +45,7 @@ enum TestDoubleTransportError: ErrorType {
             callbacks.last!(data)
             callbackIndexToRunNext++
         } else {
-            XCTFail("No callbacks left to run!")
+            XCTFail("No callbacks left to run! Exhausted \(callbacks.count).")
         }
         return self
     }
