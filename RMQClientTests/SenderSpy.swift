@@ -1,6 +1,6 @@
 @objc class NothingSentYet : AMQFrameset {}
 
-@objc class FakeSender : NSObject, RMQSender {
+@objc class SenderSpy : NSObject, RMQSender {
     var lastWaitedUponFrameset: AMQFrameset = AMQFrameset()
     var lastSentFrameset: AMQFrameset = NothingSentYet()
     var methodWaitedUpon: String = "nothing waited upon yet!"
