@@ -1,5 +1,4 @@
 #import "RMQReaderLoop.h"
-#import "AMQProtocolMethods.h"
 #import "AMQFrame.h"
 #import "AMQMethodDecoder.h"
 
