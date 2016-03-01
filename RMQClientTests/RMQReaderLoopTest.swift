@@ -4,7 +4,7 @@ class RMQReaderLoopTest: XCTestCase {
 
     func testSendsDecodedContentlessFramesetToFrameHandler() {
         let transport = ControlledInteractionTransport()
-        let frameHandler = FakeFrameHandler()
+        let frameHandler = FrameHandlerSpy()
         let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
         let method = MethodFixtures.connectionStart()
         let expectedFrameset = AMQFrameset(channelID: 42, method: method, contentHeader: AMQContentHeaderNone(), contentBodies: [])
@@ -22,7 +22,7 @@ class RMQReaderLoopTest: XCTestCase {
     
     func testHandlesContentTerminatedByNonContentFrame() {
         let transport = ControlledInteractionTransport()
-        let frameHandler = FakeFrameHandler()
+        let frameHandler = FrameHandlerSpy()
         let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
         let method = MethodFixtures.basicGetOk("my.great.queue")
         let content1 = AMQContentBody(data: "aa".dataUsingEncoding(NSUTF8StringEncoding)!)
@@ -64,7 +64,7 @@ class RMQReaderLoopTest: XCTestCase {
 
     func testHandlesContentTerminatedByEndOfDataSize() {
         let transport = ControlledInteractionTransport()
-        let frameHandler = FakeFrameHandler()
+        let frameHandler = FrameHandlerSpy()
         let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
         let method = MethodFixtures.basicGetOk("my.great.queue")
         let content1 = AMQContentBody(data: "aa".dataUsingEncoding(NSUTF8StringEncoding)!)

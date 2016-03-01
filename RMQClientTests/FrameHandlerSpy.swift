@@ -1,4 +1,4 @@
-@objc class FakeFrameHandler : NSObject, RMQFrameHandler {
+@objc class FrameHandlerSpy : NSObject, RMQFrameHandler {
     var receivedFramesets: [AMQFrameset] = []
 
     func handleFrameset(frameset: AMQFrameset!) {
