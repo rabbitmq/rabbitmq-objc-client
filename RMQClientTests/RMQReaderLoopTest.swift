@@ -20,7 +20,7 @@ class RMQReaderLoopTest: XCTestCase {
         )
     }
     
-    func testSendsContentTerminatedByNonContentFrame() {
+    func testHandlesContentTerminatedByNonContentFrame() {
         let transport = ControlledInteractionTransport()
         let frameHandler = FakeFrameHandler()
         let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
@@ -62,7 +62,7 @@ class RMQReaderLoopTest: XCTestCase {
         XCTAssertEqual(expectedNonContentFrameset, frameHandler.receivedFramesets[1])
     }
 
-    func testSendsContentTerminatedByEndOfDataSize() {
+    func testHandlesContentTerminatedByEndOfDataSize() {
         let transport = ControlledInteractionTransport()
         let frameHandler = FakeFrameHandler()
         let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)

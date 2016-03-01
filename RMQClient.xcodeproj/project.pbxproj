@@ -14,13 +14,13 @@
 		AE05DA6D1C6A0848009E68C7 /* RMQMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = AE05DA6B1C6A0848009E68C7 /* RMQMessage.m */; settings = {ASSET_TAGS = (); }; };
 		AE111BD71C57B33300F88277 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE111BD61C57B33300F88277 /* TestHelper.swift */; settings = {ASSET_TAGS = (); }; };
 		AE111BD81C57B33300F88277 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE111BD61C57B33300F88277 /* TestHelper.swift */; settings = {ASSET_TAGS = (); }; };
-		AE254F601C51B4D800DEA468 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE41C5521C4FC88F00129207 /* Fixtures.swift */; settings = {ASSET_TAGS = (); }; };
+		AE254F601C51B4D800DEA468 /* MethodFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE41C5521C4FC88F00129207 /* MethodFixtures.swift */; settings = {ASSET_TAGS = (); }; };
 		AE39BD9E1C68B019000E7A77 /* AMQProtocolValues.h in Headers */ = {isa = PBXBuildFile; fileRef = AE39BD9C1C68B019000E7A77 /* AMQProtocolValues.h */; settings = {ASSET_TAGS = (); }; };
 		AE39BD9F1C68B019000E7A77 /* AMQProtocolValues.m in Sources */ = {isa = PBXBuildFile; fileRef = AE39BD9D1C68B019000E7A77 /* AMQProtocolValues.m */; settings = {ASSET_TAGS = (); }; };
 		AE39BDA21C68B105000E7A77 /* AMQProtocolHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = AE39BDA01C68B105000E7A77 /* AMQProtocolHeader.h */; settings = {ASSET_TAGS = (); }; };
 		AE39BDA31C68B105000E7A77 /* AMQProtocolHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = AE39BDA11C68B105000E7A77 /* AMQProtocolHeader.m */; settings = {ASSET_TAGS = (); }; };
 		AE3E0E381C56416F00186BA7 /* AMQEncodingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE3E0E371C56416F00186BA7 /* AMQEncodingTest.swift */; settings = {ASSET_TAGS = (); }; };
-		AE41C5531C4FC88F00129207 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE41C5521C4FC88F00129207 /* Fixtures.swift */; settings = {ASSET_TAGS = (); }; };
+		AE41C5531C4FC88F00129207 /* MethodFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE41C5521C4FC88F00129207 /* MethodFixtures.swift */; settings = {ASSET_TAGS = (); }; };
 		AE4E7F4A1C6A293D00A441EC /* AMQProtocolMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = AE4E7F491C6A293D00A441EC /* AMQProtocolMethods.h */; settings = {ASSET_TAGS = (); }; };
 		AE4E7F4B1C6A297900A441EC /* AMQProtocolMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA45EC41C43C20F00FE1F62 /* AMQProtocolMethods.m */; };
 		AE4E7F4E1C6A2A8900A441EC /* AMQProtocolConversations.h in Headers */ = {isa = PBXBuildFile; fileRef = AE4E7F4C1C6A2A8900A441EC /* AMQProtocolConversations.h */; settings = {ASSET_TAGS = (); }; };
@@ -103,7 +103,7 @@
 		AE39BDA01C68B105000E7A77 /* AMQProtocolHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQProtocolHeader.h; sourceTree = "<group>"; };
 		AE39BDA11C68B105000E7A77 /* AMQProtocolHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQProtocolHeader.m; sourceTree = "<group>"; };
 		AE3E0E371C56416F00186BA7 /* AMQEncodingTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AMQEncodingTest.swift; sourceTree = "<group>"; };
-		AE41C5521C4FC88F00129207 /* Fixtures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
+		AE41C5521C4FC88F00129207 /* MethodFixtures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MethodFixtures.swift; sourceTree = "<group>"; };
 		AE41C5621C51A2D500129207 /* RMQTransportContract.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQTransportContract.swift; sourceTree = "<group>"; };
 		AE4E7F491C6A293D00A441EC /* AMQProtocolMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQProtocolMethods.h; sourceTree = "<group>"; };
 		AE4E7F4C1C6A2A8900A441EC /* AMQProtocolConversations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQProtocolConversations.h; sourceTree = "<group>"; };
@@ -278,7 +278,7 @@
 				AEEB8B4B1C7DC64A002D3FCE /* Test Doubles */,
 				AE607C671C3C0EAD00BE9AC4 /* RMQClientTests-Bridging-Header.h */,
 				AEE7FEA21C3BCA6000DF8C4F /* Info.plist */,
-				AE41C5521C4FC88F00129207 /* Fixtures.swift */,
+				AE41C5521C4FC88F00129207 /* MethodFixtures.swift */,
 				AE111BD61C57B33300F88277 /* TestHelper.swift */,
 				AE898D571C3C2D2E00AA3BF1 /* AMQURIParseTest.swift */,
 				AEA45EC71C43CBBE00FE1F62 /* RMQConnectionTest.swift */,
@@ -500,7 +500,7 @@
 				AEA45EE21C440FFD00FE1F62 /* IntegrationTests.swift in Sources */,
 				AEEB8B501C7DE8D1002D3FCE /* ControlledInteractionTransport.swift in Sources */,
 				AE111BD81C57B33300F88277 /* TestHelper.swift in Sources */,
-				AE254F601C51B4D800DEA468 /* Fixtures.swift in Sources */,
+				AE254F601C51B4D800DEA468 /* MethodFixtures.swift in Sources */,
 				AEA45EE31C44100C00FE1F62 /* RMQTCPSocketTransportTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -539,7 +539,7 @@
 				AE541F431C7E132700C17932 /* ConnectionTuningTest.swift in Sources */,
 				AEE445E81C7342EE0082132C /* RMQReaderLoopTest.swift in Sources */,
 				AEEB8B551C7DEDE5002D3FCE /* ControlledInteractionTransportTest.swift in Sources */,
-				AE41C5531C4FC88F00129207 /* Fixtures.swift in Sources */,
+				AE41C5531C4FC88F00129207 /* MethodFixtures.swift in Sources */,
 				AEADA37E1C71D64A00012D61 /* ControlledInteractionTransport.swift in Sources */,
 				AE111BD71C57B33300F88277 /* TestHelper.swift in Sources */,
 				AEEB8B531C7DED0E002D3FCE /* RMQTransportContract.swift in Sources */,
