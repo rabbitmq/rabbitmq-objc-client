@@ -50,23 +50,6 @@
     return self;
 }
 
-- (NSArray *)contentBodiesFromData:(NSData *)data inChunksOf:(NSUInteger)chunkSize {
-    NSMutableArray *bodies = [NSMutableArray new];
-    NSUInteger chunkCount = data.length / chunkSize;
-    for (int i = 0; i < chunkCount; i++) {
-        NSUInteger offset = i * chunkSize;
-        NSData *subData = [data subdataWithRange:NSMakeRange(offset, chunkSize)];
-        AMQContentBody *body = [[AMQContentBody alloc] initWithData:subData];
-        [bodies addObject:body];
-    }
-    NSUInteger lastChunkSize = data.length % chunkSize;
-    if (lastChunkSize > 0) {
-        NSData *lastData = [data subdataWithRange:NSMakeRange(data.length - lastChunkSize, lastChunkSize)];
-        [bodies addObject:[[AMQContentBody alloc] initWithData:lastData]];
-    }
-    return bodies;
-}
-
 - (id<RMQMessage>)pop {
     AMQProtocolBasicGet *get = [[AMQProtocolBasicGet alloc] initWithReserved1:[[AMQShort alloc] init:0]
                                                                         queue:[[AMQShortstr alloc] init:self.name]
@@ -94,6 +77,25 @@
     return [[RMQContentMessage alloc] initWithDeliveryInfo:@{@"consumer_tag": @"foo"}
                                                   metadata:@{@"foo": @"bar"}
                                                    content:content];
+}
+
+# pragma mark - Private
+
+- (NSArray *)contentBodiesFromData:(NSData *)data inChunksOf:(NSUInteger)chunkSize {
+    NSMutableArray *bodies = [NSMutableArray new];
+    NSUInteger chunkCount = data.length / chunkSize;
+    for (int i = 0; i < chunkCount; i++) {
+        NSUInteger offset = i * chunkSize;
+        NSData *subData = [data subdataWithRange:NSMakeRange(offset, chunkSize)];
+        AMQContentBody *body = [[AMQContentBody alloc] initWithData:subData];
+        [bodies addObject:body];
+    }
+    NSUInteger lastChunkSize = data.length % chunkSize;
+    if (lastChunkSize > 0) {
+        NSData *lastData = [data subdataWithRange:NSMakeRange(data.length - lastChunkSize, lastChunkSize)];
+        [bodies addObject:[[AMQContentBody alloc] initWithData:lastData]];
+    }
+    return bodies;
 }
 
 - (AMQProtocolBasicPublish *)amqPublish {
