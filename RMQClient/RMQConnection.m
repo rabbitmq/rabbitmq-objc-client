@@ -118,7 +118,7 @@
                error:(NSError *__autoreleasing  _Nullable *)error {
     [self.watchedIncomingMethods addObject:@[channelID, amqMethodClass]];
     
-    char delay = 2;
+    char delay = 10;
     dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC);
     if (dispatch_semaphore_wait(self.methodSemaphore, timeout) == 0) {
         return YES;
