@@ -4,7 +4,8 @@ class RMQQueueTest: XCTestCase {
 
     func testPublishSendsABasicPublish() {
         let sender = SenderSpy(frameMax: 4 + AMQEmptyFrameSize)
-        let queue = RMQQueue(name: "my.q", channel: RMQDispatchQueueChannel(123, sender: sender), sender: sender)
+        let channel = ChannelSpy(123)
+        let queue = RMQQueue(name: "my.q", channel: channel, sender: sender)
         let messageContent = "my great message yo"
 
         queue.publish(messageContent)
@@ -49,7 +50,8 @@ class RMQQueueTest: XCTestCase {
 
     func testPublishWhenContentLengthIsMultipleOfFrameMax() {
         let sender = SenderSpy(frameMax: 4 + AMQEmptyFrameSize)
-        let queue = RMQQueue(name: "my.q", channel: RMQDispatchQueueChannel(123, sender: sender), sender: sender)
+        let channel = ChannelSpy(123)
+        let queue = RMQQueue(name: "my.q", channel: channel, sender: sender)
         let messageContent = "12345678"
 
         queue.publish(messageContent)
@@ -91,7 +93,8 @@ class RMQQueueTest: XCTestCase {
     
     func testPopSendsAGet() {
         let sender = SenderSpy()
-        let queue = RMQQueue(name: "great.queue", channel: RMQDispatchQueueChannel(42, sender: sender), sender: sender)
+        let channel = ChannelSpy(42)
+        let queue = RMQQueue(name: "great.queue", channel: channel, sender: sender)
 
         queue.pop()
 
@@ -112,7 +115,8 @@ class RMQQueueTest: XCTestCase {
 
     func testPopWaitsOnNextGetOk() {
         let sender = SenderSpy()
-        let queue = RMQQueue(name: "great.queue", channel: RMQDispatchQueueChannel(42, sender: sender), sender: sender)
+        let channel = ChannelSpy(42)
+        let queue = RMQQueue(name: "great.queue", channel: channel, sender: sender)
 
         queue.pop()
 
@@ -122,7 +126,8 @@ class RMQQueueTest: XCTestCase {
 
     func testPopReturnsMessageBasedOnLastFramesetWaitedUpon() {
         let sender = SenderSpy()
-        let queue = RMQQueue(name: "great.queue", channel: RMQDispatchQueueChannel(42, sender: sender), sender: sender)
+        let channel = ChannelSpy(42)
+        let queue = RMQQueue(name: "great.queue", channel: channel, sender: sender)
 
         let method = AMQProtocolBasicGetOk(
             deliveryTag: AMQLonglong(0),
@@ -143,6 +148,21 @@ class RMQQueueTest: XCTestCase {
         )
 
         XCTAssertEqual("totally expected message", queue.pop().content)
+    }
+
+    func testSubscribeSendsABasicConsumeToChannel() {
+        let channel = ChannelSpy(123)
+        let queue = RMQQueue(name: "my great queue", channel: channel, sender: SenderSpy())
+
+        var handlerCalled = false
+        queue.subscribe { RMQMessage in
+            handlerCalled = true
+        }
+
+        let message = RMQContentMessage(deliveryInfo: [:], metadata: [:], content: "Hi there!")
+        channel.lastReceivedBasicConsumeBlock!(message)
+
+        XCTAssert(handlerCalled)
     }
 
 }

@@ -1,5 +1,4 @@
 #import <Foundation/Foundation.h>
-#import "RMQDispatchQueueChannel.h"
 #import "RMQTransport.h"
 #import "RMQChannelAllocator.h"
 #import "AMQProtocolValues.h"
@@ -19,5 +18,5 @@
                         heartbeat:(NSNumber *)heartbeat;
 - (RMQConnection *)start;
 - (void)close;
-- (RMQDispatchQueueChannel *)createChannel;
+- (id<RMQChannel>)createChannel;
 @end

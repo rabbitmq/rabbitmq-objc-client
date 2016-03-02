@@ -11,7 +11,7 @@
 @property (nonatomic, readwrite) NSString *mechanism;
 @property (nonatomic, readwrite) NSString *locale;
 @property (nonatomic, readwrite) AMQCredentials *credentials;
-@property (nonatomic, readwrite) NSDictionary *channels;
+@property (nonatomic, readwrite) NSMutableDictionary *channels;
 @property (nonatomic, readwrite) RMQReaderLoop *readerLoop;
 @property (nonatomic, readwrite) id <RMQChannelAllocator> channelAllocator;
 @property (nonatomic, readwrite) NSMutableArray *watchedIncomingMethods;
@@ -54,7 +54,8 @@
         self.mechanism = @"PLAIN";
         self.locale = @"en_GB";
         self.readerLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport frameHandler:self];
-        self.channels = @{@0 : [[RMQDispatchQueueChannel alloc] init:@0 sender:self]};
+        self.channelAllocator = channelAllocator;
+        self.channels = [@{@0 : [self.channelAllocator allocateWithSender:self]} mutableCopy];
         self.watchedIncomingMethods = [NSMutableArray new];
         self.methodSemaphore = dispatch_semaphore_create(0);
         self.lastWaitedUponFrameset = nil;
@@ -89,8 +90,9 @@
     [self.transport write:frame.amqEncoded error:&error onComplete:^{}];
 }
 
-- (RMQDispatchQueueChannel *)createChannel {
-    RMQDispatchQueueChannel *ch = [[RMQDispatchQueueChannel alloc] init:[self.channelAllocator nextID] sender:self];
+- (id<RMQChannel>)createChannel {
+    id<RMQChannel> ch = [self.channelAllocator allocateWithSender:self];
+    self.channels[ch.channelID] = ch;
     AMQFrame *frame = [[AMQFrame alloc] initWithChannelID:ch.channelID payload:self.amqChannelOpen];
     NSError *error = NULL;
     [self.transport write:frame.amqEncoded error:&error onComplete:^{}];
@@ -147,6 +149,10 @@
     }
     if ([self shouldTriggerCallback:method]) {
         [method didReceiveWithContext:self.transport];
+    }
+    if ([frameset.method isKindOfClass:[AMQProtocolBasicDeliver class]]) {
+        id<RMQChannel> ch = self.channels[frameset.channelID];
+        [ch handleFrameset:frameset];
     }
     [self.readerLoop runOnce];
 }

@@ -107,4 +107,8 @@ class MethodFixtures {
     static func basicGetOk(queueName: String) -> AMQProtocolBasicGetOk {
         return AMQProtocolBasicGetOk(deliveryTag: AMQLonglong(0), options: AMQProtocolBasicGetOkOptions.NoOptions, exchange: AMQShortstr(""), routingKey: AMQShortstr(queueName), messageCount: AMQLong(0))
     }
+
+    static func basicDeliver() -> AMQProtocolBasicDeliver {
+        return AMQProtocolBasicDeliver(consumerTag: AMQShortstr(""), deliveryTag: AMQLonglong(0), options: AMQProtocolBasicDeliverOptions.NoOptions, exchange: AMQShortstr(""), routingKey: AMQShortstr(""))
+    }
 }

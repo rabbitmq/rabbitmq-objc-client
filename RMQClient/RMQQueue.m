@@ -7,18 +7,18 @@
 @interface RMQQueue ()
 @property (nonatomic, copy, readwrite) NSString *name;
 @property (weak, nonatomic, readwrite) id <RMQSender> sender;
-@property (nonatomic, readwrite) NSNumber *channelID;
+@property (nonatomic, readwrite) id <RMQChannel> channel;
 @end
 
 @implementation RMQQueue
 
 - (instancetype)initWithName:(NSString *)name
-                     channel:(RMQDispatchQueueChannel *)channel
+                     channel:(id<RMQChannel>)channel
                       sender:(id<RMQSender>)sender {
    self = [super init];
     if (self) {
         self.name = name;
-        self.channelID = channel.channelID;
+        self.channel = channel;
         self.sender = sender;
     }
     return self;
@@ -43,7 +43,7 @@
 
     NSArray *contentBodies = [self contentBodiesFromData:bodyData
                                               inChunksOf:self.sender.frameMax.integerValue - AMQEmptyFrameSize];
-    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:self.channelID
+    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:self.channel.channelID
                                                             method:publish
                                                      contentHeader:contentHeader
                                                      contentBodies:contentBodies];
@@ -55,7 +55,7 @@
     AMQProtocolBasicGet *get = [[AMQProtocolBasicGet alloc] initWithReserved1:[[AMQShort alloc] init:0]
                                                                         queue:[[AMQShortstr alloc] init:self.name]
                                                                       options:AMQProtocolBasicGetNoOptions];
-    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:self.channelID
+    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:self.channel.channelID
                                                             method:get
                                                      contentHeader:[AMQContentHeaderNone new]
                                                      contentBodies:@[]];
@@ -63,7 +63,7 @@
 
     NSError *error = NULL;
     [self.sender waitOnMethod:[AMQProtocolBasicGetOk class]
-                    channelID:self.channelID
+                    channelID:self.channel.channelID
                         error:&error];
 
     if (error) {
@@ -78,6 +78,10 @@
     return [[RMQContentMessage alloc] initWithDeliveryInfo:@{@"consumer_tag": @"foo"}
                                                   metadata:@{@"foo": @"bar"}
                                                    content:content];
+}
+
+- (void)subscribe:(void (^)(id<RMQMessage> _Nonnull))handler {
+    [self.channel basicConsume:self.name consumer:handler];
 }
 
 # pragma mark - Private

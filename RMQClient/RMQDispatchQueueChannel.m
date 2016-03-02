@@ -6,6 +6,7 @@
 @interface RMQDispatchQueueChannel ()
 @property (nonatomic, copy, readwrite) NSNumber *channelID;
 @property (nonatomic, readwrite) id <RMQSender> sender;
+@property (nonatomic, copy, readwrite) void (^lastConsumer)(id<RMQMessage>);
 @end
 
 @implementation RMQDispatchQueueChannel
@@ -15,6 +16,7 @@
     if (self) {
         self.channelID = channelID;
         self.sender = sender;
+        self.lastConsumer = ^(id<RMQMessage> m){};
     }
     return self;
 }
@@ -23,6 +25,10 @@
 {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
+}
+
+- (RMQExchange *)defaultExchange {
+    return [RMQExchange new];
 }
 
 - (RMQQueue *)queue:(NSString *)queueName
@@ -41,10 +47,29 @@
                                                                                  options:options
                                                                                arguments:arguments];
     [self.sender sendMethod:method channelID:self.channelID];
-    return [[RMQQueue alloc] initWithName:queueName channel:self sender:self.sender];
+    return [[RMQQueue alloc] initWithName:queueName
+                                  channel:(id <RMQChannel>)self
+                                   sender:self.sender];
 }
 
-- (RMQExchange *)defaultExchange {
-    return [RMQExchange new];
+- (void)basicConsume:(NSString *)queueName consumer:(void (^)(id<RMQMessage> _Nonnull))consumer {
+    AMQProtocolBasicConsume *method = [[AMQProtocolBasicConsume alloc] initWithReserved1:[[AMQShort alloc] init:0]
+                                                                                   queue:[[AMQShortstr alloc] init:queueName]
+                                                                             consumerTag:[[AMQShortstr alloc] init:@""]
+                                                                                 options:AMQProtocolBasicConsumeNoOptions
+                                                                               arguments:[[AMQTable alloc] init:@{}]];
+    [self.sender sendMethod:method channelID:self.channelID];
+
+    NSError *error = NULL;
+    [self.sender waitOnMethod:[AMQProtocolBasicConsumeOk class] channelID:self.channelID error:&error];
+    self.lastConsumer = consumer;
+}
+
+- (void)handleFrameset:(AMQFrameset *)frameset {
+    NSString *content = [[NSString alloc] initWithData:frameset.contentData encoding:NSUTF8StringEncoding];
+    RMQContentMessage *message = [[RMQContentMessage alloc] initWithDeliveryInfo:@{@"consumer_tag" : @"foo"}
+                                                                        metadata:@{@"foo" : @"bar"}
+                                                                         content:content];
+    self.lastConsumer(message);
 }
 @end

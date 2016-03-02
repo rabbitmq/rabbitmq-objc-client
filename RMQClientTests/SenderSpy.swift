@@ -3,6 +3,7 @@
 @objc class SenderSpy : NSObject, RMQSender {
     var lastWaitedUponFrameset: AMQFrameset = AMQFrameset()
     var lastSentFrameset: AMQFrameset = NothingSentYet()
+    var lastSentMethod: AMQMethod?
     var methodWaitedUpon: String = "nothing waited upon yet!"
     var channelWaitedUpon: NSNumber = -1
     var frameMax: NSNumber
@@ -16,7 +17,7 @@
     }
 
     func sendMethod(amqMethod: AMQMethod, channelID: NSNumber) {
-
+        lastSentMethod = amqMethod
     }
 
     func waitOnMethod(amqMethodClass: AnyClass, channelID: NSNumber) throws {

@@ -2,7 +2,7 @@ import XCTest
 
 class IntegrationTests: XCTestCase {
     
-    func testIntegration() {
+    func testPop() {
         let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
         let frameMaxRequiringTwoFrames = 4096
         var messageContent = ""
@@ -44,5 +44,46 @@ class IntegrationTests: XCTestCase {
 
         XCTAssertEqual(expected, message)
     }
-    
+
+    func testSubscribe() {
+        let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
+
+        let conn = RMQConnection(
+            transport: transport,
+            channelAllocator: RMQChannel1Allocator(),
+            user: "guest",
+            password: "guest",
+            vhost: "/",
+            channelMax: 65535,
+            frameMax: 4096,
+            heartbeat: 0
+        )
+        conn.start()
+        defer { conn.close() }
+        XCTAssert(TestHelper.pollUntil { return transport.isConnected() }, "never connected")
+
+        let ch = conn.createChannel()
+        let qname = "rmqclient.integration-tests.\(NSProcessInfo.processInfo().globallyUniqueString)"
+        let q = ch.queue(qname, autoDelete: true, exclusive: false)
+
+        var delivered = RMQContentMessage(deliveryInfo: [:], metadata: [:], content: "not delivered yet")
+        q.subscribe { (message: RMQMessage) in
+            delivered = message as! RMQContentMessage
+        }
+
+        q.publish("my message")
+
+        XCTAssert(TestHelper.pollUntil { return delivered.content != "not delivered yet" })
+
+        let expectedInfo = ["consumer_tag": "foo"]
+        let expectedMeta = ["foo": "bar"]
+
+        let expected = RMQContentMessage(
+            deliveryInfo: expectedInfo,
+            metadata: expectedMeta,
+            content: "my message"
+        )
+
+        XCTAssertEqual(expected, delivered)
+    }
 }
