@@ -4,13 +4,12 @@ class IntegrationTests: XCTestCase {
     
     func testIntegration() {
         let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
-        let frameMaxRequiringTwoFrames = 4096
-        let metaDataBytes = 8
+        let frameMaxRequiringTwoFrames = UInt(4096)
         var messageContent = ""
-        for _ in 1...(frameMaxRequiringTwoFrames - metaDataBytes) {
+        for _ in 1...(frameMaxRequiringTwoFrames - AMQEmptyFrameSize) {
             messageContent += "a"
         }
-        messageContent += "bbb"
+        messageContent += "bb"
 
         let conn = RMQConnection(
             transport: transport,

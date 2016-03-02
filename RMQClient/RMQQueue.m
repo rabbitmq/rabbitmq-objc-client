@@ -2,6 +2,7 @@
 #import "AMQProtocolMethods.h"
 #import "RMQConnection.h"
 #import "AMQProtocolBasicProperties.h"
+#import "AMQConstants.h"
 
 @interface RMQQueue ()
 @property (nonatomic, copy, readwrite) NSString *name;
@@ -41,7 +42,7 @@
                                                                      properties:@[persistent, octetStream, lowPriority]];
 
     NSArray *contentBodies = [self contentBodiesFromData:bodyData
-                                              inChunksOf:self.sender.frameMax.integerValue];
+                                              inChunksOf:self.sender.frameMax.integerValue - AMQEmptyFrameSize];
     AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:self.channelID
                                                             method:publish
                                                      contentHeader:contentHeader

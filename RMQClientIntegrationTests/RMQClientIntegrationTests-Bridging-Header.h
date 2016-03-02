@@ -7,3 +7,4 @@
 #import "AMQFrameset.h"
 #import "AMQFrame.h"
 #import "RMQChannelIDAllocator.h"
+#import "AMQConstants.h"
