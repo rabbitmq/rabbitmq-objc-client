@@ -3,7 +3,7 @@ import XCTest
 class RMQQueueTest: XCTestCase {
 
     func testPublishSendsABasicPublish() {
-        let sender = SenderSpy(frameMax: 12)
+        let sender = SenderSpy(frameMax: 4 + AMQEmptyFrameSize)
         let queue = RMQQueue(name: "my.q", channel: RMQChannel(123, sender: sender), sender: sender)
         let messageContent = "my great message yo"
 
@@ -48,7 +48,7 @@ class RMQQueueTest: XCTestCase {
     }
 
     func testPublishWhenContentLengthIsMultipleOfFrameMax() {
-        let sender = SenderSpy(frameMax: 4)
+        let sender = SenderSpy(frameMax: 4 + AMQEmptyFrameSize)
         let queue = RMQQueue(name: "my.q", channel: RMQChannel(123, sender: sender), sender: sender)
         let messageContent = "12345678"
 

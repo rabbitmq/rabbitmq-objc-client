@@ -11,3 +11,4 @@
 #import "AMQProtocolBasicProperties.h"
 #import "AMQProtocolMethods.h"
 #import "RMQReaderLoop.h"
+#import "AMQConstants.h"

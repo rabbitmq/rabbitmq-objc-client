@@ -1,3 +1,3 @@
 #import <Foundation/Foundation.h>
 
-extern NSUInteger const AMQEmptyFrameSize;
+extern NSInteger const AMQEmptyFrameSize;

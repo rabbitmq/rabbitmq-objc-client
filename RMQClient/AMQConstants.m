@@ -1,2 +1,2 @@
 #import "AMQConstants.h"
-NSUInteger const AMQEmptyFrameSize = 8;
+NSInteger const AMQEmptyFrameSize = 8;
