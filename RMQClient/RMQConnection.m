@@ -13,7 +13,7 @@
 @property (nonatomic, readwrite) AMQCredentials *credentials;
 @property (nonatomic, readwrite) NSDictionary *channels;
 @property (nonatomic, readwrite) RMQReaderLoop *readerLoop;
-@property (nonatomic, readwrite) id <RMQIDAllocator> idAllocator;
+@property (nonatomic, readwrite) id <RMQChannelAllocator> channelAllocator;
 @property (nonatomic, readwrite) NSMutableArray *watchedIncomingMethods;
 @property (nonatomic, readwrite) dispatch_semaphore_t methodSemaphore;
 @property (atomic, readwrite) AMQFrameset *lastWaitedUponFrameset;
@@ -25,7 +25,7 @@
 @implementation RMQConnection
 
 - (instancetype)initWithTransport:(id<RMQTransport>)transport
-                      idAllocator:(id<RMQIDAllocator>)idAllocator
+                 channelAllocator:(id<RMQChannelAllocator>)channelAllocator
                              user:(NSString *)user
                          password:(NSString *)password
                             vhost:(NSString *)vhost
@@ -38,7 +38,7 @@
                                                            password:password];
         self.vhost = vhost;
         self.transport = transport;
-        self.idAllocator = idAllocator;
+        self.channelAllocator = channelAllocator;
         AMQTable *capabilities = [[AMQTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
                                                           @"consumer_cancel_notify": [[AMQBoolean alloc] init:YES],
                                                           @"exchange_exchange_bindings": [[AMQBoolean alloc] init:YES],
@@ -90,7 +90,7 @@
 }
 
 - (RMQChannel *)createChannel {
-    RMQChannel *ch = [[RMQChannel alloc] init:[self.idAllocator nextID] sender:self];
+    RMQChannel *ch = [[RMQChannel alloc] init:[self.channelAllocator nextID] sender:self];
     AMQFrame *frame = [[AMQFrame alloc] initWithChannelID:ch.channelID payload:self.amqChannelOpen];
     NSError *error = NULL;
     [self.transport write:frame.amqEncoded error:&error onComplete:^{}];

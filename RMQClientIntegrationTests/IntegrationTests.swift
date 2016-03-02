@@ -13,7 +13,7 @@ class IntegrationTests: XCTestCase {
 
         let conn = RMQConnection(
             transport: transport,
-            idAllocator: RMQChannelIDAllocator(),
+            channelAllocator: RMQChannel1Allocator(),
             user: "guest",
             password: "guest",
             vhost: "/",

@@ -10,7 +10,7 @@ class RMQConnectionTest: XCTestCase {
         ) -> RMQConnection {
             return RMQConnection(
                 transport: transport,
-                idAllocator: RMQChannelIDAllocator(),
+                channelAllocator: RMQChannel1Allocator(),
                 user: user,
                 password: password,
                 vhost: vhost,

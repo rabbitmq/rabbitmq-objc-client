@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "RMQChannel.h"
 #import "RMQTransport.h"
-#import "RMQIDAllocator.h"
+#import "RMQChannelAllocator.h"
 #import "AMQProtocolValues.h"
 #import "RMQFrameHandler.h"
 #import "RMQSender.h"
@@ -10,7 +10,7 @@
 @property (copy, nonatomic, readonly) NSString *vhost;
 
 - (instancetype)initWithTransport:(id<RMQTransport>)transport
-                      idAllocator:(id<RMQIDAllocator>)idAllocator
+                 channelAllocator:(id<RMQChannelAllocator>)channelAllocator
                              user:(NSString *)user
                          password:(NSString *)password
                             vhost:(NSString *)vhost

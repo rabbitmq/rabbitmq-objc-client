@@ -1,6 +1,6 @@
 #import "RMQConnection.h"
 #import "RMQChannel.h"
-#import "RMQChannelIDAllocator.h"
+#import "RMQChannelAllocator.h"
 #import "RMQQueue.h"
 #import "AMQURI.h"
 #import "RMQTCPSocketTransport.h"
@@ -12,3 +12,4 @@
 #import "AMQProtocolMethods.h"
 #import "RMQReaderLoop.h"
 #import "AMQConstants.h"
+#import "RMQChannel1Allocator.h"

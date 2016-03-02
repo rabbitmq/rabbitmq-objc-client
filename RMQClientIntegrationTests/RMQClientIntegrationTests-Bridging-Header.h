@@ -6,5 +6,5 @@
 #import "AMQProtocolMethods.h"
 #import "AMQFrameset.h"
 #import "AMQFrame.h"
-#import "RMQChannelIDAllocator.h"
+#import "RMQChannel1Allocator.h"
 #import "AMQConstants.h"

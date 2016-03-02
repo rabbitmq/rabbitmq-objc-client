@@ -62,7 +62,7 @@ class ConnectionTuningTest: XCTestCase {
     func connectWithOptions(transport: ControlledInteractionTransport, _ channelMax: Int, _ frameMax: Int, _ heartbeat: Int) -> RMQConnection {
         let connection = RMQConnection(
             transport: transport,
-            idAllocator: RMQChannelIDAllocator(),
+            channelAllocator: RMQChannel1Allocator(),
             user: "foo",
             password: "bar",
             vhost: "baz",

@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
 
-@protocol RMQIDAllocator <NSObject>
+@protocol RMQChannelAllocator <NSObject>
 - (NSNumber *)nextID;
 @end
