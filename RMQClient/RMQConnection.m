@@ -54,7 +54,7 @@
         self.mechanism = @"PLAIN";
         self.locale = @"en_GB";
         self.readerLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport frameHandler:self];
-        self.channels = @{@0 : [[RMQChannel alloc] init:@0 sender:self]};
+        self.channels = @{@0 : [[RMQDispatchQueueChannel alloc] init:@0 sender:self]};
         self.watchedIncomingMethods = [NSMutableArray new];
         self.methodSemaphore = dispatch_semaphore_create(0);
         self.lastWaitedUponFrameset = nil;
@@ -89,8 +89,8 @@
     [self.transport write:frame.amqEncoded error:&error onComplete:^{}];
 }
 
-- (RMQChannel *)createChannel {
-    RMQChannel *ch = [[RMQChannel alloc] init:[self.channelAllocator nextID] sender:self];
+- (RMQDispatchQueueChannel *)createChannel {
+    RMQDispatchQueueChannel *ch = [[RMQDispatchQueueChannel alloc] init:[self.channelAllocator nextID] sender:self];
     AMQFrame *frame = [[AMQFrame alloc] initWithChannelID:ch.channelID payload:self.amqChannelOpen];
     NSError *error = NULL;
     [self.transport write:frame.amqEncoded error:&error onComplete:^{}];

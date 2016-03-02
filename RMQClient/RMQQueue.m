@@ -13,7 +13,7 @@
 @implementation RMQQueue
 
 - (instancetype)initWithName:(NSString *)name
-                     channel:(RMQChannel *)channel
+                     channel:(RMQDispatchQueueChannel *)channel
                       sender:(id<RMQSender>)sender {
    self = [super init];
     if (self) {

@@ -1,10 +1,9 @@
 #import <Foundation/Foundation.h>
 #import "RMQExchange.h"
-#import "AMQProtocolValues.h"
 #import "RMQQueue.h"
 #import "RMQSender.h"
 
-@interface RMQChannel : NSObject
+@protocol RMQChannel <NSObject>
 @property (nonnull, copy, nonatomic, readonly) NSNumber *channelID;
 - (nonnull instancetype)init:(nonnull NSNumber *)channelID
                       sender:(nonnull id <RMQSender>)sender;

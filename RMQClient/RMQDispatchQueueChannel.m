@@ -1,14 +1,14 @@
-#import "RMQChannel.h"
+#import "RMQDispatchQueueChannel.h"
 #import "AMQMethodDecoder.h"
 #import "AMQProtocolValues.h"
 #import "AMQProtocolMethods.h"
 
-@interface RMQChannel ()
+@interface RMQDispatchQueueChannel ()
 @property (nonatomic, copy, readwrite) NSNumber *channelID;
 @property (nonatomic, readwrite) id <RMQSender> sender;
 @end
 
-@implementation RMQChannel
+@implementation RMQDispatchQueueChannel
 
 - (instancetype)init:(NSNumber *)channelID sender:(id<RMQSender>)sender {
     self = [super init];

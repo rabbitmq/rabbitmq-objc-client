@@ -26,6 +26,7 @@
 		AE4E7F4E1C6A2A8900A441EC /* AMQProtocolConversations.h in Headers */ = {isa = PBXBuildFile; fileRef = AE4E7F4C1C6A2A8900A441EC /* AMQProtocolConversations.h */; settings = {ASSET_TAGS = (); }; };
 		AE4E7F4F1C6A2A8900A441EC /* AMQProtocolConversations.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4E7F4D1C6A2A8900A441EC /* AMQProtocolConversations.m */; settings = {ASSET_TAGS = (); }; };
 		AE541F431C7E132700C17932 /* ConnectionTuningTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE541F421C7E132700C17932 /* ConnectionTuningTest.swift */; settings = {ASSET_TAGS = (); }; };
+		AE59345F1C873B6900560A73 /* RMQChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = AE59345E1C873B6900560A73 /* RMQChannel.h */; settings = {ASSET_TAGS = (); }; };
 		AE744E331C85A1B000A4C2FA /* AMQFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = AE744E311C85A1B000A4C2FA /* AMQFrame.h */; settings = {ASSET_TAGS = (); }; };
 		AE744E341C85A1B000A4C2FA /* AMQFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = AE744E321C85A1B000A4C2FA /* AMQFrame.m */; settings = {ASSET_TAGS = (); }; };
 		AE744E371C85A20700A4C2FA /* AMQFrameset.h in Headers */ = {isa = PBXBuildFile; fileRef = AE744E351C85A20700A4C2FA /* AMQFrameset.h */; settings = {ASSET_TAGS = (); }; };
@@ -60,8 +61,8 @@
 		AEE7FE9C1C3BCA6000DF8C4F /* RMQClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE7FE911C3BCA6000DF8C4F /* RMQClient.framework */; settings = {ASSET_TAGS = (); }; };
 		AEE7FEAD1C3BCD0F00DF8C4F /* RMQConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE7FEAB1C3BCD0F00DF8C4F /* RMQConnection.h */; settings = {ASSET_TAGS = (); }; };
 		AEE7FEAE1C3BCD0F00DF8C4F /* RMQConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE7FEAC1C3BCD0F00DF8C4F /* RMQConnection.m */; settings = {ASSET_TAGS = (); }; };
-		AEE7FEB11C3BCEBA00DF8C4F /* RMQChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE7FEAF1C3BCEBA00DF8C4F /* RMQChannel.h */; settings = {ASSET_TAGS = (); }; };
-		AEE7FEB21C3BCEBA00DF8C4F /* RMQChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE7FEB01C3BCEBA00DF8C4F /* RMQChannel.m */; settings = {ASSET_TAGS = (); }; };
+		AEE7FEB11C3BCEBA00DF8C4F /* RMQDispatchQueueChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE7FEAF1C3BCEBA00DF8C4F /* RMQDispatchQueueChannel.h */; settings = {ASSET_TAGS = (); }; };
+		AEE7FEB21C3BCEBA00DF8C4F /* RMQDispatchQueueChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE7FEB01C3BCEBA00DF8C4F /* RMQDispatchQueueChannel.m */; settings = {ASSET_TAGS = (); }; };
 		AEE7FEB51C3BD16200DF8C4F /* RMQQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE7FEB31C3BD16200DF8C4F /* RMQQueue.h */; settings = {ASSET_TAGS = (); }; };
 		AEE7FEB61C3BD16200DF8C4F /* RMQQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE7FEB41C3BD16200DF8C4F /* RMQQueue.m */; settings = {ASSET_TAGS = (); }; };
 		AEE7FEB91C3BD2B400DF8C4F /* RMQExchange.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE7FEB71C3BD2B400DF8C4F /* RMQExchange.h */; settings = {ASSET_TAGS = (); }; };
@@ -111,6 +112,7 @@
 		AE4E7F4C1C6A2A8900A441EC /* AMQProtocolConversations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQProtocolConversations.h; sourceTree = "<group>"; };
 		AE4E7F4D1C6A2A8900A441EC /* AMQProtocolConversations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQProtocolConversations.m; sourceTree = "<group>"; };
 		AE541F421C7E132700C17932 /* ConnectionTuningTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionTuningTest.swift; sourceTree = "<group>"; };
+		AE59345E1C873B6900560A73 /* RMQChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQChannel.h; sourceTree = "<group>"; };
 		AE607C671C3C0EAD00BE9AC4 /* RMQClientTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RMQClientTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegrationTests.swift; sourceTree = "<group>"; };
 		AE744E311C85A1B000A4C2FA /* AMQFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQFrame.h; sourceTree = "<group>"; };
@@ -152,8 +154,8 @@
 		AEE7FEA21C3BCA6000DF8C4F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AEE7FEAB1C3BCD0F00DF8C4F /* RMQConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQConnection.h; sourceTree = "<group>"; };
 		AEE7FEAC1C3BCD0F00DF8C4F /* RMQConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQConnection.m; sourceTree = "<group>"; };
-		AEE7FEAF1C3BCEBA00DF8C4F /* RMQChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQChannel.h; sourceTree = "<group>"; };
-		AEE7FEB01C3BCEBA00DF8C4F /* RMQChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQChannel.m; sourceTree = "<group>"; };
+		AEE7FEAF1C3BCEBA00DF8C4F /* RMQDispatchQueueChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQDispatchQueueChannel.h; sourceTree = "<group>"; };
+		AEE7FEB01C3BCEBA00DF8C4F /* RMQDispatchQueueChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQDispatchQueueChannel.m; sourceTree = "<group>"; };
 		AEE7FEB31C3BD16200DF8C4F /* RMQQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQQueue.h; sourceTree = "<group>"; };
 		AEE7FEB41C3BD16200DF8C4F /* RMQQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQQueue.m; sourceTree = "<group>"; };
 		AEE7FEB71C3BD2B400DF8C4F /* RMQExchange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQExchange.h; sourceTree = "<group>"; };
@@ -236,8 +238,9 @@
 				AEE445E31C7341CB0082132C /* RMQFrameHandler.h */,
 				AEE445DF1C7338FE0082132C /* RMQReaderLoop.h */,
 				AEE445E01C7338FE0082132C /* RMQReaderLoop.m */,
-				AEE7FEAF1C3BCEBA00DF8C4F /* RMQChannel.h */,
-				AEE7FEB01C3BCEBA00DF8C4F /* RMQChannel.m */,
+				AE59345E1C873B6900560A73 /* RMQChannel.h */,
+				AEE7FEAF1C3BCEBA00DF8C4F /* RMQDispatchQueueChannel.h */,
+				AEE7FEB01C3BCEBA00DF8C4F /* RMQDispatchQueueChannel.m */,
 				AE4E7F4C1C6A2A8900A441EC /* AMQProtocolConversations.h */,
 				AE4E7F4D1C6A2A8900A441EC /* AMQProtocolConversations.m */,
 				AE05DA661C69EC47009E68C7 /* RMQChannelAllocator.h */,
@@ -316,8 +319,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				AEA45ECA1C43D2B900FE1F62 /* RMQTransport.h in Headers */,
-				AEE7FEB11C3BCEBA00DF8C4F /* RMQChannel.h in Headers */,
+				AEE7FEB11C3BCEBA00DF8C4F /* RMQDispatchQueueChannel.h in Headers */,
 				AEADA3811C71F59A00012D61 /* AMQProtocolMethodMap.h in Headers */,
+				AE59345F1C873B6900560A73 /* RMQChannel.h in Headers */,
 				AE05DA681C69EC47009E68C7 /* RMQChannelAllocator.h in Headers */,
 				AE05DA641C69EB79009E68C7 /* RMQChannel1Allocator.h in Headers */,
 				AE898D5B1C3C30D100AA3BF1 /* AMQURI.h in Headers */,
@@ -535,7 +539,7 @@
 				AEE7FEB61C3BD16200DF8C4F /* RMQQueue.m in Sources */,
 				AE744E341C85A1B000A4C2FA /* AMQFrame.m in Sources */,
 				AEEEF0831C4F9BFA0056A5EB /* AMQMethodDecoder.m in Sources */,
-				AEE7FEB21C3BCEBA00DF8C4F /* RMQChannel.m in Sources */,
+				AEE7FEB21C3BCEBA00DF8C4F /* RMQDispatchQueueChannel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
