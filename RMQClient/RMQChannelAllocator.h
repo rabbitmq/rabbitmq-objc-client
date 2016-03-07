@@ -4,4 +4,5 @@
 
 @protocol RMQChannelAllocator <NSObject, RMQFrameHandler>
 - (id<RMQChannel>)allocateWithSender:(id<RMQSender>)sender;
+- (void)releaseChannelNumber:(NSNumber *)channelNumber;
 @end

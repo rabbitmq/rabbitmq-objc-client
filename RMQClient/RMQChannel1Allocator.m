@@ -20,6 +20,10 @@
     return self.channel;
 }
 
+- (void)releaseChannelNumber:(NSNumber *)channelNumber {
+
+}
+
 - (void)handleFrameset:(AMQFrameset *)frameset {
     [self.channel handleFrameset:frameset];
 }

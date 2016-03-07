@@ -8,6 +8,9 @@
         return ch
     }
 
+    func releaseChannelNumber(channelNumber: NSNumber!) {
+    }
+
     func handleFrameset(frameset: AMQFrameset!) {
         // use a frame handler spy instead
     }

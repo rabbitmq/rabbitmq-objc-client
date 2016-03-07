@@ -24,4 +24,8 @@
         methodWaitedUpon = "\(amqMethodClass)"
         channelWaitedUpon = channelID
     }
+
+    override func isEqual(object: AnyObject?) -> Bool {
+        return object!.isKindOfClass(SenderSpy.self);
+    }
 }
