@@ -38,7 +38,7 @@ class RMQDispatchQueueChannelTest: XCTestCase {
         let method = MethodFixtures.basicDeliver()
         let header = AMQContentHeader(classID: 2, bodySize: 123, properties: [])
         let body = AMQContentBody(data: "Consumed!".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let frameset = AMQFrameset(channelID: 432, method: method, contentHeader: header, contentBodies: [body])
+        let frameset = AMQFrameset(channelNumber: 432, method: method, contentHeader: header, contentBodies: [body])
         channel.handleFrameset(frameset)
 
         let expectedMessage = RMQContentMessage(

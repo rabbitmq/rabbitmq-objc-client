@@ -33,9 +33,9 @@ enum TestDoubleTransportError: ErrorType {
         callbacks.append(complete)
     }
     func handshake() -> ControlledInteractionTransport {
-        serverSendsPayload(MethodFixtures.connectionStart(), channelID: 0)
-        serverSendsPayload(MethodFixtures.connectionTune(), channelID: 0)
-        serverSendsPayload(MethodFixtures.connectionOpenOk(), channelID: 0)
+        serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
+        serverSendsPayload(MethodFixtures.connectionTune(), channelNumber: 0)
+        serverSendsPayload(MethodFixtures.connectionOpenOk(), channelNumber: 0)
         return self
     }
     func serverSendsData(data: NSData) -> ControlledInteractionTransport {
@@ -49,11 +49,11 @@ enum TestDoubleTransportError: ErrorType {
         }
         return self
     }
-    func serverSendsPayload(payload: AMQPayload, channelID: Int) -> ControlledInteractionTransport {
-        serverSendsData(AMQFrame(channelID: channelID, payload: payload).amqEncoded())
+    func serverSendsPayload(payload: AMQPayload, channelNumber: Int) -> ControlledInteractionTransport {
+        serverSendsData(AMQFrame(channelNumber: channelNumber, payload: payload).amqEncoded())
         return self
     }
-    func assertClientSentMethod(amqMethod: AMQMethod, channelID: Int) -> ControlledInteractionTransport {
+    func assertClientSentMethod(amqMethod: AMQMethod, channelNumber: Int) -> ControlledInteractionTransport {
         if outboundData.isEmpty {
             XCTFail("nothing sent")
         } else {
@@ -61,14 +61,14 @@ enum TestDoubleTransportError: ErrorType {
             let parser = AMQParser(data: actual)
             let frame = AMQFrame(parser: parser)
             TestHelper.assertEqualBytes(
-                AMQFrame(channelID: channelID, payload: amqMethod).amqEncoded(),
+                AMQFrame(channelNumber: channelNumber, payload: amqMethod).amqEncoded(),
                 actual,
                 "\nExpected:\n\(amqMethod.dynamicType)\nGot:\n\(frame.payload.dynamicType)"
             )
         }
         return self
     }
-    func assertClientSentMethods(methods: [AMQMethod], channelID: Int) -> ControlledInteractionTransport {
+    func assertClientSentMethods(methods: [AMQMethod], channelNumber: Int) -> ControlledInteractionTransport {
         if outboundData.isEmpty {
             XCTFail("nothing sent")
         } else {
@@ -82,7 +82,7 @@ enum TestDoubleTransportError: ErrorType {
                 return "\(decoded?.dynamicType)"
             }
             let expected = methods.map { (method) -> NSData in
-                return AMQFrame(channelID: channelID, payload: method).amqEncoded()
+                return AMQFrame(channelNumber: channelNumber, payload: method).amqEncoded()
             }
             XCTAssertEqual(expected, actual, "\nAll outgoing methods: \(decoded)")
         }

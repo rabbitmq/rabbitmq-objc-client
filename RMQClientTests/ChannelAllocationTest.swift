@@ -13,7 +13,7 @@ class ChannelAllocationTest: XCTestCase {
         let sender = SenderSpy()
         let allocator = RMQMultipleChannelAllocator()
         allocateAll(allocator, sender)
-        XCTAssertEqual(-1, allocator.allocateWithSender(sender).channelID)
+        XCTAssertEqual(-1, allocator.allocateWithSender(sender).channelNumber)
     }
 
     func testChannelGetsAFreedChannelNumberIfOtherwiseOutOfChannelNumbers() {
@@ -21,8 +21,8 @@ class ChannelAllocationTest: XCTestCase {
         let allocator = RMQMultipleChannelAllocator()
         allocateAll(allocator, sender)
         allocator.releaseChannelNumber(2)
-        XCTAssertEqual(2, allocator.allocateWithSender(sender).channelID)
-        XCTAssertEqual(-1, allocator.allocateWithSender(sender).channelID)
+        XCTAssertEqual(2, allocator.allocateWithSender(sender).channelNumber)
+        XCTAssertEqual(-1, allocator.allocateWithSender(sender).channelNumber)
     }
 
     func testNumbersAreNotDoubleAllocated() {
@@ -40,19 +40,19 @@ class ChannelAllocationTest: XCTestCase {
 
         dispatch_group_async(group, queues[0]) {
             for _ in 1...self.allocationsPerQueue {
-                channelSet1.insert(allocator.allocateWithSender(sender).channelID)
+                channelSet1.insert(allocator.allocateWithSender(sender).channelNumber)
             }
         }
 
         dispatch_group_async(group, queues[1]) {
             for _ in 1...self.allocationsPerQueue {
-                channelSet2.insert(allocator.allocateWithSender(sender).channelID)
+                channelSet2.insert(allocator.allocateWithSender(sender).channelNumber)
             }
         }
 
         dispatch_group_async(group, queues[2]) {
             for _ in 1...self.allocationsPerQueue {
-                channelSet3.insert(allocator.allocateWithSender(sender).channelID)
+                channelSet3.insert(allocator.allocateWithSender(sender).channelNumber)
             }
         }
 

@@ -72,7 +72,7 @@ class ConnectionTuningTest: XCTestCase {
             frameMax: frameMax,
             heartbeat: heartbeat
             ).start()
-        transport.serverSendsPayload(MethodFixtures.connectionStart(), channelID: 0)
+        transport.serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
         return connection
     }
 
@@ -84,8 +84,8 @@ class ConnectionTuningTest: XCTestCase {
         let tune = AMQProtocolConnectionTune(channelMax: channelMax, frameMax: frameMax, heartbeat: heartbeat)
 
         transport
-            .serverSendsPayload(MethodFixtures.connectionStart(), channelID: 0)
-            .serverSendsPayload(tune, channelID: 0)
+            .serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
+            .serverSendsPayload(tune, channelNumber: 0)
 
         let parser = AMQParser(data: transport.outboundData[transport.outboundData.count - 2])
         let frame = AMQFrame(parser: parser)

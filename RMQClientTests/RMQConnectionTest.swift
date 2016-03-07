@@ -27,11 +27,11 @@ class RMQConnectionTest: XCTestCase {
         startedConnection(transport)
         transport
             .assertClientSentProtocolHeader()
-            .serverSendsPayload(MethodFixtures.connectionStart(), channelID: 0)
-            .assertClientSentMethod(MethodFixtures.connectionStartOk(), channelID: 0)
-            .serverSendsPayload(MethodFixtures.connectionTune(), channelID: 0)
-            .assertClientSentMethods([MethodFixtures.connectionTuneOk(), MethodFixtures.connectionOpen()], channelID: 0)
-            .serverSendsPayload(MethodFixtures.connectionOpenOk(), channelID: 0)
+            .serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
+            .assertClientSentMethod(MethodFixtures.connectionStartOk(), channelNumber: 0)
+            .serverSendsPayload(MethodFixtures.connectionTune(), channelNumber: 0)
+            .assertClientSentMethods([MethodFixtures.connectionTuneOk(), MethodFixtures.connectionOpen()], channelNumber: 0)
+            .serverSendsPayload(MethodFixtures.connectionOpenOk(), channelNumber: 0)
     }
 
     func testClientInitiatedClosing() {
@@ -47,10 +47,10 @@ class RMQConnectionTest: XCTestCase {
                 classId: AMQShort(0),
                 methodId: AMQShort(0)
             ),
-            channelID: 0
+            channelNumber: 0
         )
         XCTAssert(transport.isConnected())
-        transport.serverSendsPayload(MethodFixtures.connectionCloseOk(), channelID: 0)
+        transport.serverSendsPayload(MethodFixtures.connectionCloseOk(), channelNumber: 0)
         XCTAssertFalse(transport.isConnected())
     }
 
@@ -60,9 +60,9 @@ class RMQConnectionTest: XCTestCase {
         transport.handshake()
 
         XCTAssertTrue(transport.isConnected())
-        transport.serverSendsPayload(MethodFixtures.connectionClose(), channelID: 0)
+        transport.serverSendsPayload(MethodFixtures.connectionClose(), channelNumber: 0)
         XCTAssertFalse(transport.isConnected())
-        transport.assertClientSentMethod(MethodFixtures.connectionCloseOk(), channelID: 0)
+        transport.assertClientSentMethod(MethodFixtures.connectionCloseOk(), channelNumber: 0)
     }
 
     func testCreatingAChannelSendsAChannelOpenAndReceivesOpenOK() {
@@ -74,8 +74,8 @@ class RMQConnectionTest: XCTestCase {
         conn.createChannel()
 
         transport
-            .assertClientSentMethod(MethodFixtures.channelOpen(), channelID: 1)
-            .serverSendsPayload(MethodFixtures.channelOpenOk(), channelID: 1)
+            .assertClientSentMethod(MethodFixtures.channelOpen(), channelNumber: 1)
+            .serverSendsPayload(MethodFixtures.channelOpenOk(), channelNumber: 1)
     }
 
     func testWaitingOnAServerMessageWithSuccess() {
@@ -85,10 +85,10 @@ class RMQConnectionTest: XCTestCase {
         let halfSecond = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
 
         dispatch_after(halfSecond, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            transport.serverSendsPayload(MethodFixtures.connectionStart(), channelID: 42)
+            transport.serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 42)
         }
 
-        try! conn.waitOnMethod(AMQProtocolConnectionStart.self, channelID: 42)
+        try! conn.waitOnMethod(AMQProtocolConnectionStart.self, channelNumber: 42)
     }
 
     func testWaitingOnAServerMethodWithFailure() {
@@ -97,7 +97,7 @@ class RMQConnectionTest: XCTestCase {
 
         var error: NSError = NSError(domain: "", code: 0, userInfo: [:])
         do {
-            try conn.waitOnMethod(AMQProtocolConnectionStart.self, channelID: 42)
+            try conn.waitOnMethod(AMQProtocolConnectionStart.self, channelNumber: 42)
         }
         catch let e as NSError {
             error = e
@@ -128,10 +128,10 @@ class RMQConnectionTest: XCTestCase {
         let body2 = AMQContentBody(data: "message".dataUsingEncoding(NSUTF8StringEncoding)!)
         let header = AMQContentHeader(classID: 123, bodySize: body1.length + body2.length, properties: [])
         transport
-            .serverSendsPayload(MethodFixtures.basicDeliver(), channelID: 2)
-            .serverSendsPayload(header, channelID: 2)
-            .serverSendsPayload(body1, channelID: 2)
-            .serverSendsPayload(body2, channelID: 2)
+            .serverSendsPayload(MethodFixtures.basicDeliver(), channelNumber: 2)
+            .serverSendsPayload(header, channelNumber: 2)
+            .serverSendsPayload(body1, channelNumber: 2)
+            .serverSendsPayload(body2, channelNumber: 2)
 
         let expectedMethod = AMQProtocolBasicDeliver(
             consumerTag: AMQShortstr(""),
@@ -142,7 +142,7 @@ class RMQConnectionTest: XCTestCase {
         )
 
         let expectedFrameset = AMQFrameset(
-            channelID: 2,
+            channelNumber: 2,
             method: expectedMethod,
             contentHeader: header,
             contentBodies: [body1, body2]

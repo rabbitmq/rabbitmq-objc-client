@@ -1,7 +1,7 @@
 #import "RMQUnallocatedChannel.h"
 
 @interface RMQUnallocatedChannel ()
-@property (nonatomic, copy, readwrite) NSNumber *channelID;
+@property (nonatomic, copy, readwrite) NSNumber *channelNumber;
 @end
 
 @implementation RMQUnallocatedChannel
@@ -9,7 +9,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.channelID = @(-1);
+        self.channelNumber = @(-1);
     }
     return self;
 }

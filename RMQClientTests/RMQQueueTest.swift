@@ -37,7 +37,7 @@ class RMQQueueTest: XCTestCase {
         ]
 
         let expectedFrameset = AMQFrameset(
-            channelID: 123,
+            channelNumber: 123,
             method: publish,
             contentHeader: expectedHeader,
             contentBodies: expectedBodies
@@ -80,7 +80,7 @@ class RMQQueueTest: XCTestCase {
         ]
 
         let expectedFrameset = AMQFrameset(
-            channelID: 123,
+            channelNumber: 123,
             method: expectedMethod,
             contentHeader: expectedHeader,
             contentBodies: expectedBodies
@@ -104,7 +104,7 @@ class RMQQueueTest: XCTestCase {
             options: AMQProtocolBasicGetOptions.NoOptions
         )
         let expectedFrameset = AMQFrameset(
-            channelID: 42,
+            channelNumber: 42,
             method: get,
             contentHeader: AMQContentHeaderNone(),
             contentBodies: []
@@ -141,7 +141,7 @@ class RMQQueueTest: XCTestCase {
         let body2 = AMQContentBody(data: "message".dataUsingEncoding(NSUTF8StringEncoding)!)
 
         sender.lastWaitedUponFrameset = AMQFrameset(
-            channelID: 42,
+            channelNumber: 42,
             method: method,
             contentHeader: header,
             contentBodies: [body1, body2]

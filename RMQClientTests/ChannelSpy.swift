@@ -1,10 +1,10 @@
 @objc class ChannelSpy : NSObject, RMQChannel {
-    var channelID: NSNumber
+    var channelNumber: NSNumber
     var lastReceivedBasicConsumeBlock: ((RMQMessage) -> Void)?
     var lastReceivedFrameset: AMQFrameset?
 
-    init(_ aChannelID: Int) {
-        channelID = aChannelID
+    init(_ aChannelNumber: Int) {
+        channelNumber = aChannelNumber
     }
 
     func defaultExchange() -> RMQExchange {

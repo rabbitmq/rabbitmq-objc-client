@@ -6,8 +6,8 @@
 @property (nonnull, nonatomic, readonly) NSNumber *frameMax;
 - (void)send:(nonnull id<AMQEncoding>)encodable;
 - (void)sendMethod:(nonnull id<AMQMethod>)amqMethod
-         channelID:(nonnull NSNumber *)channelID;
+     channelNumber:(nonnull NSNumber *)channelNumber;
 - (BOOL)waitOnMethod:(nonnull Class)amqMethodClass
-           channelID:(nonnull NSNumber *)channelID
+       channelNumber:(nonnull NSNumber *)channelNumber
                error:(NSError * _Nullable * _Nullable)error;
 @end

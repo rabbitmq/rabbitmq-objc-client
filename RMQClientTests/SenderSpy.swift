@@ -16,13 +16,13 @@
         lastSentFrameset = encodable as! AMQFrameset
     }
 
-    func sendMethod(amqMethod: AMQMethod, channelID: NSNumber) {
+    func sendMethod(amqMethod: AMQMethod, channelNumber: NSNumber) {
         lastSentMethod = amqMethod
     }
 
-    func waitOnMethod(amqMethodClass: AnyClass, channelID: NSNumber) throws {
+    func waitOnMethod(amqMethodClass: AnyClass, channelNumber: NSNumber) throws {
         methodWaitedUpon = "\(amqMethodClass)"
-        channelWaitedUpon = channelID
+        channelWaitedUpon = channelNumber
     }
 
     override func isEqual(object: AnyObject?) -> Bool {

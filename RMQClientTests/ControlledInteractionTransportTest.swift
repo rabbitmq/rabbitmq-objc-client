@@ -13,7 +13,7 @@ class ControlledInteractionTransportTest: XCTestCase {
         dispatch_after(delayTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             transport
                 .assertClientSentProtocolHeader()
-                .serverSendsPayload(MethodFixtures.connectionStart(), channelID: 1)
+                .serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 1)
         }
         contract.sendingPreambleStimulatesAConnectionStart()
     }

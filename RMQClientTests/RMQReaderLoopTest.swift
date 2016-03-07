@@ -7,11 +7,11 @@ class RMQReaderLoopTest: XCTestCase {
         let frameHandler = FrameHandlerSpy()
         let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
         let method = MethodFixtures.connectionStart()
-        let expectedFrameset = AMQFrameset(channelID: 42, method: method, contentHeader: AMQContentHeaderNone(), contentBodies: [])
+        let expectedFrameset = AMQFrameset(channelNumber: 42, method: method, contentHeader: AMQContentHeaderNone(), contentBodies: [])
 
         readerLoop.runOnce()
 
-        transport.serverSendsPayload(method, channelID: 42)
+        transport.serverSendsPayload(method, channelNumber: 42)
 
         XCTAssertEqual(
             expectedFrameset,
@@ -35,14 +35,14 @@ class RMQReaderLoopTest: XCTestCase {
             ]
         )
         let expectedContentFrameset = AMQFrameset(
-            channelID: 42,
+            channelNumber: 42,
             method: method,
             contentHeader: contentHeader,
             contentBodies: [content1, content2]
         )
         let nonContent = nonContentPayload()
         let expectedNonContentFrameset = AMQFrameset(
-            channelID: 42,
+            channelNumber: 42,
             method: nonContent,
             contentHeader: AMQContentHeaderNone(),
             contentBodies: []
@@ -51,11 +51,11 @@ class RMQReaderLoopTest: XCTestCase {
         readerLoop.runOnce()
 
         transport
-            .serverSendsPayload(method, channelID: 42)
-            .serverSendsPayload(contentHeader, channelID: 42)
-            .serverSendsPayload(content1, channelID: 42)
-            .serverSendsPayload(content2, channelID: 42)
-            .serverSendsPayload(nonContent, channelID: 42)
+            .serverSendsPayload(method, channelNumber: 42)
+            .serverSendsPayload(contentHeader, channelNumber: 42)
+            .serverSendsPayload(content1, channelNumber: 42)
+            .serverSendsPayload(content2, channelNumber: 42)
+            .serverSendsPayload(nonContent, channelNumber: 42)
 
         XCTAssertEqual(2, frameHandler.receivedFramesets.count)
         XCTAssertEqual(expectedContentFrameset, frameHandler.receivedFramesets[0])
@@ -77,7 +77,7 @@ class RMQReaderLoopTest: XCTestCase {
             ]
         )
         let expectedContentFrameset = AMQFrameset(
-            channelID: 42,
+            channelNumber: 42,
             method: method,
             contentHeader: contentHeader,
             contentBodies: [content1, content2]
@@ -86,10 +86,10 @@ class RMQReaderLoopTest: XCTestCase {
         readerLoop.runOnce()
 
         transport
-            .serverSendsPayload(method, channelID: 42)
-            .serverSendsPayload(contentHeader, channelID: 42)
-            .serverSendsPayload(content1, channelID: 42)
-            .serverSendsPayload(content2, channelID: 42)
+            .serverSendsPayload(method, channelNumber: 42)
+            .serverSendsPayload(contentHeader, channelNumber: 42)
+            .serverSendsPayload(content1, channelNumber: 42)
+            .serverSendsPayload(content2, channelNumber: 42)
 
         XCTAssertEqual([expectedContentFrameset], frameHandler.receivedFramesets)
     }

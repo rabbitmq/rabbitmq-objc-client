@@ -43,10 +43,10 @@
 
     NSArray *contentBodies = [self contentBodiesFromData:bodyData
                                               inChunksOf:self.sender.frameMax.integerValue - AMQEmptyFrameSize];
-    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:self.channel.channelID
-                                                            method:publish
-                                                     contentHeader:contentHeader
-                                                     contentBodies:contentBodies];
+    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:self.channel.channelNumber
+                                                                method:publish
+                                                         contentHeader:contentHeader
+                                                         contentBodies:contentBodies];
     [self.sender send:frameset];
     return self;
 }
@@ -55,15 +55,15 @@
     AMQProtocolBasicGet *get = [[AMQProtocolBasicGet alloc] initWithReserved1:[[AMQShort alloc] init:0]
                                                                         queue:[[AMQShortstr alloc] init:self.name]
                                                                       options:AMQProtocolBasicGetNoOptions];
-    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelID:self.channel.channelID
-                                                            method:get
-                                                     contentHeader:[AMQContentHeaderNone new]
-                                                     contentBodies:@[]];
+    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:self.channel.channelNumber
+                                                                method:get
+                                                         contentHeader:[AMQContentHeaderNone new]
+                                                         contentBodies:@[]];
     [self.sender send:frameset];
 
     NSError *error = NULL;
     [self.sender waitOnMethod:[AMQProtocolBasicGetOk class]
-                    channelID:self.channel.channelID
+                    channelNumber:self.channel.channelNumber
                         error:&error];
 
     if (error) {

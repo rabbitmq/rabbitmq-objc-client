@@ -2,7 +2,7 @@
 #import "AMQMethodDecoder.h"
 
 @interface AMQFrame ()
-@property (nonatomic, copy, readwrite) NSNumber *channelID;
+@property (nonatomic, copy, readwrite) NSNumber *channelNumber;
 @property (nonatomic, readwrite) id<AMQPayload> payload;
 @end
 
@@ -14,11 +14,11 @@ typedef NS_ENUM(char, AMQFrameType) {
 
 @implementation AMQFrame
 
-- (instancetype)initWithChannelID:(NSNumber *)channelID
+- (instancetype)initWithChannelNumber:(NSNumber *)channelNumber
                           payload:(id<AMQPayload>)payload {
     self = [super init];
     if (self) {
-        self.channelID = channelID;
+        self.channelNumber = channelNumber;
         self.payload = payload;
     }
     return self;
@@ -26,7 +26,7 @@ typedef NS_ENUM(char, AMQFrameType) {
 
 - (instancetype)initWithParser:(AMQParser *)parser {
     char typeID         = [parser parseOctet];
-    NSNumber *channelID = @([parser parseShortUInt]);
+    NSNumber *channelNumber = @([parser parseShortUInt]);
     UInt32 payloadSize  = [parser parseLongUInt];
 
     id <AMQPayload> payload;
@@ -44,13 +44,13 @@ typedef NS_ENUM(char, AMQFrameType) {
             break;
     }
 
-    return [self initWithChannelID:channelID payload:payload];
+    return [self initWithChannelNumber:channelNumber payload:payload];
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *frameData = [NSMutableData new];
     NSArray *unencodedFrame = @[[[AMQOctet alloc] init:self.payload.frameTypeID.integerValue],
-                                [[AMQShort alloc] init:self.channelID.integerValue],
+                                [[AMQShort alloc] init:self.channelNumber.integerValue],
                                 [[AMQLong alloc] init:self.payload.amqEncoded.length],
                                 self.payload,
                                 [[AMQOctet alloc] init:0xCE]];

@@ -4,17 +4,17 @@
 #import "AMQProtocolMethods.h"
 
 @interface RMQDispatchQueueChannel ()
-@property (nonatomic, copy, readwrite) NSNumber *channelID;
+@property (nonatomic, copy, readwrite) NSNumber *channelNumber;
 @property (nonatomic, readwrite) id <RMQSender> sender;
 @property (nonatomic, copy, readwrite) void (^lastConsumer)(id<RMQMessage>);
 @end
 
 @implementation RMQDispatchQueueChannel
 
-- (instancetype)init:(NSNumber *)channelID sender:(id<RMQSender>)sender {
+- (instancetype)init:(NSNumber *)channelNumber sender:(id<RMQSender>)sender {
     self = [super init];
     if (self) {
-        self.channelID = channelID;
+        self.channelNumber = channelNumber;
         self.sender = sender;
         self.lastConsumer = ^(id<RMQMessage> m){};
     }
@@ -46,7 +46,7 @@
                                                                                    queue:amqQueueName
                                                                                  options:options
                                                                                arguments:arguments];
-    [self.sender sendMethod:method channelID:self.channelID];
+    [self.sender sendMethod:method channelNumber:self.channelNumber];
     return [[RMQQueue alloc] initWithName:queueName
                                   channel:(id <RMQChannel>)self
                                    sender:self.sender];
@@ -58,10 +58,10 @@
                                                                              consumerTag:[[AMQShortstr alloc] init:@""]
                                                                                  options:AMQProtocolBasicConsumeNoOptions
                                                                                arguments:[[AMQTable alloc] init:@{}]];
-    [self.sender sendMethod:method channelID:self.channelID];
+    [self.sender sendMethod:method channelNumber:self.channelNumber];
 
     NSError *error = NULL;
-    [self.sender waitOnMethod:[AMQProtocolBasicConsumeOk class] channelID:self.channelID error:&error];
+    [self.sender waitOnMethod:[AMQProtocolBasicConsumeOk class] channelNumber:self.channelNumber error:&error];
     self.lastConsumer = consumer;
 }
 

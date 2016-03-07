@@ -87,15 +87,15 @@
 
 - (void)close {
     AMQProtocolConnectionClose *method = self.amqClose;
-    AMQFrame *frame = [[AMQFrame alloc] initWithChannelID:@0 payload:method];
+    AMQFrame *frame = [[AMQFrame alloc] initWithChannelNumber:@0 payload:method];
     NSError *error = NULL;
     [self.transport write:frame.amqEncoded error:&error onComplete:^{}];
 }
 
 - (id<RMQChannel>)createChannel {
     id<RMQChannel> ch = [self.channelAllocator allocateWithSender:self];
-    self.channels[ch.channelID] = ch;
-    AMQFrame *frame = [[AMQFrame alloc] initWithChannelID:ch.channelID payload:self.amqChannelOpen];
+    self.channels[ch.channelNumber] = ch;
+    AMQFrame *frame = [[AMQFrame alloc] initWithChannelNumber:ch.channelNumber payload:self.amqChannelOpen];
     NSError *error = NULL;
     [self.transport write:frame.amqEncoded error:&error onComplete:^{}];
     return ch;
@@ -103,10 +103,10 @@
 
 # pragma mark - RMQSender
 
-- (void)sendMethod:(id<AMQMethod>)amqMethod channelID:(NSNumber *)channelID {
-    [self send:[[AMQFrame alloc] initWithChannelID:channelID payload:amqMethod]];
+- (void)sendMethod:(id<AMQMethod>)amqMethod channelNumber:(NSNumber *)channelNumber {
+    [self send:[[AMQFrame alloc] initWithChannelNumber:channelNumber payload:amqMethod]];
     if ([self shouldSendNextRequest:amqMethod]) {
-        [self sendMethod:[(id <AMQOutgoingPrecursor>)amqMethod nextRequest] channelID:channelID];
+        [self sendMethod:[(id <AMQOutgoingPrecursor>)amqMethod nextRequest] channelNumber:channelNumber];
     }
 }
 
@@ -118,9 +118,9 @@
 }
 
 - (BOOL)waitOnMethod:(Class)amqMethodClass
-           channelID:(NSNumber *)channelID
+           channelNumber:(NSNumber *)channelNumber
                error:(NSError *__autoreleasing  _Nullable *)error {
-    [self.watchedIncomingMethods addObject:@[channelID, amqMethodClass]];
+    [self.watchedIncomingMethods addObject:@[channelNumber, amqMethodClass]];
     
     char delay = 10;
     dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC);
@@ -139,7 +139,7 @@
 
 - (void)handleFrameset:(AMQFrameset *)frameset {
     id method = frameset.method;
-    NSArray *watchedMethod = @[frameset.channelID, [method class]];
+    NSArray *watchedMethod = @[frameset.channelNumber, [method class]];
     if ([self.watchedIncomingMethods containsObject:watchedMethod]) {
         [self.watchedIncomingMethods removeObject:watchedMethod];
         self.lastWaitedUponFrameset = frameset;
@@ -147,7 +147,7 @@
     }
     if ([self shouldReply:method]) {
         id<AMQMethod> reply = [method replyWithContext:self];
-        [self sendMethod:reply channelID:frameset.channelID];
+        [self sendMethod:reply channelNumber:frameset.channelNumber];
     }
     if ([self shouldTriggerCallback:method]) {
         [method didReceiveWithContext:self.transport];

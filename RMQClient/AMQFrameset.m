@@ -2,7 +2,7 @@
 #import "AMQFrame.h"
 
 @interface AMQFrameset ()
-@property (nonatomic, copy, readwrite) NSNumber *channelID;
+@property (nonatomic, copy, readwrite) NSNumber *channelNumber;
 @property (nonatomic, readwrite) id<AMQMethod> method;
 @property (nonatomic, readwrite) AMQContentHeader *contentHeader;
 @property (nonatomic, readwrite) NSArray *contentBodies;
@@ -10,13 +10,13 @@
 
 @implementation AMQFrameset
 
-- (instancetype)initWithChannelID:(NSNumber *)channelID
+- (instancetype)initWithChannelNumber:(NSNumber *)channelNumber
                            method:(id<AMQMethod>)method
                     contentHeader:(AMQContentHeader *)contentHeader
                     contentBodies:(NSArray *)contentBodies {
     self = [super init];
     if (self) {
-        self.channelID = channelID;
+        self.channelNumber = channelNumber;
         self.method = method;
         self.contentHeader = contentHeader;
         self.contentBodies = contentBodies;
@@ -26,12 +26,12 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQFrame alloc] initWithChannelID:self.channelID payload:self.method].amqEncoded];
+    [encoded appendData:[[AMQFrame alloc] initWithChannelNumber:self.channelNumber payload:self.method].amqEncoded];
     NSData *contentHeaderEncoded = self.contentHeader.amqEncoded;
     if (contentHeaderEncoded.length) {
-        [encoded appendData:[[AMQFrame alloc] initWithChannelID:self.channelID payload:self.contentHeader].amqEncoded];
+        [encoded appendData:[[AMQFrame alloc] initWithChannelNumber:self.channelNumber payload:self.contentHeader].amqEncoded];
         for (AMQContentBody *body in self.contentBodies) {
-            [encoded appendData:[[AMQFrame alloc] initWithChannelID:self.channelID payload:body].amqEncoded];
+            [encoded appendData:[[AMQFrame alloc] initWithChannelNumber:self.channelNumber payload:body].amqEncoded];
         }
     }
     return encoded;

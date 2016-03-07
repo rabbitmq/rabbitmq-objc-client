@@ -38,7 +38,7 @@ class AMQEncodingTest: XCTestCase {
             mechanisms: AMQLongstr("PLAIN_JANE"),
             locales: AMQLongstr("en_PIRATE")
         )
-        let data = AMQFrame(channelID: 42, payload: payload).amqEncoded()
+        let data = AMQFrame(channelNumber: 42, payload: payload).amqEncoded()
         let parser = AMQParser(data: data)
         let frame = AMQFrame(parser: parser)
         let hydrated = frame.payload as! AMQProtocolConnectionStart
@@ -67,7 +67,7 @@ class AMQEncodingTest: XCTestCase {
             bodySize: 23,
             properties: properties
         )
-        let data = AMQFrame(channelID: 42, payload: payload).amqEncoded()
+        let data = AMQFrame(channelNumber: 42, payload: payload).amqEncoded()
         let parser = AMQParser(data: data)
         let hydrated = AMQFrame(parser: parser).payload as! AMQContentHeader
         XCTAssertEqual(payload, hydrated)
@@ -75,7 +75,7 @@ class AMQEncodingTest: XCTestCase {
 
     func testRoundTripContentBodyThroughFrame() {
         let payload = AMQContentBody(data: "cyclist's string 🚴🏿".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let data = AMQFrame(channelID: 321, payload: payload).amqEncoded()
+        let data = AMQFrame(channelNumber: 321, payload: payload).amqEncoded()
         let parser = AMQParser(data: data)
         let hydrated = AMQFrame(parser: parser).payload as! AMQContentBody
         TestHelper.assertEqualBytes(payload.data, hydrated.data)
@@ -140,7 +140,7 @@ class AMQEncodingTest: XCTestCase {
         expectedFrame.appendBytes(&frameEnd, length: 1)
 
         let encodableMethod = EncodableMethod()
-        let frame: NSData = AMQFrame(channelID: 0, payload: encodableMethod).amqEncoded()
+        let frame: NSData = AMQFrame(channelNumber: 0, payload: encodableMethod).amqEncoded()
 
         TestHelper.assertEqualBytes(expectedFrame, frame)
     }
@@ -151,16 +151,16 @@ class AMQEncodingTest: XCTestCase {
         let body1 = AMQContentBody(data: "some body".dataUsingEncoding(NSUTF8StringEncoding)!)
         let body2 = AMQContentBody(data: "another body".dataUsingEncoding(NSUTF8StringEncoding)!)
         let frameset = AMQFrameset(
-            channelID: 1,
+            channelNumber: 1,
             method: method,
             contentHeader: header,
             contentBodies: [body1, body2]
         )
         let expected = NSMutableData()
-        expected.appendData(AMQFrame(channelID: 1, payload: method).amqEncoded())
-        expected.appendData(AMQFrame(channelID: 1, payload: header).amqEncoded())
-        expected.appendData(AMQFrame(channelID: 1, payload: body1).amqEncoded())
-        expected.appendData(AMQFrame(channelID: 1, payload: body2).amqEncoded())
+        expected.appendData(AMQFrame(channelNumber: 1, payload: method).amqEncoded())
+        expected.appendData(AMQFrame(channelNumber: 1, payload: header).amqEncoded())
+        expected.appendData(AMQFrame(channelNumber: 1, payload: body1).amqEncoded())
+        expected.appendData(AMQFrame(channelNumber: 1, payload: body2).amqEncoded())
         let actual = frameset.amqEncoded();
         TestHelper.assertEqualBytes(expected, actual)
     }
@@ -170,12 +170,12 @@ class AMQEncodingTest: XCTestCase {
         let header = AMQContentHeaderNone()
         let ignoredBody = AMQContentBody(data: "some body".dataUsingEncoding(NSUTF8StringEncoding)!)
         let frameset = AMQFrameset(
-            channelID: 1,
+            channelNumber: 1,
             method: method,
             contentHeader: header,
             contentBodies: [ignoredBody]
         )
-        let expected = AMQFrame(channelID: 1, payload: method).amqEncoded()
+        let expected = AMQFrame(channelNumber: 1, payload: method).amqEncoded()
         let actual = frameset.amqEncoded();
         TestHelper.assertEqualBytes(expected, actual)
     }

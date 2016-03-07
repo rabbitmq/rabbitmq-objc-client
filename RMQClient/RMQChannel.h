@@ -4,7 +4,7 @@
 #import "RMQFrameHandler.h"
 
 @protocol RMQChannel <NSObject, RMQFrameHandler>
-@property (nonnull, copy, nonatomic, readonly) NSNumber *channelID;
+@property (nonnull, copy, nonatomic, readonly) NSNumber *channelNumber;
 - (nonnull RMQExchange *)defaultExchange;
 - (nonnull RMQQueue *)queue:(nonnull NSString *)queueName
                  autoDelete:(BOOL)shouldAutoDelete
