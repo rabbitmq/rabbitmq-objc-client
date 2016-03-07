@@ -118,7 +118,7 @@
 }
 
 - (BOOL)waitOnMethod:(Class)amqMethodClass
-           channelNumber:(NSNumber *)channelNumber
+       channelNumber:(NSNumber *)channelNumber
                error:(NSError *__autoreleasing  _Nullable *)error {
     [self.watchedIncomingMethods addObject:@[channelNumber, amqMethodClass]];
     
