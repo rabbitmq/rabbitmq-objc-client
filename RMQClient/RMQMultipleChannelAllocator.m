@@ -1,7 +1,6 @@
 #import "RMQMultipleChannelAllocator.h"
 #import "RMQDispatchQueueChannel.h"
 #import "AMQConstants.h"
-#import <libkern/OSAtomic.h>
 
 @interface RMQMultipleChannelAllocator ()
 @property (atomic, readwrite) UInt16 channelNumber;
