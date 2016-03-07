@@ -43,9 +43,9 @@ class RMQQueueTest: XCTestCase {
             contentBodies: expectedBodies
         )
 
-        XCTAssertEqual(5, sender.lastSentFrameset.contentBodies.count)
-        XCTAssertEqual(expectedBodies, sender.lastSentFrameset.contentBodies)
-        XCTAssertEqual(expectedFrameset, sender.lastSentFrameset)
+        XCTAssertEqual(5, sender.sentFramesets.last!.contentBodies.count)
+        XCTAssertEqual(expectedBodies, sender.sentFramesets.last!.contentBodies)
+        XCTAssertEqual(expectedFrameset, sender.sentFramesets.last!)
     }
 
     func testPublishWhenContentLengthIsMultipleOfFrameMax() {
@@ -86,9 +86,9 @@ class RMQQueueTest: XCTestCase {
             contentBodies: expectedBodies
         )
 
-        XCTAssertEqual(2, sender.lastSentFrameset.contentBodies.count)
-        XCTAssertEqual(expectedBodies, sender.lastSentFrameset.contentBodies)
-        XCTAssertEqual(expectedFrameset, sender.lastSentFrameset)
+        XCTAssertEqual(2, sender.sentFramesets.last!.contentBodies.count)
+        XCTAssertEqual(expectedBodies, sender.sentFramesets.last!.contentBodies)
+        XCTAssertEqual(expectedFrameset, sender.sentFramesets.last!)
     }
     
     func testPopSendsAGet() {
@@ -110,7 +110,7 @@ class RMQQueueTest: XCTestCase {
             contentBodies: []
         )
 
-        XCTAssertEqual(expectedFrameset, sender.lastSentFrameset)
+        XCTAssertEqual(expectedFrameset, sender.sentFramesets.last!)
     }
 
     func testPopWaitsOnNextGetOk() {

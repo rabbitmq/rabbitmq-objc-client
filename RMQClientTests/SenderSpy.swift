@@ -2,7 +2,7 @@
 
 @objc class SenderSpy : NSObject, RMQSender {
     var lastWaitedUponFrameset: AMQFrameset = AMQFrameset()
-    var lastSentFrameset: AMQFrameset = NothingSentYet()
+    var sentFramesets: [AMQFrameset] = []
     var lastSentMethod: AMQMethod?
     var methodWaitedUpon: String = "nothing waited upon yet!"
     var channelWaitedUpon: NSNumber = -1
@@ -13,7 +13,7 @@
     }
 
     func send(encodable: AMQEncoding) {
-        lastSentFrameset = encodable as! AMQFrameset
+        sentFramesets.append(encodable as! AMQFrameset)
     }
 
     func sendMethod(amqMethod: AMQMethod, channelNumber: NSNumber) {

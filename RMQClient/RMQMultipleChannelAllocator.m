@@ -5,7 +5,7 @@
 
 @interface RMQMultipleChannelAllocator ()
 @property (atomic, readwrite) UInt16 channelNumber;
-@property (atomic, readwrite) NSMutableSet *allocatedNumbers;
+@property (nonatomic, readwrite) NSMutableDictionary *channels;
 @property (nonatomic, readwrite) id<RMQSender> sender;
 @end
 
@@ -15,49 +15,73 @@
 {
     self = [super init];
     if (self) {
+        self.channels = [NSMutableDictionary new];
         self.sender = sender;
         self.channelNumber = 0;
-        self.allocatedNumbers = [NSMutableSet new];
     }
     return self;
+}
+
+- (instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 - (id<RMQChannel>)allocate {
     id<RMQChannel> ch;
     @synchronized(self) {
-        ch = [self unsafeAllocateWithSender:self.sender];
+        ch = self.unsafeAllocate;
     }
     return ch;
 }
 
 - (void)releaseChannelNumber:(NSNumber *)channelNumber {
-    [self.allocatedNumbers removeObject:channelNumber];
+    [self.channels removeObjectForKey:channelNumber];
 }
 
 - (void)handleFrameset:(AMQFrameset *)frameset {
-
+    RMQDispatchQueueChannel *ch = self.channels[frameset.channelNumber];
+    [ch handleFrameset:frameset];
 }
 
-- (id<RMQChannel>)unsafeAllocateWithSender:(id<RMQSender>)sender {
-    if (self.allocatedNumbers.count == AMQChannelLimit) {
+# pragma mark - Private
+
+- (id<RMQChannel>)unsafeAllocate {
+    if (self.atCapacity) {
         return [RMQUnallocatedChannel new];
-    } else if (self.channelNumber == AMQChannelLimit) {
-        for (UInt16 i = 1; i < AMQChannelLimit; i++) {
-            if (![self.allocatedNumbers containsObject:@(i)]) {
-                [self.allocatedNumbers addObject:@(i)];
-                RMQDispatchQueueChannel *ch = [[RMQDispatchQueueChannel alloc] init:@(i)
-                                                                             sender:sender];
-                return ch;
-            }
-        }
-        return [RMQUnallocatedChannel new];
+    } else if (self.atMaxIndex) {
+        return self.previouslyFreedChannel;
     } else {
-        [self.allocatedNumbers addObject:@(self.channelNumber)];
-        RMQDispatchQueueChannel *ch = [[RMQDispatchQueueChannel alloc] init:@(self.channelNumber)
-                                                                     sender:sender];
-        self.channelNumber++;
-        return ch;
+        return self.newAllocation;
     }
+}
+
+- (id<RMQChannel>)newAllocation {
+    RMQDispatchQueueChannel *ch = [[RMQDispatchQueueChannel alloc] init:@(self.channelNumber)
+                                                                 sender:self.sender];
+    self.channels[@(self.channelNumber)] = ch;
+    self.channelNumber++;
+    return ch;
+}
+
+- (id<RMQChannel>)previouslyFreedChannel {
+    for (UInt16 i = 1; i < AMQChannelLimit; i++) {
+        if (!self.channels[@(i)]) {
+            RMQDispatchQueueChannel *ch = [[RMQDispatchQueueChannel alloc] init:@(i)
+                                                                         sender:self.sender];
+            self.channels[@(i)] = ch;
+            return ch;
+        }
+    }
+    return [RMQUnallocatedChannel new];
+}
+
+- (BOOL)atCapacity {
+    return self.channels.count == AMQChannelLimit;
+}
+
+- (BOOL)atMaxIndex {
+    return self.channelNumber == AMQChannelLimit;
 }
 
 @end
