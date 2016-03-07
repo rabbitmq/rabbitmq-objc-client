@@ -107,47 +107,4 @@ class RMQConnectionTest: XCTestCase {
         }
         XCTAssertEqual("Timeout", error.localizedDescription)
     }
-
-    func testBasicDeliverGetsSentToAllocator() {
-        let transport = ControlledInteractionTransport()
-        let frameHandler = FrameHandlerSpy()
-        RMQConnection(
-            transport: transport,
-            channelAllocator: RMQChannel1Allocator(),
-            frameHandler: frameHandler,
-            user: "foo",
-            password: "bar",
-            vhost: "",
-            channelMax: 10,
-            frameMax: 5000,
-            heartbeat: 10
-        ).start()
-        transport.handshake()
-
-        let body1 = AMQContentBody(data: "a great ".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let body2 = AMQContentBody(data: "message".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let header = AMQContentHeader(classID: 123, bodySize: body1.length + body2.length, properties: [])
-        transport
-            .serverSendsPayload(MethodFixtures.basicDeliver(), channelNumber: 2)
-            .serverSendsPayload(header, channelNumber: 2)
-            .serverSendsPayload(body1, channelNumber: 2)
-            .serverSendsPayload(body2, channelNumber: 2)
-
-        let expectedMethod = AMQProtocolBasicDeliver(
-            consumerTag: AMQShortstr(""),
-            deliveryTag: AMQLonglong(0),
-            options: AMQProtocolBasicDeliverOptions.NoOptions,
-            exchange: AMQShortstr(""),
-            routingKey: AMQShortstr("")
-        )
-
-        let expectedFrameset = AMQFrameset(
-            channelNumber: 2,
-            method: expectedMethod,
-            contentHeader: header,
-            contentBodies: [body1, body2]
-        )
-
-        XCTAssertEqual(expectedFrameset, frameHandler.receivedFramesets.last)
-    }
 }
