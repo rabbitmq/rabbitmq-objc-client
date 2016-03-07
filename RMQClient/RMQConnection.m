@@ -57,7 +57,6 @@
         self.mechanism = @"PLAIN";
         self.locale = @"en_GB";
         self.readerLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport frameHandler:self];
-        self.channelAllocator = channelAllocator;
         self.watchedIncomingMethods = [NSMutableArray new];
         self.methodSemaphore = dispatch_semaphore_create(0);
         self.lastWaitedUponFrameset = nil;
