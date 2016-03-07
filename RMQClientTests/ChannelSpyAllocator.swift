@@ -7,4 +7,8 @@
         channels.append(ch)
         return ch
     }
+
+    func handleFrameset(frameset: AMQFrameset!) {
+        // use a frame handler spy instead
+    }
 }

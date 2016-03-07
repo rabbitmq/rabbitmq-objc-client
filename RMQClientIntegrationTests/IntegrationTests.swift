@@ -11,9 +11,11 @@ class IntegrationTests: XCTestCase {
         }
         messageContent += "bb"
 
+        let allocator = RMQChannel1Allocator()
         let conn = RMQConnection(
             transport: transport,
-            channelAllocator: RMQChannel1Allocator(),
+            channelAllocator: allocator,
+            frameHandler: allocator,
             user: "guest",
             password: "guest",
             vhost: "/",
@@ -47,10 +49,11 @@ class IntegrationTests: XCTestCase {
 
     func testSubscribe() {
         let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
-
+        let allocator = RMQChannel1Allocator()
         let conn = RMQConnection(
             transport: transport,
-            channelAllocator: RMQChannel1Allocator(),
+            channelAllocator: allocator,
+            frameHandler: allocator,
             user: "guest",
             password: "guest",
             vhost: "/",

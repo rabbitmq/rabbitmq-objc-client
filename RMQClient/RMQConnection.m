@@ -14,6 +14,7 @@
 @property (nonatomic, readwrite) NSMutableDictionary *channels;
 @property (nonatomic, readwrite) RMQReaderLoop *readerLoop;
 @property (nonatomic, readwrite) id <RMQChannelAllocator> channelAllocator;
+@property (nonatomic, readwrite) id <RMQFrameHandler> frameHandler;
 @property (nonatomic, readwrite) NSMutableArray *watchedIncomingMethods;
 @property (nonatomic, readwrite) dispatch_semaphore_t methodSemaphore;
 @property (atomic, readwrite) AMQFrameset *lastWaitedUponFrameset;
@@ -26,6 +27,7 @@
 
 - (instancetype)initWithTransport:(id<RMQTransport>)transport
                  channelAllocator:(id<RMQChannelAllocator>)channelAllocator
+                     frameHandler:(id<RMQFrameHandler>)frameHandler
                              user:(NSString *)user
                          password:(NSString *)password
                             vhost:(NSString *)vhost
@@ -39,6 +41,7 @@
         self.vhost = vhost;
         self.transport = transport;
         self.channelAllocator = channelAllocator;
+        self.frameHandler = frameHandler;
         AMQTable *capabilities = [[AMQTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
                                                           @"consumer_cancel_notify": [[AMQBoolean alloc] init:YES],
                                                           @"exchange_exchange_bindings": [[AMQBoolean alloc] init:YES],
@@ -55,7 +58,6 @@
         self.locale = @"en_GB";
         self.readerLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport frameHandler:self];
         self.channelAllocator = channelAllocator;
-        self.channels = [@{@0 : [self.channelAllocator allocateWithSender:self]} mutableCopy];
         self.watchedIncomingMethods = [NSMutableArray new];
         self.methodSemaphore = dispatch_semaphore_create(0);
         self.lastWaitedUponFrameset = nil;
@@ -151,8 +153,7 @@
         [method didReceiveWithContext:self.transport];
     }
     if ([frameset.method isKindOfClass:[AMQProtocolBasicDeliver class]]) {
-        id<RMQChannel> ch = self.channels[frameset.channelID];
-        [ch handleFrameset:frameset];
+        [self.frameHandler handleFrameset:frameset];
     }
     [self.readerLoop runOnce];
 }

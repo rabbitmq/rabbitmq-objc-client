@@ -8,9 +8,11 @@ class RMQConnectionTest: XCTestCase {
         password: String = "bar",
         vhost: String = "baz"
         ) -> RMQConnection {
+            let allocator = RMQChannel1Allocator()
             return RMQConnection(
                 transport: transport,
-                channelAllocator: RMQChannel1Allocator(),
+                channelAllocator: allocator,
+                frameHandler: allocator,
                 user: user,
                 password: password,
                 vhost: vhost,
@@ -104,5 +106,48 @@ class RMQConnectionTest: XCTestCase {
             XCTFail("Wrong error")
         }
         XCTAssertEqual("Timeout", error.localizedDescription)
+    }
+
+    func testBasicDeliverGetsSentToAllocator() {
+        let transport = ControlledInteractionTransport()
+        let frameHandler = FrameHandlerSpy()
+        RMQConnection(
+            transport: transport,
+            channelAllocator: RMQChannel1Allocator(),
+            frameHandler: frameHandler,
+            user: "foo",
+            password: "bar",
+            vhost: "",
+            channelMax: 10,
+            frameMax: 5000,
+            heartbeat: 10
+        ).start()
+        transport.handshake()
+
+        let body1 = AMQContentBody(data: "a great ".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let body2 = AMQContentBody(data: "message".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let header = AMQContentHeader(classID: 123, bodySize: body1.length + body2.length, properties: [])
+        transport
+            .serverSendsPayload(MethodFixtures.basicDeliver(), channelID: 2)
+            .serverSendsPayload(header, channelID: 2)
+            .serverSendsPayload(body1, channelID: 2)
+            .serverSendsPayload(body2, channelID: 2)
+
+        let expectedMethod = AMQProtocolBasicDeliver(
+            consumerTag: AMQShortstr(""),
+            deliveryTag: AMQLonglong(0),
+            options: AMQProtocolBasicDeliverOptions.NoOptions,
+            exchange: AMQShortstr(""),
+            routingKey: AMQShortstr("")
+        )
+
+        let expectedFrameset = AMQFrameset(
+            channelID: 2,
+            method: expectedMethod,
+            contentHeader: header,
+            contentBodies: [body1, body2]
+        )
+
+        XCTAssertEqual(expectedFrameset, frameHandler.receivedFramesets.last)
     }
 }

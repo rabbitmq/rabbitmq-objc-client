@@ -1,8 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "RMQExchange.h"
 #import "RMQQueue.h"
-#import "RMQSender.h"
-#import "AMQFrameset.h"
 #import "RMQFrameHandler.h"
 
 @protocol RMQChannel <NSObject, RMQFrameHandler>
