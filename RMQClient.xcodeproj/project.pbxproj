@@ -42,6 +42,8 @@
 		AE8279851C8D86110013ADD1 /* ChannelAllocationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8279841C8D86110013ADD1 /* ChannelAllocationTest.swift */; settings = {ASSET_TAGS = (); }; };
 		AE8279881C8D88120013ADD1 /* RMQMultipleChannelAllocator.h in Headers */ = {isa = PBXBuildFile; fileRef = AE8279861C8D88120013ADD1 /* RMQMultipleChannelAllocator.h */; settings = {ASSET_TAGS = (); }; };
 		AE8279891C8D88120013ADD1 /* RMQMultipleChannelAllocator.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8279871C8D88120013ADD1 /* RMQMultipleChannelAllocator.m */; settings = {ASSET_TAGS = (); }; };
+		AE82798C1C8DBD6B0013ADD1 /* RMQUnallocatedChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = AE82798A1C8DBD6B0013ADD1 /* RMQUnallocatedChannel.h */; settings = {ASSET_TAGS = (); }; };
+		AE82798D1C8DBD6B0013ADD1 /* RMQUnallocatedChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = AE82798B1C8DBD6B0013ADD1 /* RMQUnallocatedChannel.m */; settings = {ASSET_TAGS = (); }; };
 		AE898D581C3C2D2E00AA3BF1 /* AMQURIParseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE898D571C3C2D2E00AA3BF1 /* AMQURIParseTest.swift */; settings = {ASSET_TAGS = (); }; };
 		AE898D5B1C3C30D100AA3BF1 /* AMQURI.h in Headers */ = {isa = PBXBuildFile; fileRef = AE898D591C3C30D100AA3BF1 /* AMQURI.h */; settings = {ASSET_TAGS = (); }; };
 		AE898D5C1C3C30D100AA3BF1 /* AMQURI.m in Sources */ = {isa = PBXBuildFile; fileRef = AE898D5A1C3C30D100AA3BF1 /* AMQURI.m */; settings = {ASSET_TAGS = (); }; };
@@ -137,6 +139,8 @@
 		AE8279841C8D86110013ADD1 /* ChannelAllocationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelAllocationTest.swift; sourceTree = "<group>"; };
 		AE8279861C8D88120013ADD1 /* RMQMultipleChannelAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQMultipleChannelAllocator.h; sourceTree = "<group>"; };
 		AE8279871C8D88120013ADD1 /* RMQMultipleChannelAllocator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQMultipleChannelAllocator.m; sourceTree = "<group>"; };
+		AE82798A1C8DBD6B0013ADD1 /* RMQUnallocatedChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQUnallocatedChannel.h; sourceTree = "<group>"; };
+		AE82798B1C8DBD6B0013ADD1 /* RMQUnallocatedChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQUnallocatedChannel.m; sourceTree = "<group>"; };
 		AE898D571C3C2D2E00AA3BF1 /* AMQURIParseTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AMQURIParseTest.swift; sourceTree = "<group>"; };
 		AE898D591C3C30D100AA3BF1 /* AMQURI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQURI.h; sourceTree = "<group>"; };
 		AE898D5A1C3C30D100AA3BF1 /* AMQURI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQURI.m; sourceTree = "<group>"; };
@@ -209,6 +213,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AE82798F1C8DBDF80013ADD1 /* Channels */ = {
+			isa = PBXGroup;
+			children = (
+				AE59345E1C873B6900560A73 /* RMQChannel.h */,
+				AEE7FEAF1C3BCEBA00DF8C4F /* RMQDispatchQueueChannel.h */,
+				AEE7FEB01C3BCEBA00DF8C4F /* RMQDispatchQueueChannel.m */,
+				AE82798A1C8DBD6B0013ADD1 /* RMQUnallocatedChannel.h */,
+				AE82798B1C8DBD6B0013ADD1 /* RMQUnallocatedChannel.m */,
+			);
+			name = Channels;
+			sourceTree = "<group>";
+		};
 		AEA45ED81C440FE400FE1F62 /* RMQClientIntegrationTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -252,9 +268,7 @@
 				AEE445E31C7341CB0082132C /* RMQFrameHandler.h */,
 				AEE445DF1C7338FE0082132C /* RMQReaderLoop.h */,
 				AEE445E01C7338FE0082132C /* RMQReaderLoop.m */,
-				AE59345E1C873B6900560A73 /* RMQChannel.h */,
-				AEE7FEAF1C3BCEBA00DF8C4F /* RMQDispatchQueueChannel.h */,
-				AEE7FEB01C3BCEBA00DF8C4F /* RMQDispatchQueueChannel.m */,
+				AE82798F1C8DBDF80013ADD1 /* Channels */,
 				AE05DA661C69EC47009E68C7 /* RMQChannelAllocator.h */,
 				AE8279861C8D88120013ADD1 /* RMQMultipleChannelAllocator.h */,
 				AE8279871C8D88120013ADD1 /* RMQMultipleChannelAllocator.m */,
@@ -365,6 +379,7 @@
 				AE744E331C85A1B000A4C2FA /* AMQFrame.h in Headers */,
 				AEE445E11C7338FE0082132C /* RMQReaderLoop.h in Headers */,
 				AE39BD9E1C68B019000E7A77 /* AMQProtocolValues.h in Headers */,
+				AE82798C1C8DBD6B0013ADD1 /* RMQUnallocatedChannel.h in Headers */,
 				AE744E3D1C86F43300A4C2FA /* AMQConstants.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -555,6 +570,7 @@
 				AE39BD9F1C68B019000E7A77 /* AMQProtocolValues.m in Sources */,
 				AE898D5C1C3C30D100AA3BF1 /* AMQURI.m in Sources */,
 				AEE445EC1C7373BF0082132C /* AMQProtocolBasicProperties.m in Sources */,
+				AE82798D1C8DBD6B0013ADD1 /* RMQUnallocatedChannel.m in Sources */,
 				AE80BAB41C4D47C100E6DFFD /* AMQParser.m in Sources */,
 				AE744E381C85A20700A4C2FA /* AMQFrameset.m in Sources */,
 				AE05DA6D1C6A0848009E68C7 /* RMQMessage.m in Sources */,

@@ -5,6 +5,3 @@
 - (nonnull instancetype)init:(nonnull NSNumber *)channelID
                       sender:(nonnull id <RMQSender>)sender;
 @end
-
-@interface RMQUnallocatedDispatchQueueChannel : MTLModel <RMQChannel>
-@end

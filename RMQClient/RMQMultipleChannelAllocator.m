@@ -1,5 +1,6 @@
 #import "RMQMultipleChannelAllocator.h"
 #import "RMQDispatchQueueChannel.h"
+#import "RMQUnallocatedChannel.h"
 #import "AMQConstants.h"
 
 @interface RMQMultipleChannelAllocator ()
@@ -37,7 +38,7 @@
 
 - (id<RMQChannel>)unsafeAllocateWithSender:(id<RMQSender>)sender {
     if (self.allocatedNumbers.count == AMQChannelLimit) {
-        return [RMQUnallocatedDispatchQueueChannel new];
+        return [RMQUnallocatedChannel new];
     } else if (self.channelNumber == AMQChannelLimit) {
         for (UInt16 i = 1; i < AMQChannelLimit; i++) {
             if (![self.allocatedNumbers containsObject:@(i)]) {
@@ -47,7 +48,7 @@
                 return ch;
             }
         }
-        return [RMQUnallocatedDispatchQueueChannel new];
+        return [RMQUnallocatedChannel new];
     } else {
         [self.allocatedNumbers addObject:@(self.channelNumber)];
         RMQDispatchQueueChannel *ch = [[RMQDispatchQueueChannel alloc] init:@(self.channelNumber)
