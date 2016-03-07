@@ -39,7 +39,7 @@
                                                            password:password];
         self.vhost = vhost;
         self.transport = transport;
-        RMQChannel1Allocator *allocator = [RMQChannel1Allocator new];
+        RMQChannel1Allocator *allocator = [[RMQChannel1Allocator alloc] initWithSender:self];
         self.channelAllocator = allocator;
         self.frameHandler = allocator;
         AMQTable *capabilities = [[AMQTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
@@ -92,7 +92,7 @@
 }
 
 - (id<RMQChannel>)createChannel {
-    id<RMQChannel> ch = [self.channelAllocator allocateWithSender:self];
+    id<RMQChannel> ch = self.channelAllocator.allocate;
     self.channels[ch.channelNumber] = ch;
     AMQFrame *frame = [[AMQFrame alloc] initWithChannelNumber:ch.channelNumber payload:self.amqChannelOpen];
     NSError *error = NULL;

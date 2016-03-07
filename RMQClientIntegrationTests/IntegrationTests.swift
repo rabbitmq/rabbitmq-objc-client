@@ -11,7 +11,6 @@ class IntegrationTests: XCTestCase {
         }
         messageContent += "bb"
 
-        let allocator = RMQChannel1Allocator()
         let conn = RMQConnection(
             transport: transport,
             user: "guest",

@@ -6,24 +6,26 @@
 @interface RMQMultipleChannelAllocator ()
 @property (atomic, readwrite) UInt16 channelNumber;
 @property (atomic, readwrite) NSMutableSet *allocatedNumbers;
+@property (nonatomic, readwrite) id<RMQSender> sender;
 @end
 
 @implementation RMQMultipleChannelAllocator
 
-- (instancetype)init
+- (instancetype)initWithSender:(id<RMQSender>)sender
 {
     self = [super init];
     if (self) {
+        self.sender = sender;
         self.channelNumber = 0;
         self.allocatedNumbers = [NSMutableSet new];
     }
     return self;
 }
 
-- (id<RMQChannel>)allocateWithSender:(id<RMQSender>)sender {
+- (id<RMQChannel>)allocate {
     id<RMQChannel> ch;
     @synchronized(self) {
-        ch = [self unsafeAllocateWithSender:sender];
+        ch = [self unsafeAllocateWithSender:self.sender];
     }
     return ch;
 }

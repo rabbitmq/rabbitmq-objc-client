@@ -3,20 +3,22 @@
 
 @interface RMQChannel1Allocator ()
 @property (nonatomic, readwrite) RMQDispatchQueueChannel *channel;
+@property (nonatomic, readwrite) id<RMQSender> sender;
 @end
 
 @implementation RMQChannel1Allocator
 
-- (instancetype)init {
+- (instancetype)initWithSender:(id<RMQSender>)sender {
     self = [super init];
     if (self) {
         self.channel = nil;
+        self.sender = sender;
     }
     return self;
 }
 
-- (id<RMQChannel>)allocateWithSender:(id<RMQSender>)sender {
-    self.channel = [[RMQDispatchQueueChannel alloc] init:@1 sender:sender];
+- (id<RMQChannel>)allocate {
+    self.channel = [[RMQDispatchQueueChannel alloc] init:@1 sender:self.sender];
     return self.channel;
 }
 

@@ -2,6 +2,6 @@
 #import "RMQChannel.h"
 
 @protocol RMQChannelAllocator <NSObject>
-- (id<RMQChannel>)allocateWithSender:(id<RMQSender>)sender;
+- (id<RMQChannel>)allocate;
 - (void)releaseChannelNumber:(NSNumber *)channelNumber;
 @end

@@ -5,29 +5,29 @@ class ChannelAllocationTest: XCTestCase {
 
     func allocateAll(allocator: RMQChannelAllocator, _ sender: RMQSender) {
         for _ in 1...AMQChannelLimit {
-            allocator.allocateWithSender(sender)
+            allocator.allocate()
         }
     }
 
     func testChannelGetsNegativeOneChannelNumberWhenOutOfChannelNumbers() {
         let sender = SenderSpy()
-        let allocator = RMQMultipleChannelAllocator()
+        let allocator = RMQMultipleChannelAllocator(sender: sender)
         allocateAll(allocator, sender)
-        XCTAssertEqual(-1, allocator.allocateWithSender(sender).channelNumber)
+        XCTAssertEqual(-1, allocator.allocate().channelNumber)
     }
 
     func testChannelGetsAFreedChannelNumberIfOtherwiseOutOfChannelNumbers() {
         let sender = SenderSpy()
-        let allocator = RMQMultipleChannelAllocator()
+        let allocator = RMQMultipleChannelAllocator(sender: sender)
         allocateAll(allocator, sender)
         allocator.releaseChannelNumber(2)
-        XCTAssertEqual(2, allocator.allocateWithSender(sender).channelNumber)
-        XCTAssertEqual(-1, allocator.allocateWithSender(sender).channelNumber)
+        XCTAssertEqual(2, allocator.allocate().channelNumber)
+        XCTAssertEqual(-1, allocator.allocate().channelNumber)
     }
 
     func testNumbersAreNotDoubleAllocated() {
         let sender      = SenderSpy()
-        let allocator   = RMQMultipleChannelAllocator()
+        let allocator   = RMQMultipleChannelAllocator(sender: sender)
         var channelSet1 = Set<NSNumber>()
         var channelSet2 = Set<NSNumber>()
         var channelSet3 = Set<NSNumber>()
@@ -40,19 +40,19 @@ class ChannelAllocationTest: XCTestCase {
 
         dispatch_group_async(group, queues[0]) {
             for _ in 1...self.allocationsPerQueue {
-                channelSet1.insert(allocator.allocateWithSender(sender).channelNumber)
+                channelSet1.insert(allocator.allocate().channelNumber)
             }
         }
 
         dispatch_group_async(group, queues[1]) {
             for _ in 1...self.allocationsPerQueue {
-                channelSet2.insert(allocator.allocateWithSender(sender).channelNumber)
+                channelSet2.insert(allocator.allocate().channelNumber)
             }
         }
 
         dispatch_group_async(group, queues[2]) {
             for _ in 1...self.allocationsPerQueue {
-                channelSet3.insert(allocator.allocateWithSender(sender).channelNumber)
+                channelSet3.insert(allocator.allocate().channelNumber)
             }
         }
 
