@@ -39,8 +39,9 @@
                                                            password:password];
         self.vhost = vhost;
         self.transport = transport;
-        self.channelAllocator = [RMQChannel1Allocator new];
-        self.frameHandler = self.channelAllocator;
+        RMQChannel1Allocator *allocator = [RMQChannel1Allocator new];
+        self.channelAllocator = allocator;
+        self.frameHandler = allocator;
         AMQTable *capabilities = [[AMQTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
                                                           @"consumer_cancel_notify": [[AMQBoolean alloc] init:YES],
                                                           @"exchange_exchange_bindings": [[AMQBoolean alloc] init:YES],

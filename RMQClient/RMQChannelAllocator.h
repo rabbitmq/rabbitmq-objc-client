@@ -1,8 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "RMQChannel.h"
-#import "RMQFrameHandler.h"
 
-@protocol RMQChannelAllocator <NSObject, RMQFrameHandler>
+@protocol RMQChannelAllocator <NSObject>
 - (id<RMQChannel>)allocateWithSender:(id<RMQSender>)sender;
 - (void)releaseChannelNumber:(NSNumber *)channelNumber;
 @end
