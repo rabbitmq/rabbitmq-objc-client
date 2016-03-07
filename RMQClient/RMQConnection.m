@@ -3,7 +3,7 @@
 #import "AMQProtocolMethods.h"
 #import "RMQReaderLoop.h"
 #import "AMQFrame.h"
-#import "RMQChannel1Allocator.h"
+#import "RMQMultipleChannelAllocator.h"
 
 @interface RMQConnection ()
 @property (copy, nonatomic, readwrite) NSString *vhost;
@@ -39,7 +39,7 @@
                                                            password:password];
         self.vhost = vhost;
         self.transport = transport;
-        RMQChannel1Allocator *allocator = [[RMQChannel1Allocator alloc] initWithSender:self];
+        RMQMultipleChannelAllocator *allocator = [[RMQMultipleChannelAllocator alloc] initWithSender:self];
         self.channelAllocator = allocator;
         self.frameHandler = allocator;
         AMQTable *capabilities = [[AMQTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
@@ -64,6 +64,7 @@
         self.channelMax = channelMax;
         self.frameMax = frameMax;
         self.heartbeat = heartbeat;
+        [self allocateChannelZero];
     }
     return self;
 }
@@ -158,6 +159,10 @@
 }
 
 # pragma mark - Private
+
+- (void)allocateChannelZero {
+    [self.channelAllocator allocate];
+}
 
 - (AMQProtocolChannelOpen *)amqChannelOpen {
     return [[AMQProtocolChannelOpen alloc] initWithReserved1:[[AMQShortstr alloc] init:@""]];
