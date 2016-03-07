@@ -9,8 +9,6 @@
 @property (copy, nonatomic, readonly) NSString *vhost;
 
 - (instancetype)initWithTransport:(id<RMQTransport>)transport
-                 channelAllocator:(id<RMQChannelAllocator>)channelAllocator
-                     frameHandler:(id<RMQFrameHandler>)frameHandler
                              user:(NSString *)user
                          password:(NSString *)password
                             vhost:(NSString *)vhost

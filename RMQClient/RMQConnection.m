@@ -3,6 +3,7 @@
 #import "AMQProtocolMethods.h"
 #import "RMQReaderLoop.h"
 #import "AMQFrame.h"
+#import "RMQChannel1Allocator.h"
 
 @interface RMQConnection ()
 @property (copy, nonatomic, readwrite) NSString *vhost;
@@ -26,8 +27,6 @@
 @implementation RMQConnection
 
 - (instancetype)initWithTransport:(id<RMQTransport>)transport
-                 channelAllocator:(id<RMQChannelAllocator>)channelAllocator
-                     frameHandler:(id<RMQFrameHandler>)frameHandler
                              user:(NSString *)user
                          password:(NSString *)password
                             vhost:(NSString *)vhost
@@ -40,8 +39,8 @@
                                                            password:password];
         self.vhost = vhost;
         self.transport = transport;
-        self.channelAllocator = channelAllocator;
-        self.frameHandler = frameHandler;
+        self.channelAllocator = [RMQChannel1Allocator new];
+        self.frameHandler = self.channelAllocator;
         AMQTable *capabilities = [[AMQTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
                                                           @"consumer_cancel_notify": [[AMQBoolean alloc] init:YES],
                                                           @"exchange_exchange_bindings": [[AMQBoolean alloc] init:YES],

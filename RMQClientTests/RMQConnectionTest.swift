@@ -8,11 +8,8 @@ class RMQConnectionTest: XCTestCase {
         password: String = "bar",
         vhost: String = "baz"
         ) -> RMQConnection {
-            let allocator = RMQChannel1Allocator()
             return RMQConnection(
                 transport: transport,
-                channelAllocator: allocator,
-                frameHandler: allocator,
                 user: user,
                 password: password,
                 vhost: vhost,
