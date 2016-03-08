@@ -30,12 +30,18 @@ class GenerateMethods
       method_id = method[:index]
       constructor = constructor(fields)
       class_part = method.xpath('..').first[:name].capitalize
-      has_content_value = method[:content] == "1" ? "YES" : "NO"
+      has_content_value = objc_boolean(method[:content] == "1")
+      should_halt_on_receipt_value =
+        objc_boolean(%w(AMQProtocolConnectionClose AMQProtocolConnectionCloseOk).include?(class_name))
       acc + template('methods_implementation_template').result(binding)
     }
   end
 
   private
+
+  def objc_boolean(x)
+    x ? "YES" : "NO"
+  end
 
   def chassis_names(method)
     method.xpath('chassis').map {|c| c[:name]}

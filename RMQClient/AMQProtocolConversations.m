@@ -80,20 +80,4 @@
     return [AMQProtocolConnectionCloseOk new];
 }
 
-- (void)didReceiveWithContext:(id<AMQIncomingCallbackContext>)context {
-    [context close:^{
-
-    }];
-}
-
-@end
-
-@implementation AMQProtocolConnectionCloseOk (Conversation)
-
-- (void)didReceiveWithContext:(id<AMQIncomingCallbackContext>)context {
-    [context close:^{
-
-    }];
-}
-
 @end

@@ -84,9 +84,10 @@
 
 @protocol AMQMethod <NSObject, AMQPayload>
 + (nonnull NSArray *)frame;
+- (nonnull NSNumber *)classID;
 - (nonnull instancetype)initWithDecodedFrame:(nonnull NSArray *)frame;
 - (BOOL)hasContent;
-- (nonnull NSNumber *)classID;
+- (BOOL)shouldHaltOnReceipt;
 @end
 
 @protocol AMQAwaitServerMethod <NSObject>
@@ -101,10 +102,6 @@
 
 @protocol AMQIncomingSync <NSObject,AMQMethod>
 - (nonnull id<AMQMethod>)replyWithContext:(nonnull id<AMQReplyContext>)context;
-@end
-
-@protocol AMQIncomingCallback <NSObject>
-- (void)didReceiveWithContext:(nonnull id<AMQIncomingCallbackContext>)context;
 @end
 
 @interface AMQContentHeader : MTLModel<AMQPayload>

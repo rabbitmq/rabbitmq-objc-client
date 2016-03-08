@@ -11,10 +11,11 @@
 + (NSArray *)frame {
     return @[<%= fields.map {|f| f[:decode_object]}.join(",\n               ") -%>];
 }
-- (NSNumber *)classID     { return @<%= class_id %>; }
-- (NSNumber *)methodID    { return @<%= method_id %>; }
-- (NSNumber *)frameTypeID { return @1; }
-- (BOOL)hasContent        { return <%= has_content_value %>; }
+- (NSNumber *)classID       { return @<%= class_id %>; }
+- (NSNumber *)methodID      { return @<%= method_id %>; }
+- (NSNumber *)frameTypeID   { return @1; }
+- (BOOL)hasContent          { return <%= has_content_value %>; }
+- (BOOL)shouldHaltOnReceipt { return <%= should_halt_on_receipt_value %>; }
 
 <%- if constructor -%>
 <%= constructor %> {

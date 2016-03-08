@@ -19,6 +19,9 @@ import XCTest
     func hasContent() -> Bool {
         return false
     }
+    func shouldHaltOnReceipt() -> Bool {
+        return false
+    }
     func amqEncoded() -> NSData {
         let data = NSMutableData()
         data.appendData(AMQShort(10).amqEncoded())

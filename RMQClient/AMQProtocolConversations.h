@@ -19,10 +19,7 @@
 @interface AMQProtocolChannelOpen (Conversation) <AMQOutgoingSync>
 @end
 
-@interface AMQProtocolConnectionClose (Conversation) <AMQIncomingSync, AMQIncomingCallback>
-@end
-
-@interface AMQProtocolConnectionCloseOk (Conversation) <AMQIncomingCallback>
+@interface AMQProtocolConnectionClose (Conversation) <AMQIncomingSync>
 @end
 
 @interface AMQProtocolConnectionOpenOk (Conversation) <AMQAwaitServerMethod>

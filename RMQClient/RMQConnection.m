@@ -149,8 +149,8 @@
         id<AMQMethod> reply = [method replyWithContext:self];
         [self sendMethod:reply channelNumber:frameset.channelNumber];
     }
-    if ([self shouldTriggerCallback:method]) {
-        [method didReceiveWithContext:self.transport];
+    if (((id<AMQMethod>)method).shouldHaltOnReceipt) {
+        [self.transport close:^{}];
     }
     if ([frameset.method isKindOfClass:[AMQProtocolBasicDeliver class]]) {
         [self.frameHandler handleFrameset:frameset];
@@ -181,10 +181,6 @@
 
 - (BOOL)shouldSendNextRequest:(id<AMQMethod>)amqMethod {
     return [amqMethod conformsToProtocol:@protocol(AMQOutgoingPrecursor)];
-}
-
-- (BOOL)shouldTriggerCallback:(id<AMQMethod>)amqMethod {
-    return [amqMethod conformsToProtocol:@protocol(AMQIncomingCallback)];
 }
 
 @end
