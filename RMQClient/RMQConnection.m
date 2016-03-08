@@ -146,7 +146,7 @@
         dispatch_semaphore_signal(self.methodSemaphore);
     }
     if ([self shouldReply:method]) {
-        id<AMQMethod> reply = [method replyWithContext:self.config];
+        id<AMQMethod> reply = [method replyWithConfig:self.config];
         [self sendMethod:reply channelNumber:frameset.channelNumber];
     }
     if (((id<AMQMethod>)method).shouldHaltOnReceipt) {

@@ -2,7 +2,7 @@
 
 @implementation AMQProtocolConnectionStart (Conversation)
 
-- (id<AMQMethod>)replyWithContext:(RMQConnectionConfig *)context {
+- (id<AMQMethod>)replyWithConfig:(RMQConnectionConfig *)config {
     AMQTable *capabilities = [[AMQTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
                                                       @"consumer_cancel_notify": [[AMQBoolean alloc] init:YES],
                                                       @"exchange_exchange_bindings": [[AMQBoolean alloc] init:YES],
@@ -18,7 +18,7 @@
 
     return [[AMQProtocolConnectionStartOk alloc] initWithClientProperties:clientProperties
                                                                 mechanism:[[AMQShortstr alloc] init:@"PLAIN"]
-                                                                 response:context.credentials
+                                                                 response:config.credentials
                                                                    locale:[[AMQShortstr alloc] init:@"en_GB"]];
 }
 
@@ -26,8 +26,8 @@
 
 @implementation AMQProtocolConnectionTune (Conversation)
 
-- (id<AMQMethod>)replyWithContext:(RMQConnectionConfig *)context {
-    RMQConnectionConfig *client = context;
+- (id<AMQMethod>)replyWithConfig:(RMQConnectionConfig *)config {
+    RMQConnectionConfig *client = config;
     AMQProtocolConnectionTune *server = self;
 
     NSNumber *channelMax = [self negotiateBetweenClientValue:client.channelMax
@@ -64,7 +64,7 @@
 
 @implementation AMQProtocolConnectionClose (Conversation)
 
-- (id<AMQMethod>)replyWithContext:(RMQConnectionConfig *)context {
+- (id<AMQMethod>)replyWithConfig:(RMQConnectionConfig *)config {
     return [AMQProtocolConnectionCloseOk new];
 }
 

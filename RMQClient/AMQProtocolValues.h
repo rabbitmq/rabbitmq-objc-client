@@ -89,7 +89,7 @@
 @end
 
 @protocol AMQIncomingSync <NSObject,AMQMethod>
-- (nonnull id<AMQMethod>)replyWithContext:(nonnull RMQConnectionConfig *)context;
+- (nonnull id<AMQMethod>)replyWithConfig:(nonnull RMQConnectionConfig *)config;
 @end
 
 @interface AMQContentHeader : MTLModel<AMQPayload>
