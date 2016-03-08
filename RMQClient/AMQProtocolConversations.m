@@ -24,9 +24,6 @@
 
 @end
 
-@implementation AMQProtocolConnectionStartOk (Conversation)
-@end
-
 @implementation AMQProtocolConnectionTune (Conversation)
 
 - (id<AMQMethod>)replyWithContext:(id<AMQReplyContext>)context {
@@ -63,15 +60,6 @@
                                                           options:0];
 }
 
-@end
-
-@implementation AMQProtocolConnectionOpen (Conversation)
-@end
-
-@implementation AMQProtocolChannelOpen (Conversation)
-@end
-
-@implementation AMQProtocolConnectionOpenOk (Conversation)
 @end
 
 @implementation AMQProtocolConnectionClose (Conversation)

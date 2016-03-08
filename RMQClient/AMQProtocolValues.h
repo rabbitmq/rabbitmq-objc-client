@@ -90,12 +90,6 @@
 - (BOOL)shouldHaltOnReceipt;
 @end
 
-@protocol AMQAwaitServerMethod <NSObject>
-@end
-
-@protocol AMQOutgoingSync <NSObject, AMQAwaitServerMethod>
-@end
-
 @protocol AMQOutgoingPrecursor <NSObject>
 - (nonnull id<AMQMethod>)nextRequest;
 @end
