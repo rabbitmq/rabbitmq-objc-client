@@ -2,7 +2,7 @@
 
 @implementation AMQProtocolConnectionStart (Conversation)
 
-- (id<AMQMethod>)replyWithContext:(id<AMQReplyContext>)context {
+- (id<AMQMethod>)replyWithContext:(RMQConnectionConfig *)context {
     AMQTable *capabilities = [[AMQTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
                                                       @"consumer_cancel_notify": [[AMQBoolean alloc] init:YES],
                                                       @"exchange_exchange_bindings": [[AMQBoolean alloc] init:YES],
@@ -26,8 +26,8 @@
 
 @implementation AMQProtocolConnectionTune (Conversation)
 
-- (id<AMQMethod>)replyWithContext:(id<AMQReplyContext>)context {
-    id <AMQReplyContext> client = context;
+- (id<AMQMethod>)replyWithContext:(RMQConnectionConfig *)context {
+    RMQConnectionConfig *client = context;
     AMQProtocolConnectionTune *server = self;
 
     NSNumber *channelMax = [self negotiateBetweenClientValue:client.channelMax
@@ -64,7 +64,7 @@
 
 @implementation AMQProtocolConnectionClose (Conversation)
 
-- (id<AMQMethod>)replyWithContext:(id<AMQReplyContext>)context {
+- (id<AMQMethod>)replyWithContext:(RMQConnectionConfig *)context {
     return [AMQProtocolConnectionCloseOk new];
 }
 

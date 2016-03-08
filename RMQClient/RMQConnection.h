@@ -5,7 +5,7 @@
 #import "RMQFrameHandler.h"
 #import "RMQSender.h"
 
-@interface RMQConnection : NSObject<AMQReplyContext, RMQFrameHandler, RMQSender>
+@interface RMQConnection : NSObject<RMQFrameHandler, RMQSender>
 @property (copy, nonatomic, readonly) NSString *vhost;
 
 - (instancetype)initWithTransport:(id<RMQTransport>)transport

@@ -11,7 +11,7 @@
 @property (nonatomic, readwrite) AMQTable *clientProperties;
 @property (nonatomic, readwrite) NSString *mechanism;
 @property (nonatomic, readwrite) NSString *locale;
-@property (nonatomic, readwrite) AMQCredentials *credentials;
+@property (nonatomic, readwrite) RMQConnectionConfig *config;
 @property (nonatomic, readwrite) NSMutableDictionary *channels;
 @property (nonatomic, readwrite) RMQReaderLoop *readerLoop;
 @property (nonatomic, readwrite) id <RMQChannelAllocator> channelAllocator;
@@ -19,9 +19,7 @@
 @property (nonatomic, readwrite) NSMutableArray *watchedIncomingMethods;
 @property (nonatomic, readwrite) dispatch_semaphore_t methodSemaphore;
 @property (atomic, readwrite) AMQFrameset *lastWaitedUponFrameset;
-@property (nonatomic, readwrite) NSNumber *channelMax;
 @property (nonatomic, readwrite) NSNumber *frameMax;
-@property (nonatomic, readwrite) NSNumber *heartbeat;
 @end
 
 @implementation RMQConnection
@@ -35,8 +33,13 @@
                         heartbeat:(NSNumber *)heartbeat {
     self = [super init];
     if (self) {
-        self.credentials = [[AMQCredentials alloc] initWithUsername:user
-                                                           password:password];
+        AMQCredentials *credentials = [[AMQCredentials alloc] initWithUsername:user
+                                                                      password:password];
+        self.config = [[RMQConnectionConfig alloc] initWithCredentials:credentials
+                                                            channelMax:channelMax
+                                                              frameMax:frameMax
+                                                             heartbeat:heartbeat];
+        self.frameMax = frameMax;
         self.vhost = vhost;
         self.transport = transport;
         RMQMultipleChannelAllocator *allocator = [[RMQMultipleChannelAllocator alloc] initWithSender:self];
@@ -61,9 +64,6 @@
         self.methodSemaphore = dispatch_semaphore_create(0);
         self.lastWaitedUponFrameset = nil;
 
-        self.channelMax = channelMax;
-        self.frameMax = frameMax;
-        self.heartbeat = heartbeat;
         [self allocateChannelZero];
     }
     return self;
@@ -146,7 +146,7 @@
         dispatch_semaphore_signal(self.methodSemaphore);
     }
     if ([self shouldReply:method]) {
-        id<AMQMethod> reply = [method replyWithContext:self];
+        id<AMQMethod> reply = [method replyWithContext:self.config];
         [self sendMethod:reply channelNumber:frameset.channelNumber];
     }
     if (((id<AMQMethod>)method).shouldHaltOnReceipt) {

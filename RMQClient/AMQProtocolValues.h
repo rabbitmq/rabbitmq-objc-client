@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 @import Mantle;
 #import "AMQParser.h"
+#import "RMQConnectionConfig.h"
 
 @protocol AMQEncoding <NSObject>
 - (nonnull NSData *)amqEncoded;
@@ -67,13 +68,6 @@
                                 password:(nonnull NSString *)password;
 @end
 
-@protocol AMQReplyContext <NSObject>
-@property (nonnull, nonatomic, readonly) NSNumber *channelMax;
-@property (nonnull, nonatomic, readonly) NSNumber *frameMax;
-@property (nonnull, nonatomic, readonly) NSNumber *heartbeat;
-- (nonnull AMQCredentials *)credentials;
-@end
-
 @protocol AMQIncomingCallbackContext <NSObject>
 - (void)close:(void (^ _Nonnull)())onClose;
 @end
@@ -95,7 +89,7 @@
 @end
 
 @protocol AMQIncomingSync <NSObject,AMQMethod>
-- (nonnull id<AMQMethod>)replyWithContext:(nonnull id<AMQReplyContext>)context;
+- (nonnull id<AMQMethod>)replyWithContext:(nonnull RMQConnectionConfig *)context;
 @end
 
 @interface AMQContentHeader : MTLModel<AMQPayload>
