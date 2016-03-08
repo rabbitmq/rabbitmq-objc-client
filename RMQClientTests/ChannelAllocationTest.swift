@@ -65,6 +65,40 @@ class ChannelAllocationTest: XCTestCase {
         XCTAssertEqual(AMQChannelLimit + expectedUniqueUnallocatedCount, total)
     }
 
+    func testChannelsAreReleasedWithThreadSafety() {
+        let sender      = SenderSpy()
+        let allocator   = RMQMultipleChannelAllocator(sender: sender)
+        let group       = dispatch_group_create()
+        let queues      = [
+            dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
+            dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
+            dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
+        ]
+        allocateAll(allocator, sender)
+
+        dispatch_group_async(group, queues[0]) {
+            for n in 1...AMQChannelLimit {
+                allocator.releaseChannelNumber(n)
+            }
+        }
+
+        dispatch_group_async(group, queues[1]) {
+            for n in 1...AMQChannelLimit {
+                allocator.releaseChannelNumber(n)
+            }
+        }
+
+        dispatch_group_async(group, queues[2]) {
+            for n in 1...AMQChannelLimit {
+                allocator.releaseChannelNumber(n)
+            }
+        }
+
+        dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
+
+        XCTAssertEqual(1, allocator.allocate().channelNumber)
+    }
+
     func sumUnallocated(accumulator: Int, current: Set<NSNumber>) -> Int {
         return accumulator + (current.count == self.allocationsPerQueue ? 0 : 1)
     }

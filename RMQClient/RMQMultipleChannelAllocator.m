@@ -36,7 +36,9 @@
 }
 
 - (void)releaseChannelNumber:(NSNumber *)channelNumber {
-    [self.channels removeObjectForKey:channelNumber];
+    @synchronized(self) {
+        [self unsafeReleaseChannelNumber:channelNumber];
+    }
 }
 
 - (void)handleFrameset:(AMQFrameset *)frameset {
@@ -50,10 +52,14 @@
     if (self.atCapacity) {
         return [RMQUnallocatedChannel new];
     } else if (self.atMaxIndex) {
-        return self.previouslyFreedChannel;
+        return self.previouslyReleasedChannel;
     } else {
         return self.newAllocation;
     }
+}
+
+- (void)unsafeReleaseChannelNumber:(NSNumber *)channelNumber {
+    [self.channels removeObjectForKey:channelNumber];
 }
 
 - (id<RMQChannel>)newAllocation {
@@ -64,7 +70,7 @@
     return ch;
 }
 
-- (id<RMQChannel>)previouslyFreedChannel {
+- (id<RMQChannel>)previouslyReleasedChannel {
     for (UInt16 i = 1; i < AMQChannelLimit; i++) {
         if (!self.channels[@(i)]) {
             RMQDispatchQueueChannel *ch = [[RMQDispatchQueueChannel alloc] init:@(i)
