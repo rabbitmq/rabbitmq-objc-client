@@ -23,7 +23,6 @@ class IntegrationTests: XCTestCase {
         )
         conn.start()
         defer { conn.close() }
-        XCTAssert(TestHelper.pollUntil { return transport.isConnected() }, "never connected")
 
         let ch = conn.createChannel()
         let qname = "rmqclient.integration-tests.\(NSProcessInfo.processInfo().globallyUniqueString)"
@@ -59,7 +58,6 @@ class IntegrationTests: XCTestCase {
         )
         conn.start()
         defer { conn.close() }
-        XCTAssert(TestHelper.pollUntil { return transport.isConnected() }, "never connected")
 
         let ch = conn.createChannel()
         let qname = "rmqclient.integration-tests.\(NSProcessInfo.processInfo().globallyUniqueString)"

@@ -85,6 +85,8 @@
                         error:&error
                    onComplete:^{ [self.readerLoop runOnce]; }];
     }];
+    NSError *error = NULL;
+    [self waitOnMethod:[AMQConnectionOpenOk class] channelNumber:@0 error:&error];
     return self;
 }
 
