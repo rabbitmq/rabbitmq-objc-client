@@ -14,7 +14,8 @@
                             vhost:(NSString *)vhost
                        channelMax:(NSNumber *)channelMax
                          frameMax:(NSNumber *)frameMax
-                        heartbeat:(NSNumber *)heartbeat;
+                        heartbeat:(NSNumber *)heartbeat
+                      syncTimeout:(NSNumber *)syncTimeout;
 - (RMQConnection *)start;
 - (void)close;
 - (id<RMQChannel>)createChannel;

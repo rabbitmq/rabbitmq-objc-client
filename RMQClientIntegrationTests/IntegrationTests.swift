@@ -18,7 +18,8 @@ class IntegrationTests: XCTestCase {
             vhost: "/",
             channelMax: 65535,
             frameMax: frameMaxRequiringTwoFrames,
-            heartbeat: 0
+            heartbeat: 0,
+            syncTimeout: 10
         )
         conn.start()
         defer { conn.close() }
@@ -53,7 +54,8 @@ class IntegrationTests: XCTestCase {
             vhost: "/",
             channelMax: 65535,
             frameMax: 4096,
-            heartbeat: 0
+            heartbeat: 0,
+            syncTimeout: 10
         )
         conn.start()
         defer { conn.close() }

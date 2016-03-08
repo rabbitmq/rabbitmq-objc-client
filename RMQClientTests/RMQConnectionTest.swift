@@ -4,6 +4,7 @@ class RMQConnectionTest: XCTestCase {
 
     func startedConnection(
         transport: RMQTransport,
+        syncTimeout: Double = 0,
         user: String = "foo",
         password: String = "bar",
         vhost: String = "baz"
@@ -15,8 +16,8 @@ class RMQConnectionTest: XCTestCase {
                 vhost: vhost,
                 channelMax: 65535,
                 frameMax: 131072,
-                heartbeat: 0
-                ).start()
+                heartbeat: 0,
+                syncTimeout: syncTimeout).start()
     }
 
     func testHandshaking() {
@@ -77,9 +78,9 @@ class RMQConnectionTest: XCTestCase {
 
     func testWaitingOnAServerMessageWithSuccess() {
         let transport = ControlledInteractionTransport()
-        let conn = startedConnection(transport)
+        let conn = startedConnection(transport, syncTimeout: 0.3)
 
-        let halfSecond = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
+        let halfSecond = dispatch_time(DISPATCH_TIME_NOW, Int64(0.2 * Double(NSEC_PER_SEC)))
 
         dispatch_after(halfSecond, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             transport.serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 42)
@@ -90,7 +91,7 @@ class RMQConnectionTest: XCTestCase {
 
     func testWaitingOnAServerMethodWithFailure() {
         let transport = ControlledInteractionTransport()
-        let conn = startedConnection(transport)
+        let conn = startedConnection(transport, syncTimeout: 0.1)
 
         var error: NSError = NSError(domain: "", code: 0, userInfo: [:])
         do {
@@ -104,4 +105,5 @@ class RMQConnectionTest: XCTestCase {
         }
         XCTAssertEqual("Timeout", error.localizedDescription)
     }
+
 }

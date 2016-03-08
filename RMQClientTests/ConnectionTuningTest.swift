@@ -67,8 +67,8 @@ class ConnectionTuningTest: XCTestCase {
             vhost: "baz",
             channelMax: channelMax,
             frameMax: frameMax,
-            heartbeat: heartbeat
-            ).start()
+            heartbeat: heartbeat,
+            syncTimeout: 0).start()
         transport.serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
         return connection
     }

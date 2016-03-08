@@ -20,6 +20,7 @@
 @property (nonatomic, readwrite) dispatch_semaphore_t methodSemaphore;
 @property (atomic, readwrite) AMQFrameset *lastWaitedUponFrameset;
 @property (nonatomic, readwrite) NSNumber *frameMax;
+@property (nonatomic, readwrite) NSNumber *syncTimeout;
 @end
 
 @implementation RMQConnection
@@ -30,7 +31,8 @@
                             vhost:(NSString *)vhost
                        channelMax:(NSNumber *)channelMax
                          frameMax:(NSNumber *)frameMax
-                        heartbeat:(NSNumber *)heartbeat {
+                        heartbeat:(NSNumber *)heartbeat
+                      syncTimeout:(NSNumber *)syncTimeout {
     self = [super init];
     if (self) {
         AMQCredentials *credentials = [[AMQCredentials alloc] initWithUsername:user
@@ -42,6 +44,7 @@
         self.frameMax = frameMax;
         self.vhost = vhost;
         self.transport = transport;
+        self.syncTimeout = syncTimeout;
         RMQMultipleChannelAllocator *allocator = [[RMQMultipleChannelAllocator alloc] initWithSender:self];
         self.channelAllocator = allocator;
         self.frameHandler = allocator;
@@ -122,8 +125,7 @@
                error:(NSError *__autoreleasing  _Nullable *)error {
     [self.watchedIncomingMethods addObject:@[channelNumber, amqMethodClass]];
     
-    char delay = 10;
-    dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC);
+    dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, self.syncTimeout.doubleValue * NSEC_PER_SEC);
     if (dispatch_semaphore_wait(self.methodSemaphore, timeout) == 0) {
         return YES;
     } else {
