@@ -1,5 +1,5 @@
-#import "AMQProtocolValues.h"
-#import "AMQProtocolBasicProperties.h"
+#import "AMQValues.h"
+#import "AMQBasicProperties.h"
 
 @interface AMQOctet ()
 @property (nonatomic, readwrite) char octet;

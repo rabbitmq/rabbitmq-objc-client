@@ -1,4 +1,4 @@
-#import "AMQProtocolValues.h"
+#import "AMQValues.h"
 
 @interface AMQFrameset : MTLModel<AMQEncoding>
 @property (nonnull, nonatomic, copy, readonly) id<AMQMethod>method;

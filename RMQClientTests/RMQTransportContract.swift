@@ -41,7 +41,7 @@ class RMQTransportContract {
         defer { self.transport.close() {} }
         
         var readData: NSData = NSData()
-        var connectionStart = AMQProtocolConnectionStart()
+        var connectionStart = AMQConnectionStart()
 
         self.transport.connect() {
             try! self.transport.write(AMQProtocolHeader().amqEncoded()) {
@@ -50,7 +50,7 @@ class RMQTransportContract {
                     readData = receivedData
                     let parser = AMQParser(data: readData)
                     let frame = AMQFrame(parser: parser)
-                    connectionStart = frame.payload as! AMQProtocolConnectionStart
+                    connectionStart = frame.payload as! AMQConnectionStart
                 }
             }
         }

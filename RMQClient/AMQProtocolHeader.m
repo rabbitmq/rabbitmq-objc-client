@@ -1,5 +1,5 @@
 #import "AMQProtocolHeader.h"
-#import "AMQProtocolMethods.h"
+#import "AMQMethods.h"
 
 @implementation AMQProtocolHeader
 
@@ -10,7 +10,7 @@
 }
 
 - (Class)expectedResponseClass {
-    return [AMQProtocolConnectionStart class];
+    return [AMQConnectionStart class];
 }
 
 @end

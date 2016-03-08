@@ -34,7 +34,7 @@ import XCTest
 class AMQEncodingTest: XCTestCase {
 
     func testRoundTripMethod() {
-        let payload = AMQProtocolConnectionStart(
+        let payload = AMQConnectionStart(
             versionMajor: AMQOctet(0),
             versionMinor: AMQOctet(9),
             serverProperties: AMQTable(["foo": AMQTable(["bar": AMQShortstr("baz")])]),
@@ -44,7 +44,7 @@ class AMQEncodingTest: XCTestCase {
         let data = AMQFrame(channelNumber: 42, payload: payload).amqEncoded()
         let parser = AMQParser(data: data)
         let frame = AMQFrame(parser: parser)
-        let hydrated = frame.payload as! AMQProtocolConnectionStart
+        let hydrated = frame.payload as! AMQConnectionStart
         XCTAssertEqual(payload, hydrated)
     }
 
@@ -224,10 +224,10 @@ class AMQEncodingTest: XCTestCase {
     }
 
     func testOptionsBecomeBitfieldOctet() {
-        var optionsSet: AMQProtocolQueueDeclareOptions = []
+        var optionsSet: AMQQueueDeclareOptions = []
         optionsSet.insert(.Passive)
         optionsSet.insert(.Durable)
-        let method = AMQProtocolQueueDeclare(
+        let method = AMQQueueDeclare(
             reserved1: AMQShort(0),
             queue: AMQShortstr("queuename"),
             options: optionsSet,

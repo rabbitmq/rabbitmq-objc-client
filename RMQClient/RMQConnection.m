@@ -1,6 +1,6 @@
 #import "RMQConnection.h"
 #import "AMQProtocolHeader.h"
-#import "AMQProtocolMethods.h"
+#import "AMQMethods.h"
 #import "RMQReaderLoop.h"
 #import "AMQFrame.h"
 #import "RMQMultipleChannelAllocator.h"
@@ -86,7 +86,7 @@
 }
 
 - (void)close {
-    AMQProtocolConnectionClose *method = self.amqClose;
+    AMQConnectionClose *method = self.amqClose;
     AMQFrame *frame = [[AMQFrame alloc] initWithChannelNumber:@0 payload:method];
     NSError *error = NULL;
     [self.transport write:frame.amqEncoded error:&error onComplete:^{}];
@@ -152,7 +152,7 @@
     if (((id<AMQMethod>)method).shouldHaltOnReceipt) {
         [self.transport close:^{}];
     }
-    if ([frameset.method isKindOfClass:[AMQProtocolBasicDeliver class]]) {
+    if ([frameset.method isKindOfClass:[AMQBasicDeliver class]]) {
         [self.frameHandler handleFrameset:frameset];
     }
     [self.readerLoop runOnce];
@@ -164,12 +164,12 @@
     [self.channelAllocator allocate];
 }
 
-- (AMQProtocolChannelOpen *)amqChannelOpen {
-    return [[AMQProtocolChannelOpen alloc] initWithReserved1:[[AMQShortstr alloc] init:@""]];
+- (AMQChannelOpen *)amqChannelOpen {
+    return [[AMQChannelOpen alloc] initWithReserved1:[[AMQShortstr alloc] init:@""]];
 }
 
-- (AMQProtocolConnectionClose *)amqClose {
-    return [[AMQProtocolConnectionClose alloc] initWithReplyCode:[[AMQShort alloc] init:200]
+- (AMQConnectionClose *)amqClose {
+    return [[AMQConnectionClose alloc] initWithReplyCode:[[AMQShort alloc] init:200]
                                                        replyText:[[AMQShortstr alloc] init:@"Goodbye"]
                                                          classId:[[AMQShort alloc] init:0]
                                                         methodId:[[AMQShort alloc] init:0]];

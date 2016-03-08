@@ -1,7 +1,7 @@
 #import "RMQQueue.h"
-#import "AMQProtocolMethods.h"
+#import "AMQMethods.h"
 #import "RMQConnection.h"
-#import "AMQProtocolBasicProperties.h"
+#import "AMQBasicProperties.h"
 #import "AMQConstants.h"
 
 @interface RMQQueue ()
@@ -25,10 +25,10 @@
 }
 
 - (RMQQueue *)publish:(NSString *)message {
-    AMQProtocolBasicPublish *publish = [[AMQProtocolBasicPublish alloc] initWithReserved1:[[AMQShort alloc] init:0]
-                                                                                 exchange:[[AMQShortstr alloc] init:@""]
-                                                                               routingKey:[[AMQShortstr alloc] init:self.name]
-                                                                                  options:AMQProtocolBasicPublishNoOptions];
+    AMQBasicPublish *publish = [[AMQBasicPublish alloc] initWithReserved1:[[AMQShort alloc] init:0]
+                                                                 exchange:[[AMQShortstr alloc] init:@""]
+                                                               routingKey:[[AMQShortstr alloc] init:self.name]
+                                                                  options:AMQBasicPublishNoOptions];
     NSData *contentBodyData = [message dataUsingEncoding:NSUTF8StringEncoding];
     AMQContentBody *contentBody = [[AMQContentBody alloc] initWithData:contentBodyData];
 
@@ -52,9 +52,9 @@
 }
 
 - (id<RMQMessage>)pop {
-    AMQProtocolBasicGet *get = [[AMQProtocolBasicGet alloc] initWithReserved1:[[AMQShort alloc] init:0]
-                                                                        queue:[[AMQShortstr alloc] init:self.name]
-                                                                      options:AMQProtocolBasicGetNoOptions];
+    AMQBasicGet *get = [[AMQBasicGet alloc] initWithReserved1:[[AMQShort alloc] init:0]
+                                                        queue:[[AMQShortstr alloc] init:self.name]
+                                                      options:AMQBasicGetNoOptions];
     AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:self.channel.channelNumber
                                                                 method:get
                                                          contentHeader:[AMQContentHeaderNone new]
@@ -62,7 +62,7 @@
     [self.sender send:frameset];
 
     NSError *error = NULL;
-    [self.sender waitOnMethod:[AMQProtocolBasicGetOk class]
+    [self.sender waitOnMethod:[AMQBasicGetOk class]
                     channelNumber:self.channel.channelNumber
                         error:&error];
 
@@ -103,11 +103,11 @@
     return bodies;
 }
 
-- (AMQProtocolBasicPublish *)amqPublish {
-    return [[AMQProtocolBasicPublish alloc] initWithReserved1:[[AMQShort alloc] init:0]
-                                                     exchange:[[AMQShortstr alloc] init:@""]
-                                                   routingKey:[[AMQShortstr alloc] init:@""]
-                                                      options:0];
+- (AMQBasicPublish *)amqPublish {
+    return [[AMQBasicPublish alloc] initWithReserved1:[[AMQShort alloc] init:0]
+                                             exchange:[[AMQShortstr alloc] init:@""]
+                                           routingKey:[[AMQShortstr alloc] init:@""]
+                                              options:0];
 }
 
 @end

@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import "AMQProtocolValues.h"
+#import "AMQValues.h"
 #import "AMQParser.h"
 
 @interface AMQMethodDecoder : NSObject

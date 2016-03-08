@@ -1,7 +1,7 @@
 #import "RMQDispatchQueueChannel.h"
 #import "AMQMethodDecoder.h"
-#import "AMQProtocolValues.h"
-#import "AMQProtocolMethods.h"
+#import "AMQValues.h"
+#import "AMQMethods.h"
 
 @interface RMQDispatchQueueChannel ()
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
@@ -38,11 +38,11 @@
     AMQShortstr *amqQueueName = [[AMQShortstr alloc] init:queueName];
     AMQTable *arguments       = [[AMQTable alloc] init:@{}];
 
-    AMQProtocolQueueDeclareOptions options = AMQProtocolQueueDeclareDurable;
-    if (isExclusive)            { options |= AMQProtocolQueueDeclareExclusive; }
-    if (shouldAutoDelete)       { options |= AMQProtocolQueueDeclareAutoDelete; }
+    AMQQueueDeclareOptions options = AMQQueueDeclareDurable;
+    if (isExclusive)            { options |= AMQQueueDeclareExclusive; }
+    if (shouldAutoDelete)       { options |= AMQQueueDeclareAutoDelete; }
 
-    AMQProtocolQueueDeclare *method = [[AMQProtocolQueueDeclare alloc] initWithReserved1:ticket
+    AMQQueueDeclare *method = [[AMQQueueDeclare alloc] initWithReserved1:ticket
                                                                                    queue:amqQueueName
                                                                                  options:options
                                                                                arguments:arguments];
@@ -53,15 +53,15 @@
 }
 
 - (void)basicConsume:(NSString *)queueName consumer:(void (^)(id<RMQMessage> _Nonnull))consumer {
-    AMQProtocolBasicConsume *method = [[AMQProtocolBasicConsume alloc] initWithReserved1:[[AMQShort alloc] init:0]
+    AMQBasicConsume *method = [[AMQBasicConsume alloc] initWithReserved1:[[AMQShort alloc] init:0]
                                                                                    queue:[[AMQShortstr alloc] init:queueName]
                                                                              consumerTag:[[AMQShortstr alloc] init:@""]
-                                                                                 options:AMQProtocolBasicConsumeNoOptions
+                                                                                 options:AMQBasicConsumeNoOptions
                                                                                arguments:[[AMQTable alloc] init:@{}]];
     [self.sender sendMethod:method channelNumber:self.channelNumber];
 
     NSError *error = NULL;
-    [self.sender waitOnMethod:[AMQProtocolBasicConsumeOk class] channelNumber:self.channelNumber error:&error];
+    [self.sender waitOnMethod:[AMQBasicConsumeOk class] channelNumber:self.channelNumber error:&error];
     self.lastConsumer = consumer;
 }
 

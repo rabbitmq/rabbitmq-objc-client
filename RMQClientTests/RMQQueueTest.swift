@@ -10,11 +10,11 @@ class RMQQueueTest: XCTestCase {
 
         queue.publish(messageContent)
 
-        let publish = AMQProtocolBasicPublish(
+        let publish = AMQBasicPublish(
             reserved1: AMQShort(0),
             exchange: AMQShortstr(""),
             routingKey: AMQShortstr("my.q"),
-            options: AMQProtocolBasicPublishOptions.NoOptions
+            options: AMQBasicPublishOptions.NoOptions
         )
         let expectedBodyData = messageContent.dataUsingEncoding(NSUTF8StringEncoding)!
 
@@ -56,11 +56,11 @@ class RMQQueueTest: XCTestCase {
 
         queue.publish(messageContent)
 
-        let expectedMethod = AMQProtocolBasicPublish(
+        let expectedMethod = AMQBasicPublish(
             reserved1: AMQShort(0),
             exchange: AMQShortstr(""),
             routingKey: AMQShortstr("my.q"),
-            options: AMQProtocolBasicPublishOptions.NoOptions
+            options: AMQBasicPublishOptions.NoOptions
         )
 
         let expectedBodyData = messageContent.dataUsingEncoding(NSUTF8StringEncoding)!
@@ -98,10 +98,10 @@ class RMQQueueTest: XCTestCase {
 
         queue.pop()
 
-        let get = AMQProtocolBasicGet(
+        let get = AMQBasicGet(
             reserved1: AMQShort(0),
             queue: AMQShortstr("great.queue"),
-            options: AMQProtocolBasicGetOptions.NoOptions
+            options: AMQBasicGetOptions.NoOptions
         )
         let expectedFrameset = AMQFrameset(
             channelNumber: 42,
@@ -120,7 +120,7 @@ class RMQQueueTest: XCTestCase {
 
         queue.pop()
 
-        XCTAssertEqual("AMQProtocolBasicGetOk", sender.methodWaitedUpon)
+        XCTAssertEqual("AMQBasicGetOk", sender.methodWaitedUpon)
         XCTAssertEqual(42, sender.channelWaitedUpon)
     }
 
@@ -129,9 +129,9 @@ class RMQQueueTest: XCTestCase {
         let channel = ChannelSpy(42)
         let queue = RMQQueue(name: "great.queue", channel: channel, sender: sender)
 
-        let method = AMQProtocolBasicGetOk(
+        let method = AMQBasicGetOk(
             deliveryTag: AMQLonglong(0),
-            options: AMQProtocolBasicGetOkOptions.NoOptions,
+            options: AMQBasicGetOkOptions.NoOptions,
             exchange: AMQShortstr(""),
             routingKey: AMQShortstr(""),
             messageCount: AMQLong(0)

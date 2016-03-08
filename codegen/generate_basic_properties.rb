@@ -14,7 +14,7 @@ class GenerateBasicProperties
   def header
     <<-OBJC
 #{do_not_edit}
-#import "AMQProtocolValues.h"
+#import "AMQValues.h"
 
 @protocol AMQBasicValue <NSObject, AMQEncoding>
 + (NSUInteger)flagBit;
@@ -31,7 +31,7 @@ class GenerateBasicProperties
   def implementation(fields)
     <<-OBJC
 #{implementation_start}
-#import "AMQProtocolBasicProperties.h"
+#import "AMQBasicProperties.h"
 
 @implementation AMQBasicProperties
 + (NSArray *)properties {

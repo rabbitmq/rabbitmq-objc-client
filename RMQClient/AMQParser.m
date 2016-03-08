@@ -1,5 +1,5 @@
 #import "AMQParser.h"
-#import "AMQProtocolValues.h"
+#import "AMQValues.h"
 
 enum AMQParserFieldValue {
     AMQParserFieldTable = 'F',

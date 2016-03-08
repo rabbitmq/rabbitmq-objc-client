@@ -3,7 +3,7 @@
 #import "RMQTCPSocketTransport.h"
 #import "AMQMethodDecoder.h"
 #import "AMQProtocolHeader.h"
-#import "AMQProtocolMethods.h"
+#import "AMQMethods.h"
 #import "AMQFrameset.h"
 #import "AMQFrame.h"
 #import "RMQMultipleChannelAllocator.h"

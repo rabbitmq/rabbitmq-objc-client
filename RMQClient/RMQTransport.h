@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import "AMQProtocolValues.h"
+#import "AMQValues.h"
 
 @protocol RMQTransport <AMQIncomingCallbackContext>
 - (void)connect:(void (^ _Nonnull)())onConnect;

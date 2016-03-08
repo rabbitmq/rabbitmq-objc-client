@@ -6,14 +6,14 @@ class RMQDispatchQueueChannelTest: XCTestCase {
         let sender = SenderSpy()
         let channel = RMQDispatchQueueChannel(1, sender: sender)
         channel.basicConsume("a_queue_name") { message in }
-        let expectedMethod = AMQProtocolBasicConsume(
+        let expectedMethod = AMQBasicConsume(
             reserved1: AMQShort(0),
             queue: AMQShortstr("a_queue_name"),
             consumerTag: AMQShortstr(""),
-            options: AMQProtocolBasicConsumeOptions.NoOptions,
+            options: AMQBasicConsumeOptions.NoOptions,
             arguments: AMQTable([:])
         )
-        let receivedMethod = sender.lastSentMethod! as! AMQProtocolBasicConsume
+        let receivedMethod = sender.lastSentMethod! as! AMQBasicConsume
         XCTAssertEqual(expectedMethod, receivedMethod)
     }
 
@@ -22,7 +22,7 @@ class RMQDispatchQueueChannelTest: XCTestCase {
         let channel = RMQDispatchQueueChannel(432, sender: sender)
         channel.basicConsume("a_queue_name") { message in }
 
-        XCTAssertEqual("AMQProtocolBasicConsumeOk", sender.methodWaitedUpon)
+        XCTAssertEqual("AMQBasicConsumeOk", sender.methodWaitedUpon)
         XCTAssertEqual(432, sender.channelWaitedUpon)
     }
 

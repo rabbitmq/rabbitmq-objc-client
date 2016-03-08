@@ -6,7 +6,7 @@ module CodegenHelpers
   def objc_class_name(method)
     class_name = method.xpath('..').first[:name].capitalize
     method_name = method[:name].underscore.camelize
-    "AMQProtocol#{class_name}#{method_name}"
+    "AMQ#{class_name}#{method_name}"
   end
 
   def do_not_edit

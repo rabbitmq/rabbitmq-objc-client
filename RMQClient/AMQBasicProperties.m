@@ -1,5 +1,5 @@
 // This file is generated. Do not edit.
-#import "AMQProtocolBasicProperties.h"
+#import "AMQBasicProperties.h"
 
 @implementation AMQBasicProperties
 + (NSArray *)properties {

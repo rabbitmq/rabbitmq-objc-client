@@ -73,12 +73,12 @@ class ConnectionTuningTest: XCTestCase {
         return connection
     }
 
-    func clientTuneOk(channelMax: AMQShort, _ frameMax: AMQLong, _ heartbeat: AMQShort) -> AMQProtocolConnectionTuneOk {
-        return AMQProtocolConnectionTuneOk(channelMax: channelMax, frameMax: frameMax, heartbeat: heartbeat)
+    func clientTuneOk(channelMax: AMQShort, _ frameMax: AMQLong, _ heartbeat: AMQShort) -> AMQConnectionTuneOk {
+        return AMQConnectionTuneOk(channelMax: channelMax, frameMax: frameMax, heartbeat: heartbeat)
     }
 
-    func negotiatedParamsGivenServerParams(transport: ControlledInteractionTransport, _ channelMax: AMQShort, _ frameMax: AMQLong, _ heartbeat: AMQShort) -> AMQProtocolConnectionTuneOk {
-        let tune = AMQProtocolConnectionTune(channelMax: channelMax, frameMax: frameMax, heartbeat: heartbeat)
+    func negotiatedParamsGivenServerParams(transport: ControlledInteractionTransport, _ channelMax: AMQShort, _ frameMax: AMQLong, _ heartbeat: AMQShort) -> AMQConnectionTuneOk {
+        let tune = AMQConnectionTune(channelMax: channelMax, frameMax: frameMax, heartbeat: heartbeat)
 
         transport
             .serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
@@ -86,6 +86,6 @@ class ConnectionTuningTest: XCTestCase {
 
         let parser = AMQParser(data: transport.outboundData[transport.outboundData.count - 2])
         let frame = AMQFrame(parser: parser)
-        return frame.payload as! AMQProtocolConnectionTuneOk
+        return frame.payload as! AMQConnectionTuneOk
     }
 }

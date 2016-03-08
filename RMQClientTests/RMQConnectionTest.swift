@@ -38,7 +38,7 @@ class RMQConnectionTest: XCTestCase {
         conn.close()
 
         transport.assertClientSentMethod(
-            AMQProtocolConnectionClose(
+            AMQConnectionClose(
                 replyCode: AMQShort(200),
                 replyText: AMQShortstr("Goodbye"),
                 classId: AMQShort(0),
@@ -85,7 +85,7 @@ class RMQConnectionTest: XCTestCase {
             transport.serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 42)
         }
 
-        try! conn.waitOnMethod(AMQProtocolConnectionStart.self, channelNumber: 42)
+        try! conn.waitOnMethod(AMQConnectionStart.self, channelNumber: 42)
     }
 
     func testWaitingOnAServerMethodWithFailure() {
@@ -94,7 +94,7 @@ class RMQConnectionTest: XCTestCase {
 
         var error: NSError = NSError(domain: "", code: 0, userInfo: [:])
         do {
-            try conn.waitOnMethod(AMQProtocolConnectionStart.self, channelNumber: 42)
+            try conn.waitOnMethod(AMQConnectionStart.self, channelNumber: 42)
         }
         catch let e as NSError {
             error = e

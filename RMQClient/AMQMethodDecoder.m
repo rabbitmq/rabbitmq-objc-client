@@ -1,5 +1,5 @@
 #import "AMQMethodDecoder.h"
-#import "AMQProtocolMethodMap.h"
+#import "AMQMethodMap.h"
 
 @interface AMQMethodDecoder ()
 @property (nonatomic, readwrite) AMQParser *parser;
@@ -18,7 +18,7 @@
 - (id)decode {
     NSNumber *classID   = @([self.parser parseShortUInt]);
     NSNumber *methodID  = @([self.parser parseShortUInt]);
-    Class methodClass = AMQProtocolMethodMap.methodMap[@[classID, methodID]];
+    Class methodClass = AMQMethodMap.methodMap[@[classID, methodID]];
     NSArray *frame = [methodClass frame];
     NSMutableArray *decodedFrame = [NSMutableArray new];
     for (int i = 0; i < frame.count; i++) {

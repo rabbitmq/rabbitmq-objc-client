@@ -94,7 +94,7 @@ class RMQReaderLoopTest: XCTestCase {
         XCTAssertEqual([expectedContentFrameset], frameHandler.receivedFramesets)
     }
 
-    func nonContentPayload() -> AMQProtocolBasicDeliver {
-        return AMQProtocolBasicDeliver(consumerTag: AMQShortstr(""), deliveryTag: AMQLonglong(0), options: AMQProtocolBasicDeliverOptions.NoOptions, exchange: AMQShortstr(""), routingKey: AMQShortstr("somekey"))
+    func nonContentPayload() -> AMQBasicDeliver {
+        return AMQBasicDeliver(consumerTag: AMQShortstr(""), deliveryTag: AMQLonglong(0), options: AMQBasicDeliverOptions.NoOptions, exchange: AMQShortstr(""), routingKey: AMQShortstr("somekey"))
     }
 }

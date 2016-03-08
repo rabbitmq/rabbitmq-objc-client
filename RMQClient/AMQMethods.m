@@ -1,7 +1,7 @@
 // This file is generated. Do not edit.
-#import "AMQProtocolMethods.h"
+#import "AMQMethods.h"
 
-@interface AMQProtocolConnectionStart ()
+@interface AMQConnectionStart ()
 @property (nonnull, copy, nonatomic, readwrite) AMQOctet *versionMajor;
 @property (nonnull, copy, nonatomic, readwrite) AMQOctet *versionMinor;
 @property (nonnull, copy, nonatomic, readwrite) AMQTable *serverProperties;
@@ -11,7 +11,7 @@
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolConnectionStart
+@implementation AMQConnectionStart
 
 + (NSArray *)frame {
     return @[[AMQOctet class],
@@ -76,7 +76,7 @@
 
 @end
 
-@interface AMQProtocolConnectionStartOk ()
+@interface AMQConnectionStartOk ()
 @property (nonnull, copy, nonatomic, readwrite) AMQTable *clientProperties;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *mechanism;
 @property (nonnull, copy, nonatomic, readwrite) AMQLongstr *response;
@@ -85,7 +85,7 @@
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolConnectionStartOk
+@implementation AMQConnectionStartOk
 
 + (NSArray *)frame {
     return @[[AMQTable class],
@@ -144,13 +144,13 @@
 
 @end
 
-@interface AMQProtocolConnectionSecure ()
+@interface AMQConnectionSecure ()
 @property (nonnull, copy, nonatomic, readwrite) AMQLongstr *challenge;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolConnectionSecure
+@implementation AMQConnectionSecure
 
 + (NSArray *)frame {
     return @[[AMQLongstr class]];
@@ -191,13 +191,13 @@
 
 @end
 
-@interface AMQProtocolConnectionSecureOk ()
+@interface AMQConnectionSecureOk ()
 @property (nonnull, copy, nonatomic, readwrite) AMQLongstr *response;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolConnectionSecureOk
+@implementation AMQConnectionSecureOk
 
 + (NSArray *)frame {
     return @[[AMQLongstr class]];
@@ -238,7 +238,7 @@
 
 @end
 
-@interface AMQProtocolConnectionTune ()
+@interface AMQConnectionTune ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *channelMax;
 @property (nonnull, copy, nonatomic, readwrite) AMQLong *frameMax;
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *heartbeat;
@@ -246,7 +246,7 @@
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolConnectionTune
+@implementation AMQConnectionTune
 
 + (NSArray *)frame {
     return @[[AMQShort class],
@@ -299,7 +299,7 @@
 
 @end
 
-@interface AMQProtocolConnectionTuneOk ()
+@interface AMQConnectionTuneOk ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *channelMax;
 @property (nonnull, copy, nonatomic, readwrite) AMQLong *frameMax;
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *heartbeat;
@@ -307,7 +307,7 @@
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolConnectionTuneOk
+@implementation AMQConnectionTuneOk
 
 + (NSArray *)frame {
     return @[[AMQShort class],
@@ -360,15 +360,15 @@
 
 @end
 
-@interface AMQProtocolConnectionOpen ()
+@interface AMQConnectionOpen ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *virtualHost;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reserved1;
-@property (nonatomic, readwrite) AMQProtocolConnectionOpenOptions options;
+@property (nonatomic, readwrite) AMQConnectionOpenOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolConnectionOpen
+@implementation AMQConnectionOpen
 
 + (NSArray *)frame {
     return @[[AMQShortstr class],
@@ -383,7 +383,7 @@
 
 - (nonnull instancetype)initWithVirtualHost:(nonnull AMQShortstr *)virtualHost
                                   reserved1:(nonnull AMQShortstr *)reserved1
-                                    options:(AMQProtocolConnectionOpenOptions)options {
+                                    options:(AMQConnectionOpenOptions)options {
     self = [super init];
     if (self) {
         self.virtualHost = virtualHost;
@@ -421,13 +421,13 @@
 
 @end
 
-@interface AMQProtocolConnectionOpenOk ()
+@interface AMQConnectionOpenOk ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reserved1;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolConnectionOpenOk
+@implementation AMQConnectionOpenOk
 
 + (NSArray *)frame {
     return @[[AMQShortstr class]];
@@ -468,7 +468,7 @@
 
 @end
 
-@interface AMQProtocolConnectionClose ()
+@interface AMQConnectionClose ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *replyCode;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *replyText;
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *classId;
@@ -477,7 +477,7 @@
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolConnectionClose
+@implementation AMQConnectionClose
 
 + (NSArray *)frame {
     return @[[AMQShort class],
@@ -536,12 +536,12 @@
 
 @end
 
-@interface AMQProtocolConnectionCloseOk ()
+@interface AMQConnectionCloseOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolConnectionCloseOk
+@implementation AMQConnectionCloseOk
 
 + (NSArray *)frame {
     return @[];
@@ -573,13 +573,13 @@
 
 @end
 
-@interface AMQProtocolConnectionBlocked ()
+@interface AMQConnectionBlocked ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reason;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolConnectionBlocked
+@implementation AMQConnectionBlocked
 
 + (NSArray *)frame {
     return @[[AMQShortstr class]];
@@ -620,12 +620,12 @@
 
 @end
 
-@interface AMQProtocolConnectionUnblocked ()
+@interface AMQConnectionUnblocked ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolConnectionUnblocked
+@implementation AMQConnectionUnblocked
 
 + (NSArray *)frame {
     return @[];
@@ -657,13 +657,13 @@
 
 @end
 
-@interface AMQProtocolChannelOpen ()
+@interface AMQChannelOpen ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reserved1;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolChannelOpen
+@implementation AMQChannelOpen
 
 + (NSArray *)frame {
     return @[[AMQShortstr class]];
@@ -704,13 +704,13 @@
 
 @end
 
-@interface AMQProtocolChannelOpenOk ()
+@interface AMQChannelOpenOk ()
 @property (nonnull, copy, nonatomic, readwrite) AMQLongstr *reserved1;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolChannelOpenOk
+@implementation AMQChannelOpenOk
 
 + (NSArray *)frame {
     return @[[AMQLongstr class]];
@@ -751,13 +751,13 @@
 
 @end
 
-@interface AMQProtocolChannelFlow ()
-@property (nonatomic, readwrite) AMQProtocolChannelFlowOptions options;
+@interface AMQChannelFlow ()
+@property (nonatomic, readwrite) AMQChannelFlowOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolChannelFlow
+@implementation AMQChannelFlow
 
 + (NSArray *)frame {
     return @[[AMQOctet class]];
@@ -768,7 +768,7 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithOptions:(AMQProtocolChannelFlowOptions)options {
+- (nonnull instancetype)initWithOptions:(AMQChannelFlowOptions)options {
     self = [super init];
     if (self) {
         self.options = options;
@@ -798,13 +798,13 @@
 
 @end
 
-@interface AMQProtocolChannelFlowOk ()
-@property (nonatomic, readwrite) AMQProtocolChannelFlowOkOptions options;
+@interface AMQChannelFlowOk ()
+@property (nonatomic, readwrite) AMQChannelFlowOkOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolChannelFlowOk
+@implementation AMQChannelFlowOk
 
 + (NSArray *)frame {
     return @[[AMQOctet class]];
@@ -815,7 +815,7 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithOptions:(AMQProtocolChannelFlowOkOptions)options {
+- (nonnull instancetype)initWithOptions:(AMQChannelFlowOkOptions)options {
     self = [super init];
     if (self) {
         self.options = options;
@@ -845,7 +845,7 @@
 
 @end
 
-@interface AMQProtocolChannelClose ()
+@interface AMQChannelClose ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *replyCode;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *replyText;
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *classId;
@@ -854,7 +854,7 @@
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolChannelClose
+@implementation AMQChannelClose
 
 + (NSArray *)frame {
     return @[[AMQShort class],
@@ -913,12 +913,12 @@
 
 @end
 
-@interface AMQProtocolChannelCloseOk ()
+@interface AMQChannelCloseOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolChannelCloseOk
+@implementation AMQChannelCloseOk
 
 + (NSArray *)frame {
     return @[];
@@ -950,17 +950,17 @@
 
 @end
 
-@interface AMQProtocolExchangeDeclare ()
+@interface AMQExchangeDeclare ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *type;
-@property (nonatomic, readwrite) AMQProtocolExchangeDeclareOptions options;
+@property (nonatomic, readwrite) AMQExchangeDeclareOptions options;
 @property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolExchangeDeclare
+@implementation AMQExchangeDeclare
 
 + (NSArray *)frame {
     return @[[AMQShort class],
@@ -978,7 +978,7 @@
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                  exchange:(nonnull AMQShortstr *)exchange
                                      type:(nonnull AMQShortstr *)type
-                                  options:(AMQProtocolExchangeDeclareOptions)options
+                                  options:(AMQExchangeDeclareOptions)options
                                 arguments:(nonnull AMQTable *)arguments {
     self = [super init];
     if (self) {
@@ -1025,12 +1025,12 @@
 
 @end
 
-@interface AMQProtocolExchangeDeclareOk ()
+@interface AMQExchangeDeclareOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolExchangeDeclareOk
+@implementation AMQExchangeDeclareOk
 
 + (NSArray *)frame {
     return @[];
@@ -1062,15 +1062,15 @@
 
 @end
 
-@interface AMQProtocolExchangeDelete ()
+@interface AMQExchangeDelete ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
-@property (nonatomic, readwrite) AMQProtocolExchangeDeleteOptions options;
+@property (nonatomic, readwrite) AMQExchangeDeleteOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolExchangeDelete
+@implementation AMQExchangeDelete
 
 + (NSArray *)frame {
     return @[[AMQShort class],
@@ -1085,7 +1085,7 @@
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                  exchange:(nonnull AMQShortstr *)exchange
-                                  options:(AMQProtocolExchangeDeleteOptions)options {
+                                  options:(AMQExchangeDeleteOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -1123,12 +1123,12 @@
 
 @end
 
-@interface AMQProtocolExchangeDeleteOk ()
+@interface AMQExchangeDeleteOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolExchangeDeleteOk
+@implementation AMQExchangeDeleteOk
 
 + (NSArray *)frame {
     return @[];
@@ -1160,18 +1160,18 @@
 
 @end
 
-@interface AMQProtocolExchangeBind ()
+@interface AMQExchangeBind ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *destination;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *source;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
-@property (nonatomic, readwrite) AMQProtocolExchangeBindOptions options;
+@property (nonatomic, readwrite) AMQExchangeBindOptions options;
 @property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolExchangeBind
+@implementation AMQExchangeBind
 
 + (NSArray *)frame {
     return @[[AMQShort class],
@@ -1191,7 +1191,7 @@
                               destination:(nonnull AMQShortstr *)destination
                                    source:(nonnull AMQShortstr *)source
                                routingKey:(nonnull AMQShortstr *)routingKey
-                                  options:(AMQProtocolExchangeBindOptions)options
+                                  options:(AMQExchangeBindOptions)options
                                 arguments:(nonnull AMQTable *)arguments {
     self = [super init];
     if (self) {
@@ -1242,12 +1242,12 @@
 
 @end
 
-@interface AMQProtocolExchangeBindOk ()
+@interface AMQExchangeBindOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolExchangeBindOk
+@implementation AMQExchangeBindOk
 
 + (NSArray *)frame {
     return @[];
@@ -1279,18 +1279,18 @@
 
 @end
 
-@interface AMQProtocolExchangeUnbind ()
+@interface AMQExchangeUnbind ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *destination;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *source;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
-@property (nonatomic, readwrite) AMQProtocolExchangeUnbindOptions options;
+@property (nonatomic, readwrite) AMQExchangeUnbindOptions options;
 @property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolExchangeUnbind
+@implementation AMQExchangeUnbind
 
 + (NSArray *)frame {
     return @[[AMQShort class],
@@ -1310,7 +1310,7 @@
                               destination:(nonnull AMQShortstr *)destination
                                    source:(nonnull AMQShortstr *)source
                                routingKey:(nonnull AMQShortstr *)routingKey
-                                  options:(AMQProtocolExchangeUnbindOptions)options
+                                  options:(AMQExchangeUnbindOptions)options
                                 arguments:(nonnull AMQTable *)arguments {
     self = [super init];
     if (self) {
@@ -1361,12 +1361,12 @@
 
 @end
 
-@interface AMQProtocolExchangeUnbindOk ()
+@interface AMQExchangeUnbindOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolExchangeUnbindOk
+@implementation AMQExchangeUnbindOk
 
 + (NSArray *)frame {
     return @[];
@@ -1398,16 +1398,16 @@
 
 @end
 
-@interface AMQProtocolQueueDeclare ()
+@interface AMQQueueDeclare ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (nonatomic, readwrite) AMQProtocolQueueDeclareOptions options;
+@property (nonatomic, readwrite) AMQQueueDeclareOptions options;
 @property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolQueueDeclare
+@implementation AMQQueueDeclare
 
 + (NSArray *)frame {
     return @[[AMQShort class],
@@ -1423,7 +1423,7 @@
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
-                                  options:(AMQProtocolQueueDeclareOptions)options
+                                  options:(AMQQueueDeclareOptions)options
                                 arguments:(nonnull AMQTable *)arguments {
     self = [super init];
     if (self) {
@@ -1466,7 +1466,7 @@
 
 @end
 
-@interface AMQProtocolQueueDeclareOk ()
+@interface AMQQueueDeclareOk ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
 @property (nonnull, copy, nonatomic, readwrite) AMQLong *messageCount;
 @property (nonnull, copy, nonatomic, readwrite) AMQLong *consumerCount;
@@ -1474,7 +1474,7 @@
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolQueueDeclareOk
+@implementation AMQQueueDeclareOk
 
 + (NSArray *)frame {
     return @[[AMQShortstr class],
@@ -1527,18 +1527,18 @@
 
 @end
 
-@interface AMQProtocolQueueBind ()
+@interface AMQQueueBind ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
-@property (nonatomic, readwrite) AMQProtocolQueueBindOptions options;
+@property (nonatomic, readwrite) AMQQueueBindOptions options;
 @property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolQueueBind
+@implementation AMQQueueBind
 
 + (NSArray *)frame {
     return @[[AMQShort class],
@@ -1558,7 +1558,7 @@
                                     queue:(nonnull AMQShortstr *)queue
                                  exchange:(nonnull AMQShortstr *)exchange
                                routingKey:(nonnull AMQShortstr *)routingKey
-                                  options:(AMQProtocolQueueBindOptions)options
+                                  options:(AMQQueueBindOptions)options
                                 arguments:(nonnull AMQTable *)arguments {
     self = [super init];
     if (self) {
@@ -1609,12 +1609,12 @@
 
 @end
 
-@interface AMQProtocolQueueBindOk ()
+@interface AMQQueueBindOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolQueueBindOk
+@implementation AMQQueueBindOk
 
 + (NSArray *)frame {
     return @[];
@@ -1646,7 +1646,7 @@
 
 @end
 
-@interface AMQProtocolQueueUnbind ()
+@interface AMQQueueUnbind ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
@@ -1656,7 +1656,7 @@
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolQueueUnbind
+@implementation AMQQueueUnbind
 
 + (NSArray *)frame {
     return @[[AMQShort class],
@@ -1721,12 +1721,12 @@
 
 @end
 
-@interface AMQProtocolQueueUnbindOk ()
+@interface AMQQueueUnbindOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolQueueUnbindOk
+@implementation AMQQueueUnbindOk
 
 + (NSArray *)frame {
     return @[];
@@ -1758,15 +1758,15 @@
 
 @end
 
-@interface AMQProtocolQueuePurge ()
+@interface AMQQueuePurge ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (nonatomic, readwrite) AMQProtocolQueuePurgeOptions options;
+@property (nonatomic, readwrite) AMQQueuePurgeOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolQueuePurge
+@implementation AMQQueuePurge
 
 + (NSArray *)frame {
     return @[[AMQShort class],
@@ -1781,7 +1781,7 @@
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
-                                  options:(AMQProtocolQueuePurgeOptions)options {
+                                  options:(AMQQueuePurgeOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -1819,13 +1819,13 @@
 
 @end
 
-@interface AMQProtocolQueuePurgeOk ()
+@interface AMQQueuePurgeOk ()
 @property (nonnull, copy, nonatomic, readwrite) AMQLong *messageCount;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolQueuePurgeOk
+@implementation AMQQueuePurgeOk
 
 + (NSArray *)frame {
     return @[[AMQLong class]];
@@ -1866,15 +1866,15 @@
 
 @end
 
-@interface AMQProtocolQueueDelete ()
+@interface AMQQueueDelete ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (nonatomic, readwrite) AMQProtocolQueueDeleteOptions options;
+@property (nonatomic, readwrite) AMQQueueDeleteOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolQueueDelete
+@implementation AMQQueueDelete
 
 + (NSArray *)frame {
     return @[[AMQShort class],
@@ -1889,7 +1889,7 @@
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
-                                  options:(AMQProtocolQueueDeleteOptions)options {
+                                  options:(AMQQueueDeleteOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -1927,13 +1927,13 @@
 
 @end
 
-@interface AMQProtocolQueueDeleteOk ()
+@interface AMQQueueDeleteOk ()
 @property (nonnull, copy, nonatomic, readwrite) AMQLong *messageCount;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolQueueDeleteOk
+@implementation AMQQueueDeleteOk
 
 + (NSArray *)frame {
     return @[[AMQLong class]];
@@ -1974,15 +1974,15 @@
 
 @end
 
-@interface AMQProtocolBasicQos ()
+@interface AMQBasicQos ()
 @property (nonnull, copy, nonatomic, readwrite) AMQLong *prefetchSize;
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *prefetchCount;
-@property (nonatomic, readwrite) AMQProtocolBasicQosOptions options;
+@property (nonatomic, readwrite) AMQBasicQosOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolBasicQos
+@implementation AMQBasicQos
 
 + (NSArray *)frame {
     return @[[AMQLong class],
@@ -1997,7 +1997,7 @@
 
 - (nonnull instancetype)initWithPrefetchSize:(nonnull AMQLong *)prefetchSize
                                prefetchCount:(nonnull AMQShort *)prefetchCount
-                                     options:(AMQProtocolBasicQosOptions)options {
+                                     options:(AMQBasicQosOptions)options {
     self = [super init];
     if (self) {
         self.prefetchSize = prefetchSize;
@@ -2035,12 +2035,12 @@
 
 @end
 
-@interface AMQProtocolBasicQosOk ()
+@interface AMQBasicQosOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolBasicQosOk
+@implementation AMQBasicQosOk
 
 + (NSArray *)frame {
     return @[];
@@ -2072,17 +2072,17 @@
 
 @end
 
-@interface AMQProtocolBasicConsume ()
+@interface AMQBasicConsume ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *consumerTag;
-@property (nonatomic, readwrite) AMQProtocolBasicConsumeOptions options;
+@property (nonatomic, readwrite) AMQBasicConsumeOptions options;
 @property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolBasicConsume
+@implementation AMQBasicConsume
 
 + (NSArray *)frame {
     return @[[AMQShort class],
@@ -2100,7 +2100,7 @@
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
                               consumerTag:(nonnull AMQShortstr *)consumerTag
-                                  options:(AMQProtocolBasicConsumeOptions)options
+                                  options:(AMQBasicConsumeOptions)options
                                 arguments:(nonnull AMQTable *)arguments {
     self = [super init];
     if (self) {
@@ -2147,13 +2147,13 @@
 
 @end
 
-@interface AMQProtocolBasicConsumeOk ()
+@interface AMQBasicConsumeOk ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *consumerTag;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolBasicConsumeOk
+@implementation AMQBasicConsumeOk
 
 + (NSArray *)frame {
     return @[[AMQShortstr class]];
@@ -2194,14 +2194,14 @@
 
 @end
 
-@interface AMQProtocolBasicCancel ()
+@interface AMQBasicCancel ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *consumerTag;
-@property (nonatomic, readwrite) AMQProtocolBasicCancelOptions options;
+@property (nonatomic, readwrite) AMQBasicCancelOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolBasicCancel
+@implementation AMQBasicCancel
 
 + (NSArray *)frame {
     return @[[AMQShortstr class],
@@ -2214,7 +2214,7 @@
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag
-                                    options:(AMQProtocolBasicCancelOptions)options {
+                                    options:(AMQBasicCancelOptions)options {
     self = [super init];
     if (self) {
         self.consumerTag = consumerTag;
@@ -2248,13 +2248,13 @@
 
 @end
 
-@interface AMQProtocolBasicCancelOk ()
+@interface AMQBasicCancelOk ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *consumerTag;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolBasicCancelOk
+@implementation AMQBasicCancelOk
 
 + (NSArray *)frame {
     return @[[AMQShortstr class]];
@@ -2295,16 +2295,16 @@
 
 @end
 
-@interface AMQProtocolBasicPublish ()
+@interface AMQBasicPublish ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
-@property (nonatomic, readwrite) AMQProtocolBasicPublishOptions options;
+@property (nonatomic, readwrite) AMQBasicPublishOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolBasicPublish
+@implementation AMQBasicPublish
 
 + (NSArray *)frame {
     return @[[AMQShort class],
@@ -2321,7 +2321,7 @@
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                  exchange:(nonnull AMQShortstr *)exchange
                                routingKey:(nonnull AMQShortstr *)routingKey
-                                  options:(AMQProtocolBasicPublishOptions)options {
+                                  options:(AMQBasicPublishOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -2363,7 +2363,7 @@
 
 @end
 
-@interface AMQProtocolBasicReturn ()
+@interface AMQBasicReturn ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *replyCode;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *replyText;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
@@ -2372,7 +2372,7 @@
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolBasicReturn
+@implementation AMQBasicReturn
 
 + (NSArray *)frame {
     return @[[AMQShort class],
@@ -2431,17 +2431,17 @@
 
 @end
 
-@interface AMQProtocolBasicDeliver ()
+@interface AMQBasicDeliver ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *consumerTag;
 @property (nonnull, copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
-@property (nonatomic, readwrite) AMQProtocolBasicDeliverOptions options;
+@property (nonatomic, readwrite) AMQBasicDeliverOptions options;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolBasicDeliver
+@implementation AMQBasicDeliver
 
 + (NSArray *)frame {
     return @[[AMQShortstr class],
@@ -2458,7 +2458,7 @@
 
 - (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag
                                 deliveryTag:(nonnull AMQLonglong *)deliveryTag
-                                    options:(AMQProtocolBasicDeliverOptions)options
+                                    options:(AMQBasicDeliverOptions)options
                                    exchange:(nonnull AMQShortstr *)exchange
                                  routingKey:(nonnull AMQShortstr *)routingKey {
     self = [super init];
@@ -2506,15 +2506,15 @@
 
 @end
 
-@interface AMQProtocolBasicGet ()
+@interface AMQBasicGet ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (nonatomic, readwrite) AMQProtocolBasicGetOptions options;
+@property (nonatomic, readwrite) AMQBasicGetOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolBasicGet
+@implementation AMQBasicGet
 
 + (NSArray *)frame {
     return @[[AMQShort class],
@@ -2529,7 +2529,7 @@
 
 - (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
                                     queue:(nonnull AMQShortstr *)queue
-                                  options:(AMQProtocolBasicGetOptions)options {
+                                  options:(AMQBasicGetOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -2567,9 +2567,9 @@
 
 @end
 
-@interface AMQProtocolBasicGetOk ()
+@interface AMQBasicGetOk ()
 @property (nonnull, copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
-@property (nonatomic, readwrite) AMQProtocolBasicGetOkOptions options;
+@property (nonatomic, readwrite) AMQBasicGetOkOptions options;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
 @property (nonnull, copy, nonatomic, readwrite) AMQLong *messageCount;
@@ -2577,7 +2577,7 @@
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolBasicGetOk
+@implementation AMQBasicGetOk
 
 + (NSArray *)frame {
     return @[[AMQLonglong class],
@@ -2593,7 +2593,7 @@
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
-                                    options:(AMQProtocolBasicGetOkOptions)options
+                                    options:(AMQBasicGetOkOptions)options
                                    exchange:(nonnull AMQShortstr *)exchange
                                  routingKey:(nonnull AMQShortstr *)routingKey
                                messageCount:(nonnull AMQLong *)messageCount {
@@ -2642,13 +2642,13 @@
 
 @end
 
-@interface AMQProtocolBasicGetEmpty ()
+@interface AMQBasicGetEmpty ()
 @property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reserved1;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolBasicGetEmpty
+@implementation AMQBasicGetEmpty
 
 + (NSArray *)frame {
     return @[[AMQShortstr class]];
@@ -2689,14 +2689,14 @@
 
 @end
 
-@interface AMQProtocolBasicAck ()
+@interface AMQBasicAck ()
 @property (nonnull, copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
-@property (nonatomic, readwrite) AMQProtocolBasicAckOptions options;
+@property (nonatomic, readwrite) AMQBasicAckOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolBasicAck
+@implementation AMQBasicAck
 
 + (NSArray *)frame {
     return @[[AMQLonglong class],
@@ -2709,7 +2709,7 @@
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
-                                    options:(AMQProtocolBasicAckOptions)options {
+                                    options:(AMQBasicAckOptions)options {
     self = [super init];
     if (self) {
         self.deliveryTag = deliveryTag;
@@ -2743,14 +2743,14 @@
 
 @end
 
-@interface AMQProtocolBasicReject ()
+@interface AMQBasicReject ()
 @property (nonnull, copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
-@property (nonatomic, readwrite) AMQProtocolBasicRejectOptions options;
+@property (nonatomic, readwrite) AMQBasicRejectOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolBasicReject
+@implementation AMQBasicReject
 
 + (NSArray *)frame {
     return @[[AMQLonglong class],
@@ -2763,7 +2763,7 @@
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
-                                    options:(AMQProtocolBasicRejectOptions)options {
+                                    options:(AMQBasicRejectOptions)options {
     self = [super init];
     if (self) {
         self.deliveryTag = deliveryTag;
@@ -2797,13 +2797,13 @@
 
 @end
 
-@interface AMQProtocolBasicRecoverAsync ()
-@property (nonatomic, readwrite) AMQProtocolBasicRecoverAsyncOptions options;
+@interface AMQBasicRecoverAsync ()
+@property (nonatomic, readwrite) AMQBasicRecoverAsyncOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolBasicRecoverAsync
+@implementation AMQBasicRecoverAsync
 
 + (NSArray *)frame {
     return @[[AMQOctet class]];
@@ -2814,7 +2814,7 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithOptions:(AMQProtocolBasicRecoverAsyncOptions)options {
+- (nonnull instancetype)initWithOptions:(AMQBasicRecoverAsyncOptions)options {
     self = [super init];
     if (self) {
         self.options = options;
@@ -2844,13 +2844,13 @@
 
 @end
 
-@interface AMQProtocolBasicRecover ()
-@property (nonatomic, readwrite) AMQProtocolBasicRecoverOptions options;
+@interface AMQBasicRecover ()
+@property (nonatomic, readwrite) AMQBasicRecoverOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolBasicRecover
+@implementation AMQBasicRecover
 
 + (NSArray *)frame {
     return @[[AMQOctet class]];
@@ -2861,7 +2861,7 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithOptions:(AMQProtocolBasicRecoverOptions)options {
+- (nonnull instancetype)initWithOptions:(AMQBasicRecoverOptions)options {
     self = [super init];
     if (self) {
         self.options = options;
@@ -2891,12 +2891,12 @@
 
 @end
 
-@interface AMQProtocolBasicRecoverOk ()
+@interface AMQBasicRecoverOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolBasicRecoverOk
+@implementation AMQBasicRecoverOk
 
 + (NSArray *)frame {
     return @[];
@@ -2928,14 +2928,14 @@
 
 @end
 
-@interface AMQProtocolBasicNack ()
+@interface AMQBasicNack ()
 @property (nonnull, copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
-@property (nonatomic, readwrite) AMQProtocolBasicNackOptions options;
+@property (nonatomic, readwrite) AMQBasicNackOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolBasicNack
+@implementation AMQBasicNack
 
 + (NSArray *)frame {
     return @[[AMQLonglong class],
@@ -2948,7 +2948,7 @@
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
-                                    options:(AMQProtocolBasicNackOptions)options {
+                                    options:(AMQBasicNackOptions)options {
     self = [super init];
     if (self) {
         self.deliveryTag = deliveryTag;
@@ -2982,12 +2982,12 @@
 
 @end
 
-@interface AMQProtocolTxSelect ()
+@interface AMQTxSelect ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolTxSelect
+@implementation AMQTxSelect
 
 + (NSArray *)frame {
     return @[];
@@ -3019,12 +3019,12 @@
 
 @end
 
-@interface AMQProtocolTxSelectOk ()
+@interface AMQTxSelectOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolTxSelectOk
+@implementation AMQTxSelectOk
 
 + (NSArray *)frame {
     return @[];
@@ -3056,12 +3056,12 @@
 
 @end
 
-@interface AMQProtocolTxCommit ()
+@interface AMQTxCommit ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolTxCommit
+@implementation AMQTxCommit
 
 + (NSArray *)frame {
     return @[];
@@ -3093,12 +3093,12 @@
 
 @end
 
-@interface AMQProtocolTxCommitOk ()
+@interface AMQTxCommitOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolTxCommitOk
+@implementation AMQTxCommitOk
 
 + (NSArray *)frame {
     return @[];
@@ -3130,12 +3130,12 @@
 
 @end
 
-@interface AMQProtocolTxRollback ()
+@interface AMQTxRollback ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolTxRollback
+@implementation AMQTxRollback
 
 + (NSArray *)frame {
     return @[];
@@ -3167,12 +3167,12 @@
 
 @end
 
-@interface AMQProtocolTxRollbackOk ()
+@interface AMQTxRollbackOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolTxRollbackOk
+@implementation AMQTxRollbackOk
 
 + (NSArray *)frame {
     return @[];
@@ -3204,13 +3204,13 @@
 
 @end
 
-@interface AMQProtocolConfirmSelect ()
-@property (nonatomic, readwrite) AMQProtocolConfirmSelectOptions options;
+@interface AMQConfirmSelect ()
+@property (nonatomic, readwrite) AMQConfirmSelectOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolConfirmSelect
+@implementation AMQConfirmSelect
 
 + (NSArray *)frame {
     return @[[AMQOctet class]];
@@ -3221,7 +3221,7 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithOptions:(AMQProtocolConfirmSelectOptions)options {
+- (nonnull instancetype)initWithOptions:(AMQConfirmSelectOptions)options {
     self = [super init];
     if (self) {
         self.options = options;
@@ -3251,12 +3251,12 @@
 
 @end
 
-@interface AMQProtocolConfirmSelectOk ()
+@interface AMQConfirmSelectOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQProtocolConfirmSelectOk
+@implementation AMQConfirmSelectOk
 
 + (NSArray *)frame {
     return @[];

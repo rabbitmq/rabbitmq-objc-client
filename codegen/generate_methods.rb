@@ -32,7 +32,7 @@ class GenerateMethods
       class_part = method.xpath('..').first[:name].capitalize
       has_content_value = objc_boolean(method[:content] == "1")
       should_halt_on_receipt_value =
-        objc_boolean(%w(AMQProtocolConnectionClose AMQProtocolConnectionCloseOk).include?(class_name))
+        objc_boolean(%w(AMQConnectionClose AMQConnectionCloseOk).include?(class_name))
       acc + template('methods_implementation_template').result(binding)
     }
   end
@@ -55,7 +55,7 @@ class GenerateMethods
     <<-OBJC
 #{header_start}
 @import Mantle;
-#import "AMQProtocolValues.h"
+#import "AMQValues.h"
 
       OBJC
   end
@@ -63,7 +63,7 @@ class GenerateMethods
   def implementation
     <<-OBJC
 #{implementation_start}
-#import "AMQProtocolMethods.h"
+#import "AMQMethods.h"
 
     OBJC
   end

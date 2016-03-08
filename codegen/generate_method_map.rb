@@ -11,7 +11,7 @@ class GenerateMethodMap
     <<-OBJC
 #{header_start}
 
-@interface AMQProtocolMethodMap : NSObject
+@interface AMQMethodMap : NSObject
 + (NSDictionary *)methodMap;
 @end
     OBJC
@@ -27,10 +27,10 @@ class GenerateMethodMap
     }
     <<-OBJC
 #{implementation_start}
-#import "AMQProtocolMethodMap.h"
-#import "AMQProtocolMethods.h"
+#import "AMQMethodMap.h"
+#import "AMQMethods.h"
 
-@implementation AMQProtocolMethodMap
+@implementation AMQMethodMap
 + (NSDictionary *)methodMap {
     return @{#{pairs.join(",\n             ")}};
 }

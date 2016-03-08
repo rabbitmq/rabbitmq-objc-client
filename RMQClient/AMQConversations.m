@@ -1,6 +1,6 @@
-#import "AMQProtocolConversations.h"
+#import "AMQConversations.h"
 
-@implementation AMQProtocolConnectionStart (Conversation)
+@implementation AMQConnectionStart (Conversation)
 
 - (id<AMQMethod>)replyWithConfig:(RMQConnectionConfig *)config {
     AMQTable *capabilities = [[AMQTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
@@ -16,7 +16,7 @@
                                     @"version"     : [[AMQLongstr alloc] init:@"0.0.1"],
                                     @"information" : [[AMQLongstr alloc] init:@"https://github.com/camelpunch/RMQClient"]}];
 
-    return [[AMQProtocolConnectionStartOk alloc] initWithClientProperties:clientProperties
+    return [[AMQConnectionStartOk alloc] initWithClientProperties:clientProperties
                                                                 mechanism:[[AMQShortstr alloc] init:@"PLAIN"]
                                                                  response:config.credentials
                                                                    locale:[[AMQShortstr alloc] init:@"en_GB"]];
@@ -24,11 +24,11 @@
 
 @end
 
-@implementation AMQProtocolConnectionTune (Conversation)
+@implementation AMQConnectionTune (Conversation)
 
 - (id<AMQMethod>)replyWithConfig:(RMQConnectionConfig *)config {
     RMQConnectionConfig *client = config;
-    AMQProtocolConnectionTune *server = self;
+    AMQConnectionTune *server = self;
 
     NSNumber *channelMax = [self negotiateBetweenClientValue:client.channelMax
                                                  serverValue:@(server.channelMax.integerValue)];
@@ -36,7 +36,7 @@
                                                  serverValue:@(server.frameMax.integerValue)];
     NSNumber *heartbeat  = [self negotiateBetweenClientValue:client.heartbeat
                                                  serverValue:@(server.heartbeat.integerValue)];
-    return [[AMQProtocolConnectionTuneOk alloc] initWithChannelMax:[[AMQShort alloc] init:channelMax.integerValue]
+    return [[AMQConnectionTuneOk alloc] initWithChannelMax:[[AMQShort alloc] init:channelMax.integerValue]
                                                           frameMax:[[AMQLong alloc] init:frameMax.integerValue]
                                                          heartbeat:[[AMQShort alloc] init:heartbeat.integerValue]];
 }
@@ -52,20 +52,20 @@
 
 @end
 
-@implementation AMQProtocolConnectionTuneOk (Conversation)
+@implementation AMQConnectionTuneOk (Conversation)
 
 - (id<AMQMethod>)nextRequest {
-    return [[AMQProtocolConnectionOpen alloc] initWithVirtualHost:[[AMQShortstr alloc] init:@"/"]
+    return [[AMQConnectionOpen alloc] initWithVirtualHost:[[AMQShortstr alloc] init:@"/"]
                                                         reserved1:[[AMQShortstr alloc] init:@""]
                                                           options:0];
 }
 
 @end
 
-@implementation AMQProtocolConnectionClose (Conversation)
+@implementation AMQConnectionClose (Conversation)
 
 - (id<AMQMethod>)replyWithConfig:(RMQConnectionConfig *)config {
-    return [AMQProtocolConnectionCloseOk new];
+    return [AMQConnectionCloseOk new];
 }
 
 @end

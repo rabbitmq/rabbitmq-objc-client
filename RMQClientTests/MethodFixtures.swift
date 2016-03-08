@@ -1,7 +1,7 @@
 import UIKit
 
 class MethodFixtures {
-    static func connectionStart() -> AMQProtocolConnectionStart {
+    static func connectionStart() -> AMQConnectionStart {
         let dict: [String : AMQBoolean] = [
             "authentication_failure_close" : AMQBoolean(true),
             "basic.nack"                   : AMQBoolean(true),
@@ -13,7 +13,7 @@ class MethodFixtures {
             "publisher_confirms"           : AMQBoolean(true)
         ]
         let capabilities = AMQTable(dict)
-        return AMQProtocolConnectionStart(
+        return AMQConnectionStart(
             versionMajor: AMQOctet(0),
             versionMinor: AMQOctet(9),
             serverProperties: AMQTable([
@@ -30,7 +30,7 @@ class MethodFixtures {
         )
     }
 
-    static func connectionStartOk(user user: String = "foo", password: String = "bar") -> AMQProtocolConnectionStartOk {
+    static func connectionStartOk(user user: String = "foo", password: String = "bar") -> AMQConnectionStartOk {
         let capabilities = AMQTable([
             "publisher_confirms": AMQBoolean(true),
             "consumer_cancel_notify": AMQBoolean(true),
@@ -46,7 +46,7 @@ class MethodFixtures {
             "version"     : AMQLongstr("0.0.1"),
             "information" : AMQLongstr("https://github.com/camelpunch/RMQClient")
             ])
-        return AMQProtocolConnectionStartOk(
+        return AMQConnectionStartOk(
             clientProperties: clientProperties,
             mechanism: AMQShortstr("PLAIN"),
             response: AMQCredentials(username: user, password: password),
@@ -54,24 +54,24 @@ class MethodFixtures {
         )
     }
 
-    static func connectionTune() -> AMQProtocolConnectionTune {
-        return AMQProtocolConnectionTune(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
+    static func connectionTune() -> AMQConnectionTune {
+        return AMQConnectionTune(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
     }
 
-    static func connectionTuneOk() -> AMQProtocolConnectionTuneOk {
-        return AMQProtocolConnectionTuneOk(channelMax: AMQShort(65535), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
+    static func connectionTuneOk() -> AMQConnectionTuneOk {
+        return AMQConnectionTuneOk(channelMax: AMQShort(65535), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
     }
 
-    static func connectionOpen() -> AMQProtocolConnectionOpen {
-        return AMQProtocolConnectionOpen(virtualHost: AMQShortstr("/"), reserved1: AMQShortstr(""), options: AMQProtocolConnectionOpenOptions.NoOptions)
+    static func connectionOpen() -> AMQConnectionOpen {
+        return AMQConnectionOpen(virtualHost: AMQShortstr("/"), reserved1: AMQShortstr(""), options: AMQConnectionOpenOptions.NoOptions)
     }
 
-    static func connectionOpenOk() -> AMQProtocolConnectionOpenOk {
-        return AMQProtocolConnectionOpenOk(reserved1: AMQShortstr(""))
+    static func connectionOpenOk() -> AMQConnectionOpenOk {
+        return AMQConnectionOpenOk(reserved1: AMQShortstr(""))
     }
 
-    static func connectionClose() -> AMQProtocolConnectionClose {
-        return AMQProtocolConnectionClose(
+    static func connectionClose() -> AMQConnectionClose {
+        return AMQConnectionClose(
             replyCode: AMQShort(200),
             replyText: AMQShortstr("Goodbye"),
             classId: AMQShort(0),
@@ -79,36 +79,36 @@ class MethodFixtures {
         )
     }
 
-    static func connectionCloseOk() -> AMQProtocolConnectionCloseOk {
-        return AMQProtocolConnectionCloseOk()
+    static func connectionCloseOk() -> AMQConnectionCloseOk {
+        return AMQConnectionCloseOk()
     }
 
-    static func channelOpen() -> AMQProtocolChannelOpen {
-        return AMQProtocolChannelOpen(reserved1: AMQShortstr(""))
+    static func channelOpen() -> AMQChannelOpen {
+        return AMQChannelOpen(reserved1: AMQShortstr(""))
     }
 
-    static func channelOpenOk() -> AMQProtocolChannelOpenOk {
-        return AMQProtocolChannelOpenOk(reserved1: AMQLongstr(""))
+    static func channelOpenOk() -> AMQChannelOpenOk {
+        return AMQChannelOpenOk(reserved1: AMQLongstr(""))
     }
 
-    static func queueDeclare(name: String) -> AMQProtocolQueueDeclare {
-        return AMQProtocolQueueDeclare(
+    static func queueDeclare(name: String) -> AMQQueueDeclare {
+        return AMQQueueDeclare(
             reserved1: AMQShort(0),
             queue: AMQShortstr(name),
-            options: AMQProtocolQueueDeclareOptions.Durable,
+            options: AMQQueueDeclareOptions.Durable,
             arguments: AMQTable([:])
         )
     }
 
-    static func basicGet() -> AMQProtocolBasicGet {
-        return AMQProtocolBasicGet(reserved1: AMQShort(0), queue: AMQShortstr("my.queue"), options: AMQProtocolBasicGetOptions.NoOptions)
+    static func basicGet() -> AMQBasicGet {
+        return AMQBasicGet(reserved1: AMQShort(0), queue: AMQShortstr("my.queue"), options: AMQBasicGetOptions.NoOptions)
     }
 
-    static func basicGetOk(queueName: String) -> AMQProtocolBasicGetOk {
-        return AMQProtocolBasicGetOk(deliveryTag: AMQLonglong(0), options: AMQProtocolBasicGetOkOptions.NoOptions, exchange: AMQShortstr(""), routingKey: AMQShortstr(queueName), messageCount: AMQLong(0))
+    static func basicGetOk(queueName: String) -> AMQBasicGetOk {
+        return AMQBasicGetOk(deliveryTag: AMQLonglong(0), options: AMQBasicGetOkOptions.NoOptions, exchange: AMQShortstr(""), routingKey: AMQShortstr(queueName), messageCount: AMQLong(0))
     }
 
-    static func basicDeliver() -> AMQProtocolBasicDeliver {
-        return AMQProtocolBasicDeliver(consumerTag: AMQShortstr(""), deliveryTag: AMQLonglong(0), options: AMQProtocolBasicDeliverOptions.NoOptions, exchange: AMQShortstr(""), routingKey: AMQShortstr(""))
+    static func basicDeliver() -> AMQBasicDeliver {
+        return AMQBasicDeliver(consumerTag: AMQShortstr(""), deliveryTag: AMQLonglong(0), options: AMQBasicDeliverOptions.NoOptions, exchange: AMQShortstr(""), routingKey: AMQShortstr(""))
     }
 }

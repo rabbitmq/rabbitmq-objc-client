@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "RMQTransport.h"
 #import "RMQChannelAllocator.h"
-#import "AMQProtocolValues.h"
+#import "AMQValues.h"
 #import "RMQFrameHandler.h"
 #import "RMQSender.h"
 
