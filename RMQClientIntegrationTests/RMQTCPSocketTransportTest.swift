@@ -11,6 +11,15 @@ class RMQTCPSocketTransportTest: XCTestCase {
             .sendingPreambleStimulatesAConnectionStart()
     }
 
+    func testConnectBlocksUntilConnectBlockCalled() {
+        let timeBefore = NSDate()
+        transport.connect {
+            usleep(200000)
+        }
+        let elapsed = NSDate().timeIntervalSinceDate(timeBefore)
+        XCTAssert(elapsed > 0.2)
+    }
+
     func testIsNotConnectedWhenSocketDisconnectedOutsideOfCloseBlock() {
         let error = NSError(domain: "", code: 0, userInfo: [:])
         transport.socketDidDisconnect(GCDAsyncSocket(), withError: error)

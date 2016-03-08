@@ -10,6 +10,8 @@ long closeTag   = UINT32_MAX + 2;
 @property (nonatomic, readwrite) BOOL _isConnected;
 @property (nonnull, nonatomic, readwrite) GCDAsyncSocket *socket;
 @property (nonnull, nonatomic, readwrite) NSMutableDictionary *callbacks;
+@property (nonatomic, readwrite) dispatch_semaphore_t connectSemaphore;
+
 @end
 
 @implementation RMQTCPSocketTransport
@@ -26,6 +28,7 @@ long closeTag   = UINT32_MAX + 2;
         self.host = host;
         self.port = port;
         self.callbacks = callbacks;
+        self.connectSemaphore = nil;
     }
     return self;
 }
@@ -37,12 +40,16 @@ long closeTag   = UINT32_MAX + 2;
 }
 
 - (void)connect:(void (^)())onConnect {
+    self.connectSemaphore = dispatch_semaphore_create(0);
+
     NSError *error = nil;
     [self.callbacks setObject:[onConnect copy] forKey:@(connectTag)];
     if (![self.socket connectToHost:self.host onPort:self.port.unsignedIntegerValue error:&error]) {
         NSLog(@"*************** Something is very wrong: %@", error);
         [self.callbacks removeObjectForKey:@(connectTag)];
     }
+
+    dispatch_semaphore_wait(self.connectSemaphore, DISPATCH_TIME_FOREVER);
 }
 
 - (void)close:(void (^)())onClose {
@@ -127,6 +134,7 @@ struct __attribute__((__packed__)) AMQPHeader {
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
     self._isConnected = true;
     [self invokeZeroArityCallback:connectTag];
+    dispatch_semaphore_signal(self.connectSemaphore);
 }
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err {
