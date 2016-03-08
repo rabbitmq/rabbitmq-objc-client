@@ -25,8 +25,7 @@ class IntegrationTests: XCTestCase {
         defer { conn.close() }
 
         let ch = conn.createChannel()
-        let qname = "rmqclient.integration-tests.\(NSProcessInfo.processInfo().globallyUniqueString)"
-        let q = ch.queue(qname, autoDelete: true, exclusive: false)
+        let q = ch.queue(generatedQueueName(), autoDelete: true, exclusive: false)
 
         q.publish(messageContent)
 
@@ -60,8 +59,7 @@ class IntegrationTests: XCTestCase {
         defer { conn.close() }
 
         let ch = conn.createChannel()
-        let qname = "rmqclient.integration-tests.\(NSProcessInfo.processInfo().globallyUniqueString)"
-        let q = ch.queue(qname, autoDelete: true, exclusive: false)
+        let q = ch.queue(generatedQueueName(), autoDelete: true, exclusive: false)
 
         var delivered = RMQContentMessage(deliveryInfo: [:], metadata: [:], content: "not delivered yet")
         q.subscribe { (message: RMQMessage) in
@@ -82,5 +80,9 @@ class IntegrationTests: XCTestCase {
         )
 
         XCTAssertEqual(expected, delivered)
+    }
+
+    func generatedQueueName() -> String {
+        return "rmqclient.integration-tests.\(NSProcessInfo.processInfo().globallyUniqueString)"
     }
 }
