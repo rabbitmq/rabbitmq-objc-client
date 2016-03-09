@@ -79,6 +79,7 @@
 @protocol AMQMethod <NSObject, AMQPayload>
 + (nonnull NSArray *)frame;
 - (nonnull NSNumber *)classID;
+- (nonnull NSNumber *)methodID;
 - (nonnull instancetype)initWithDecodedFrame:(nonnull NSArray *)frame;
 - (BOOL)hasContent;
 - (BOOL)shouldHaltOnReceipt;

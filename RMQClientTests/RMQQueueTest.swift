@@ -159,7 +159,7 @@ class RMQQueueTest: XCTestCase {
             handlerCalled = true
         }
 
-        let message = RMQContentMessage(deliveryInfo: [:], metadata: [:], content: "Hi there!")
+        let message = RMQContentMessage(consumerTag: "", deliveryTag: 123, content: "Hi there!")
         channel.lastReceivedBasicConsumeBlock!(message)
 
         XCTAssert(handlerCalled)

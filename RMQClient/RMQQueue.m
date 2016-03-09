@@ -70,14 +70,16 @@
         NSLog(@"\n**** ERROR WAITING FOR GET-OK %@", error);
     }
 
-    AMQFrameset *getOk = self.sender.lastWaitedUponFrameset;
+    AMQFrameset *getOkFrameset = self.sender.lastWaitedUponFrameset;
 
-    NSString *content = [[NSString alloc] initWithData:getOk.contentData
+    NSString *content = [[NSString alloc] initWithData:getOkFrameset.contentData
                                               encoding:NSUTF8StringEncoding];
 
-    return [[RMQContentMessage alloc] initWithDeliveryInfo:@{@"consumer_tag": @"foo"}
-                                                  metadata:@{@"foo": @"bar"}
-                                                   content:content];
+    AMQBasicGetOk *getOk = (AMQBasicGetOk *)getOkFrameset.method;
+
+    return [[RMQContentMessage alloc] initWithConsumerTag:@""
+                                              deliveryTag:@(getOk.deliveryTag.integerValue)
+                                                  content:content];
 }
 
 - (void)subscribe:(void (^)(id<RMQMessage> _Nonnull))handler {

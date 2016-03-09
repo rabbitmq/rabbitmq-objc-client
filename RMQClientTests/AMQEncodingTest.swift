@@ -16,6 +16,9 @@ import XCTest
     func classID() -> NSNumber {
         return 999
     }
+    func methodID() -> NSNumber {
+        return 999
+    }
     func hasContent() -> Bool {
         return false
     }

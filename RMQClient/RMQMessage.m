@@ -1,19 +1,19 @@
 #import "RMQMessage.h"
 
 @interface RMQContentMessage ()
-@property (nonatomic, copy, readwrite) NSDictionary *deliveryInfo;
-@property (nonatomic, copy, readwrite) NSDictionary *metadata;
-@property (nonatomic, copy, readwrite) NSString *content;
+@property (nonnull, nonatomic, readwrite) NSString *consumerTag;
+@property (nonnull, nonatomic, readwrite) NSNumber *deliveryTag;
+@property (nonnull, nonatomic, readwrite) NSString *content;
 @end
 
 @implementation RMQContentMessage
-- (instancetype)initWithDeliveryInfo:(NSDictionary *)deliveryInfo
-                            metadata:(NSDictionary *)metadata
-                             content:(NSString *)content {
+- (instancetype)initWithConsumerTag:(NSString *)consumerTag
+                        deliveryTag:(NSNumber *)deliveryTag
+                            content:(NSString *)content {
     self = [super init];
     if (self) {
-        self.deliveryInfo = deliveryInfo;
-        self.metadata = metadata;
+        self.consumerTag = consumerTag;
+        self.deliveryTag = deliveryTag;
         self.content = content;
     }
     return self;
@@ -21,7 +21,9 @@
 @end
 
 @interface RMQEmptyMessage ()
-@property (nonnull, nonatomic, copy, readwrite) NSString *content;
+@property (nonnull, nonatomic, readwrite) NSString *consumerTag;
+@property (nonnull, nonatomic, readwrite) NSNumber *deliveryTag;
+@property (nonnull, nonatomic, readwrite) NSString *content;
 @end
 
 @implementation RMQEmptyMessage
@@ -30,6 +32,8 @@
     self = [super init];
     if (self) {
         self.content = @"";
+        self.consumerTag = @"";
+        self.deliveryTag = @0;
     }
     return self;
 }

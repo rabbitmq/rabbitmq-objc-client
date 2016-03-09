@@ -2,6 +2,7 @@
 #import "AMQMethodDecoder.h"
 #import "AMQValues.h"
 #import "AMQMethods.h"
+#import "AMQMethodMap.h"
 
 @interface RMQDispatchQueueChannel ()
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
@@ -67,9 +68,16 @@
 
 - (void)handleFrameset:(AMQFrameset *)frameset {
     NSString *content = [[NSString alloc] initWithData:frameset.contentData encoding:NSUTF8StringEncoding];
-    RMQContentMessage *message = [[RMQContentMessage alloc] initWithDeliveryInfo:@{@"consumer_tag" : @"foo"}
-                                                                        metadata:@{@"foo" : @"bar"}
-                                                                         content:content];
+    Class methodType = AMQMethodMap.methodMap[@[frameset.method.classID, frameset.method.methodID]];
+    RMQContentMessage *message;
+    if (methodType == [AMQBasicDeliver class]) {
+        AMQBasicDeliver *deliver = (AMQBasicDeliver *)frameset.method;
+        message = [[RMQContentMessage alloc] initWithConsumerTag:deliver.consumerTag.stringValue
+                                                     deliveryTag:@(deliver.deliveryTag.integerValue)
+                                                         content:content];
+    } else {
+        message = [[RMQContentMessage alloc] initWithConsumerTag:@"" deliveryTag:@0 content:@""];
+    }
     self.lastConsumer(message);
 }
 @end

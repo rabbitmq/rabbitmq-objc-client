@@ -30,22 +30,18 @@ class RMQDispatchQueueChannelTest: XCTestCase {
         let sender = SenderSpy()
         let channel = RMQDispatchQueueChannel(432, sender: sender)
 
-        var consumedMessage = RMQContentMessage(deliveryInfo: [:], metadata: [:], content: "Not consumed yet")
+        var consumedMessage = RMQContentMessage(consumerTag: "", deliveryTag: 0, content: "Not consumed yet")
         channel.basicConsume("somequeue") { message in
             consumedMessage = message as! RMQContentMessage
         }
 
-        let method = MethodFixtures.basicDeliver()
-        let header = AMQContentHeader(classID: 2, bodySize: 123, properties: [])
+        let method = MethodFixtures.basicDeliver(consumerTag: "foo", deliveryTag: 123)
+        let header = AMQContentHeader(classID: method.classID(), bodySize: 123, properties: [])
         let body = AMQContentBody(data: "Consumed!".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let frameset = AMQFrameset(channelNumber: 432, method: method, contentHeader: header, contentBodies: [body])
-        channel.handleFrameset(frameset)
+        let incomingFrameset = AMQFrameset(channelNumber: 432, method: method, contentHeader: header, contentBodies: [body])
+        channel.handleFrameset(incomingFrameset)
 
-        let expectedMessage = RMQContentMessage(
-            deliveryInfo: ["consumer_tag": "foo"],
-            metadata: ["foo": "bar"],
-            content: "Consumed!"
-        )
+        let expectedMessage = RMQContentMessage(consumerTag: "foo", deliveryTag: 123, content: "Consumed!")
         XCTAssertEqual(expectedMessage, consumedMessage)
     }
     

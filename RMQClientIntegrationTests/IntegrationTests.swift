@@ -31,15 +31,7 @@ class IntegrationTests: XCTestCase {
 
         let message = q.pop() as! RMQContentMessage
 
-        let expectedInfo = ["consumer_tag": "foo"]
-        let expectedMeta = ["foo": "bar"]
-
-        let expected = RMQContentMessage(
-            deliveryInfo: expectedInfo,
-            metadata: expectedMeta,
-            content: messageContent
-        )
-
+        let expected = RMQContentMessage(consumerTag: "", deliveryTag: 1, content: messageContent)
         XCTAssertEqual(expected, message)
     }
 
@@ -61,7 +53,7 @@ class IntegrationTests: XCTestCase {
         let ch = conn.createChannel()
         let q = ch.queue(generatedQueueName(), autoDelete: true, exclusive: false)
 
-        var delivered = RMQContentMessage(deliveryInfo: [:], metadata: [:], content: "not delivered yet")
+        var delivered = RMQContentMessage(consumerTag: "", deliveryTag: 0, content: "not delivered yet")
         q.subscribe { (message: RMQMessage) in
             delivered = message as! RMQContentMessage
         }
@@ -70,16 +62,8 @@ class IntegrationTests: XCTestCase {
 
         XCTAssert(TestHelper.pollUntil { return delivered.content != "not delivered yet" })
 
-        let expectedInfo = ["consumer_tag": "foo"]
-        let expectedMeta = ["foo": "bar"]
-
-        let expected = RMQContentMessage(
-            deliveryInfo: expectedInfo,
-            metadata: expectedMeta,
-            content: "my message"
-        )
-
-        XCTAssertEqual(expected, delivered)
+        XCTAssertEqual(1, delivered.deliveryTag)
+        XCTAssertEqual("my message", delivered.content)
     }
 
     func generatedQueueName() -> String {
