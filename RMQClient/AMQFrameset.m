@@ -11,9 +11,9 @@
 @implementation AMQFrameset
 
 - (instancetype)initWithChannelNumber:(NSNumber *)channelNumber
-                           method:(id<AMQMethod>)method
-                    contentHeader:(AMQContentHeader *)contentHeader
-                    contentBodies:(NSArray *)contentBodies {
+                               method:(id<AMQMethod>)method
+                        contentHeader:(AMQContentHeader *)contentHeader
+                        contentBodies:(NSArray *)contentBodies {
     self = [super init];
     if (self) {
         self.channelNumber = channelNumber;

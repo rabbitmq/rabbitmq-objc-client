@@ -7,8 +7,8 @@
 @property (nonnull, nonatomic, copy, readonly) NSNumber *channelNumber;
 @property (nonnull, nonatomic, readonly) NSArray *frames;
 - (nonnull instancetype)initWithChannelNumber:(nonnull NSNumber *)channelNumber
-                                   method:(nonnull id<AMQMethod>)method
-                            contentHeader:(nonnull AMQContentHeader *)contentHeader
-                            contentBodies:(nonnull NSArray *)contentBodies;
+                                       method:(nonnull id<AMQMethod>)method
+                                contentHeader:(nonnull AMQContentHeader *)contentHeader
+                                contentBodies:(nonnull NSArray *)contentBodies;
 - (nonnull NSData *)contentData;
 @end
