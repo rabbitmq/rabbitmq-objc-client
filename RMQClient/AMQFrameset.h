@@ -9,5 +9,7 @@
                                        method:(nonnull id<AMQMethod>)method
                                 contentHeader:(nonnull AMQContentHeader *)contentHeader
                                 contentBodies:(nonnull NSArray *)contentBodies;
+- (nonnull instancetype)initWithChannelNumber:(nonnull NSNumber *)channelNumber
+                                       method:(nonnull id<AMQMethod>)method;
 - (nonnull NSData *)contentData;
 @end

@@ -7,7 +7,7 @@ class RMQReaderLoopTest: XCTestCase {
         let frameHandler = FrameHandlerSpy()
         let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
         let method = MethodFixtures.channelOpenOk()
-        let expectedFrameset = AMQFrameset(channelNumber: 42, method: method, contentHeader: AMQContentHeaderNone(), contentBodies: [])
+        let expectedFrameset = AMQFrameset(channelNumber: 42, method: method)
 
         readerLoop.runOnce()
 
@@ -26,7 +26,7 @@ class RMQReaderLoopTest: XCTestCase {
         let frameHandler = FrameHandlerSpy()
         let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
         let method = MethodFixtures.connectionStart()
-        let expectedFrameset = AMQFrameset(channelNumber: 42, method: method, contentHeader: AMQContentHeaderNone(), contentBodies: [])
+        let expectedFrameset = AMQFrameset(channelNumber: 42, method: method)
 
         readerLoop.runOnce()
 
@@ -60,12 +60,7 @@ class RMQReaderLoopTest: XCTestCase {
             contentBodies: [content1, content2]
         )
         let nonContent = nonContentPayload()
-        let expectedNonContentFrameset = AMQFrameset(
-            channelNumber: 42,
-            method: nonContent,
-            contentHeader: AMQContentHeaderNone(),
-            contentBodies: []
-        )
+        let expectedNonContentFrameset = AMQFrameset(channelNumber: 42, method: nonContent)
 
         readerLoop.runOnce()
 

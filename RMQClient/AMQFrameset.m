@@ -24,6 +24,14 @@
     return self;
 }
 
+- (instancetype)initWithChannelNumber:(NSNumber *)channelNumber
+                               method:(id<AMQMethod>)method {
+    return [self initWithChannelNumber:channelNumber
+                                method:method
+                         contentHeader:[AMQContentHeaderNone new]
+                         contentBodies:@[]];
+}
+
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQFrame alloc] initWithChannelNumber:self.channelNumber payload:self.method].amqEncoded];

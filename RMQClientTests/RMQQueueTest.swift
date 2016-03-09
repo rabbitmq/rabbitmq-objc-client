@@ -103,12 +103,7 @@ class RMQQueueTest: XCTestCase {
             queue: AMQShortstr("great.queue"),
             options: AMQBasicGetOptions.NoOptions
         )
-        let expectedFrameset = AMQFrameset(
-            channelNumber: 42,
-            method: get,
-            contentHeader: AMQContentHeaderNone(),
-            contentBodies: []
-        )
+        let expectedFrameset = AMQFrameset(channelNumber: 42, method: get)
 
         XCTAssertEqual(expectedFrameset, sender.sentFramesets.last!)
     }

@@ -3,18 +3,21 @@ import XCTest
 class FramesetRoutingTest: XCTestCase {
 
     func testConsumerTriggeredWhenCorrectChannelAllocated() {
-        let allocator = RMQMultipleChannelAllocator(sender: SenderSpy())
+        let sender = SenderSpy()
+        let allocator = RMQMultipleChannelAllocator(sender: sender)
 
         let frameset = AMQFrameset(
             channelNumber: 1,
-            method: MethodFixtures.queueDeclare("foo"),
-            contentHeader: AMQContentHeaderNone(),
-            contentBodies: []
+            method: MethodFixtures.basicDeliver(consumerTag: "atag4u", deliveryTag: 1)
         )
 
         allocator.allocate()          // 0
         let ch = allocator.allocate() // 1
 
+        sender.lastWaitedUponFrameset = AMQFrameset(
+            channelNumber: 1,
+            method: AMQBasicConsumeOk(consumerTag: AMQShortstr("atag4u"))
+        )
         var consumerTriggered = false
         ch.basicConsume("foo") { message in
             consumerTriggered = true

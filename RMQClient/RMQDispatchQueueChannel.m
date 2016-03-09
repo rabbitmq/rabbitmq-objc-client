@@ -4,10 +4,12 @@
 #import "AMQMethods.h"
 #import "AMQMethodMap.h"
 
+typedef void (^Consumer)(id<RMQMessage>);
+
 @interface RMQDispatchQueueChannel ()
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
 @property (nonatomic, readwrite) id <RMQSender> sender;
-@property (nonatomic, copy, readwrite) void (^lastConsumer)(id<RMQMessage>);
+@property (nonatomic, readwrite) NSMutableDictionary *consumers;
 @end
 
 @implementation RMQDispatchQueueChannel
@@ -17,7 +19,7 @@
     if (self) {
         self.channelNumber = channelNumber;
         self.sender = sender;
-        self.lastConsumer = ^(id<RMQMessage> m){};
+        self.consumers = [NSMutableDictionary new];
     }
     return self;
 }
@@ -53,7 +55,7 @@
                                    sender:self.sender];
 }
 
-- (void)basicConsume:(NSString *)queueName consumer:(void (^)(id<RMQMessage> _Nonnull))consumer {
+- (void)basicConsume:(NSString *)queueName consumer:(Consumer)consumer {
     AMQBasicConsume *method = [[AMQBasicConsume alloc] initWithReserved1:[[AMQShort alloc] init:0]
                                                                                    queue:[[AMQShortstr alloc] init:queueName]
                                                                              consumerTag:[[AMQShortstr alloc] init:@""]
@@ -63,21 +65,21 @@
 
     NSError *error = NULL;
     [self.sender waitOnMethod:[AMQBasicConsumeOk class] channelNumber:self.channelNumber error:&error];
-    self.lastConsumer = consumer;
+    AMQBasicConsumeOk *consumeOk = (AMQBasicConsumeOk *)self.sender.lastWaitedUponFrameset.method;
+
+    self.consumers[consumeOk.consumerTag] = consumer;
 }
 
 - (void)handleFrameset:(AMQFrameset *)frameset {
-    NSString *content = [[NSString alloc] initWithData:frameset.contentData encoding:NSUTF8StringEncoding];
     Class methodType = AMQMethodMap.methodMap[@[frameset.method.classID, frameset.method.methodID]];
-    RMQContentMessage *message;
     if (methodType == [AMQBasicDeliver class]) {
         AMQBasicDeliver *deliver = (AMQBasicDeliver *)frameset.method;
-        message = [[RMQContentMessage alloc] initWithConsumerTag:deliver.consumerTag.stringValue
-                                                     deliveryTag:@(deliver.deliveryTag.integerValue)
-                                                         content:content];
-    } else {
-        message = [[RMQContentMessage alloc] initWithConsumerTag:@"" deliveryTag:@0 content:@""];
+        NSString *content = [[NSString alloc] initWithData:frameset.contentData encoding:NSUTF8StringEncoding];
+        Consumer consumer = self.consumers[deliver.consumerTag];
+        RMQContentMessage *message = [[RMQContentMessage alloc] initWithConsumerTag:deliver.consumerTag.stringValue
+                                                                        deliveryTag:@(deliver.deliveryTag.integerValue)
+                                                                            content:content];
+        consumer(message);
     }
-    self.lastConsumer(message);
 }
 @end

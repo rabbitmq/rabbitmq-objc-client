@@ -46,9 +46,7 @@
         }];
     } else {
         AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:frame.channelNumber
-                                                                    method:method
-                                                             contentHeader:[AMQContentHeaderNone new]
-                                                             contentBodies:@[]];
+                                                                    method:method];
         [self.frameHandler handleFrameset:frameset];
     }
 }
@@ -70,9 +68,7 @@
         } else {
             [self.frameHandler handleFrameset:contentFrameset];
             AMQFrameset *nonContentFrameset = [[AMQFrameset alloc] initWithChannelNumber:channelNumber
-                                                                                  method:(id <AMQMethod>)frame.payload
-                                                                           contentHeader:[AMQContentHeaderNone new]
-                                                                           contentBodies:@[]];
+                                                                                  method:(id <AMQMethod>)frame.payload];
             [self.frameHandler handleFrameset:nonContentFrameset];
         }
     }];
