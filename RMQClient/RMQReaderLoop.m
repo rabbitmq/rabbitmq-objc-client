@@ -20,40 +20,45 @@
 
 - (void)runOnce {
     [self.transport readFrame:^(NSData * _Nonnull methodData) {
-        AMQParser *parser = [[AMQParser alloc] initWithData:methodData];
-        AMQFrame *frame = [[AMQFrame alloc] initWithParser:parser];
-        id<AMQMethod> method = (id<AMQMethod>)frame.payload;
+        AMQFrame *frame = [self frameWithData:methodData];
 
-        if (method.hasContent) {
-            [self.transport readFrame:^(NSData * _Nonnull headerData) {
-                AMQParser *headerParser  = [[AMQParser alloc] initWithData:headerData];
-                AMQFrame *header = [[AMQFrame alloc] initWithParser:headerParser];
-
-                [self readBodiesForChannelNumber:frame.channelNumber
-                                          method:method
-                                          header:(AMQContentHeader *)header.payload
-                                   contentBodies:@[]];
-            }];
+        if (frame.isHeartbeat) {
+            [self runOnce];
         } else {
-            AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:frame.channelNumber
-                                                                        method:method
-                                                                 contentHeader:[AMQContentHeaderNone new]
-                                                                 contentBodies:@[]];
-            [self.frameHandler handleFrameset:frameset];
+            [self handleMethodFrame:frame];
         }
     }];
 }
 
 # pragma mark - Private
 
+- (void)handleMethodFrame:(AMQFrame *)frame {
+    id<AMQMethod> method = (id<AMQMethod>)frame.payload;
+
+    if (method.hasContent) {
+        [self.transport readFrame:^(NSData * _Nonnull headerData) {
+            AMQFrame *header = [self frameWithData:headerData];
+
+            [self readBodiesForChannelNumber:frame.channelNumber
+                                      method:method
+                                      header:(AMQContentHeader *)header.payload
+                               contentBodies:@[]];
+        }];
+    } else {
+        AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:frame.channelNumber
+                                                                    method:method
+                                                             contentHeader:[AMQContentHeaderNone new]
+                                                             contentBodies:@[]];
+        [self.frameHandler handleFrameset:frameset];
+    }
+}
+
 - (void)readBodiesForChannelNumber:(NSNumber *)channelNumber
                         method:(id<AMQMethod>)method
                         header:(AMQContentHeader *)header
                  contentBodies:(NSArray *)contentBodies {
     [self.transport readFrame:^(NSData * _Nonnull data) {
-        AMQParser *parser = [[AMQParser alloc] initWithData:data];
-        AMQFrame *frame = [[AMQFrame alloc] initWithParser:parser];
-
+        AMQFrame *frame = [self frameWithData:data];
         AMQFrameset *contentFrameset = [[AMQFrameset alloc] initWithChannelNumber:channelNumber
                                                                            method:method
                                                                     contentHeader:header
@@ -64,7 +69,6 @@
                                              newFrame:frame];
         } else {
             [self.frameHandler handleFrameset:contentFrameset];
-
             AMQFrameset *nonContentFrameset = [[AMQFrameset alloc] initWithChannelNumber:channelNumber
                                                                                   method:(id <AMQMethod>)frame.payload
                                                                            contentHeader:[AMQContentHeaderNone new]
@@ -91,6 +95,11 @@
                                   header:frameset.contentHeader
                            contentBodies:conjoinedContentBodies];
     }
+}
+
+- (AMQFrame *)frameWithData:(NSData *)data {
+    AMQParser *parser = [[AMQParser alloc] initWithData:data];
+    return [[AMQFrame alloc] initWithParser:parser];
 }
 
 @end

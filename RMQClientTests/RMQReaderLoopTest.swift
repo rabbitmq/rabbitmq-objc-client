@@ -2,6 +2,25 @@ import XCTest
 
 class RMQReaderLoopTest: XCTestCase {
 
+    func testSkipsServerHeartbeats() {
+        let transport = ControlledInteractionTransport()
+        let frameHandler = FrameHandlerSpy()
+        let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
+        let method = MethodFixtures.channelOpenOk()
+        let expectedFrameset = AMQFrameset(channelNumber: 42, method: method, contentHeader: AMQContentHeaderNone(), contentBodies: [])
+
+        readerLoop.runOnce()
+
+        transport.serverSendsPayload(AMQHeartbeat(), channelNumber: 0)
+        transport.serverSendsPayload(method, channelNumber: 42)
+
+        XCTAssertEqual(
+            expectedFrameset,
+            frameHandler.lastReceivedFrameset()!,
+            "\n\nExpected: \(method)\n\nGot: \(frameHandler.lastReceivedFrameset()!.method)"
+        )
+    }
+
     func testSendsDecodedContentlessFramesetToFrameHandler() {
         let transport = ControlledInteractionTransport()
         let frameHandler = FrameHandlerSpy()

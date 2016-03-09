@@ -44,7 +44,7 @@ class IntegrationTests: XCTestCase {
             vhost: "/",
             channelMax: 65535,
             frameMax: 4096,
-            heartbeat: 0,
+            heartbeat: 1,
             syncTimeout: 10
         )
         conn.start()
