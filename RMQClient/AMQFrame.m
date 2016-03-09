@@ -1,21 +1,16 @@
 #import "AMQFrame.h"
 #import "AMQMethodDecoder.h"
+#import "AMQHeartbeat.h"
 
 @interface AMQFrame ()
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
 @property (nonatomic, readwrite) id<AMQPayload> payload;
 @end
 
-typedef NS_ENUM(char, AMQFrameType) {
-    AMQFrameTypeMethod = 1,
-    AMQFrameTypeContentHeader,
-    AMQFrameTypeContentBody,
-};
-
 @implementation AMQFrame
 
 - (instancetype)initWithChannelNumber:(NSNumber *)channelNumber
-                          payload:(id<AMQPayload>)payload {
+                              payload:(id<AMQPayload>)payload {
     self = [super init];
     if (self) {
         self.channelNumber = channelNumber;
@@ -39,6 +34,10 @@ typedef NS_ENUM(char, AMQFrameType) {
             payload = [[AMQContentBody alloc] initWithParser:parser payloadSize:payloadSize];
             break;
 
+        case AMQFrameTypeHeartbeat:
+            payload = [AMQHeartbeat new];
+            break;
+
         default:
             payload = [[[AMQMethodDecoder alloc] initWithParser:parser] decode];
             break;
@@ -58,6 +57,10 @@ typedef NS_ENUM(char, AMQFrameType) {
         [frameData appendData:part.amqEncoded];
     }
     return frameData;
+}
+
+- (BOOL)isHeartbeat {
+    return self.channelNumber.integerValue == 0 && [self.payload isKindOfClass:[AMQHeartbeat class]];
 }
 
 @end

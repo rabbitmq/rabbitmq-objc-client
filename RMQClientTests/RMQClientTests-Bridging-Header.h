@@ -12,3 +12,4 @@
 #import "AMQConstants.h"
 #import "RMQMultipleChannelAllocator.h"
 #import "RMQDispatchQueueChannel.h"
+#import "AMQHeartbeat.h"

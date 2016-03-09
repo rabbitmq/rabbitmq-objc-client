@@ -79,12 +79,21 @@ class AMQEncodingTest: XCTestCase {
         XCTAssertEqual(payload, hydrated)
     }
 
-    func testRoundTripContentBodyThroughFrame() {
+    func testRoundTripContentBody() {
         let payload = AMQContentBody(data: "cyclist's string 🚴🏿".dataUsingEncoding(NSUTF8StringEncoding)!)
         let data = AMQFrame(channelNumber: 321, payload: payload).amqEncoded()
         let parser = AMQParser(data: data)
         let hydrated = AMQFrame(parser: parser).payload as! AMQContentBody
         TestHelper.assertEqualBytes(payload.data, hydrated.data)
+    }
+
+    func testRoundTripHeartbeat() {
+        let payload = AMQHeartbeat()
+        let data = AMQFrame(channelNumber: 0, payload: payload).amqEncoded()
+        let parser = AMQParser(data: data)
+        let hydrated = AMQFrame(parser: parser).payload as! AMQHeartbeat
+        XCTAssertEqual(1 + 2 + 4 + 1, payload.amqEncoded().length)
+        TestHelper.assertEqualBytes(payload.amqEncoded(), hydrated.amqEncoded())
     }
 
     func testParserCanReturnLengthOfData() {
