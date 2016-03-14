@@ -46,9 +46,9 @@ typedef void (^Consumer)(id<RMQMessage>);
     if (shouldAutoDelete)       { options |= AMQQueueDeclareAutoDelete; }
 
     AMQQueueDeclare *method = [[AMQQueueDeclare alloc] initWithReserved1:ticket
-                                                                                   queue:amqQueueName
-                                                                                 options:options
-                                                                               arguments:arguments];
+                                                                   queue:amqQueueName
+                                                                 options:options
+                                                               arguments:arguments];
     [self.sender sendMethod:method channelNumber:self.channelNumber];
     return [[RMQQueue alloc] initWithName:queueName
                                   channel:(id <RMQChannel>)self
@@ -57,10 +57,10 @@ typedef void (^Consumer)(id<RMQMessage>);
 
 - (void)basicConsume:(NSString *)queueName consumer:(Consumer)consumer {
     AMQBasicConsume *method = [[AMQBasicConsume alloc] initWithReserved1:[[AMQShort alloc] init:0]
-                                                                                   queue:[[AMQShortstr alloc] init:queueName]
-                                                                             consumerTag:[[AMQShortstr alloc] init:@""]
-                                                                                 options:AMQBasicConsumeNoOptions
-                                                                               arguments:[[AMQTable alloc] init:@{}]];
+                                                                   queue:[[AMQShortstr alloc] init:queueName]
+                                                             consumerTag:[[AMQShortstr alloc] init:@""]
+                                                                 options:AMQBasicConsumeNoOptions
+                                                               arguments:[[AMQTable alloc] init:@{}]];
     [self.sender sendMethod:method channelNumber:self.channelNumber];
 
     NSError *error = NULL;
