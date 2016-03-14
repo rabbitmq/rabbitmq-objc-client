@@ -16,6 +16,8 @@
 		AE26FA281C90309F00CDBBAA /* AMQFrameTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE26FA271C90309F00CDBBAA /* AMQFrameTest.swift */; settings = {ASSET_TAGS = (); }; };
 		AE26FA2B1C9032E400CDBBAA /* AMQHeartbeat.h in Headers */ = {isa = PBXBuildFile; fileRef = AE26FA291C9032E400CDBBAA /* AMQHeartbeat.h */; settings = {ASSET_TAGS = (); }; };
 		AE26FA2C1C9032E400CDBBAA /* AMQHeartbeat.m in Sources */ = {isa = PBXBuildFile; fileRef = AE26FA2A1C9032E400CDBBAA /* AMQHeartbeat.m */; settings = {ASSET_TAGS = (); }; };
+		AE26FA2E1C970DF100CDBBAA /* RMQChannelContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE26FA2D1C970DF100CDBBAA /* RMQChannelContract.swift */; settings = {ASSET_TAGS = (); }; };
+		AE26FA311C97157700CDBBAA /* ChannelSpyTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE26FA301C97157700CDBBAA /* ChannelSpyTest.swift */; settings = {ASSET_TAGS = (); }; };
 		AE39BD9E1C68B019000E7A77 /* AMQValues.h in Headers */ = {isa = PBXBuildFile; fileRef = AE39BD9C1C68B019000E7A77 /* AMQValues.h */; settings = {ASSET_TAGS = (); }; };
 		AE39BD9F1C68B019000E7A77 /* AMQValues.m in Sources */ = {isa = PBXBuildFile; fileRef = AE39BD9D1C68B019000E7A77 /* AMQValues.m */; settings = {ASSET_TAGS = (); }; };
 		AE39BDA21C68B105000E7A77 /* AMQProtocolHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = AE39BDA01C68B105000E7A77 /* AMQProtocolHeader.h */; settings = {ASSET_TAGS = (); }; };
@@ -114,6 +116,8 @@
 		AE26FA271C90309F00CDBBAA /* AMQFrameTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AMQFrameTest.swift; sourceTree = "<group>"; };
 		AE26FA291C9032E400CDBBAA /* AMQHeartbeat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQHeartbeat.h; sourceTree = "<group>"; };
 		AE26FA2A1C9032E400CDBBAA /* AMQHeartbeat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQHeartbeat.m; sourceTree = "<group>"; };
+		AE26FA2D1C970DF100CDBBAA /* RMQChannelContract.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQChannelContract.swift; sourceTree = "<group>"; };
+		AE26FA301C97157700CDBBAA /* ChannelSpyTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelSpyTest.swift; sourceTree = "<group>"; };
 		AE39BD9C1C68B019000E7A77 /* AMQValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQValues.h; sourceTree = "<group>"; };
 		AE39BD9D1C68B019000E7A77 /* AMQValues.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AMQValues.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AE39BDA01C68B105000E7A77 /* AMQProtocolHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AMQProtocolHeader.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -219,6 +223,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AE26FA2F1C970E9A00CDBBAA /* Channels */ = {
+			isa = PBXGroup;
+			children = (
+				AE26FA2D1C970DF100CDBBAA /* RMQChannelContract.swift */,
+				AE8279841C8D86110013ADD1 /* ChannelAllocationTest.swift */,
+				AE5934541C870C0E00560A73 /* RMQDispatchQueueChannelTest.swift */,
+				AE26FA301C97157700CDBBAA /* ChannelSpyTest.swift */,
+			);
+			name = Channels;
+			sourceTree = "<group>";
+		};
 		AE82798F1C8DBDF80013ADD1 /* Channels */ = {
 			isa = PBXGroup;
 			children = (
@@ -322,6 +337,7 @@
 		AEE7FE9F1C3BCA6000DF8C4F /* RMQClientTests */ = {
 			isa = PBXGroup;
 			children = (
+				AE26FA2F1C970E9A00CDBBAA /* Channels */,
 				AEEB8B4B1C7DC64A002D3FCE /* Test Doubles */,
 				AE607C671C3C0EAD00BE9AC4 /* RMQClientTests-Bridging-Header.h */,
 				AEE7FEA21C3BCA6000DF8C4F /* Info.plist */,
@@ -329,9 +345,7 @@
 				AE111BD61C57B33300F88277 /* TestHelper.swift */,
 				AEA45EC71C43CBBE00FE1F62 /* RMQConnectionTest.swift */,
 				AE541F421C7E132700C17932 /* ConnectionTuningTest.swift */,
-				AE8279841C8D86110013ADD1 /* ChannelAllocationTest.swift */,
 				AE5934581C87353400560A73 /* FramesetRoutingTest.swift */,
-				AE5934541C870C0E00560A73 /* RMQDispatchQueueChannelTest.swift */,
 				AEE445E71C7342EE0082132C /* RMQReaderLoopTest.swift */,
 				AEA7A3D81C72255900BDEA05 /* RMQQueueTest.swift */,
 				AE41C5621C51A2D500129207 /* RMQTransportContract.swift */,
@@ -600,9 +614,11 @@
 				AE898D581C3C2D2E00AA3BF1 /* AMQURIParseTest.swift in Sources */,
 				AE59345B1C8735FA00560A73 /* ChannelSpy.swift in Sources */,
 				AE541F431C7E132700C17932 /* ConnectionTuningTest.swift in Sources */,
+				AE26FA311C97157700CDBBAA /* ChannelSpyTest.swift in Sources */,
 				AEE445E81C7342EE0082132C /* RMQReaderLoopTest.swift in Sources */,
 				AEEB8B551C7DEDE5002D3FCE /* ControlledInteractionTransportTest.swift in Sources */,
 				AE8279851C8D86110013ADD1 /* ChannelAllocationTest.swift in Sources */,
+				AE26FA2E1C970DF100CDBBAA /* RMQChannelContract.swift in Sources */,
 				AE41C5531C4FC88F00129207 /* MethodFixtures.swift in Sources */,
 				AEADA37E1C71D64A00012D61 /* ControlledInteractionTransport.swift in Sources */,
 				AE26FA281C90309F00CDBBAA /* AMQFrameTest.swift in Sources */,

@@ -1,6 +1,14 @@
 import XCTest
 
 class RMQDispatchQueueChannelTest: XCTestCase {
+
+    func testObeysContract() {
+        let sender = SenderSpy()
+        let channel = RMQDispatchQueueChannel(1, sender: sender)
+        let contract = RMQChannelContract(channel)
+
+        contract.check()
+    }
     
     func testBasicConsumeSendsBasicConsumeMethod() {
         let sender = SenderSpy()

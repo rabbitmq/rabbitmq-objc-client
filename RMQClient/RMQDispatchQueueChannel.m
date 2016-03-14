@@ -10,6 +10,7 @@ typedef void (^Consumer)(id<RMQMessage>);
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
 @property (nonatomic, readwrite) id <RMQSender> sender;
 @property (nonatomic, readwrite) NSMutableDictionary *consumers;
+@property (nonatomic, readwrite) NSMutableDictionary *queues;
 @end
 
 @implementation RMQDispatchQueueChannel
@@ -20,6 +21,7 @@ typedef void (^Consumer)(id<RMQMessage>);
         self.channelNumber = channelNumber;
         self.sender = sender;
         self.consumers = [NSMutableDictionary new];
+        self.queues = [NSMutableDictionary new];
     }
     return self;
 }
@@ -37,22 +39,9 @@ typedef void (^Consumer)(id<RMQMessage>);
 - (RMQQueue *)queue:(NSString *)queueName
          autoDelete:(BOOL)shouldAutoDelete
           exclusive:(BOOL)isExclusive {
-    AMQShort *ticket          = [[AMQShort alloc] init:0];
-    AMQShortstr *amqQueueName = [[AMQShortstr alloc] init:queueName];
-    AMQTable *arguments       = [[AMQTable alloc] init:@{}];
-
-    AMQQueueDeclareOptions options = AMQQueueDeclareDurable;
-    if (isExclusive)            { options |= AMQQueueDeclareExclusive; }
-    if (shouldAutoDelete)       { options |= AMQQueueDeclareAutoDelete; }
-
-    AMQQueueDeclare *method = [[AMQQueueDeclare alloc] initWithReserved1:ticket
-                                                                   queue:amqQueueName
-                                                                 options:options
-                                                               arguments:arguments];
-    [self.sender sendMethod:method channelNumber:self.channelNumber];
-    return [[RMQQueue alloc] initWithName:queueName
-                                  channel:(id <RMQChannel>)self
-                                   sender:self.sender];
+    return self.queues[queueName] ?: [self declareQueueName:queueName
+                                                 autoDelete:shouldAutoDelete
+                                                  exclusive:isExclusive];
 }
 
 - (void)basicConsume:(NSString *)queueName consumer:(Consumer)consumer {
@@ -82,4 +71,31 @@ typedef void (^Consumer)(id<RMQMessage>);
         consumer(message);
     }
 }
+
+# pragma mark - Private
+
+- (RMQQueue *)declareQueueName:(NSString *)queueName
+                    autoDelete:(BOOL)shouldAutoDelete
+                     exclusive:(BOOL)isExclusive {
+    AMQShort *ticket          = [[AMQShort alloc] init:0];
+    AMQShortstr *amqQueueName = [[AMQShortstr alloc] init:queueName];
+    AMQTable *arguments       = [[AMQTable alloc] init:@{}];
+
+    AMQQueueDeclareOptions options = AMQQueueDeclareDurable;
+    if (isExclusive)      { options |= AMQQueueDeclareExclusive; }
+    if (shouldAutoDelete) { options |= AMQQueueDeclareAutoDelete; }
+
+    AMQQueueDeclare *method = [[AMQQueueDeclare alloc] initWithReserved1:ticket
+                                                                   queue:amqQueueName
+                                                                 options:options
+                                                               arguments:arguments];
+    [self.sender sendMethod:method channelNumber:self.channelNumber];
+
+    RMQQueue *q = [[RMQQueue alloc] initWithName:queueName
+                                         channel:(id<RMQChannel>)self
+                                          sender:self.sender];
+    self.queues[q.name] = q;
+    return q;
+}
+
 @end
