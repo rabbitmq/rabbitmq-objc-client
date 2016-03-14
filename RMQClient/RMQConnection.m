@@ -122,20 +122,20 @@
                onComplete:^{}];
 }
 
-- (BOOL)waitOnMethod:(Class)amqMethodClass
-       channelNumber:(NSNumber *)channelNumber
-               error:(NSError *__autoreleasing  _Nullable *)error {
+- (AMQFrameset *)waitOnMethod:(Class)amqMethodClass
+                channelNumber:(NSNumber *)channelNumber
+                        error:(NSError *__autoreleasing  _Nullable *)error {
     [self.watchedIncomingMethods addObject:@[channelNumber, amqMethodClass]];
     
     dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, self.syncTimeout.doubleValue * NSEC_PER_SEC);
     if (dispatch_semaphore_wait(self.methodSemaphore, timeout) == 0) {
-        return YES;
+        return self.lastWaitedUponFrameset;
     } else {
         NSString *errorMessage = @"Timeout";
         *error = [NSError errorWithDomain:@"com.rabbitmq.rmqconnection"
                                      code:0
                                  userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
-        return NO;
+        return nil;
     }
 }
 

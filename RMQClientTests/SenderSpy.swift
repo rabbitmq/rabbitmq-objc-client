@@ -20,9 +20,10 @@
         lastSentMethod = amqMethod
     }
 
-    func waitOnMethod(amqMethodClass: AnyClass, channelNumber: NSNumber) throws {
+    func waitOnMethod(amqMethodClass: AnyClass, channelNumber: NSNumber) throws -> AMQFrameset {
         methodWaitedUpon = "\(amqMethodClass)"
         channelWaitedUpon = channelNumber
+        return lastWaitedUponFrameset
     }
 
     override func isEqual(object: AnyObject?) -> Bool {

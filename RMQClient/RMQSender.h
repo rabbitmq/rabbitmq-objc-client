@@ -7,7 +7,7 @@
 - (void)send:(nonnull id<AMQEncoding>)encodable;
 - (void)sendMethod:(nonnull id<AMQMethod>)amqMethod
      channelNumber:(nonnull NSNumber *)channelNumber;
-- (BOOL)waitOnMethod:(nonnull Class)amqMethodClass
-       channelNumber:(nonnull NSNumber *)channelNumber
-               error:(NSError * _Nullable * _Nullable)error;
+- (nullable AMQFrameset *)waitOnMethod:(nonnull Class)amqMethodClass
+                         channelNumber:(nonnull NSNumber *)channelNumber
+                                 error:(NSError * _Nullable * _Nullable)error;
 @end

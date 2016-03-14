@@ -62,15 +62,12 @@
     [self.sender send:frameset];
 
     NSError *error = NULL;
-    [self.sender waitOnMethod:[AMQBasicGetOk class]
-                    channelNumber:self.channel.channelNumber
-                        error:&error];
-
+    AMQFrameset *getOkFrameset = [self.sender waitOnMethod:[AMQBasicGetOk class]
+                                             channelNumber:self.channel.channelNumber
+                                                     error:&error];
     if (error) {
         NSLog(@"\n**** ERROR WAITING FOR GET-OK %@", error);
     }
-
-    AMQFrameset *getOkFrameset = self.sender.lastWaitedUponFrameset;
 
     NSString *content = [[NSString alloc] initWithData:getOkFrameset.contentData
                                               encoding:NSUTF8StringEncoding];
