@@ -20,9 +20,9 @@
 }
 
 - (instancetype)initWithParser:(AMQParser *)parser {
-    char typeID         = [parser parseOctet];
+    char typeID             = [parser parseOctet];
     NSNumber *channelNumber = @([parser parseShortUInt]);
-    UInt32 payloadSize  = [parser parseLongUInt];
+    UInt32 payloadSize      = [parser parseLongUInt];
 
     id <AMQPayload> payload;
     switch (typeID) {
