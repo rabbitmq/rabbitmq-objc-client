@@ -222,6 +222,10 @@
     return self;
 }
 
+- (instancetype)init {
+    return [self init:@{}];
+}
+
 - (instancetype)initWithParser:(AMQParser *)parser {
     return [self init:[parser parseFieldTable]];
 }
