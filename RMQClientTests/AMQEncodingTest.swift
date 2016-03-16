@@ -96,6 +96,14 @@ class AMQEncodingTest: XCTestCase {
         TestHelper.assertEqualBytes(payload.amqEncoded(), hydrated.amqEncoded())
     }
 
+    func testRoundTripChannelClose() {
+        let payload = AMQChannelClose(replyCode: AMQShort(406), replyText: AMQShortstr("PRECONDITION_FAILED - inequivalent arg 'durable' for queue 'rmqclient.integration-tests.E0B5A093-6B2E-402C-84F3-E93B59DF807B-71865-0003F85C24C90FC6' in vhost '/': received 'false' but current is 'true'"), classId: AMQShort(20), methodId: AMQShort(40))
+        let data = AMQFrame(channelNumber: 2, payload: payload).amqEncoded()
+        let parser = AMQParser(data: data)
+        let hydrated = AMQFrame(parser: parser).payload as! AMQChannelClose
+        XCTAssertEqual(payload, hydrated)
+    }
+
     func testParserCanReturnLengthOfData() {
         let data = "Ho ho ho 🏈".dataUsingEncoding(NSUTF8StringEncoding)!
         let parser = AMQParser(data: data)

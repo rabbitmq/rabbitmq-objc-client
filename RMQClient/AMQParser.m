@@ -82,7 +82,8 @@ enum AMQParserFieldValue {
 }
 
 - (NSString *)parseShortString {
-    unsigned int length = *((self.cursor)++);
+    UInt8 length = *(self.cursor);
+    self.cursor++;
     NSString *string = [NSString stringWithFormat:@"%.*s", length, self.cursor];
     self.cursor += length;
 
