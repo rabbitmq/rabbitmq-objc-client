@@ -11,6 +11,7 @@ enum AMQParserFieldValue {
 @interface AMQParser ()
 @property (nonatomic, readwrite) const char *cursor;
 @property (nonatomic, readwrite) const char *end;
+@property (nonatomic, readwrite) NSData *data;
 @end
 
 @implementation AMQParser
@@ -18,8 +19,9 @@ enum AMQParserFieldValue {
 - (instancetype)initWithData:(NSData *)data {
     self = [super init];
     if (self) {
+        self.data   = data;
         self.cursor = (const char *)data.bytes;
-        self.end    = (const char *)data.bytes + data.length - 1;
+        self.end    = (const char *)data.bytes + data.length;
     }
     return self;
 }
@@ -78,41 +80,45 @@ enum AMQParserFieldValue {
 }
 
 - (char)parseOctet {
-    return *((self.cursor)++);
-}
-
-- (NSString *)parseShortString {
-    UInt8 length = *(self.cursor);
-    self.cursor++;
-    NSString *string = [NSString stringWithFormat:@"%.*s", length, self.cursor];
-    self.cursor += length;
-
-    return string;
-}
-
-- (NSString *)parseLongString {
-    if (!self.cursor || self.cursor + 4 > self.end) {
-        // throw or something
+    if (self.cursor + 1 > self.end) {
+        return 0;
+    } else {
+        return *((self.cursor)++);
     }
-
-    unsigned int length = CFSwapInt32BigToHost(*(UInt32 *)self.cursor);
-    self.cursor += sizeof(length);
-
-    if (self.cursor + length > self.end) {
-        // TODO: What to do if length == 4GiB
-    }
-    NSString *string= [NSString stringWithFormat:@"%.*s", length, self.cursor];
-    self.cursor += length;
-
-    return string;
 }
 
 - (BOOL)parseBoolean {
-    if (!self.cursor || self.cursor + 1 > self.end) {
-        // throw or something
-    }
+    return [self parseOctet] != 0;
+}
 
-    return *((self.cursor)++) != 0;
+- (NSString *)parseShortString {
+    UInt8 length = *self.cursor;
+    const char *expectedStringEnd = self.cursor + sizeof(length) + length;
+
+    if (expectedStringEnd > self.end) {
+        return @"";
+    } else {
+        self.cursor++;
+        NSString *string = [NSString stringWithFormat:@"%.*s", length, self.cursor];
+        self.cursor += length;
+
+        return string;
+    }
+}
+
+- (NSString *)parseLongString {
+    UInt32 length = CFSwapInt32BigToHost(*(UInt32 *)self.cursor);
+    const char *expectedStringEnd = self.cursor + sizeof(length) + length;
+
+    if (expectedStringEnd > self.end) {
+        return @"";
+    } else {
+        self.cursor += sizeof(length);
+        NSString *string = [NSString stringWithFormat:@"%.*s", length, self.cursor];
+        self.cursor += length;
+
+        return string;
+    }
 }
 
 - (NSData *)parseLength:(UInt32)length {
