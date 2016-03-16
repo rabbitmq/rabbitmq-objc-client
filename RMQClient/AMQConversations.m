@@ -17,9 +17,9 @@
                                     @"information" : [[AMQLongstr alloc] init:@"https://github.com/camelpunch/RMQClient"]}];
 
     return [[AMQConnectionStartOk alloc] initWithClientProperties:clientProperties
-                                                                mechanism:[[AMQShortstr alloc] init:@"PLAIN"]
-                                                                 response:config.credentials
-                                                                   locale:[[AMQShortstr alloc] init:@"en_GB"]];
+                                                        mechanism:[[AMQShortstr alloc] init:@"PLAIN"]
+                                                         response:config.credentials
+                                                           locale:[[AMQShortstr alloc] init:@"en_GB"]];
 }
 
 @end
