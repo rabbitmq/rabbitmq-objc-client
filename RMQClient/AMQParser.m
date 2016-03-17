@@ -114,7 +114,8 @@ enum AMQParserFieldValue {
         return @"";
     } else {
         self.cursor += sizeof(length);
-        NSString *string = [NSString stringWithFormat:@"%.*s", length, self.cursor];
+        int readCharsLength = length;
+        NSString *string = [NSString stringWithFormat:@"%.*s", readCharsLength, self.cursor];
         self.cursor += length;
 
         return string;
