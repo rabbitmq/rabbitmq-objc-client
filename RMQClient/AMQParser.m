@@ -107,6 +107,9 @@ enum AMQParserFieldValue {
 }
 
 - (NSString *)parseLongString {
+    if (self.cursor >= self.end) {
+        return @"";
+    }
     UInt32 length = CFSwapInt32BigToHost(*(UInt32 *)self.cursor);
     const char *expectedStringEnd = self.cursor + sizeof(length) + length;
 
