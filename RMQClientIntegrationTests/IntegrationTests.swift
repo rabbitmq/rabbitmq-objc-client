@@ -109,7 +109,10 @@ class IntegrationTests: XCTestCase {
         }
 
         XCTAssertEqual(3, producingQueue.consumerCount())
-        TestHelper.pollUntil { return set1.union(set2).union(set3).count == 100 }
+        XCTAssert(
+            TestHelper.pollUntil { return set1.union(set2).union(set3).count == 100 },
+            "Timed out waiting for messages to arrive on single channel"
+        )
 
         XCTAssertFalse(set1.isEmpty)
         XCTAssertFalse(set2.isEmpty)
