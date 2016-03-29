@@ -52,9 +52,9 @@
 }
 
 - (void)readBodiesForChannelNumber:(NSNumber *)channelNumber
-                        method:(id<AMQMethod>)method
-                        header:(AMQContentHeader *)header
-                 contentBodies:(NSArray *)contentBodies {
+                            method:(id<AMQMethod>)method
+                            header:(AMQContentHeader *)header
+                     contentBodies:(NSArray *)contentBodies {
     [self.transport readFrame:^(NSData * _Nonnull data) {
         AMQFrame *frame = [self frameWithData:data];
         AMQFrameset *contentFrameset = [[AMQFrameset alloc] initWithChannelNumber:channelNumber
