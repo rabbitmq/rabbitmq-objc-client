@@ -1,8 +1,9 @@
-#import "RMQDispatchQueueChannel.h"
+#import "AMQFrame.h"
 #import "AMQMethodDecoder.h"
-#import "AMQValues.h"
-#import "AMQMethods.h"
 #import "AMQMethodMap.h"
+#import "AMQMethods.h"
+#import "AMQValues.h"
+#import "RMQDispatchQueueChannel.h"
 
 typedef void (^Consumer)(id<RMQMessage>);
 
@@ -37,11 +38,32 @@ typedef void (^Consumer)(id<RMQMessage>);
 }
 
 - (RMQQueue *)queue:(NSString *)queueName
-         autoDelete:(BOOL)shouldAutoDelete
-          exclusive:(BOOL)isExclusive {
-    return self.queues[queueName] ?: [self declareQueueName:queueName
-                                                 autoDelete:shouldAutoDelete
-                                                  exclusive:isExclusive];
+            options:(AMQQueueDeclareOptions)options {
+    RMQQueue *found = self.queues[queueName];
+    if (found) {
+        return found;
+    } else {
+        AMQFrameset *frameset = [self queueDeclareFrameset:queueName
+                                                   options:options];
+        [self.sender sendMethod:frameset.method channelNumber:self.channelNumber];
+        RMQQueue *q = [[RMQQueue alloc] initWithName:queueName
+                                             options:options
+                                             channel:(id<RMQChannel>)self
+                                              sender:self.sender];
+        self.queues[q.name] = q;
+        return q;
+    }
+}
+
+- (AMQQueueDeclareOk *)queueDeclare:(NSString *)queueName
+                            options:(AMQQueueDeclareOptions)options {
+    AMQFrameset *frameset = [self queueDeclareFrameset:queueName
+                                               options:options];
+    [self.sender send:frameset];
+    NSError *error = NULL;
+    AMQFrameset *incomingFrameset = [self.sender waitOnMethod:[AMQQueueDeclareOk class]
+                                                channelNumber:self.channelNumber error:&error];
+    return (AMQQueueDeclareOk *)incomingFrameset.method;
 }
 
 - (void)basicConsume:(NSString *)queueName consumer:(Consumer)consumer {
@@ -74,28 +96,18 @@ typedef void (^Consumer)(id<RMQMessage>);
 
 # pragma mark - Private
 
-- (RMQQueue *)declareQueueName:(NSString *)queueName
-                    autoDelete:(BOOL)shouldAutoDelete
-                     exclusive:(BOOL)isExclusive {
+- (AMQFrameset *)queueDeclareFrameset:(NSString *)queueName
+                              options:(AMQQueueDeclareOptions)options {
     AMQShort *ticket          = [[AMQShort alloc] init:0];
     AMQShortstr *amqQueueName = [[AMQShortstr alloc] init:queueName];
     AMQTable *arguments       = [[AMQTable alloc] init:@{}];
-
-    AMQQueueDeclareOptions options = AMQQueueDeclareDurable;
-    if (isExclusive)      { options |= AMQQueueDeclareExclusive; }
-    if (shouldAutoDelete) { options |= AMQQueueDeclareAutoDelete; }
-
     AMQQueueDeclare *method = [[AMQQueueDeclare alloc] initWithReserved1:ticket
                                                                    queue:amqQueueName
                                                                  options:options
                                                                arguments:arguments];
-    [self.sender sendMethod:method channelNumber:self.channelNumber];
-
-    RMQQueue *q = [[RMQQueue alloc] initWithName:queueName
-                                         channel:(id<RMQChannel>)self
-                                          sender:self.sender];
-    self.queues[q.name] = q;
-    return q;
+    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:self.channelNumber
+                                                                method:method];
+    return frameset;
 }
 
 @end

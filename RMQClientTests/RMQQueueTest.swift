@@ -160,4 +160,49 @@ class RMQQueueTest: XCTestCase {
         XCTAssert(handlerCalled)
     }
 
+    func testGettingMessageCountRedeclaresQueueWithSameOptions() {
+        let channel = ChannelSpy(123)
+        let queue = RMQQueue(
+            name: "my great queue",
+            options: [.AutoDelete, .Durable],
+            channel: channel,
+            sender: SenderSpy()
+        )
+
+        queue.messageCount()
+
+        let expectedOptions: AMQQueueDeclareOptions = [.AutoDelete, .Durable]
+        XCTAssertEqual(expectedOptions, channel.lastReceivedQueueDeclareOptions)
+    }
+
+    func testMessageCountRetrievedFromQueueDeclareOk() {
+        let channel = ChannelSpy(123)
+        channel.stubbedMessageCount = AMQLong(666)
+        let queue = RMQQueue(name: "my great queue", channel: channel, sender: SenderSpy())
+
+        XCTAssertEqual(666, queue.messageCount())
+    }
+
+    func testGettingConsumerCountRedeclaresQueueWithSameOptions() {
+        let channel = ChannelSpy(123)
+        let queue = RMQQueue(
+            name: "my great queue",
+            options: [.AutoDelete, .Durable],
+            channel: channel,
+            sender: SenderSpy()
+        )
+
+        queue.consumerCount()
+
+        let expectedOptions: AMQQueueDeclareOptions = [.AutoDelete, .Durable]
+        XCTAssertEqual(expectedOptions, channel.lastReceivedQueueDeclareOptions)
+    }
+
+    func testConsumerCountRetrievedFromQueueDeclareOk() {
+        let channel = ChannelSpy(321)
+        channel.stubbedConsumerCount = AMQLong(444)
+        let queue = RMQQueue(name: "marvelous-mechanical-mouse-organ", channel: channel, sender: SenderSpy())
+
+        XCTAssertEqual(444, queue.consumerCount())
+    }
 }

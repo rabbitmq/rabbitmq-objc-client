@@ -6,22 +6,31 @@
 
 @interface RMQQueue ()
 @property (nonatomic, copy, readwrite) NSString *name;
-@property (weak, nonatomic, readwrite) id <RMQSender> sender;
+@property (nonatomic, readwrite) AMQQueueDeclareOptions options;
 @property (nonatomic, readwrite) id <RMQChannel> channel;
+@property (weak, nonatomic, readwrite) id <RMQSender> sender;
 @end
 
 @implementation RMQQueue
 
 - (instancetype)initWithName:(NSString *)name
+                     options:(AMQQueueDeclareOptions)options
                      channel:(id<RMQChannel>)channel
                       sender:(id<RMQSender>)sender {
    self = [super init];
     if (self) {
         self.name = name;
+        self.options = options;
         self.channel = channel;
         self.sender = sender;
     }
     return self;
+}
+
+- (instancetype)initWithName:(NSString *)name
+                     channel:(id<RMQChannel>)channel
+                      sender:(id<RMQSender>)sender {
+    return [self initWithName:name options:AMQQueueDeclareNoOptions channel:channel sender:sender];
 }
 
 - (RMQQueue *)publish:(NSString *)message {
@@ -83,7 +92,19 @@
     [self.channel basicConsume:self.name consumer:handler];
 }
 
+- (NSNumber *)messageCount {
+    return @(self.redeclare.messageCount.integerValue);
+}
+
+- (NSNumber *)consumerCount {
+    return @(self.redeclare.consumerCount.integerValue);
+}
+
 # pragma mark - Private
+
+- (AMQQueueDeclareOk *)redeclare {
+    return [self.channel queueDeclare:self.name options:self.options];
+}
 
 - (NSArray *)contentBodiesFromData:(NSData *)data inChunksOf:(NSUInteger)chunkSize {
     NSMutableArray *bodies = [NSMutableArray new];

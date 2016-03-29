@@ -19,7 +19,11 @@
 - (RMQExchange *)defaultExchange {
     return nil;
 }
-- (RMQQueue *)queue:(NSString *)queueName autoDelete:(BOOL)shouldAutoDelete exclusive:(BOOL)isExclusive {
+- (RMQQueue *)queue:(NSString *)queueName options:(AMQQueueDeclareOptions)options {
+    return nil;
+}
+- (AMQQueueDeclareOk *)queueDeclare:(NSString *)queueName
+                            options:(AMQQueueDeclareOptions)options {
     return nil;
 }
 - (void)handleFrameset:(AMQFrameset *)frameset {

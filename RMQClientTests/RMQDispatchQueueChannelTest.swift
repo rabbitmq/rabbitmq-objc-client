@@ -9,6 +9,46 @@ class RMQDispatchQueueChannelTest: XCTestCase {
 
         contract.check()
     }
+
+    func testDeclaringAQueueSendsAQueueDeclare() {
+        let sender = SenderSpy()
+        let channel = RMQDispatchQueueChannel(1, sender: sender)
+
+        channel.queueDeclare("bagpuss", options: [.AutoDelete, .Exclusive])
+
+        let expectedQueueDeclare = AMQQueueDeclare(
+            reserved1: AMQShort(0),
+            queue: AMQShortstr("bagpuss"),
+            options: [.AutoDelete, .Exclusive],
+            arguments: AMQTable([:])
+        )
+        let actualFrame = sender.sentFramesets.last!
+        let actualMethod = actualFrame.method as! AMQQueueDeclare
+        XCTAssertEqual(expectedQueueDeclare, actualMethod)
+    }
+
+    func testDeclaringAQueueWaitsOnQueueDeclareOk() {
+        let sender = SenderSpy()
+        let channel = RMQDispatchQueueChannel(678, sender: sender)
+
+        channel.queueDeclare("fatfurrycatpuss", options: [.AutoDelete, .Exclusive])
+
+        XCTAssertEqual("AMQQueueDeclareOk", sender.methodWaitedUpon)
+        XCTAssertEqual(678, sender.channelWaitedUpon)
+    }
+
+    func testDeclaringAQueueReturnsTheQueueDeclareOk() {
+        let sender = SenderSpy()
+        let incomingMethod = AMQQueueDeclareOk(
+            queue: AMQShortstr("madeleine"),
+            messageCount: AMQLong(123),
+            consumerCount: AMQLong(0)
+        )
+        sender.lastWaitedUponFrameset = AMQFrameset(channelNumber: 876, method: incomingMethod)
+        let channel = RMQDispatchQueueChannel(876, sender: sender)
+
+        XCTAssertEqual(incomingMethod, channel.queueDeclare("madeleine", options: [.AutoDelete, .Exclusive]))
+    }
     
     func testBasicConsumeSendsBasicConsumeMethod() {
         let sender = SenderSpy()

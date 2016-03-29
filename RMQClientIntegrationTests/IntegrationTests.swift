@@ -25,7 +25,7 @@ class IntegrationTests: XCTestCase {
         defer { conn.close() }
 
         let ch = conn.createChannel()
-        let q = ch.queue(generatedQueueName(), autoDelete: true, exclusive: false)
+        let q = ch.queue(generatedQueueName(), options: [.AutoDelete])
 
         q.publish(messageContent)
 
@@ -51,7 +51,7 @@ class IntegrationTests: XCTestCase {
         defer { conn.close() }
 
         let ch = conn.createChannel()
-        let q = ch.queue(generatedQueueName(), autoDelete: true, exclusive: false)
+        let q = ch.queue(generatedQueueName(), options: [.AutoDelete, .Exclusive])
 
         var delivered = RMQContentMessage(consumerTag: "", deliveryTag: 0, content: "not delivered yet")
         q.subscribe { (message: RMQMessage) in
@@ -87,7 +87,7 @@ class IntegrationTests: XCTestCase {
 
         let consumingChannel = conn.createChannel()
         let queueName = generatedQueueName()
-        let consumingQueue = consumingChannel.queue(queueName, autoDelete: false, exclusive: false)
+        let consumingQueue = consumingChannel.queue(queueName, options: [])
 
         consumingQueue.subscribe { (message: RMQMessage) in
             set1.insert(message.deliveryTag)
@@ -102,12 +102,13 @@ class IntegrationTests: XCTestCase {
         }
 
         let producingChannel = conn.createChannel()
-        let producingQueue = producingChannel.queue(queueName, autoDelete: false, exclusive: false)
+        let producingQueue = producingChannel.queue(queueName, options: [])
 
         for _ in 1...100 {
             producingQueue.publish("hello")
         }
 
+        XCTAssertEqual(3, producingQueue.consumerCount())
         TestHelper.pollUntil { return set1.union(set2).union(set3).count == 100 }
 
         XCTAssertFalse(set1.isEmpty)
@@ -117,7 +118,7 @@ class IntegrationTests: XCTestCase {
         let expected: Set<NSNumber> = Set<NSNumber>().union((1...100).map { NSNumber(integer: $0) })
         XCTAssertEqual(expected, set1.union(set2).union(set3))
 
-//        XCTAssertEqual(0, producingQueue.messageCount)
+        XCTAssertEqual(0, producingQueue.messageCount())
     }
 
     func generatedQueueName() -> String {
