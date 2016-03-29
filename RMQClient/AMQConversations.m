@@ -11,10 +11,10 @@
                                                       @"authentication_failure_close": [[AMQBoolean alloc] init:YES]}];
     AMQTable *clientProperties = [[AMQTable alloc] init:
                                   @{@"capabilities" : capabilities,
-                                    @"product"     : [[AMQLongstr alloc] init:@"RMQClient"],
-                                    @"platform"    : [[AMQLongstr alloc] init:@"iOS"],
-                                    @"version"     : [[AMQLongstr alloc] init:@"0.0.1"],
-                                    @"information" : [[AMQLongstr alloc] init:@"https://github.com/camelpunch/RMQClient"]}];
+                                    @"product"      : [[AMQLongstr alloc] init:@"RMQClient"],
+                                    @"platform"     : [[AMQLongstr alloc] init:@"iOS"],
+                                    @"version"      : [[AMQLongstr alloc] init:@"0.0.1"],
+                                    @"information"  : [[AMQLongstr alloc] init:@"https://github.com/camelpunch/RMQClient"]}];
 
     return [[AMQConnectionStartOk alloc] initWithClientProperties:clientProperties
                                                         mechanism:[[AMQShortstr alloc] init:@"PLAIN"]
@@ -37,8 +37,8 @@
     NSNumber *heartbeat  = [self negotiateBetweenClientValue:client.heartbeat
                                                  serverValue:@(server.heartbeat.integerValue)];
     return [[AMQConnectionTuneOk alloc] initWithChannelMax:[[AMQShort alloc] init:channelMax.integerValue]
-                                                          frameMax:[[AMQLong alloc] init:frameMax.integerValue]
-                                                         heartbeat:[[AMQShort alloc] init:heartbeat.integerValue]];
+                                                  frameMax:[[AMQLong alloc] init:frameMax.integerValue]
+                                                 heartbeat:[[AMQShort alloc] init:heartbeat.integerValue]];
 }
 
 - (NSNumber *)negotiateBetweenClientValue:(NSNumber *)client
@@ -56,8 +56,8 @@
 
 - (id<AMQMethod>)nextRequest {
     return [[AMQConnectionOpen alloc] initWithVirtualHost:[[AMQShortstr alloc] init:@"/"]
-                                                        reserved1:[[AMQShortstr alloc] init:@""]
-                                                          options:0];
+                                                reserved1:[[AMQShortstr alloc] init:@""]
+                                                  options:0];
 }
 
 @end
