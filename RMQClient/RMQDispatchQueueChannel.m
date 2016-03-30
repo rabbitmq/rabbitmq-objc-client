@@ -102,13 +102,12 @@ typedef void (^Consumer)(id<RMQMessage>);
     AMQShort *ticket          = [[AMQShort alloc] init:0];
     AMQShortstr *amqQueueName = [[AMQShortstr alloc] init:queueName];
     AMQTable *arguments       = [[AMQTable alloc] init:@{}];
-    AMQQueueDeclare *method = [[AMQQueueDeclare alloc] initWithReserved1:ticket
-                                                                   queue:amqQueueName
-                                                                 options:options
-                                                               arguments:arguments];
-    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:self.channelNumber
-                                                                method:method];
-    return frameset;
+    AMQQueueDeclare *method   = [[AMQQueueDeclare alloc] initWithReserved1:ticket
+                                                                     queue:amqQueueName
+                                                                   options:options
+                                                                 arguments:arguments];
+    return [[AMQFrameset alloc] initWithChannelNumber:self.channelNumber
+                                               method:method];
 }
 
 @end
