@@ -149,9 +149,7 @@
     if (((id<AMQMethod>)method).shouldHaltOnReceipt) {
         [self.transport close:^{}];
     }
-    if ([frameset.method isKindOfClass:[AMQBasicDeliver class]]) {
-        [self.frameHandler handleFrameset:frameset];
-    }
+    [self.frameHandler handleFrameset:frameset];
     [self.readerLoop runOnce];
 }
 
