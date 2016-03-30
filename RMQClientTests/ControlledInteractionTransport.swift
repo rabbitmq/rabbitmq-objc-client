@@ -43,7 +43,7 @@ enum TestDoubleTransportError: ErrorType {
             XCTFail("No read callbacks stored!")
         } else if callbackIndexToRunNext == callbacks.count - 1 {
             callbacks.last!(data)
-            callbackIndexToRunNext++
+            callbackIndexToRunNext += 1
         } else {
             XCTFail("No callbacks left to run! Exhausted \(callbacks.count).")
         }

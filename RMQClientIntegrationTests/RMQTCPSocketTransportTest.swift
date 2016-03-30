@@ -33,9 +33,9 @@ class RMQTCPSocketTransportTest: XCTestCase {
 
         var finished = false
         transport.connect {
-            try! transport.write(AMQProtocolHeader().amqEncoded()) {
-                transport.readFrame { _ in
-                    transport.close { finished = true }
+            try! self.transport.write(AMQProtocolHeader().amqEncoded()) {
+                self.transport.readFrame { _ in
+                    self.transport.close { finished = true }
                 }
             }
         }
