@@ -68,11 +68,9 @@
                                                                 method:get
                                                          contentHeader:[AMQContentHeaderNone new]
                                                          contentBodies:@[]];
-    [self.sender sendFrameset:frameset];
-
     NSError *error = NULL;
-    AMQFrameset *getOkFrameset = [self.sender waitOnMethod:[AMQBasicGetOk class]
-                                             channelNumber:self.channel.channelNumber
+    AMQFrameset *getOkFrameset = [self.sender sendFrameset:frameset
+                                              waitOnMethod:[AMQBasicGetOk class]
                                                      error:&error];
     if (error) {
         NSLog(@"\n**** ERROR WAITING FOR GET-OK %@", error);

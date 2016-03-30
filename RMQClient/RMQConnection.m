@@ -124,25 +124,13 @@
                onComplete:^{}];
 }
 
-- (AMQFrameset *)waitOnMethod:(Class)amqMethodClass
-                channelNumber:(NSNumber *)channelNumber
+- (AMQFrameset *)sendFrameset:(AMQFrameset *)frameset
+                 waitOnMethod:(Class)amqMethodClass
                         error:(NSError *__autoreleasing  _Nullable *)error {
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    self.anticipatedFramesetSemaphores[channelNumber] = semaphore;
-    [self.watchedIncomingMethods addObject:@[channelNumber, amqMethodClass]];
-
-    if (dispatch_semaphore_wait(semaphore, self.syncTimeoutFromNow) == 0) {
-        [self.anticipatedFramesetSemaphores removeObjectForKey:channelNumber];
-        AMQFrameset *foundFrameset = self.anticipatedFramesets[channelNumber];
-        [self.anticipatedFramesets removeObjectForKey:channelNumber];
-        return foundFrameset;
-    } else {
-        NSString *errorMessage = @"Timeout";
-        *error = [NSError errorWithDomain:@"com.rabbitmq.rmqconnection"
-                                     code:0
-                                 userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
-        return nil;
-    }
+    [self sendFrameset:frameset];
+    return [self waitOnMethod:amqMethodClass
+                channelNumber:frameset.channelNumber
+                        error:error];
 }
 
 # pragma mark - RMQFrameHandler
@@ -170,6 +158,27 @@
 }
 
 # pragma mark - Private
+
+- (AMQFrameset *)waitOnMethod:(Class)amqMethodClass
+                channelNumber:(NSNumber *)channelNumber
+                        error:(NSError *__autoreleasing  _Nullable *)error {
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    self.anticipatedFramesetSemaphores[channelNumber] = semaphore;
+    [self.watchedIncomingMethods addObject:@[channelNumber, amqMethodClass]];
+
+    if (dispatch_semaphore_wait(semaphore, self.syncTimeoutFromNow) == 0) {
+        [self.anticipatedFramesetSemaphores removeObjectForKey:channelNumber];
+        AMQFrameset *foundFrameset = self.anticipatedFramesets[channelNumber];
+        [self.anticipatedFramesets removeObjectForKey:channelNumber];
+        return foundFrameset;
+    } else {
+        NSString *errorMessage = @"Timeout";
+        *error = [NSError errorWithDomain:@"com.rabbitmq.rmqconnection"
+                                     code:0
+                                 userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
+        return nil;
+    }
+}
 
 - (dispatch_time_t)syncTimeoutFromNow {
     return dispatch_time(DISPATCH_TIME_NOW, self.syncTimeout.doubleValue * NSEC_PER_SEC);

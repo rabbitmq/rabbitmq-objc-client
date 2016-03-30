@@ -82,7 +82,7 @@ class RMQConnectionTest: XCTestCase {
         let delay1 = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC)))
         let delay2 = dispatch_time(DISPATCH_TIME_NOW, Int64(0.2 * Double(NSEC_PER_SEC)))
 
-        let stubbedPayload1 = MethodFixtures.connectionStart()
+        let stubbedPayload1 = MethodFixtures.connectionOpenOk()
         dispatch_after(delay1, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)) {
             transport.serverSendsPayload(stubbedPayload1, channelNumber: 42)
         }
@@ -97,17 +97,23 @@ class RMQConnectionTest: XCTestCase {
             dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
             dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
         ]
-        var receivedMethod1: AMQConnectionStart = AMQConnectionStart()
+        var receivedMethod1: AMQConnectionOpenOk = AMQConnectionOpenOk()
         var receivedMethod2: AMQConnectionTune = AMQConnectionTune()
 
         dispatch_group_async(group, queues[0]) {
-            let receivedFrameset2 = try! conn.waitOnMethod(AMQConnectionTune.self, channelNumber: 56)
+            let receivedFrameset2 = try! conn.sendFrameset(
+                AMQFrameset(channelNumber: 56, method: MethodFixtures.connectionStartOk()),
+                waitOnMethod: AMQConnectionTune.self
+            )
             receivedMethod2 = receivedFrameset2.method as! AMQConnectionTune
         }
 
         dispatch_group_async(group, queues[1]) {
-            let receivedFrameset1 = try! conn.waitOnMethod(AMQConnectionStart.self, channelNumber: 42)
-            receivedMethod1 = receivedFrameset1.method as! AMQConnectionStart
+            let receivedFrameset1 = try! conn.sendFrameset(
+                AMQFrameset(channelNumber: 42, method: MethodFixtures.connectionOpen()),
+                waitOnMethod: AMQConnectionOpenOk.self
+            )
+            receivedMethod1 = receivedFrameset1.method as! AMQConnectionOpenOk
         }
 
         dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
@@ -122,7 +128,10 @@ class RMQConnectionTest: XCTestCase {
 
         var error: NSError = NSError(domain: "", code: 0, userInfo: [:])
         do {
-            try conn.waitOnMethod(AMQConnectionStart.self, channelNumber: 42)
+            try conn.sendFrameset(
+                AMQFrameset(channelNumber: 42, method: MethodFixtures.connectionStartOk()),
+                waitOnMethod: AMQConnectionTune.self
+            )
         }
         catch let e as NSError {
             error = e

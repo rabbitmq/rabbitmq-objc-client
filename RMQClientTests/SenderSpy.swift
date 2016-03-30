@@ -16,14 +16,16 @@
         sentFramesets.append(frameset)
     }
 
-    func sendMethod(amqMethod: AMQMethod, channelNumber: NSNumber) {
-        lastSentMethod = amqMethod
+    func sendFrameset(frameset: AMQFrameset, waitOnMethod amqMethodClass: AnyClass) throws -> AMQFrameset {
+        sentFramesets.append(frameset)
+        lastSentMethod = frameset.method
+        methodWaitedUpon = "\(amqMethodClass)"
+        channelWaitedUpon = frameset.channelNumber
+        return lastWaitedUponFrameset
     }
 
-    func waitOnMethod(amqMethodClass: AnyClass, channelNumber: NSNumber) throws -> AMQFrameset {
-        methodWaitedUpon = "\(amqMethodClass)"
-        channelWaitedUpon = channelNumber
-        return lastWaitedUponFrameset
+    func sendMethod(amqMethod: AMQMethod, channelNumber: NSNumber) {
+        lastSentMethod = amqMethod
     }
 
     override func isEqual(object: AnyObject?) -> Bool {

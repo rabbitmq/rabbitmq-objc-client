@@ -59,10 +59,10 @@ typedef void (^Consumer)(id<RMQMessage>);
                             options:(AMQQueueDeclareOptions)options {
     AMQFrameset *frameset = [self queueDeclareFrameset:queueName
                                                options:options];
-    [self.sender sendFrameset:frameset];
     NSError *error = NULL;
-    AMQFrameset *incomingFrameset = [self.sender waitOnMethod:[AMQQueueDeclareOk class]
-                                                channelNumber:self.channelNumber error:&error];
+    AMQFrameset *incomingFrameset = [self.sender sendFrameset:frameset
+                                                 waitOnMethod:[AMQQueueDeclareOk class]
+                                                        error:&error];
     return (AMQQueueDeclareOk *)incomingFrameset.method;
 }
 
@@ -72,10 +72,11 @@ typedef void (^Consumer)(id<RMQMessage>);
                                                              consumerTag:[[AMQShortstr alloc] init:@""]
                                                                  options:AMQBasicConsumeNoOptions
                                                                arguments:[[AMQTable alloc] init:@{}]];
-    [self.sender sendMethod:method channelNumber:self.channelNumber];
-
+    AMQFrameset *outgoingFrameset = [[AMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
     NSError *error = NULL;
-    AMQFrameset *frameset = [self.sender waitOnMethod:[AMQBasicConsumeOk class] channelNumber:self.channelNumber error:&error];
+    AMQFrameset *frameset = [self.sender sendFrameset:outgoingFrameset
+                                         waitOnMethod:[AMQBasicConsumeOk class]
+                                                error:&error];
     AMQBasicConsumeOk *consumeOk = (AMQBasicConsumeOk *)frameset.method;
 
     self.consumers[consumeOk.consumerTag] = consumer;
