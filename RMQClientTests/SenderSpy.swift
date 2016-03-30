@@ -12,8 +12,8 @@
         frameMax = aFrameMax
     }
 
-    func send(encodable: AMQEncoding) {
-        sentFramesets.append(encodable as! AMQFrameset)
+    func sendFrameset(frameset: AMQFrameset) {
+        sentFramesets.append(frameset)
     }
 
     func sendMethod(amqMethod: AMQMethod, channelNumber: NSNumber) {

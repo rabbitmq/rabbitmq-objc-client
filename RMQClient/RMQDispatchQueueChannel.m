@@ -59,7 +59,7 @@ typedef void (^Consumer)(id<RMQMessage>);
                             options:(AMQQueueDeclareOptions)options {
     AMQFrameset *frameset = [self queueDeclareFrameset:queueName
                                                options:options];
-    [self.sender send:frameset];
+    [self.sender sendFrameset:frameset];
     NSError *error = NULL;
     AMQFrameset *incomingFrameset = [self.sender waitOnMethod:[AMQQueueDeclareOk class]
                                                 channelNumber:self.channelNumber error:&error];

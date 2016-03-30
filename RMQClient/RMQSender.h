@@ -3,7 +3,7 @@
 
 @protocol RMQSender <NSObject>
 @property (nonnull, nonatomic, readonly) NSNumber *frameMax;
-- (void)send:(nonnull id<AMQEncoding>)encodable;
+- (void)sendFrameset:(nonnull AMQFrameset *)frameset;
 - (void)sendMethod:(nonnull id<AMQMethod>)amqMethod
      channelNumber:(nonnull NSNumber *)channelNumber;
 - (nullable AMQFrameset *)waitOnMethod:(nonnull Class)amqMethodClass

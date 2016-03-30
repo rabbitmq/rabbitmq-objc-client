@@ -111,15 +111,15 @@
 # pragma mark - RMQSender
 
 - (void)sendMethod:(id<AMQMethod>)amqMethod channelNumber:(NSNumber *)channelNumber {
-    [self send:[[AMQFrame alloc] initWithChannelNumber:channelNumber payload:amqMethod]];
+    [self sendFrameset:[[AMQFrameset alloc] initWithChannelNumber:channelNumber method:amqMethod]];
     if ([self shouldSendNextRequest:amqMethod]) {
         [self sendMethod:[(id <AMQOutgoingPrecursor>)amqMethod nextRequest] channelNumber:channelNumber];
     }
 }
 
-- (void)send:(id<AMQEncoding>)encodable {
+- (void)sendFrameset:(AMQFrameset *)frameset {
     NSError *error = NULL;
-    [self.transport write:encodable.amqEncoded
+    [self.transport write:frameset.amqEncoded
                     error:&error
                onComplete:^{}];
 }

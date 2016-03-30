@@ -56,7 +56,7 @@
                                                                 method:publish
                                                          contentHeader:contentHeader
                                                          contentBodies:contentBodies];
-    [self.sender send:frameset];
+    [self.sender sendFrameset:frameset];
     return self;
 }
 
@@ -68,7 +68,7 @@
                                                                 method:get
                                                          contentHeader:[AMQContentHeaderNone new]
                                                          contentBodies:@[]];
-    [self.sender send:frameset];
+    [self.sender sendFrameset:frameset];
 
     NSError *error = NULL;
     AMQFrameset *getOkFrameset = [self.sender waitOnMethod:[AMQBasicGetOk class]
