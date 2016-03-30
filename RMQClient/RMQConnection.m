@@ -18,7 +18,6 @@
 @property (nonatomic, readwrite) NSMutableDictionary *channels;
 @property (nonatomic, readwrite) NSMutableDictionary *anticipatedFramesetSemaphores;
 @property (nonatomic, readwrite) NSMutableDictionary *anticipatedFramesets;
-@property (nonatomic, readwrite) NSMutableArray *watchedIncomingMethods;
 @property (nonatomic, readwrite) NSNumber *frameMax;
 @property (nonatomic, readwrite) NSNumber *syncTimeout;
 @end
@@ -65,7 +64,6 @@
         self.readerLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport frameHandler:self];
 
         self.channels = [NSMutableDictionary new];
-        self.watchedIncomingMethods = [NSMutableArray new];
         self.anticipatedFramesetSemaphores = [NSMutableDictionary new];
         self.anticipatedFramesets = [NSMutableDictionary new];
 
@@ -139,10 +137,10 @@
     id method = frameset.method;
     NSArray *watchedMethod = @[frameset.channelNumber, [method class]];
 
-    if ([self.watchedIncomingMethods containsObject:watchedMethod]) {
-        [self.watchedIncomingMethods removeObject:watchedMethod];
+    dispatch_semaphore_t foundSemaphore = self.anticipatedFramesetSemaphores[watchedMethod];
+    if (foundSemaphore) {
         self.anticipatedFramesets[frameset.channelNumber] = frameset;
-        dispatch_semaphore_signal(self.anticipatedFramesetSemaphores[frameset.channelNumber]);
+        dispatch_semaphore_signal(foundSemaphore);
     }
     if ([self shouldReply:method]) {
         id<AMQMethod> reply = [method replyWithConfig:self.config];
@@ -163,11 +161,11 @@
                 channelNumber:(NSNumber *)channelNumber
                         error:(NSError *__autoreleasing  _Nullable *)error {
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    self.anticipatedFramesetSemaphores[channelNumber] = semaphore;
-    [self.watchedIncomingMethods addObject:@[channelNumber, amqMethodClass]];
+    NSArray *watchedMethod = @[channelNumber, amqMethodClass];
 
+    self.anticipatedFramesetSemaphores[watchedMethod] = semaphore;
     if (dispatch_semaphore_wait(semaphore, self.syncTimeoutFromNow) == 0) {
-        [self.anticipatedFramesetSemaphores removeObjectForKey:channelNumber];
+        [self.anticipatedFramesetSemaphores removeObjectForKey:watchedMethod];
         AMQFrameset *foundFrameset = self.anticipatedFramesets[channelNumber];
         [self.anticipatedFramesets removeObjectForKey:channelNumber];
         return foundFrameset;
