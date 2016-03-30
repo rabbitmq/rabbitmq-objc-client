@@ -75,8 +75,8 @@ typedef void (^Consumer)(id<RMQMessage>);
     [self.sender sendMethod:method channelNumber:self.channelNumber];
 
     NSError *error = NULL;
-    [self.sender waitOnMethod:[AMQBasicConsumeOk class] channelNumber:self.channelNumber error:&error];
-    AMQBasicConsumeOk *consumeOk = (AMQBasicConsumeOk *)self.sender.lastWaitedUponFrameset.method;
+    AMQFrameset *frameset = [self.sender waitOnMethod:[AMQBasicConsumeOk class] channelNumber:self.channelNumber error:&error];
+    AMQBasicConsumeOk *consumeOk = (AMQBasicConsumeOk *)frameset.method;
 
     self.consumers[consumeOk.consumerTag] = consumer;
 }

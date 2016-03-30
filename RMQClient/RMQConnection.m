@@ -12,13 +12,13 @@
 @property (nonatomic, readwrite) NSString *mechanism;
 @property (nonatomic, readwrite) NSString *locale;
 @property (nonatomic, readwrite) RMQConnectionConfig *config;
-@property (nonatomic, readwrite) NSMutableDictionary *channels;
 @property (nonatomic, readwrite) RMQReaderLoop *readerLoop;
 @property (nonatomic, readwrite) id <RMQChannelAllocator> channelAllocator;
 @property (nonatomic, readwrite) id <RMQFrameHandler> frameHandler;
+@property (nonatomic, readwrite) NSMutableDictionary *channels;
+@property (nonatomic, readwrite) NSMutableDictionary *anticipatedFramesetSemaphores;
+@property (nonatomic, readwrite) NSMutableDictionary *anticipatedFramesets;
 @property (nonatomic, readwrite) NSMutableArray *watchedIncomingMethods;
-@property (nonatomic, readwrite) dispatch_semaphore_t methodSemaphore;
-@property (atomic, readwrite) AMQFrameset *lastWaitedUponFrameset;
 @property (nonatomic, readwrite) NSNumber *frameMax;
 @property (nonatomic, readwrite) NSNumber *syncTimeout;
 @end
@@ -63,9 +63,11 @@
         self.mechanism = @"PLAIN";
         self.locale = @"en_GB";
         self.readerLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport frameHandler:self];
+
+        self.channels = [NSMutableDictionary new];
         self.watchedIncomingMethods = [NSMutableArray new];
-        self.methodSemaphore = dispatch_semaphore_create(0);
-        self.lastWaitedUponFrameset = nil;
+        self.anticipatedFramesetSemaphores = [NSMutableDictionary new];
+        self.anticipatedFramesets = [NSMutableDictionary new];
 
         [self allocateChannelZero];
     }
@@ -125,11 +127,15 @@
 - (AMQFrameset *)waitOnMethod:(Class)amqMethodClass
                 channelNumber:(NSNumber *)channelNumber
                         error:(NSError *__autoreleasing  _Nullable *)error {
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    self.anticipatedFramesetSemaphores[channelNumber] = semaphore;
     [self.watchedIncomingMethods addObject:@[channelNumber, amqMethodClass]];
-    
-    dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, self.syncTimeout.doubleValue * NSEC_PER_SEC);
-    if (dispatch_semaphore_wait(self.methodSemaphore, timeout) == 0) {
-        return self.lastWaitedUponFrameset;
+
+    if (dispatch_semaphore_wait(semaphore, self.syncTimeoutFromNow) == 0) {
+        [self.anticipatedFramesetSemaphores removeObjectForKey:channelNumber];
+        AMQFrameset *foundFrameset = self.anticipatedFramesets[channelNumber];
+        [self.anticipatedFramesets removeObjectForKey:channelNumber];
+        return foundFrameset;
     } else {
         NSString *errorMessage = @"Timeout";
         *error = [NSError errorWithDomain:@"com.rabbitmq.rmqconnection"
@@ -144,10 +150,11 @@
 - (void)handleFrameset:(AMQFrameset *)frameset {
     id method = frameset.method;
     NSArray *watchedMethod = @[frameset.channelNumber, [method class]];
+
     if ([self.watchedIncomingMethods containsObject:watchedMethod]) {
         [self.watchedIncomingMethods removeObject:watchedMethod];
-        self.lastWaitedUponFrameset = frameset;
-        dispatch_semaphore_signal(self.methodSemaphore);
+        self.anticipatedFramesets[frameset.channelNumber] = frameset;
+        dispatch_semaphore_signal(self.anticipatedFramesetSemaphores[frameset.channelNumber]);
     }
     if ([self shouldReply:method]) {
         id<AMQMethod> reply = [method replyWithConfig:self.config];
@@ -163,6 +170,10 @@
 }
 
 # pragma mark - Private
+
+- (dispatch_time_t)syncTimeoutFromNow {
+    return dispatch_time(DISPATCH_TIME_NOW, self.syncTimeout.doubleValue * NSEC_PER_SEC);
+}
 
 - (void)allocateChannelZero {
     [self.channelAllocator allocate];

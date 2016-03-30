@@ -10,6 +10,7 @@ long closeTag   = UINT32_MAX + 2;
 @property (nonatomic, readwrite) BOOL _isConnected;
 @property (nonnull, nonatomic, readwrite) GCDAsyncSocket *socket;
 @property (nonnull, nonatomic, readwrite) NSMutableDictionary *callbacks;
+@property (nonatomic, readwrite) NSObject *callbackLock;
 @property (nonatomic, readwrite) dispatch_semaphore_t connectSemaphore;
 
 @end
@@ -28,6 +29,7 @@ long closeTag   = UINT32_MAX + 2;
         self.host = host;
         self.port = port;
         self.callbacks = callbacks;
+        self.callbackLock = [NSObject new];
         self.connectSemaphore = nil;
     }
     return self;
@@ -53,7 +55,9 @@ long closeTag   = UINT32_MAX + 2;
 }
 
 - (void)close:(void (^)())onClose {
-    [self.callbacks setObject:[onClose copy] forKey:@(closeTag)];
+    @synchronized(self.callbackLock) {
+        self.callbacks[@(closeTag)] = [onClose copy];
+    }
     [self.socket disconnectAfterReadingAndWriting];
 }
 
@@ -111,24 +115,32 @@ struct __attribute__((__packed__)) AMQPHeader {
 
 - (long)storeCallback:(id)callback {
     uint32_t tag = arc4random_uniform(INT32_MAX);
-    [self.callbacks setObject:[callback copy] forKey:@(tag)];
+    @synchronized(self.callbackLock) {
+        self.callbacks[@(tag)] = [callback copy];
+    }
     return tag;
 }
 
 - (void)invokeZeroArityCallback:(long)tag {
-    void (^foundCallback)() = self.callbacks[@(tag)];
+    void (^foundCallback)();
+    @synchronized(self.callbackLock) {
+        foundCallback = self.callbacks[@(tag)];
+        [self.callbacks removeObjectForKey:@(tag)];
+    }
     if (foundCallback) {
         foundCallback();
-        [self.callbacks removeObjectForKey:@(tag)];
     }
 }
 
 # pragma mark - GCDAsyncSocketDelegate
 
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
-    void (^foundCallback)() = self.callbacks[@(tag)];
+    void (^foundCallback)(NSData *);
+    @synchronized(self.callbackLock) {
+        foundCallback = self.callbacks[@(tag)];
+        [self.callbacks removeObjectForKey:@(tag)];
+    }
     foundCallback(data);
-    [self.callbacks removeObjectForKey:@(tag)];
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {

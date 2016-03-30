@@ -76,17 +76,44 @@ class RMQConnectionTest: XCTestCase {
             .serverSendsPayload(MethodFixtures.channelOpenOk(), channelNumber: 1)
     }
 
-    func testWaitingOnAServerMessageWithSuccess() {
+    func testWaitingOnServerMessagesWithSuccess() {
         let transport = ControlledInteractionTransport()
-        let conn = startedConnection(transport, syncTimeout: 0.3)
+        let conn = startedConnection(transport, syncTimeout: 0.4)
+        let delay1 = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC)))
+        let delay2 = dispatch_time(DISPATCH_TIME_NOW, Int64(0.2 * Double(NSEC_PER_SEC)))
 
-        let halfSecond = dispatch_time(DISPATCH_TIME_NOW, Int64(0.2 * Double(NSEC_PER_SEC)))
-
-        dispatch_after(halfSecond, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            transport.serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 42)
+        let stubbedPayload1 = MethodFixtures.connectionStart()
+        dispatch_after(delay1, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)) {
+            transport.serverSendsPayload(stubbedPayload1, channelNumber: 42)
         }
 
-        try! conn.waitOnMethod(AMQConnectionStart.self, channelNumber: 42)
+        let stubbedPayload2 = MethodFixtures.connectionTune()
+        dispatch_after(delay2, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+            transport.serverSendsPayload(stubbedPayload2, channelNumber: 56)
+        }
+
+        let group = dispatch_group_create()
+        let queues      = [
+            dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
+            dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
+        ]
+        var receivedMethod1: AMQConnectionStart = AMQConnectionStart()
+        var receivedMethod2: AMQConnectionTune = AMQConnectionTune()
+
+        dispatch_group_async(group, queues[0]) {
+            let receivedFrameset2 = try! conn.waitOnMethod(AMQConnectionTune.self, channelNumber: 56)
+            receivedMethod2 = receivedFrameset2.method as! AMQConnectionTune
+        }
+
+        dispatch_group_async(group, queues[1]) {
+            let receivedFrameset1 = try! conn.waitOnMethod(AMQConnectionStart.self, channelNumber: 42)
+            receivedMethod1 = receivedFrameset1.method as! AMQConnectionStart
+        }
+
+        dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
+
+        XCTAssertEqual(stubbedPayload1, receivedMethod1)
+        XCTAssertEqual(stubbedPayload2, receivedMethod2)
     }
 
     func testWaitingOnAServerMethodWithFailure() {

@@ -124,6 +124,51 @@ class IntegrationTests: XCTestCase {
         XCTAssertEqual(0, producingQueue.messageCount())
     }
 
+    func testConcurrentDeliveryOnDifferentChannels() {
+        var counter: Int32 = 0
+        var consumingChannels: [RMQChannel] = []
+        var consumingQueues: [RMQQueue] = []
+        let queueName = generatedQueueName()
+        let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
+        let conn = RMQConnection(
+            transport: transport,
+            user: "guest",
+            password: "guest",
+            vhost: "/",
+            channelMax: 65535,
+            frameMax: 4096,
+            heartbeat: 0,
+            syncTimeout: 10
+        )
+        conn.start()
+        defer { conn.close() }
+
+        for _ in 1...100 {
+            let ch = conn.createChannel()
+            let q = ch.queue(queueName, options: [])
+            q.subscribe { (message: RMQMessage) in
+                OSAtomicIncrement32(&counter)
+            }
+            consumingChannels.append(ch)
+            consumingQueues.append(q)
+        }
+
+        let producingChannel = conn.createChannel()
+        let producingQueue = producingChannel.queue(queueName, options: [])
+        XCTAssertEqual(100, producingQueue.consumerCount())
+
+        for _ in 1...100 {
+            producingQueue.publish("hello")
+        }
+
+        XCTAssert(
+            TestHelper.pollUntil { return counter == 100 },
+            "Timed out waiting for messages to arrive on different channels"
+        )
+
+        XCTAssertEqual(0, producingQueue.messageCount())
+    }
+
     func generatedQueueName() -> String {
         return "rmqclient.integration-tests.\(NSProcessInfo.processInfo().globallyUniqueString)"
     }
