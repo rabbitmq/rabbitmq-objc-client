@@ -1,4 +1,5 @@
 #import <UIKit/UIKit.h>
+#import "RMQConnection.h"
 
 //! Project version number for RMQClient.
 FOUNDATION_EXPORT double RMQClientVersionNumber;
