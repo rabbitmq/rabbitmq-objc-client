@@ -1,5 +1,5 @@
 #import "RMQMultipleChannelAllocator.h"
-#import "RMQDispatchQueueChannel.h"
+#import "RMQAllocatedChannel.h"
 #import "RMQUnallocatedChannel.h"
 #import "AMQConstants.h"
 
@@ -42,7 +42,7 @@
 }
 
 - (void)handleFrameset:(AMQFrameset *)frameset {
-    RMQDispatchQueueChannel *ch = self.channels[frameset.channelNumber];
+    RMQAllocatedChannel *ch = self.channels[frameset.channelNumber];
     [ch handleFrameset:frameset];
 }
 
@@ -63,7 +63,7 @@
 }
 
 - (id<RMQChannel>)newAllocation {
-    RMQDispatchQueueChannel *ch = [[RMQDispatchQueueChannel alloc] init:@(self.channelNumber)
+    RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(self.channelNumber)
                                                                  sender:self.sender];
     self.channels[@(self.channelNumber)] = ch;
     self.channelNumber++;
@@ -73,7 +73,7 @@
 - (id<RMQChannel>)previouslyReleasedChannel {
     for (UInt16 i = 1; i < AMQChannelLimit; i++) {
         if (!self.channels[@(i)]) {
-            RMQDispatchQueueChannel *ch = [[RMQDispatchQueueChannel alloc] init:@(i)
+            RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(i)
                                                                          sender:self.sender];
             self.channels[@(i)] = ch;
             return ch;

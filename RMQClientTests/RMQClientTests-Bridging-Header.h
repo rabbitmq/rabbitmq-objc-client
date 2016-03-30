@@ -11,5 +11,5 @@
 #import "RMQReaderLoop.h"
 #import "AMQConstants.h"
 #import "RMQMultipleChannelAllocator.h"
-#import "RMQDispatchQueueChannel.h"
+#import "RMQAllocatedChannel.h"
 #import "AMQHeartbeat.h"

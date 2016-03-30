@@ -1,10 +1,10 @@
 import XCTest
 
-class RMQDispatchQueueChannelTest: XCTestCase {
+class RMQAllocatedChannelTest: XCTestCase {
 
     func testObeysContract() {
         let sender = SenderSpy()
-        let channel = RMQDispatchQueueChannel(1, sender: sender)
+        let channel = RMQAllocatedChannel(1, sender: sender)
         let contract = RMQChannelContract(channel)
 
         contract.check()
@@ -12,7 +12,7 @@ class RMQDispatchQueueChannelTest: XCTestCase {
 
     func testDeclaringAQueueSendsAQueueDeclare() {
         let sender = SenderSpy()
-        let channel = RMQDispatchQueueChannel(1, sender: sender)
+        let channel = RMQAllocatedChannel(1, sender: sender)
 
         channel.queueDeclare("bagpuss", options: [.AutoDelete, .Exclusive])
 
@@ -29,7 +29,7 @@ class RMQDispatchQueueChannelTest: XCTestCase {
 
     func testDeclaringAQueueWaitsOnQueueDeclareOk() {
         let sender = SenderSpy()
-        let channel = RMQDispatchQueueChannel(678, sender: sender)
+        let channel = RMQAllocatedChannel(678, sender: sender)
 
         channel.queueDeclare("fatfurrycatpuss", options: [.AutoDelete, .Exclusive])
 
@@ -45,14 +45,14 @@ class RMQDispatchQueueChannelTest: XCTestCase {
             consumerCount: AMQLong(0)
         )
         sender.lastWaitedUponFrameset = AMQFrameset(channelNumber: 876, method: incomingMethod)
-        let channel = RMQDispatchQueueChannel(876, sender: sender)
+        let channel = RMQAllocatedChannel(876, sender: sender)
 
         XCTAssertEqual(incomingMethod, channel.queueDeclare("madeleine", options: [.AutoDelete, .Exclusive]))
     }
     
     func testBasicConsumeSendsBasicConsumeMethod() {
         let sender = SenderSpy()
-        let channel = RMQDispatchQueueChannel(1, sender: sender)
+        let channel = RMQAllocatedChannel(1, sender: sender)
         sender.lastWaitedUponFrameset = AMQFrameset(channelNumber: 1, method: AMQBasicConsumeOk(consumerTag: AMQShortstr("taggy")))
         channel.basicConsume("a_queue_name") { message in }
         let expectedMethod = AMQBasicConsume(
@@ -68,7 +68,7 @@ class RMQDispatchQueueChannelTest: XCTestCase {
 
     func testBasicConsumeWaitsOnBasicConsumeOk() {
         let sender = SenderSpy()
-        let channel = RMQDispatchQueueChannel(432, sender: sender)
+        let channel = RMQAllocatedChannel(432, sender: sender)
         sender.lastWaitedUponFrameset = AMQFrameset(channelNumber: 432, method: AMQBasicConsumeOk(consumerTag: AMQShortstr("taggy")))
         channel.basicConsume("a_queue_name") { message in }
 
@@ -78,7 +78,7 @@ class RMQDispatchQueueChannelTest: XCTestCase {
 
     func testBasicConsumeCallsCallbackWhenMessageIsDelivered() {
         let sender = SenderSpy()
-        let channel = RMQDispatchQueueChannel(432, sender: sender)
+        let channel = RMQAllocatedChannel(432, sender: sender)
         sender.lastWaitedUponFrameset = AMQFrameset(channelNumber: 432, method: AMQBasicConsumeOk(consumerTag: AMQShortstr("foo")))
 
         var consumedMessage = RMQContentMessage(consumerTag: "", deliveryTag: 0, content: "Not consumed yet")
@@ -98,7 +98,7 @@ class RMQDispatchQueueChannelTest: XCTestCase {
 
     func testMultipleConsumersOnSameQueueReceiveMessages() {
         let sender = SenderSpy()
-        let channel = RMQDispatchQueueChannel(999, sender: sender)
+        let channel = RMQAllocatedChannel(999, sender: sender)
 
         var consumedMessage1 = RMQContentMessage(consumerTag: "", deliveryTag: 0, content: "Not consumed yet")
         var consumedMessage2 = RMQContentMessage(consumerTag: "", deliveryTag: 0, content: "Not consumed yet")

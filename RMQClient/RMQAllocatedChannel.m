@@ -3,18 +3,18 @@
 #import "AMQMethodMap.h"
 #import "AMQMethods.h"
 #import "AMQValues.h"
-#import "RMQDispatchQueueChannel.h"
+#import "RMQAllocatedChannel.h"
 
 typedef void (^Consumer)(id<RMQMessage>);
 
-@interface RMQDispatchQueueChannel ()
+@interface RMQAllocatedChannel ()
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
 @property (nonatomic, readwrite) id <RMQSender> sender;
 @property (nonatomic, readwrite) NSMutableDictionary *consumers;
 @property (nonatomic, readwrite) NSMutableDictionary *queues;
 @end
 
-@implementation RMQDispatchQueueChannel
+@implementation RMQAllocatedChannel
 
 - (instancetype)init:(NSNumber *)channelNumber sender:(id<RMQSender>)sender {
     self = [super init];
