@@ -13,3 +13,4 @@
 #import "RMQMultipleChannelAllocator.h"
 #import "RMQAllocatedChannel.h"
 #import "AMQHeartbeat.h"
+#import "RMQSynchronizedMutableDictionary.h"

@@ -5,12 +5,11 @@ long closeTag   = UINT32_MAX + 2;
 
 @interface RMQTCPSocketTransport ()
 
-@property (nonnull, nonatomic, readwrite) NSString *host;
-@property (nonnull, nonatomic, readwrite) NSNumber *port;
+@property (nonatomic, readwrite) NSString *host;
+@property (nonatomic, readwrite) NSNumber *port;
 @property (nonatomic, readwrite) BOOL _isConnected;
-@property (nonnull, nonatomic, readwrite) GCDAsyncSocket *socket;
-@property (nonnull, nonatomic, readwrite) NSMutableDictionary *callbacks;
-@property (nonatomic, readwrite) NSObject *callbackLock;
+@property (nonatomic, readwrite) GCDAsyncSocket *socket;
+@property (nonatomic, readwrite) id callbacks;
 @property (nonatomic, readwrite) dispatch_semaphore_t connectSemaphore;
 
 @end
@@ -18,10 +17,10 @@ long closeTag   = UINT32_MAX + 2;
 @implementation RMQTCPSocketTransport
 
 - (instancetype)initWithHost:(NSString *)host port:(NSNumber *)port {
-    return [self initWithHost:host port:port callbackStorage:[NSMutableDictionary new]];
+    return [self initWithHost:host port:port callbackStorage:[RMQSynchronizedMutableDictionary new]];
 }
 
-- (instancetype)initWithHost:(NSString *)host port:(NSNumber *)port callbackStorage:(NSMutableDictionary *)callbacks {
+- (instancetype)initWithHost:(NSString *)host port:(NSNumber *)port callbackStorage:(id)callbacks {
     self = [super init];
     if (self) {
         self.socket = [[GCDAsyncSocket alloc] initWithDelegate:self
@@ -29,7 +28,6 @@ long closeTag   = UINT32_MAX + 2;
         self.host = host;
         self.port = port;
         self.callbacks = callbacks;
-        self.callbackLock = [NSObject new];
         self.connectSemaphore = nil;
     }
     return self;
@@ -45,7 +43,7 @@ long closeTag   = UINT32_MAX + 2;
     self.connectSemaphore = dispatch_semaphore_create(0);
 
     NSError *error = nil;
-    [self.callbacks setObject:[onConnect copy] forKey:@(connectTag)];
+    self.callbacks[@(connectTag)] = [onConnect copy];
     if (![self.socket connectToHost:self.host onPort:self.port.unsignedIntegerValue error:&error]) {
         NSLog(@"*************** Something is very wrong: %@", error);
         [self.callbacks removeObjectForKey:@(connectTag)];
@@ -55,9 +53,7 @@ long closeTag   = UINT32_MAX + 2;
 }
 
 - (void)close:(void (^)())onClose {
-    @synchronized(self.callbackLock) {
-        self.callbacks[@(closeTag)] = [onClose copy];
-    }
+    self.callbacks[@(closeTag)] = [onClose copy];
     [self.socket disconnectAfterReadingAndWriting];
 }
 
@@ -115,18 +111,13 @@ struct __attribute__((__packed__)) AMQPHeader {
 
 - (long)storeCallback:(id)callback {
     uint32_t tag = arc4random_uniform(INT32_MAX);
-    @synchronized(self.callbackLock) {
-        self.callbacks[@(tag)] = [callback copy];
-    }
+    self.callbacks[@(tag)] = [callback copy];
     return tag;
 }
 
 - (void)invokeZeroArityCallback:(long)tag {
-    void (^foundCallback)();
-    @synchronized(self.callbackLock) {
-        foundCallback = self.callbacks[@(tag)];
-        [self.callbacks removeObjectForKey:@(tag)];
-    }
+    void (^foundCallback)() = self.callbacks[@(tag)];
+    [self.callbacks removeObjectForKey:@(tag)];
     if (foundCallback) {
         foundCallback();
     }
@@ -135,11 +126,8 @@ struct __attribute__((__packed__)) AMQPHeader {
 # pragma mark - GCDAsyncSocketDelegate
 
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
-    void (^foundCallback)(NSData *);
-    @synchronized(self.callbackLock) {
-        foundCallback = self.callbacks[@(tag)];
-        [self.callbacks removeObjectForKey:@(tag)];
-    }
+    void (^foundCallback)(NSData *) = self.callbacks[@(tag)];
+    [self.callbacks removeObjectForKey:@(tag)];
     foundCallback(data);
 }
 
