@@ -2,26 +2,6 @@ import XCTest
 
 class RMQSynchronizedMutableDictionaryTest: XCTestCase {
 
-    func testEqualToAnotherEmptyInstance() {
-        XCTAssertEqual(RMQSynchronizedMutableDictionary(), RMQSynchronizedMutableDictionary())
-    }
-
-    func testEqualToAnotherInstanceWithSameKeysAndValues() {
-        let a = RMQSynchronizedMutableDictionary()
-        let b = RMQSynchronizedMutableDictionary()
-        a[2] = "foo"
-        b[2] = "foo"
-        XCTAssertEqual(a, b)
-    }
-
-    func testNotEqualWithDifferentValues() {
-        let a = RMQSynchronizedMutableDictionary()
-        let b = RMQSynchronizedMutableDictionary()
-        a[2] = "foo"
-        b[2] = "bar"
-        XCTAssertNotEqual(a, b)
-    }
-
     func testSingleThreadedExample() {
         let sharedDictionary = RMQSynchronizedMutableDictionary()
 

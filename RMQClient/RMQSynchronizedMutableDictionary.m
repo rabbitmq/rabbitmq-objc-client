@@ -30,8 +30,4 @@
     [self.backingDictionary removeObjectForKey:key];
 }
 
-- (BOOL)isEqual:(id)object {
-    return [self.backingDictionary isEqualToDictionary:[object valueForKey:@"_backingDictionary"]];
-}
-
 @end
