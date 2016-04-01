@@ -3,6 +3,7 @@
 #import "RMQConnection.h"
 #import "AMQBasicProperties.h"
 #import "AMQConstants.h"
+#import "RMQChannel.h"
 
 @interface RMQQueue ()
 @property (nonatomic, copy, readwrite) NSString *name;

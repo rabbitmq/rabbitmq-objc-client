@@ -12,10 +12,7 @@ class IntegrationTests: XCTestCase {
         messageContent += "bb"
 
         let conn = RMQConnection(
-            transport: transport,
-            user: "guest",
-            password: "guest",
-            vhost: "/",
+            uri: "amqp://guest:guest@localhost",
             channelMax: 65535,
             frameMax: frameMaxRequiringTwoFrames,
             heartbeat: 0,
@@ -36,17 +33,7 @@ class IntegrationTests: XCTestCase {
     }
 
     func testSubscribe() {
-        let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
-        let conn = RMQConnection(
-            transport: transport,
-            user: "guest",
-            password: "guest",
-            vhost: "/",
-            channelMax: 65535,
-            frameMax: 4096,
-            heartbeat: 1,
-            syncTimeout: 10
-        )
+        let conn = RMQConnection()
         conn.start()
         defer { conn.close() }
 
@@ -67,17 +54,7 @@ class IntegrationTests: XCTestCase {
     }
 
     func testMultipleConsumersOnSameChannel() {
-        let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
-        let conn = RMQConnection(
-            transport: transport,
-            user: "guest",
-            password: "guest",
-            vhost: "/",
-            channelMax: 65535,
-            frameMax: 4096,
-            heartbeat: 0,
-            syncTimeout: 10
-        )
+        let conn = RMQConnection()
         conn.start()
         defer { conn.close() }
 
@@ -129,17 +106,7 @@ class IntegrationTests: XCTestCase {
         var consumingChannels: [RMQChannel] = []
         var consumingQueues: [RMQQueue] = []
         let queueName = generatedQueueName()
-        let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
-        let conn = RMQConnection(
-            transport: transport,
-            user: "guest",
-            password: "guest",
-            vhost: "/",
-            channelMax: 65535,
-            frameMax: 4096,
-            heartbeat: 0,
-            syncTimeout: 10
-        )
+        let conn = RMQConnection()
         conn.start()
         defer { conn.close() }
 

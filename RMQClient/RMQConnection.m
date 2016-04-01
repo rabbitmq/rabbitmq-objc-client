@@ -1,9 +1,12 @@
-#import "RMQConnection.h"
-#import "AMQProtocolHeader.h"
-#import "AMQMethods.h"
-#import "RMQReaderLoop.h"
+#import "AMQConstants.h"
 #import "AMQFrame.h"
+#import "AMQMethods.h"
+#import "AMQProtocolHeader.h"
+#import "AMQURI.h"
+#import "RMQConnection.h"
 #import "RMQMultipleChannelAllocator.h"
+#import "RMQReaderLoop.h"
+#import "RMQTCPSocketTransport.h"
 
 @interface RMQConnection ()
 @property (copy, nonatomic, readwrite) NSString *vhost;
@@ -72,10 +75,31 @@
     return self;
 }
 
+- (instancetype)initWithUri:(NSString *)uri
+                 channelMax:(NSNumber *)channelMax
+                   frameMax:(NSNumber *)frameMax
+                  heartbeat:(NSNumber *)heartbeat
+                syncTimeout:(NSNumber *)syncTimeout {
+    NSError *error = NULL;
+    AMQURI *amqURI = [AMQURI parse:uri error:&error];
+    RMQTCPSocketTransport *transport = [[RMQTCPSocketTransport alloc] initWithHost:amqURI.host port:amqURI.portNumber];
+    return [self initWithTransport:transport
+                              user:amqURI.username
+                          password:amqURI.password
+                             vhost:amqURI.vhost
+                        channelMax:channelMax
+                          frameMax:frameMax
+                         heartbeat:heartbeat
+                       syncTimeout:syncTimeout];
+}
+
 - (instancetype)init
 {
-    [self doesNotRecognizeSelector:_cmd];
-    return nil;
+    return [self initWithUri:@"amqp://guest:guest@localhost"
+                  channelMax:@(AMQChannelLimit)
+                    frameMax:@131072
+                   heartbeat:@0
+                 syncTimeout:@10];
 }
 
 - (RMQConnection *)start {
