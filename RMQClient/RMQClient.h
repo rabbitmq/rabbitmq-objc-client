@@ -1,5 +1,20 @@
 #import <UIKit/UIKit.h>
-#import "RMQConnection.h"
+#import <RMQClient/RMQConnection.h>
+#import <RMQClient/AMQBasicProperties.h>
+#import <RMQClient/AMQConstants.h>
+#import <RMQClient/AMQConversations.h>
+#import <RMQClient/AMQFrame.h>
+#import <RMQClient/AMQHeartbeat.h>
+#import <RMQClient/AMQMethodDecoder.h>
+#import <RMQClient/AMQMethodMap.h>
+#import <RMQClient/AMQProtocolHeader.h>
+#import <RMQClient/AMQURI.h>
+#import <RMQClient/RMQAllocatedChannel.h>
+#import <RMQClient/RMQMultipleChannelAllocator.h>
+#import <RMQClient/RMQReaderLoop.h>
+#import <RMQClient/RMQSynchronizedMutableDictionary.h>
+#import <RMQClient/RMQTCPSocketTransport.h>
+#import <RMQClient/RMQUnallocatedChannel.h>
 
 //! Project version number for RMQClient.
 FOUNDATION_EXPORT double RMQClientVersionNumber;
