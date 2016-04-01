@@ -25,6 +25,10 @@
         }
     }
 
+    func queue(queueName: String) -> RMQQueue {
+        return queue(queueName, options: [])
+    }
+
     func queueDeclare(queueName: String, options: AMQQueueDeclareOptions) -> AMQQueueDeclareOk {
         lastReceivedQueueDeclareOptions = options
         return AMQQueueDeclareOk(

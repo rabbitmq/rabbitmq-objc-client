@@ -22,6 +22,9 @@
 - (RMQQueue *)queue:(NSString *)queueName options:(AMQQueueDeclareOptions)options {
     return nil;
 }
+- (RMQQueue *)queue:(NSString *)queueName {
+    return nil;
+}
 - (AMQQueueDeclareOk *)queueDeclare:(NSString *)queueName
                             options:(AMQQueueDeclareOptions)options {
     return nil;

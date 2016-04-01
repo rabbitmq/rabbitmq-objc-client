@@ -64,7 +64,7 @@ class IntegrationTests: XCTestCase {
 
         let consumingChannel = conn.createChannel()
         let queueName = generatedQueueName()
-        let consumingQueue = consumingChannel.queue(queueName, options: [])
+        let consumingQueue = consumingChannel.queue(queueName)
 
         consumingQueue.subscribe { (message: RMQMessage) in
             set1.insert(message.deliveryTag)
@@ -79,7 +79,7 @@ class IntegrationTests: XCTestCase {
         }
 
         let producingChannel = conn.createChannel()
-        let producingQueue = producingChannel.queue(queueName, options: [])
+        let producingQueue = producingChannel.queue(queueName)
 
         for _ in 1...100 {
             producingQueue.publish("hello")
@@ -112,7 +112,7 @@ class IntegrationTests: XCTestCase {
 
         for _ in 1...100 {
             let ch = conn.createChannel()
-            let q = ch.queue(queueName, options: [])
+            let q = ch.queue(queueName)
             q.subscribe { (message: RMQMessage) in
                 OSAtomicIncrement32(&counter)
             }
@@ -121,7 +121,7 @@ class IntegrationTests: XCTestCase {
         }
 
         let producingChannel = conn.createChannel()
-        let producingQueue = producingChannel.queue(queueName, options: [])
+        let producingQueue = producingChannel.queue(queueName)
         XCTAssertEqual(100, producingQueue.consumerCount())
 
         for _ in 1...100 {

@@ -55,6 +55,10 @@ typedef void (^Consumer)(id<RMQMessage>);
     }
 }
 
+- (RMQQueue *)queue:(NSString *)queueName {
+    return [self queue:queueName options:AMQQueueDeclareNoOptions];
+}
+
 - (AMQQueueDeclareOk *)queueDeclare:(NSString *)queueName
                             options:(AMQQueueDeclareOptions)options {
     AMQFrameset *frameset = [self queueDeclareFrameset:queueName
