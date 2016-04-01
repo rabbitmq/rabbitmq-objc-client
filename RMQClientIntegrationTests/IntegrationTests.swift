@@ -3,7 +3,6 @@ import XCTest
 class IntegrationTests: XCTestCase {
     
     func testPop() {
-        let transport = RMQTCPSocketTransport(host: "localhost", port: 5672)
         let frameMaxRequiringTwoFrames = 4096
         var messageContent = ""
         for _ in 1...(frameMaxRequiringTwoFrames - AMQEmptyFrameSize) {
