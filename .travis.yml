@@ -6,5 +6,6 @@ xcode_sdk: iphonesimulator
 before_install:
   - brew update
   - brew outdated xctool || brew upgrade xctool
+  - xctool -version
 before_script:
   - carthage bootstrap
