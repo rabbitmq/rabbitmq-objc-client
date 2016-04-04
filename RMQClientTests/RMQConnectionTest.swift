@@ -81,18 +81,12 @@ class RMQConnectionTest: XCTestCase {
         transport.stubbedToThrowErrorOnWrite = "stubbed message"
         let conn = startedConnection(transport)
 
-        XCTAssertThrowsError(try conn.createChannel()) { error in
-            guard let thrownError = error as? TestDoubleTransportError else {
-                XCTFail("Threw the wrong type of error")
-                return
-            }
-
-            switch thrownError {
-            case .ArbitraryError(let message):
-                XCTAssertEqual("stubbed message", message)
-            default:
-                XCTFail("Wrong type of error")
-            }
+        do {
+            try conn.createChannel()
+            XCTFail("No error assigned")
+        }
+        catch let e {
+            XCTAssertEqual("ArbitraryError(\"stubbed message\")", "\(e)")
         }
     }
 
