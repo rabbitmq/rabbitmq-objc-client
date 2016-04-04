@@ -12,6 +12,8 @@
 		AE05DA6D1C6A0848009E68C7 /* RMQMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = AE05DA6B1C6A0848009E68C7 /* RMQMessage.m */; };
 		AE111BD71C57B33300F88277 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE111BD61C57B33300F88277 /* TestHelper.swift */; };
 		AE111BD81C57B33300F88277 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE111BD61C57B33300F88277 /* TestHelper.swift */; };
+		AE1E0EC91CB2613A008285DD /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE1E0EC81CB2613A008285DD /* CocoaAsyncSocket.framework */; };
+		AE1E0ECB1CB2613E008285DD /* Mantle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE1E0ECA1CB2613E008285DD /* Mantle.framework */; };
 		AE254F601C51B4D800DEA468 /* MethodFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE41C5521C4FC88F00129207 /* MethodFixtures.swift */; };
 		AE26FA281C90309F00CDBBAA /* AMQFrameTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE26FA271C90309F00CDBBAA /* AMQFrameTest.swift */; };
 		AE26FA2B1C9032E400CDBBAA /* AMQHeartbeat.h in Headers */ = {isa = PBXBuildFile; fileRef = AE26FA291C9032E400CDBBAA /* AMQHeartbeat.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -24,6 +26,8 @@
 		AE39BDA21C68B105000E7A77 /* AMQProtocolHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = AE39BDA01C68B105000E7A77 /* AMQProtocolHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE39BDA31C68B105000E7A77 /* AMQProtocolHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = AE39BDA11C68B105000E7A77 /* AMQProtocolHeader.m */; };
 		AE3E0E381C56416F00186BA7 /* AMQEncodingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE3E0E371C56416F00186BA7 /* AMQEncodingTest.swift */; };
+		AE40C74A1CB272F000CC7B97 /* CocoaAsyncSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE1E0EC81CB2613A008285DD /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AE40C7511CB2749800CC7B97 /* Mantle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE1E0ECA1CB2613E008285DD /* Mantle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE41C5531C4FC88F00129207 /* MethodFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE41C5521C4FC88F00129207 /* MethodFixtures.swift */; };
 		AE4E7F4A1C6A293D00A441EC /* AMQMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = AE4E7F491C6A293D00A441EC /* AMQMethods.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE4E7F4B1C6A297900A441EC /* AMQMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA45EC41C43C20F00FE1F62 /* AMQMethods.m */; };
@@ -63,7 +67,6 @@
 		AEADA3811C71F59A00012D61 /* AMQMethodMap.h in Headers */ = {isa = PBXBuildFile; fileRef = AEADA37F1C71F59A00012D61 /* AMQMethodMap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEADA3821C71F59A00012D61 /* AMQMethodMap.m in Sources */ = {isa = PBXBuildFile; fileRef = AEADA3801C71F59A00012D61 /* AMQMethodMap.m */; };
 		AEC4D1D71C74C1AC00D7D585 /* RMQSender.h in Headers */ = {isa = PBXBuildFile; fileRef = AEC4D1D61C74C1AC00D7D585 /* RMQSender.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		AED2B68D1C4D87D8005660D6 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AED2B68C1C4D87D8005660D6 /* CocoaAsyncSocket.framework */; };
 		AEE445E11C7338FE0082132C /* RMQReaderLoop.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE445DF1C7338FE0082132C /* RMQReaderLoop.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEE445E21C7338FE0082132C /* RMQReaderLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE445E01C7338FE0082132C /* RMQReaderLoop.m */; };
 		AEE445E51C7341CB0082132C /* RMQFrameHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE445E31C7341CB0082132C /* RMQFrameHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -112,11 +115,27 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		AE40C7491CB272E600CC7B97 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				AE40C7511CB2749800CC7B97 /* Mantle.framework in CopyFiles */,
+				AE40C74A1CB272F000CC7B97 /* CocoaAsyncSocket.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		AE05DA661C69EC47009E68C7 /* RMQChannelAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQChannelAllocator.h; sourceTree = "<group>"; };
 		AE05DA6A1C6A0848009E68C7 /* RMQMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQMessage.h; sourceTree = "<group>"; };
 		AE05DA6B1C6A0848009E68C7 /* RMQMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQMessage.m; sourceTree = "<group>"; };
 		AE111BD61C57B33300F88277 /* TestHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
+		AE1E0EC81CB2613A008285DD /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/iOS/CocoaAsyncSocket.framework; sourceTree = "<group>"; };
+		AE1E0ECA1CB2613E008285DD /* Mantle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mantle.framework; path = Carthage/Build/iOS/Mantle.framework; sourceTree = "<group>"; };
 		AE26FA271C90309F00CDBBAA /* AMQFrameTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AMQFrameTest.swift; sourceTree = "<group>"; };
 		AE26FA291C9032E400CDBBAA /* AMQHeartbeat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMQHeartbeat.h; sourceTree = "<group>"; };
 		AE26FA2A1C9032E400CDBBAA /* AMQHeartbeat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMQHeartbeat.m; sourceTree = "<group>"; };
@@ -171,7 +190,6 @@
 		AEADA37F1C71F59A00012D61 /* AMQMethodMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AMQMethodMap.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		AEADA3801C71F59A00012D61 /* AMQMethodMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AMQMethodMap.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AEC4D1D61C74C1AC00D7D585 /* RMQSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQSender.h; sourceTree = "<group>"; };
-		AED2B68C1C4D87D8005660D6 /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/iOS/CocoaAsyncSocket.framework; sourceTree = "<group>"; };
 		AEE445DF1C7338FE0082132C /* RMQReaderLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQReaderLoop.h; sourceTree = "<group>"; };
 		AEE445E01C7338FE0082132C /* RMQReaderLoop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQReaderLoop.m; sourceTree = "<group>"; };
 		AEE445E31C7341CB0082132C /* RMQFrameHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQFrameHandler.h; sourceTree = "<group>"; };
@@ -216,7 +234,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AED2B68D1C4D87D8005660D6 /* CocoaAsyncSocket.framework in Frameworks */,
+				AE1E0EC91CB2613A008285DD /* CocoaAsyncSocket.framework in Frameworks */,
+				AE1E0ECB1CB2613E008285DD /* Mantle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,11 +287,12 @@
 		AEE7FE871C3BCA6000DF8C4F = {
 			isa = PBXGroup;
 			children = (
+				AE1E0ECA1CB2613E008285DD /* Mantle.framework */,
+				AE1E0EC81CB2613A008285DD /* CocoaAsyncSocket.framework */,
 				AEE7FE931C3BCA6000DF8C4F /* RMQClient */,
 				AEE7FE9F1C3BCA6000DF8C4F /* RMQClientTests */,
 				AEA45ED81C440FE400FE1F62 /* RMQClientIntegrationTests */,
 				AEE7FE921C3BCA6000DF8C4F /* Products */,
-				AED2B68C1C4D87D8005660D6 /* CocoaAsyncSocket.framework */,
 			);
 			sourceTree = "<group>";
 		};
@@ -452,6 +472,7 @@
 				AEE7FE8E1C3BCA6000DF8C4F /* Headers */,
 				AEE7FE8F1C3BCA6000DF8C4F /* Resources */,
 				AE637E2C1C4CFF28006F9EDF /* ShellScript */,
+				AE40C7491CB272E600CC7B97 /* CopyFiles */,
 			);
 			buildRules = (
 			);
