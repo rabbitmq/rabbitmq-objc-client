@@ -69,11 +69,31 @@ class RMQConnectionTest: XCTestCase {
 
         transport.handshake()
 
-        conn.createChannel()
+        try! conn.createChannel()
 
         transport
             .assertClientSentMethod(MethodFixtures.channelOpen(), channelNumber: 1)
             .serverSendsPayload(MethodFixtures.channelOpenOk(), channelNumber: 1)
+    }
+
+    func testCreatingAChannelThrowsWhenTransportThrows() {
+        let transport = ControlledInteractionTransport()
+        transport.stubbedToThrowErrorOnWrite = "stubbed message"
+        let conn = startedConnection(transport)
+
+        XCTAssertThrowsError(try conn.createChannel()) { error in
+            guard let thrownError = error as? TestDoubleTransportError else {
+                XCTFail("Threw the wrong type of error")
+                return
+            }
+
+            switch thrownError {
+            case .ArbitraryError(let message):
+                XCTAssertEqual("stubbed message", message)
+            default:
+                XCTFail("Wrong type of error")
+            }
+        }
     }
 
     func testWaitingOnServerMessagesWithSuccess() {

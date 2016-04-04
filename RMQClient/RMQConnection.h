@@ -7,25 +7,25 @@
 
 @interface RMQConnection : NSObject<RMQFrameHandler, RMQSender>
 
-@property (copy, nonatomic, readonly) NSString *vhost;
+@property (nonnull, copy, nonatomic, readonly) NSString *vhost;
 
-- (instancetype)initWithTransport:(id<RMQTransport>)transport
-                             user:(NSString *)user
-                         password:(NSString *)password
-                            vhost:(NSString *)vhost
-                       channelMax:(NSNumber *)channelMax
-                         frameMax:(NSNumber *)frameMax
-                        heartbeat:(NSNumber *)heartbeat
-                      syncTimeout:(NSNumber *)syncTimeout;
+- (nonnull instancetype)initWithTransport:(nonnull id<RMQTransport>)transport
+                                     user:(nonnull NSString *)user
+                                 password:(nonnull NSString *)password
+                                    vhost:(nonnull NSString *)vhost
+                               channelMax:(nonnull NSNumber *)channelMax
+                                 frameMax:(nonnull NSNumber *)frameMax
+                                heartbeat:(nonnull NSNumber *)heartbeat
+                              syncTimeout:(nonnull NSNumber *)syncTimeout;
 
-- (instancetype)initWithUri:(NSString *)uri
-                 channelMax:(NSNumber *)channelMax
-                   frameMax:(NSNumber *)frameMax
-                  heartbeat:(NSNumber *)heartbeat
-                syncTimeout:(NSNumber *)syncTimeout;
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                         channelMax:(nonnull NSNumber *)channelMax
+                           frameMax:(nonnull NSNumber *)frameMax
+                          heartbeat:(nonnull NSNumber *)heartbeat
+                        syncTimeout:(nonnull NSNumber *)syncTimeout;
 
-- (RMQConnection *)start;
+- (nonnull RMQConnection *)start;
 - (void)close;
-- (id<RMQChannel>)createChannel;
+- (nullable id<RMQChannel>)createChannelWithError:(NSError * _Nullable * _Nullable)error;
 
 @end

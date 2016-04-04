@@ -121,13 +121,15 @@
     [self.transport write:frame.amqEncoded error:&error onComplete:^{}];
 }
 
-- (id<RMQChannel>)createChannel {
+- (id<RMQChannel>)createChannelWithError:(NSError *__autoreleasing  _Nullable *)error {
     id<RMQChannel> ch = self.channelAllocator.allocate;
     self.channels[ch.channelNumber] = ch;
     AMQFrame *frame = [[AMQFrame alloc] initWithChannelNumber:ch.channelNumber payload:self.amqChannelOpen];
-    NSError *error = NULL;
-    [self.transport write:frame.amqEncoded error:&error onComplete:^{}];
-    return ch;
+    if ([self.transport write:frame.amqEncoded error:error onComplete:^{}]) {
+        return ch;
+    } else {
+        return nil;
+    }
 }
 
 # pragma mark - RMQSender

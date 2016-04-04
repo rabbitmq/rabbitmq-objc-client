@@ -2,6 +2,7 @@ import XCTest
 
 enum TestDoubleTransportError: ErrorType {
     case NotConnected(localizedDescription: String)
+    case ArbitraryError(localizedDescription: String)
 }
 
 @objc class ControlledInteractionTransport: NSObject, RMQTransport {
@@ -9,6 +10,7 @@ enum TestDoubleTransportError: ErrorType {
     var outboundData: [NSData] = []
     var callbacks: Array<(NSData) -> Void> = []
     var callbackIndexToRunNext = 0
+    var stubbedToThrowErrorOnWrite: String?
 
     func connect(onConnect: () -> Void) {
         connected = true
@@ -19,7 +21,9 @@ enum TestDoubleTransportError: ErrorType {
         onClose()
     }
     func write(data: NSData, onComplete complete: () -> Void) throws -> RMQTransport {
-        if (!connected) {
+        if let stubbedError = stubbedToThrowErrorOnWrite {
+            throw TestDoubleTransportError.ArbitraryError(localizedDescription: stubbedError)
+        } else if (!connected) {
             throw TestDoubleTransportError.NotConnected(localizedDescription: "foo")
         }
         outboundData.append(data)

@@ -20,7 +20,7 @@ class IntegrationTests: XCTestCase {
         conn.start()
         defer { conn.close() }
 
-        let ch = conn.createChannel()
+        let ch = try! conn.createChannel()
         let q = ch.queue(generatedQueueName(), options: [.AutoDelete])
 
         q.publish(messageContent)
@@ -36,7 +36,7 @@ class IntegrationTests: XCTestCase {
         conn.start()
         defer { conn.close() }
 
-        let ch = conn.createChannel()
+        let ch = try! conn.createChannel()
         let q = ch.queue(generatedQueueName(), options: [.AutoDelete, .Exclusive])
 
         var delivered = RMQContentMessage(consumerTag: "", deliveryTag: 0, content: "not delivered yet")
@@ -61,7 +61,7 @@ class IntegrationTests: XCTestCase {
         var set2 = Set<NSNumber>()
         var set3 = Set<NSNumber>()
 
-        let consumingChannel = conn.createChannel()
+        let consumingChannel = try! conn.createChannel()
         let queueName = generatedQueueName()
         let consumingQueue = consumingChannel.queue(queueName)
 
@@ -77,7 +77,7 @@ class IntegrationTests: XCTestCase {
             set3.insert(message.deliveryTag)
         }
 
-        let producingChannel = conn.createChannel()
+        let producingChannel = try! conn.createChannel()
         let producingQueue = producingChannel.queue(queueName)
 
         for _ in 1...100 {
@@ -110,7 +110,7 @@ class IntegrationTests: XCTestCase {
         defer { conn.close() }
 
         for _ in 1...100 {
-            let ch = conn.createChannel()
+            let ch = try! conn.createChannel()
             let q = ch.queue(queueName)
             q.subscribe { (message: RMQMessage) in
                 OSAtomicIncrement32(&counter)
@@ -119,7 +119,7 @@ class IntegrationTests: XCTestCase {
             consumingQueues.append(q)
         }
 
-        let producingChannel = conn.createChannel()
+        let producingChannel = try! conn.createChannel()
         let producingQueue = producingChannel.queue(queueName)
         XCTAssertEqual(100, producingQueue.consumerCount())
 
