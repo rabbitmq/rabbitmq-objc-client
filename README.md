@@ -23,9 +23,9 @@ burdening Objective-C developers with Swift baggage.
    ```
    carthage bootstrap --platform iOS --use-submodules
    ```
-1. In your Xcode project, in the Build Phases section of your target, open up Link
-Binary With Libraries. Now drag Carthage/Build/iOS/RMQClient.framework into
+1. In your Xcode project, in the **Build Phases** section of your target, open up **Link
+Binary With Libraries**. Now drag `Carthage/Build/iOS/RMQClient.framework` into
 this list.
-1. If you don't already have one, click the '+' icon under Build Phases to add a
-Copy Files phase.
-1. Click the '+' and add RMQClient.framework. Ensure Code Sign On Copy is checked.
+1. If you don't already have one, click the '+' icon under **Build Phases** to add a
+**Copy Files** phase.
+1. Click the '+' and add RMQClient.framework. Ensure **Code Sign On Copy** is checked.
