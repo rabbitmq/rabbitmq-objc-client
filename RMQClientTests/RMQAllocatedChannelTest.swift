@@ -59,7 +59,7 @@ class RMQAllocatedChannelTest: XCTestCase {
             reserved1: AMQShort(0),
             queue: AMQShortstr("a_queue_name"),
             consumerTag: AMQShortstr(""),
-            options: AMQBasicConsumeOptions.NoOptions,
+            options: [.NoAck],
             arguments: AMQTable([:])
         )
         let receivedMethod = sender.lastSentMethod! as! AMQBasicConsume
