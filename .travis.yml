@@ -4,4 +4,4 @@ xcode_project: RMQClient.xcodeproj
 xcode_scheme: RMQClientCI
 xcode_sdk: iphonesimulator
 before_script:
-  - carthage bootstrap
+  - carthage bootstrap --platform iOS
