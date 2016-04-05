@@ -6,6 +6,8 @@
     var stubbedMessageCount: AMQLong = AMQLong(0)
     var stubbedConsumerCount: AMQLong = AMQLong(0)
     var lastReceivedQueueDeclareOptions: AMQQueueDeclareOptions = []
+    var prefetchCount: NSNumber = 0
+    var prefetchGlobal: Bool = false
 
     init(_ aChannelNumber: Int) {
         channelNumber = aChannelNumber
@@ -44,5 +46,9 @@
 
     func handleFrameset(frameset: AMQFrameset) {
         lastReceivedFrameset = frameset
+    }
+
+    func basicQos(count: NSNumber, global isGlobal: Bool) throws -> AMQBasicQosOk {
+        return AMQBasicQosOk()
     }
 }

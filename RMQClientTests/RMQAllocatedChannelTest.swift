@@ -139,5 +139,73 @@ class RMQAllocatedChannelTest: XCTestCase {
         XCTAssertEqual(expectedMessage1, consumedMessage1)
         XCTAssertEqual(expectedMessage2, consumedMessage2)
     }
-    
+
+    func testBasicQosSendsBasicQosGlobal() {
+        let sender = SenderSpy.waitingUpon(AMQBasicQosOk(), channelNumber: 999)
+        let channel = RMQAllocatedChannel(999, sender: sender)
+
+        try! channel.basicQos(32, global: true)
+
+        let expectedMethod = MethodFixtures.basicQos(32, options: [.Global])
+        let actualMethod = sender.lastSentMethod as! AMQBasicQos
+        XCTAssertEqual(expectedMethod, actualMethod)
+    }
+
+    func testBasicQosSendsBasicQosNonGlobal() {
+        let sender = SenderSpy.waitingUpon(AMQBasicQosOk(), channelNumber: 999)
+        let channel = RMQAllocatedChannel(999, sender: sender)
+
+        try! channel.basicQos(64, global: false)
+
+        let expectedMethod = MethodFixtures.basicQos(64, options: [])
+        let actualMethod = sender.lastSentMethod as! AMQBasicQos
+        XCTAssertEqual(expectedMethod, actualMethod)
+    }
+
+    func testBasicQosWaitsOnBasicQosOk() {
+        let sender = SenderSpy.waitingUpon(AMQBasicQosOk(), channelNumber: 999)
+        let channel = RMQAllocatedChannel(999, sender: sender)
+
+        try! channel.basicQos(64, global: false)
+
+        XCTAssertEqual("AMQBasicQosOk", sender.methodWaitedUpon)
+    }
+
+    func testBasicQosReturnsBasicQosOk() {
+        let sender = SenderSpy.waitingUpon(AMQBasicQosOk(), channelNumber:  999)
+        let channel = RMQAllocatedChannel(999, sender: sender)
+
+        XCTAssertEqual(AMQBasicQosOk(), try! channel.basicQos(123, global: false))
+    }
+
+    func testBasicQosSetsChannelPrefetchSettings() {
+        let sender = SenderSpy.waitingUpon(AMQBasicQosOk(), channelNumber: 999)
+        let channel = RMQAllocatedChannel(999, sender: sender)
+
+        XCTAssertEqual(0, channel.prefetchCount)
+        XCTAssertFalse(channel.prefetchGlobal)
+
+        try! channel.basicQos(123, global: true)
+
+        XCTAssertEqual(123, channel.prefetchCount)
+        XCTAssert(channel.prefetchGlobal)
+
+        try! channel.basicQos(321, global: false)
+
+        XCTAssertEqual(321, channel.prefetchCount)
+        XCTAssertFalse(channel.prefetchGlobal)
+    }
+
+    func testNoPrefetchSettingChangeWhenSenderThrows() {
+        let sender = SenderSpy()
+        sender.throwFromSendFramesetWaitUpon = true
+        let channel = RMQAllocatedChannel(999, sender: sender)
+
+        if let qosOk = try? channel.basicQos(123, global: true) {
+            XCTFail("basicQos didn't throw, returned \(qosOk).")
+        } else {
+            XCTAssertEqual(0, channel.prefetchCount)
+            XCTAssertFalse(channel.prefetchGlobal)
+        }
+    }
 }

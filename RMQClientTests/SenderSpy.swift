@@ -1,3 +1,7 @@
+enum SenderSpyError: ErrorType {
+    case ArbitraryError(localizedDescription: String)
+}
+
 @objc class NothingSentYet : AMQFrameset {}
 
 @objc class SenderSpy : NSObject, RMQSender {
@@ -7,6 +11,13 @@
     var methodWaitedUpon: String = "nothing waited upon yet!"
     var channelWaitedUpon: NSNumber = -1
     var frameMax: NSNumber
+    var throwFromSendFramesetWaitUpon = false
+
+    static func waitingUpon(method: AMQMethod, channelNumber: Int) -> SenderSpy {
+        let sender = SenderSpy()
+        sender.lastWaitedUponFrameset = AMQFrameset(channelNumber: channelNumber, method: method)
+        return sender
+    }
 
     init(frameMax aFrameMax: Int = 131072) {
         frameMax = aFrameMax
@@ -17,11 +28,15 @@
     }
 
     func sendFrameset(frameset: AMQFrameset, waitOnMethod amqMethodClass: AnyClass) throws -> AMQFrameset {
-        sentFramesets.append(frameset)
-        lastSentMethod = frameset.method
-        methodWaitedUpon = "\(amqMethodClass)"
-        channelWaitedUpon = frameset.channelNumber
-        return lastWaitedUponFrameset
+        if throwFromSendFramesetWaitUpon {
+            throw SenderSpyError.ArbitraryError(localizedDescription: "stubbed to throw")
+        } else {
+            sentFramesets.append(frameset)
+            lastSentMethod = frameset.method
+            methodWaitedUpon = "\(amqMethodClass)"
+            channelWaitedUpon = frameset.channelNumber
+            return lastWaitedUponFrameset
+        }
     }
 
     func sendMethod(amqMethod: AMQMethod, channelNumber: NSNumber) {

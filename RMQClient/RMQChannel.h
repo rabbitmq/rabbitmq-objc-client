@@ -7,6 +7,8 @@
 @protocol RMQChannel <NSObject, RMQFrameHandler>
 
 @property (nonnull, copy, nonatomic, readonly) NSNumber *channelNumber;
+@property (nonnull, nonatomic, readonly) NSNumber *prefetchCount;
+@property (nonatomic, readonly) BOOL prefetchGlobal;
 
 - (nonnull RMQExchange *)defaultExchange;
 
@@ -20,5 +22,9 @@
 
 - (void)basicConsume:(nonnull NSString *)queueName
             consumer:(void (^ _Nonnull)(id <RMQMessage> _Nonnull))consumer;
+
+- (nullable AMQBasicQosOk *)basicQos:(nonnull NSNumber *)count
+                              global:(BOOL)isGlobal
+                               error:(NSError * _Nullable * _Nullable)error;
 
 @end

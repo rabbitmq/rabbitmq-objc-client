@@ -111,4 +111,8 @@ class MethodFixtures {
     static func basicDeliver(consumerTag consumerTag: String = "", deliveryTag: UInt64 = 0) -> AMQBasicDeliver {
         return AMQBasicDeliver(consumerTag: AMQShortstr(consumerTag), deliveryTag: AMQLonglong(deliveryTag), options: AMQBasicDeliverOptions.NoOptions, exchange: AMQShortstr(""), routingKey: AMQShortstr(""))
     }
+
+    static func basicQos(prefetchCount: UInt, options: AMQBasicQosOptions) -> AMQBasicQos {
+        return AMQBasicQos(prefetchSize: AMQLong(0), prefetchCount: AMQShort(prefetchCount), options: options)
+    }
 }

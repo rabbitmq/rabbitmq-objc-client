@@ -12,6 +12,8 @@ typedef void (^Consumer)(id<RMQMessage>);
 @property (nonatomic, readwrite) id <RMQSender> sender;
 @property (nonatomic, readwrite) NSMutableDictionary *consumers;
 @property (nonatomic, readwrite) NSMutableDictionary *queues;
+@property (nonatomic, readwrite) NSNumber *prefetchCount;
+@property (nonatomic, readwrite) BOOL prefetchGlobal;
 @end
 
 @implementation RMQAllocatedChannel
@@ -23,6 +25,8 @@ typedef void (^Consumer)(id<RMQMessage>);
         self.sender = sender;
         self.consumers = [NSMutableDictionary new];
         self.queues = [NSMutableDictionary new];
+        self.prefetchCount = @0;
+        self.prefetchGlobal = NO;
     }
     return self;
 }
@@ -84,6 +88,29 @@ typedef void (^Consumer)(id<RMQMessage>);
     AMQBasicConsumeOk *consumeOk = (AMQBasicConsumeOk *)frameset.method;
 
     self.consumers[consumeOk.consumerTag] = consumer;
+}
+
+- (AMQBasicQosOk *)basicQos:(NSNumber *)count
+                     global:(BOOL)isGlobal
+                      error:(NSError *__autoreleasing  _Nullable * _Nullable)error {
+    AMQBasicQosOptions options = AMQBasicQosNoOptions;
+    if (isGlobal) options     |= AMQBasicQosGlobal;
+
+    AMQBasicQos *qos = [[AMQBasicQos alloc] initWithPrefetchSize:[[AMQLong alloc] init:0]
+                                                   prefetchCount:[[AMQShort alloc] init:count.integerValue]
+                                                         options:options];
+    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:self.channelNumber method:qos];
+
+    AMQBasicQosOk *response = (AMQBasicQosOk *)[self.sender sendFrameset:frameset
+                                                            waitOnMethod:[AMQBasicQosOk class]
+                                                                   error:error].method;
+    if (response) {
+        self.prefetchCount = count;
+        self.prefetchGlobal = isGlobal;
+        return response;
+    } else {
+        return nil;
+    }
 }
 
 - (void)handleFrameset:(AMQFrameset *)frameset {

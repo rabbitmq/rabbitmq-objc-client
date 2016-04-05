@@ -6,6 +6,9 @@
 
 @implementation RMQUnallocatedChannel
 
+@synthesize prefetchCount;
+@synthesize prefetchGlobal;
+
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -30,6 +33,10 @@
     return nil;
 }
 - (void)handleFrameset:(AMQFrameset *)frameset {
-
+}
+- (AMQBasicQosOk *)basicQos:(NSNumber *)count
+                     global:(BOOL)isGlobal
+                      error:(NSError *__autoreleasing  _Nullable * _Nullable)error {
+    return nil;
 }
 @end
