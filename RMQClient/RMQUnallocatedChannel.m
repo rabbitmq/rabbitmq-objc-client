@@ -17,7 +17,9 @@
     return self;
 }
 
-- (void)basicConsume:(NSString *)queueName consumer:(void (^)(id<RMQMessage> _Nonnull))consumer {
+- (void)basicConsume:(NSString *)queueName
+             options:(AMQBasicConsumeOptions)options
+            consumer:(void (^)(id<RMQMessage> _Nonnull))consumer {
 }
 - (RMQExchange *)defaultExchange {
     return nil;

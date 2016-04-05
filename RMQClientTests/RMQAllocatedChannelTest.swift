@@ -51,10 +51,10 @@ class RMQAllocatedChannelTest: XCTestCase {
     }
     
     func testBasicConsumeSendsBasicConsumeMethod() {
-        let sender = SenderSpy()
+        let sender = SenderSpy.waitingUpon(AMQBasicConsumeOk(consumerTag: AMQShortstr("taggy")), channelNumber: 1)
         let channel = RMQAllocatedChannel(1, sender: sender)
-        sender.lastWaitedUponFrameset = AMQFrameset(channelNumber: 1, method: AMQBasicConsumeOk(consumerTag: AMQShortstr("taggy")))
-        channel.basicConsume("a_queue_name") { message in }
+
+        channel.basicConsume("a_queue_name", options: [.NoAck]) { message in }
         let expectedMethod = AMQBasicConsume(
             reserved1: AMQShort(0),
             queue: AMQShortstr("a_queue_name"),
@@ -70,7 +70,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let sender = SenderSpy()
         let channel = RMQAllocatedChannel(432, sender: sender)
         sender.lastWaitedUponFrameset = AMQFrameset(channelNumber: 432, method: AMQBasicConsumeOk(consumerTag: AMQShortstr("taggy")))
-        channel.basicConsume("a_queue_name") { message in }
+        channel.basicConsume("a_queue_name", options: []) { message in }
 
         XCTAssertEqual("AMQBasicConsumeOk", sender.methodWaitedUpon)
         XCTAssertEqual(432, sender.channelWaitedUpon)
@@ -82,7 +82,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         sender.lastWaitedUponFrameset = AMQFrameset(channelNumber: 432, method: AMQBasicConsumeOk(consumerTag: AMQShortstr("foo")))
 
         var consumedMessage = RMQContentMessage(consumerTag: "", deliveryTag: 0, content: "Not consumed yet")
-        channel.basicConsume("somequeue") { message in
+        channel.basicConsume("somequeue", options: []) { message in
             consumedMessage = message as! RMQContentMessage
         }
 
@@ -107,12 +107,12 @@ class RMQAllocatedChannelTest: XCTestCase {
         let consumeOk2 = AMQFrameset(channelNumber: 999, method: AMQBasicConsumeOk(consumerTag: AMQShortstr("servertag2")))
 
         sender.lastWaitedUponFrameset = consumeOk1
-        channel.basicConsume("sameq") { message in
+        channel.basicConsume("sameq", options: []) { message in
             consumedMessage1 = message as! RMQContentMessage
         }
 
         sender.lastWaitedUponFrameset = consumeOk2
-        channel.basicConsume("sameq") { message in
+        channel.basicConsume("sameq", options: []) { message in
             consumedMessage2 = message as! RMQContentMessage
         }
 

@@ -21,6 +21,7 @@
                                     options:(AMQQueueDeclareOptions)options;
 
 - (void)basicConsume:(nonnull NSString *)queueName
+             options:(AMQBasicConsumeOptions)options
             consumer:(void (^ _Nonnull)(id <RMQMessage> _Nonnull))consumer;
 
 - (nullable AMQBasicQosOk *)basicQos:(nonnull NSNumber *)count

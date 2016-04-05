@@ -40,7 +40,7 @@
         )
     }
 
-    func basicConsume(queueName: String, consumer: (RMQMessage) -> Void) {
+    func basicConsume(queueName: String, options: AMQBasicConsumeOptions, consumer: (RMQMessage) -> Void) {
         lastReceivedBasicConsumeBlock = consumer
     }
 

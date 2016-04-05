@@ -74,11 +74,13 @@ typedef void (^Consumer)(id<RMQMessage>);
     return (AMQQueueDeclareOk *)incomingFrameset.method;
 }
 
-- (void)basicConsume:(NSString *)queueName consumer:(Consumer)consumer {
+- (void)basicConsume:(NSString *)queueName
+             options:(AMQBasicConsumeOptions)options
+            consumer:(Consumer)consumer {
     AMQBasicConsume *method = [[AMQBasicConsume alloc] initWithReserved1:[[AMQShort alloc] init:0]
                                                                    queue:[[AMQShortstr alloc] init:queueName]
                                                              consumerTag:[[AMQShortstr alloc] init:@""]
-                                                                 options:AMQBasicConsumeNoAck
+                                                                 options:options
                                                                arguments:[[AMQTable alloc] init:@{}]];
     AMQFrameset *outgoingFrameset = [[AMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
     NSError *error = NULL;
