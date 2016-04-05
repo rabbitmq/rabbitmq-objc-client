@@ -145,19 +145,37 @@ class RMQQueueTest: XCTestCase {
         XCTAssertEqual("totally expected message", queue.pop().content)
     }
 
-    func testSubscribeSendsABasicConsumeToChannel() {
+    func testSubscribeSendsABasicConsumeToChannelWithAutoAck() {
         let channel = ChannelSpy(123)
-        let queue = RMQQueue(name: "my great queue", channel: channel, sender: SenderSpy())
+        let queue = RMQQueue(name: "default options", channel: channel, sender: SenderSpy())
 
         var handlerCalled = false
         queue.subscribe { RMQMessage in
             handlerCalled = true
         }
 
-        let message = RMQContentMessage(consumerTag: "", deliveryTag: 123, content: "Hi there!")
+        let message = RMQContentMessage(consumerTag: "", deliveryTag: 123, content: "I have default options!")
         channel.lastReceivedBasicConsumeBlock!(message)
 
         XCTAssert(handlerCalled)
+        XCTAssertEqual([.NoAck], channel.lastReceivedBasicConsumeOptions)
+    }
+
+    func testSubscribeWithOptionsSendsOptionsToChannel() {
+        let channel = ChannelSpy(123)
+        let queue = RMQQueue(name: "custom options", channel: channel, sender: SenderSpy())
+
+        var handlerCalled = false
+
+        queue.subscribe([.NoWait]) { RMQMessage in
+            handlerCalled = true
+        }
+
+        let message = RMQContentMessage(consumerTag: "", deliveryTag: 123, content: "I have custom options!")
+        channel.lastReceivedBasicConsumeBlock!(message)
+
+        XCTAssert(handlerCalled)
+        XCTAssertEqual([.NoWait], channel.lastReceivedBasicConsumeOptions)
     }
 
     func testGettingMessageCountRedeclaresQueueWithSameOptions() {

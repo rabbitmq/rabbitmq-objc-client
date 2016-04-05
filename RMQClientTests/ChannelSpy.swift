@@ -1,5 +1,6 @@
 @objc class ChannelSpy : NSObject, RMQChannel {
     var channelNumber: NSNumber
+    var lastReceivedBasicConsumeOptions: AMQBasicConsumeOptions = []
     var lastReceivedBasicConsumeBlock: ((RMQMessage) -> Void)?
     var lastReceivedFrameset: AMQFrameset?
     var queues: [String: RMQQueue] = [:]
@@ -41,6 +42,7 @@
     }
 
     func basicConsume(queueName: String, options: AMQBasicConsumeOptions, consumer: (RMQMessage) -> Void) {
+        lastReceivedBasicConsumeOptions = options
         lastReceivedBasicConsumeBlock = consumer
     }
 

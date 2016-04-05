@@ -87,8 +87,12 @@
                                                   content:content];
 }
 
+- (void)subscribe:(AMQBasicConsumeOptions)options handler:(void (^)(id<RMQMessage> _Nonnull))handler {
+    [self.channel basicConsume:self.name options:options consumer:handler];
+}
+
 - (void)subscribe:(void (^)(id<RMQMessage> _Nonnull))handler {
-    [self.channel basicConsume:self.name options:AMQBasicConsumeNoAck consumer:handler];
+    [self subscribe:AMQBasicConsumeNoAck handler:handler];
 }
 
 - (NSNumber *)messageCount {
