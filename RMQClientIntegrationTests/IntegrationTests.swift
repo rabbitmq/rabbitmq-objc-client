@@ -17,7 +17,7 @@ class IntegrationTests: XCTestCase {
             heartbeat: 0,
             syncTimeout: 10
         )
-        conn.start()
+        try! conn.start()
         defer { conn.close() }
 
         let ch = try! conn.createChannel()
@@ -33,7 +33,7 @@ class IntegrationTests: XCTestCase {
 
     func testSubscribe() {
         let conn = RMQConnection()
-        conn.start()
+        try! conn.start()
         defer { conn.close() }
 
         let ch = try! conn.createChannel()
@@ -54,7 +54,7 @@ class IntegrationTests: XCTestCase {
 
     func testMultipleConsumersOnSameChannel() {
         let conn = RMQConnection()
-        conn.start()
+        try! conn.start()
         defer { conn.close() }
 
         var set1 = Set<NSNumber>()
@@ -106,7 +106,7 @@ class IntegrationTests: XCTestCase {
         var consumingQueues: [RMQQueue] = []
         let queueName = generatedQueueName()
         let conn = RMQConnection()
-        conn.start()
+        try! conn.start()
         defer { conn.close() }
 
         for _ in 1...100 {

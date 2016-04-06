@@ -24,7 +24,7 @@
                           heartbeat:(nonnull NSNumber *)heartbeat
                         syncTimeout:(nonnull NSNumber *)syncTimeout;
 
-- (nonnull RMQConnection *)start;
+- (BOOL)startWithError:(NSError * _Nullable * _Nullable)error;
 - (void)close;
 - (nullable id<RMQChannel>)createChannelWithError:(NSError * _Nullable * _Nullable)error;
 

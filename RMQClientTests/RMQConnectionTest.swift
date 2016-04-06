@@ -9,15 +9,64 @@ class RMQConnectionTest: XCTestCase {
         password: String = "bar",
         vhost: String = "baz"
         ) -> RMQConnection {
-            return RMQConnection(
-                transport: transport,
-                user: user,
-                password: password,
-                vhost: vhost,
-                channelMax: 65535,
-                frameMax: 131072,
-                heartbeat: 0,
-                syncTimeout: syncTimeout).start()
+        let conn = RMQConnection(
+            transport: transport,
+            user: user,
+            password: password,
+            vhost: vhost,
+            channelMax: 65535,
+            frameMax: 131072,
+            heartbeat: 0,
+            syncTimeout: syncTimeout)
+        try! conn.start()
+        return conn
+    }
+
+    func testConnectionErrorWhenWritingIsPropagated() {
+        let transport = ControlledInteractionTransport()
+        transport.stubbedToThrowErrorOnWrite = "bad write"
+        let conn = RMQConnection(
+            transport: transport,
+            user: "foo",
+            password: "bar",
+            vhost: "",
+            channelMax: 123,
+            frameMax: 321,
+            heartbeat: 10,
+            syncTimeout: 10
+        )
+        do {
+            try conn.start()
+        }
+        catch let e as NSError {
+            XCTAssertEqual("RMQClientTests.TestDoubleTransportError", e.domain)
+        }
+        catch {
+            XCTFail("start() didn't produce error")
+        }
+    }
+
+    func testTimeoutWhenWaitingForStart() {
+        let transport = ControlledInteractionTransport()
+        let conn = RMQConnection(
+            transport: transport,
+            user: "foo",
+            password: "bar",
+            vhost: "",
+            channelMax: 123,
+            frameMax: 321,
+            heartbeat: 10,
+            syncTimeout: 0
+        )
+        do {
+            try conn.start()
+        }
+        catch let e as NSError {
+            XCTAssertEqual("RMQClientTests.TestDoubleTransportError", e.domain)
+        }
+        catch {
+            XCTFail("start() didn't produce error")
+        }
     }
 
     func testHandshaking() {
@@ -78,8 +127,8 @@ class RMQConnectionTest: XCTestCase {
 
     func testCreatingAChannelThrowsWhenTransportThrows() {
         let transport = ControlledInteractionTransport()
-        transport.stubbedToThrowErrorOnWrite = "stubbed message"
         let conn = startedConnection(transport)
+        transport.stubbedToThrowErrorOnWrite = "stubbed message"
 
         do {
             try conn.createChannel()

@@ -102,16 +102,19 @@
                  syncTimeout:@10];
 }
 
-- (RMQConnection *)start {
+- (BOOL)startWithError:(NSError *__autoreleasing  _Nullable *)error {
     [self.transport connect:^{
-        NSError *error = NULL;
         [self.transport write:[AMQProtocolHeader new].amqEncoded
-                        error:&error
+                        error:error
                    onComplete:^{ [self.readerLoop runOnce]; }];
     }];
-    NSError *error = NULL;
-    [self waitOnMethod:[AMQConnectionOpenOk class] channelNumber:@0 error:&error];
-    return self;
+    if (*error) {
+        return NO;
+    } else if ([self waitOnMethod:[AMQConnectionOpenOk class] channelNumber:@0 error:error] && *error) {
+        return NO;
+    } else {
+        return YES;
+    }
 }
 
 - (void)close {
