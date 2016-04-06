@@ -19,6 +19,8 @@ class RMQSynchronizedMutableDictionaryTest: XCTestCase {
         sharedDictionary.removeObjectForKey(2)
 
         XCTAssertNil(sharedDictionary[2])
+
+        XCTAssertEqual(2, sharedDictionary.count)
     }
 
     func testMultiThreadedWriting() {

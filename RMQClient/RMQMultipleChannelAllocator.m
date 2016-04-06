@@ -1,11 +1,12 @@
+#import "AMQConstants.h"
 #import "RMQMultipleChannelAllocator.h"
 #import "RMQAllocatedChannel.h"
+#import "RMQSynchronizedMutableDictionary.h"
 #import "RMQUnallocatedChannel.h"
-#import "AMQConstants.h"
 
 @interface RMQMultipleChannelAllocator ()
 @property (atomic, readwrite) UInt16 channelNumber;
-@property (nonatomic, readwrite) NSMutableDictionary *channels;
+@property (nonatomic, readwrite) RMQSynchronizedMutableDictionary *channels;
 @property (nonatomic, readwrite) id<RMQSender> sender;
 @end
 
@@ -15,7 +16,7 @@
 {
     self = [super init];
     if (self) {
-        self.channels = [NSMutableDictionary new];
+        self.channels = [RMQSynchronizedMutableDictionary new];
         self.sender = sender;
         self.channelNumber = 0;
     }
