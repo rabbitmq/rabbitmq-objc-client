@@ -20,7 +20,7 @@
 - (nonnull RMQQueue *)publish:(nonnull NSString *)message;
 - (nonnull id<RMQMessage>)pop;
 - (BOOL)subscribeWithError:(NSError * _Nonnull * _Nonnull)error
-                   handler:(void (^ _Nonnull)(id<RMQMessage> _Nonnull))handler;
+                   handler:(void (^ _Nonnull)(id<RMQMessage> _Nonnull message))handler;
 - (BOOL)subscribe:(AMQBasicConsumeOptions)options
             error:(NSError * _Nonnull * _Nonnull)error
           handler:(void (^ _Nonnull)(id<RMQMessage> _Nonnull message))handler;
