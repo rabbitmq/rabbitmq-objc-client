@@ -32,7 +32,7 @@ class IntegrationTests: XCTestCase {
     }
 
     func testSubscribe() {
-        let conn = RMQConnection()
+        let conn = RMQConnection(uri: "amqp://guest:guest@localhost")
         try! conn.start()
         defer { conn.close() }
 

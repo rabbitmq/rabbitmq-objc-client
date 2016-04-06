@@ -93,13 +93,17 @@
                        syncTimeout:syncTimeout];
 }
 
-- (instancetype)init
-{
-    return [self initWithUri:@"amqp://guest:guest@localhost"
+- (instancetype)initWithUri:(NSString *)uri {
+    return [self initWithUri:uri
                   channelMax:@(AMQChannelLimit)
                     frameMax:@131072
                    heartbeat:@0
                  syncTimeout:@10];
+}
+
+- (instancetype)init
+{
+    return [self initWithUri:@"amqp://guest:guest@localhost"];
 }
 
 - (BOOL)startWithError:(NSError *__autoreleasing  _Nullable *)error {
