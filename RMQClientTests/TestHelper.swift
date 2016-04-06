@@ -14,6 +14,18 @@ class TestHelper {
         return false
     }
 
+    static func pollUntil(timeout: NSTimeInterval, checker: () -> Bool) -> Bool {
+        let startTime = NSDate()
+        while NSDate().timeIntervalSinceDate(startTime) < timeout {
+            if checker() {
+                return true
+            } else {
+                run(0.5)
+            }
+        }
+        return false
+    }
+
     static func run(time: NSTimeInterval) {
         NSRunLoop.currentRunLoop().runUntilDate(NSDate().dateByAddingTimeInterval(time))
     }

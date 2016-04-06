@@ -54,7 +54,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let sender = SenderSpy.waitingUpon(AMQBasicConsumeOk(consumerTag: AMQShortstr("taggy")), channelNumber: 1)
         let channel = RMQAllocatedChannel(1, sender: sender)
 
-        channel.basicConsume("a_queue_name", options: [.NoAck]) { message in }
+        try! channel.basicConsume("a_queue_name", options: [.NoAck]) { message in }
         let expectedMethod = AMQBasicConsume(
             reserved1: AMQShort(0),
             queue: AMQShortstr("a_queue_name"),
@@ -70,7 +70,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let sender = SenderSpy()
         let channel = RMQAllocatedChannel(432, sender: sender)
         sender.lastWaitedUponFrameset = AMQFrameset(channelNumber: 432, method: AMQBasicConsumeOk(consumerTag: AMQShortstr("taggy")))
-        channel.basicConsume("a_queue_name", options: []) { message in }
+        try! channel.basicConsume("a_queue_name", options: []) { message in }
 
         XCTAssertEqual("AMQBasicConsumeOk", sender.methodWaitedUpon)
         XCTAssertEqual(432, sender.channelWaitedUpon)
@@ -82,7 +82,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         sender.lastWaitedUponFrameset = AMQFrameset(channelNumber: 432, method: AMQBasicConsumeOk(consumerTag: AMQShortstr("foo")))
 
         var consumedMessage = RMQContentMessage(consumerTag: "", deliveryTag: 0, content: "Not consumed yet")
-        channel.basicConsume("somequeue", options: []) { message in
+        try! channel.basicConsume("somequeue", options: []) { message in
             consumedMessage = message as! RMQContentMessage
         }
 
@@ -96,6 +96,41 @@ class RMQAllocatedChannelTest: XCTestCase {
         XCTAssertEqual(expectedMessage, consumedMessage)
     }
 
+    func testBasicConsumeFailureThrows() {
+        let sender = SenderSpy()
+        sender.throwFromSendFramesetWaitUpon = true
+        let channel = RMQAllocatedChannel(432, sender: sender)
+
+        do {
+            try channel.basicConsume("somequeue", options: []) { message in }
+        }
+        catch let e as NSError {
+            XCTAssertEqual("RMQClientTests.SenderSpyError", e.domain)
+        }
+        catch {
+            XCTFail("Wrong error")
+        }
+    }
+
+    func testBasicConsumeDoesNotCallbackIfConsumeOkFails() {
+        let sender = SenderSpy()
+        sender.throwFromSendFramesetWaitUpon = true
+        let channel = RMQAllocatedChannel(432, sender: sender)
+
+        var called = false
+        let _ = try? channel.basicConsume("somequeue", options: []) { message in
+            called = true
+        }
+
+        let deliverMethod = MethodFixtures.basicDeliver(consumerTag: "foo", deliveryTag: 123)
+        let header = AMQContentHeader(classID: deliverMethod.classID(), bodySize: 123, properties: [])
+        let body = AMQContentBody(data: "Should not be consumed!".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let incomingDeliver = AMQFrameset(channelNumber: 432, method: deliverMethod, contentHeader: header, contentBodies: [body])
+        channel.handleFrameset(incomingDeliver)
+
+        XCTAssertFalse(called)
+    }
+
     func testMultipleConsumersOnSameQueueReceiveMessages() {
         let sender = SenderSpy()
         let channel = RMQAllocatedChannel(999, sender: sender)
@@ -107,12 +142,12 @@ class RMQAllocatedChannelTest: XCTestCase {
         let consumeOk2 = AMQFrameset(channelNumber: 999, method: AMQBasicConsumeOk(consumerTag: AMQShortstr("servertag2")))
 
         sender.lastWaitedUponFrameset = consumeOk1
-        channel.basicConsume("sameq", options: []) { message in
+        try! channel.basicConsume("sameq", options: []) { message in
             consumedMessage1 = message as! RMQContentMessage
         }
 
         sender.lastWaitedUponFrameset = consumeOk2
-        channel.basicConsume("sameq", options: []) { message in
+        try! channel.basicConsume("sameq", options: []) { message in
             consumedMessage2 = message as! RMQContentMessage
         }
 

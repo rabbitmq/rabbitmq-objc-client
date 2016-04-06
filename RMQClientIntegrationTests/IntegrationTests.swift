@@ -40,7 +40,7 @@ class IntegrationTests: XCTestCase {
         let q = ch.queue(generatedQueueName(), options: [.AutoDelete, .Exclusive])
 
         var delivered = RMQContentMessage(consumerTag: "", deliveryTag: 0, content: "not delivered yet")
-        q.subscribe { (message: RMQMessage) in
+        try! q.subscribe { (message: RMQMessage) in
             delivered = message as! RMQContentMessage
         }
 
@@ -65,15 +65,15 @@ class IntegrationTests: XCTestCase {
         let queueName = generatedQueueName()
         let consumingQueue = consumingChannel.queue(queueName)
 
-        consumingQueue.subscribe { (message: RMQMessage) in
+        try! consumingQueue.subscribe { (message: RMQMessage) in
             set1.insert(message.deliveryTag)
         }
 
-        consumingQueue.subscribe { (message: RMQMessage) in
+        try! consumingQueue.subscribe { (message: RMQMessage) in
             set2.insert(message.deliveryTag)
         }
 
-        consumingQueue.subscribe { (message: RMQMessage) in
+        try! consumingQueue.subscribe { (message: RMQMessage) in
             set3.insert(message.deliveryTag)
         }
 
@@ -112,7 +112,7 @@ class IntegrationTests: XCTestCase {
         for _ in 1...100 {
             let ch = try! conn.createChannel()
             let q = ch.queue(queueName)
-            q.subscribe { (message: RMQMessage) in
+            try! q.subscribe { (message: RMQMessage) in
                 OSAtomicIncrement32(&counter)
             }
             consumingChannels.append(ch)

@@ -20,8 +20,9 @@
 - (nonnull AMQQueueDeclareOk *)queueDeclare:(nonnull NSString *)queueName
                                     options:(AMQQueueDeclareOptions)options;
 
-- (void)basicConsume:(nonnull NSString *)queueName
+- (BOOL)basicConsume:(nonnull NSString *)queueName
              options:(AMQBasicConsumeOptions)options
+               error:(NSError * _Nullable * _Nullable)error
             consumer:(void (^ _Nonnull)(id <RMQMessage> _Nonnull))consumer;
 
 - (nullable AMQBasicQosOk *)basicQos:(nonnull NSNumber *)count

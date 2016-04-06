@@ -87,12 +87,25 @@
                                                   content:content];
 }
 
-- (void)subscribe:(AMQBasicConsumeOptions)options handler:(void (^)(id<RMQMessage> _Nonnull))handler {
-    [self.channel basicConsume:self.name options:options consumer:handler];
+- (BOOL)subscribe:(AMQBasicConsumeOptions)options
+            error:(NSError *__autoreleasing  _Nonnull *)error
+          handler:(void (^)(id<RMQMessage> _Nonnull))handler {
+    [self.channel basicConsume:self.name
+                       options:options
+                         error:error
+                      consumer:handler];
+    if (*error) {
+        return NO;
+    } else {
+        return YES;
+    }
 }
 
-- (void)subscribe:(void (^)(id<RMQMessage> _Nonnull))handler {
-    [self subscribe:AMQBasicConsumeNoAck handler:handler];
+- (BOOL)subscribeWithError:(NSError *__autoreleasing  _Nonnull *)error
+                   handler:(void (^)(id<RMQMessage> _Nonnull))handler {
+    return [self subscribe:AMQBasicConsumeNoAck
+                     error:error
+                   handler:handler];
 }
 
 - (NSNumber *)messageCount {

@@ -19,7 +19,7 @@ class FramesetRoutingTest: XCTestCase {
             method: AMQBasicConsumeOk(consumerTag: AMQShortstr("atag4u"))
         )
         var consumerTriggered = false
-        ch.basicConsume("foo", options: []) { message in
+        try! ch.basicConsume("foo", options: []) { message in
             consumerTriggered = true
         }
 

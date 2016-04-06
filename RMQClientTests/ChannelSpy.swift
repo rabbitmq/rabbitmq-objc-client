@@ -1,3 +1,7 @@
+enum ChannelSpyError: ErrorType {
+    case ArbitraryError(localizedDescription: String)
+}
+
 @objc class ChannelSpy : NSObject, RMQChannel {
     var channelNumber: NSNumber
     var lastReceivedBasicConsumeOptions: AMQBasicConsumeOptions = []
@@ -9,6 +13,7 @@
     var lastReceivedQueueDeclareOptions: AMQQueueDeclareOptions = []
     var prefetchCount: NSNumber = 0
     var prefetchGlobal: Bool = false
+    var throwFromBasicConsume = false
 
     init(_ aChannelNumber: Int) {
         channelNumber = aChannelNumber
@@ -41,9 +46,12 @@
         )
     }
 
-    func basicConsume(queueName: String, options: AMQBasicConsumeOptions, consumer: (RMQMessage) -> Void) {
+    func basicConsume(queueName: String, options: AMQBasicConsumeOptions, consumer: (RMQMessage) -> Void) throws {
         lastReceivedBasicConsumeOptions = options
         lastReceivedBasicConsumeBlock = consumer
+        if throwFromBasicConsume {
+            throw ChannelSpyError.ArbitraryError(localizedDescription: "stubbed throw")
+        }
     }
 
     func handleFrameset(frameset: AMQFrameset) {

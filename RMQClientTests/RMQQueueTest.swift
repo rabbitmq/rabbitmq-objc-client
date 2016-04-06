@@ -150,7 +150,7 @@ class RMQQueueTest: XCTestCase {
         let queue = RMQQueue(name: "default options", channel: channel, sender: SenderSpy())
 
         var handlerCalled = false
-        queue.subscribe { RMQMessage in
+        try! queue.subscribe { RMQMessage in
             handlerCalled = true
         }
 
@@ -167,7 +167,7 @@ class RMQQueueTest: XCTestCase {
 
         var handlerCalled = false
 
-        queue.subscribe([.NoWait]) { RMQMessage in
+        try! queue.subscribe([.NoWait]) { RMQMessage in
             handlerCalled = true
         }
 
@@ -176,6 +176,22 @@ class RMQQueueTest: XCTestCase {
 
         XCTAssert(handlerCalled)
         XCTAssertEqual([.NoWait], channel.lastReceivedBasicConsumeOptions)
+    }
+
+    func testBasicConsumeErrorsArePropagatedThroughSubscribe() {
+        let channel = ChannelSpy(123)
+        channel.throwFromBasicConsume = true
+        let queue = RMQQueue(name: "custom options", channel: channel, sender: SenderSpy())
+
+        do {
+            try queue.subscribe { RMQMessage in }
+        }
+        catch let e as NSError {
+            XCTAssertEqual("RMQClientTests.ChannelSpyError", e.domain)
+        }
+        catch {
+            XCTFail("Wrong error")
+        }
     }
 
     func testGettingMessageCountRedeclaresQueueWithSameOptions() {

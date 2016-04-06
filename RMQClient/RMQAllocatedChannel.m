@@ -74,8 +74,9 @@ typedef void (^Consumer)(id<RMQMessage>);
     return (AMQQueueDeclareOk *)incomingFrameset.method;
 }
 
-- (void)basicConsume:(NSString *)queueName
+- (BOOL)basicConsume:(NSString *)queueName
              options:(AMQBasicConsumeOptions)options
+               error:(NSError *__autoreleasing  _Nullable * _Nullable)error
             consumer:(Consumer)consumer {
     AMQBasicConsume *method = [[AMQBasicConsume alloc] initWithReserved1:[[AMQShort alloc] init:0]
                                                                    queue:[[AMQShortstr alloc] init:queueName]
@@ -83,13 +84,16 @@ typedef void (^Consumer)(id<RMQMessage>);
                                                                  options:options
                                                                arguments:[[AMQTable alloc] init:@{}]];
     AMQFrameset *outgoingFrameset = [[AMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
-    NSError *error = NULL;
     AMQFrameset *frameset = [self.sender sendFrameset:outgoingFrameset
                                          waitOnMethod:[AMQBasicConsumeOk class]
-                                                error:&error];
-    AMQBasicConsumeOk *consumeOk = (AMQBasicConsumeOk *)frameset.method;
-
-    self.consumers[consumeOk.consumerTag] = consumer;
+                                                error:error];
+    if (*error) {
+        return NO;
+    } else {
+        AMQBasicConsumeOk *consumeOk = (AMQBasicConsumeOk *)frameset.method;
+        self.consumers[consumeOk.consumerTag] = consumer;
+        return YES;
+    }
 }
 
 - (AMQBasicQosOk *)basicQos:(NSNumber *)count
@@ -121,10 +125,12 @@ typedef void (^Consumer)(id<RMQMessage>);
         AMQBasicDeliver *deliver = (AMQBasicDeliver *)frameset.method;
         NSString *content = [[NSString alloc] initWithData:frameset.contentData encoding:NSUTF8StringEncoding];
         Consumer consumer = self.consumers[deliver.consumerTag];
-        RMQContentMessage *message = [[RMQContentMessage alloc] initWithConsumerTag:deliver.consumerTag.stringValue
-                                                                        deliveryTag:@(deliver.deliveryTag.integerValue)
-                                                                            content:content];
-        consumer(message);
+        if (consumer) {
+            RMQContentMessage *message = [[RMQContentMessage alloc] initWithConsumerTag:deliver.consumerTag.stringValue
+                                                                            deliveryTag:@(deliver.deliveryTag.integerValue)
+                                                                                content:content];
+            consumer(message);
+        }
     }
 }
 

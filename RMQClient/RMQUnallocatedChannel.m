@@ -17,9 +17,12 @@
     return self;
 }
 
-- (void)basicConsume:(NSString *)queueName
+- (BOOL)basicConsume:(NSString *)queueName
              options:(AMQBasicConsumeOptions)options
+               error:(NSError *__autoreleasing  _Nullable * _Nullable)error
             consumer:(void (^)(id<RMQMessage> _Nonnull))consumer {
+    *error = [NSError errorWithDomain:@"RMQ" code:0 userInfo:@{@"localizedDescription": @"Unallocated channel"}];
+    return NO;
 }
 - (RMQExchange *)defaultExchange {
     return nil;
