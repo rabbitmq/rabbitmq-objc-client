@@ -12,9 +12,9 @@ enum TestDoubleTransportError: ErrorType {
     var callbackIndexToRunNext = 0
     var stubbedToThrowErrorOnWrite: String?
 
-    func connect(onConnect: () -> Void) {
+    func connect(onComplete complete: () -> Void) throws {
         connected = true
-        onConnect()
+        complete()
     }
     func close(onClose: () -> Void) {
         connected = false

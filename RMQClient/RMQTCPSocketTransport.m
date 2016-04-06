@@ -1,8 +1,7 @@
 #import "RMQTCPSocketTransport.h"
 #import "RMQSynchronizedMutableDictionary.h"
 
-long connectTag = UINT32_MAX + 1;
-long closeTag   = UINT32_MAX + 2;
+long closeTag   = UINT32_MAX + 1;
 
 @interface RMQTCPSocketTransport ()
 
@@ -12,6 +11,7 @@ long closeTag   = UINT32_MAX + 2;
 @property (nonatomic, readwrite) GCDAsyncSocket *socket;
 @property (nonatomic, readwrite) id callbacks;
 @property (nonatomic, readwrite) dispatch_semaphore_t connectSemaphore;
+@property (nonatomic, readwrite) NSNumber *connectTimeout;
 
 @end
 
@@ -30,6 +30,7 @@ long closeTag   = UINT32_MAX + 2;
         self.port = port;
         self.callbacks = callbacks;
         self.connectSemaphore = nil;
+        self.connectTimeout = @2;
     }
     return self;
 }
@@ -40,17 +41,22 @@ long closeTag   = UINT32_MAX + 2;
     return nil;
 }
 
-- (void)connect:(void (^)())onConnect {
+- (BOOL)connectAndReturnError:(NSError *__autoreleasing  _Nullable *)error onComplete:(void (^)())complete {
     self.connectSemaphore = dispatch_semaphore_create(0);
 
-    NSError *error = nil;
-    self.callbacks[@(connectTag)] = [onConnect copy];
-    if (![self.socket connectToHost:self.host onPort:self.port.unsignedIntegerValue error:&error]) {
-        NSLog(@"*************** Something is very wrong: %@", error);
-        [self.callbacks removeObjectForKey:@(connectTag)];
+    if (![self.socket connectToHost:self.host
+                             onPort:self.port.unsignedIntegerValue
+                              error:error]) {
+        return NO;
+    } else if (dispatch_semaphore_wait(self.connectSemaphore, self.connectTimeoutFromNow) == 0) {
+        complete();
+        return YES;
+    } else {
+        *error = [NSError errorWithDomain:@"AMQ"
+                                     code:0
+                                 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Timed out waiting to connect", nil)}];
+        return NO;
     }
-
-    dispatch_semaphore_wait(self.connectSemaphore, DISPATCH_TIME_FOREVER);
 }
 
 - (void)close:(void (^)())onClose {
@@ -124,6 +130,10 @@ struct __attribute__((__packed__)) AMQPHeader {
     }
 }
 
+- (dispatch_time_t)connectTimeoutFromNow {
+    return dispatch_time(DISPATCH_TIME_NOW, self.connectTimeout.doubleValue * NSEC_PER_SEC);
+}
+
 # pragma mark - GCDAsyncSocketDelegate
 
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
@@ -134,7 +144,6 @@ struct __attribute__((__packed__)) AMQPHeader {
 
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
     self._isConnected = true;
-    [self invokeZeroArityCallback:connectTag];
     dispatch_semaphore_signal(self.connectSemaphore);
 }
 

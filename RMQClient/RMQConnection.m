@@ -103,7 +103,7 @@
 }
 
 - (BOOL)startWithError:(NSError *__autoreleasing  _Nullable *)error {
-    [self.transport connect:^{
+    [self.transport connectAndReturnError:error onComplete:^{
         [self.transport write:[AMQProtocolHeader new].amqEncoded
                         error:error
                    onComplete:^{ [self.readerLoop runOnce]; }];

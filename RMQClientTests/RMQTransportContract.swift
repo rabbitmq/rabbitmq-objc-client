@@ -9,7 +9,7 @@ class RMQTransportContract {
     
     func connectAndDisconnect() -> RMQTransportContract {
         var connected = false
-        transport.connect() {
+        try! transport.connect {
             connected = true
         }
         XCTAssert(TestHelper.pollUntil { return connected }, "didn't connect")
@@ -43,7 +43,7 @@ class RMQTransportContract {
         var readData: NSData = NSData()
         var connectionStart = AMQConnectionStart()
 
-        self.transport.connect() {
+        try! self.transport.connect {
             try! self.transport.write(AMQProtocolHeader().amqEncoded()) {
                 XCTAssertEqual(0, readData.length)
                 self.transport.readFrame() { receivedData in

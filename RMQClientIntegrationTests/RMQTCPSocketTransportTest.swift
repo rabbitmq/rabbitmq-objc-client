@@ -13,11 +13,11 @@ class RMQTCPSocketTransportTest: XCTestCase {
 
     func testConnectBlocksUntilConnectBlockCalled() {
         let timeBefore = NSDate()
-        transport.connect {
+        try! transport.connect {
             usleep(200000)
         }
         let elapsed = NSDate().timeIntervalSinceDate(timeBefore)
-        XCTAssert(elapsed > 0.2)
+        XCTAssert(elapsed > 0.2, "Expected \(elapsed) to be > 0.2")
     }
 
     func testIsNotConnectedWhenSocketDisconnectedOutsideOfCloseBlock() {
@@ -32,7 +32,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
         transport = RMQTCPSocketTransport(host: "localhost", port: 5672, callbackStorage: callbacks)
 
         var finished = false
-        transport.connect {
+        try! transport.connect {
             try! self.transport.write(AMQProtocolHeader().amqEncoded()) {
                 self.transport.readFrame { _ in
                     self.transport.close { finished = true }
@@ -42,5 +42,19 @@ class RMQTCPSocketTransportTest: XCTestCase {
 
         XCTAssert(TestHelper.pollUntil { return finished }, "couldn't exercise all callbacks")
         XCTAssertEqual(0, callbacks.count)
+    }
+
+    func testPropagatesErrorWhenConnectionTimesOut() {
+        let callbacks = RMQSynchronizedMutableDictionary()
+        transport = RMQTCPSocketTransport(host: "localhost", port: 123456, callbackStorage: callbacks)
+        do {
+            try transport.connect {}
+        }
+        catch let e as NSError {
+            XCTAssertEqual("Timed out waiting to connect", e.localizedDescription)
+        }
+        catch {
+            XCTFail("Should have failed on timeout")
+        }
     }
 }
