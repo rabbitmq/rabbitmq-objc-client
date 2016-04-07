@@ -21,7 +21,7 @@ class IntegrationTests: XCTestCase {
         defer { conn.close() }
 
         let ch = try! conn.createChannel()
-        let q = ch.queue(generatedQueueName(), options: [.AutoDelete])
+        let q = ch.queue(generatedQueueName("pop"), options: [.AutoDelete, .Exclusive])
 
         q.publish(messageContent)
 
@@ -37,7 +37,7 @@ class IntegrationTests: XCTestCase {
         defer { conn.close() }
 
         let ch = try! conn.createChannel()
-        let q = ch.queue(generatedQueueName(), options: [.AutoDelete, .Exclusive])
+        let q = ch.queue(generatedQueueName("subscribe"), options: [.AutoDelete, .Exclusive])
 
         var delivered = RMQContentMessage(consumerTag: "", deliveryTag: 0, content: "not delivered yet")
         try! q.subscribe { (message: RMQMessage) in
@@ -62,8 +62,8 @@ class IntegrationTests: XCTestCase {
         var set3 = Set<NSNumber>()
 
         let consumingChannel = try! conn.createChannel()
-        let queueName = generatedQueueName()
-        let consumingQueue = consumingChannel.queue(queueName)
+        let queueName = generatedQueueName("multiple-same-channel")
+        let consumingQueue = consumingChannel.queue(queueName, options: [.AutoDelete, .Exclusive])
 
         try! consumingQueue.subscribe { (message: RMQMessage) in
             set1.insert(message.deliveryTag)
@@ -78,7 +78,7 @@ class IntegrationTests: XCTestCase {
         }
 
         let producingChannel = try! conn.createChannel()
-        let producingQueue = producingChannel.queue(queueName)
+        let producingQueue = producingChannel.queue(queueName, options: [.AutoDelete, .Exclusive])
 
         for _ in 1...100 {
             producingQueue.publish("hello")
@@ -104,14 +104,14 @@ class IntegrationTests: XCTestCase {
         var counter: Int32 = 0
         var consumingChannels: [RMQChannel] = []
         var consumingQueues: [RMQQueue] = []
-        let queueName = generatedQueueName()
+        let queueName = generatedQueueName("concurrent-different-channels")
         let conn = RMQConnection()
         try! conn.start()
         defer { conn.close() }
 
         for _ in 1...100 {
             let ch = try! conn.createChannel()
-            let q = ch.queue(queueName)
+            let q = ch.queue(queueName, options: [.AutoDelete, .Exclusive])
             try! q.subscribe { (message: RMQMessage) in
                 OSAtomicIncrement32(&counter)
             }
@@ -120,7 +120,7 @@ class IntegrationTests: XCTestCase {
         }
 
         let producingChannel = try! conn.createChannel()
-        let producingQueue = producingChannel.queue(queueName)
+        let producingQueue = producingChannel.queue(queueName, options: [.AutoDelete, .Exclusive])
         XCTAssertEqual(100, producingQueue.consumerCount())
 
         for _ in 1...100 {
@@ -135,7 +135,7 @@ class IntegrationTests: XCTestCase {
         XCTAssertEqual(0, producingQueue.messageCount())
     }
 
-    func generatedQueueName() -> String {
-        return "rmqclient.integration-tests.\(NSProcessInfo.processInfo().globallyUniqueString)"
+    func generatedQueueName(identifier: String) -> String {
+        return "rmqclient.integration-tests.\(identifier)\(NSProcessInfo.processInfo().globallyUniqueString)"
     }
 }
