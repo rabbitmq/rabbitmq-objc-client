@@ -147,6 +147,13 @@ struct __attribute__((__packed__)) AMQPHeader {
     dispatch_semaphore_signal(self.connectSemaphore);
 }
 
+- (NSTimeInterval)socket:(GCDAsyncSocket *)sock
+shouldTimeoutReadWithTag:(long)tag
+                 elapsed:(NSTimeInterval)elapsed
+               bytesDone:(NSUInteger)length {
+    return 10000;
+}
+
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err {
     self._isConnected = false;
     [self invokeZeroArityCallback:closeTag];

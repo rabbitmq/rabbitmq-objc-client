@@ -57,4 +57,11 @@ class RMQTCPSocketTransportTest: XCTestCase {
             XCTFail("Should have failed on timeout")
         }
     }
+
+    func testExtendsReadWhenReadTimesOut() {
+        let callbacks = RMQSynchronizedMutableDictionary()
+        transport = RMQTCPSocketTransport(host: "localhost", port: 123456, callbackStorage: callbacks)
+        let timeoutExtension = transport.socket(GCDAsyncSocket(), shouldTimeoutReadWithTag: 123, elapsed: 123, bytesDone: 999)
+        XCTAssert(timeoutExtension > 0)
+    }
 }
