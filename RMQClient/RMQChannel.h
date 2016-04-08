@@ -29,4 +29,11 @@
                               global:(BOOL)isGlobal
                                error:(NSError * _Nullable * _Nullable)error;
 
+- (BOOL)ack:(nonnull NSNumber *)deliveryTag
+    options:(AMQBasicAckOptions)options
+      error:(NSError * _Nullable * _Nullable)error;
+
+- (BOOL)ack:(nonnull NSNumber *)deliveryTag
+      error:(NSError * _Nullable * _Nullable)error;
+
 @end

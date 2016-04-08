@@ -142,26 +142,30 @@
 # pragma mark - RMQSender
 
 - (void)sendMethod:(id<AMQMethod>)amqMethod channelNumber:(NSNumber *)channelNumber {
-    [self sendFrameset:[[AMQFrameset alloc] initWithChannelNumber:channelNumber method:amqMethod]];
+    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:channelNumber method:amqMethod];
+    [self sendFrameset:frameset error:NULL];
     if ([self shouldSendNextRequest:amqMethod]) {
         [self sendMethod:[(id <AMQOutgoingPrecursor>)amqMethod nextRequest] channelNumber:channelNumber];
     }
 }
 
-- (void)sendFrameset:(AMQFrameset *)frameset {
-    NSError *error = NULL;
-    [self.transport write:frameset.amqEncoded
-                    error:&error
-               onComplete:^{}];
+- (BOOL)sendFrameset:(AMQFrameset *)frameset
+               error:(NSError *__autoreleasing  _Nullable *)error {
+    return [self.transport write:frameset.amqEncoded
+                           error:error
+                      onComplete:^{}];
 }
 
 - (AMQFrameset *)sendFrameset:(AMQFrameset *)frameset
                  waitOnMethod:(Class)amqMethodClass
                         error:(NSError *__autoreleasing  _Nullable *)error {
-    [self sendFrameset:frameset];
-    return [self waitOnMethod:amqMethodClass
-                channelNumber:frameset.channelNumber
-                        error:error];
+    if ([self sendFrameset:frameset error:error]) {
+        return [self waitOnMethod:amqMethodClass
+                    channelNumber:frameset.channelNumber
+                            error:error];
+    } else {
+        return nil;
+    }
 }
 
 # pragma mark - RMQFrameHandler

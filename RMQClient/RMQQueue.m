@@ -57,7 +57,7 @@
                                                                 method:publish
                                                          contentHeader:contentHeader
                                                          contentBodies:contentBodies];
-    [self.sender sendFrameset:frameset];
+    [self.sender sendFrameset:frameset error:NULL];
     return self;
 }
 

@@ -119,6 +119,23 @@ typedef void (^Consumer)(id<RMQMessage>);
     }
 }
 
+- (BOOL)ack:(NSNumber *)deliveryTag
+    options:(AMQBasicAckOptions)options
+      error:(NSError *__autoreleasing  _Nullable *)error {
+    AMQBasicAck *basicAck = [[AMQBasicAck alloc] initWithDeliveryTag:[[AMQLonglong alloc] init:deliveryTag.integerValue]
+                                                             options:options];
+    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:self.channelNumber
+                                                                method:basicAck];
+    return [self.sender sendFrameset:frameset error:error];
+}
+
+- (BOOL)ack:(NSNumber *)deliveryTag
+      error:(NSError *__autoreleasing  _Nullable *)error {
+    return [self ack:deliveryTag options:AMQBasicAckNoOptions error:error];
+}
+
+# pragma mark - RMQFrameHandler
+
 - (void)handleFrameset:(AMQFrameset *)frameset {
     Class methodType = AMQMethodMap.methodMap[@[frameset.method.classID, frameset.method.methodID]];
     if (methodType == [AMQBasicDeliver class]) {

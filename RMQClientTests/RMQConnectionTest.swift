@@ -39,7 +39,7 @@ class RMQConnectionTest: XCTestCase {
             try conn.start()
         }
         catch let e as NSError {
-            XCTAssertEqual("RMQClientTests.TestDoubleTransportError", e.domain)
+            XCTAssertEqual("bad write", e.localizedDescription)
         }
         catch {
             XCTFail("start() didn't produce error")
@@ -134,8 +134,11 @@ class RMQConnectionTest: XCTestCase {
             try conn.createChannel()
             XCTFail("No error assigned")
         }
-        catch let e {
-            XCTAssertEqual("ArbitraryError(\"stubbed message\")", "\(e)")
+        catch let e as NSError {
+            XCTAssertEqual("stubbed message", e.localizedDescription)
+        }
+        catch {
+            XCTFail("Wrong error")
         }
     }
 
@@ -185,7 +188,7 @@ class RMQConnectionTest: XCTestCase {
         XCTAssertEqual(stubbedPayload2, receivedMethod2)
     }
 
-    func testWaitingOnAServerMethodWithFailure() {
+    func testWaitingOnAServerMethodWithWaitFailure() {
         let transport = ControlledInteractionTransport()
         let conn = startedConnection(transport, syncTimeout: 0.1)
 
@@ -203,6 +206,27 @@ class RMQConnectionTest: XCTestCase {
             XCTFail("Wrong error")
         }
         XCTAssertEqual("Timeout", error.localizedDescription)
+    }
+
+    func testWaitingOnAServerMethodWithSendFailure() {
+        let transport = ControlledInteractionTransport()
+        let conn = startedConnection(transport, syncTimeout: 0)
+        transport.stubbedToThrowErrorOnWrite = "please fail"
+
+        var error: NSError = NSError(domain: "", code: 0, userInfo: [:])
+        do {
+            try conn.sendFrameset(
+                AMQFrameset(channelNumber: 42, method: MethodFixtures.connectionStartOk()),
+                waitOnMethod: AMQConnectionTune.self
+            )
+        }
+        catch let e as NSError {
+            error = e
+        }
+        catch {
+            XCTFail("Wrong error")
+        }
+        XCTAssertEqual("please fail", error.localizedDescription)
     }
 
 }

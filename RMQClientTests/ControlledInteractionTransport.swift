@@ -20,15 +20,14 @@ enum TestDoubleTransportError: ErrorType {
         connected = false
         onClose()
     }
-    func write(data: NSData, onComplete complete: () -> Void) throws -> RMQTransport {
+    func write(data: NSData, onComplete complete: () -> Void) throws {
         if let stubbedError = stubbedToThrowErrorOnWrite {
-            throw TestDoubleTransportError.ArbitraryError(localizedDescription: stubbedError)
+            throw NSError(domain: "RMQ", code: 0, userInfo: [ NSLocalizedDescriptionKey : stubbedError ])
         } else if (!connected) {
             throw TestDoubleTransportError.NotConnected(localizedDescription: "foo")
         }
         outboundData.append(data)
         complete()
-        return self
     }
     func isConnected() -> Bool {
         return connected

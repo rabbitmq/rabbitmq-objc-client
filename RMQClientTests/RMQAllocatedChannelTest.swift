@@ -98,7 +98,7 @@ class RMQAllocatedChannelTest: XCTestCase {
 
     func testBasicConsumeFailureThrows() {
         let sender = SenderSpy()
-        sender.throwFromSendFramesetWaitUpon = true
+        sender.throwFromSend = true
         let channel = RMQAllocatedChannel(432, sender: sender)
 
         do {
@@ -114,7 +114,7 @@ class RMQAllocatedChannelTest: XCTestCase {
 
     func testBasicConsumeDoesNotCallbackIfConsumeOkFails() {
         let sender = SenderSpy()
-        sender.throwFromSendFramesetWaitUpon = true
+        sender.throwFromSend = true
         let channel = RMQAllocatedChannel(432, sender: sender)
 
         var called = false
@@ -233,7 +233,7 @@ class RMQAllocatedChannelTest: XCTestCase {
 
     func testNoPrefetchSettingChangeWhenSenderThrows() {
         let sender = SenderSpy()
-        sender.throwFromSendFramesetWaitUpon = true
+        sender.throwFromSend = true
         let channel = RMQAllocatedChannel(999, sender: sender)
 
         if let qosOk = try? channel.basicQos(123, global: true) {
@@ -241,6 +241,32 @@ class RMQAllocatedChannelTest: XCTestCase {
         } else {
             XCTAssertEqual(0, channel.prefetchCount)
             XCTAssertFalse(channel.prefetchGlobal)
+        }
+    }
+
+    func testAckSendsABasicAck() {
+        let sender = SenderSpy()
+        let channel = RMQAllocatedChannel(999, sender: sender)
+
+        try! channel.ack(123, options: [.Multiple])
+        let expected = AMQBasicAck(deliveryTag: AMQLonglong(123), options: [.Multiple])
+        let actual: AMQBasicAck = sender.lastSentMethod as! AMQBasicAck
+        XCTAssertEqual(expected, actual)
+    }
+
+    func testAckThrowsWhenBasicAckFails() {
+        let sender = SenderSpy()
+        sender.throwFromSend = true
+        let channel = RMQAllocatedChannel(999, sender: sender)
+
+        do {
+            try channel.ack(321)
+        }
+        catch let e as NSError {
+            XCTAssertEqual("RMQClientTests.SenderSpyError", e.domain)
+        }
+        catch {
+            XCTFail("Wrong error")
         }
     }
 }

@@ -3,7 +3,8 @@
 
 @protocol RMQSender <NSObject>
 @property (nonnull, nonatomic, readonly) NSNumber *frameMax;
-- (void)sendFrameset:(nonnull AMQFrameset *)frameset;
+- (BOOL)sendFrameset:(nonnull AMQFrameset *)frameset
+               error:(NSError * _Nullable * _Nullable)error;
 - (nullable AMQFrameset *)sendFrameset:(nonnull AMQFrameset *)frameset
                           waitOnMethod:(nonnull Class)amqMethodClass
                                  error:(NSError * _Nullable * _Nullable)error;

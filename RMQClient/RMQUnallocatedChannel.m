@@ -45,4 +45,10 @@
                       error:(NSError *__autoreleasing  _Nullable * _Nullable)error {
     return nil;
 }
+- (BOOL)ack:(NSNumber *)deliveryTag options:(AMQBasicAckOptions)options error:(NSError *__autoreleasing  _Nullable *)error {
+    return NO;
+}
+- (BOOL)ack:(NSNumber *)deliveryTag error:(NSError *__autoreleasing  _Nullable *)error {
+    return [self ack:deliveryTag options:AMQBasicAckNoOptions error:error];
+}
 @end

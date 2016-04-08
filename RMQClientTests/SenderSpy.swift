@@ -11,7 +11,7 @@ enum SenderSpyError: ErrorType {
     var methodWaitedUpon: String = "nothing waited upon yet!"
     var channelWaitedUpon: NSNumber = -1
     var frameMax: NSNumber
-    var throwFromSendFramesetWaitUpon = false
+    var throwFromSend = false
 
     static func waitingUpon(method: AMQMethod, channelNumber: Int) -> SenderSpy {
         let sender = SenderSpy()
@@ -23,12 +23,17 @@ enum SenderSpyError: ErrorType {
         frameMax = aFrameMax
     }
 
-    func sendFrameset(frameset: AMQFrameset) {
-        sentFramesets.append(frameset)
+    func sendFrameset(frameset: AMQFrameset) throws {
+        if throwFromSend {
+            throw SenderSpyError.ArbitraryError(localizedDescription: "stubbed to throw")
+        } else {
+            lastSentMethod = frameset.method
+            sentFramesets.append(frameset)
+        }
     }
 
     func sendFrameset(frameset: AMQFrameset, waitOnMethod amqMethodClass: AnyClass) throws -> AMQFrameset {
-        if throwFromSendFramesetWaitUpon {
+        if throwFromSend {
             throw SenderSpyError.ArbitraryError(localizedDescription: "stubbed to throw")
         } else {
             sentFramesets.append(frameset)

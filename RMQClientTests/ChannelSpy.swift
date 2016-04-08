@@ -54,6 +54,13 @@ enum ChannelSpyError: ErrorType {
         }
     }
 
+    func ack(deliveryTag: NSNumber, options: AMQBasicAckOptions) throws {
+    }
+
+    func ack(deliveryTag: NSNumber) throws {
+        try ack(deliveryTag, options: [])
+    }
+
     func handleFrameset(frameset: AMQFrameset) {
         lastReceivedFrameset = frameset
     }

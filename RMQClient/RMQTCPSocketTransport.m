@@ -65,17 +65,17 @@ long closeTag   = UINT32_MAX + 1;
     [self.socket disconnectAfterReadingAndWriting];
 }
 
-- (id<RMQTransport>)write:(NSData *)data error:(NSError *__autoreleasing  _Nullable *)error onComplete:(void (^)())complete {
+- (BOOL)write:(NSData *)data error:(NSError *__autoreleasing  _Nullable *)error onComplete:(void (^)())complete {
     if (self._isConnected) {
         [self.socket writeData:data
                    withTimeout:10
                            tag:[self storeCallback:complete]];
-        return self;
+        return YES;
     } else {
         *error = [NSError errorWithDomain:RMQErrorDomain
                                      code:0
                                  userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Not connected", nil)}];
-        return nil;
+        return NO;
     }
 }
 

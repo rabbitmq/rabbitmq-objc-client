@@ -40,8 +40,10 @@ class IntegrationTests: XCTestCase {
         let q = ch.queue(generatedQueueName("subscribe"), options: [.AutoDelete, .Exclusive])
 
         var delivered = RMQContentMessage(consumerTag: "", deliveryTag: 0, content: "not delivered yet")
-        try! q.subscribe { (message: RMQMessage) in
+
+        try! q.subscribe([.NoOptions]) { (message: RMQMessage) in
             delivered = message as! RMQContentMessage
+            try! ch.ack(message.deliveryTag)
         }
 
         q.publish("my message")
