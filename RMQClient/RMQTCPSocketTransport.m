@@ -1,5 +1,6 @@
 #import "RMQTCPSocketTransport.h"
 #import "RMQSynchronizedMutableDictionary.h"
+#import "AMQConstants.h"
 
 long closeTag   = UINT32_MAX + 1;
 
@@ -52,7 +53,7 @@ long closeTag   = UINT32_MAX + 1;
         complete();
         return YES;
     } else {
-        *error = [NSError errorWithDomain:@"AMQ"
+        *error = [NSError errorWithDomain:RMQErrorDomain
                                      code:0
                                  userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Timed out waiting to connect", nil)}];
         return NO;
@@ -71,7 +72,7 @@ long closeTag   = UINT32_MAX + 1;
                            tag:[self storeCallback:complete]];
         return self;
     } else {
-        *error = [NSError errorWithDomain:@"AMQ"
+        *error = [NSError errorWithDomain:RMQErrorDomain
                                      code:0
                                  userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Not connected", nil)}];
         return nil;

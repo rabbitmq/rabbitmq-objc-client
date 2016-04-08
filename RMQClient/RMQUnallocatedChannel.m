@@ -1,4 +1,5 @@
 #import "RMQUnallocatedChannel.h"
+#import "AMQConstants.h"
 
 @interface RMQUnallocatedChannel ()
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
@@ -21,7 +22,7 @@
              options:(AMQBasicConsumeOptions)options
                error:(NSError *__autoreleasing  _Nullable * _Nullable)error
             consumer:(void (^)(id<RMQMessage> _Nonnull))consumer {
-    *error = [NSError errorWithDomain:@"RMQ" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Unallocated channel"}];
+    *error = [NSError errorWithDomain:RMQErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey: @"Unallocated channel"}];
     return NO;
 }
 - (RMQExchange *)defaultExchange {

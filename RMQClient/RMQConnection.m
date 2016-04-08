@@ -202,7 +202,7 @@
         return foundFrameset;
     } else {
         NSString *errorMessage = @"Timeout";
-        *error = [NSError errorWithDomain:@"com.rabbitmq.rmqconnection"
+        *error = [NSError errorWithDomain:RMQErrorDomain
                                      code:0
                                  userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
         return nil;

@@ -2,3 +2,4 @@
 
 extern NSInteger const AMQEmptyFrameSize;
 extern NSInteger const AMQChannelLimit;
+extern NSString * const RMQErrorDomain;
