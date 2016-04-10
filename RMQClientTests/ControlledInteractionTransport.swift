@@ -35,13 +35,13 @@ enum TestDoubleTransportError: ErrorType {
     func readFrame(complete: (NSData) -> Void) {
         callbacks.append(complete)
     }
-    func handshake() -> ControlledInteractionTransport {
+    func handshake() -> Self {
         serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
         serverSendsPayload(MethodFixtures.connectionTune(), channelNumber: 0)
         serverSendsPayload(MethodFixtures.connectionOpenOk(), channelNumber: 0)
         return self
     }
-    func serverSendsData(data: NSData) -> ControlledInteractionTransport {
+    func serverSendsData(data: NSData) -> Self {
         if callbacks.isEmpty {
             XCTFail("No read callbacks stored!")
         } else if callbackIndexToRunNext == callbacks.count - 1 {
@@ -52,11 +52,11 @@ enum TestDoubleTransportError: ErrorType {
         }
         return self
     }
-    func serverSendsPayload(payload: AMQPayload, channelNumber: Int) -> ControlledInteractionTransport {
+    func serverSendsPayload(payload: AMQPayload, channelNumber: Int) -> Self {
         serverSendsData(AMQFrame(channelNumber: channelNumber, payload: payload).amqEncoded())
         return self
     }
-    func assertClientSentMethod(amqMethod: AMQMethod, channelNumber: Int) -> ControlledInteractionTransport {
+    func assertClientSentMethod(amqMethod: AMQMethod, channelNumber: Int) -> Self {
         if outboundData.isEmpty {
             XCTFail("nothing sent")
         } else {
@@ -71,7 +71,7 @@ enum TestDoubleTransportError: ErrorType {
         }
         return self
     }
-    func assertClientSentMethods(methods: [AMQMethod], channelNumber: Int) -> ControlledInteractionTransport {
+    func assertClientSentMethods(methods: [AMQMethod], channelNumber: Int) -> Self {
         if outboundData.isEmpty {
             XCTFail("nothing sent")
         } else {
@@ -91,7 +91,7 @@ enum TestDoubleTransportError: ErrorType {
         }
         return self
     }
-    func assertClientSentProtocolHeader() -> ControlledInteractionTransport {
+    func assertClientSentProtocolHeader() -> Self {
         TestHelper.pollUntil { return self.outboundData.count > 0 }
         TestHelper.assertEqualBytes(
             AMQProtocolHeader().amqEncoded(),
