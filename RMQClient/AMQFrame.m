@@ -53,7 +53,7 @@
                                 [[AMQLong alloc] init:self.payload.amqEncoded.length],
                                 self.payload,
                                 [[AMQOctet alloc] init:0xCE]];
-    for (id<AMQEncoding> part in unencodedFrame) {
+    for (id<AMQEncodable> part in unencodedFrame) {
         [frameData appendData:part.amqEncoded];
     }
     return frameData;

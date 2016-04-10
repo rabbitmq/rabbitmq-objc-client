@@ -3,7 +3,7 @@
 #import "AMQParser.h"
 #import "RMQConnectionConfig.h"
 
-@protocol AMQEncoding <NSObject>
+@protocol AMQEncodable <NSObject>
 - (nonnull NSData *)amqEncoded;
 @end
 
@@ -11,16 +11,16 @@
 - (nonnull instancetype)initWithParser:(nonnull AMQParser *)parser;
 @end
 
-@protocol AMQFieldValue <NSObject,AMQEncoding,AMQParseable>
+@protocol AMQFieldValue <NSObject,AMQEncodable,AMQParseable>
 - (nonnull NSData *)amqFieldValueType;
 @end
 
-@interface AMQOctet : MTLModel<AMQEncoding,AMQParseable>
+@interface AMQOctet : MTLModel<AMQEncodable,AMQParseable>
 @property (nonatomic, readonly) NSUInteger integerValue;
 - (nonnull instancetype)init:(char)octet;
 @end
 
-@interface AMQBoolean : MTLModel<AMQEncoding,AMQFieldValue,AMQParseable>
+@interface AMQBoolean : MTLModel<AMQEncodable,AMQFieldValue,AMQParseable>
 @property (nonatomic, readonly) BOOL boolValue;
 - (nonnull instancetype)init:(BOOL)boolean;
 @end
@@ -58,9 +58,9 @@
 - (nonnull instancetype)init:(nonnull NSDate *)date;
 @end
 
-@interface AMQFieldValuePair : MTLModel<AMQEncoding>
+@interface AMQFieldValuePair : MTLModel<AMQEncodable>
 - (nonnull instancetype)initWithFieldName:(nonnull NSString *)fieldName
-                               fieldValue:(nonnull id <AMQEncoding,AMQFieldValue>)fieldValue;
+                               fieldValue:(nonnull id <AMQEncodable,AMQFieldValue>)fieldValue;
 @end
 
 @interface AMQCredentials : AMQLongstr
@@ -72,7 +72,7 @@
 - (void)close:(void (^ _Nonnull)())onClose;
 @end
 
-@protocol AMQPayload <NSObject, AMQEncoding>
+@protocol AMQPayload <NSObject, AMQEncodable>
 - (nonnull NSNumber *)frameTypeID;
 @end
 

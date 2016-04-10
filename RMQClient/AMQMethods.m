@@ -68,7 +68,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -136,7 +136,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -183,7 +183,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -230,7 +230,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -291,7 +291,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -352,7 +352,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -413,7 +413,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -460,7 +460,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -528,7 +528,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -565,7 +565,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -612,7 +612,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -649,7 +649,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -696,7 +696,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -743,7 +743,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -790,7 +790,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -837,7 +837,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -905,7 +905,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -942,7 +942,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1017,7 +1017,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1054,7 +1054,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1115,7 +1115,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1152,7 +1152,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1234,7 +1234,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1271,7 +1271,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1353,7 +1353,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1390,7 +1390,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1458,7 +1458,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1519,7 +1519,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1601,7 +1601,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1638,7 +1638,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1713,7 +1713,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1750,7 +1750,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1811,7 +1811,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1858,7 +1858,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1919,7 +1919,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1966,7 +1966,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2027,7 +2027,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2064,7 +2064,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2139,7 +2139,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2186,7 +2186,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2240,7 +2240,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2287,7 +2287,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2355,7 +2355,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2423,7 +2423,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2498,7 +2498,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2559,7 +2559,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2634,7 +2634,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2681,7 +2681,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2735,7 +2735,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2789,7 +2789,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2836,7 +2836,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2883,7 +2883,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2920,7 +2920,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2974,7 +2974,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -3011,7 +3011,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -3048,7 +3048,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -3085,7 +3085,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -3122,7 +3122,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -3159,7 +3159,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -3196,7 +3196,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -3243,7 +3243,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -3280,7 +3280,7 @@
     NSMutableData *encoded = [NSMutableData new];
     [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
     [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncoding>arg in self.payloadArguments) {
+    for (id<AMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;

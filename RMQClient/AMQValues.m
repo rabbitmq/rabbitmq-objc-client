@@ -286,13 +286,13 @@
 
 @interface AMQFieldValuePair ()
 @property (nonnull, nonatomic, copy) NSString *fieldName;
-@property (nonnull, nonatomic, copy) id<AMQEncoding,AMQFieldValue> fieldValue;
+@property (nonnull, nonatomic, copy) id<AMQEncodable,AMQFieldValue> fieldValue;
 @end
 
 @implementation AMQFieldValuePair
 
 - (instancetype)initWithFieldName:(NSString *)fieldName
-                       fieldValue:(id<AMQEncoding,AMQFieldValue>)fieldValue {
+                       fieldValue:(id<AMQEncodable,AMQFieldValue>)fieldValue {
     self = [super init];
     if (self) {
         self.fieldName = fieldName;

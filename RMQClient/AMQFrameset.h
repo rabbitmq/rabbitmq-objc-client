@@ -1,6 +1,6 @@
 #import "AMQValues.h"
 
-@interface AMQFrameset : MTLModel<AMQEncoding>
+@interface AMQFrameset : MTLModel<AMQEncodable>
 @property (nonnull, nonatomic, copy, readonly) NSNumber *channelNumber;
 @property (nonnull, nonatomic, copy, readonly) id<AMQMethod>method;
 @property (nonnull, nonatomic, readonly) AMQContentHeader *contentHeader;

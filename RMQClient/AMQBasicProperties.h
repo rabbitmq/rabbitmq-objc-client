@@ -1,7 +1,7 @@
 // This file is generated. Do not edit.
 #import "AMQValues.h"
 
-@protocol AMQBasicValue <NSObject, AMQEncoding>
+@protocol AMQBasicValue <NSObject, AMQEncodable>
 + (NSUInteger)flagBit;
 - (NSUInteger)flagBit;
 @end

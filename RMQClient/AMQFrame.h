@@ -7,10 +7,10 @@ typedef NS_ENUM(char, AMQFrameType) {
     AMQFrameTypeHeartbeat = 8
 };
 
-@interface AMQFrame : MTLModel<AMQEncoding,AMQParseable>
+@interface AMQFrame : MTLModel<AMQEncodable,AMQParseable>
 @property (nonnull, nonatomic, copy, readonly) NSNumber *channelNumber;
 @property (nonnull, nonatomic, readonly) id<AMQPayload> payload;
 - (nonnull instancetype)initWithChannelNumber:(nonnull NSNumber *)channelNumber
-                                      payload:(nonnull id<AMQEncoding>)payload;
+                                      payload:(nonnull id<AMQEncodable>)payload;
 - (BOOL)isHeartbeat;
 @end

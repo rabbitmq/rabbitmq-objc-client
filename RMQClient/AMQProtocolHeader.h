@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
 #import "AMQValues.h"
 
-@interface AMQProtocolHeader : MTLModel<AMQEncoding>
+@interface AMQProtocolHeader : MTLModel<AMQEncodable>
 @end
