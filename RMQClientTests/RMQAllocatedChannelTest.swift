@@ -269,4 +269,31 @@ class RMQAllocatedChannelTest: XCTestCase {
             XCTFail("Wrong error")
         }
     }
+
+    func testRejectSendsABasicReject() {
+        let sender = SenderSpy()
+        let channel = RMQAllocatedChannel(999, sender: sender)
+
+        try! channel.reject(123, options: [.Requeue])
+        let expected = AMQBasicReject(deliveryTag: AMQLonglong(123), options: [.Requeue])
+        let actual: AMQBasicReject = sender.lastSentMethod as! AMQBasicReject
+        XCTAssertEqual(expected, actual)
+    }
+
+    func testRejectThrowsWhenBasicRejectFails() {
+        let sender = SenderSpy()
+        sender.throwFromSend = true
+        let channel = RMQAllocatedChannel(999, sender: sender)
+
+        do {
+            try channel.reject(123)
+        }
+        catch let e as NSError {
+            XCTAssertEqual("RMQClientTests.SenderSpyError", e.domain)
+        }
+        catch {
+            XCTFail("Wrong error")
+        }
+    }
+
 }

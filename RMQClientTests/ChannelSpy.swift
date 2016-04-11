@@ -68,4 +68,10 @@ enum ChannelSpyError: ErrorType {
     func basicQos(count: NSNumber, global isGlobal: Bool) throws -> AMQBasicQosOk {
         return AMQBasicQosOk()
     }
+
+    func reject(deliveryTag: NSNumber, options: AMQBasicRejectOptions) throws {
+    }
+
+    func reject(deliveryTag: NSNumber) throws {
+    }
 }

@@ -54,6 +54,31 @@ class IntegrationTests: XCTestCase {
         XCTAssertEqual("my message", delivered.content)
     }
 
+    func testReject() {
+        let conn = RMQConnection(uri: "amqp://guest:guest@localhost")
+        try! conn.start()
+        defer { conn.close() }
+
+        let ch = try! conn.createChannel()
+        let q = ch.queue(generatedQueueName("subscribeForReject"), options: [.AutoDelete, .Exclusive])
+
+        var isRejected = false
+        var handledReject = false
+
+        try! q.subscribe([.NoOptions]) { (message: RMQMessage) in
+            if isRejected {
+                handledReject = true
+            } else {
+                isRejected = true
+                try! ch.reject(message.deliveryTag, options: [.Requeue])
+            }
+        }
+
+        q.publish("my message")
+
+        XCTAssert(TestHelper.pollUntil { handledReject })
+    }
+
     func testMultipleConsumersOnSameChannel() {
         let conn = RMQConnection()
         try! conn.start()

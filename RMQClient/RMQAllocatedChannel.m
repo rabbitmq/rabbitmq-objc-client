@@ -134,6 +134,20 @@ typedef void (^Consumer)(id<RMQMessage>);
     return [self ack:deliveryTag options:AMQBasicAckNoOptions error:error];
 }
 
+- (BOOL)reject:(NSNumber *)deliveryTag
+       options:(AMQBasicRejectOptions)options
+         error:(NSError *__autoreleasing  _Nullable *)error {
+    AMQBasicReject *basicReject = [[AMQBasicReject alloc] initWithDeliveryTag:[[AMQLonglong alloc] init:deliveryTag.integerValue]
+                                                                      options:options];
+    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:self.channelNumber method:basicReject];
+    return [self.sender sendFrameset:frameset error:error];
+}
+
+- (BOOL)reject:(NSNumber *)deliveryTag
+         error:(NSError *__autoreleasing  _Nullable *)error {
+    return [self reject:deliveryTag options:AMQBasicRejectNoOptions error:error];
+}
+
 # pragma mark - RMQFrameHandler
 
 - (void)handleFrameset:(AMQFrameset *)frameset {

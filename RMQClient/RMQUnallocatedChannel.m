@@ -51,4 +51,10 @@
 - (BOOL)ack:(NSNumber *)deliveryTag error:(NSError *__autoreleasing  _Nullable *)error {
     return [self ack:deliveryTag options:AMQBasicAckNoOptions error:error];
 }
+- (BOOL)reject:(NSNumber *)deliveryTag options:(AMQBasicRejectOptions)options error:(NSError *__autoreleasing  _Nullable *)error {
+    return NO;
+}
+- (BOOL)reject:(NSNumber *)deliveryTag error:(NSError *__autoreleasing  _Nullable *)error {
+    return NO;
+}
 @end

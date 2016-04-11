@@ -36,4 +36,11 @@
 - (BOOL)ack:(nonnull NSNumber *)deliveryTag
       error:(NSError * _Nullable * _Nullable)error;
 
+- (BOOL)reject:(nonnull NSNumber *)deliveryTag
+       options:(AMQBasicRejectOptions)options
+         error:(NSError * _Nullable * _Nullable)error;
+
+- (BOOL)reject:(nonnull NSNumber *)deliveryTag
+         error:(NSError * _Nullable * _Nullable)error;
+
 @end
