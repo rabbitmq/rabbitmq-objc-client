@@ -65,7 +65,7 @@
                                    @"product"     : [[AMQLongstr alloc] init:@"RMQClient"],
                                    @"platform"    : [[AMQLongstr alloc] init:@"iOS"],
                                    @"version"     : [[AMQLongstr alloc] init:@"0.0.1"],
-                                   @"information" : [[AMQLongstr alloc] init:@"https://github.com/camelpunch/RMQClient"]}];
+                                   @"information" : [[AMQLongstr alloc] init:@"https://github.com/rabbitmq/rabbitmq-objc-client"]}];
         self.mechanism = @"PLAIN";
         self.locale = @"en_GB";
         self.readerLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport frameHandler:self];
