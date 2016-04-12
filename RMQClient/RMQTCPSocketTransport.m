@@ -2,7 +2,7 @@
 #import "RMQSynchronizedMutableDictionary.h"
 #import "AMQConstants.h"
 
-long closeTag   = UINT32_MAX + 1;
+long closeTag = UINT32_MAX + 1;
 
 @interface RMQTCPSocketTransport ()
 
