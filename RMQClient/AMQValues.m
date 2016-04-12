@@ -468,7 +468,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"Body: %@", self.data];
+    return [NSString stringWithFormat:@"Body: %@", [[NSString alloc] initWithData:self.data encoding:NSUTF8StringEncoding]];
 }
 
 @end

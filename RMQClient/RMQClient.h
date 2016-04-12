@@ -10,6 +10,7 @@
 #import <RMQClient/AMQProtocolHeader.h>
 #import <RMQClient/AMQURI.h>
 #import <RMQClient/RMQAllocatedChannel.h>
+#import <RMQClient/RMQFramesetSemaphoreWaiter.h>
 #import <RMQClient/RMQMultipleChannelAllocator.h>
 #import <RMQClient/RMQReaderLoop.h>
 #import <RMQClient/RMQSynchronizedMutableDictionary.h>

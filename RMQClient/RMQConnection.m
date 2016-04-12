@@ -4,6 +4,7 @@
 #import "AMQProtocolHeader.h"
 #import "AMQURI.h"
 #import "RMQConnection.h"
+#import "RMQHandshaker.h"
 #import "RMQMultipleChannelAllocator.h"
 #import "RMQReaderLoop.h"
 #import "RMQTCPSocketTransport.h"
@@ -19,12 +20,12 @@
 @property (nonatomic, readwrite) id <RMQChannelAllocator> channelAllocator;
 @property (nonatomic, readwrite) id <RMQFrameHandler> frameHandler;
 @property (nonatomic, readwrite) NSMutableDictionary *channels;
-@property (nonatomic, readwrite) NSMutableDictionary *anticipatedFramesetSemaphores;
-@property (nonatomic, readwrite) NSMutableDictionary *anticipatedFramesets;
 @property (nonatomic, readwrite) NSNumber *frameMax;
 @property (nonatomic, readwrite) NSNumber *syncTimeout;
 @property (nonatomic, weak, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) dispatch_queue_t delegateQueue;
+@property (nonatomic, readwrite) dispatch_queue_t networkQueue;
+@property (nonatomic, readwrite) BOOL handshakeComplete;
 @end
 
 @implementation RMQConnection
@@ -37,8 +38,11 @@
                          frameMax:(NSNumber *)frameMax
                         heartbeat:(NSNumber *)heartbeat
                       syncTimeout:(NSNumber *)syncTimeout
+                 channelAllocator:(nonnull id<RMQChannelAllocator>)channelAllocator
+                     frameHandler:(nonnull id<RMQFrameHandler>)frameHandler
                          delegate:(id<RMQConnectionDelegate>)delegate
-                    delegateQueue:(dispatch_queue_t)delegateQueue {
+                    delegateQueue:(dispatch_queue_t)delegateQueue
+                     networkQueue:(nonnull dispatch_queue_t)networkQueue {
     self = [super init];
     if (self) {
         AMQCredentials *credentials = [[AMQCredentials alloc] initWithUsername:user
@@ -50,10 +54,11 @@
         self.frameMax = frameMax;
         self.vhost = vhost;
         self.transport = transport;
+        self.transport.delegate = self;
         self.syncTimeout = syncTimeout;
-        RMQMultipleChannelAllocator *allocator = [[RMQMultipleChannelAllocator alloc] initWithSender:self];
-        self.channelAllocator = allocator;
-        self.frameHandler = allocator;
+        self.channelAllocator = channelAllocator;
+        self.channelAllocator.sender = self;
+        self.frameHandler = frameHandler;
         AMQTable *capabilities = [[AMQTable alloc] init:@{@"publisher_confirms": [[AMQBoolean alloc] init:YES],
                                                           @"consumer_cancel_notify": [[AMQBoolean alloc] init:YES],
                                                           @"exchange_exchange_bindings": [[AMQBoolean alloc] init:YES],
@@ -71,10 +76,10 @@
         self.readerLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport frameHandler:self];
 
         self.channels = [NSMutableDictionary new];
-        self.anticipatedFramesetSemaphores = [NSMutableDictionary new];
-        self.anticipatedFramesets = [NSMutableDictionary new];
         self.delegate = delegate;
         self.delegateQueue = delegateQueue;
+        self.networkQueue = networkQueue;
+        self.handshakeComplete = NO;
 
         [self allocateChannelZero];
     }
@@ -91,6 +96,7 @@
     NSError *error = NULL;
     AMQURI *amqURI = [AMQURI parse:uri error:&error];
     RMQTCPSocketTransport *transport = [[RMQTCPSocketTransport alloc] initWithHost:amqURI.host port:amqURI.portNumber];
+    RMQMultipleChannelAllocator *allocator = [RMQMultipleChannelAllocator new];
     return [self initWithTransport:transport
                               user:amqURI.username
                           password:amqURI.password
@@ -99,8 +105,11 @@
                           frameMax:frameMax
                          heartbeat:heartbeat
                        syncTimeout:syncTimeout
+                  channelAllocator:allocator
+                      frameHandler:allocator
                           delegate:delegate
-                     delegateQueue:delegateQueue];
+                     delegateQueue:delegateQueue
+                      networkQueue:dispatch_queue_create("com.rabbitmq.RMQConnectionNetworkQueue", NULL)];
 }
 
 - (instancetype)initWithUri:(NSString *)uri
@@ -114,85 +123,80 @@
                delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
 }
 
+- (instancetype)initWithDelegate:(id<RMQConnectionDelegate>)delegate {
+    return [self initWithUri:@"amqp://guest:guest@localhost" delegate:delegate];
+}
+
 - (instancetype)init
 {
-    return [self initWithUri:@"amqp://guest:guest@localhost"
-                    delegate:nil];
+    return [self initWithDelegate:nil];
 }
 
 - (void)start {
     NSError *connectError = NULL;
-    __block NSError *writeError = NULL;
 
-    [self.transport connectAndReturnError:&connectError onComplete:^{
-        [self.transport write:[AMQProtocolHeader new].amqEncoded
-                        error:&writeError
-                   onComplete:^{ [self.readerLoop runOnce]; }];
-    }];
-
-    if (connectError)    [self sendDelegateError:connectError];
-    else if (writeError) [self sendDelegateError:writeError];
-    else                 [self waitForConnectionHandshakeToComplete];
+    [self.transport connectAndReturnError:&connectError];
+    if (connectError) {
+        [self sendDelegateConnectionError:connectError];
+    } else {
+        [self.transport write:[AMQProtocolHeader new].amqEncoded];
+        RMQHandshaker *handshaker = [[RMQHandshaker alloc] initWithSender:self
+                                                                   config:self.config
+                                                        completionHandler:^{
+                                                            for (id<RMQChannel> ch in self.channels.allValues) {
+                                                                [ch activateWithDelegate:self.delegate];
+                                                            }
+                                                            self.handshakeComplete = YES;
+                                                            [self.readerLoop runOnce];
+                                                        }];
+        RMQReaderLoop *handshakeLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport
+                                                                   frameHandler:handshaker];
+        handshaker.readerLoop = handshakeLoop;
+        [handshakeLoop runOnce];
+    }
 }
 
 - (void)close {
     AMQConnectionClose *method = self.amqClose;
-    AMQFrame *frame = [[AMQFrame alloc] initWithChannelNumber:@0 payload:method];
-    NSError *error = NULL;
-    [self.transport write:frame.amqEncoded error:&error onComplete:^{}];
+    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:@0 method:method];
+    [self sendFrameset:frameset];
 }
 
-- (id<RMQChannel>)createChannelWithError:(NSError *__autoreleasing  _Nullable *)error {
+- (id<RMQChannel>)createChannel {
     id<RMQChannel> ch = self.channelAllocator.allocate;
     self.channels[ch.channelNumber] = ch;
-    AMQFrame *frame = [[AMQFrame alloc] initWithChannelNumber:ch.channelNumber payload:self.amqChannelOpen];
-    if ([self.transport write:frame.amqEncoded error:error onComplete:^{}]) {
-        return ch;
-    } else {
-        return nil;
+
+    if (self.handshakeComplete) {
+        [ch activateWithDelegate:self.delegate];
     }
+
+    [ch open];
+
+    return ch;
 }
 
 # pragma mark - RMQSender
 
 - (void)sendMethod:(id<AMQMethod>)amqMethod channelNumber:(NSNumber *)channelNumber {
     AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:channelNumber method:amqMethod];
-    [self sendFrameset:frameset error:NULL];
+    [self sendFrameset:frameset];
     if ([self shouldSendNextRequest:amqMethod]) {
-        [self sendMethod:[(id <AMQOutgoingPrecursor>)amqMethod nextRequest] channelNumber:channelNumber];
+        id<AMQMethod> followOn = [(id <AMQOutgoingPrecursor>)amqMethod nextRequest];
+        [self sendMethod:followOn channelNumber:channelNumber];
     }
 }
 
-- (BOOL)sendFrameset:(AMQFrameset *)frameset
-               error:(NSError *__autoreleasing  _Nullable *)error {
-    return [self.transport write:frameset.amqEncoded
-                           error:error
-                      onComplete:^{}];
-}
-
-- (AMQFrameset *)sendFrameset:(AMQFrameset *)frameset
-                 waitOnMethod:(Class)amqMethodClass
-                        error:(NSError *__autoreleasing  _Nullable *)error {
-    if ([self sendFrameset:frameset error:error]) {
-        return [self waitOnMethod:amqMethodClass
-                    channelNumber:frameset.channelNumber
-                            error:error];
-    } else {
-        return nil;
-    }
+- (void)sendFrameset:(AMQFrameset *)frameset {
+    dispatch_async(self.networkQueue, ^{
+        [self.transport write:frameset.amqEncoded];
+    });
 }
 
 # pragma mark - RMQFrameHandler
 
 - (void)handleFrameset:(AMQFrameset *)frameset {
     id method = frameset.method;
-    NSArray *watchedMethod = @[frameset.channelNumber, [method class]];
 
-    dispatch_semaphore_t foundSemaphore = self.anticipatedFramesetSemaphores[watchedMethod];
-    if (foundSemaphore) {
-        self.anticipatedFramesets[frameset.channelNumber] = frameset;
-        dispatch_semaphore_signal(foundSemaphore);
-    }
     if ([self shouldReply:method]) {
         id<AMQMethod> reply = [method replyWithConfig:self.config];
         [self sendMethod:reply channelNumber:frameset.channelNumber];
@@ -204,36 +208,19 @@
     [self.readerLoop runOnce];
 }
 
+# pragma mark - RMQTransportDelegate
+
+- (void)transport:(id<RMQTransport>)transport failedToWriteWithError:(NSError *)error {
+    [self.delegate connection:self failedToWriteWithError:error];
+}
+
+- (void)transport:(id<RMQTransport>)transport disconnectedWithError:(NSError *)error {
+    [self.delegate connection:self disconnectedWithError:error];
+}
+
 # pragma mark - Private
 
-- (void)waitForConnectionHandshakeToComplete {
-    NSError *waitError = NULL;
-    [self waitOnMethod:[AMQConnectionOpenOk class] channelNumber:@0 error:&waitError];
-    if (waitError) [self sendDelegateError:waitError];
-}
-
-- (AMQFrameset *)waitOnMethod:(Class)amqMethodClass
-                channelNumber:(NSNumber *)channelNumber
-                        error:(NSError *__autoreleasing  _Nullable *)error {
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    NSArray *watchedMethod = @[channelNumber, amqMethodClass];
-
-    self.anticipatedFramesetSemaphores[watchedMethod] = semaphore;
-    if (dispatch_semaphore_wait(semaphore, self.syncTimeoutFromNow) == 0) {
-        [self.anticipatedFramesetSemaphores removeObjectForKey:watchedMethod];
-        AMQFrameset *foundFrameset = self.anticipatedFramesets[channelNumber];
-        [self.anticipatedFramesets removeObjectForKey:channelNumber];
-        return foundFrameset;
-    } else {
-        NSString *errorMessage = [NSString stringWithFormat:@"Timed out waiting for %@", amqMethodClass];
-        *error = [NSError errorWithDomain:RMQErrorDomain
-                                     code:0
-                                 userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
-        return nil;
-    }
-}
-
-- (void)sendDelegateError:(NSError *)error {
+- (void)sendDelegateConnectionError:(NSError *)error {
     dispatch_async(self.delegateQueue, ^{
         [self.delegate connection:self failedToConnectWithError:error];
     });
@@ -245,10 +232,6 @@
 
 - (void)allocateChannelZero {
     [self.channelAllocator allocate];
-}
-
-- (AMQChannelOpen *)amqChannelOpen {
-    return [[AMQChannelOpen alloc] initWithReserved1:[[AMQShortstr alloc] init:@""]];
 }
 
 - (AMQConnectionClose *)amqClose {

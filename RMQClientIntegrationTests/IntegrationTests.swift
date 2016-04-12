@@ -1,4 +1,4 @@
-import XCTest
+    import XCTest
 
 class IntegrationTests: XCTestCase {
     
@@ -22,30 +22,32 @@ class IntegrationTests: XCTestCase {
         conn.start()
         defer { conn.close() }
 
-        let ch = try! conn.createChannel()
+        let ch = conn.createChannel()
         let q = ch.queue(generatedQueueName("pop"), options: [.AutoDelete, .Exclusive])
 
         q.publish(messageContent)
 
-        let message = q.pop() as! RMQContentMessage
-
-        let expected = RMQContentMessage(consumerTag: "", deliveryTag: 1, content: messageContent)
-        XCTAssertEqual(expected, message)
+        q.pop { (m) in
+            let message = m as! RMQContentMessage
+            let expected = RMQContentMessage(consumerTag: "", deliveryTag: 1, content: messageContent)
+            XCTAssertEqual(expected, message)
+        }
     }
 
     func testSubscribe() {
-        let conn = RMQConnection(uri: "amqp://guest:guest@localhost", delegate: nil)
+        let delegate = ConnectionDelegatePrinter()
+        let conn = RMQConnection(uri: "amqp://guest:guest@localhost", delegate: delegate)
         conn.start()
         defer { conn.close() }
 
-        let ch = try! conn.createChannel()
+        let ch = conn.createChannel()
         let q = ch.queue(generatedQueueName("subscribe"), options: [.AutoDelete, .Exclusive])
 
         var delivered = RMQContentMessage(consumerTag: "", deliveryTag: 0, content: "not delivered yet")
 
-        try! q.subscribe([.NoOptions]) { (message: RMQMessage) in
+        q.subscribe([.NoOptions]) { (message: RMQMessage) in
             delivered = message as! RMQContentMessage
-            try! ch.ack(message.deliveryTag)
+            ch.ack(message.deliveryTag)
         }
 
         q.publish("my message")
@@ -61,18 +63,18 @@ class IntegrationTests: XCTestCase {
         conn.start()
         defer { conn.close() }
 
-        let ch = try! conn.createChannel()
+        let ch = conn.createChannel()
         let q = ch.queue(generatedQueueName("subscribeForReject"), options: [.AutoDelete, .Exclusive])
 
         var isRejected = false
         var handledReject = false
 
-        try! q.subscribe([.NoOptions]) { (message: RMQMessage) in
+        q.subscribe([.NoOptions]) { (message: RMQMessage) in
             if isRejected {
                 handledReject = true
             } else {
                 isRejected = true
-                try! ch.reject(message.deliveryTag, options: [.Requeue])
+                ch.reject(message.deliveryTag, options: [.Requeue])
             }
         }
 
@@ -90,30 +92,31 @@ class IntegrationTests: XCTestCase {
         var set2 = Set<NSNumber>()
         var set3 = Set<NSNumber>()
 
-        let consumingChannel = try! conn.createChannel()
+        let consumingChannel = conn.createChannel()
         let queueName = generatedQueueName("multiple-same-channel")
         let consumingQueue = consumingChannel.queue(queueName, options: [.AutoDelete, .Exclusive])
 
-        try! consumingQueue.subscribe { (message: RMQMessage) in
+        consumingQueue.subscribe { (message: RMQMessage) in
             set1.insert(message.deliveryTag)
         }
 
-        try! consumingQueue.subscribe { (message: RMQMessage) in
+        consumingQueue.subscribe { (message: RMQMessage) in
             set2.insert(message.deliveryTag)
         }
 
-        try! consumingQueue.subscribe { (message: RMQMessage) in
+        consumingQueue.subscribe { (message: RMQMessage) in
             set3.insert(message.deliveryTag)
         }
 
-        let producingChannel = try! conn.createChannel()
+        sleep(1)
+
+        let producingChannel = conn.createChannel()
         let producingQueue = producingChannel.queue(queueName, options: [.AutoDelete, .Exclusive])
 
         for _ in 1...100 {
             producingQueue.publish("hello")
         }
 
-        XCTAssertEqual(3, producingQueue.consumerCount())
         XCTAssert(
             TestHelper.pollUntil { return set1.union(set2).union(set3).count == 100 },
             "Timed out waiting for messages to arrive on single channel"
@@ -125,8 +128,6 @@ class IntegrationTests: XCTestCase {
 
         let expected: Set<NSNumber> = Set<NSNumber>().union((1...100).map { NSNumber(integer: $0) })
         XCTAssertEqual(expected, set1.union(set2).union(set3))
-
-        XCTAssertEqual(0, producingQueue.messageCount())
     }
 
     func testConcurrentDeliveryOnDifferentChannels() {
@@ -139,18 +140,17 @@ class IntegrationTests: XCTestCase {
         defer { conn.close() }
 
         for _ in 1...100 {
-            let ch = try! conn.createChannel()
+            let ch = conn.createChannel()
             let q = ch.queue(queueName, options: [.AutoDelete, .Exclusive])
-            try! q.subscribe { (message: RMQMessage) in
+            q.subscribe { (message: RMQMessage) in
                 OSAtomicIncrement32(&counter)
             }
             consumingChannels.append(ch)
             consumingQueues.append(q)
         }
 
-        let producingChannel = try! conn.createChannel()
+        let producingChannel = conn.createChannel()
         let producingQueue = producingChannel.queue(queueName, options: [.AutoDelete, .Exclusive])
-        XCTAssertEqual(100, producingQueue.consumerCount())
 
         for _ in 1...100 {
             producingQueue.publish("hello")
@@ -160,8 +160,6 @@ class IntegrationTests: XCTestCase {
             TestHelper.pollUntil { return counter == 100 },
             "Timed out waiting for messages to arrive on different channels"
         )
-
-        XCTAssertEqual(0, producingQueue.messageCount())
     }
 
     func generatedQueueName(identifier: String) -> String {

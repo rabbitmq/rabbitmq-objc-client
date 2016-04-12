@@ -18,13 +18,9 @@
                               sender:(nonnull id <RMQSender>)sender;
 
 - (nonnull RMQQueue *)publish:(nonnull NSString *)message;
-- (nonnull id<RMQMessage>)pop;
-- (BOOL)subscribeWithError:(NSError * _Nonnull * _Nonnull)error
-                   handler:(void (^ _Nonnull)(id<RMQMessage> _Nonnull message))handler;
-- (BOOL)subscribe:(AMQBasicConsumeOptions)options
-            error:(NSError * _Nonnull * _Nonnull)error
+- (void)pop:(void (^ _Nonnull)(id<RMQMessage> _Nonnull message))handler;
+- (void)subscribe:(void (^ _Nonnull)(id<RMQMessage> _Nonnull message))handler;
+- (void)subscribe:(AMQBasicConsumeOptions)options
           handler:(void (^ _Nonnull)(id<RMQMessage> _Nonnull message))handler;
-- (nonnull NSNumber *)messageCount;
-- (nonnull NSNumber *)consumerCount;
 
 @end

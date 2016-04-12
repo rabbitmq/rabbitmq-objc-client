@@ -1,4 +1,3 @@
-import Foundation
 import XCTest
 
 class TestHelper {
@@ -37,4 +36,49 @@ class TestHelper {
             XCTAssertEqual(expected, actual, message)
         }
     }
+
+    static func startedConnection(
+        transport: RMQTransport,
+        delegateQueue: dispatch_queue_t = dispatch_get_main_queue(),
+        networkQueue: dispatch_queue_t = dispatch_get_main_queue(),
+        delegate: RMQConnectionDelegate? = nil,
+        syncTimeout: Double = 0,
+        user: String = "foo",
+        password: String = "bar",
+        vhost: String = "baz"
+        ) -> RMQConnection {
+        let allocator = RMQMultipleChannelAllocator()
+        let conn = RMQConnection(
+            transport: transport,
+            user: user,
+            password: password,
+            vhost: vhost,
+            channelMax: 65535,
+            frameMax: 131072,
+            heartbeat: 0,
+            syncTimeout: syncTimeout,
+            channelAllocator: allocator,
+            frameHandler: allocator,
+            delegate: delegate,
+            delegateQueue: delegateQueue,
+            networkQueue: networkQueue
+        )
+        conn.start()
+        return conn
+    }
+
+    static func connectionAfterHandshake() -> (transport: ControlledInteractionTransport, q: QueueHelper, conn: RMQConnection, delegate: ConnectionDelegateSpy) {
+        let transport = ControlledInteractionTransport()
+        let q = QueueHelper()
+        let delegate = ConnectionDelegateSpy()
+        let conn = TestHelper.startedConnection(transport,
+                                                delegateQueue: q.dispatchQueue,
+                                                networkQueue: q.dispatchQueue,
+                                                delegate: delegate)
+        q.finish()
+        transport.handshake()
+
+        return (transport, q, conn, delegate)
+    }
+
 }

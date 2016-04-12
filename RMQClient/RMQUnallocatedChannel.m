@@ -1,14 +1,13 @@
 #import "RMQUnallocatedChannel.h"
 #import "AMQConstants.h"
+#import "RMQConnectionDelegate.h"
 
 @interface RMQUnallocatedChannel ()
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
+@property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
 @end
 
 @implementation RMQUnallocatedChannel
-
-@synthesize prefetchCount;
-@synthesize prefetchGlobal;
 
 - (instancetype)init {
     self = [super init];
@@ -18,13 +17,24 @@
     return self;
 }
 
-- (BOOL)basicConsume:(NSString *)queueName
-             options:(AMQBasicConsumeOptions)options
-               error:(NSError *__autoreleasing  _Nullable * _Nullable)error
-            consumer:(void (^)(id<RMQMessage> _Nonnull))consumer {
-    *error = [NSError errorWithDomain:RMQErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey: @"Unallocated channel"}];
-    return NO;
+- (void)activateWithDelegate:(id<RMQConnectionDelegate>)delegate {
+    self.delegate = delegate;
 }
+- (void)open {}
+
+- (void)basicConsume:(NSString *)queueName
+             options:(AMQBasicConsumeOptions)options
+            consumer:(void (^)(id<RMQMessage> _Nonnull))consumer {
+    NSError *error = [NSError errorWithDomain:RMQErrorDomain code:RMQChannelErrorUnallocated userInfo:@{NSLocalizedDescriptionKey: @"Unallocated channel"}];
+    [self.delegate channel:self error:error];
+}
+
+- (void)basicPublish:(NSString *)message routingKey:(NSString *)routingKey exchange:(NSString *)exchange {
+}
+
+- (void)basicGet:(NSString *)queue options:(AMQBasicGetOptions)options completionHandler:(void (^)(id<RMQMessage> _Nonnull))completionHandler {
+}
+
 - (RMQExchange *)defaultExchange {
     return nil;
 }
@@ -40,21 +50,15 @@
 }
 - (void)handleFrameset:(AMQFrameset *)frameset {
 }
-- (AMQBasicQosOk *)basicQos:(NSNumber *)count
-                     global:(BOOL)isGlobal
-                      error:(NSError *__autoreleasing  _Nullable * _Nullable)error {
-    return nil;
+- (void)basicQos:(NSNumber *)count
+          global:(BOOL)isGlobal {
 }
-- (BOOL)ack:(NSNumber *)deliveryTag options:(AMQBasicAckOptions)options error:(NSError *__autoreleasing  _Nullable *)error {
-    return NO;
+- (void)ack:(NSNumber *)deliveryTag options:(AMQBasicAckOptions)options {
 }
-- (BOOL)ack:(NSNumber *)deliveryTag error:(NSError *__autoreleasing  _Nullable *)error {
-    return [self ack:deliveryTag options:AMQBasicAckNoOptions error:error];
+- (void)ack:(NSNumber *)deliveryTag {
 }
-- (BOOL)reject:(NSNumber *)deliveryTag options:(AMQBasicRejectOptions)options error:(NSError *__autoreleasing  _Nullable *)error {
-    return NO;
+- (void)reject:(NSNumber *)deliveryTag options:(AMQBasicRejectOptions)options {
 }
-- (BOOL)reject:(NSNumber *)deliveryTag error:(NSError *__autoreleasing  _Nullable *)error {
-    return NO;
+- (void)reject:(NSNumber *)deliveryTag {
 }
 @end

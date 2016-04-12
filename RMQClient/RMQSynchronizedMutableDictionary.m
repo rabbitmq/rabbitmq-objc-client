@@ -19,7 +19,9 @@
 }
 
 - (id)objectForKeyedSubscript:(NSNumber *)key {
-    return self.backingDictionary[key];
+    @synchronized (self.lock) {
+        return self.backingDictionary[key];
+    }
 }
 
 - (void)setObject:(id)obj forKeyedSubscript:(NSNumber *)key {

@@ -20,6 +20,8 @@
 
 - (void)runOnce {
     [self.transport readFrame:^(NSData * _Nonnull methodData) {
+        // executing on a concurrent queue
+        
         AMQFrame *frame = [self frameWithData:methodData];
 
         if (frame.isHeartbeat) {

@@ -35,115 +35,26 @@
 }
 
 - (RMQQueue *)publish:(NSString *)message {
-    AMQBasicPublish *publish = [[AMQBasicPublish alloc] initWithReserved1:[[AMQShort alloc] init:0]
-                                                                 exchange:[[AMQShortstr alloc] init:@""]
-                                                               routingKey:[[AMQShortstr alloc] init:self.name]
-                                                                  options:AMQBasicPublishNoOptions];
-    NSData *contentBodyData = [message dataUsingEncoding:NSUTF8StringEncoding];
-    AMQContentBody *contentBody = [[AMQContentBody alloc] initWithData:contentBodyData];
-
-    AMQBasicDeliveryMode *persistent = [[AMQBasicDeliveryMode alloc] init:2];
-    AMQBasicContentType *octetStream = [[AMQBasicContentType alloc] init:@"application/octet-stream"];
-    AMQBasicPriority *lowPriority = [[AMQBasicPriority alloc] init:0];
-
-    NSData *bodyData = contentBody.amqEncoded;
-    AMQContentHeader *contentHeader = [[AMQContentHeader alloc] initWithClassID:publish.classID
-                                                                       bodySize:@(bodyData.length)
-                                                                     properties:@[persistent, octetStream, lowPriority]];
-
-    NSArray *contentBodies = [self contentBodiesFromData:bodyData
-                                              inChunksOf:self.sender.frameMax.integerValue - AMQEmptyFrameSize];
-    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:self.channel.channelNumber
-                                                                method:publish
-                                                         contentHeader:contentHeader
-                                                         contentBodies:contentBodies];
-    [self.sender sendFrameset:frameset error:NULL];
+    [self.channel basicPublish:message routingKey:self.name exchange:@""];
     return self;
 }
 
-- (id<RMQMessage>)pop {
-    AMQBasicGet *get = [[AMQBasicGet alloc] initWithReserved1:[[AMQShort alloc] init:0]
-                                                        queue:[[AMQShortstr alloc] init:self.name]
-                                                      options:AMQBasicGetNoOptions];
-    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:self.channel.channelNumber
-                                                                method:get
-                                                         contentHeader:[AMQContentHeaderNone new]
-                                                         contentBodies:@[]];
-    NSError *error = NULL;
-    AMQFrameset *getOkFrameset = [self.sender sendFrameset:frameset
-                                              waitOnMethod:[AMQBasicGetOk class]
-                                                     error:&error];
-    if (error) {
-        NSLog(@"\n**** ERROR WAITING FOR GET-OK %@", error);
-    }
-
-    NSString *content = [[NSString alloc] initWithData:getOkFrameset.contentData
-                                              encoding:NSUTF8StringEncoding];
-
-    AMQBasicGetOk *getOk = (AMQBasicGetOk *)getOkFrameset.method;
-
-    return [[RMQContentMessage alloc] initWithConsumerTag:@""
-                                              deliveryTag:@(getOk.deliveryTag.integerValue)
-                                                  content:content];
+- (void)pop:(void (^)(id<RMQMessage> _Nonnull))handler {
+    [self.channel basicGet:self.name
+                   options:AMQBasicGetNoOptions
+         completionHandler:handler];
 }
 
-- (BOOL)subscribe:(AMQBasicConsumeOptions)options
-            error:(NSError *__autoreleasing  _Nonnull *)error
+- (void)subscribe:(AMQBasicConsumeOptions)options
           handler:(void (^)(id<RMQMessage> _Nonnull))handler {
     [self.channel basicConsume:self.name
                        options:options
-                         error:error
                       consumer:handler];
-    if (*error) {
-        return NO;
-    } else {
-        return YES;
-    }
 }
 
-- (BOOL)subscribeWithError:(NSError *__autoreleasing  _Nonnull *)error
-                   handler:(void (^)(id<RMQMessage> _Nonnull))handler {
+- (void)subscribe:(void (^)(id<RMQMessage> _Nonnull))handler {
     return [self subscribe:AMQBasicConsumeNoAck
-                     error:error
                    handler:handler];
-}
-
-- (NSNumber *)messageCount {
-    return @(self.redeclare.messageCount.integerValue);
-}
-
-- (NSNumber *)consumerCount {
-    return @(self.redeclare.consumerCount.integerValue);
-}
-
-# pragma mark - Private
-
-- (AMQQueueDeclareOk *)redeclare {
-    return [self.channel queueDeclare:self.name options:self.options];
-}
-
-- (NSArray *)contentBodiesFromData:(NSData *)data inChunksOf:(NSUInteger)chunkSize {
-    NSMutableArray *bodies = [NSMutableArray new];
-    NSUInteger chunkCount = data.length / chunkSize;
-    for (int i = 0; i < chunkCount; i++) {
-        NSUInteger offset = i * chunkSize;
-        NSData *subData = [data subdataWithRange:NSMakeRange(offset, chunkSize)];
-        AMQContentBody *body = [[AMQContentBody alloc] initWithData:subData];
-        [bodies addObject:body];
-    }
-    NSUInteger lastChunkSize = data.length % chunkSize;
-    if (lastChunkSize > 0) {
-        NSData *lastData = [data subdataWithRange:NSMakeRange(data.length - lastChunkSize, lastChunkSize)];
-        [bodies addObject:[[AMQContentBody alloc] initWithData:lastData]];
-    }
-    return bodies;
-}
-
-- (AMQBasicPublish *)amqPublish {
-    return [[AMQBasicPublish alloc] initWithReserved1:[[AMQShort alloc] init:0]
-                                             exchange:[[AMQShortstr alloc] init:@""]
-                                           routingKey:[[AMQShortstr alloc] init:@""]
-                                              options:0];
 }
 
 @end

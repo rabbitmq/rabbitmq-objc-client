@@ -6,19 +6,19 @@ enum TestDoubleTransportError: ErrorType {
 }
 
 @objc class ControlledInteractionTransport: NSObject, RMQTransport {
+    var delegate: RMQTransportDelegate? = nil
     var connected = false
     var outboundData: [NSData] = []
-    var callbacks: Array<(NSData) -> Void> = []
+    var readCallbacks: Array<(NSData) -> Void> = []
     var callbackIndexToRunNext = 0
-    var stubbedToThrowErrorOnWrite: String?
+    var stubbedToProduceErrorOnWrite: String?
     var stubbedToThrowErrorOnConnect: String?
 
-    func connect(onComplete complete: () -> Void) throws {
+    func connect() throws {
         if let stubbedError = stubbedToThrowErrorOnConnect {
             throw NSError(domain: RMQErrorDomain, code: 0, userInfo: [ NSLocalizedDescriptionKey: stubbedError ])
         } else {
             connected = true
-            complete()
         }
     }
     
@@ -27,14 +27,14 @@ enum TestDoubleTransportError: ErrorType {
         onClose()
     }
 
-    func write(data: NSData, onComplete complete: () -> Void) throws {
-        if let stubbedError = stubbedToThrowErrorOnWrite {
-            throw NSError(domain: RMQErrorDomain, code: 0, userInfo: [ NSLocalizedDescriptionKey: stubbedError ])
-        } else if (!connected) {
-            throw TestDoubleTransportError.NotConnected(localizedDescription: "foo")
+    func write(data: NSData) {
+        if let description = stubbedToProduceErrorOnWrite {
+            let error = NSError(domain: RMQErrorDomain, code: 0, userInfo: [ NSLocalizedDescriptionKey: description ])
+            delegate?.transport(self,
+                                failedToWriteWithError: error)
+        } else {
+            outboundData.append(data)
         }
-        outboundData.append(data)
-        complete()
     }
 
     func isConnected() -> Bool {
@@ -42,13 +42,13 @@ enum TestDoubleTransportError: ErrorType {
     }
 
     func readFrame(complete: (NSData) -> Void) {
-        callbacks.append(complete)
+        readCallbacks.append(complete)
     }
 
     func handshake() -> Self {
-        serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
-        serverSendsPayload(MethodFixtures.connectionTune(), channelNumber: 0)
-        serverSendsPayload(MethodFixtures.connectionOpenOk(), channelNumber: 0)
+        self.serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
+        self.serverSendsPayload(MethodFixtures.connectionTune(), channelNumber: 0)
+        self.serverSendsPayload(MethodFixtures.connectionOpenOk(), channelNumber: 0)
         return self
     }
 
@@ -58,13 +58,13 @@ enum TestDoubleTransportError: ErrorType {
     }
 
     func serverSendsData(data: NSData) -> Self {
-        if callbacks.isEmpty {
+        if readCallbacks.isEmpty {
             XCTFail("No read callbacks stored!")
-        } else if callbackIndexToRunNext == callbacks.count - 1 {
-            callbacks.last!(data)
+        } else if callbackIndexToRunNext == readCallbacks.count - 1 {
+            readCallbacks.last!(data)
             callbackIndexToRunNext += 1
         } else {
-            XCTFail("No callbacks left to run! Exhausted \(callbacks.count).")
+            XCTFail("No read callbacks left to fulfill! Already fulfilled \(readCallbacks.count).")
         }
         return self
     }

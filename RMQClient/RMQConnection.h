@@ -1,12 +1,13 @@
 #import <Foundation/Foundation.h>
 #import "AMQValues.h"
 #import "RMQChannel.h"
+#import "RMQChannelAllocator.h"
 #import "RMQConnectionDelegate.h"
 #import "RMQFrameHandler.h"
 #import "RMQSender.h"
 #import "RMQTransport.h"
 
-@interface RMQConnection : NSObject<RMQFrameHandler, RMQSender>
+@interface RMQConnection : NSObject<RMQFrameHandler, RMQSender, RMQTransportDelegate>
 
 @property (nonnull, copy, nonatomic, readonly) NSString *vhost;
 
@@ -18,8 +19,11 @@
                                  frameMax:(nonnull NSNumber *)frameMax
                                 heartbeat:(nonnull NSNumber *)heartbeat
                               syncTimeout:(nonnull NSNumber *)syncTimeout
+                         channelAllocator:(nonnull id<RMQChannelAllocator>)channelAllocator
+                             frameHandler:(nonnull id<RMQFrameHandler>)frameHandler
                                  delegate:(nullable id<RMQConnectionDelegate>)delegate
-                            delegateQueue:(nonnull dispatch_queue_t)delegateQueue;
+                            delegateQueue:(nonnull dispatch_queue_t)delegateQueue
+                             networkQueue:(nonnull dispatch_queue_t)networkQueue;
 
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
                          channelMax:(nonnull NSNumber *)channelMax
@@ -32,8 +36,10 @@
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
                            delegate:(nullable id<RMQConnectionDelegate>)delegate;
 
+- (nonnull instancetype)initWithDelegate:(nullable id<RMQConnectionDelegate>)delegate;
+
 - (void)start;
 - (void)close;
-- (nullable id<RMQChannel>)createChannelWithError:(NSError * _Nullable * _Nullable)error;
+- (nonnull id<RMQChannel>)createChannel;
 
 @end

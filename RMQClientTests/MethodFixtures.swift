@@ -100,12 +100,20 @@ class MethodFixtures {
         )
     }
 
-    static func basicGet() -> AMQBasicGet {
-        return AMQBasicGet(reserved1: AMQShort(0), queue: AMQShortstr("my.queue"), options: AMQBasicGetOptions.NoOptions)
+    static func basicConsumeOk(consumerTag: String) -> AMQBasicConsumeOk {
+        return AMQBasicConsumeOk(consumerTag: AMQShortstr(consumerTag))
     }
 
-    static func basicGetOk(queueName: String) -> AMQBasicGetOk {
-        return AMQBasicGetOk(deliveryTag: AMQLonglong(0), options: AMQBasicGetOkOptions.NoOptions, exchange: AMQShortstr(""), routingKey: AMQShortstr(queueName), messageCount: AMQLong(0))
+    static func basicGet(queue: String = "my.queue", options: AMQBasicGetOptions = []) -> AMQBasicGet {
+        return AMQBasicGet(reserved1: AMQShort(0), queue: AMQShortstr(queue), options: options)
+    }
+
+    static func basicGetOk(routingKey: String, deliveryTag: UInt64 = 0) -> AMQBasicGetOk {
+        return AMQBasicGetOk(deliveryTag: AMQLonglong(deliveryTag), options: AMQBasicGetOkOptions.NoOptions, exchange: AMQShortstr(""), routingKey: AMQShortstr(routingKey), messageCount: AMQLong(0))
+    }
+
+    static func basicPublish(message: String, routingKey: String, exchange: String = "", options: AMQBasicPublishOptions = []) -> AMQBasicPublish {
+        return AMQBasicPublish(reserved1: AMQShort(0), exchange: AMQShortstr(exchange), routingKey: AMQShortstr(routingKey), options: options)
     }
 
     static func basicDeliver(consumerTag consumerTag: String = "", deliveryTag: UInt64 = 0) -> AMQBasicDeliver {

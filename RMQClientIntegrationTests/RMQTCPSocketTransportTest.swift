@@ -7,17 +7,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
     func testObeysContract() {
         RMQTransportContract(transport)
             .connectAndDisconnect()
-            .throwsWhenWritingButNotConnected()
             .sendingPreambleStimulatesAConnectionStart()
-    }
-
-    func testConnectBlocksUntilConnectBlockCalled() {
-        let timeBefore = NSDate()
-        try! transport.connect {
-            usleep(200000)
-        }
-        let elapsed = NSDate().timeIntervalSinceDate(timeBefore)
-        XCTAssert(elapsed > 0.2, "Expected \(elapsed) to be > 0.2")
     }
 
     func testIsNotConnectedWhenSocketDisconnectedOutsideOfCloseBlock() {
@@ -32,27 +22,27 @@ class RMQTCPSocketTransportTest: XCTestCase {
         transport = RMQTCPSocketTransport(host: "localhost", port: 5672, callbackStorage: callbacks)
 
         var finished = false
-        try! transport.connect {
-            try! self.transport.write(AMQProtocolHeader().amqEncoded()) {
-                self.transport.readFrame { _ in
-                    self.transport.close { finished = true }
-                }
-            }
+        try! transport.connect()
+        transport.write(AMQProtocolHeader().amqEncoded())
+        transport.readFrame { _ in
+            self.transport.close { finished = true }
         }
 
         XCTAssert(TestHelper.pollUntil { return finished }, "couldn't exercise all callbacks")
         XCTAssertEqual(0, callbacks.count)
     }
 
-    func testPropagatesErrorWhenConnectionTimesOut() {
+    func testSendsErrorToDelegateWhenConnectionTimesOut() {
         let callbacks = RMQSynchronizedMutableDictionary()
+        let delegate = TransportDelegateSpy()
         transport = RMQTCPSocketTransport(host: "localhost", port: 123456, callbackStorage: callbacks)
 
-        XCTAssertThrowsError(try transport.connect {}) { error in
-            do {
-                XCTAssertEqual("Timed out waiting to connect", (error as NSError).localizedDescription)
-            }
-        }
+        transport.delegate = delegate
+        try! transport.connect()
+
+        TestHelper.pollUntil { delegate.lastDisconnectError.localizedDescription != "no error yet" }
+
+        XCTAssertEqual("Connection refused", delegate.lastDisconnectError.localizedDescription)
     }
 
     func testExtendsReadWhenReadTimesOut() {

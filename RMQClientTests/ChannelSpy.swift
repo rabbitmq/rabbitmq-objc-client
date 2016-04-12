@@ -6,14 +6,20 @@ enum ChannelSpyError: ErrorType {
     var channelNumber: NSNumber
     var lastReceivedBasicConsumeOptions: AMQBasicConsumeOptions = []
     var lastReceivedBasicConsumeBlock: ((RMQMessage) -> Void)?
+    var lastReceivedBasicGetQueue: String?
+    var lastReceivedBasicGetOptions: AMQBasicGetOptions?
+    var lastReceivedBasicGetCompletionHandler: ((RMQMessage) -> Void)?
+    var lastReceivedBasicPublishMessage: String?
+    var lastReceivedBasicPublishRoutingKey: String?
+    var lastReceivedBasicPublishExchange: String?
     var lastReceivedFrameset: AMQFrameset?
     var queues: [String: RMQQueue] = [:]
     var stubbedMessageCount: AMQLong = AMQLong(0)
     var stubbedConsumerCount: AMQLong = AMQLong(0)
     var lastReceivedQueueDeclareOptions: AMQQueueDeclareOptions = []
-    var prefetchCount: NSNumber = 0
-    var prefetchGlobal: Bool = false
-    var throwFromBasicConsume = false
+    var stubbedBasicConsumeError: String?
+    var openCalled = false
+    var delegateSentToActivate: RMQConnectionDelegate?
     override var description: String {
         return "Channel Spy \(channelNumber)"
     }
@@ -24,6 +30,19 @@ enum ChannelSpyError: ErrorType {
 
     func defaultExchange() -> RMQExchange {
         return RMQExchange()
+    }
+
+    func activateWithDelegate(delegate: RMQConnectionDelegate?) {
+        delegateSentToActivate = delegate
+    }
+
+    func open() {
+        openCalled = true
+    }
+
+    func sendMethod(sendingMethod: AMQMethod,
+                    waitOnMethod waitOnMethodClass: AnyClass,
+                    completionHandler: (AMQFrameset?, NSError?) -> Void) {
     }
 
     func queue(queueName: String, options: AMQQueueDeclareOptions) -> RMQQueue {
@@ -49,32 +68,43 @@ enum ChannelSpyError: ErrorType {
         )
     }
 
-    func basicConsume(queueName: String, options: AMQBasicConsumeOptions, consumer: (RMQMessage) -> Void) throws {
+    func basicConsume(queueName: String, options: AMQBasicConsumeOptions, consumer: (RMQMessage) -> Void) {
         lastReceivedBasicConsumeOptions = options
         lastReceivedBasicConsumeBlock = consumer
-        if throwFromBasicConsume {
-            throw ChannelSpyError.ArbitraryError(localizedDescription: "stubbed throw")
+        if let msg = stubbedBasicConsumeError {
+            let e = NSError(domain: RMQErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: msg])
+            delegateSentToActivate?.channel(self, error: e)
         }
     }
 
-    func ack(deliveryTag: NSNumber, options: AMQBasicAckOptions) throws {
+    func basicPublish(message: String, routingKey: String, exchange: String) {
+        lastReceivedBasicPublishMessage = message
+        lastReceivedBasicPublishRoutingKey = routingKey
+        lastReceivedBasicPublishExchange = exchange
     }
 
-    func ack(deliveryTag: NSNumber) throws {
-        try ack(deliveryTag, options: [])
+    func basicGet(queue: String, options: AMQBasicGetOptions, completionHandler: (RMQMessage) -> Void) {
+        lastReceivedBasicGetQueue = queue
+        lastReceivedBasicGetOptions = options
+        lastReceivedBasicGetCompletionHandler = completionHandler
+    }
+
+    func ack(deliveryTag: NSNumber, options: AMQBasicAckOptions) {
+    }
+
+    func ack(deliveryTag: NSNumber) {
     }
 
     func handleFrameset(frameset: AMQFrameset) {
         lastReceivedFrameset = frameset
     }
 
-    func basicQos(count: NSNumber, global isGlobal: Bool) throws -> AMQBasicQosOk {
-        return AMQBasicQosOk()
+    func basicQos(count: NSNumber, global isGlobal: Bool) {
     }
 
-    func reject(deliveryTag: NSNumber, options: AMQBasicRejectOptions) throws {
+    func reject(deliveryTag: NSNumber, options: AMQBasicRejectOptions) {
     }
 
-    func reject(deliveryTag: NSNumber) throws {
+    func reject(deliveryTag: NSNumber) {
     }
 }

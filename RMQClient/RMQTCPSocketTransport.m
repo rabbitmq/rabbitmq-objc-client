@@ -3,6 +3,7 @@
 #import "AMQConstants.h"
 
 long closeTag = UINT32_MAX + 1;
+long writeTag = UINT32_MAX + 2;
 
 @interface RMQTCPSocketTransport ()
 
@@ -11,12 +12,12 @@ long closeTag = UINT32_MAX + 1;
 @property (nonatomic, readwrite) BOOL _isConnected;
 @property (nonatomic, readwrite) GCDAsyncSocket *socket;
 @property (nonatomic, readwrite) id callbacks;
-@property (nonatomic, readwrite) dispatch_semaphore_t connectSemaphore;
 @property (nonatomic, readwrite) NSNumber *connectTimeout;
 
 @end
 
 @implementation RMQTCPSocketTransport
+@synthesize delegate;
 
 - (instancetype)initWithHost:(NSString *)host port:(NSNumber *)port callbackStorage:(id)callbacks {
     self = [super init];
@@ -26,7 +27,6 @@ long closeTag = UINT32_MAX + 1;
         self.host = host;
         self.port = port;
         self.callbacks = callbacks;
-        self.connectSemaphore = nil;
         self.connectTimeout = @2;
     }
     return self;
@@ -42,22 +42,10 @@ long closeTag = UINT32_MAX + 1;
     return nil;
 }
 
-- (BOOL)connectAndReturnError:(NSError *__autoreleasing  _Nullable *)error onComplete:(void (^)())complete {
-    self.connectSemaphore = dispatch_semaphore_create(0);
-
-    if (![self.socket connectToHost:self.host
-                             onPort:self.port.unsignedIntegerValue
-                              error:error]) {
-        return NO;
-    } else if (dispatch_semaphore_wait(self.connectSemaphore, self.connectTimeoutFromNow) == 0) {
-        complete();
-        return YES;
-    } else {
-        *error = [NSError errorWithDomain:RMQErrorDomain
-                                     code:0
-                                 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Timed out waiting to connect", nil)}];
-        return NO;
-    }
+- (BOOL)connectAndReturnError:(NSError *__autoreleasing  _Nullable *)error {
+    return [self.socket connectToHost:self.host
+                               onPort:self.port.unsignedIntegerValue
+                                error:error];
 }
 
 - (void)close:(void (^)())onClose {
@@ -65,18 +53,10 @@ long closeTag = UINT32_MAX + 1;
     [self.socket disconnectAfterReadingAndWriting];
 }
 
-- (BOOL)write:(NSData *)data error:(NSError *__autoreleasing  _Nullable *)error onComplete:(void (^)())complete {
-    if (self._isConnected) {
-        [self.socket writeData:data
-                   withTimeout:10
-                           tag:[self storeCallback:complete]];
-        return YES;
-    } else {
-        *error = [NSError errorWithDomain:RMQErrorDomain
-                                     code:0
-                                 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Not connected", nil)}];
-        return NO;
-    }
+- (void)write:(NSData *)data {
+    [self.socket writeData:data
+               withTimeout:10
+                       tag:writeTag];
 }
 
 struct __attribute__((__packed__)) AMQPHeader {
@@ -145,7 +125,6 @@ struct __attribute__((__packed__)) AMQPHeader {
 
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
     self._isConnected = true;
-    dispatch_semaphore_signal(self.connectSemaphore);
 }
 
 - (NSTimeInterval)socket:(GCDAsyncSocket *)sock
@@ -158,6 +137,7 @@ shouldTimeoutReadWithTag:(long)tag
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err {
     self._isConnected = false;
     [self invokeZeroArityCallback:closeTag];
+    [self.delegate transport:self disconnectedWithError:err];
 }
 
 - (void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag {

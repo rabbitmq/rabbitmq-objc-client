@@ -3,31 +3,28 @@ import XCTest
 class ChannelAllocationTest: XCTestCase {
     let allocationsPerQueue = 30000
 
-    func allocateAll(allocator: RMQChannelAllocator, _ sender: RMQSender) {
+    func allocateAll(allocator: RMQChannelAllocator) {
         for _ in 1...AMQChannelLimit {
             allocator.allocate()
         }
     }
 
     func testChannelGetsNegativeOneChannelNumberWhenOutOfChannelNumbers() {
-        let sender = SenderSpy()
-        let allocator = RMQMultipleChannelAllocator(sender: sender)
-        allocateAll(allocator, sender)
+        let allocator = RMQMultipleChannelAllocator()
+        allocateAll(allocator)
         XCTAssertEqual(-1, allocator.allocate().channelNumber)
     }
 
     func testChannelGetsAFreedChannelNumberIfOtherwiseOutOfChannelNumbers() {
-        let sender = SenderSpy()
-        let allocator = RMQMultipleChannelAllocator(sender: sender)
-        allocateAll(allocator, sender)
+        let allocator = RMQMultipleChannelAllocator()
+        allocateAll(allocator)
         allocator.releaseChannelNumber(2)
         XCTAssertEqual(2, allocator.allocate().channelNumber)
         XCTAssertEqual(-1, allocator.allocate().channelNumber)
     }
 
     func testNumbersAreNotDoubleAllocated() {
-        let sender      = SenderSpy()
-        let allocator   = RMQMultipleChannelAllocator(sender: sender)
+        let allocator   = RMQMultipleChannelAllocator()
         var channelSet1 = Set<NSNumber>()
         var channelSet2 = Set<NSNumber>()
         var channelSet3 = Set<NSNumber>()
@@ -66,15 +63,14 @@ class ChannelAllocationTest: XCTestCase {
     }
 
     func testChannelsAreReleasedWithThreadSafety() {
-        let sender      = SenderSpy()
-        let allocator   = RMQMultipleChannelAllocator(sender: sender)
+        let allocator   = RMQMultipleChannelAllocator()
         let group       = dispatch_group_create()
         let queues      = [
             dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
             dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
             dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
         ]
-        allocateAll(allocator, sender)
+        allocateAll(allocator)
 
         dispatch_group_async(group, queues[0]) {
             for n in 1...AMQChannelLimit {

@@ -4,43 +4,45 @@
 #import "RMQFrameHandler.h"
 #import "RMQQueue.h"
 
+@protocol RMQConnectionDelegate;
+
 @protocol RMQChannel <NSObject, RMQFrameHandler>
 
 @property (nonnull, copy, nonatomic, readonly) NSNumber *channelNumber;
-@property (nonnull, nonatomic, readonly) NSNumber *prefetchCount;
-@property (nonatomic, readonly) BOOL prefetchGlobal;
 
 - (nonnull RMQExchange *)defaultExchange;
+
+- (void)activateWithDelegate:(nullable id<RMQConnectionDelegate>)delegate;
+- (void)open;
 
 - (nonnull RMQQueue *)queue:(nonnull NSString *)queueName
                     options:(AMQQueueDeclareOptions)options;
 
 - (nonnull RMQQueue *)queue:(nonnull NSString *)queueName;
 
-- (nonnull AMQQueueDeclareOk *)queueDeclare:(nonnull NSString *)queueName
-                                    options:(AMQQueueDeclareOptions)options;
-
-- (BOOL)basicConsume:(nonnull NSString *)queueName
+- (void)basicConsume:(nonnull NSString *)queueName
              options:(AMQBasicConsumeOptions)options
-               error:(NSError * _Nullable * _Nullable)error
             consumer:(void (^ _Nonnull)(id <RMQMessage> _Nonnull))consumer;
 
-- (nullable AMQBasicQosOk *)basicQos:(nonnull NSNumber *)count
-                              global:(BOOL)isGlobal
-                               error:(NSError * _Nullable * _Nullable)error;
+- (void)basicPublish:(nonnull NSString *)message
+          routingKey:(nonnull NSString *)routingKey
+            exchange:(nonnull NSString *)exchange;
 
-- (BOOL)ack:(nonnull NSNumber *)deliveryTag
-    options:(AMQBasicAckOptions)options
-      error:(NSError * _Nullable * _Nullable)error;
+-  (void)basicGet:(nonnull NSString *)queue
+          options:(AMQBasicGetOptions)options
+completionHandler:(void (^ _Nonnull)(id<RMQMessage> _Nonnull message))completionHandler;
 
-- (BOOL)ack:(nonnull NSNumber *)deliveryTag
-      error:(NSError * _Nullable * _Nullable)error;
+- (void)basicQos:(nonnull NSNumber *)count
+          global:(BOOL)isGlobal;
 
-- (BOOL)reject:(nonnull NSNumber *)deliveryTag
-       options:(AMQBasicRejectOptions)options
-         error:(NSError * _Nullable * _Nullable)error;
+- (void)ack:(nonnull NSNumber *)deliveryTag
+    options:(AMQBasicAckOptions)options;
 
-- (BOOL)reject:(nonnull NSNumber *)deliveryTag
-         error:(NSError * _Nullable * _Nullable)error;
+- (void)ack:(nonnull NSNumber *)deliveryTag;
+
+- (void)reject:(nonnull NSNumber *)deliveryTag
+       options:(AMQBasicRejectOptions)options;
+
+- (void)reject:(nonnull NSNumber *)deliveryTag;
 
 @end

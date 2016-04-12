@@ -3,13 +3,14 @@ import XCTest
 class ConnectionTuningTest: XCTestCase {
     func testUsesClientTuneOptionsWhenServersAreZeroes() {
         let transport = ControlledInteractionTransport()
-        connectWithOptions(transport, 12, 10, 9)
+        let q = connectWithOptions(transport, 12, 10, 9)
+
         XCTAssertEqual(
             clientTuneOk(
                 AMQShort(12), AMQLong(10), AMQShort(9)
             ),
             negotiatedParamsGivenServerParams(
-                transport,
+                transport, q,
                  AMQShort(0),  AMQLong(0), AMQShort(0)
             )
         )
@@ -17,13 +18,13 @@ class ConnectionTuningTest: XCTestCase {
 
     func testUsesServerTuneOptionsWhenClientsAreZeroes() {
         let transport = ControlledInteractionTransport()
-        connectWithOptions(transport, 0, 0, 0)
+        let q = connectWithOptions(transport, 0, 0, 0)
         XCTAssertEqual(
             clientTuneOk(
                 AMQShort(12), AMQLong(10), AMQShort(9)
             ),
             negotiatedParamsGivenServerParams(
-                transport,
+                transport, q,
                 AMQShort(12), AMQLong(10), AMQShort(9)
             )
         )
@@ -31,13 +32,13 @@ class ConnectionTuningTest: XCTestCase {
 
     func testUsesClientTuneOptionsWhenServersAreHigher() {
         let transport = ControlledInteractionTransport()
-        connectWithOptions(transport, 11, 9, 8)
+        let q = connectWithOptions(transport, 11, 9, 8)
         XCTAssertEqual(
             clientTuneOk(
                 AMQShort(11),  AMQLong(9), AMQShort(8)
             ),
             negotiatedParamsGivenServerParams(
-                transport,
+                transport, q,
                 AMQShort(12), AMQLong(10), AMQShort(9)
             )
         )
@@ -45,13 +46,13 @@ class ConnectionTuningTest: XCTestCase {
 
     func testUsesServerTuneOptionsWhenClientsAreHigher() {
         let transport = ControlledInteractionTransport()
-        connectWithOptions(transport, 12, 11, 10)
+        let q = connectWithOptions(transport, 12, 11, 10)
         XCTAssertEqual(
             clientTuneOk(
                 AMQShort(11), AMQLong(10), AMQShort(9)
             ),
             negotiatedParamsGivenServerParams(
-                transport,
+                transport, q,
                 AMQShort(11), AMQLong(10), AMQShort(9)
             )
         )
@@ -59,7 +60,9 @@ class ConnectionTuningTest: XCTestCase {
 
     // MARK: Helpers
 
-    func connectWithOptions(transport: ControlledInteractionTransport, _ channelMax: Int, _ frameMax: Int, _ heartbeat: Int) -> RMQConnection {
+    func connectWithOptions(transport: ControlledInteractionTransport, _ channelMax: Int, _ frameMax: Int, _ heartbeat: Int) -> QueueHelper {
+        let q = QueueHelper()
+        let allocator = RMQMultipleChannelAllocator()
         let connection = RMQConnection(
             transport: transport,
             user: "foo",
@@ -69,24 +72,29 @@ class ConnectionTuningTest: XCTestCase {
             frameMax: frameMax,
             heartbeat: heartbeat,
             syncTimeout: 0,
+            channelAllocator: allocator,
+            frameHandler: allocator,
             delegate: nil,
-            delegateQueue: dispatch_get_main_queue()
+            delegateQueue: q.dispatchQueue,
+            networkQueue: q.dispatchQueue
         )
         connection.start()
-        transport.serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
-        return connection
+
+        return q
     }
 
     func clientTuneOk(channelMax: AMQShort, _ frameMax: AMQLong, _ heartbeat: AMQShort) -> AMQConnectionTuneOk {
         return AMQConnectionTuneOk(channelMax: channelMax, frameMax: frameMax, heartbeat: heartbeat)
     }
 
-    func negotiatedParamsGivenServerParams(transport: ControlledInteractionTransport, _ channelMax: AMQShort, _ frameMax: AMQLong, _ heartbeat: AMQShort) -> AMQConnectionTuneOk {
+    func negotiatedParamsGivenServerParams(transport: ControlledInteractionTransport, _ q: QueueHelper, _ channelMax: AMQShort, _ frameMax: AMQLong, _ heartbeat: AMQShort) -> AMQConnectionTuneOk {
         let tune = AMQConnectionTune(channelMax: channelMax, frameMax: frameMax, heartbeat: heartbeat)
 
+        q.finish()
         transport
             .serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
             .serverSendsPayload(tune, channelNumber: 0)
+        q.finish()
 
         let parser = AMQParser(data: transport.outboundData[transport.outboundData.count - 2])
         let frame = AMQFrame(parser: parser)
