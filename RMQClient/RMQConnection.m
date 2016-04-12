@@ -23,6 +23,7 @@
 @property (nonatomic, readwrite) NSMutableDictionary *anticipatedFramesets;
 @property (nonatomic, readwrite) NSNumber *frameMax;
 @property (nonatomic, readwrite) NSNumber *syncTimeout;
+@property (nonatomic, weak, readwrite) id<RMQConnectionDelegate> delegate;
 @end
 
 @implementation RMQConnection
@@ -34,7 +35,8 @@
                        channelMax:(NSNumber *)channelMax
                          frameMax:(NSNumber *)frameMax
                         heartbeat:(NSNumber *)heartbeat
-                      syncTimeout:(NSNumber *)syncTimeout {
+                      syncTimeout:(NSNumber *)syncTimeout
+                         delegate:(nullable id<RMQConnectionDelegate>)delegate {
     self = [super init];
     if (self) {
         AMQCredentials *credentials = [[AMQCredentials alloc] initWithUsername:user
@@ -69,6 +71,7 @@
         self.channels = [NSMutableDictionary new];
         self.anticipatedFramesetSemaphores = [NSMutableDictionary new];
         self.anticipatedFramesets = [NSMutableDictionary new];
+        self.delegate = delegate;
 
         [self allocateChannelZero];
     }
@@ -79,7 +82,8 @@
                  channelMax:(NSNumber *)channelMax
                    frameMax:(NSNumber *)frameMax
                   heartbeat:(NSNumber *)heartbeat
-                syncTimeout:(NSNumber *)syncTimeout {
+                syncTimeout:(NSNumber *)syncTimeout
+                   delegate:(id<RMQConnectionDelegate>)delegate {
     NSError *error = NULL;
     AMQURI *amqURI = [AMQURI parse:uri error:&error];
     RMQTCPSocketTransport *transport = [[RMQTCPSocketTransport alloc] initWithHost:amqURI.host port:amqURI.portNumber];
@@ -90,34 +94,40 @@
                         channelMax:channelMax
                           frameMax:frameMax
                          heartbeat:heartbeat
-                       syncTimeout:syncTimeout];
+                       syncTimeout:syncTimeout
+                          delegate:delegate];
 }
 
-- (instancetype)initWithUri:(NSString *)uri {
+- (instancetype)initWithUri:(NSString *)uri
+                   delegate:(id<RMQConnectionDelegate>)delegate {
     return [self initWithUri:uri
                   channelMax:@(AMQChannelLimit)
                     frameMax:@131072
                    heartbeat:@0
-                 syncTimeout:@10];
+                 syncTimeout:@10
+                    delegate:delegate];
 }
 
 - (instancetype)init
 {
-    return [self initWithUri:@"amqp://guest:guest@localhost"];
+    return [self initWithUri:@"amqp://guest:guest@localhost"
+                    delegate:nil];
 }
 
-- (BOOL)startWithError:(NSError *__autoreleasing  _Nullable *)error {
-    [self.transport connectAndReturnError:error onComplete:^{
+- (void)start {
+    __block NSError *error = NULL;
+    [self.transport connectAndReturnError:&error onComplete:^{
         [self.transport write:[AMQProtocolHeader new].amqEncoded
-                        error:error
+                        error:&error
                    onComplete:^{ [self.readerLoop runOnce]; }];
     }];
-    if (*error) {
-        return NO;
-    } else if ([self waitOnMethod:[AMQConnectionOpenOk class] channelNumber:@0 error:error] && *error) {
-        return NO;
+    if (error) {
+        [self.delegate connection:self failedToConnectWithError:error];
     } else {
-        return YES;
+        [self waitOnMethod:[AMQConnectionOpenOk class] channelNumber:@0 error:&error];
+        if (error) {
+            [self.delegate connection:self failedToConnectWithError:error];
+        }
     }
 }
 

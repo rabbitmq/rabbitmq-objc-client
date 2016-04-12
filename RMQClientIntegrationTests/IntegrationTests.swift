@@ -15,9 +15,10 @@ class IntegrationTests: XCTestCase {
             channelMax: 65535,
             frameMax: frameMaxRequiringTwoFrames,
             heartbeat: 0,
-            syncTimeout: 10
+            syncTimeout: 10,
+            delegate: nil
         )
-        try! conn.start()
+        conn.start()
         defer { conn.close() }
 
         let ch = try! conn.createChannel()
@@ -32,8 +33,8 @@ class IntegrationTests: XCTestCase {
     }
 
     func testSubscribe() {
-        let conn = RMQConnection(uri: "amqp://guest:guest@localhost")
-        try! conn.start()
+        let conn = RMQConnection(uri: "amqp://guest:guest@localhost", delegate: nil)
+        conn.start()
         defer { conn.close() }
 
         let ch = try! conn.createChannel()
@@ -55,8 +56,8 @@ class IntegrationTests: XCTestCase {
     }
 
     func testReject() {
-        let conn = RMQConnection(uri: "amqp://guest:guest@localhost")
-        try! conn.start()
+        let conn = RMQConnection(uri: "amqp://guest:guest@localhost", delegate: nil)
+        conn.start()
         defer { conn.close() }
 
         let ch = try! conn.createChannel()
@@ -81,7 +82,7 @@ class IntegrationTests: XCTestCase {
 
     func testMultipleConsumersOnSameChannel() {
         let conn = RMQConnection()
-        try! conn.start()
+        conn.start()
         defer { conn.close() }
 
         var set1 = Set<NSNumber>()
@@ -133,7 +134,7 @@ class IntegrationTests: XCTestCase {
         var consumingQueues: [RMQQueue] = []
         let queueName = generatedQueueName("concurrent-different-channels")
         let conn = RMQConnection()
-        try! conn.start()
+        conn.start()
         defer { conn.close() }
 
         for _ in 1...100 {

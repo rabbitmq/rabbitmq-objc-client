@@ -68,9 +68,10 @@ class ConnectionTuningTest: XCTestCase {
             channelMax: channelMax,
             frameMax: frameMax,
             heartbeat: heartbeat,
-            syncTimeout: 0
+            syncTimeout: 0,
+            delegate: nil
         )
-        try! connection.start()
+        connection.start()
         transport.serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
         return connection
     }

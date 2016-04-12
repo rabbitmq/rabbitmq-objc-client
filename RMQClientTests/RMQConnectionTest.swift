@@ -17,14 +17,17 @@ class RMQConnectionTest: XCTestCase {
             channelMax: 65535,
             frameMax: 131072,
             heartbeat: 0,
-            syncTimeout: syncTimeout)
-        try! conn.start()
+            syncTimeout: syncTimeout,
+            delegate: nil
+        )
+        conn.start()
         return conn
     }
 
     func testConnectionErrorWhenWritingIsPropagated() {
         let transport = ControlledInteractionTransport()
         transport.stubbedToThrowErrorOnWrite = "bad write"
+        let delegate = ConnectionDelegateSpy()
         let conn = RMQConnection(
             transport: transport,
             user: "foo",
@@ -33,21 +36,17 @@ class RMQConnectionTest: XCTestCase {
             channelMax: 123,
             frameMax: 321,
             heartbeat: 10,
-            syncTimeout: 10
+            syncTimeout: 10,
+            delegate: delegate
         )
-        do {
-            try conn.start()
-        }
-        catch let e as NSError {
-            XCTAssertEqual("bad write", e.localizedDescription)
-        }
-        catch {
-            XCTFail("start() didn't produce error")
-        }
+        conn.start()
+        let e = delegate.lastConnectionError
+        XCTAssertEqual("bad write", e.localizedDescription)
     }
 
     func testTimeoutWhenWaitingForStart() {
         let transport = ControlledInteractionTransport()
+        let delegate = ConnectionDelegateSpy()
         let conn = RMQConnection(
             transport: transport,
             user: "foo",
@@ -56,17 +55,12 @@ class RMQConnectionTest: XCTestCase {
             channelMax: 123,
             frameMax: 321,
             heartbeat: 10,
-            syncTimeout: 0
+            syncTimeout: 0,
+            delegate: delegate
         )
-        do {
-            try conn.start()
-        }
-        catch let e as NSError {
-            XCTAssertEqual("RMQClientTests.TestDoubleTransportError", e.domain)
-        }
-        catch {
-            XCTFail("start() didn't produce error")
-        }
+        conn.start()
+        let e = delegate.lastConnectionError
+        XCTAssertEqual("Timeout", e.localizedDescription)
     }
 
     func testHandshaking() {
