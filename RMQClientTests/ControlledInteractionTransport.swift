@@ -21,10 +21,12 @@ enum TestDoubleTransportError: ErrorType {
             complete()
         }
     }
+    
     func close(onClose: () -> Void) {
         connected = false
         onClose()
     }
+
     func write(data: NSData, onComplete complete: () -> Void) throws {
         if let stubbedError = stubbedToThrowErrorOnWrite {
             throw NSError(domain: RMQErrorDomain, code: 0, userInfo: [ NSLocalizedDescriptionKey: stubbedError ])
@@ -34,18 +36,27 @@ enum TestDoubleTransportError: ErrorType {
         outboundData.append(data)
         complete()
     }
+
     func isConnected() -> Bool {
         return connected
     }
+
     func readFrame(complete: (NSData) -> Void) {
         callbacks.append(complete)
     }
+
     func handshake() -> Self {
         serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
         serverSendsPayload(MethodFixtures.connectionTune(), channelNumber: 0)
         serverSendsPayload(MethodFixtures.connectionOpenOk(), channelNumber: 0)
         return self
     }
+
+    func serverSendsPayload(payload: AMQPayload, channelNumber: Int) -> Self {
+        serverSendsData(AMQFrame(channelNumber: channelNumber, payload: payload).amqEncoded())
+        return self
+    }
+
     func serverSendsData(data: NSData) -> Self {
         if callbacks.isEmpty {
             XCTFail("No read callbacks stored!")
@@ -57,10 +68,7 @@ enum TestDoubleTransportError: ErrorType {
         }
         return self
     }
-    func serverSendsPayload(payload: AMQPayload, channelNumber: Int) -> Self {
-        serverSendsData(AMQFrame(channelNumber: channelNumber, payload: payload).amqEncoded())
-        return self
-    }
+
     func assertClientSentMethod(amqMethod: AMQMethod, channelNumber: Int) -> Self {
         if outboundData.isEmpty {
             XCTFail("nothing sent")
@@ -76,6 +84,7 @@ enum TestDoubleTransportError: ErrorType {
         }
         return self
     }
+
     func assertClientSentMethods(methods: [AMQMethod], channelNumber: Int) -> Self {
         if outboundData.isEmpty {
             XCTFail("nothing sent")
@@ -96,6 +105,7 @@ enum TestDoubleTransportError: ErrorType {
         }
         return self
     }
+
     func assertClientSentProtocolHeader() -> Self {
         TestHelper.pollUntil { return self.outboundData.count > 0 }
         TestHelper.assertEqualBytes(
