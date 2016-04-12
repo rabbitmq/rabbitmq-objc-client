@@ -18,10 +18,6 @@ long closeTag = UINT32_MAX + 1;
 
 @implementation RMQTCPSocketTransport
 
-- (instancetype)initWithHost:(NSString *)host port:(NSNumber *)port {
-    return [self initWithHost:host port:port callbackStorage:[RMQSynchronizedMutableDictionary new]];
-}
-
 - (instancetype)initWithHost:(NSString *)host port:(NSNumber *)port callbackStorage:(id)callbacks {
     self = [super init];
     if (self) {
@@ -34,6 +30,10 @@ long closeTag = UINT32_MAX + 1;
         self.connectTimeout = @2;
     }
     return self;
+}
+
+- (instancetype)initWithHost:(NSString *)host port:(NSNumber *)port {
+    return [self initWithHost:host port:port callbackStorage:[RMQSynchronizedMutableDictionary new]];
 }
 
 - (instancetype)init
