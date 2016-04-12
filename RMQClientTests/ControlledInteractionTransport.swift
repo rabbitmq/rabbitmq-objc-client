@@ -11,10 +11,15 @@ enum TestDoubleTransportError: ErrorType {
     var callbacks: Array<(NSData) -> Void> = []
     var callbackIndexToRunNext = 0
     var stubbedToThrowErrorOnWrite: String?
+    var stubbedToThrowErrorOnConnect: String?
 
     func connect(onComplete complete: () -> Void) throws {
-        connected = true
-        complete()
+        if let stubbedError = stubbedToThrowErrorOnConnect {
+            throw NSError(domain: RMQErrorDomain, code: 0, userInfo: [ NSLocalizedDescriptionKey: stubbedError ])
+        } else {
+            connected = true
+            complete()
+        }
     }
     func close(onClose: () -> Void) {
         connected = false
@@ -22,7 +27,7 @@ enum TestDoubleTransportError: ErrorType {
     }
     func write(data: NSData, onComplete complete: () -> Void) throws {
         if let stubbedError = stubbedToThrowErrorOnWrite {
-            throw NSError(domain: "RMQ", code: 0, userInfo: [ NSLocalizedDescriptionKey : stubbedError ])
+            throw NSError(domain: RMQErrorDomain, code: 0, userInfo: [ NSLocalizedDescriptionKey: stubbedError ])
         } else if (!connected) {
             throw TestDoubleTransportError.NotConnected(localizedDescription: "foo")
         }

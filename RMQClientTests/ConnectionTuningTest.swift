@@ -69,7 +69,8 @@ class ConnectionTuningTest: XCTestCase {
             frameMax: frameMax,
             heartbeat: heartbeat,
             syncTimeout: 0,
-            delegate: nil
+            delegate: nil,
+            delegateQueue: dispatch_get_main_queue()
         )
         connection.start()
         transport.serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)

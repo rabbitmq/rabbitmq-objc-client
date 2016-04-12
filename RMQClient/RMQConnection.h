@@ -18,14 +18,16 @@
                                  frameMax:(nonnull NSNumber *)frameMax
                                 heartbeat:(nonnull NSNumber *)heartbeat
                               syncTimeout:(nonnull NSNumber *)syncTimeout
-                                 delegate:(nullable id<RMQConnectionDelegate>)delegate;
+                                 delegate:(nullable id<RMQConnectionDelegate>)delegate
+                            delegateQueue:(nonnull dispatch_queue_t)delegateQueue;
 
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
                          channelMax:(nonnull NSNumber *)channelMax
                            frameMax:(nonnull NSNumber *)frameMax
                           heartbeat:(nonnull NSNumber *)heartbeat
                         syncTimeout:(nonnull NSNumber *)syncTimeout
-                           delegate:(nullable id<RMQConnectionDelegate>)delegate;
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate
+                      delegateQueue:(nonnull dispatch_queue_t)delegateQueue;
 
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
                            delegate:(nullable id<RMQConnectionDelegate>)delegate;

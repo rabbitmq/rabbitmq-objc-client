@@ -24,6 +24,7 @@
 @property (nonatomic, readwrite) NSNumber *frameMax;
 @property (nonatomic, readwrite) NSNumber *syncTimeout;
 @property (nonatomic, weak, readwrite) id<RMQConnectionDelegate> delegate;
+@property (nonatomic, readwrite) dispatch_queue_t delegateQueue;
 @end
 
 @implementation RMQConnection
@@ -36,7 +37,8 @@
                          frameMax:(NSNumber *)frameMax
                         heartbeat:(NSNumber *)heartbeat
                       syncTimeout:(NSNumber *)syncTimeout
-                         delegate:(nullable id<RMQConnectionDelegate>)delegate {
+                         delegate:(id<RMQConnectionDelegate>)delegate
+                    delegateQueue:(dispatch_queue_t)delegateQueue {
     self = [super init];
     if (self) {
         AMQCredentials *credentials = [[AMQCredentials alloc] initWithUsername:user
@@ -72,6 +74,7 @@
         self.anticipatedFramesetSemaphores = [NSMutableDictionary new];
         self.anticipatedFramesets = [NSMutableDictionary new];
         self.delegate = delegate;
+        self.delegateQueue = delegateQueue;
 
         [self allocateChannelZero];
     }
@@ -83,7 +86,8 @@
                    frameMax:(NSNumber *)frameMax
                   heartbeat:(NSNumber *)heartbeat
                 syncTimeout:(NSNumber *)syncTimeout
-                   delegate:(id<RMQConnectionDelegate>)delegate {
+                   delegate:(id<RMQConnectionDelegate>)delegate
+              delegateQueue:(dispatch_queue_t)delegateQueue {
     NSError *error = NULL;
     AMQURI *amqURI = [AMQURI parse:uri error:&error];
     RMQTCPSocketTransport *transport = [[RMQTCPSocketTransport alloc] initWithHost:amqURI.host port:amqURI.portNumber];
@@ -95,7 +99,8 @@
                           frameMax:frameMax
                          heartbeat:heartbeat
                        syncTimeout:syncTimeout
-                          delegate:delegate];
+                          delegate:delegate
+                     delegateQueue:delegateQueue];
 }
 
 - (instancetype)initWithUri:(NSString *)uri
@@ -105,7 +110,8 @@
                     frameMax:@131072
                    heartbeat:@0
                  syncTimeout:@10
-                    delegate:delegate];
+                    delegate:delegate
+               delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
 }
 
 - (instancetype)init
@@ -115,20 +121,18 @@
 }
 
 - (void)start {
-    __block NSError *error = NULL;
-    [self.transport connectAndReturnError:&error onComplete:^{
+    NSError *connectError = NULL;
+    __block NSError *writeError = NULL;
+
+    [self.transport connectAndReturnError:&connectError onComplete:^{
         [self.transport write:[AMQProtocolHeader new].amqEncoded
-                        error:&error
+                        error:&writeError
                    onComplete:^{ [self.readerLoop runOnce]; }];
     }];
-    if (error) {
-        [self.delegate connection:self failedToConnectWithError:error];
-    } else {
-        [self waitOnMethod:[AMQConnectionOpenOk class] channelNumber:@0 error:&error];
-        if (error) {
-            [self.delegate connection:self failedToConnectWithError:error];
-        }
-    }
+
+    if (connectError)    [self sendDelegateError:connectError];
+    else if (writeError) [self sendDelegateError:writeError];
+    else                 [self waitForConnectionHandshakeToComplete];
 }
 
 - (void)close {
@@ -202,6 +206,12 @@
 
 # pragma mark - Private
 
+- (void)waitForConnectionHandshakeToComplete {
+    NSError *waitError = NULL;
+    [self waitOnMethod:[AMQConnectionOpenOk class] channelNumber:@0 error:&waitError];
+    if (waitError) [self sendDelegateError:waitError];
+}
+
 - (AMQFrameset *)waitOnMethod:(Class)amqMethodClass
                 channelNumber:(NSNumber *)channelNumber
                         error:(NSError *__autoreleasing  _Nullable *)error {
@@ -215,12 +225,18 @@
         [self.anticipatedFramesets removeObjectForKey:channelNumber];
         return foundFrameset;
     } else {
-        NSString *errorMessage = @"Timeout";
+        NSString *errorMessage = [NSString stringWithFormat:@"Timed out waiting for %@", amqMethodClass];
         *error = [NSError errorWithDomain:RMQErrorDomain
                                      code:0
                                  userInfo:@{NSLocalizedDescriptionKey: errorMessage}];
         return nil;
     }
+}
+
+- (void)sendDelegateError:(NSError *)error {
+    dispatch_async(self.delegateQueue, ^{
+        [self.delegate connection:self failedToConnectWithError:error];
+    });
 }
 
 - (dispatch_time_t)syncTimeoutFromNow {

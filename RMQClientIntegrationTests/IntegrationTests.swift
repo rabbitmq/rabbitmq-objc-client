@@ -16,7 +16,8 @@ class IntegrationTests: XCTestCase {
             frameMax: frameMaxRequiringTwoFrames,
             heartbeat: 0,
             syncTimeout: 10,
-            delegate: nil
+            delegate: nil,
+            delegateQueue: dispatch_get_main_queue()
         )
         conn.start()
         defer { conn.close() }

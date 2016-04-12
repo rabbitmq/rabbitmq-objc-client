@@ -18,16 +18,18 @@ class RMQConnectionTest: XCTestCase {
             frameMax: 131072,
             heartbeat: 0,
             syncTimeout: syncTimeout,
-            delegate: nil
+            delegate: nil,
+            delegateQueue: dispatch_get_main_queue()
         )
         conn.start()
         return conn
     }
 
-    func testConnectionErrorWhenWritingIsPropagated() {
+    func testConnectionErrorOnConnectIsSentToDelegate() {
         let transport = ControlledInteractionTransport()
-        transport.stubbedToThrowErrorOnWrite = "bad write"
+        transport.stubbedToThrowErrorOnConnect = "bad connection"
         let delegate = ConnectionDelegateSpy()
+        let queueHelper = QueueHelper()
         let conn = RMQConnection(
             transport: transport,
             user: "foo",
@@ -36,17 +38,45 @@ class RMQConnectionTest: XCTestCase {
             channelMax: 123,
             frameMax: 321,
             heartbeat: 10,
-            syncTimeout: 10,
-            delegate: delegate
+            syncTimeout: 1,
+            delegate: delegate,
+            delegateQueue: queueHelper.dispatchQueue
         )
         conn.start()
-        let e = delegate.lastConnectionError
-        XCTAssertEqual("bad write", e.localizedDescription)
+
+        queueHelper
+            .beforeExecution() { XCTAssertEqual("no error yet", delegate.lastConnectionError.localizedDescription) }
+            .afterExecution()  { XCTAssertEqual("bad connection", delegate.lastConnectionError.localizedDescription) }
     }
 
-    func testTimeoutWhenWaitingForStart() {
+    func testConnectionErrorOnWriteIsSentToDelegate() {
+        let transport = ControlledInteractionTransport()
+        transport.stubbedToThrowErrorOnWrite = "bad write"
+        let delegate = ConnectionDelegateSpy()
+        let queueHelper = QueueHelper()
+        let conn = RMQConnection(
+            transport: transport,
+            user: "foo",
+            password: "bar",
+            vhost: "",
+            channelMax: 123,
+            frameMax: 321,
+            heartbeat: 10,
+            syncTimeout: 1,
+            delegate: delegate,
+            delegateQueue: queueHelper.dispatchQueue
+        )
+        conn.start()
+
+        queueHelper
+            .beforeExecution() { XCTAssertEqual("no error yet", delegate.lastConnectionError.localizedDescription) }
+            .afterExecution()  { XCTAssertEqual("bad write", delegate.lastConnectionError.localizedDescription) }
+    }
+
+    func testTimeoutWhenWaitingForHandshakeToComplete() {
         let transport = ControlledInteractionTransport()
         let delegate = ConnectionDelegateSpy()
+        let queueHelper = QueueHelper()
         let conn = RMQConnection(
             transport: transport,
             user: "foo",
@@ -56,11 +86,14 @@ class RMQConnectionTest: XCTestCase {
             frameMax: 321,
             heartbeat: 10,
             syncTimeout: 0,
-            delegate: delegate
+            delegate: delegate,
+            delegateQueue: queueHelper.dispatchQueue
         )
         conn.start()
-        let e = delegate.lastConnectionError
-        XCTAssertEqual("Timeout", e.localizedDescription)
+
+        queueHelper
+            .beforeExecution { XCTAssertEqual("no error yet", delegate.lastConnectionError.localizedDescription) }
+            .afterExecution  { XCTAssertEqual("Timed out waiting for AMQConnectionOpenOk", delegate.lastConnectionError.localizedDescription) }
     }
 
     func testHandshaking() {
@@ -199,7 +232,7 @@ class RMQConnectionTest: XCTestCase {
         catch {
             XCTFail("Wrong error")
         }
-        XCTAssertEqual("Timeout", error.localizedDescription)
+        XCTAssertEqual("Timed out waiting for AMQConnectionTune", error.localizedDescription)
     }
 
     func testWaitingOnAServerMethodWithSendFailure() {
