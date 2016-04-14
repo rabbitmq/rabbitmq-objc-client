@@ -14,6 +14,9 @@ enum ChannelSpyError: ErrorType {
     var prefetchCount: NSNumber = 0
     var prefetchGlobal: Bool = false
     var throwFromBasicConsume = false
+    override var description: String {
+        return "Channel Spy \(channelNumber)"
+    }
 
     init(_ aChannelNumber: Int) {
         channelNumber = aChannelNumber
