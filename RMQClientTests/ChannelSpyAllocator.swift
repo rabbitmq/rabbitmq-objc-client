@@ -3,8 +3,8 @@
     var channels: [ChannelSpy] = []
     
     func allocate() -> RMQChannel {
-        id += 1
         let ch = ChannelSpy(id)
+        id += 1
         channels.append(ch)
         return ch
     }
