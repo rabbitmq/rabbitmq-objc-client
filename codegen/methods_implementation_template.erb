@@ -8,7 +8,7 @@
 
 @implementation <%= class_name %>
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[<%= fields.map {|f| f[:decode_object]}.join(",\n               ") -%>];
 }
 - (NSNumber *)classID       { return @<%= class_id %>; }

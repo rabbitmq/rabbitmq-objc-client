@@ -19,10 +19,10 @@
     NSNumber *classID   = @([self.parser parseShortUInt]);
     NSNumber *methodID  = @([self.parser parseShortUInt]);
     Class methodClass = AMQMethodMap.methodMap[@[classID, methodID]];
-    NSArray *frame = [methodClass frame];
+    NSArray *propertyClasses = [methodClass propertyClasses];
     NSMutableArray *decodedFrame = [NSMutableArray new];
-    for (int i = 0; i < frame.count; i++) {
-        Class propertyClass = frame[i];
+    for (int i = 0; i < propertyClasses.count; i++) {
+        Class propertyClass = propertyClasses[i];
         decodedFrame[i] = [[propertyClass alloc] initWithParser:self.parser];
     }
     return [(id <AMQMethod>)[methodClass alloc] initWithDecodedFrame:decodedFrame];

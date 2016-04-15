@@ -77,7 +77,7 @@
 @end
 
 @protocol AMQMethod <NSObject, AMQPayload>
-+ (nonnull NSArray *)frame;
++ (nonnull NSArray *)propertyClasses;
 - (nonnull NSNumber *)classID;
 - (nonnull NSNumber *)methodID;
 - (nonnull instancetype)initWithDecodedFrame:(nonnull NSArray *)frame;

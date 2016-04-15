@@ -1,7 +1,7 @@
 import XCTest
 
 @objc class EncodableMethod: NSObject, AMQMethod, NSCopying {
-    static func frame() -> [AnyObject] {
+    static func propertyClasses() -> [AnyObject] {
         return []
     }
     required convenience init(decodedFrame frame: [AnyObject]) {

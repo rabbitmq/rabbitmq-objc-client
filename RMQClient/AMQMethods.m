@@ -13,7 +13,7 @@
 
 @implementation AMQConnectionStart
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQOctet class],
                [AMQOctet class],
                [AMQTable class],
@@ -87,7 +87,7 @@
 
 @implementation AMQConnectionStartOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQTable class],
                [AMQShortstr class],
                [AMQLongstr class],
@@ -152,7 +152,7 @@
 
 @implementation AMQConnectionSecure
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQLongstr class]];
 }
 - (NSNumber *)classID       { return @10; }
@@ -199,7 +199,7 @@
 
 @implementation AMQConnectionSecureOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQLongstr class]];
 }
 - (NSNumber *)classID       { return @10; }
@@ -248,7 +248,7 @@
 
 @implementation AMQConnectionTune
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShort class],
                [AMQLong class],
                [AMQShort class]];
@@ -309,7 +309,7 @@
 
 @implementation AMQConnectionTuneOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShort class],
                [AMQLong class],
                [AMQShort class]];
@@ -370,7 +370,7 @@
 
 @implementation AMQConnectionOpen
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShortstr class],
                [AMQShortstr class],
                [AMQOctet class]];
@@ -429,7 +429,7 @@
 
 @implementation AMQConnectionOpenOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShortstr class]];
 }
 - (NSNumber *)classID       { return @10; }
@@ -479,7 +479,7 @@
 
 @implementation AMQConnectionClose
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShort class],
@@ -543,7 +543,7 @@
 
 @implementation AMQConnectionCloseOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[];
 }
 - (NSNumber *)classID       { return @10; }
@@ -581,7 +581,7 @@
 
 @implementation AMQConnectionBlocked
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShortstr class]];
 }
 - (NSNumber *)classID       { return @10; }
@@ -627,7 +627,7 @@
 
 @implementation AMQConnectionUnblocked
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[];
 }
 - (NSNumber *)classID       { return @10; }
@@ -665,7 +665,7 @@
 
 @implementation AMQChannelOpen
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShortstr class]];
 }
 - (NSNumber *)classID       { return @20; }
@@ -712,7 +712,7 @@
 
 @implementation AMQChannelOpenOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQLongstr class]];
 }
 - (NSNumber *)classID       { return @20; }
@@ -759,7 +759,7 @@
 
 @implementation AMQChannelFlow
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQOctet class]];
 }
 - (NSNumber *)classID       { return @20; }
@@ -806,7 +806,7 @@
 
 @implementation AMQChannelFlowOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQOctet class]];
 }
 - (NSNumber *)classID       { return @20; }
@@ -856,7 +856,7 @@
 
 @implementation AMQChannelClose
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShort class],
@@ -920,7 +920,7 @@
 
 @implementation AMQChannelCloseOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[];
 }
 - (NSNumber *)classID       { return @20; }
@@ -962,7 +962,7 @@
 
 @implementation AMQExchangeDeclare
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
@@ -1032,7 +1032,7 @@
 
 @implementation AMQExchangeDeclareOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[];
 }
 - (NSNumber *)classID       { return @40; }
@@ -1072,7 +1072,7 @@
 
 @implementation AMQExchangeDelete
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShort class],
                [AMQShortstr class],
                [AMQOctet class]];
@@ -1130,7 +1130,7 @@
 
 @implementation AMQExchangeDeleteOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[];
 }
 - (NSNumber *)classID       { return @40; }
@@ -1173,7 +1173,7 @@
 
 @implementation AMQExchangeBind
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
@@ -1249,7 +1249,7 @@
 
 @implementation AMQExchangeBindOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[];
 }
 - (NSNumber *)classID       { return @40; }
@@ -1292,7 +1292,7 @@
 
 @implementation AMQExchangeUnbind
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
@@ -1368,7 +1368,7 @@
 
 @implementation AMQExchangeUnbindOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[];
 }
 - (NSNumber *)classID       { return @40; }
@@ -1409,7 +1409,7 @@
 
 @implementation AMQQueueDeclare
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShort class],
                [AMQShortstr class],
                [AMQOctet class],
@@ -1476,7 +1476,7 @@
 
 @implementation AMQQueueDeclareOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShortstr class],
                [AMQLong class],
                [AMQLong class]];
@@ -1540,7 +1540,7 @@
 
 @implementation AMQQueueBind
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
@@ -1616,7 +1616,7 @@
 
 @implementation AMQQueueBindOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[];
 }
 - (NSNumber *)classID       { return @50; }
@@ -1658,7 +1658,7 @@
 
 @implementation AMQQueueUnbind
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
@@ -1728,7 +1728,7 @@
 
 @implementation AMQQueueUnbindOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[];
 }
 - (NSNumber *)classID       { return @50; }
@@ -1768,7 +1768,7 @@
 
 @implementation AMQQueuePurge
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShort class],
                [AMQShortstr class],
                [AMQOctet class]];
@@ -1827,7 +1827,7 @@
 
 @implementation AMQQueuePurgeOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQLong class]];
 }
 - (NSNumber *)classID       { return @50; }
@@ -1876,7 +1876,7 @@
 
 @implementation AMQQueueDelete
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShort class],
                [AMQShortstr class],
                [AMQOctet class]];
@@ -1935,7 +1935,7 @@
 
 @implementation AMQQueueDeleteOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQLong class]];
 }
 - (NSNumber *)classID       { return @50; }
@@ -1984,7 +1984,7 @@
 
 @implementation AMQBasicQos
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQLong class],
                [AMQShort class],
                [AMQOctet class]];
@@ -2042,7 +2042,7 @@
 
 @implementation AMQBasicQosOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[];
 }
 - (NSNumber *)classID       { return @60; }
@@ -2084,7 +2084,7 @@
 
 @implementation AMQBasicConsume
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
@@ -2155,7 +2155,7 @@
 
 @implementation AMQBasicConsumeOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShortstr class]];
 }
 - (NSNumber *)classID       { return @60; }
@@ -2203,7 +2203,7 @@
 
 @implementation AMQBasicCancel
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShortstr class],
                [AMQOctet class]];
 }
@@ -2256,7 +2256,7 @@
 
 @implementation AMQBasicCancelOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShortstr class]];
 }
 - (NSNumber *)classID       { return @60; }
@@ -2306,7 +2306,7 @@
 
 @implementation AMQBasicPublish
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
@@ -2374,7 +2374,7 @@
 
 @implementation AMQBasicReturn
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShort class],
                [AMQShortstr class],
                [AMQShortstr class],
@@ -2443,7 +2443,7 @@
 
 @implementation AMQBasicDeliver
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShortstr class],
                [AMQLonglong class],
                [AMQOctet class],
@@ -2516,7 +2516,7 @@
 
 @implementation AMQBasicGet
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShort class],
                [AMQShortstr class],
                [AMQOctet class]];
@@ -2579,7 +2579,7 @@
 
 @implementation AMQBasicGetOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQLonglong class],
                [AMQOctet class],
                [AMQShortstr class],
@@ -2650,7 +2650,7 @@
 
 @implementation AMQBasicGetEmpty
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQShortstr class]];
 }
 - (NSNumber *)classID       { return @60; }
@@ -2698,7 +2698,7 @@
 
 @implementation AMQBasicAck
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQLonglong class],
                [AMQOctet class]];
 }
@@ -2752,7 +2752,7 @@
 
 @implementation AMQBasicReject
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQLonglong class],
                [AMQOctet class]];
 }
@@ -2805,7 +2805,7 @@
 
 @implementation AMQBasicRecoverAsync
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQOctet class]];
 }
 - (NSNumber *)classID       { return @60; }
@@ -2852,7 +2852,7 @@
 
 @implementation AMQBasicRecover
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQOctet class]];
 }
 - (NSNumber *)classID       { return @60; }
@@ -2898,7 +2898,7 @@
 
 @implementation AMQBasicRecoverOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[];
 }
 - (NSNumber *)classID       { return @60; }
@@ -2937,7 +2937,7 @@
 
 @implementation AMQBasicNack
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQLonglong class],
                [AMQOctet class]];
 }
@@ -2989,7 +2989,7 @@
 
 @implementation AMQTxSelect
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[];
 }
 - (NSNumber *)classID       { return @90; }
@@ -3026,7 +3026,7 @@
 
 @implementation AMQTxSelectOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[];
 }
 - (NSNumber *)classID       { return @90; }
@@ -3063,7 +3063,7 @@
 
 @implementation AMQTxCommit
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[];
 }
 - (NSNumber *)classID       { return @90; }
@@ -3100,7 +3100,7 @@
 
 @implementation AMQTxCommitOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[];
 }
 - (NSNumber *)classID       { return @90; }
@@ -3137,7 +3137,7 @@
 
 @implementation AMQTxRollback
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[];
 }
 - (NSNumber *)classID       { return @90; }
@@ -3174,7 +3174,7 @@
 
 @implementation AMQTxRollbackOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[];
 }
 - (NSNumber *)classID       { return @90; }
@@ -3212,7 +3212,7 @@
 
 @implementation AMQConfirmSelect
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[[AMQOctet class]];
 }
 - (NSNumber *)classID       { return @85; }
@@ -3258,7 +3258,7 @@
 
 @implementation AMQConfirmSelectOk
 
-+ (NSArray *)frame {
++ (NSArray *)propertyClasses {
     return @[];
 }
 - (NSNumber *)classID       { return @85; }
