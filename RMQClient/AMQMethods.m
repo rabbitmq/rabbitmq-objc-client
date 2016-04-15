@@ -15,10 +15,10 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQOctet class],
-               [AMQOctet class],
-               [AMQTable class],
-               [AMQLongstr class],
-               [AMQLongstr class]];
+             [AMQOctet class],
+             [AMQTable class],
+             [AMQLongstr class],
+             [AMQLongstr class]];
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @10; }
@@ -89,9 +89,9 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQTable class],
-               [AMQShortstr class],
-               [AMQLongstr class],
-               [AMQShortstr class]];
+             [AMQShortstr class],
+             [AMQLongstr class],
+             [AMQShortstr class]];
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @11; }
@@ -250,8 +250,8 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShort class],
-               [AMQLong class],
-               [AMQShort class]];
+             [AMQLong class],
+             [AMQShort class]];
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @30; }
@@ -311,8 +311,8 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShort class],
-               [AMQLong class],
-               [AMQShort class]];
+             [AMQLong class],
+             [AMQShort class]];
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @31; }
@@ -372,8 +372,8 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShortstr class],
-               [AMQShortstr class],
-               [AMQOctet class]];
+             [AMQShortstr class],
+             [AMQOctet class]];
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @40; }
@@ -481,9 +481,9 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShort class],
-               [AMQShortstr class],
-               [AMQShort class],
-               [AMQShort class]];
+             [AMQShortstr class],
+             [AMQShort class],
+             [AMQShort class]];
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @50; }
@@ -858,9 +858,9 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShort class],
-               [AMQShortstr class],
-               [AMQShort class],
-               [AMQShort class]];
+             [AMQShortstr class],
+             [AMQShort class],
+             [AMQShort class]];
 }
 - (NSNumber *)classID       { return @20; }
 - (NSNumber *)methodID      { return @40; }
@@ -964,10 +964,10 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShort class],
-               [AMQShortstr class],
-               [AMQShortstr class],
-               [AMQOctet class],
-               [AMQTable class]];
+             [AMQShortstr class],
+             [AMQShortstr class],
+             [AMQOctet class],
+             [AMQTable class]];
 }
 - (NSNumber *)classID       { return @40; }
 - (NSNumber *)methodID      { return @10; }
@@ -1074,8 +1074,8 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShort class],
-               [AMQShortstr class],
-               [AMQOctet class]];
+             [AMQShortstr class],
+             [AMQOctet class]];
 }
 - (NSNumber *)classID       { return @40; }
 - (NSNumber *)methodID      { return @20; }
@@ -1175,11 +1175,11 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShort class],
-               [AMQShortstr class],
-               [AMQShortstr class],
-               [AMQShortstr class],
-               [AMQOctet class],
-               [AMQTable class]];
+             [AMQShortstr class],
+             [AMQShortstr class],
+             [AMQShortstr class],
+             [AMQOctet class],
+             [AMQTable class]];
 }
 - (NSNumber *)classID       { return @40; }
 - (NSNumber *)methodID      { return @30; }
@@ -1294,11 +1294,11 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShort class],
-               [AMQShortstr class],
-               [AMQShortstr class],
-               [AMQShortstr class],
-               [AMQOctet class],
-               [AMQTable class]];
+             [AMQShortstr class],
+             [AMQShortstr class],
+             [AMQShortstr class],
+             [AMQOctet class],
+             [AMQTable class]];
 }
 - (NSNumber *)classID       { return @40; }
 - (NSNumber *)methodID      { return @40; }
@@ -1411,9 +1411,9 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShort class],
-               [AMQShortstr class],
-               [AMQOctet class],
-               [AMQTable class]];
+             [AMQShortstr class],
+             [AMQOctet class],
+             [AMQTable class]];
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @10; }
@@ -1478,8 +1478,8 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShortstr class],
-               [AMQLong class],
-               [AMQLong class]];
+             [AMQLong class],
+             [AMQLong class]];
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @11; }
@@ -1542,11 +1542,11 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShort class],
-               [AMQShortstr class],
-               [AMQShortstr class],
-               [AMQShortstr class],
-               [AMQOctet class],
-               [AMQTable class]];
+             [AMQShortstr class],
+             [AMQShortstr class],
+             [AMQShortstr class],
+             [AMQOctet class],
+             [AMQTable class]];
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @20; }
@@ -1660,10 +1660,10 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShort class],
-               [AMQShortstr class],
-               [AMQShortstr class],
-               [AMQShortstr class],
-               [AMQTable class]];
+             [AMQShortstr class],
+             [AMQShortstr class],
+             [AMQShortstr class],
+             [AMQTable class]];
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @50; }
@@ -1770,8 +1770,8 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShort class],
-               [AMQShortstr class],
-               [AMQOctet class]];
+             [AMQShortstr class],
+             [AMQOctet class]];
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @30; }
@@ -1878,8 +1878,8 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShort class],
-               [AMQShortstr class],
-               [AMQOctet class]];
+             [AMQShortstr class],
+             [AMQOctet class]];
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @40; }
@@ -1986,8 +1986,8 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQLong class],
-               [AMQShort class],
-               [AMQOctet class]];
+             [AMQShort class],
+             [AMQOctet class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @10; }
@@ -2086,10 +2086,10 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShort class],
-               [AMQShortstr class],
-               [AMQShortstr class],
-               [AMQOctet class],
-               [AMQTable class]];
+             [AMQShortstr class],
+             [AMQShortstr class],
+             [AMQOctet class],
+             [AMQTable class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @20; }
@@ -2205,7 +2205,7 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShortstr class],
-               [AMQOctet class]];
+             [AMQOctet class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @30; }
@@ -2308,9 +2308,9 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShort class],
-               [AMQShortstr class],
-               [AMQShortstr class],
-               [AMQOctet class]];
+             [AMQShortstr class],
+             [AMQShortstr class],
+             [AMQOctet class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @40; }
@@ -2376,9 +2376,9 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShort class],
-               [AMQShortstr class],
-               [AMQShortstr class],
-               [AMQShortstr class]];
+             [AMQShortstr class],
+             [AMQShortstr class],
+             [AMQShortstr class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @50; }
@@ -2445,10 +2445,10 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShortstr class],
-               [AMQLonglong class],
-               [AMQOctet class],
-               [AMQShortstr class],
-               [AMQShortstr class]];
+             [AMQLonglong class],
+             [AMQOctet class],
+             [AMQShortstr class],
+             [AMQShortstr class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @60; }
@@ -2518,8 +2518,8 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQShort class],
-               [AMQShortstr class],
-               [AMQOctet class]];
+             [AMQShortstr class],
+             [AMQOctet class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @70; }
@@ -2581,10 +2581,10 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQLonglong class],
-               [AMQOctet class],
-               [AMQShortstr class],
-               [AMQShortstr class],
-               [AMQLong class]];
+             [AMQOctet class],
+             [AMQShortstr class],
+             [AMQShortstr class],
+             [AMQLong class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @71; }
@@ -2700,7 +2700,7 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQLonglong class],
-               [AMQOctet class]];
+             [AMQOctet class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @80; }
@@ -2754,7 +2754,7 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQLonglong class],
-               [AMQOctet class]];
+             [AMQOctet class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @90; }
@@ -2939,7 +2939,7 @@
 
 + (NSArray *)propertyClasses {
     return @[[AMQLonglong class],
-               [AMQOctet class]];
+             [AMQOctet class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @120; }

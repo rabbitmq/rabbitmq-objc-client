@@ -1,6 +1,6 @@
 <%- if bits.any? -%>
 typedef NS_OPTIONS(NSUInteger, <%= class_name %>Options) {
-    <%= class_name %>NoOptions = 0,
+    <%= class_name + "NoOptions".ljust(max_bit_length) %> = 0,
     <%- bits.each_with_index do |bit, index| -%>
     <%= class_name %><%= bit[:name] %> = 1 << <%= index %>,
     <%- end -%>

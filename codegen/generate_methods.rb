@@ -16,7 +16,7 @@ class GenerateMethods
     xml.xpath("//method").reduce(header) { |acc, method|
       class_name = objc_class_name(method)
       protocols = ["AMQMethod"]
-      bits, fields = bits_and_fields(method)
+      bits, fields, max_bit_length = bits_and_fields(method)
       constructor = constructor(fields)
       acc + template('methods_header_template').result(binding)
     }
@@ -72,10 +72,12 @@ class GenerateMethods
     original_fields = camelized_fields(method.xpath('field'))
     bits = original_fields.select {|f| f[:type] == "AMQBit"}
     type = objc_class_name(method) + "Options"
-    bit_name_lengths = bits.map {|b| b[:name].length}
+    bit_name_lengths = ["nooptions".length] + bits.map {|b| b[:name].length}
+    max_bit_length = bit_name_lengths.max
     [
-      bits.map {|bit| bit.merge(name: bit[:name].camelize.ljust(bit_name_lengths.max))},
-      collapse_bits_into_options(original_fields, type)
+      bits.map {|bit| bit.merge(name: bit[:name].camelize.ljust(max_bit_length))},
+      collapse_bits_into_options(original_fields, type),
+      max_bit_length,
     ]
   end
 

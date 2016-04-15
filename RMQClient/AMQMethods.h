@@ -110,7 +110,7 @@ typedef NS_OPTIONS(NSUInteger, AMQConnectionOpenOptions) {
 
 typedef NS_OPTIONS(NSUInteger, AMQChannelFlowOptions) {
     AMQChannelFlowNoOptions = 0,
-    AMQChannelFlowActive = 1 << 0,
+    AMQChannelFlowActive    = 1 << 0,
 };
 
 @interface AMQChannelFlow : MTLModel <AMQMethod>
@@ -120,7 +120,7 @@ typedef NS_OPTIONS(NSUInteger, AMQChannelFlowOptions) {
 
 typedef NS_OPTIONS(NSUInteger, AMQChannelFlowOkOptions) {
     AMQChannelFlowOkNoOptions = 0,
-    AMQChannelFlowOkActive = 1 << 0,
+    AMQChannelFlowOkActive    = 1 << 0,
 };
 
 @interface AMQChannelFlowOk : MTLModel <AMQMethod>
@@ -144,7 +144,7 @@ typedef NS_OPTIONS(NSUInteger, AMQChannelFlowOkOptions) {
 @end
 
 typedef NS_OPTIONS(NSUInteger, AMQExchangeDeclareOptions) {
-    AMQExchangeDeclareNoOptions = 0,
+    AMQExchangeDeclareNoOptions  = 0,
     AMQExchangeDeclarePassive    = 1 << 0,
     AMQExchangeDeclareDurable    = 1 << 1,
     AMQExchangeDeclareAutoDelete = 1 << 2,
@@ -171,8 +171,8 @@ typedef NS_OPTIONS(NSUInteger, AMQExchangeDeclareOptions) {
 
 typedef NS_OPTIONS(NSUInteger, AMQExchangeDeleteOptions) {
     AMQExchangeDeleteNoOptions = 0,
-    AMQExchangeDeleteIfUnused = 1 << 0,
-    AMQExchangeDeleteNoWait   = 1 << 1,
+    AMQExchangeDeleteIfUnused  = 1 << 0,
+    AMQExchangeDeleteNoWait    = 1 << 1,
 };
 
 @interface AMQExchangeDelete : MTLModel <AMQMethod>
@@ -190,7 +190,7 @@ typedef NS_OPTIONS(NSUInteger, AMQExchangeDeleteOptions) {
 
 typedef NS_OPTIONS(NSUInteger, AMQExchangeBindOptions) {
     AMQExchangeBindNoOptions = 0,
-    AMQExchangeBindNoWait = 1 << 0,
+    AMQExchangeBindNoWait    = 1 << 0,
 };
 
 @interface AMQExchangeBind : MTLModel <AMQMethod>
@@ -214,7 +214,7 @@ typedef NS_OPTIONS(NSUInteger, AMQExchangeBindOptions) {
 
 typedef NS_OPTIONS(NSUInteger, AMQExchangeUnbindOptions) {
     AMQExchangeUnbindNoOptions = 0,
-    AMQExchangeUnbindNoWait = 1 << 0,
+    AMQExchangeUnbindNoWait    = 1 << 0,
 };
 
 @interface AMQExchangeUnbind : MTLModel <AMQMethod>
@@ -237,7 +237,7 @@ typedef NS_OPTIONS(NSUInteger, AMQExchangeUnbindOptions) {
 @end
 
 typedef NS_OPTIONS(NSUInteger, AMQQueueDeclareOptions) {
-    AMQQueueDeclareNoOptions = 0,
+    AMQQueueDeclareNoOptions  = 0,
     AMQQueueDeclarePassive    = 1 << 0,
     AMQQueueDeclareDurable    = 1 << 1,
     AMQQueueDeclareExclusive  = 1 << 2,
@@ -267,7 +267,7 @@ typedef NS_OPTIONS(NSUInteger, AMQQueueDeclareOptions) {
 
 typedef NS_OPTIONS(NSUInteger, AMQQueueBindOptions) {
     AMQQueueBindNoOptions = 0,
-    AMQQueueBindNoWait = 1 << 0,
+    AMQQueueBindNoWait    = 1 << 0,
 };
 
 @interface AMQQueueBind : MTLModel <AMQMethod>
@@ -308,7 +308,7 @@ typedef NS_OPTIONS(NSUInteger, AMQQueueBindOptions) {
 
 typedef NS_OPTIONS(NSUInteger, AMQQueuePurgeOptions) {
     AMQQueuePurgeNoOptions = 0,
-    AMQQueuePurgeNoWait = 1 << 0,
+    AMQQueuePurgeNoWait    = 1 << 0,
 };
 
 @interface AMQQueuePurge : MTLModel <AMQMethod>
@@ -327,9 +327,9 @@ typedef NS_OPTIONS(NSUInteger, AMQQueuePurgeOptions) {
 
 typedef NS_OPTIONS(NSUInteger, AMQQueueDeleteOptions) {
     AMQQueueDeleteNoOptions = 0,
-    AMQQueueDeleteIfUnused = 1 << 0,
-    AMQQueueDeleteIfEmpty  = 1 << 1,
-    AMQQueueDeleteNoWait   = 1 << 2,
+    AMQQueueDeleteIfUnused  = 1 << 0,
+    AMQQueueDeleteIfEmpty   = 1 << 1,
+    AMQQueueDeleteNoWait    = 1 << 2,
 };
 
 @interface AMQQueueDelete : MTLModel <AMQMethod>
@@ -348,7 +348,7 @@ typedef NS_OPTIONS(NSUInteger, AMQQueueDeleteOptions) {
 
 typedef NS_OPTIONS(NSUInteger, AMQBasicQosOptions) {
     AMQBasicQosNoOptions = 0,
-    AMQBasicQosGlobal = 1 << 0,
+    AMQBasicQosGlobal    = 1 << 0,
 };
 
 @interface AMQBasicQos : MTLModel <AMQMethod>
@@ -392,7 +392,7 @@ typedef NS_OPTIONS(NSUInteger, AMQBasicConsumeOptions) {
 
 typedef NS_OPTIONS(NSUInteger, AMQBasicCancelOptions) {
     AMQBasicCancelNoOptions = 0,
-    AMQBasicCancelNoWait = 1 << 0,
+    AMQBasicCancelNoWait    = 1 << 0,
 };
 
 @interface AMQBasicCancel : MTLModel <AMQMethod>
@@ -436,7 +436,7 @@ typedef NS_OPTIONS(NSUInteger, AMQBasicPublishOptions) {
 @end
 
 typedef NS_OPTIONS(NSUInteger, AMQBasicDeliverOptions) {
-    AMQBasicDeliverNoOptions = 0,
+    AMQBasicDeliverNoOptions   = 0,
     AMQBasicDeliverRedelivered = 1 << 0,
 };
 
@@ -455,7 +455,7 @@ typedef NS_OPTIONS(NSUInteger, AMQBasicDeliverOptions) {
 
 typedef NS_OPTIONS(NSUInteger, AMQBasicGetOptions) {
     AMQBasicGetNoOptions = 0,
-    AMQBasicGetNoAck = 1 << 0,
+    AMQBasicGetNoAck     = 1 << 0,
 };
 
 @interface AMQBasicGet : MTLModel <AMQMethod>
@@ -468,7 +468,7 @@ typedef NS_OPTIONS(NSUInteger, AMQBasicGetOptions) {
 @end
 
 typedef NS_OPTIONS(NSUInteger, AMQBasicGetOkOptions) {
-    AMQBasicGetOkNoOptions = 0,
+    AMQBasicGetOkNoOptions   = 0,
     AMQBasicGetOkRedelivered = 1 << 0,
 };
 
@@ -492,7 +492,7 @@ typedef NS_OPTIONS(NSUInteger, AMQBasicGetOkOptions) {
 
 typedef NS_OPTIONS(NSUInteger, AMQBasicAckOptions) {
     AMQBasicAckNoOptions = 0,
-    AMQBasicAckMultiple = 1 << 0,
+    AMQBasicAckMultiple  = 1 << 0,
 };
 
 @interface AMQBasicAck : MTLModel <AMQMethod>
@@ -504,7 +504,7 @@ typedef NS_OPTIONS(NSUInteger, AMQBasicAckOptions) {
 
 typedef NS_OPTIONS(NSUInteger, AMQBasicRejectOptions) {
     AMQBasicRejectNoOptions = 0,
-    AMQBasicRejectRequeue = 1 << 0,
+    AMQBasicRejectRequeue   = 1 << 0,
 };
 
 @interface AMQBasicReject : MTLModel <AMQMethod>
@@ -516,7 +516,7 @@ typedef NS_OPTIONS(NSUInteger, AMQBasicRejectOptions) {
 
 typedef NS_OPTIONS(NSUInteger, AMQBasicRecoverAsyncOptions) {
     AMQBasicRecoverAsyncNoOptions = 0,
-    AMQBasicRecoverAsyncRequeue = 1 << 0,
+    AMQBasicRecoverAsyncRequeue   = 1 << 0,
 };
 
 @interface AMQBasicRecoverAsync : MTLModel <AMQMethod>
@@ -526,7 +526,7 @@ typedef NS_OPTIONS(NSUInteger, AMQBasicRecoverAsyncOptions) {
 
 typedef NS_OPTIONS(NSUInteger, AMQBasicRecoverOptions) {
     AMQBasicRecoverNoOptions = 0,
-    AMQBasicRecoverRequeue = 1 << 0,
+    AMQBasicRecoverRequeue   = 1 << 0,
 };
 
 @interface AMQBasicRecover : MTLModel <AMQMethod>
@@ -540,8 +540,8 @@ typedef NS_OPTIONS(NSUInteger, AMQBasicRecoverOptions) {
 
 typedef NS_OPTIONS(NSUInteger, AMQBasicNackOptions) {
     AMQBasicNackNoOptions = 0,
-    AMQBasicNackMultiple = 1 << 0,
-    AMQBasicNackRequeue  = 1 << 1,
+    AMQBasicNackMultiple  = 1 << 0,
+    AMQBasicNackRequeue   = 1 << 1,
 };
 
 @interface AMQBasicNack : MTLModel <AMQMethod>
@@ -577,7 +577,7 @@ typedef NS_OPTIONS(NSUInteger, AMQBasicNackOptions) {
 
 typedef NS_OPTIONS(NSUInteger, AMQConfirmSelectOptions) {
     AMQConfirmSelectNoOptions = 0,
-    AMQConfirmSelectNowait = 1 << 0,
+    AMQConfirmSelectNowait    = 1 << 0,
 };
 
 @interface AMQConfirmSelect : MTLModel <AMQMethod>
