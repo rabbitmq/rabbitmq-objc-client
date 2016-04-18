@@ -183,15 +183,12 @@ class RMQQueueTest: XCTestCase {
         channel.throwFromBasicConsume = true
         let queue = RMQQueue(name: "custom options", channel: channel, sender: SenderSpy())
 
-        do {
-            try queue.subscribe { RMQMessage in }
+        XCTAssertThrowsError(try queue.subscribe { RMQMessage in }) { error in
+            do {
+                XCTAssertEqual("RMQClientTests.ChannelSpyError", (error as NSError).domain)
+            }
         }
-        catch let e as NSError {
-            XCTAssertEqual("RMQClientTests.ChannelSpyError", e.domain)
-        }
-        catch {
-            XCTFail("Wrong error")
-        }
+
     }
 
     func testGettingMessageCountRedeclaresQueueWithSameOptions() {

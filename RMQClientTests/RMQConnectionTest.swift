@@ -157,15 +157,10 @@ class RMQConnectionTest: XCTestCase {
         let conn = startedConnection(transport)
         transport.stubbedToThrowErrorOnWrite = "stubbed message"
 
-        do {
-            try conn.createChannel()
-            XCTFail("No error assigned")
-        }
-        catch let e as NSError {
-            XCTAssertEqual("stubbed message", e.localizedDescription)
-        }
-        catch {
-            XCTFail("Wrong error")
+        XCTAssertThrowsError(try conn.createChannel()) { (error) in
+            do {
+                XCTAssertEqual("stubbed message", (error as NSError).localizedDescription)
+            }
         }
     }
 
@@ -219,20 +214,16 @@ class RMQConnectionTest: XCTestCase {
         let transport = ControlledInteractionTransport()
         let conn = startedConnection(transport, syncTimeout: 0.1)
 
-        var error: NSError = NSError(domain: "", code: 0, userInfo: [:])
-        do {
+        XCTAssertThrowsError(
             try conn.sendFrameset(
                 AMQFrameset(channelNumber: 42, method: MethodFixtures.connectionStartOk()),
                 waitOnMethod: AMQConnectionTune.self
             )
+        ) { error in
+            do {
+                XCTAssertEqual("Timed out waiting for AMQConnectionTune", (error as NSError).localizedDescription)
+            }
         }
-        catch let e as NSError {
-            error = e
-        }
-        catch {
-            XCTFail("Wrong error")
-        }
-        XCTAssertEqual("Timed out waiting for AMQConnectionTune", error.localizedDescription)
     }
 
     func testWaitingOnAServerMethodWithSendFailure() {
@@ -240,20 +231,16 @@ class RMQConnectionTest: XCTestCase {
         let conn = startedConnection(transport, syncTimeout: 0)
         transport.stubbedToThrowErrorOnWrite = "please fail"
 
-        var error: NSError = NSError(domain: "", code: 0, userInfo: [:])
-        do {
+        XCTAssertThrowsError(
             try conn.sendFrameset(
                 AMQFrameset(channelNumber: 42, method: MethodFixtures.connectionStartOk()),
                 waitOnMethod: AMQConnectionTune.self
             )
+        ) { error in
+            do {
+                XCTAssertEqual("please fail", (error as NSError).localizedDescription)
+            }
         }
-        catch let e as NSError {
-            error = e
-        }
-        catch {
-            XCTFail("Wrong error")
-        }
-        XCTAssertEqual("please fail", error.localizedDescription)
     }
 
 }

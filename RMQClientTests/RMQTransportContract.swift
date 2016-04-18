@@ -23,17 +23,11 @@ class RMQTransportContract {
     }
     
     func throwsWhenWritingButNotConnected() -> RMQTransportContract {
-        do {
-            try transport.write(NSData()) {}
-            XCTFail("No error assigned")
+        XCTAssertThrowsError(try transport.write(NSData()) {}) { _ in
+            do {
+                XCTAssert(true)
+            }
         }
-        catch _ as NSError {
-            XCTAssert(true)
-        }
-        catch {
-            XCTFail("Wrong error")
-        }
-
         return self
     }
     

@@ -47,14 +47,11 @@ class RMQTCPSocketTransportTest: XCTestCase {
     func testPropagatesErrorWhenConnectionTimesOut() {
         let callbacks = RMQSynchronizedMutableDictionary()
         transport = RMQTCPSocketTransport(host: "localhost", port: 123456, callbackStorage: callbacks)
-        do {
-            try transport.connect {}
-        }
-        catch let e as NSError {
-            XCTAssertEqual("Timed out waiting to connect", e.localizedDescription)
-        }
-        catch {
-            XCTFail("Should have failed on timeout")
+
+        XCTAssertThrowsError(try transport.connect {}) { error in
+            do {
+                XCTAssertEqual("Timed out waiting to connect", (error as NSError).localizedDescription)
+            }
         }
     }
 

@@ -101,14 +101,10 @@ class RMQAllocatedChannelTest: XCTestCase {
         sender.throwFromSend = true
         let channel = RMQAllocatedChannel(432, sender: sender)
 
-        do {
-            try channel.basicConsume("somequeue", options: []) { message in }
-        }
-        catch let e as NSError {
-            XCTAssertEqual("RMQClientTests.SenderSpyError", e.domain)
-        }
-        catch {
-            XCTFail("Wrong error")
+        XCTAssertThrowsError(try channel.basicConsume("somequeue", options: []) { message in }) { (error) in
+            do {
+                XCTAssertEqual("RMQClientTests.SenderSpyError", (error as NSError).domain)
+            }
         }
     }
 
@@ -259,14 +255,10 @@ class RMQAllocatedChannelTest: XCTestCase {
         sender.throwFromSend = true
         let channel = RMQAllocatedChannel(999, sender: sender)
 
-        do {
-            try channel.ack(321)
-        }
-        catch let e as NSError {
-            XCTAssertEqual("RMQClientTests.SenderSpyError", e.domain)
-        }
-        catch {
-            XCTFail("Wrong error")
+        XCTAssertThrowsError(try channel.ack(321)) { (error) in
+            do {
+                XCTAssertEqual("RMQClientTests.SenderSpyError", (error as NSError).domain)
+            }
         }
     }
 
@@ -285,14 +277,10 @@ class RMQAllocatedChannelTest: XCTestCase {
         sender.throwFromSend = true
         let channel = RMQAllocatedChannel(999, sender: sender)
 
-        do {
-            try channel.reject(123)
-        }
-        catch let e as NSError {
-            XCTAssertEqual("RMQClientTests.SenderSpyError", e.domain)
-        }
-        catch {
-            XCTFail("Wrong error")
+        XCTAssertThrowsError(try channel.reject(123)) { (error) in
+            do {
+                XCTAssertEqual("RMQClientTests.SenderSpyError", (error as NSError).domain)
+            }
         }
     }
 

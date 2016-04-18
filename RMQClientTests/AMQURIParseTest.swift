@@ -3,20 +3,14 @@ import XCTest
 class AMQURIParseTest: XCTestCase {
     
     func testNonAMQPSchemesNotAllowed() {
-        do {
-            try AMQURI.parse("amqpfoo://dev.rabbitmq.com")
-            XCTFail("No error assigned")
+        XCTAssertThrowsError(try AMQURI.parse("amqpfoo://dev.rabbitmq.com")) { (error) in
+            do {
+                XCTAssertEqual(
+                    "Connection URI must use amqp or amqps schema (example: amqp://bus.megacorp.internal:5766), learn more at http://bit.ly/ks8MXK",
+                    (error as NSError).localizedDescription
+                )
+            }
         }
-        catch let e as NSError {
-            XCTAssertEqual(
-                "Connection URI must use amqp or amqps schema (example: amqp://bus.megacorp.internal:5766), learn more at http://bit.ly/ks8MXK",
-                e.localizedDescription
-            )
-        }
-        catch {
-            XCTFail("Wrong error")
-        }
-        
     }
     
     func testHandlesAMQPURIsWithoutPathPart() {
@@ -53,18 +47,13 @@ class AMQURIParseTest: XCTestCase {
     }
     
     func testSlashesNotAllowedInVhost() {
-        do {
-            try AMQURI.parse("amqp://dev.rabbitmq.com/a/path/with/slashes")
-            XCTFail("No error assigned")
-        }
-        catch let e as NSError {
-            XCTAssertEqual(
-                "amqp://dev.rabbitmq.com/a/path/with/slashes has multiple-segment path; please percent-encode any slashes in the vhost name (e.g. /production => %2Fproduction). Learn more at http://bit.ly/amqp-gem-and-connection-uris",
-                e.localizedDescription
-            )
-        }
-        catch {
-            XCTFail("Wrong error")
+        XCTAssertThrowsError(try AMQURI.parse("amqp://dev.rabbitmq.com/a/path/with/slashes")) { (error) in
+            do {
+                XCTAssertEqual(
+                    "amqp://dev.rabbitmq.com/a/path/with/slashes has multiple-segment path; please percent-encode any slashes in the vhost name (e.g. /production => %2Fproduction). Learn more at http://bit.ly/amqp-gem-and-connection-uris",
+                    (error as NSError).localizedDescription
+                )
+            }
         }
     }
     
