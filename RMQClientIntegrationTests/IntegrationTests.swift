@@ -35,7 +35,7 @@ class IntegrationTests: XCTestCase {
     }
 
     func testSubscribe() {
-        let delegate = ConnectionDelegatePrinter()
+        let delegate = RMQConnectionDelegateLogger()
         let conn = RMQConnection(uri: "amqp://guest:guest@localhost", delegate: delegate)
         conn.start()
         defer { conn.close() }
