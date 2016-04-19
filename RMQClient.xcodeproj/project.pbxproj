@@ -314,6 +314,9 @@
 				AE8AD2611CC53AEB00229444 /* RMQFramesetSemaphoreWaiter.m */,
 				AE8AD2641CC53B0D00229444 /* RMQFramesetWaitResult.h */,
 				AE8AD2651CC53B0D00229444 /* RMQFramesetWaitResult.m */,
+				AE05DA661C69EC47009E68C7 /* RMQChannelAllocator.h */,
+				AE8279861C8D88120013ADD1 /* RMQMultipleChannelAllocator.h */,
+				AE8279871C8D88120013ADD1 /* RMQMultipleChannelAllocator.m */,
 			);
 			name = Channels;
 			sourceTree = "<group>";
@@ -368,9 +371,6 @@
 				AEE445DF1C7338FE0082132C /* RMQReaderLoop.h */,
 				AEE445E01C7338FE0082132C /* RMQReaderLoop.m */,
 				AE82798F1C8DBDF80013ADD1 /* Channels */,
-				AE05DA661C69EC47009E68C7 /* RMQChannelAllocator.h */,
-				AE8279861C8D88120013ADD1 /* RMQMultipleChannelAllocator.h */,
-				AE8279871C8D88120013ADD1 /* RMQMultipleChannelAllocator.m */,
 				AEE7FEB31C3BD16200DF8C4F /* RMQQueue.h */,
 				AEE7FEB41C3BD16200DF8C4F /* RMQQueue.m */,
 				AE05DA6A1C6A0848009E68C7 /* RMQMessage.h */,

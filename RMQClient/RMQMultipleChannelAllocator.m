@@ -37,6 +37,8 @@
     }
 }
 
+# pragma mark - RMQFrameHandler
+
 - (void)handleFrameset:(AMQFrameset *)frameset {
     RMQAllocatedChannel *ch = self.channels[frameset.channelNumber];
     [ch handleFrameset:frameset];
