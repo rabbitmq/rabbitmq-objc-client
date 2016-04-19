@@ -23,6 +23,12 @@ class ChannelAllocationTest: XCTestCase {
         XCTAssertEqual(-1, allocator.allocate().channelNumber)
     }
 
+    func testChannelZeroGetsAChannelZeroInstance() {
+        let allocator = RMQMultipleChannelAllocator()
+        let ch = allocator.allocate()
+        XCTAssert(ch.isKindOfClass(RMQChannelZero), "Actually got \(ch)")
+    }
+
     func testNumbersAreNotDoubleAllocated() {
         let allocator   = RMQMultipleChannelAllocator()
         var channelSet1 = Set<NSNumber>()
@@ -53,7 +59,8 @@ class ChannelAllocationTest: XCTestCase {
             }
         }
 
-        dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
+        let timeout = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+        XCTAssertEqual(0, dispatch_group_wait(group, timeout), "Timed out waiting for allocations")
 
         let channelSets                    = [channelSet1, channelSet2, channelSet3]
         let expectedUniqueUnallocatedCount = channelSets.reduce(0, combine: sumUnallocated)
@@ -90,10 +97,12 @@ class ChannelAllocationTest: XCTestCase {
             }
         }
 
-        dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
+        let timeout = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+        XCTAssertEqual(0, dispatch_group_wait(group, timeout), "Timed out waiting for releases")
 
         XCTAssertEqual(1, allocator.allocate().channelNumber)
     }
+
 
     func sumUnallocated(accumulator: Int, current: Set<NSNumber>) -> Int {
         return accumulator + (current.count == self.allocationsPerQueue ? 0 : 1)

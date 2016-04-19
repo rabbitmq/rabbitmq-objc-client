@@ -1,5 +1,6 @@
 #import "AMQConstants.h"
 #import "RMQAllocatedChannel.h"
+#import "RMQChannelZero.h"
 #import "RMQFramesetSemaphoreWaiter.h"
 #import "RMQMultipleChannelAllocator.h"
 #import "RMQSynchronizedMutableDictionary.h"
@@ -47,7 +48,12 @@
 # pragma mark - Private
 
 - (id<RMQChannel>)unsafeAllocate {
-    if (self.atCapacity) {
+    if (self.channelNumber == 0) {
+        RMQChannelZero *ch = [RMQChannelZero new];
+        self.channels[@0] = ch;
+        self.channelNumber++;
+        return ch;
+    } else if (self.atCapacity) {
         return [RMQUnallocatedChannel new];
     } else if (self.atMaxIndex) {
         return self.previouslyReleasedChannel;
