@@ -39,12 +39,15 @@
 
     if (method.hasContent) {
         [self.transport readFrame:^(NSData * _Nonnull headerData) {
-            AMQFrame *header = [self frameWithData:headerData];
+            AMQFrame *headerFrame = [self frameWithData:headerData];
+            AMQContentHeader *header = (AMQContentHeader *)headerFrame.payload;
 
-            [self readBodiesForChannelNumber:frame.channelNumber
-                                      method:method
-                                      header:(AMQContentHeader *)header.payload
-                               contentBodies:@[]];
+            if (![header.bodySize isEqualToNumber:@0]) {
+                [self readBodiesForChannelNumber:frame.channelNumber
+                                          method:method
+                                          header:header
+                                   contentBodies:@[]];
+            }
         }];
     } else {
         AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:frame.channelNumber
