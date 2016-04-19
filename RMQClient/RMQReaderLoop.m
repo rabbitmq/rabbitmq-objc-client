@@ -42,11 +42,14 @@
             AMQFrame *headerFrame = [self frameWithData:headerData];
             AMQContentHeader *header = (AMQContentHeader *)headerFrame.payload;
 
-            if (![header.bodySize isEqualToNumber:@0]) {
-                [self readBodiesForChannelNumber:frame.channelNumber
-                                          method:method
-                                          header:header
-                                   contentBodies:@[]];
+            AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:frame.channelNumber
+                                                                        method:method
+                                                                 contentHeader:header
+                                                                 contentBodies:@[]];
+            if ([header.bodySize isEqualToNumber:@0]) {
+                [self.frameHandler handleFrameset:frameset];
+            } else {
+                [self readBodiesForIncompleteFrameset:frameset];
             }
         }];
     } else {
@@ -56,45 +59,30 @@
     }
 }
 
-- (void)readBodiesForChannelNumber:(NSNumber *)channelNumber
-                            method:(id<AMQMethod>)method
-                            header:(AMQContentHeader *)header
-                     contentBodies:(NSArray *)contentBodies {
+- (void)readBodiesForIncompleteFrameset:(AMQFrameset *)contentFrameset {
     [self.transport readFrame:^(NSData * _Nonnull data) {
         AMQFrame *frame = [self frameWithData:data];
-        AMQFrameset *contentFrameset = [[AMQFrameset alloc] initWithChannelNumber:channelNumber
-                                                                           method:method
-                                                                    contentHeader:header
-                                                                    contentBodies:contentBodies];
 
         if ([frame.payload isKindOfClass:[AMQContentBody class]]) {
-            [self handlePotentiallyIncompleteFrameset:contentFrameset
-                                             newFrame:frame];
+            [self frameset:contentFrameset
+              addBodyFrame:frame];
         } else {
             [self.frameHandler handleFrameset:contentFrameset];
-            AMQFrameset *nonContentFrameset = [[AMQFrameset alloc] initWithChannelNumber:channelNumber
+            AMQFrameset *nonContentFrameset = [[AMQFrameset alloc] initWithChannelNumber:contentFrameset.channelNumber
                                                                                   method:(id <AMQMethod>)frame.payload];
             [self.frameHandler handleFrameset:nonContentFrameset];
         }
     }];
 }
 
-- (void)handlePotentiallyIncompleteFrameset:(AMQFrameset *)frameset
-                                   newFrame:(AMQFrame *)newFrame {
-    NSArray *conjoinedContentBodies = [frameset.contentBodies arrayByAddingObject:(AMQContentBody *)newFrame.payload];
-    NSNumber *finishedLength = [conjoinedContentBodies valueForKeyPath:@"@sum.length"];
+- (void)frameset:(AMQFrameset *)frameset
+    addBodyFrame:(AMQFrame *)newFrame {
+    AMQFrameset *combinedFrameset = [frameset addBody:(AMQContentBody *)newFrame.payload];
 
-    if ([frameset.contentHeader.bodySize isEqualToNumber:finishedLength]) {
-        AMQFrameset *contentFrameset = [[AMQFrameset alloc] initWithChannelNumber:frameset.channelNumber
-                                                                           method:frameset.method
-                                                                    contentHeader:frameset.contentHeader
-                                                                    contentBodies:conjoinedContentBodies];
-        [self.frameHandler handleFrameset:contentFrameset];
+    if (frameset.contentHeader.bodySize.integerValue == combinedFrameset.contentData.length) {
+        [self.frameHandler handleFrameset:combinedFrameset];
     } else {
-        [self readBodiesForChannelNumber:frameset.channelNumber
-                                  method:frameset.method
-                                  header:frameset.contentHeader
-                           contentBodies:conjoinedContentBodies];
+        [self readBodiesForIncompleteFrameset:combinedFrameset];
     }
 }
 

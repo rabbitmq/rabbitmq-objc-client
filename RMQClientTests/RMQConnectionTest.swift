@@ -97,19 +97,4 @@ class RMQConnectionTest: XCTestCase {
         XCTAssertEqual(frameset.amqEncoded(), transport.outboundData.last)
     }
 
-    func testDeliveryWithZeroBodySizeDoesNotCauseBodyFrameRead() {
-        let (transport, _, _, _) = TestHelper.connectionAfterHandshake()
-
-        let deliver = AMQFrame(channelNumber: 42, payload: MethodFixtures.basicDeliver())
-        let header = AMQFrame(channelNumber: 42, payload: AMQContentHeader(classID: 60, bodySize: 0, properties: []))
-
-        transport.serverSendsData(deliver.amqEncoded())
-
-        let before = transport.readCallbacks.count
-        transport.serverSendsData(header.amqEncoded())
-        let after = transport.readCallbacks.count
-
-        XCTAssertEqual(after, before)
-    }
-
 }

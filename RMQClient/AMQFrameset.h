@@ -12,4 +12,5 @@
 - (nonnull instancetype)initWithChannelNumber:(nonnull NSNumber *)channelNumber
                                        method:(nonnull id<AMQMethod>)method;
 - (nonnull NSData *)contentData;
+- (nonnull AMQFrameset *)addBody:(nonnull AMQContentBody *)body;
 @end

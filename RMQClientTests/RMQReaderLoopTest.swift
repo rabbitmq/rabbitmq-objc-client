@@ -108,6 +108,44 @@ class RMQReaderLoopTest: XCTestCase {
         XCTAssertEqual([expectedContentFrameset], frameHandler.receivedFramesets)
     }
 
+    func testDeliveryWithZeroBodySizeDoesNotCauseBodyFrameRead() {
+        let transport = ControlledInteractionTransport()
+        let frameHandler = FrameHandlerSpy()
+        let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
+
+        let deliver = AMQFrame(channelNumber: 42, payload: MethodFixtures.basicDeliver())
+        let header = AMQFrame(channelNumber: 42, payload: AMQContentHeader(classID: 60, bodySize: 0, properties: []))
+
+        readerLoop.runOnce()
+
+        transport.serverSendsData(deliver.amqEncoded())
+
+        let before = transport.readCallbacks.count
+        transport.serverSendsData(header.amqEncoded())
+        let after = transport.readCallbacks.count
+
+        XCTAssertEqual(after, before)
+    }
+
+    func testDeliveryWithZeroBodySizeGetsSentToFrameHandler() {
+        let transport = ControlledInteractionTransport()
+        let frameHandler = FrameHandlerSpy()
+        let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
+
+        let method = MethodFixtures.basicDeliver()
+        let deliver = AMQFrame(channelNumber: 42, payload: method)
+        let header = AMQContentHeader(classID: 60, bodySize: 0, properties: [])
+        let headerFrame = AMQFrame(channelNumber: 42, payload: header)
+
+        readerLoop.runOnce()
+
+        transport.serverSendsData(deliver.amqEncoded())
+        transport.serverSendsData(headerFrame.amqEncoded())
+
+        XCTAssertEqual(AMQFrameset(channelNumber: 42, method: method, contentHeader: header, contentBodies: []),
+                       frameHandler.lastReceivedFrameset())
+    }
+
     func nonContentPayload() -> AMQBasicDeliver {
         return AMQBasicDeliver(consumerTag: AMQShortstr(""), deliveryTag: AMQLonglong(0), options: AMQBasicDeliverOptions.NoOptions, exchange: AMQShortstr(""), routingKey: AMQShortstr("somekey"))
     }

@@ -53,4 +53,13 @@
     return allBodyData;
 }
 
+- (AMQFrameset *)addBody:(AMQContentBody *)body {
+    NSArray *conjoinedContentBodies = [self.contentBodies arrayByAddingObject:body];
+
+    return [[AMQFrameset alloc] initWithChannelNumber:self.channelNumber
+                                               method:self.method
+                                        contentHeader:self.contentHeader
+                                        contentBodies:conjoinedContentBodies];
+}
+
 @end
