@@ -71,7 +71,7 @@ enum TestDoubleTransportError: ErrorType {
 
     func assertClientSentMethod(amqMethod: AMQMethod, channelNumber: Int) -> Self {
         if outboundData.isEmpty {
-            XCTFail("nothing sent")
+            XCTFail("Nothing sent. Expected \(amqMethod.dynamicType).")
         } else {
             let actual = outboundData.last!
             let parser = AMQParser(data: actual)
