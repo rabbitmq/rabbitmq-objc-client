@@ -24,6 +24,7 @@
 @property (nonatomic, weak, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) dispatch_queue_t delegateQueue;
 @property (nonatomic, readwrite) dispatch_queue_t networkQueue;
+@property (nonatomic, readwrite) NSNumber *handshakeTimeout;
 @property (nonatomic, readwrite) BOOL handshakeComplete;
 @property (nonatomic, readwrite) BOOL closing;
 @end
@@ -37,6 +38,7 @@
                        channelMax:(NSNumber *)channelMax
                          frameMax:(NSNumber *)frameMax
                         heartbeat:(NSNumber *)heartbeat
+                 handshakeTimeout:(NSNumber *)handshakeTimeout
                  channelAllocator:(nonnull id<RMQChannelAllocator>)channelAllocator
                      frameHandler:(nonnull id<RMQFrameHandler>)frameHandler
                          delegate:(id<RMQConnectionDelegate>)delegate
@@ -50,6 +52,7 @@
                                                             channelMax:channelMax
                                                               frameMax:frameMax
                                                              heartbeat:heartbeat];
+        self.handshakeTimeout = handshakeTimeout;
         self.frameMax = frameMax;
         self.vhost = vhost;
         self.transport = transport;
@@ -103,6 +106,7 @@
                         channelMax:channelMax
                           frameMax:frameMax
                          heartbeat:heartbeat
+                  handshakeTimeout:syncTimeout
                   channelAllocator:allocator
                       frameHandler:allocator
                           delegate:delegate
@@ -137,24 +141,36 @@
     if (connectError) {
         [self sendDelegateConnectionError:connectError];
     } else {
-        [self.transport write:[AMQProtocolHeader new].amqEncoded];
-        RMQHandshaker *handshaker = [[RMQHandshaker alloc] initWithSender:self
-                                                                   config:self.config
-                                                        completionHandler:^{
-                                                            for (id<RMQChannel> ch in self.channels.allValues) {
-                                                                [ch activateWithDelegate:self.delegate];
-                                                            }
-                                                            self.handshakeComplete = YES;
-                                                            if (self.closing) {
-                                                                self.closing = NO;
-                                                                [self close];
-                                                            }
-                                                            [self.readerLoop runOnce];
-                                                        }];
-        RMQReaderLoop *handshakeLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport
-                                                                   frameHandler:handshaker];
-        handshaker.readerLoop = handshakeLoop;
-        [handshakeLoop runOnce];
+        dispatch_async(self.networkQueue, ^{
+            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+
+            [self.transport write:[AMQProtocolHeader new].amqEncoded];
+            RMQHandshaker *handshaker = [[RMQHandshaker alloc] initWithSender:self
+                                                                       config:self.config
+                                                            completionHandler:^{
+                                                                dispatch_semaphore_signal(semaphore);
+                                                                for (id<RMQChannel> ch in self.channels.allValues) {
+                                                                    [ch activateWithDelegate:self.delegate];
+                                                                }
+                                                                self.handshakeComplete = YES;
+                                                                if (self.closing) {
+                                                                    self.closing = NO;
+                                                                    [self close];
+                                                                }
+                                                                [self.readerLoop runOnce];
+                                                            }];
+            RMQReaderLoop *handshakeLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport
+                                                                       frameHandler:handshaker];
+            handshaker.readerLoop = handshakeLoop;
+            [handshakeLoop runOnce];
+
+            if (dispatch_semaphore_wait(semaphore, self.handshakeTimeoutFromNow) != 0) {
+                NSError *error = [NSError errorWithDomain:RMQErrorDomain
+                                                     code:RMQConnectionErrorHandshakeTimedOut
+                                                 userInfo:@{NSLocalizedDescriptionKey: @"Handshake timed out."}];
+                [self.delegate connection:self failedToConnectWithError:error];
+            }
+        });
     }
 }
 
@@ -247,6 +263,10 @@
 
 - (BOOL)shouldSendNextRequest:(id<AMQMethod>)amqMethod {
     return [amqMethod conformsToProtocol:@protocol(AMQOutgoingPrecursor)];
+}
+
+- (dispatch_time_t)handshakeTimeoutFromNow {
+    return dispatch_time(DISPATCH_TIME_NOW, self.handshakeTimeout.doubleValue * NSEC_PER_SEC);
 }
 
 @end

@@ -22,6 +22,7 @@ class ChannelCreationTest: XCTestCase {
                              channelMax: 10,
                              frameMax: 2,
                              heartbeat: 3,
+                             handshakeTimeout: 10,
                              channelAllocator: allocator!,
                              frameHandler: frameHandler,
                              delegate: delegate!,
@@ -31,19 +32,19 @@ class ChannelCreationTest: XCTestCase {
 
     func testSendsChannelActivateIfHandshakeIsComplete() {
         conn?.start()
-        q?.finish()
-        transport?.handshake()
+        TestHelper.handshakeAsync(transport!, q: q!)
+
         conn?.createChannel()
         let actualDelegate: ConnectionDelegateSpy = allocator!.channels.last!.delegateSentToActivate! as! ConnectionDelegateSpy
         XCTAssertEqual(delegate!, actualDelegate)
     }
 
-    func testDelaysSendingOfChannelActivateIfHandshakeIsIncomplete() {
+    func testDelaysSendingOfChannelActivateUntilHandshakeIsComplete() {
         conn?.start()
-        q?.finish()
         conn?.createChannel()
+
         XCTAssertNil(allocator!.channels.last!.delegateSentToActivate)
-        transport?.handshake()
+        TestHelper.handshakeAsync(transport!, q: q!)
         XCTAssertNotNil(allocator!.channels.last!.delegateSentToActivate)
     }
 

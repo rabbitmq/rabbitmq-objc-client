@@ -73,6 +73,7 @@ class ConnectionTuningTest: XCTestCase {
             channelMax: channelMax,
             frameMax: frameMax,
             heartbeat: heartbeat,
+            handshakeTimeout: 10,
             channelAllocator: allocator,
             frameHandler: allocator,
             delegate: nil,
@@ -91,10 +92,12 @@ class ConnectionTuningTest: XCTestCase {
     func negotiatedParamsGivenServerParams(transport: ControlledInteractionTransport, _ q: QueueHelper, _ channelMax: AMQShort, _ frameMax: AMQLong, _ heartbeat: AMQShort) -> AMQConnectionTuneOk {
         let tune = AMQConnectionTune(channelMax: channelMax, frameMax: frameMax, heartbeat: heartbeat)
 
-        q.finish()
-        transport
-            .serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
-            .serverSendsPayload(tune, channelNumber: 0)
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            transport
+                .serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
+                .serverSendsPayload(tune, channelNumber: 0)
+                .serverSendsPayload(MethodFixtures.connectionOpenOk(), channelNumber: 0)
+        }
         q.finish()
 
         let parser = AMQParser(data: transport.outboundData[transport.outboundData.count - 2])

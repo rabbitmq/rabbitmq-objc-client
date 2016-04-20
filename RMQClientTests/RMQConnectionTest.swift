@@ -16,6 +16,7 @@ class RMQConnectionTest: XCTestCase {
             channelMax: 123,
             frameMax: 321,
             heartbeat: 10,
+            handshakeTimeout: 10,
             channelAllocator: allocator,
             frameHandler: allocator,
             delegate: delegate,
@@ -29,14 +30,44 @@ class RMQConnectionTest: XCTestCase {
         XCTAssertEqual("bad connection", delegate.lastConnectionError!.localizedDescription)
     }
 
-    func testTransportDelegateWriteErrorsAreTransformedIntoConnectionDelegateErrors() {
-        let (transport, q, conn, connDelegate) = TestHelper.connectionAfterHandshake()
-        transport.stubbedToProduceErrorOnWrite = "foo"
-
+    func testErrorSentToDelegateOnHandshakeTimeout() {
+        let transport = ControlledInteractionTransport()
+        let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 10)
+        let delegate = ConnectionDelegateSpy()
+        let q = QueueHelper()
+        let conn = RMQConnection(
+            transport: transport,
+            user: "foo",
+            password: "bar",
+            vhost: "",
+            channelMax: 123,
+            frameMax: 321,
+            heartbeat: 10,
+            handshakeTimeout: 0,
+            channelAllocator: allocator,
+            frameHandler: allocator,
+            delegate: delegate,
+            delegateQueue: q.dispatchQueue,
+            networkQueue: q.dispatchQueue
+        )
         conn.start()
         q.finish()
 
-        XCTAssertEqual("foo", connDelegate.lastWriteError!.localizedDescription)
+        XCTAssertEqual("Handshake timed out.", delegate.lastConnectionError?.localizedDescription)
+    }
+
+    func testTransportDelegateWriteErrorsAreTransformedIntoConnectionDelegateErrors() {
+        let transport = ControlledInteractionTransport()
+        let q = QueueHelper()
+        let delegate = ConnectionDelegateSpy()
+        TestHelper.startedConnection(transport,
+                                     delegateQueue: q.dispatchQueue,
+                                     networkQueue: q.dispatchQueue,
+                                     delegate: delegate)
+        transport.stubbedToProduceErrorOnWrite = "fail please"
+        TestHelper.handshakeAsync(transport, q: q)
+
+        XCTAssertEqual("fail please", delegate.lastWriteError!.localizedDescription)
     }
 
     func testTransportDelegateDisconnectErrorsAreTransformedIntoConnectionDelegateErrors() {
@@ -62,7 +93,7 @@ class RMQConnectionTest: XCTestCase {
         XCTAssertFalse(transport.isConnected())
     }
 
-    func testClientInitiatedClosingDuringHandshakeWaitsForHandshakeToComplete() {
+    func testClientInitiatedClosingWaitsForHandshakeToComplete() {
         let transport = ControlledInteractionTransport()
         let q = QueueHelper()
         let tuneOk = MethodFixtures.connectionTuneOk()
@@ -74,6 +105,7 @@ class RMQConnectionTest: XCTestCase {
             channelMax: tuneOk.channelMax.integerValue,
             frameMax: tuneOk.frameMax.integerValue,
             heartbeat: tuneOk.heartbeat.integerValue,
+            handshakeTimeout: 10,
             channelAllocator: ChannelSpyAllocator(),
             frameHandler: FrameHandlerSpy(),
             delegate: ConnectionDelegateSpy(),
@@ -81,35 +113,19 @@ class RMQConnectionTest: XCTestCase {
             networkQueue: q.dispatchQueue
         )
         conn.start()
-
-        transport
-            .serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
-            .serverSendsPayload(MethodFixtures.connectionTune(), channelNumber: 0)
-
-        q.finish()
-
         conn.close()
 
-        transport.assertClientSentMethod(MethodFixtures.connectionOpen(), channelNumber: 0)
-        transport.serverSendsPayload(MethodFixtures.connectionOpenOk(), channelNumber: 0)
+        TestHelper.handshakeAsync(transport, q: q)
 
-        q.finish()
-
-        transport.assertClientSentMethod(MethodFixtures.connectionClose(), channelNumber: 0)
-
+        transport.assertClientSentMethods([MethodFixtures.connectionOpen(), MethodFixtures.connectionClose()],
+                                          channelNumber: 0)
         XCTAssert(transport.isConnected())
         transport.serverSendsPayload(MethodFixtures.connectionCloseOk(), channelNumber: 0)
         XCTAssertFalse(transport.isConnected())
     }
 
     func testServerInitiatedClosing() {
-        let transport = ControlledInteractionTransport()
-        let q = QueueHelper()
-        TestHelper.startedConnection(transport,
-                                     delegateQueue: q.dispatchQueue,
-                                     networkQueue: q.dispatchQueue)
-        q.finish()
-        transport.handshake()
+        let (transport, q, _, _) = TestHelper.connectionAfterHandshake()
 
         transport.serverSendsPayload(MethodFixtures.connectionClose(), channelNumber: 0)
 

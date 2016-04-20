@@ -56,6 +56,7 @@ class TestHelper {
             channelMax: 65535,
             frameMax: 131072,
             heartbeat: 0,
+            handshakeTimeout: 10,
             channelAllocator: allocator,
             frameHandler: allocator,
             delegate: delegate,
@@ -74,10 +75,16 @@ class TestHelper {
                                                 delegateQueue: q.dispatchQueue,
                                                 networkQueue: q.dispatchQueue,
                                                 delegate: delegate)
-        q.finish()
-        transport.handshake()
+        handshakeAsync(transport, q: q)
 
         return (transport, q, conn, delegate)
+    }
+
+    static func handshakeAsync(transport: ControlledInteractionTransport, q: QueueHelper) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            transport.handshake()
+        }
+        q.finish()
     }
 
 }

@@ -21,6 +21,7 @@
     self.delegate = delegate;
 }
 - (void)open {}
+- (void)blockingClose {}
 
 - (void)basicConsume:(NSString *)queueName
              options:(AMQBasicConsumeOptions)options
