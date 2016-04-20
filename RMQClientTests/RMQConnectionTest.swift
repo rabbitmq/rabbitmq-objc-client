@@ -118,14 +118,4 @@ class RMQConnectionTest: XCTestCase {
         transport.assertClientSentMethod(MethodFixtures.connectionCloseOk(), channelNumber: 0)
     }
 
-    func testSendFramesetUsesNetworkQueue() {
-        let (transport, q, conn, _) = TestHelper.connectionAfterHandshake()
-        let frameset = AMQFrameset(channelNumber: 42, method: MethodFixtures.queueDeclare("da-club"))
-        conn.sendFrameset(frameset)
-
-        XCTAssertNotEqual(frameset.amqEncoded(), transport.outboundData.last)
-        q.finish()
-        XCTAssertEqual(frameset.amqEncoded(), transport.outboundData.last)
-    }
-
 }

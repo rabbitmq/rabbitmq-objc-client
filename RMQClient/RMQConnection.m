@@ -193,9 +193,7 @@
 }
 
 - (void)sendFrameset:(AMQFrameset *)frameset {
-    dispatch_async(self.networkQueue, ^{
-        [self.transport write:frameset.amqEncoded];
-    });
+    [self.transport write:frameset.amqEncoded];
 }
 
 # pragma mark - RMQFrameHandler
