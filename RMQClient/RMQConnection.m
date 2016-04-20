@@ -26,6 +26,7 @@
 @property (nonatomic, readwrite) dispatch_queue_t delegateQueue;
 @property (nonatomic, readwrite) dispatch_queue_t networkQueue;
 @property (nonatomic, readwrite) BOOL handshakeComplete;
+@property (nonatomic, readwrite) BOOL closing;
 @end
 
 @implementation RMQConnection
@@ -80,6 +81,7 @@
         self.delegateQueue = delegateQueue;
         self.networkQueue = networkQueue;
         self.handshakeComplete = NO;
+        self.closing = NO;
 
         [self allocateChannelZero];
     }
@@ -147,6 +149,10 @@
                                                                 [ch activateWithDelegate:self.delegate];
                                                             }
                                                             self.handshakeComplete = YES;
+                                                            if (self.closing) {
+                                                                self.closing = NO;
+                                                                [self close];
+                                                            }
                                                             [self.readerLoop runOnce];
                                                         }];
         RMQReaderLoop *handshakeLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport
@@ -157,9 +163,13 @@
 }
 
 - (void)close {
-    AMQConnectionClose *method = self.amqClose;
-    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:@0 method:method];
-    [self sendFrameset:frameset];
+    if (self.handshakeComplete) {
+        AMQConnectionClose *method = self.amqClose;
+        AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:@0 method:method];
+        [self sendFrameset:frameset];
+    } else {
+        self.closing = YES;
+    }
 }
 
 - (id<RMQChannel>)createChannel {

@@ -50,22 +50,55 @@ class RMQConnectionTest: XCTestCase {
         XCTAssertEqual("foo", delegate.lastDisconnectError!.localizedDescription)
     }
 
-    func testClientInitiatedClosing() {
+    func testClientInitiatedClosingAfterHandshake() {
         let (transport, q, conn, _) = TestHelper.connectionAfterHandshake()
 
         conn.close()
 
         q.finish()
 
-        transport.assertClientSentMethod(
-            AMQConnectionClose(
-                replyCode: AMQShort(200),
-                replyText: AMQShortstr("Goodbye"),
-                classId: AMQShort(0),
-                methodId: AMQShort(0)
-            ),
-            channelNumber: 0
+        transport.assertClientSentMethod(MethodFixtures.connectionClose(), channelNumber: 0)
+        XCTAssert(transport.isConnected())
+        transport.serverSendsPayload(MethodFixtures.connectionCloseOk(), channelNumber: 0)
+        XCTAssertFalse(transport.isConnected())
+    }
+
+    func testClientInitiatedClosingDuringHandshakeWaitsForHandshakeToComplete() {
+        let transport = ControlledInteractionTransport()
+        let q = QueueHelper()
+        let tuneOk = MethodFixtures.connectionTuneOk()
+        let conn = RMQConnection(
+            transport: transport,
+            user: "",
+            password: "",
+            vhost: "",
+            channelMax: tuneOk.channelMax.integerValue,
+            frameMax: tuneOk.frameMax.integerValue,
+            heartbeat: tuneOk.heartbeat.integerValue,
+            syncTimeout: 1,
+            channelAllocator: ChannelSpyAllocator(),
+            frameHandler: FrameHandlerSpy(),
+            delegate: ConnectionDelegateSpy(),
+            delegateQueue: q.dispatchQueue,
+            networkQueue: q.dispatchQueue
         )
+        conn.start()
+
+        transport
+            .serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
+            .serverSendsPayload(MethodFixtures.connectionTune(), channelNumber: 0)
+
+        q.finish()
+
+        conn.close()
+
+        transport.assertClientSentMethod(MethodFixtures.connectionOpen(), channelNumber: 0)
+        transport.serverSendsPayload(MethodFixtures.connectionOpenOk(), channelNumber: 0)
+
+        q.finish()
+
+        transport.assertClientSentMethod(MethodFixtures.connectionClose(), channelNumber: 0)
+
         XCTAssert(transport.isConnected())
         transport.serverSendsPayload(MethodFixtures.connectionCloseOk(), channelNumber: 0)
         XCTAssertFalse(transport.isConnected())

@@ -59,7 +59,7 @@ enum TestDoubleTransportError: ErrorType {
 
     func serverSendsData(data: NSData) -> Self {
         if readCallbacks.isEmpty {
-            XCTFail("No read callbacks stored!")
+            XCTFail("No read callbacks stored for \(decode(data))!")
         } else if callbackIndexToRunNext == readCallbacks.count - 1 {
             readCallbacks.last!(data)
             callbackIndexToRunNext += 1
@@ -93,10 +93,7 @@ enum TestDoubleTransportError: ErrorType {
             let startIndex = lastIndex - methods.count + 1
             let actual = Array(outboundData[startIndex...lastIndex])
             let decoded = outboundData.map { (data) -> String in
-                let parser = AMQParser(data: data)
-                let frame = AMQFrame(parser: parser)
-                let decoded = frame.payload as? AMQMethod
-                return "\(decoded?.dynamicType)"
+                decode(data)
             }
             let expected = methods.map { (method) -> NSData in
                 return AMQFrame(channelNumber: channelNumber, payload: method).amqEncoded()
@@ -113,5 +110,12 @@ enum TestDoubleTransportError: ErrorType {
             outboundData.last!
         )
         return self
+    }
+
+    func decode(data: NSData) -> String {
+        let parser = AMQParser(data: data)
+        let frame = AMQFrame(parser: parser)
+        let decoded = frame.payload as? AMQMethod
+        return "\(decoded?.dynamicType)"
     }
 }
