@@ -10,13 +10,13 @@ class ChannelAllocationTest: XCTestCase {
     }
 
     func testChannelGetsNegativeOneChannelNumberWhenOutOfChannelNumbers() {
-        let allocator = RMQMultipleChannelAllocator()
+        let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
         allocateAll(allocator)
         XCTAssertEqual(-1, allocator.allocate().channelNumber)
     }
 
     func testChannelGetsAFreedChannelNumberIfOtherwiseOutOfChannelNumbers() {
-        let allocator = RMQMultipleChannelAllocator()
+        let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
         allocateAll(allocator)
         allocator.releaseChannelNumber(2)
         XCTAssertEqual(2, allocator.allocate().channelNumber)
@@ -24,7 +24,7 @@ class ChannelAllocationTest: XCTestCase {
     }
 
     func testNumbersAreNotDoubleAllocated() {
-        let allocator   = RMQMultipleChannelAllocator()
+        let allocator   = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
         var channelSet1 = Set<NSNumber>()
         var channelSet2 = Set<NSNumber>()
         var channelSet3 = Set<NSNumber>()
@@ -64,7 +64,7 @@ class ChannelAllocationTest: XCTestCase {
     }
 
     func testChannelsAreReleasedWithThreadSafety() {
-        let allocator   = RMQMultipleChannelAllocator()
+        let allocator   = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
         let group       = dispatch_group_create()
         let queues      = [
             dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),

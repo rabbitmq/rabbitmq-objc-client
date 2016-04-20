@@ -7,7 +7,7 @@ class RMQConnectionTest: XCTestCase {
         transport.stubbedToThrowErrorOnConnect = "bad connection"
         let delegate = ConnectionDelegateSpy()
         let queueHelper = QueueHelper()
-        let allocator = RMQMultipleChannelAllocator()
+        let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
         let conn = RMQConnection(
             transport: transport,
             user: "foo",
@@ -16,7 +16,6 @@ class RMQConnectionTest: XCTestCase {
             channelMax: 123,
             frameMax: 321,
             heartbeat: 10,
-            syncTimeout: 1,
             channelAllocator: allocator,
             frameHandler: allocator,
             delegate: delegate,
@@ -75,7 +74,6 @@ class RMQConnectionTest: XCTestCase {
             channelMax: tuneOk.channelMax.integerValue,
             frameMax: tuneOk.frameMax.integerValue,
             heartbeat: tuneOk.heartbeat.integerValue,
-            syncTimeout: 1,
             channelAllocator: ChannelSpyAllocator(),
             frameHandler: FrameHandlerSpy(),
             delegate: ConnectionDelegateSpy(),

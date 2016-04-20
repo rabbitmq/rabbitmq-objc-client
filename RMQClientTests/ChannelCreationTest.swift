@@ -22,7 +22,6 @@ class ChannelCreationTest: XCTestCase {
                              channelMax: 10,
                              frameMax: 2,
                              heartbeat: 3,
-                             syncTimeout: 0,
                              channelAllocator: allocator!,
                              frameHandler: frameHandler,
                              delegate: delegate!,

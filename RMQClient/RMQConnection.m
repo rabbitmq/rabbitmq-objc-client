@@ -21,7 +21,6 @@
 @property (nonatomic, readwrite) id <RMQFrameHandler> frameHandler;
 @property (nonatomic, readwrite) NSMutableDictionary *channels;
 @property (nonatomic, readwrite) NSNumber *frameMax;
-@property (nonatomic, readwrite) NSNumber *syncTimeout;
 @property (nonatomic, weak, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) dispatch_queue_t delegateQueue;
 @property (nonatomic, readwrite) dispatch_queue_t networkQueue;
@@ -38,7 +37,6 @@
                        channelMax:(NSNumber *)channelMax
                          frameMax:(NSNumber *)frameMax
                         heartbeat:(NSNumber *)heartbeat
-                      syncTimeout:(NSNumber *)syncTimeout
                  channelAllocator:(nonnull id<RMQChannelAllocator>)channelAllocator
                      frameHandler:(nonnull id<RMQFrameHandler>)frameHandler
                          delegate:(id<RMQConnectionDelegate>)delegate
@@ -56,7 +54,6 @@
         self.vhost = vhost;
         self.transport = transport;
         self.transport.delegate = self;
-        self.syncTimeout = syncTimeout;
         self.channelAllocator = channelAllocator;
         self.channelAllocator.sender = self;
         self.frameHandler = frameHandler;
@@ -98,7 +95,7 @@
     NSError *error = NULL;
     AMQURI *amqURI = [AMQURI parse:uri error:&error];
     RMQTCPSocketTransport *transport = [[RMQTCPSocketTransport alloc] initWithHost:amqURI.host port:amqURI.portNumber];
-    RMQMultipleChannelAllocator *allocator = [RMQMultipleChannelAllocator new];
+    RMQMultipleChannelAllocator *allocator = [[RMQMultipleChannelAllocator alloc] initWithChannelSyncTimeout:syncTimeout];
     return [self initWithTransport:transport
                               user:amqURI.username
                           password:amqURI.password
@@ -106,7 +103,6 @@
                         channelMax:channelMax
                           frameMax:frameMax
                          heartbeat:heartbeat
-                       syncTimeout:syncTimeout
                   channelAllocator:allocator
                       frameHandler:allocator
                           delegate:delegate
@@ -234,10 +230,6 @@
     dispatch_async(self.delegateQueue, ^{
         [self.delegate connection:self failedToConnectWithError:error];
     });
-}
-
-- (dispatch_time_t)syncTimeoutFromNow {
-    return dispatch_time(DISPATCH_TIME_NOW, self.syncTimeout.doubleValue * NSEC_PER_SEC);
 }
 
 - (void)allocateChannelZero {

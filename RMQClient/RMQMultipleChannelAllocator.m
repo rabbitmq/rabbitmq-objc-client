@@ -8,19 +8,26 @@
 @interface RMQMultipleChannelAllocator ()
 @property (atomic, readwrite) UInt16 channelNumber;
 @property (nonatomic, readwrite) RMQSynchronizedMutableDictionary *channels;
+@property (nonatomic, readwrite) NSNumber *syncTimeout;
 @end
 
 @implementation RMQMultipleChannelAllocator
 @synthesize sender;
 
-- (instancetype)init {
+- (instancetype)initWithChannelSyncTimeout:(NSNumber *)syncTimeout {
     self = [super init];
     if (self) {
         self.channels = [RMQSynchronizedMutableDictionary new];
         self.channelNumber = 0;
         self.sender = nil;
+        self.syncTimeout = syncTimeout;
     }
     return self;
+}
+
+- (instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 - (id<RMQChannel>)allocate {
@@ -61,9 +68,10 @@
 }
 
 - (id<RMQChannel>)newAllocation {
+    RMQFramesetSemaphoreWaiter *waiter = [[RMQFramesetSemaphoreWaiter alloc] initWithSyncTimeout:self.syncTimeout];
     RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(self.channelNumber)
                                                          sender:self.sender
-                                                         waiter:[[RMQFramesetSemaphoreWaiter alloc] initWithSyncTimeout:@2]
+                                                         waiter:waiter
                                                           queue:[self suspendedDispatchQueue:self.channelNumber]];
     self.channels[@(self.channelNumber)] = ch;
     self.channelNumber++;

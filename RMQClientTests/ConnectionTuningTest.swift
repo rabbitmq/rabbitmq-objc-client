@@ -64,7 +64,7 @@ class ConnectionTuningTest: XCTestCase {
 
     func connectWithOptions(transport: ControlledInteractionTransport, _ channelMax: Int, _ frameMax: Int, _ heartbeat: Int) -> QueueHelper {
         let q = QueueHelper()
-        let allocator = RMQMultipleChannelAllocator()
+        let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
         let connection = RMQConnection(
             transport: transport,
             user: "foo",
@@ -73,7 +73,6 @@ class ConnectionTuningTest: XCTestCase {
             channelMax: channelMax,
             frameMax: frameMax,
             heartbeat: heartbeat,
-            syncTimeout: 0,
             channelAllocator: allocator,
             frameHandler: allocator,
             delegate: nil,

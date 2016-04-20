@@ -47,7 +47,7 @@ class TestHelper {
         password: String = "bar",
         vhost: String = "baz"
         ) -> RMQConnection {
-        let allocator = RMQMultipleChannelAllocator()
+        let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
         let conn = RMQConnection(
             transport: transport,
             user: user,
@@ -56,7 +56,6 @@ class TestHelper {
             channelMax: 65535,
             frameMax: 131072,
             heartbeat: 0,
-            syncTimeout: syncTimeout,
             channelAllocator: allocator,
             frameHandler: allocator,
             delegate: delegate,

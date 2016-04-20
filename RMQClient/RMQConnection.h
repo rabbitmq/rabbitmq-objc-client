@@ -18,7 +18,6 @@
                                channelMax:(nonnull NSNumber *)channelMax
                                  frameMax:(nonnull NSNumber *)frameMax
                                 heartbeat:(nonnull NSNumber *)heartbeat
-                              syncTimeout:(nonnull NSNumber *)syncTimeout
                          channelAllocator:(nonnull id<RMQChannelAllocator>)channelAllocator
                              frameHandler:(nonnull id<RMQFrameHandler>)frameHandler
                                  delegate:(nullable id<RMQConnectionDelegate>)delegate
