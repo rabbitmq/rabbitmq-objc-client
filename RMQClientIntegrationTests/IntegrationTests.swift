@@ -108,7 +108,7 @@ class IntegrationTests: XCTestCase {
             set3.insert(message.deliveryTag)
         }
 
-        sleep(1)
+        sleep(2)
 
         let producingChannel = conn.createChannel()
         let producingQueue = producingChannel.queue(queueName, options: [.AutoDelete, .Exclusive])
