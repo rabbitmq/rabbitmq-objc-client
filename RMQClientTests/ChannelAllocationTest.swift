@@ -23,12 +23,6 @@ class ChannelAllocationTest: XCTestCase {
         XCTAssertEqual(-1, allocator.allocate().channelNumber)
     }
 
-    func testChannelZeroGetsAChannelZeroInstance() {
-        let allocator = RMQMultipleChannelAllocator()
-        let ch = allocator.allocate()
-        XCTAssert(ch.isKindOfClass(RMQChannelZero), "Actually got \(ch)")
-    }
-
     func testNumbersAreNotDoubleAllocated() {
         let allocator   = RMQMultipleChannelAllocator()
         var channelSet1 = Set<NSNumber>()
@@ -102,7 +96,6 @@ class ChannelAllocationTest: XCTestCase {
 
         XCTAssertEqual(1, allocator.allocate().channelNumber)
     }
-
 
     func sumUnallocated(accumulator: Int, current: Set<NSNumber>) -> Int {
         return accumulator + (current.count == self.allocationsPerQueue ? 0 : 1)
