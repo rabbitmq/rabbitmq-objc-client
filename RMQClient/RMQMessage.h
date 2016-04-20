@@ -12,6 +12,3 @@
                                 deliveryTag:(nonnull NSNumber *)deliveryTag
                                     content:(nonnull NSString *)content;
 @end
-
-@interface RMQEmptyMessage : MTLModel <RMQMessage>
-@end
