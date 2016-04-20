@@ -164,8 +164,16 @@
 
 - (void)close {
     dispatch_async(self.networkQueue, ^{
-        AMQConnectionClose *method = self.amqClose;
-        AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:@0 method:method];
+        dispatch_group_t group = dispatch_group_create();
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        for (id<RMQChannel> ch in self.channels.allValues) {
+            dispatch_group_async(group, queue, ^{
+                [ch blockingClose];
+            });
+        }
+        dispatch_group_wait(group, self.handshakeTimeoutFromNow);
+
+        AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:@0 method:self.amqClose];
         [self sendFrameset:frameset];
     });
 }

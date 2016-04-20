@@ -124,6 +124,48 @@ class RMQConnectionTest: XCTestCase {
         XCTAssertFalse(transport.isConnected())
     }
 
+    func testClientInitiatedClosingWaitsForChannelsToCloseBeforeSendingClose() {
+        let transport = ControlledInteractionTransport()
+        let allocator = ChannelSpyAllocator()
+        let q = QueueHelper()
+        let conn = RMQConnection(
+            transport: transport,
+            user: "",
+            password: "",
+            vhost: "",
+            channelMax: 4,
+            frameMax: 5,
+            heartbeat: 6,
+            handshakeTimeout: 10,
+            channelAllocator: allocator,
+            frameHandler: FrameHandlerSpy(),
+            delegate: ConnectionDelegateSpy(),
+            delegateQueue: q.dispatchQueue,
+            networkQueue: q.dispatchQueue
+        )
+        conn.start()
+        TestHelper.handshakeAsync(transport, q: q)
+
+        conn.createChannel()
+        conn.createChannel()
+        conn.createChannel()
+        q.finish()
+
+        transport.outboundData = []
+
+        conn.close()
+
+        XCTAssertEqual([], transport.outboundData)
+
+        q.finish()
+
+        for ch in allocator.channels[1...3] {
+            XCTAssert(ch.blockingCloseCalled)
+        }
+
+        transport.assertClientSentMethod(MethodFixtures.connectionClose(), channelNumber: 0)
+    }
+
     func testServerInitiatedClosing() {
         let (transport, q, _, _) = TestHelper.connectionAfterHandshake()
 
