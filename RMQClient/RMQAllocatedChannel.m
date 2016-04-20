@@ -80,6 +80,22 @@ typedef void (^Consumer)(id<RMQMessage>);
     });
 }
 
+- (void)blockingClose {
+    AMQChannelClose *close = [[AMQChannelClose alloc] initWithReplyCode:[[AMQShort alloc] init:200]
+                                                              replyText:[[AMQShortstr alloc] init:@"Goodbye"]
+                                                                classId:[[AMQShort alloc] init:0]
+                                                               methodId:[[AMQShort alloc] init:0]];
+    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:self.channelNumber method:close];
+    dispatch_sync(self.queue, ^{
+        [self.sender sendFrameset:frameset];
+
+        RMQFramesetWaitResult *result = [self.waiter waitOn:[AMQChannelCloseOk class]];
+        if (result.error) {
+            [self.delegate channel:self error:result.error];
+        }
+    });
+}
+
 - (RMQQueue *)queue:(NSString *)queueName
             options:(AMQQueueDeclareOptions)options {
     RMQQueue *found = self.queues[queueName];

@@ -84,6 +84,43 @@ class RMQAllocatedChannelTest: XCTestCase {
         XCTAssertEqual("foo", delegate.lastChannelOpenError!.localizedDescription)
     }
 
+    func testBlockingCloseSendsCloseAndBlocksUntilCloseOkReceived() {
+        let sender = SenderSpy()
+        let q = QueueHelper()
+        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, queue: q.dispatchQueue)
+        ch.activateWithDelegate(nil)
+        ch.open()
+        
+        waiter!.fulfill(AMQFrameset(channelNumber: 1, method: MethodFixtures.channelCloseOk()))
+        ch.blockingClose()
+
+        XCTAssertEqual(
+            [
+                AMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpen()),
+                AMQFrameset(channelNumber: 1, method: MethodFixtures.channelClose())
+            ],
+            sender.sentFramesets
+        )
+        XCTAssertEqual(AMQChannelCloseOk.description(), waiter!.lastWaitedOnClass!.description())
+
+        q.suspend()
+    }
+
+    func testBlockingCloseSendsMessageToDelegateIfWaitFails() {
+        let sender = SenderSpy()
+        let q = QueueHelper()
+        let delegate = ConnectionDelegateSpy()
+        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, queue: q.dispatchQueue)
+        ch.activateWithDelegate(delegate)
+        ch.open()
+
+        waiter!.err("waiting failed")
+        ch.blockingClose()
+        XCTAssertEqual("waiting failed", delegate.lastChannelError?.localizedDescription)
+
+        q.suspend()
+    }
+
     func testQueueSendsAQueueDeclareWithNoWait() {
         let sender = SenderSpy()
         let q = QueueHelper()

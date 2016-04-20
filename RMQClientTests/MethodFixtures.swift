@@ -91,6 +91,19 @@ class MethodFixtures {
         return AMQChannelOpenOk(reserved1: AMQLongstr(""))
     }
 
+    static func channelClose() -> AMQChannelClose {
+        return AMQChannelClose(
+            replyCode: AMQShort(200),
+            replyText: AMQShortstr("Goodbye"),
+            classId: AMQShort(0),
+            methodId: AMQShort(0)
+        )
+    }
+
+    static func channelCloseOk() -> AMQChannelCloseOk {
+        return AMQChannelCloseOk()
+    }
+
     static func queueDeclare(name: String) -> AMQQueueDeclare {
         return AMQQueueDeclare(
             reserved1: AMQShort(0),

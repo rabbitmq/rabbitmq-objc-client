@@ -19,6 +19,7 @@ enum ChannelSpyError: ErrorType {
     var lastReceivedQueueDeclareOptions: AMQQueueDeclareOptions = []
     var stubbedBasicConsumeError: String?
     var openCalled = false
+    var blockingCloseCalled = false
     var delegateSentToActivate: RMQConnectionDelegate?
     override var description: String {
         return "Channel Spy \(channelNumber)"
@@ -38,6 +39,10 @@ enum ChannelSpyError: ErrorType {
 
     func open() {
         openCalled = true
+    }
+
+    func blockingClose() {
+        blockingCloseCalled = true
     }
 
     func sendMethod(sendingMethod: AMQMethod,

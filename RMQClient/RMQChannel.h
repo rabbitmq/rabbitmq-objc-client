@@ -14,6 +14,7 @@
 
 - (void)activateWithDelegate:(nullable id<RMQConnectionDelegate>)delegate;
 - (void)open;
+- (void)blockingClose;
 
 - (nonnull RMQQueue *)queue:(nonnull NSString *)queueName
                     options:(AMQQueueDeclareOptions)options;
