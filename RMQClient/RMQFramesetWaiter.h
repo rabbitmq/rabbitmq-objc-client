@@ -3,5 +3,5 @@
 
 @protocol RMQFramesetWaiter <NSObject>
 - (RMQFramesetWaitResult *)waitOn:(Class)methodClass;
-- (void)fulfill:(AMQFrameset *)frameset;
+- (void)fulfill:(RMQFrameset *)frameset;
 @end

@@ -1,9 +1,9 @@
 #import <Foundation/Foundation.h>
-#import "AMQFrameset.h"
+#import "RMQFrameset.h"
 
 @interface RMQFramesetWaitResult : NSObject
 @property (nonatomic, readonly) NSError *error;
-@property (nonatomic, readonly) AMQFrameset *frameset;
+@property (nonatomic, readonly) RMQFrameset *frameset;
 
-- (instancetype)initWithFrameset:(AMQFrameset *)frameset error:(NSError *)error;
+- (instancetype)initWithFrameset:(RMQFrameset *)frameset error:(NSError *)error;
 @end

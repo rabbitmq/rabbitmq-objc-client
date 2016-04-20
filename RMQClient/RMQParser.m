@@ -1,20 +1,20 @@
-#import "AMQParser.h"
-#import "AMQValues.h"
+#import "RMQParser.h"
+#import "RMQValues.h"
 
-enum AMQParserFieldValue {
-    AMQParserFieldTable = 'F',
-    AMQParserBoolean = 't',
-    AMQParserShortString = 's',
-    AMQParserLongString = 'S',
+enum RMQParserFieldValue {
+    RMQParserFieldTable = 'F',
+    RMQParserBoolean = 't',
+    RMQParserShortString = 's',
+    RMQParserLongString = 'S',
 };
 
-@interface AMQParser ()
+@interface RMQParser ()
 @property (nonatomic, readwrite) const char *cursor;
 @property (nonatomic, readwrite) const char *end;
 @property (nonatomic, readwrite) NSData *data;
 @end
 
-@implementation AMQParser
+@implementation RMQParser
 
 - (instancetype)initWithData:(NSData *)data {
     self = [super init];
@@ -36,19 +36,19 @@ enum AMQParserFieldValue {
     while (self.cursor < start + tableLength.integerValue && self.cursor < self.end) {
         NSString *key = [self parseShortString];
 
-        enum AMQParserFieldValue type = *((self.cursor)++);
+        enum RMQParserFieldValue type = *((self.cursor)++);
         switch (type) {
-            case AMQParserFieldTable:
-                dict[key] = [[AMQTable alloc] init:[self parseFieldTable]];
+            case RMQParserFieldTable:
+                dict[key] = [[RMQTable alloc] init:[self parseFieldTable]];
                 break;
-            case AMQParserBoolean:
-                dict[key] = [[AMQBoolean alloc] init:[self parseBoolean]];
+            case RMQParserBoolean:
+                dict[key] = [[RMQBoolean alloc] init:[self parseBoolean]];
                 break;
-            case AMQParserShortString:
-                dict[key] = [[AMQShortstr alloc] init:[self parseShortString]];
+            case RMQParserShortString:
+                dict[key] = [[RMQShortstr alloc] init:[self parseShortString]];
                 break;
-            case AMQParserLongString:
-                dict[key] = [[AMQLongstr alloc] init:[self parseLongString]];
+            case RMQParserLongString:
+                dict[key] = [[RMQLongstr alloc] init:[self parseLongString]];
                 break;
         }
     }

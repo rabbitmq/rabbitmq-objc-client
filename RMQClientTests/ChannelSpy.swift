@@ -4,19 +4,19 @@ enum ChannelSpyError: ErrorType {
 
 @objc class ChannelSpy : NSObject, RMQChannel {
     var channelNumber: NSNumber
-    var lastReceivedBasicConsumeOptions: AMQBasicConsumeOptions = []
+    var lastReceivedBasicConsumeOptions: RMQBasicConsumeOptions = []
     var lastReceivedBasicConsumeBlock: ((RMQMessage) -> Void)?
     var lastReceivedBasicGetQueue: String?
-    var lastReceivedBasicGetOptions: AMQBasicGetOptions?
+    var lastReceivedBasicGetOptions: RMQBasicGetOptions?
     var lastReceivedBasicGetCompletionHandler: ((RMQMessage) -> Void)?
     var lastReceivedBasicPublishMessage: String?
     var lastReceivedBasicPublishRoutingKey: String?
     var lastReceivedBasicPublishExchange: String?
-    var lastReceivedFrameset: AMQFrameset?
+    var lastReceivedFrameset: RMQFrameset?
     var queues: [String: RMQQueue] = [:]
-    var stubbedMessageCount: AMQLong = AMQLong(0)
-    var stubbedConsumerCount: AMQLong = AMQLong(0)
-    var lastReceivedQueueDeclareOptions: AMQQueueDeclareOptions = []
+    var stubbedMessageCount: RMQLong = RMQLong(0)
+    var stubbedConsumerCount: RMQLong = RMQLong(0)
+    var lastReceivedQueueDeclareOptions: RMQQueueDeclareOptions = []
     var stubbedBasicConsumeError: String?
     var openCalled = false
     var blockingCloseCalled = false
@@ -45,12 +45,12 @@ enum ChannelSpyError: ErrorType {
         blockingCloseCalled = true
     }
 
-    func sendMethod(sendingMethod: AMQMethod,
+    func sendMethod(sendingMethod: RMQMethod,
                     waitOnMethod waitOnMethodClass: AnyClass,
-                    completionHandler: (AMQFrameset?, NSError?) -> Void) {
+                    completionHandler: (RMQFrameset?, NSError?) -> Void) {
     }
 
-    func queue(queueName: String, options: AMQQueueDeclareOptions) -> RMQQueue {
+    func queue(queueName: String, options: RMQQueueDeclareOptions) -> RMQQueue {
         if let foundQueue = queues[queueName] {
             return foundQueue;
         } else {
@@ -64,16 +64,16 @@ enum ChannelSpyError: ErrorType {
         return queue(queueName, options: [])
     }
 
-    func queueDeclare(queueName: String, options: AMQQueueDeclareOptions) -> AMQQueueDeclareOk {
+    func queueDeclare(queueName: String, options: RMQQueueDeclareOptions) -> RMQQueueDeclareOk {
         lastReceivedQueueDeclareOptions = options
-        return AMQQueueDeclareOk(
-            queue: AMQShortstr(queueName),
+        return RMQQueueDeclareOk(
+            queue: RMQShortstr(queueName),
             messageCount: stubbedMessageCount,
             consumerCount: stubbedConsumerCount
         )
     }
 
-    func basicConsume(queueName: String, options: AMQBasicConsumeOptions, consumer: (RMQMessage) -> Void) {
+    func basicConsume(queueName: String, options: RMQBasicConsumeOptions, consumer: (RMQMessage) -> Void) {
         lastReceivedBasicConsumeOptions = options
         lastReceivedBasicConsumeBlock = consumer
         if let msg = stubbedBasicConsumeError {
@@ -88,32 +88,32 @@ enum ChannelSpyError: ErrorType {
         lastReceivedBasicPublishExchange = exchange
     }
 
-    func basicGet(queue: String, options: AMQBasicGetOptions, completionHandler: (RMQMessage) -> Void) {
+    func basicGet(queue: String, options: RMQBasicGetOptions, completionHandler: (RMQMessage) -> Void) {
         lastReceivedBasicGetQueue = queue
         lastReceivedBasicGetOptions = options
         lastReceivedBasicGetCompletionHandler = completionHandler
     }
 
-    func ack(deliveryTag: NSNumber, options: AMQBasicAckOptions) {
+    func ack(deliveryTag: NSNumber, options: RMQBasicAckOptions) {
     }
 
     func ack(deliveryTag: NSNumber) {
     }
 
-    func handleFrameset(frameset: AMQFrameset) {
+    func handleFrameset(frameset: RMQFrameset) {
         lastReceivedFrameset = frameset
     }
 
     func basicQos(count: NSNumber, global isGlobal: Bool) {
     }
 
-    func reject(deliveryTag: NSNumber, options: AMQBasicRejectOptions) {
+    func reject(deliveryTag: NSNumber, options: RMQBasicRejectOptions) {
     }
 
     func reject(deliveryTag: NSNumber) {
     }
 
-    func nack(deliveryTag: NSNumber, options: AMQBasicNackOptions) {
+    func nack(deliveryTag: NSNumber, options: RMQBasicNackOptions) {
     }
 
     func nack(deliveryTag: NSNumber) {

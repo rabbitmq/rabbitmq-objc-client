@@ -1,24 +1,24 @@
 // This file is generated. Do not edit.
-#import "AMQMethods.h"
+#import "RMQMethods.h"
 
-@interface AMQConnectionStart ()
-@property (nonnull, copy, nonatomic, readwrite) AMQOctet *versionMajor;
-@property (nonnull, copy, nonatomic, readwrite) AMQOctet *versionMinor;
-@property (nonnull, copy, nonatomic, readwrite) AMQTable *serverProperties;
-@property (nonnull, copy, nonatomic, readwrite) AMQLongstr *mechanisms;
-@property (nonnull, copy, nonatomic, readwrite) AMQLongstr *locales;
+@interface RMQConnectionStart ()
+@property (nonnull, copy, nonatomic, readwrite) RMQOctet *versionMajor;
+@property (nonnull, copy, nonatomic, readwrite) RMQOctet *versionMinor;
+@property (nonnull, copy, nonatomic, readwrite) RMQTable *serverProperties;
+@property (nonnull, copy, nonatomic, readwrite) RMQLongstr *mechanisms;
+@property (nonnull, copy, nonatomic, readwrite) RMQLongstr *locales;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQConnectionStart
+@implementation RMQConnectionStart
 
 + (NSArray *)propertyClasses {
-    return @[[AMQOctet class],
-             [AMQOctet class],
-             [AMQTable class],
-             [AMQLongstr class],
-             [AMQLongstr class]];
+    return @[[RMQOctet class],
+             [RMQOctet class],
+             [RMQTable class],
+             [RMQLongstr class],
+             [RMQLongstr class]];
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @10; }
@@ -26,11 +26,11 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithVersionMajor:(nonnull AMQOctet *)versionMajor
-                                versionMinor:(nonnull AMQOctet *)versionMinor
-                            serverProperties:(nonnull AMQTable *)serverProperties
-                                  mechanisms:(nonnull AMQLongstr *)mechanisms
-                                     locales:(nonnull AMQLongstr *)locales {
+- (nonnull instancetype)initWithVersionMajor:(nonnull RMQOctet *)versionMajor
+                                versionMinor:(nonnull RMQOctet *)versionMinor
+                            serverProperties:(nonnull RMQTable *)serverProperties
+                                  mechanisms:(nonnull RMQLongstr *)mechanisms
+                                     locales:(nonnull RMQLongstr *)locales {
     self = [super init];
     if (self) {
         self.versionMajor = versionMajor;
@@ -50,11 +50,11 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.versionMajor = ((AMQOctet *)frame[0]);
-        self.versionMinor = ((AMQOctet *)frame[1]);
-        self.serverProperties = ((AMQTable *)frame[2]);
-        self.mechanisms = ((AMQLongstr *)frame[3]);
-        self.locales = ((AMQLongstr *)frame[4]);
+        self.versionMajor = ((RMQOctet *)frame[0]);
+        self.versionMinor = ((RMQOctet *)frame[1]);
+        self.serverProperties = ((RMQTable *)frame[2]);
+        self.mechanisms = ((RMQLongstr *)frame[3]);
+        self.locales = ((RMQLongstr *)frame[4]);
         self.payloadArguments = @[self.versionMajor,
                                   self.versionMinor,
                                   self.serverProperties,
@@ -66,9 +66,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -76,22 +76,22 @@
 
 @end
 
-@interface AMQConnectionStartOk ()
-@property (nonnull, copy, nonatomic, readwrite) AMQTable *clientProperties;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *mechanism;
-@property (nonnull, copy, nonatomic, readwrite) AMQLongstr *response;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *locale;
+@interface RMQConnectionStartOk ()
+@property (nonnull, copy, nonatomic, readwrite) RMQTable *clientProperties;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *mechanism;
+@property (nonnull, copy, nonatomic, readwrite) RMQLongstr *response;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *locale;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQConnectionStartOk
+@implementation RMQConnectionStartOk
 
 + (NSArray *)propertyClasses {
-    return @[[AMQTable class],
-             [AMQShortstr class],
-             [AMQLongstr class],
-             [AMQShortstr class]];
+    return @[[RMQTable class],
+             [RMQShortstr class],
+             [RMQLongstr class],
+             [RMQShortstr class]];
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @11; }
@@ -99,10 +99,10 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithClientProperties:(nonnull AMQTable *)clientProperties
-                                       mechanism:(nonnull AMQShortstr *)mechanism
-                                        response:(nonnull AMQLongstr *)response
-                                          locale:(nonnull AMQShortstr *)locale {
+- (nonnull instancetype)initWithClientProperties:(nonnull RMQTable *)clientProperties
+                                       mechanism:(nonnull RMQShortstr *)mechanism
+                                        response:(nonnull RMQLongstr *)response
+                                          locale:(nonnull RMQShortstr *)locale {
     self = [super init];
     if (self) {
         self.clientProperties = clientProperties;
@@ -120,10 +120,10 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.clientProperties = ((AMQTable *)frame[0]);
-        self.mechanism = ((AMQShortstr *)frame[1]);
-        self.response = ((AMQLongstr *)frame[2]);
-        self.locale = ((AMQShortstr *)frame[3]);
+        self.clientProperties = ((RMQTable *)frame[0]);
+        self.mechanism = ((RMQShortstr *)frame[1]);
+        self.response = ((RMQLongstr *)frame[2]);
+        self.locale = ((RMQShortstr *)frame[3]);
         self.payloadArguments = @[self.clientProperties,
                                   self.mechanism,
                                   self.response,
@@ -134,9 +134,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -144,16 +144,16 @@
 
 @end
 
-@interface AMQConnectionSecure ()
-@property (nonnull, copy, nonatomic, readwrite) AMQLongstr *challenge;
+@interface RMQConnectionSecure ()
+@property (nonnull, copy, nonatomic, readwrite) RMQLongstr *challenge;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQConnectionSecure
+@implementation RMQConnectionSecure
 
 + (NSArray *)propertyClasses {
-    return @[[AMQLongstr class]];
+    return @[[RMQLongstr class]];
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @20; }
@@ -161,7 +161,7 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithChallenge:(nonnull AMQLongstr *)challenge {
+- (nonnull instancetype)initWithChallenge:(nonnull RMQLongstr *)challenge {
     self = [super init];
     if (self) {
         self.challenge = challenge;
@@ -173,7 +173,7 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.challenge = ((AMQLongstr *)frame[0]);
+        self.challenge = ((RMQLongstr *)frame[0]);
         self.payloadArguments = @[self.challenge];
     }
     return self;
@@ -181,9 +181,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -191,16 +191,16 @@
 
 @end
 
-@interface AMQConnectionSecureOk ()
-@property (nonnull, copy, nonatomic, readwrite) AMQLongstr *response;
+@interface RMQConnectionSecureOk ()
+@property (nonnull, copy, nonatomic, readwrite) RMQLongstr *response;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQConnectionSecureOk
+@implementation RMQConnectionSecureOk
 
 + (NSArray *)propertyClasses {
-    return @[[AMQLongstr class]];
+    return @[[RMQLongstr class]];
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @21; }
@@ -208,7 +208,7 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithResponse:(nonnull AMQLongstr *)response {
+- (nonnull instancetype)initWithResponse:(nonnull RMQLongstr *)response {
     self = [super init];
     if (self) {
         self.response = response;
@@ -220,7 +220,7 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.response = ((AMQLongstr *)frame[0]);
+        self.response = ((RMQLongstr *)frame[0]);
         self.payloadArguments = @[self.response];
     }
     return self;
@@ -228,9 +228,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -238,20 +238,20 @@
 
 @end
 
-@interface AMQConnectionTune ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *channelMax;
-@property (nonnull, copy, nonatomic, readwrite) AMQLong *frameMax;
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *heartbeat;
+@interface RMQConnectionTune ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *channelMax;
+@property (nonnull, copy, nonatomic, readwrite) RMQLong *frameMax;
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *heartbeat;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQConnectionTune
+@implementation RMQConnectionTune
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShort class],
-             [AMQLong class],
-             [AMQShort class]];
+    return @[[RMQShort class],
+             [RMQLong class],
+             [RMQShort class]];
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @30; }
@@ -259,9 +259,9 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithChannelMax:(nonnull AMQShort *)channelMax
-                                  frameMax:(nonnull AMQLong *)frameMax
-                                 heartbeat:(nonnull AMQShort *)heartbeat {
+- (nonnull instancetype)initWithChannelMax:(nonnull RMQShort *)channelMax
+                                  frameMax:(nonnull RMQLong *)frameMax
+                                 heartbeat:(nonnull RMQShort *)heartbeat {
     self = [super init];
     if (self) {
         self.channelMax = channelMax;
@@ -277,9 +277,9 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.channelMax = ((AMQShort *)frame[0]);
-        self.frameMax = ((AMQLong *)frame[1]);
-        self.heartbeat = ((AMQShort *)frame[2]);
+        self.channelMax = ((RMQShort *)frame[0]);
+        self.frameMax = ((RMQLong *)frame[1]);
+        self.heartbeat = ((RMQShort *)frame[2]);
         self.payloadArguments = @[self.channelMax,
                                   self.frameMax,
                                   self.heartbeat];
@@ -289,9 +289,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -299,20 +299,20 @@
 
 @end
 
-@interface AMQConnectionTuneOk ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *channelMax;
-@property (nonnull, copy, nonatomic, readwrite) AMQLong *frameMax;
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *heartbeat;
+@interface RMQConnectionTuneOk ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *channelMax;
+@property (nonnull, copy, nonatomic, readwrite) RMQLong *frameMax;
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *heartbeat;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQConnectionTuneOk
+@implementation RMQConnectionTuneOk
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShort class],
-             [AMQLong class],
-             [AMQShort class]];
+    return @[[RMQShort class],
+             [RMQLong class],
+             [RMQShort class]];
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @31; }
@@ -320,9 +320,9 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithChannelMax:(nonnull AMQShort *)channelMax
-                                  frameMax:(nonnull AMQLong *)frameMax
-                                 heartbeat:(nonnull AMQShort *)heartbeat {
+- (nonnull instancetype)initWithChannelMax:(nonnull RMQShort *)channelMax
+                                  frameMax:(nonnull RMQLong *)frameMax
+                                 heartbeat:(nonnull RMQShort *)heartbeat {
     self = [super init];
     if (self) {
         self.channelMax = channelMax;
@@ -338,9 +338,9 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.channelMax = ((AMQShort *)frame[0]);
-        self.frameMax = ((AMQLong *)frame[1]);
-        self.heartbeat = ((AMQShort *)frame[2]);
+        self.channelMax = ((RMQShort *)frame[0]);
+        self.frameMax = ((RMQLong *)frame[1]);
+        self.heartbeat = ((RMQShort *)frame[2]);
         self.payloadArguments = @[self.channelMax,
                                   self.frameMax,
                                   self.heartbeat];
@@ -350,9 +350,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -360,20 +360,20 @@
 
 @end
 
-@interface AMQConnectionOpen ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *virtualHost;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reserved1;
-@property (nonatomic, readwrite) AMQConnectionOpenOptions options;
+@interface RMQConnectionOpen ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *virtualHost;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *reserved1;
+@property (nonatomic, readwrite) RMQConnectionOpenOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQConnectionOpen
+@implementation RMQConnectionOpen
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShortstr class],
-             [AMQShortstr class],
-             [AMQOctet class]];
+    return @[[RMQShortstr class],
+             [RMQShortstr class],
+             [RMQOctet class]];
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @40; }
@@ -381,9 +381,9 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithVirtualHost:(nonnull AMQShortstr *)virtualHost
-                                  reserved1:(nonnull AMQShortstr *)reserved1
-                                    options:(AMQConnectionOpenOptions)options {
+- (nonnull instancetype)initWithVirtualHost:(nonnull RMQShortstr *)virtualHost
+                                  reserved1:(nonnull RMQShortstr *)reserved1
+                                    options:(RMQConnectionOpenOptions)options {
     self = [super init];
     if (self) {
         self.virtualHost = virtualHost;
@@ -391,7 +391,7 @@
         self.options = options;
         self.payloadArguments = @[self.virtualHost,
                                   self.reserved1,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -399,21 +399,21 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.virtualHost = ((AMQShortstr *)frame[0]);
-        self.reserved1 = ((AMQShortstr *)frame[1]);
-        self.options = ((AMQOctet *)frame[2]).integerValue;
+        self.virtualHost = ((RMQShortstr *)frame[0]);
+        self.reserved1 = ((RMQShortstr *)frame[1]);
+        self.options = ((RMQOctet *)frame[2]).integerValue;
         self.payloadArguments = @[self.virtualHost,
                                   self.reserved1,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -421,16 +421,16 @@
 
 @end
 
-@interface AMQConnectionOpenOk ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reserved1;
+@interface RMQConnectionOpenOk ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *reserved1;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQConnectionOpenOk
+@implementation RMQConnectionOpenOk
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShortstr class]];
+    return @[[RMQShortstr class]];
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @41; }
@@ -438,7 +438,7 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReserved1:(nonnull AMQShortstr *)reserved1 {
+- (nonnull instancetype)initWithReserved1:(nonnull RMQShortstr *)reserved1 {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -450,7 +450,7 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShortstr *)frame[0]);
+        self.reserved1 = ((RMQShortstr *)frame[0]);
         self.payloadArguments = @[self.reserved1];
     }
     return self;
@@ -458,9 +458,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -468,22 +468,22 @@
 
 @end
 
-@interface AMQConnectionClose ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *replyCode;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *replyText;
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *classId;
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *methodId;
+@interface RMQConnectionClose ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *replyCode;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *replyText;
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *classId;
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *methodId;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQConnectionClose
+@implementation RMQConnectionClose
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShort class],
-             [AMQShortstr class],
-             [AMQShort class],
-             [AMQShort class]];
+    return @[[RMQShort class],
+             [RMQShortstr class],
+             [RMQShort class],
+             [RMQShort class]];
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @50; }
@@ -491,10 +491,10 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return YES; }
 
-- (nonnull instancetype)initWithReplyCode:(nonnull AMQShort *)replyCode
-                                replyText:(nonnull AMQShortstr *)replyText
-                                  classId:(nonnull AMQShort *)classId
-                                 methodId:(nonnull AMQShort *)methodId {
+- (nonnull instancetype)initWithReplyCode:(nonnull RMQShort *)replyCode
+                                replyText:(nonnull RMQShortstr *)replyText
+                                  classId:(nonnull RMQShort *)classId
+                                 methodId:(nonnull RMQShort *)methodId {
     self = [super init];
     if (self) {
         self.replyCode = replyCode;
@@ -512,10 +512,10 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.replyCode = ((AMQShort *)frame[0]);
-        self.replyText = ((AMQShortstr *)frame[1]);
-        self.classId = ((AMQShort *)frame[2]);
-        self.methodId = ((AMQShort *)frame[3]);
+        self.replyCode = ((RMQShort *)frame[0]);
+        self.replyText = ((RMQShortstr *)frame[1]);
+        self.classId = ((RMQShort *)frame[2]);
+        self.methodId = ((RMQShort *)frame[3]);
         self.payloadArguments = @[self.replyCode,
                                   self.replyText,
                                   self.classId,
@@ -526,9 +526,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -536,12 +536,12 @@
 
 @end
 
-@interface AMQConnectionCloseOk ()
+@interface RMQConnectionCloseOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQConnectionCloseOk
+@implementation RMQConnectionCloseOk
 
 + (NSArray *)propertyClasses {
     return @[];
@@ -563,9 +563,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -573,16 +573,16 @@
 
 @end
 
-@interface AMQConnectionBlocked ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reason;
+@interface RMQConnectionBlocked ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *reason;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQConnectionBlocked
+@implementation RMQConnectionBlocked
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShortstr class]];
+    return @[[RMQShortstr class]];
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @60; }
@@ -590,7 +590,7 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReason:(nonnull AMQShortstr *)reason {
+- (nonnull instancetype)initWithReason:(nonnull RMQShortstr *)reason {
     self = [super init];
     if (self) {
         self.reason = reason;
@@ -602,7 +602,7 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reason = ((AMQShortstr *)frame[0]);
+        self.reason = ((RMQShortstr *)frame[0]);
         self.payloadArguments = @[self.reason];
     }
     return self;
@@ -610,9 +610,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -620,12 +620,12 @@
 
 @end
 
-@interface AMQConnectionUnblocked ()
+@interface RMQConnectionUnblocked ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQConnectionUnblocked
+@implementation RMQConnectionUnblocked
 
 + (NSArray *)propertyClasses {
     return @[];
@@ -647,9 +647,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -657,16 +657,16 @@
 
 @end
 
-@interface AMQChannelOpen ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reserved1;
+@interface RMQChannelOpen ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *reserved1;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQChannelOpen
+@implementation RMQChannelOpen
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShortstr class]];
+    return @[[RMQShortstr class]];
 }
 - (NSNumber *)classID       { return @20; }
 - (NSNumber *)methodID      { return @10; }
@@ -674,7 +674,7 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReserved1:(nonnull AMQShortstr *)reserved1 {
+- (nonnull instancetype)initWithReserved1:(nonnull RMQShortstr *)reserved1 {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -686,7 +686,7 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShortstr *)frame[0]);
+        self.reserved1 = ((RMQShortstr *)frame[0]);
         self.payloadArguments = @[self.reserved1];
     }
     return self;
@@ -694,9 +694,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -704,16 +704,16 @@
 
 @end
 
-@interface AMQChannelOpenOk ()
-@property (nonnull, copy, nonatomic, readwrite) AMQLongstr *reserved1;
+@interface RMQChannelOpenOk ()
+@property (nonnull, copy, nonatomic, readwrite) RMQLongstr *reserved1;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQChannelOpenOk
+@implementation RMQChannelOpenOk
 
 + (NSArray *)propertyClasses {
-    return @[[AMQLongstr class]];
+    return @[[RMQLongstr class]];
 }
 - (NSNumber *)classID       { return @20; }
 - (NSNumber *)methodID      { return @11; }
@@ -721,7 +721,7 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReserved1:(nonnull AMQLongstr *)reserved1 {
+- (nonnull instancetype)initWithReserved1:(nonnull RMQLongstr *)reserved1 {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -733,7 +733,7 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQLongstr *)frame[0]);
+        self.reserved1 = ((RMQLongstr *)frame[0]);
         self.payloadArguments = @[self.reserved1];
     }
     return self;
@@ -741,9 +741,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -751,16 +751,16 @@
 
 @end
 
-@interface AMQChannelFlow ()
-@property (nonatomic, readwrite) AMQChannelFlowOptions options;
+@interface RMQChannelFlow ()
+@property (nonatomic, readwrite) RMQChannelFlowOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQChannelFlow
+@implementation RMQChannelFlow
 
 + (NSArray *)propertyClasses {
-    return @[[AMQOctet class]];
+    return @[[RMQOctet class]];
 }
 - (NSNumber *)classID       { return @20; }
 - (NSNumber *)methodID      { return @20; }
@@ -768,11 +768,11 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithOptions:(AMQChannelFlowOptions)options {
+- (nonnull instancetype)initWithOptions:(RMQChannelFlowOptions)options {
     self = [super init];
     if (self) {
         self.options = options;
-        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
+        self.payloadArguments = @[[[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -780,17 +780,17 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.options = ((AMQOctet *)frame[0]).integerValue;
-        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
+        self.options = ((RMQOctet *)frame[0]).integerValue;
+        self.payloadArguments = @[[[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -798,16 +798,16 @@
 
 @end
 
-@interface AMQChannelFlowOk ()
-@property (nonatomic, readwrite) AMQChannelFlowOkOptions options;
+@interface RMQChannelFlowOk ()
+@property (nonatomic, readwrite) RMQChannelFlowOkOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQChannelFlowOk
+@implementation RMQChannelFlowOk
 
 + (NSArray *)propertyClasses {
-    return @[[AMQOctet class]];
+    return @[[RMQOctet class]];
 }
 - (NSNumber *)classID       { return @20; }
 - (NSNumber *)methodID      { return @21; }
@@ -815,11 +815,11 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithOptions:(AMQChannelFlowOkOptions)options {
+- (nonnull instancetype)initWithOptions:(RMQChannelFlowOkOptions)options {
     self = [super init];
     if (self) {
         self.options = options;
-        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
+        self.payloadArguments = @[[[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -827,17 +827,17 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.options = ((AMQOctet *)frame[0]).integerValue;
-        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
+        self.options = ((RMQOctet *)frame[0]).integerValue;
+        self.payloadArguments = @[[[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -845,22 +845,22 @@
 
 @end
 
-@interface AMQChannelClose ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *replyCode;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *replyText;
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *classId;
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *methodId;
+@interface RMQChannelClose ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *replyCode;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *replyText;
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *classId;
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *methodId;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQChannelClose
+@implementation RMQChannelClose
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShort class],
-             [AMQShortstr class],
-             [AMQShort class],
-             [AMQShort class]];
+    return @[[RMQShort class],
+             [RMQShortstr class],
+             [RMQShort class],
+             [RMQShort class]];
 }
 - (NSNumber *)classID       { return @20; }
 - (NSNumber *)methodID      { return @40; }
@@ -868,10 +868,10 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReplyCode:(nonnull AMQShort *)replyCode
-                                replyText:(nonnull AMQShortstr *)replyText
-                                  classId:(nonnull AMQShort *)classId
-                                 methodId:(nonnull AMQShort *)methodId {
+- (nonnull instancetype)initWithReplyCode:(nonnull RMQShort *)replyCode
+                                replyText:(nonnull RMQShortstr *)replyText
+                                  classId:(nonnull RMQShort *)classId
+                                 methodId:(nonnull RMQShort *)methodId {
     self = [super init];
     if (self) {
         self.replyCode = replyCode;
@@ -889,10 +889,10 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.replyCode = ((AMQShort *)frame[0]);
-        self.replyText = ((AMQShortstr *)frame[1]);
-        self.classId = ((AMQShort *)frame[2]);
-        self.methodId = ((AMQShort *)frame[3]);
+        self.replyCode = ((RMQShort *)frame[0]);
+        self.replyText = ((RMQShortstr *)frame[1]);
+        self.classId = ((RMQShort *)frame[2]);
+        self.methodId = ((RMQShort *)frame[3]);
         self.payloadArguments = @[self.replyCode,
                                   self.replyText,
                                   self.classId,
@@ -903,9 +903,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -913,12 +913,12 @@
 
 @end
 
-@interface AMQChannelCloseOk ()
+@interface RMQChannelCloseOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQChannelCloseOk
+@implementation RMQChannelCloseOk
 
 + (NSArray *)propertyClasses {
     return @[];
@@ -940,9 +940,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -950,24 +950,24 @@
 
 @end
 
-@interface AMQExchangeDeclare ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *type;
-@property (nonatomic, readwrite) AMQExchangeDeclareOptions options;
-@property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
+@interface RMQExchangeDeclare ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *exchange;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *type;
+@property (nonatomic, readwrite) RMQExchangeDeclareOptions options;
+@property (nonnull, copy, nonatomic, readwrite) RMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQExchangeDeclare
+@implementation RMQExchangeDeclare
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShort class],
-             [AMQShortstr class],
-             [AMQShortstr class],
-             [AMQOctet class],
-             [AMQTable class]];
+    return @[[RMQShort class],
+             [RMQShortstr class],
+             [RMQShortstr class],
+             [RMQOctet class],
+             [RMQTable class]];
 }
 - (NSNumber *)classID       { return @40; }
 - (NSNumber *)methodID      { return @10; }
@@ -975,11 +975,11 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
-                                 exchange:(nonnull AMQShortstr *)exchange
-                                     type:(nonnull AMQShortstr *)type
-                                  options:(AMQExchangeDeclareOptions)options
-                                arguments:(nonnull AMQTable *)arguments {
+- (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
+                                 exchange:(nonnull RMQShortstr *)exchange
+                                     type:(nonnull RMQShortstr *)type
+                                  options:(RMQExchangeDeclareOptions)options
+                                arguments:(nonnull RMQTable *)arguments {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -990,7 +990,7 @@
         self.payloadArguments = @[self.reserved1,
                                   self.exchange,
                                   self.type,
-                                  [[AMQOctet alloc] init:self.options],
+                                  [[RMQOctet alloc] init:self.options],
                                   self.arguments];
     }
     return self;
@@ -999,15 +999,15 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frame[0]);
-        self.exchange = ((AMQShortstr *)frame[1]);
-        self.type = ((AMQShortstr *)frame[2]);
-        self.options = ((AMQOctet *)frame[3]).integerValue;
-        self.arguments = ((AMQTable *)frame[4]);
+        self.reserved1 = ((RMQShort *)frame[0]);
+        self.exchange = ((RMQShortstr *)frame[1]);
+        self.type = ((RMQShortstr *)frame[2]);
+        self.options = ((RMQOctet *)frame[3]).integerValue;
+        self.arguments = ((RMQTable *)frame[4]);
         self.payloadArguments = @[self.reserved1,
                                   self.exchange,
                                   self.type,
-                                  [[AMQOctet alloc] init:self.options],
+                                  [[RMQOctet alloc] init:self.options],
                                   self.arguments];
     }
     return self;
@@ -1015,9 +1015,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1025,12 +1025,12 @@
 
 @end
 
-@interface AMQExchangeDeclareOk ()
+@interface RMQExchangeDeclareOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQExchangeDeclareOk
+@implementation RMQExchangeDeclareOk
 
 + (NSArray *)propertyClasses {
     return @[];
@@ -1052,9 +1052,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1062,20 +1062,20 @@
 
 @end
 
-@interface AMQExchangeDelete ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
-@property (nonatomic, readwrite) AMQExchangeDeleteOptions options;
+@interface RMQExchangeDelete ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *exchange;
+@property (nonatomic, readwrite) RMQExchangeDeleteOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQExchangeDelete
+@implementation RMQExchangeDelete
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShort class],
-             [AMQShortstr class],
-             [AMQOctet class]];
+    return @[[RMQShort class],
+             [RMQShortstr class],
+             [RMQOctet class]];
 }
 - (NSNumber *)classID       { return @40; }
 - (NSNumber *)methodID      { return @20; }
@@ -1083,9 +1083,9 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
-                                 exchange:(nonnull AMQShortstr *)exchange
-                                  options:(AMQExchangeDeleteOptions)options {
+- (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
+                                 exchange:(nonnull RMQShortstr *)exchange
+                                  options:(RMQExchangeDeleteOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -1093,7 +1093,7 @@
         self.options = options;
         self.payloadArguments = @[self.reserved1,
                                   self.exchange,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1101,21 +1101,21 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frame[0]);
-        self.exchange = ((AMQShortstr *)frame[1]);
-        self.options = ((AMQOctet *)frame[2]).integerValue;
+        self.reserved1 = ((RMQShort *)frame[0]);
+        self.exchange = ((RMQShortstr *)frame[1]);
+        self.options = ((RMQOctet *)frame[2]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.exchange,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1123,12 +1123,12 @@
 
 @end
 
-@interface AMQExchangeDeleteOk ()
+@interface RMQExchangeDeleteOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQExchangeDeleteOk
+@implementation RMQExchangeDeleteOk
 
 + (NSArray *)propertyClasses {
     return @[];
@@ -1150,9 +1150,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1160,26 +1160,26 @@
 
 @end
 
-@interface AMQExchangeBind ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *destination;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *source;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
-@property (nonatomic, readwrite) AMQExchangeBindOptions options;
-@property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
+@interface RMQExchangeBind ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *destination;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *source;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *routingKey;
+@property (nonatomic, readwrite) RMQExchangeBindOptions options;
+@property (nonnull, copy, nonatomic, readwrite) RMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQExchangeBind
+@implementation RMQExchangeBind
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShort class],
-             [AMQShortstr class],
-             [AMQShortstr class],
-             [AMQShortstr class],
-             [AMQOctet class],
-             [AMQTable class]];
+    return @[[RMQShort class],
+             [RMQShortstr class],
+             [RMQShortstr class],
+             [RMQShortstr class],
+             [RMQOctet class],
+             [RMQTable class]];
 }
 - (NSNumber *)classID       { return @40; }
 - (NSNumber *)methodID      { return @30; }
@@ -1187,12 +1187,12 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
-                              destination:(nonnull AMQShortstr *)destination
-                                   source:(nonnull AMQShortstr *)source
-                               routingKey:(nonnull AMQShortstr *)routingKey
-                                  options:(AMQExchangeBindOptions)options
-                                arguments:(nonnull AMQTable *)arguments {
+- (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
+                              destination:(nonnull RMQShortstr *)destination
+                                   source:(nonnull RMQShortstr *)source
+                               routingKey:(nonnull RMQShortstr *)routingKey
+                                  options:(RMQExchangeBindOptions)options
+                                arguments:(nonnull RMQTable *)arguments {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -1205,7 +1205,7 @@
                                   self.destination,
                                   self.source,
                                   self.routingKey,
-                                  [[AMQOctet alloc] init:self.options],
+                                  [[RMQOctet alloc] init:self.options],
                                   self.arguments];
     }
     return self;
@@ -1214,17 +1214,17 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frame[0]);
-        self.destination = ((AMQShortstr *)frame[1]);
-        self.source = ((AMQShortstr *)frame[2]);
-        self.routingKey = ((AMQShortstr *)frame[3]);
-        self.options = ((AMQOctet *)frame[4]).integerValue;
-        self.arguments = ((AMQTable *)frame[5]);
+        self.reserved1 = ((RMQShort *)frame[0]);
+        self.destination = ((RMQShortstr *)frame[1]);
+        self.source = ((RMQShortstr *)frame[2]);
+        self.routingKey = ((RMQShortstr *)frame[3]);
+        self.options = ((RMQOctet *)frame[4]).integerValue;
+        self.arguments = ((RMQTable *)frame[5]);
         self.payloadArguments = @[self.reserved1,
                                   self.destination,
                                   self.source,
                                   self.routingKey,
-                                  [[AMQOctet alloc] init:self.options],
+                                  [[RMQOctet alloc] init:self.options],
                                   self.arguments];
     }
     return self;
@@ -1232,9 +1232,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1242,12 +1242,12 @@
 
 @end
 
-@interface AMQExchangeBindOk ()
+@interface RMQExchangeBindOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQExchangeBindOk
+@implementation RMQExchangeBindOk
 
 + (NSArray *)propertyClasses {
     return @[];
@@ -1269,9 +1269,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1279,26 +1279,26 @@
 
 @end
 
-@interface AMQExchangeUnbind ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *destination;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *source;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
-@property (nonatomic, readwrite) AMQExchangeUnbindOptions options;
-@property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
+@interface RMQExchangeUnbind ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *destination;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *source;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *routingKey;
+@property (nonatomic, readwrite) RMQExchangeUnbindOptions options;
+@property (nonnull, copy, nonatomic, readwrite) RMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQExchangeUnbind
+@implementation RMQExchangeUnbind
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShort class],
-             [AMQShortstr class],
-             [AMQShortstr class],
-             [AMQShortstr class],
-             [AMQOctet class],
-             [AMQTable class]];
+    return @[[RMQShort class],
+             [RMQShortstr class],
+             [RMQShortstr class],
+             [RMQShortstr class],
+             [RMQOctet class],
+             [RMQTable class]];
 }
 - (NSNumber *)classID       { return @40; }
 - (NSNumber *)methodID      { return @40; }
@@ -1306,12 +1306,12 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
-                              destination:(nonnull AMQShortstr *)destination
-                                   source:(nonnull AMQShortstr *)source
-                               routingKey:(nonnull AMQShortstr *)routingKey
-                                  options:(AMQExchangeUnbindOptions)options
-                                arguments:(nonnull AMQTable *)arguments {
+- (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
+                              destination:(nonnull RMQShortstr *)destination
+                                   source:(nonnull RMQShortstr *)source
+                               routingKey:(nonnull RMQShortstr *)routingKey
+                                  options:(RMQExchangeUnbindOptions)options
+                                arguments:(nonnull RMQTable *)arguments {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -1324,7 +1324,7 @@
                                   self.destination,
                                   self.source,
                                   self.routingKey,
-                                  [[AMQOctet alloc] init:self.options],
+                                  [[RMQOctet alloc] init:self.options],
                                   self.arguments];
     }
     return self;
@@ -1333,17 +1333,17 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frame[0]);
-        self.destination = ((AMQShortstr *)frame[1]);
-        self.source = ((AMQShortstr *)frame[2]);
-        self.routingKey = ((AMQShortstr *)frame[3]);
-        self.options = ((AMQOctet *)frame[4]).integerValue;
-        self.arguments = ((AMQTable *)frame[5]);
+        self.reserved1 = ((RMQShort *)frame[0]);
+        self.destination = ((RMQShortstr *)frame[1]);
+        self.source = ((RMQShortstr *)frame[2]);
+        self.routingKey = ((RMQShortstr *)frame[3]);
+        self.options = ((RMQOctet *)frame[4]).integerValue;
+        self.arguments = ((RMQTable *)frame[5]);
         self.payloadArguments = @[self.reserved1,
                                   self.destination,
                                   self.source,
                                   self.routingKey,
-                                  [[AMQOctet alloc] init:self.options],
+                                  [[RMQOctet alloc] init:self.options],
                                   self.arguments];
     }
     return self;
@@ -1351,9 +1351,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1361,12 +1361,12 @@
 
 @end
 
-@interface AMQExchangeUnbindOk ()
+@interface RMQExchangeUnbindOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQExchangeUnbindOk
+@implementation RMQExchangeUnbindOk
 
 + (NSArray *)propertyClasses {
     return @[];
@@ -1388,9 +1388,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1398,22 +1398,22 @@
 
 @end
 
-@interface AMQQueueDeclare ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (nonatomic, readwrite) AMQQueueDeclareOptions options;
-@property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
+@interface RMQQueueDeclare ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *queue;
+@property (nonatomic, readwrite) RMQQueueDeclareOptions options;
+@property (nonnull, copy, nonatomic, readwrite) RMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQQueueDeclare
+@implementation RMQQueueDeclare
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShort class],
-             [AMQShortstr class],
-             [AMQOctet class],
-             [AMQTable class]];
+    return @[[RMQShort class],
+             [RMQShortstr class],
+             [RMQOctet class],
+             [RMQTable class]];
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @10; }
@@ -1421,10 +1421,10 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
-                                    queue:(nonnull AMQShortstr *)queue
-                                  options:(AMQQueueDeclareOptions)options
-                                arguments:(nonnull AMQTable *)arguments {
+- (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
+                                    queue:(nonnull RMQShortstr *)queue
+                                  options:(RMQQueueDeclareOptions)options
+                                arguments:(nonnull RMQTable *)arguments {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -1433,7 +1433,7 @@
         self.arguments = arguments;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
-                                  [[AMQOctet alloc] init:self.options],
+                                  [[RMQOctet alloc] init:self.options],
                                   self.arguments];
     }
     return self;
@@ -1442,13 +1442,13 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frame[0]);
-        self.queue = ((AMQShortstr *)frame[1]);
-        self.options = ((AMQOctet *)frame[2]).integerValue;
-        self.arguments = ((AMQTable *)frame[3]);
+        self.reserved1 = ((RMQShort *)frame[0]);
+        self.queue = ((RMQShortstr *)frame[1]);
+        self.options = ((RMQOctet *)frame[2]).integerValue;
+        self.arguments = ((RMQTable *)frame[3]);
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
-                                  [[AMQOctet alloc] init:self.options],
+                                  [[RMQOctet alloc] init:self.options],
                                   self.arguments];
     }
     return self;
@@ -1456,9 +1456,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1466,20 +1466,20 @@
 
 @end
 
-@interface AMQQueueDeclareOk ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (nonnull, copy, nonatomic, readwrite) AMQLong *messageCount;
-@property (nonnull, copy, nonatomic, readwrite) AMQLong *consumerCount;
+@interface RMQQueueDeclareOk ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *queue;
+@property (nonnull, copy, nonatomic, readwrite) RMQLong *messageCount;
+@property (nonnull, copy, nonatomic, readwrite) RMQLong *consumerCount;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQQueueDeclareOk
+@implementation RMQQueueDeclareOk
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShortstr class],
-             [AMQLong class],
-             [AMQLong class]];
+    return @[[RMQShortstr class],
+             [RMQLong class],
+             [RMQLong class]];
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @11; }
@@ -1487,9 +1487,9 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithQueue:(nonnull AMQShortstr *)queue
-                         messageCount:(nonnull AMQLong *)messageCount
-                        consumerCount:(nonnull AMQLong *)consumerCount {
+- (nonnull instancetype)initWithQueue:(nonnull RMQShortstr *)queue
+                         messageCount:(nonnull RMQLong *)messageCount
+                        consumerCount:(nonnull RMQLong *)consumerCount {
     self = [super init];
     if (self) {
         self.queue = queue;
@@ -1505,9 +1505,9 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.queue = ((AMQShortstr *)frame[0]);
-        self.messageCount = ((AMQLong *)frame[1]);
-        self.consumerCount = ((AMQLong *)frame[2]);
+        self.queue = ((RMQShortstr *)frame[0]);
+        self.messageCount = ((RMQLong *)frame[1]);
+        self.consumerCount = ((RMQLong *)frame[2]);
         self.payloadArguments = @[self.queue,
                                   self.messageCount,
                                   self.consumerCount];
@@ -1517,9 +1517,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1527,26 +1527,26 @@
 
 @end
 
-@interface AMQQueueBind ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
-@property (nonatomic, readwrite) AMQQueueBindOptions options;
-@property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
+@interface RMQQueueBind ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *queue;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *exchange;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *routingKey;
+@property (nonatomic, readwrite) RMQQueueBindOptions options;
+@property (nonnull, copy, nonatomic, readwrite) RMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQQueueBind
+@implementation RMQQueueBind
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShort class],
-             [AMQShortstr class],
-             [AMQShortstr class],
-             [AMQShortstr class],
-             [AMQOctet class],
-             [AMQTable class]];
+    return @[[RMQShort class],
+             [RMQShortstr class],
+             [RMQShortstr class],
+             [RMQShortstr class],
+             [RMQOctet class],
+             [RMQTable class]];
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @20; }
@@ -1554,12 +1554,12 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
-                                    queue:(nonnull AMQShortstr *)queue
-                                 exchange:(nonnull AMQShortstr *)exchange
-                               routingKey:(nonnull AMQShortstr *)routingKey
-                                  options:(AMQQueueBindOptions)options
-                                arguments:(nonnull AMQTable *)arguments {
+- (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
+                                    queue:(nonnull RMQShortstr *)queue
+                                 exchange:(nonnull RMQShortstr *)exchange
+                               routingKey:(nonnull RMQShortstr *)routingKey
+                                  options:(RMQQueueBindOptions)options
+                                arguments:(nonnull RMQTable *)arguments {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -1572,7 +1572,7 @@
                                   self.queue,
                                   self.exchange,
                                   self.routingKey,
-                                  [[AMQOctet alloc] init:self.options],
+                                  [[RMQOctet alloc] init:self.options],
                                   self.arguments];
     }
     return self;
@@ -1581,17 +1581,17 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frame[0]);
-        self.queue = ((AMQShortstr *)frame[1]);
-        self.exchange = ((AMQShortstr *)frame[2]);
-        self.routingKey = ((AMQShortstr *)frame[3]);
-        self.options = ((AMQOctet *)frame[4]).integerValue;
-        self.arguments = ((AMQTable *)frame[5]);
+        self.reserved1 = ((RMQShort *)frame[0]);
+        self.queue = ((RMQShortstr *)frame[1]);
+        self.exchange = ((RMQShortstr *)frame[2]);
+        self.routingKey = ((RMQShortstr *)frame[3]);
+        self.options = ((RMQOctet *)frame[4]).integerValue;
+        self.arguments = ((RMQTable *)frame[5]);
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   self.exchange,
                                   self.routingKey,
-                                  [[AMQOctet alloc] init:self.options],
+                                  [[RMQOctet alloc] init:self.options],
                                   self.arguments];
     }
     return self;
@@ -1599,9 +1599,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1609,12 +1609,12 @@
 
 @end
 
-@interface AMQQueueBindOk ()
+@interface RMQQueueBindOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQQueueBindOk
+@implementation RMQQueueBindOk
 
 + (NSArray *)propertyClasses {
     return @[];
@@ -1636,9 +1636,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1646,24 +1646,24 @@
 
 @end
 
-@interface AMQQueueUnbind ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
-@property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
+@interface RMQQueueUnbind ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *queue;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *exchange;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *routingKey;
+@property (nonnull, copy, nonatomic, readwrite) RMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQQueueUnbind
+@implementation RMQQueueUnbind
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShort class],
-             [AMQShortstr class],
-             [AMQShortstr class],
-             [AMQShortstr class],
-             [AMQTable class]];
+    return @[[RMQShort class],
+             [RMQShortstr class],
+             [RMQShortstr class],
+             [RMQShortstr class],
+             [RMQTable class]];
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @50; }
@@ -1671,11 +1671,11 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
-                                    queue:(nonnull AMQShortstr *)queue
-                                 exchange:(nonnull AMQShortstr *)exchange
-                               routingKey:(nonnull AMQShortstr *)routingKey
-                                arguments:(nonnull AMQTable *)arguments {
+- (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
+                                    queue:(nonnull RMQShortstr *)queue
+                                 exchange:(nonnull RMQShortstr *)exchange
+                               routingKey:(nonnull RMQShortstr *)routingKey
+                                arguments:(nonnull RMQTable *)arguments {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -1695,11 +1695,11 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frame[0]);
-        self.queue = ((AMQShortstr *)frame[1]);
-        self.exchange = ((AMQShortstr *)frame[2]);
-        self.routingKey = ((AMQShortstr *)frame[3]);
-        self.arguments = ((AMQTable *)frame[4]);
+        self.reserved1 = ((RMQShort *)frame[0]);
+        self.queue = ((RMQShortstr *)frame[1]);
+        self.exchange = ((RMQShortstr *)frame[2]);
+        self.routingKey = ((RMQShortstr *)frame[3]);
+        self.arguments = ((RMQTable *)frame[4]);
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   self.exchange,
@@ -1711,9 +1711,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1721,12 +1721,12 @@
 
 @end
 
-@interface AMQQueueUnbindOk ()
+@interface RMQQueueUnbindOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQQueueUnbindOk
+@implementation RMQQueueUnbindOk
 
 + (NSArray *)propertyClasses {
     return @[];
@@ -1748,9 +1748,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1758,20 +1758,20 @@
 
 @end
 
-@interface AMQQueuePurge ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (nonatomic, readwrite) AMQQueuePurgeOptions options;
+@interface RMQQueuePurge ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *queue;
+@property (nonatomic, readwrite) RMQQueuePurgeOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQQueuePurge
+@implementation RMQQueuePurge
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShort class],
-             [AMQShortstr class],
-             [AMQOctet class]];
+    return @[[RMQShort class],
+             [RMQShortstr class],
+             [RMQOctet class]];
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @30; }
@@ -1779,9 +1779,9 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
-                                    queue:(nonnull AMQShortstr *)queue
-                                  options:(AMQQueuePurgeOptions)options {
+- (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
+                                    queue:(nonnull RMQShortstr *)queue
+                                  options:(RMQQueuePurgeOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -1789,7 +1789,7 @@
         self.options = options;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1797,21 +1797,21 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frame[0]);
-        self.queue = ((AMQShortstr *)frame[1]);
-        self.options = ((AMQOctet *)frame[2]).integerValue;
+        self.reserved1 = ((RMQShort *)frame[0]);
+        self.queue = ((RMQShortstr *)frame[1]);
+        self.options = ((RMQOctet *)frame[2]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1819,16 +1819,16 @@
 
 @end
 
-@interface AMQQueuePurgeOk ()
-@property (nonnull, copy, nonatomic, readwrite) AMQLong *messageCount;
+@interface RMQQueuePurgeOk ()
+@property (nonnull, copy, nonatomic, readwrite) RMQLong *messageCount;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQQueuePurgeOk
+@implementation RMQQueuePurgeOk
 
 + (NSArray *)propertyClasses {
-    return @[[AMQLong class]];
+    return @[[RMQLong class]];
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @31; }
@@ -1836,7 +1836,7 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithMessageCount:(nonnull AMQLong *)messageCount {
+- (nonnull instancetype)initWithMessageCount:(nonnull RMQLong *)messageCount {
     self = [super init];
     if (self) {
         self.messageCount = messageCount;
@@ -1848,7 +1848,7 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.messageCount = ((AMQLong *)frame[0]);
+        self.messageCount = ((RMQLong *)frame[0]);
         self.payloadArguments = @[self.messageCount];
     }
     return self;
@@ -1856,9 +1856,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1866,20 +1866,20 @@
 
 @end
 
-@interface AMQQueueDelete ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (nonatomic, readwrite) AMQQueueDeleteOptions options;
+@interface RMQQueueDelete ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *queue;
+@property (nonatomic, readwrite) RMQQueueDeleteOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQQueueDelete
+@implementation RMQQueueDelete
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShort class],
-             [AMQShortstr class],
-             [AMQOctet class]];
+    return @[[RMQShort class],
+             [RMQShortstr class],
+             [RMQOctet class]];
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @40; }
@@ -1887,9 +1887,9 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
-                                    queue:(nonnull AMQShortstr *)queue
-                                  options:(AMQQueueDeleteOptions)options {
+- (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
+                                    queue:(nonnull RMQShortstr *)queue
+                                  options:(RMQQueueDeleteOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -1897,7 +1897,7 @@
         self.options = options;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -1905,21 +1905,21 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frame[0]);
-        self.queue = ((AMQShortstr *)frame[1]);
-        self.options = ((AMQOctet *)frame[2]).integerValue;
+        self.reserved1 = ((RMQShort *)frame[0]);
+        self.queue = ((RMQShortstr *)frame[1]);
+        self.options = ((RMQOctet *)frame[2]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1927,16 +1927,16 @@
 
 @end
 
-@interface AMQQueueDeleteOk ()
-@property (nonnull, copy, nonatomic, readwrite) AMQLong *messageCount;
+@interface RMQQueueDeleteOk ()
+@property (nonnull, copy, nonatomic, readwrite) RMQLong *messageCount;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQQueueDeleteOk
+@implementation RMQQueueDeleteOk
 
 + (NSArray *)propertyClasses {
-    return @[[AMQLong class]];
+    return @[[RMQLong class]];
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @41; }
@@ -1944,7 +1944,7 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithMessageCount:(nonnull AMQLong *)messageCount {
+- (nonnull instancetype)initWithMessageCount:(nonnull RMQLong *)messageCount {
     self = [super init];
     if (self) {
         self.messageCount = messageCount;
@@ -1956,7 +1956,7 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.messageCount = ((AMQLong *)frame[0]);
+        self.messageCount = ((RMQLong *)frame[0]);
         self.payloadArguments = @[self.messageCount];
     }
     return self;
@@ -1964,9 +1964,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -1974,20 +1974,20 @@
 
 @end
 
-@interface AMQBasicQos ()
-@property (nonnull, copy, nonatomic, readwrite) AMQLong *prefetchSize;
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *prefetchCount;
-@property (nonatomic, readwrite) AMQBasicQosOptions options;
+@interface RMQBasicQos ()
+@property (nonnull, copy, nonatomic, readwrite) RMQLong *prefetchSize;
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *prefetchCount;
+@property (nonatomic, readwrite) RMQBasicQosOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQBasicQos
+@implementation RMQBasicQos
 
 + (NSArray *)propertyClasses {
-    return @[[AMQLong class],
-             [AMQShort class],
-             [AMQOctet class]];
+    return @[[RMQLong class],
+             [RMQShort class],
+             [RMQOctet class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @10; }
@@ -1995,9 +1995,9 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithPrefetchSize:(nonnull AMQLong *)prefetchSize
-                               prefetchCount:(nonnull AMQShort *)prefetchCount
-                                     options:(AMQBasicQosOptions)options {
+- (nonnull instancetype)initWithPrefetchSize:(nonnull RMQLong *)prefetchSize
+                               prefetchCount:(nonnull RMQShort *)prefetchCount
+                                     options:(RMQBasicQosOptions)options {
     self = [super init];
     if (self) {
         self.prefetchSize = prefetchSize;
@@ -2005,7 +2005,7 @@
         self.options = options;
         self.payloadArguments = @[self.prefetchSize,
                                   self.prefetchCount,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2013,21 +2013,21 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.prefetchSize = ((AMQLong *)frame[0]);
-        self.prefetchCount = ((AMQShort *)frame[1]);
-        self.options = ((AMQOctet *)frame[2]).integerValue;
+        self.prefetchSize = ((RMQLong *)frame[0]);
+        self.prefetchCount = ((RMQShort *)frame[1]);
+        self.options = ((RMQOctet *)frame[2]).integerValue;
         self.payloadArguments = @[self.prefetchSize,
                                   self.prefetchCount,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2035,12 +2035,12 @@
 
 @end
 
-@interface AMQBasicQosOk ()
+@interface RMQBasicQosOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQBasicQosOk
+@implementation RMQBasicQosOk
 
 + (NSArray *)propertyClasses {
     return @[];
@@ -2062,9 +2062,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2072,24 +2072,24 @@
 
 @end
 
-@interface AMQBasicConsume ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *consumerTag;
-@property (nonatomic, readwrite) AMQBasicConsumeOptions options;
-@property (nonnull, copy, nonatomic, readwrite) AMQTable *arguments;
+@interface RMQBasicConsume ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *queue;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *consumerTag;
+@property (nonatomic, readwrite) RMQBasicConsumeOptions options;
+@property (nonnull, copy, nonatomic, readwrite) RMQTable *arguments;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQBasicConsume
+@implementation RMQBasicConsume
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShort class],
-             [AMQShortstr class],
-             [AMQShortstr class],
-             [AMQOctet class],
-             [AMQTable class]];
+    return @[[RMQShort class],
+             [RMQShortstr class],
+             [RMQShortstr class],
+             [RMQOctet class],
+             [RMQTable class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @20; }
@@ -2097,11 +2097,11 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
-                                    queue:(nonnull AMQShortstr *)queue
-                              consumerTag:(nonnull AMQShortstr *)consumerTag
-                                  options:(AMQBasicConsumeOptions)options
-                                arguments:(nonnull AMQTable *)arguments {
+- (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
+                                    queue:(nonnull RMQShortstr *)queue
+                              consumerTag:(nonnull RMQShortstr *)consumerTag
+                                  options:(RMQBasicConsumeOptions)options
+                                arguments:(nonnull RMQTable *)arguments {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -2112,7 +2112,7 @@
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   self.consumerTag,
-                                  [[AMQOctet alloc] init:self.options],
+                                  [[RMQOctet alloc] init:self.options],
                                   self.arguments];
     }
     return self;
@@ -2121,15 +2121,15 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frame[0]);
-        self.queue = ((AMQShortstr *)frame[1]);
-        self.consumerTag = ((AMQShortstr *)frame[2]);
-        self.options = ((AMQOctet *)frame[3]).integerValue;
-        self.arguments = ((AMQTable *)frame[4]);
+        self.reserved1 = ((RMQShort *)frame[0]);
+        self.queue = ((RMQShortstr *)frame[1]);
+        self.consumerTag = ((RMQShortstr *)frame[2]);
+        self.options = ((RMQOctet *)frame[3]).integerValue;
+        self.arguments = ((RMQTable *)frame[4]);
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
                                   self.consumerTag,
-                                  [[AMQOctet alloc] init:self.options],
+                                  [[RMQOctet alloc] init:self.options],
                                   self.arguments];
     }
     return self;
@@ -2137,9 +2137,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2147,16 +2147,16 @@
 
 @end
 
-@interface AMQBasicConsumeOk ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *consumerTag;
+@interface RMQBasicConsumeOk ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *consumerTag;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQBasicConsumeOk
+@implementation RMQBasicConsumeOk
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShortstr class]];
+    return @[[RMQShortstr class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @21; }
@@ -2164,7 +2164,7 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag {
+- (nonnull instancetype)initWithConsumerTag:(nonnull RMQShortstr *)consumerTag {
     self = [super init];
     if (self) {
         self.consumerTag = consumerTag;
@@ -2176,7 +2176,7 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.consumerTag = ((AMQShortstr *)frame[0]);
+        self.consumerTag = ((RMQShortstr *)frame[0]);
         self.payloadArguments = @[self.consumerTag];
     }
     return self;
@@ -2184,9 +2184,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2194,18 +2194,18 @@
 
 @end
 
-@interface AMQBasicCancel ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *consumerTag;
-@property (nonatomic, readwrite) AMQBasicCancelOptions options;
+@interface RMQBasicCancel ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *consumerTag;
+@property (nonatomic, readwrite) RMQBasicCancelOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQBasicCancel
+@implementation RMQBasicCancel
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShortstr class],
-             [AMQOctet class]];
+    return @[[RMQShortstr class],
+             [RMQOctet class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @30; }
@@ -2213,14 +2213,14 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag
-                                    options:(AMQBasicCancelOptions)options {
+- (nonnull instancetype)initWithConsumerTag:(nonnull RMQShortstr *)consumerTag
+                                    options:(RMQBasicCancelOptions)options {
     self = [super init];
     if (self) {
         self.consumerTag = consumerTag;
         self.options = options;
         self.payloadArguments = @[self.consumerTag,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2228,19 +2228,19 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.consumerTag = ((AMQShortstr *)frame[0]);
-        self.options = ((AMQOctet *)frame[1]).integerValue;
+        self.consumerTag = ((RMQShortstr *)frame[0]);
+        self.options = ((RMQOctet *)frame[1]).integerValue;
         self.payloadArguments = @[self.consumerTag,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2248,16 +2248,16 @@
 
 @end
 
-@interface AMQBasicCancelOk ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *consumerTag;
+@interface RMQBasicCancelOk ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *consumerTag;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQBasicCancelOk
+@implementation RMQBasicCancelOk
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShortstr class]];
+    return @[[RMQShortstr class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @31; }
@@ -2265,7 +2265,7 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag {
+- (nonnull instancetype)initWithConsumerTag:(nonnull RMQShortstr *)consumerTag {
     self = [super init];
     if (self) {
         self.consumerTag = consumerTag;
@@ -2277,7 +2277,7 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.consumerTag = ((AMQShortstr *)frame[0]);
+        self.consumerTag = ((RMQShortstr *)frame[0]);
         self.payloadArguments = @[self.consumerTag];
     }
     return self;
@@ -2285,9 +2285,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2295,22 +2295,22 @@
 
 @end
 
-@interface AMQBasicPublish ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
-@property (nonatomic, readwrite) AMQBasicPublishOptions options;
+@interface RMQBasicPublish ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *exchange;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *routingKey;
+@property (nonatomic, readwrite) RMQBasicPublishOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQBasicPublish
+@implementation RMQBasicPublish
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShort class],
-             [AMQShortstr class],
-             [AMQShortstr class],
-             [AMQOctet class]];
+    return @[[RMQShort class],
+             [RMQShortstr class],
+             [RMQShortstr class],
+             [RMQOctet class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @40; }
@@ -2318,10 +2318,10 @@
 - (BOOL)hasContent          { return YES; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
-                                 exchange:(nonnull AMQShortstr *)exchange
-                               routingKey:(nonnull AMQShortstr *)routingKey
-                                  options:(AMQBasicPublishOptions)options {
+- (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
+                                 exchange:(nonnull RMQShortstr *)exchange
+                               routingKey:(nonnull RMQShortstr *)routingKey
+                                  options:(RMQBasicPublishOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -2331,7 +2331,7 @@
         self.payloadArguments = @[self.reserved1,
                                   self.exchange,
                                   self.routingKey,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2339,23 +2339,23 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frame[0]);
-        self.exchange = ((AMQShortstr *)frame[1]);
-        self.routingKey = ((AMQShortstr *)frame[2]);
-        self.options = ((AMQOctet *)frame[3]).integerValue;
+        self.reserved1 = ((RMQShort *)frame[0]);
+        self.exchange = ((RMQShortstr *)frame[1]);
+        self.routingKey = ((RMQShortstr *)frame[2]);
+        self.options = ((RMQOctet *)frame[3]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.exchange,
                                   self.routingKey,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2363,22 +2363,22 @@
 
 @end
 
-@interface AMQBasicReturn ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *replyCode;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *replyText;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
+@interface RMQBasicReturn ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *replyCode;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *replyText;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *exchange;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *routingKey;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQBasicReturn
+@implementation RMQBasicReturn
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShort class],
-             [AMQShortstr class],
-             [AMQShortstr class],
-             [AMQShortstr class]];
+    return @[[RMQShort class],
+             [RMQShortstr class],
+             [RMQShortstr class],
+             [RMQShortstr class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @50; }
@@ -2386,10 +2386,10 @@
 - (BOOL)hasContent          { return YES; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReplyCode:(nonnull AMQShort *)replyCode
-                                replyText:(nonnull AMQShortstr *)replyText
-                                 exchange:(nonnull AMQShortstr *)exchange
-                               routingKey:(nonnull AMQShortstr *)routingKey {
+- (nonnull instancetype)initWithReplyCode:(nonnull RMQShort *)replyCode
+                                replyText:(nonnull RMQShortstr *)replyText
+                                 exchange:(nonnull RMQShortstr *)exchange
+                               routingKey:(nonnull RMQShortstr *)routingKey {
     self = [super init];
     if (self) {
         self.replyCode = replyCode;
@@ -2407,10 +2407,10 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.replyCode = ((AMQShort *)frame[0]);
-        self.replyText = ((AMQShortstr *)frame[1]);
-        self.exchange = ((AMQShortstr *)frame[2]);
-        self.routingKey = ((AMQShortstr *)frame[3]);
+        self.replyCode = ((RMQShort *)frame[0]);
+        self.replyText = ((RMQShortstr *)frame[1]);
+        self.exchange = ((RMQShortstr *)frame[2]);
+        self.routingKey = ((RMQShortstr *)frame[3]);
         self.payloadArguments = @[self.replyCode,
                                   self.replyText,
                                   self.exchange,
@@ -2421,9 +2421,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2431,24 +2431,24 @@
 
 @end
 
-@interface AMQBasicDeliver ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *consumerTag;
-@property (nonnull, copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
-@property (nonatomic, readwrite) AMQBasicDeliverOptions options;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
+@interface RMQBasicDeliver ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *consumerTag;
+@property (nonnull, copy, nonatomic, readwrite) RMQLonglong *deliveryTag;
+@property (nonatomic, readwrite) RMQBasicDeliverOptions options;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *exchange;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *routingKey;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQBasicDeliver
+@implementation RMQBasicDeliver
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShortstr class],
-             [AMQLonglong class],
-             [AMQOctet class],
-             [AMQShortstr class],
-             [AMQShortstr class]];
+    return @[[RMQShortstr class],
+             [RMQLonglong class],
+             [RMQOctet class],
+             [RMQShortstr class],
+             [RMQShortstr class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @60; }
@@ -2456,11 +2456,11 @@
 - (BOOL)hasContent          { return YES; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithConsumerTag:(nonnull AMQShortstr *)consumerTag
-                                deliveryTag:(nonnull AMQLonglong *)deliveryTag
-                                    options:(AMQBasicDeliverOptions)options
-                                   exchange:(nonnull AMQShortstr *)exchange
-                                 routingKey:(nonnull AMQShortstr *)routingKey {
+- (nonnull instancetype)initWithConsumerTag:(nonnull RMQShortstr *)consumerTag
+                                deliveryTag:(nonnull RMQLonglong *)deliveryTag
+                                    options:(RMQBasicDeliverOptions)options
+                                   exchange:(nonnull RMQShortstr *)exchange
+                                 routingKey:(nonnull RMQShortstr *)routingKey {
     self = [super init];
     if (self) {
         self.consumerTag = consumerTag;
@@ -2470,7 +2470,7 @@
         self.routingKey = routingKey;
         self.payloadArguments = @[self.consumerTag,
                                   self.deliveryTag,
-                                  [[AMQOctet alloc] init:self.options],
+                                  [[RMQOctet alloc] init:self.options],
                                   self.exchange,
                                   self.routingKey];
     }
@@ -2480,14 +2480,14 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.consumerTag = ((AMQShortstr *)frame[0]);
-        self.deliveryTag = ((AMQLonglong *)frame[1]);
-        self.options = ((AMQOctet *)frame[2]).integerValue;
-        self.exchange = ((AMQShortstr *)frame[3]);
-        self.routingKey = ((AMQShortstr *)frame[4]);
+        self.consumerTag = ((RMQShortstr *)frame[0]);
+        self.deliveryTag = ((RMQLonglong *)frame[1]);
+        self.options = ((RMQOctet *)frame[2]).integerValue;
+        self.exchange = ((RMQShortstr *)frame[3]);
+        self.routingKey = ((RMQShortstr *)frame[4]);
         self.payloadArguments = @[self.consumerTag,
                                   self.deliveryTag,
-                                  [[AMQOctet alloc] init:self.options],
+                                  [[RMQOctet alloc] init:self.options],
                                   self.exchange,
                                   self.routingKey];
     }
@@ -2496,9 +2496,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2506,20 +2506,20 @@
 
 @end
 
-@interface AMQBasicGet ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShort *reserved1;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *queue;
-@property (nonatomic, readwrite) AMQBasicGetOptions options;
+@interface RMQBasicGet ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShort *reserved1;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *queue;
+@property (nonatomic, readwrite) RMQBasicGetOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQBasicGet
+@implementation RMQBasicGet
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShort class],
-             [AMQShortstr class],
-             [AMQOctet class]];
+    return @[[RMQShort class],
+             [RMQShortstr class],
+             [RMQOctet class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @70; }
@@ -2527,9 +2527,9 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReserved1:(nonnull AMQShort *)reserved1
-                                    queue:(nonnull AMQShortstr *)queue
-                                  options:(AMQBasicGetOptions)options {
+- (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
+                                    queue:(nonnull RMQShortstr *)queue
+                                  options:(RMQBasicGetOptions)options {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -2537,7 +2537,7 @@
         self.options = options;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2545,21 +2545,21 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShort *)frame[0]);
-        self.queue = ((AMQShortstr *)frame[1]);
-        self.options = ((AMQOctet *)frame[2]).integerValue;
+        self.reserved1 = ((RMQShort *)frame[0]);
+        self.queue = ((RMQShortstr *)frame[1]);
+        self.options = ((RMQOctet *)frame[2]).integerValue;
         self.payloadArguments = @[self.reserved1,
                                   self.queue,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2567,24 +2567,24 @@
 
 @end
 
-@interface AMQBasicGetOk ()
-@property (nonnull, copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
-@property (nonatomic, readwrite) AMQBasicGetOkOptions options;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *exchange;
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *routingKey;
-@property (nonnull, copy, nonatomic, readwrite) AMQLong *messageCount;
+@interface RMQBasicGetOk ()
+@property (nonnull, copy, nonatomic, readwrite) RMQLonglong *deliveryTag;
+@property (nonatomic, readwrite) RMQBasicGetOkOptions options;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *exchange;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *routingKey;
+@property (nonnull, copy, nonatomic, readwrite) RMQLong *messageCount;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQBasicGetOk
+@implementation RMQBasicGetOk
 
 + (NSArray *)propertyClasses {
-    return @[[AMQLonglong class],
-             [AMQOctet class],
-             [AMQShortstr class],
-             [AMQShortstr class],
-             [AMQLong class]];
+    return @[[RMQLonglong class],
+             [RMQOctet class],
+             [RMQShortstr class],
+             [RMQShortstr class],
+             [RMQLong class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @71; }
@@ -2592,11 +2592,11 @@
 - (BOOL)hasContent          { return YES; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
-                                    options:(AMQBasicGetOkOptions)options
-                                   exchange:(nonnull AMQShortstr *)exchange
-                                 routingKey:(nonnull AMQShortstr *)routingKey
-                               messageCount:(nonnull AMQLong *)messageCount {
+- (nonnull instancetype)initWithDeliveryTag:(nonnull RMQLonglong *)deliveryTag
+                                    options:(RMQBasicGetOkOptions)options
+                                   exchange:(nonnull RMQShortstr *)exchange
+                                 routingKey:(nonnull RMQShortstr *)routingKey
+                               messageCount:(nonnull RMQLong *)messageCount {
     self = [super init];
     if (self) {
         self.deliveryTag = deliveryTag;
@@ -2605,7 +2605,7 @@
         self.routingKey = routingKey;
         self.messageCount = messageCount;
         self.payloadArguments = @[self.deliveryTag,
-                                  [[AMQOctet alloc] init:self.options],
+                                  [[RMQOctet alloc] init:self.options],
                                   self.exchange,
                                   self.routingKey,
                                   self.messageCount];
@@ -2616,13 +2616,13 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.deliveryTag = ((AMQLonglong *)frame[0]);
-        self.options = ((AMQOctet *)frame[1]).integerValue;
-        self.exchange = ((AMQShortstr *)frame[2]);
-        self.routingKey = ((AMQShortstr *)frame[3]);
-        self.messageCount = ((AMQLong *)frame[4]);
+        self.deliveryTag = ((RMQLonglong *)frame[0]);
+        self.options = ((RMQOctet *)frame[1]).integerValue;
+        self.exchange = ((RMQShortstr *)frame[2]);
+        self.routingKey = ((RMQShortstr *)frame[3]);
+        self.messageCount = ((RMQLong *)frame[4]);
         self.payloadArguments = @[self.deliveryTag,
-                                  [[AMQOctet alloc] init:self.options],
+                                  [[RMQOctet alloc] init:self.options],
                                   self.exchange,
                                   self.routingKey,
                                   self.messageCount];
@@ -2632,9 +2632,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2642,16 +2642,16 @@
 
 @end
 
-@interface AMQBasicGetEmpty ()
-@property (nonnull, copy, nonatomic, readwrite) AMQShortstr *reserved1;
+@interface RMQBasicGetEmpty ()
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *reserved1;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQBasicGetEmpty
+@implementation RMQBasicGetEmpty
 
 + (NSArray *)propertyClasses {
-    return @[[AMQShortstr class]];
+    return @[[RMQShortstr class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @72; }
@@ -2659,7 +2659,7 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithReserved1:(nonnull AMQShortstr *)reserved1 {
+- (nonnull instancetype)initWithReserved1:(nonnull RMQShortstr *)reserved1 {
     self = [super init];
     if (self) {
         self.reserved1 = reserved1;
@@ -2671,7 +2671,7 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.reserved1 = ((AMQShortstr *)frame[0]);
+        self.reserved1 = ((RMQShortstr *)frame[0]);
         self.payloadArguments = @[self.reserved1];
     }
     return self;
@@ -2679,9 +2679,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2689,18 +2689,18 @@
 
 @end
 
-@interface AMQBasicAck ()
-@property (nonnull, copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
-@property (nonatomic, readwrite) AMQBasicAckOptions options;
+@interface RMQBasicAck ()
+@property (nonnull, copy, nonatomic, readwrite) RMQLonglong *deliveryTag;
+@property (nonatomic, readwrite) RMQBasicAckOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQBasicAck
+@implementation RMQBasicAck
 
 + (NSArray *)propertyClasses {
-    return @[[AMQLonglong class],
-             [AMQOctet class]];
+    return @[[RMQLonglong class],
+             [RMQOctet class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @80; }
@@ -2708,14 +2708,14 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
-                                    options:(AMQBasicAckOptions)options {
+- (nonnull instancetype)initWithDeliveryTag:(nonnull RMQLonglong *)deliveryTag
+                                    options:(RMQBasicAckOptions)options {
     self = [super init];
     if (self) {
         self.deliveryTag = deliveryTag;
         self.options = options;
         self.payloadArguments = @[self.deliveryTag,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2723,19 +2723,19 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.deliveryTag = ((AMQLonglong *)frame[0]);
-        self.options = ((AMQOctet *)frame[1]).integerValue;
+        self.deliveryTag = ((RMQLonglong *)frame[0]);
+        self.options = ((RMQOctet *)frame[1]).integerValue;
         self.payloadArguments = @[self.deliveryTag,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2743,18 +2743,18 @@
 
 @end
 
-@interface AMQBasicReject ()
-@property (nonnull, copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
-@property (nonatomic, readwrite) AMQBasicRejectOptions options;
+@interface RMQBasicReject ()
+@property (nonnull, copy, nonatomic, readwrite) RMQLonglong *deliveryTag;
+@property (nonatomic, readwrite) RMQBasicRejectOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQBasicReject
+@implementation RMQBasicReject
 
 + (NSArray *)propertyClasses {
-    return @[[AMQLonglong class],
-             [AMQOctet class]];
+    return @[[RMQLonglong class],
+             [RMQOctet class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @90; }
@@ -2762,14 +2762,14 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
-                                    options:(AMQBasicRejectOptions)options {
+- (nonnull instancetype)initWithDeliveryTag:(nonnull RMQLonglong *)deliveryTag
+                                    options:(RMQBasicRejectOptions)options {
     self = [super init];
     if (self) {
         self.deliveryTag = deliveryTag;
         self.options = options;
         self.payloadArguments = @[self.deliveryTag,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2777,19 +2777,19 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.deliveryTag = ((AMQLonglong *)frame[0]);
-        self.options = ((AMQOctet *)frame[1]).integerValue;
+        self.deliveryTag = ((RMQLonglong *)frame[0]);
+        self.options = ((RMQOctet *)frame[1]).integerValue;
         self.payloadArguments = @[self.deliveryTag,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2797,16 +2797,16 @@
 
 @end
 
-@interface AMQBasicRecoverAsync ()
-@property (nonatomic, readwrite) AMQBasicRecoverAsyncOptions options;
+@interface RMQBasicRecoverAsync ()
+@property (nonatomic, readwrite) RMQBasicRecoverAsyncOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQBasicRecoverAsync
+@implementation RMQBasicRecoverAsync
 
 + (NSArray *)propertyClasses {
-    return @[[AMQOctet class]];
+    return @[[RMQOctet class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @100; }
@@ -2814,11 +2814,11 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithOptions:(AMQBasicRecoverAsyncOptions)options {
+- (nonnull instancetype)initWithOptions:(RMQBasicRecoverAsyncOptions)options {
     self = [super init];
     if (self) {
         self.options = options;
-        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
+        self.payloadArguments = @[[[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2826,17 +2826,17 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.options = ((AMQOctet *)frame[0]).integerValue;
-        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
+        self.options = ((RMQOctet *)frame[0]).integerValue;
+        self.payloadArguments = @[[[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2844,16 +2844,16 @@
 
 @end
 
-@interface AMQBasicRecover ()
-@property (nonatomic, readwrite) AMQBasicRecoverOptions options;
+@interface RMQBasicRecover ()
+@property (nonatomic, readwrite) RMQBasicRecoverOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQBasicRecover
+@implementation RMQBasicRecover
 
 + (NSArray *)propertyClasses {
-    return @[[AMQOctet class]];
+    return @[[RMQOctet class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @110; }
@@ -2861,11 +2861,11 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithOptions:(AMQBasicRecoverOptions)options {
+- (nonnull instancetype)initWithOptions:(RMQBasicRecoverOptions)options {
     self = [super init];
     if (self) {
         self.options = options;
-        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
+        self.payloadArguments = @[[[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2873,17 +2873,17 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.options = ((AMQOctet *)frame[0]).integerValue;
-        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
+        self.options = ((RMQOctet *)frame[0]).integerValue;
+        self.payloadArguments = @[[[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2891,12 +2891,12 @@
 
 @end
 
-@interface AMQBasicRecoverOk ()
+@interface RMQBasicRecoverOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQBasicRecoverOk
+@implementation RMQBasicRecoverOk
 
 + (NSArray *)propertyClasses {
     return @[];
@@ -2918,9 +2918,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2928,18 +2928,18 @@
 
 @end
 
-@interface AMQBasicNack ()
-@property (nonnull, copy, nonatomic, readwrite) AMQLonglong *deliveryTag;
-@property (nonatomic, readwrite) AMQBasicNackOptions options;
+@interface RMQBasicNack ()
+@property (nonnull, copy, nonatomic, readwrite) RMQLonglong *deliveryTag;
+@property (nonatomic, readwrite) RMQBasicNackOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQBasicNack
+@implementation RMQBasicNack
 
 + (NSArray *)propertyClasses {
-    return @[[AMQLonglong class],
-             [AMQOctet class]];
+    return @[[RMQLonglong class],
+             [RMQOctet class]];
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @120; }
@@ -2947,14 +2947,14 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithDeliveryTag:(nonnull AMQLonglong *)deliveryTag
-                                    options:(AMQBasicNackOptions)options {
+- (nonnull instancetype)initWithDeliveryTag:(nonnull RMQLonglong *)deliveryTag
+                                    options:(RMQBasicNackOptions)options {
     self = [super init];
     if (self) {
         self.deliveryTag = deliveryTag;
         self.options = options;
         self.payloadArguments = @[self.deliveryTag,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -2962,19 +2962,19 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.deliveryTag = ((AMQLonglong *)frame[0]);
-        self.options = ((AMQOctet *)frame[1]).integerValue;
+        self.deliveryTag = ((RMQLonglong *)frame[0]);
+        self.options = ((RMQOctet *)frame[1]).integerValue;
         self.payloadArguments = @[self.deliveryTag,
-                                  [[AMQOctet alloc] init:self.options]];
+                                  [[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -2982,12 +2982,12 @@
 
 @end
 
-@interface AMQTxSelect ()
+@interface RMQTxSelect ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQTxSelect
+@implementation RMQTxSelect
 
 + (NSArray *)propertyClasses {
     return @[];
@@ -3009,9 +3009,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -3019,12 +3019,12 @@
 
 @end
 
-@interface AMQTxSelectOk ()
+@interface RMQTxSelectOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQTxSelectOk
+@implementation RMQTxSelectOk
 
 + (NSArray *)propertyClasses {
     return @[];
@@ -3046,9 +3046,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -3056,12 +3056,12 @@
 
 @end
 
-@interface AMQTxCommit ()
+@interface RMQTxCommit ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQTxCommit
+@implementation RMQTxCommit
 
 + (NSArray *)propertyClasses {
     return @[];
@@ -3083,9 +3083,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -3093,12 +3093,12 @@
 
 @end
 
-@interface AMQTxCommitOk ()
+@interface RMQTxCommitOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQTxCommitOk
+@implementation RMQTxCommitOk
 
 + (NSArray *)propertyClasses {
     return @[];
@@ -3120,9 +3120,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -3130,12 +3130,12 @@
 
 @end
 
-@interface AMQTxRollback ()
+@interface RMQTxRollback ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQTxRollback
+@implementation RMQTxRollback
 
 + (NSArray *)propertyClasses {
     return @[];
@@ -3157,9 +3157,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -3167,12 +3167,12 @@
 
 @end
 
-@interface AMQTxRollbackOk ()
+@interface RMQTxRollbackOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQTxRollbackOk
+@implementation RMQTxRollbackOk
 
 + (NSArray *)propertyClasses {
     return @[];
@@ -3194,9 +3194,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -3204,16 +3204,16 @@
 
 @end
 
-@interface AMQConfirmSelect ()
-@property (nonatomic, readwrite) AMQConfirmSelectOptions options;
+@interface RMQConfirmSelect ()
+@property (nonatomic, readwrite) RMQConfirmSelectOptions options;
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQConfirmSelect
+@implementation RMQConfirmSelect
 
 + (NSArray *)propertyClasses {
-    return @[[AMQOctet class]];
+    return @[[RMQOctet class]];
 }
 - (NSNumber *)classID       { return @85; }
 - (NSNumber *)methodID      { return @10; }
@@ -3221,11 +3221,11 @@
 - (BOOL)hasContent          { return NO; }
 - (BOOL)shouldHaltOnReceipt { return NO; }
 
-- (nonnull instancetype)initWithOptions:(AMQConfirmSelectOptions)options {
+- (nonnull instancetype)initWithOptions:(RMQConfirmSelectOptions)options {
     self = [super init];
     if (self) {
         self.options = options;
-        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
+        self.payloadArguments = @[[[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
@@ -3233,17 +3233,17 @@
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
     self = [super init];
     if (self) {
-        self.options = ((AMQOctet *)frame[0]).integerValue;
-        self.payloadArguments = @[[[AMQOctet alloc] init:self.options]];
+        self.options = ((RMQOctet *)frame[0]).integerValue;
+        self.payloadArguments = @[[[RMQOctet alloc] init:self.options]];
     }
     return self;
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;
@@ -3251,12 +3251,12 @@
 
 @end
 
-@interface AMQConfirmSelectOk ()
+@interface RMQConfirmSelectOk ()
 @property (nonatomic, readwrite) NSArray *payloadArguments;
 @property (nonatomic, readwrite) BOOL hasContent;
 @end
 
-@implementation AMQConfirmSelectOk
+@implementation RMQConfirmSelectOk
 
 + (NSArray *)propertyClasses {
     return @[];
@@ -3278,9 +3278,9 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.methodID.integerValue].amqEncoded];
-    for (id<AMQEncodable>arg in self.payloadArguments) {
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
         [encoded appendData:arg.amqEncoded];
     }
     return encoded;

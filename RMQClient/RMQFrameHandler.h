@@ -1,5 +1,5 @@
-#import "AMQFrameset.h"
+#import "RMQFrameset.h"
 
 @protocol RMQFrameHandler
-- (void)handleFrameset:(AMQFrameset *)frameset;
+- (void)handleFrameset:(RMQFrameset *)frameset;
 @end

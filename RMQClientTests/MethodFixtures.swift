@@ -1,139 +1,139 @@
 import UIKit
 
 class MethodFixtures {
-    static func connectionStart() -> AMQConnectionStart {
-        let dict: [String : AMQBoolean] = [
-            "authentication_failure_close" : AMQBoolean(true),
-            "basic.nack"                   : AMQBoolean(true),
-            "connection.blocked"           : AMQBoolean(true),
-            "consumer_cancel_notify"       : AMQBoolean(true),
-            "consumer_priorities"          : AMQBoolean(true),
-            "exchange_exchange_bindings"   : AMQBoolean(true),
-            "per_consumer_qos"             : AMQBoolean(true),
-            "publisher_confirms"           : AMQBoolean(true)
+    static func connectionStart() -> RMQConnectionStart {
+        let dict: [String : RMQBoolean] = [
+            "authentication_failure_close" : RMQBoolean(true),
+            "basic.nack"                   : RMQBoolean(true),
+            "connection.blocked"           : RMQBoolean(true),
+            "consumer_cancel_notify"       : RMQBoolean(true),
+            "consumer_priorities"          : RMQBoolean(true),
+            "exchange_exchange_bindings"   : RMQBoolean(true),
+            "per_consumer_qos"             : RMQBoolean(true),
+            "publisher_confirms"           : RMQBoolean(true)
         ]
-        let capabilities = AMQTable(dict)
-        return AMQConnectionStart(
-            versionMajor: AMQOctet(0),
-            versionMinor: AMQOctet(9),
-            serverProperties: AMQTable([
+        let capabilities = RMQTable(dict)
+        return RMQConnectionStart(
+            versionMajor: RMQOctet(0),
+            versionMinor: RMQOctet(9),
+            serverProperties: RMQTable([
                 "capabilities" : capabilities,
-                "cluster_name" : AMQLongstr("rabbit@myapp.cfapps.pez.pivotal.io"),
-                "copyright"    : AMQLongstr("Copyright (C) 2007-2015 Pivotal Software, Inc."),
-                "information"  : AMQLongstr("Licensed under the MPL.  See http://www.rabbitmq.com/"),
-                "platform"     : AMQLongstr("Erlang/OTP"),
-                "product"      : AMQLongstr("RabbitMQ"),
-                "version"      : AMQLongstr("3.6.0"),
+                "cluster_name" : RMQLongstr("rabbit@myapp.cfapps.pez.pivotal.io"),
+                "copyright"    : RMQLongstr("Copyright (C) 2007-2015 Pivotal Software, Inc."),
+                "information"  : RMQLongstr("Licensed under the MPL.  See http://www.rabbitmq.com/"),
+                "platform"     : RMQLongstr("Erlang/OTP"),
+                "product"      : RMQLongstr("RabbitMQ"),
+                "version"      : RMQLongstr("3.6.0"),
                 ]),
-            mechanisms: AMQLongstr("AMQPLAIN PLAIN"),
-            locales: AMQLongstr("en_US")
+            mechanisms: RMQLongstr("RMQPLAIN PLAIN"),
+            locales: RMQLongstr("en_US")
         )
     }
 
-    static func connectionStartOk(user user: String = "foo", password: String = "bar") -> AMQConnectionStartOk {
-        let capabilities = AMQTable([
-            "publisher_confirms": AMQBoolean(true),
-            "consumer_cancel_notify": AMQBoolean(true),
-            "exchange_exchange_bindings": AMQBoolean(true),
-            "basic.nack": AMQBoolean(true),
-            "connection.blocked": AMQBoolean(true),
-            "authentication_failure_close": AMQBoolean(true),
+    static func connectionStartOk(user user: String = "foo", password: String = "bar") -> RMQConnectionStartOk {
+        let capabilities = RMQTable([
+            "publisher_confirms": RMQBoolean(true),
+            "consumer_cancel_notify": RMQBoolean(true),
+            "exchange_exchange_bindings": RMQBoolean(true),
+            "basic.nack": RMQBoolean(true),
+            "connection.blocked": RMQBoolean(true),
+            "authentication_failure_close": RMQBoolean(true),
             ])
-        let clientProperties = AMQTable([
+        let clientProperties = RMQTable([
             "capabilities" : capabilities,
-            "product"     : AMQLongstr("RMQClient"),
-            "platform"    : AMQLongstr("iOS"),
-            "version"     : AMQLongstr("0.0.1"),
-            "information" : AMQLongstr("https://github.com/camelpunch/RMQClient")
+            "product"     : RMQLongstr("RMQClient"),
+            "platform"    : RMQLongstr("iOS"),
+            "version"     : RMQLongstr("0.0.1"),
+            "information" : RMQLongstr("https://github.com/camelpunch/RMQClient")
             ])
-        return AMQConnectionStartOk(
+        return RMQConnectionStartOk(
             clientProperties: clientProperties,
-            mechanism: AMQShortstr("PLAIN"),
-            response: AMQCredentials(username: user, password: password),
-            locale: AMQShortstr("en_GB")
+            mechanism: RMQShortstr("PLAIN"),
+            response: RMQCredentials(username: user, password: password),
+            locale: RMQShortstr("en_GB")
         )
     }
 
-    static func connectionTune() -> AMQConnectionTune {
-        return AMQConnectionTune(channelMax: AMQShort(0), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
+    static func connectionTune() -> RMQConnectionTune {
+        return RMQConnectionTune(channelMax: RMQShort(0), frameMax: RMQLong(131072), heartbeat: RMQShort(60))
     }
 
-    static func connectionTuneOk() -> AMQConnectionTuneOk {
-        return AMQConnectionTuneOk(channelMax: AMQShort(65535), frameMax: AMQLong(131072), heartbeat: AMQShort(60))
+    static func connectionTuneOk() -> RMQConnectionTuneOk {
+        return RMQConnectionTuneOk(channelMax: RMQShort(65535), frameMax: RMQLong(131072), heartbeat: RMQShort(60))
     }
 
-    static func connectionOpen() -> AMQConnectionOpen {
-        return AMQConnectionOpen(virtualHost: AMQShortstr("/"), reserved1: AMQShortstr(""), options: AMQConnectionOpenOptions.NoOptions)
+    static func connectionOpen() -> RMQConnectionOpen {
+        return RMQConnectionOpen(virtualHost: RMQShortstr("/"), reserved1: RMQShortstr(""), options: RMQConnectionOpenOptions.NoOptions)
     }
 
-    static func connectionOpenOk() -> AMQConnectionOpenOk {
-        return AMQConnectionOpenOk(reserved1: AMQShortstr(""))
+    static func connectionOpenOk() -> RMQConnectionOpenOk {
+        return RMQConnectionOpenOk(reserved1: RMQShortstr(""))
     }
 
-    static func connectionClose() -> AMQConnectionClose {
-        return AMQConnectionClose(
-            replyCode: AMQShort(200),
-            replyText: AMQShortstr("Goodbye"),
-            classId: AMQShort(0),
-            methodId: AMQShort(0)
+    static func connectionClose() -> RMQConnectionClose {
+        return RMQConnectionClose(
+            replyCode: RMQShort(200),
+            replyText: RMQShortstr("Goodbye"),
+            classId: RMQShort(0),
+            methodId: RMQShort(0)
         )
     }
 
-    static func connectionCloseOk() -> AMQConnectionCloseOk {
-        return AMQConnectionCloseOk()
+    static func connectionCloseOk() -> RMQConnectionCloseOk {
+        return RMQConnectionCloseOk()
     }
 
-    static func channelOpen() -> AMQChannelOpen {
-        return AMQChannelOpen(reserved1: AMQShortstr(""))
+    static func channelOpen() -> RMQChannelOpen {
+        return RMQChannelOpen(reserved1: RMQShortstr(""))
     }
 
-    static func channelOpenOk() -> AMQChannelOpenOk {
-        return AMQChannelOpenOk(reserved1: AMQLongstr(""))
+    static func channelOpenOk() -> RMQChannelOpenOk {
+        return RMQChannelOpenOk(reserved1: RMQLongstr(""))
     }
 
-    static func channelClose() -> AMQChannelClose {
-        return AMQChannelClose(
-            replyCode: AMQShort(200),
-            replyText: AMQShortstr("Goodbye"),
-            classId: AMQShort(0),
-            methodId: AMQShort(0)
+    static func channelClose() -> RMQChannelClose {
+        return RMQChannelClose(
+            replyCode: RMQShort(200),
+            replyText: RMQShortstr("Goodbye"),
+            classId: RMQShort(0),
+            methodId: RMQShort(0)
         )
     }
 
-    static func channelCloseOk() -> AMQChannelCloseOk {
-        return AMQChannelCloseOk()
+    static func channelCloseOk() -> RMQChannelCloseOk {
+        return RMQChannelCloseOk()
     }
 
-    static func queueDeclare(name: String) -> AMQQueueDeclare {
-        return AMQQueueDeclare(
-            reserved1: AMQShort(0),
-            queue: AMQShortstr(name),
-            options: AMQQueueDeclareOptions.Durable,
-            arguments: AMQTable([:])
+    static func queueDeclare(name: String) -> RMQQueueDeclare {
+        return RMQQueueDeclare(
+            reserved1: RMQShort(0),
+            queue: RMQShortstr(name),
+            options: RMQQueueDeclareOptions.Durable,
+            arguments: RMQTable([:])
         )
     }
 
-    static func basicConsumeOk(consumerTag: String) -> AMQBasicConsumeOk {
-        return AMQBasicConsumeOk(consumerTag: AMQShortstr(consumerTag))
+    static func basicConsumeOk(consumerTag: String) -> RMQBasicConsumeOk {
+        return RMQBasicConsumeOk(consumerTag: RMQShortstr(consumerTag))
     }
 
-    static func basicGet(queue: String = "my.queue", options: AMQBasicGetOptions = []) -> AMQBasicGet {
-        return AMQBasicGet(reserved1: AMQShort(0), queue: AMQShortstr(queue), options: options)
+    static func basicGet(queue: String = "my.queue", options: RMQBasicGetOptions = []) -> RMQBasicGet {
+        return RMQBasicGet(reserved1: RMQShort(0), queue: RMQShortstr(queue), options: options)
     }
 
-    static func basicGetOk(routingKey: String, deliveryTag: UInt64 = 0) -> AMQBasicGetOk {
-        return AMQBasicGetOk(deliveryTag: AMQLonglong(deliveryTag), options: AMQBasicGetOkOptions.NoOptions, exchange: AMQShortstr(""), routingKey: AMQShortstr(routingKey), messageCount: AMQLong(0))
+    static func basicGetOk(routingKey: String, deliveryTag: UInt64 = 0) -> RMQBasicGetOk {
+        return RMQBasicGetOk(deliveryTag: RMQLonglong(deliveryTag), options: RMQBasicGetOkOptions.NoOptions, exchange: RMQShortstr(""), routingKey: RMQShortstr(routingKey), messageCount: RMQLong(0))
     }
 
-    static func basicPublish(message: String, routingKey: String, exchange: String = "", options: AMQBasicPublishOptions = []) -> AMQBasicPublish {
-        return AMQBasicPublish(reserved1: AMQShort(0), exchange: AMQShortstr(exchange), routingKey: AMQShortstr(routingKey), options: options)
+    static func basicPublish(message: String, routingKey: String, exchange: String = "", options: RMQBasicPublishOptions = []) -> RMQBasicPublish {
+        return RMQBasicPublish(reserved1: RMQShort(0), exchange: RMQShortstr(exchange), routingKey: RMQShortstr(routingKey), options: options)
     }
 
-    static func basicDeliver(consumerTag consumerTag: String = "", deliveryTag: UInt64 = 0) -> AMQBasicDeliver {
-        return AMQBasicDeliver(consumerTag: AMQShortstr(consumerTag), deliveryTag: AMQLonglong(deliveryTag), options: AMQBasicDeliverOptions.NoOptions, exchange: AMQShortstr(""), routingKey: AMQShortstr(""))
+    static func basicDeliver(consumerTag consumerTag: String = "", deliveryTag: UInt64 = 0) -> RMQBasicDeliver {
+        return RMQBasicDeliver(consumerTag: RMQShortstr(consumerTag), deliveryTag: RMQLonglong(deliveryTag), options: RMQBasicDeliverOptions.NoOptions, exchange: RMQShortstr(""), routingKey: RMQShortstr(""))
     }
 
-    static func basicQos(prefetchCount: UInt, options: AMQBasicQosOptions) -> AMQBasicQos {
-        return AMQBasicQos(prefetchSize: AMQLong(0), prefetchCount: AMQShort(prefetchCount), options: options)
+    static func basicQos(prefetchCount: UInt, options: RMQBasicQosOptions) -> RMQBasicQos {
+        return RMQBasicQos(prefetchSize: RMQLong(0), prefetchCount: RMQShort(prefetchCount), options: options)
     }
 }

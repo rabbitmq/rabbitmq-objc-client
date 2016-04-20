@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 
-extern NSInteger const AMQEmptyFrameSize;
-extern NSInteger const AMQChannelLimit;
+extern NSInteger const RMQEmptyFrameSize;
+extern NSInteger const RMQChannelLimit;
 extern NSString * const RMQErrorDomain;
 
 extern NSInteger const RMQConnectionErrorHandshakeTimedOut;

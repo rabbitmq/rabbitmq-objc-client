@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import "AMQMethods.h"
+#import "RMQMethods.h"
 #import "RMQExchange.h"
 #import "RMQFrameHandler.h"
 #import "RMQQueue.h"
@@ -17,12 +17,12 @@
 - (void)blockingClose;
 
 - (nonnull RMQQueue *)queue:(nonnull NSString *)queueName
-                    options:(AMQQueueDeclareOptions)options;
+                    options:(RMQQueueDeclareOptions)options;
 
 - (nonnull RMQQueue *)queue:(nonnull NSString *)queueName;
 
 - (void)basicConsume:(nonnull NSString *)queueName
-             options:(AMQBasicConsumeOptions)options
+             options:(RMQBasicConsumeOptions)options
             consumer:(void (^ _Nonnull)(id <RMQMessage> _Nonnull))consumer;
 
 - (void)basicPublish:(nonnull NSString *)message
@@ -30,24 +30,24 @@
             exchange:(nonnull NSString *)exchange;
 
 -  (void)basicGet:(nonnull NSString *)queue
-          options:(AMQBasicGetOptions)options
+          options:(RMQBasicGetOptions)options
 completionHandler:(void (^ _Nonnull)(id<RMQMessage> _Nonnull message))completionHandler;
 
 - (void)basicQos:(nonnull NSNumber *)count
           global:(BOOL)isGlobal;
 
 - (void)ack:(nonnull NSNumber *)deliveryTag
-    options:(AMQBasicAckOptions)options;
+    options:(RMQBasicAckOptions)options;
 
 - (void)ack:(nonnull NSNumber *)deliveryTag;
 
 - (void)reject:(nonnull NSNumber *)deliveryTag
-       options:(AMQBasicRejectOptions)options;
+       options:(RMQBasicRejectOptions)options;
 
 - (void)reject:(nonnull NSNumber *)deliveryTag;
 
 - (void)nack:(nonnull NSNumber *)deliveryTag
-     options:(AMQBasicNackOptions)options;
+     options:(RMQBasicNackOptions)options;
 
 - (void)nack:(nonnull NSNumber *)deliveryTag;
 

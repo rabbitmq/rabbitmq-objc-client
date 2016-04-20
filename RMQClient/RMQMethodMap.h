@@ -1,6 +1,6 @@
 // This file is generated. Do not edit.
 #import <Foundation/Foundation.h>
 
-@interface AMQMethodMap : NSObject
+@interface RMQMethodMap : NSObject
 + (NSDictionary *)methodMap;
 @end

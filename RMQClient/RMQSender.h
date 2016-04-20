@@ -1,9 +1,9 @@
 #import <Foundation/Foundation.h>
-#import "AMQFrameset.h"
+#import "RMQFrameset.h"
 
 @protocol RMQSender <NSObject>
 @property (nonnull, nonatomic, readonly) NSNumber *frameMax;
-- (void)sendFrameset:(nonnull AMQFrameset *)frameset;
-- (void)sendMethod:(nonnull id<AMQMethod>)amqMethod
+- (void)sendFrameset:(nonnull RMQFrameset *)frameset;
+- (void)sendMethod:(nonnull id<RMQMethod>)amqMethod
      channelNumber:(nonnull NSNumber *)channelNumber;
 @end

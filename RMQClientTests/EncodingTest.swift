@@ -1,6 +1,6 @@
 import XCTest
 
-@objc class EncodableMethod: NSObject, AMQMethod, NSCopying {
+@objc class EncodableMethod: NSObject, RMQMethod, NSCopying {
     static func propertyClasses() -> [AnyObject] {
         return []
     }
@@ -27,86 +27,86 @@ import XCTest
     }
     func amqEncoded() -> NSData {
         let data = NSMutableData()
-        data.appendData(AMQShort(10).amqEncoded())
-        data.appendData(AMQShort(11).amqEncoded())
-        data.appendData(AMQShortstr("foo").amqEncoded())
+        data.appendData(RMQShort(10).amqEncoded())
+        data.appendData(RMQShort(11).amqEncoded())
+        data.appendData(RMQShortstr("foo").amqEncoded())
         return data
     }
 }
 
-class AMQEncodingTest: XCTestCase {
+class EncodingTest: XCTestCase {
 
     func testRoundTripMethod() {
-        let payload = AMQConnectionStart(
-            versionMajor: AMQOctet(0),
-            versionMinor: AMQOctet(9),
-            serverProperties: AMQTable(["foo": AMQTable(["bar": AMQShortstr("baz")])]),
-            mechanisms: AMQLongstr("PLAIN_JANE"),
-            locales: AMQLongstr("en_PIRATE")
+        let payload = RMQConnectionStart(
+            versionMajor: RMQOctet(0),
+            versionMinor: RMQOctet(9),
+            serverProperties: RMQTable(["foo": RMQTable(["bar": RMQShortstr("baz")])]),
+            mechanisms: RMQLongstr("PLAIN_JANE"),
+            locales: RMQLongstr("en_PIRATE")
         )
-        let data = AMQFrame(channelNumber: 42, payload: payload).amqEncoded()
-        let parser = AMQParser(data: data)
-        let frame = AMQFrame(parser: parser)
-        let hydrated = frame.payload as! AMQConnectionStart
+        let data = RMQFrame(channelNumber: 42, payload: payload).amqEncoded()
+        let parser = RMQParser(data: data)
+        let frame = RMQFrame(parser: parser)
+        let hydrated = frame.payload as! RMQConnectionStart
         XCTAssertEqual(payload, hydrated)
     }
 
     func testRoundTripContentHeader() {
         let properties: [AnyObject] = [
-            AMQBasicContentType("somecontentype"),
-            AMQBasicContentEncoding("somecontentencoding"),
-            AMQBasicHeaders(["foo": AMQShortstr("bar")]),
-            AMQBasicDeliveryMode(3),
-            AMQBasicPriority(4),
-            AMQBasicCorrelationId("asdf"),
-            AMQBasicReplyTo("meplease"),
-            AMQBasicExpiration("NEVER!"),
-            AMQBasicMessageId("my-message"),
-            AMQBasicTimestamp(NSDate.distantFuture()),
-            AMQBasicType("mytype"),
-            AMQBasicUserId("fred"),
-            AMQBasicAppId("appy"),
-            AMQBasicReserved(""),
+            RMQBasicContentType("somecontentype"),
+            RMQBasicContentEncoding("somecontentencoding"),
+            RMQBasicHeaders(["foo": RMQShortstr("bar")]),
+            RMQBasicDeliveryMode(3),
+            RMQBasicPriority(4),
+            RMQBasicCorrelationId("asdf"),
+            RMQBasicReplyTo("meplease"),
+            RMQBasicExpiration("NEVER!"),
+            RMQBasicMessageId("my-message"),
+            RMQBasicTimestamp(NSDate.distantFuture()),
+            RMQBasicType("mytype"),
+            RMQBasicUserId("fred"),
+            RMQBasicAppId("appy"),
+            RMQBasicReserved(""),
         ]
-        let payload = AMQContentHeader(
+        let payload = RMQContentHeader(
             classID: 2,
             bodySize: 23,
             properties: properties
         )
-        let data = AMQFrame(channelNumber: 42, payload: payload).amqEncoded()
-        let parser = AMQParser(data: data)
-        let hydrated = AMQFrame(parser: parser).payload as! AMQContentHeader
+        let data = RMQFrame(channelNumber: 42, payload: payload).amqEncoded()
+        let parser = RMQParser(data: data)
+        let hydrated = RMQFrame(parser: parser).payload as! RMQContentHeader
         XCTAssertEqual(payload, hydrated)
     }
 
     func testRoundTripContentBody() {
-        let payload = AMQContentBody(data: "cyclist's string 🚴🏿".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let data = AMQFrame(channelNumber: 321, payload: payload).amqEncoded()
-        let parser = AMQParser(data: data)
-        let hydrated = AMQFrame(parser: parser).payload as! AMQContentBody
+        let payload = RMQContentBody(data: "cyclist's string 🚴🏿".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let data = RMQFrame(channelNumber: 321, payload: payload).amqEncoded()
+        let parser = RMQParser(data: data)
+        let hydrated = RMQFrame(parser: parser).payload as! RMQContentBody
         TestHelper.assertEqualBytes(payload.data, hydrated.data)
     }
 
     func testRoundTripHeartbeat() {
-        let payload = AMQHeartbeat()
-        let data = AMQFrame(channelNumber: 0, payload: payload).amqEncoded()
-        let parser = AMQParser(data: data)
-        let hydrated = AMQFrame(parser: parser).payload as! AMQHeartbeat
+        let payload = RMQHeartbeat()
+        let data = RMQFrame(channelNumber: 0, payload: payload).amqEncoded()
+        let parser = RMQParser(data: data)
+        let hydrated = RMQFrame(parser: parser).payload as! RMQHeartbeat
         XCTAssertEqual(1 + 2 + 4 + 1, payload.amqEncoded().length)
         TestHelper.assertEqualBytes(payload.amqEncoded(), hydrated.amqEncoded())
     }
 
     func testRoundTripChannelClose() {
-        let payload = AMQChannelClose(replyCode: AMQShort(406), replyText: AMQShortstr("PRECONDITION_FAILED - inequivalent arg 'durable' for queue 'rmqclient.integration-tests.E0B5A093-6B2E-402C-84F3-E93B59DF807B-71865-0003F85C24C90FC6' in vhost '/': received 'false' but current is 'true'"), classId: AMQShort(20), methodId: AMQShort(40))
-        let data = AMQFrame(channelNumber: 2, payload: payload).amqEncoded()
-        let parser = AMQParser(data: data)
-        let hydrated = AMQFrame(parser: parser).payload as! AMQChannelClose
+        let payload = RMQChannelClose(replyCode: RMQShort(406), replyText: RMQShortstr("PRECONDITION_FAILED - inequivalent arg 'durable' for queue 'rmqclient.integration-tests.E0B5A093-6B2E-402C-84F3-E93B59DF807B-71865-0003F85C24C90FC6' in vhost '/': received 'false' but current is 'true'"), classId: RMQShort(20), methodId: RMQShort(40))
+        let data = RMQFrame(channelNumber: 2, payload: payload).amqEncoded()
+        let parser = RMQParser(data: data)
+        let hydrated = RMQFrame(parser: parser).payload as! RMQChannelClose
         XCTAssertEqual(payload, hydrated)
     }
 
     func testParserCanReturnLengthOfData() {
         let data = "Ho ho ho 🏈".dataUsingEncoding(NSUTF8StringEncoding)!
-        let parser = AMQParser(data: data)
+        let parser = RMQParser(data: data)
 
         parser.parseOctet()
         let length = UInt32(data.length) - 1
@@ -115,18 +115,18 @@ class AMQEncodingTest: XCTestCase {
     }
 
     func testEncodeContentHeaderPayload() {
-        let classID = AMQShort(60)
-        let weight = AMQShort(0)
-        let bodySize = AMQLonglong(2)
-        let timestamp = AMQBasicTimestamp(NSDate())
-        let contentType = AMQBasicContentType("text/plain")
-        let contentEncoding = AMQBasicContentEncoding("foo")
-        let unsortedProperties: [AMQBasicValue] = [
+        let classID = RMQShort(60)
+        let weight = RMQShort(0)
+        let bodySize = RMQLonglong(2)
+        let timestamp = RMQBasicTimestamp(NSDate())
+        let contentType = RMQBasicContentType("text/plain")
+        let contentEncoding = RMQBasicContentEncoding("foo")
+        let unsortedProperties: [RMQBasicValue] = [
             timestamp,
             contentEncoding,
             contentType,
         ]
-        let payload = AMQContentHeader(
+        let payload = RMQContentHeader(
             classID: classID.integerValue,
             bodySize: Int(bodySize.integerValue),
             properties: unsortedProperties
@@ -136,7 +136,7 @@ class AMQEncodingTest: XCTestCase {
         expectedData.appendData(classID.amqEncoded())
         expectedData.appendData(weight.amqEncoded())
         expectedData.appendData(bodySize.amqEncoded())
-        expectedData.appendData(AMQShort(contentType.flagBit() | contentEncoding.flagBit() | timestamp.flagBit()).amqEncoded())
+        expectedData.appendData(RMQShort(contentType.flagBit() | contentEncoding.flagBit() | timestamp.flagBit()).amqEncoded())
         expectedData.appendData(contentType.amqEncoded())
         expectedData.appendData(contentEncoding.amqEncoded())
         expectedData.appendData(timestamp.amqEncoded())
@@ -146,7 +146,7 @@ class AMQEncodingTest: XCTestCase {
 
     func testEncodeContentBodyPayloadIsNoOp() {
         let data = "foo".dataUsingEncoding(NSUTF8StringEncoding)!
-        let payload = AMQContentBody(data: data)
+        let payload = RMQContentBody(data: data)
         TestHelper.assertEqualBytes(data, payload.amqEncoded())
     }
     
@@ -163,42 +163,42 @@ class AMQEncodingTest: XCTestCase {
         expectedFrame.appendBytes(&frameEnd, length: 1)
 
         let encodableMethod = EncodableMethod()
-        let frame: NSData = AMQFrame(channelNumber: 0, payload: encodableMethod).amqEncoded()
+        let frame: NSData = RMQFrame(channelNumber: 0, payload: encodableMethod).amqEncoded()
 
         TestHelper.assertEqualBytes(expectedFrame, frame)
     }
 
     func testFramesetEncodingWithContent() {
         let method = MethodFixtures.basicGet()
-        let header = AMQContentHeader(classID: 60, bodySize: 123, properties: [AMQBasicContentType("text/plain")])
-        let body1 = AMQContentBody(data: "some body".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let body2 = AMQContentBody(data: "another body".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let frameset = AMQFrameset(
+        let header = RMQContentHeader(classID: 60, bodySize: 123, properties: [RMQBasicContentType("text/plain")])
+        let body1 = RMQContentBody(data: "some body".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let body2 = RMQContentBody(data: "another body".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let frameset = RMQFrameset(
             channelNumber: 1,
             method: method,
             contentHeader: header,
             contentBodies: [body1, body2]
         )
         let expected = NSMutableData()
-        expected.appendData(AMQFrame(channelNumber: 1, payload: method).amqEncoded())
-        expected.appendData(AMQFrame(channelNumber: 1, payload: header).amqEncoded())
-        expected.appendData(AMQFrame(channelNumber: 1, payload: body1).amqEncoded())
-        expected.appendData(AMQFrame(channelNumber: 1, payload: body2).amqEncoded())
+        expected.appendData(RMQFrame(channelNumber: 1, payload: method).amqEncoded())
+        expected.appendData(RMQFrame(channelNumber: 1, payload: header).amqEncoded())
+        expected.appendData(RMQFrame(channelNumber: 1, payload: body1).amqEncoded())
+        expected.appendData(RMQFrame(channelNumber: 1, payload: body2).amqEncoded())
         let actual = frameset.amqEncoded();
         TestHelper.assertEqualBytes(expected, actual)
     }
 
     func testFramesetEncodingWithoutContent() {
         let method = MethodFixtures.basicGet()
-        let header = AMQContentHeaderNone()
-        let ignoredBody = AMQContentBody(data: "some body".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let frameset = AMQFrameset(
+        let header = RMQContentHeaderNone()
+        let ignoredBody = RMQContentBody(data: "some body".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let frameset = RMQFrameset(
             channelNumber: 1,
             method: method,
             contentHeader: header,
             contentBodies: [ignoredBody]
         )
-        let expected = AMQFrame(channelNumber: 1, payload: method).amqEncoded()
+        let expected = RMQFrame(channelNumber: 1, payload: method).amqEncoded()
         let actual = frameset.amqEncoded();
         TestHelper.assertEqualBytes(expected, actual)
     }
@@ -212,7 +212,7 @@ class AMQEncodingTest: XCTestCase {
         
         expectedData.appendData("abcdefg".dataUsingEncoding(NSASCIIStringEncoding)!)
 
-        XCTAssertEqual(expectedData, AMQLongstr("abcdefg").amqEncoded())
+        XCTAssertEqual(expectedData, RMQLongstr("abcdefg").amqEncoded())
     }
     
     func testShortStringBecomesLengthPlusChars() {
@@ -222,7 +222,7 @@ class AMQEncodingTest: XCTestCase {
         
         expectedData.appendData("abcdefg".dataUsingEncoding(NSASCIIStringEncoding)!)
         
-        XCTAssertEqual(expectedData, AMQShortstr("abcdefg").amqEncoded())
+        XCTAssertEqual(expectedData, RMQShortstr("abcdefg").amqEncoded())
     }
     
     func testTrueBecomesOne(){
@@ -231,7 +231,7 @@ class AMQEncodingTest: XCTestCase {
         var trueVal = 0x01
         expectedData.appendBytes(&trueVal, length: 1)
         
-        XCTAssertEqual(expectedData, AMQBoolean(true).amqEncoded())
+        XCTAssertEqual(expectedData, RMQBoolean(true).amqEncoded())
     }
     
     func testFalseBecomesZero() {
@@ -240,26 +240,26 @@ class AMQEncodingTest: XCTestCase {
         var falseVal = 0x00
         expectedData.appendBytes(&falseVal, length: 1)
         
-        XCTAssertEqual(expectedData, AMQBoolean(false).amqEncoded())
+        XCTAssertEqual(expectedData, RMQBoolean(false).amqEncoded())
     }
 
     func testOptionsBecomeBitfieldOctet() {
-        var optionsSet: AMQQueueDeclareOptions = []
+        var optionsSet: RMQQueueDeclareOptions = []
         optionsSet.insert(.Passive)
         optionsSet.insert(.Durable)
-        let method = AMQQueueDeclare(
-            reserved1: AMQShort(0),
-            queue: AMQShortstr("queuename"),
+        let method = RMQQueueDeclare(
+            reserved1: RMQShort(0),
+            queue: RMQShortstr("queuename"),
             options: optionsSet,
-            arguments: AMQTable([:])
+            arguments: RMQTable([:])
         )
         let actual = method.amqEncoded()
-        let optionsByte = actual.subdataWithRange(NSMakeRange(actual.length - AMQTable([:]).amqEncoded().length - 1, 1))
+        let optionsByte = actual.subdataWithRange(NSMakeRange(actual.length - RMQTable([:]).amqEncoded().length - 1, 1))
         TestHelper.assertEqualBytes("\u{03}".dataUsingEncoding(NSUTF8StringEncoding)!, optionsByte)
     }
     
     func testCredentialsEncodedAsRFC2595() {
-        let credentials = AMQCredentials(username: "fido🔫﷽", password: "2easy2break📵")
+        let credentials = RMQCredentials(username: "fido🔫﷽", password: "2easy2break📵")
         let expectedData = "\u{00}\u{00}\u{00}\u{1c}\u{00}fido🔫﷽\u{00}2easy2break📵".dataUsingEncoding(NSUTF8StringEncoding)
         TestHelper.assertEqualBytes(expectedData!, credentials.amqEncoded())
     }
@@ -277,13 +277,13 @@ class AMQEncodingTest: XCTestCase {
         let fieldPairs = "\(cats)\(dogs)\(massHysteria)\(sacrifice)"
         let expectedData = "\(fieldTableLength)\(fieldPairs)".dataUsingEncoding(NSUTF8StringEncoding)
         
-        let fieldTable = AMQTable([
-            "has_cats": AMQBoolean(true),
-            "has_dogs": AMQBoolean(false),
-            "mass_hysteria": AMQTable([
-                "ghost": AMQBoolean(false),
+        let fieldTable = RMQTable([
+            "has_cats": RMQBoolean(true),
+            "has_dogs": RMQBoolean(false),
+            "mass_hysteria": RMQTable([
+                "ghost": RMQBoolean(false),
             ]),
-            "sacrifice": AMQLongstr("forty years of darkness"),
+            "sacrifice": RMQLongstr("forty years of darkness"),
         ])
 
         TestHelper.assertEqualBytes(expectedData!, fieldTable.amqEncoded())
@@ -291,14 +291,14 @@ class AMQEncodingTest: XCTestCase {
 
     func testEmptyFieldTableBecomesFourZeroBytes() {
         let expectedData = "\u{00}\u{00}\u{00}\u{00}".dataUsingEncoding(NSUTF8StringEncoding)!
-        let fieldTable = AMQTable([:])
+        let fieldTable = RMQTable([:])
         TestHelper.assertEqualBytes(expectedData, fieldTable.amqEncoded())
     }
 
     func testTimestampBecomes64BitPOSIX() {
         let date = NSDate.distantFuture()
-        let timestamp = AMQTimestamp(date)
-        let expected = AMQLonglong(UInt64(date.timeIntervalSince1970))
+        let timestamp = RMQTimestamp(date)
+        let expected = RMQLonglong(UInt64(date.timeIntervalSince1970))
 
         TestHelper.assertEqualBytes(expected.amqEncoded(), timestamp.amqEncoded())
     }

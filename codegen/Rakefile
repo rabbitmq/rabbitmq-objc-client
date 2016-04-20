@@ -11,22 +11,22 @@ xml = Nokogiri::XML(File.open(this_dir.join("amqp0-9-1.extended.xml")))
 desc "Generate AMQP method code"
 task :generate_methods do
   generator = GenerateMethods.new(xml)
-  dest_dir.join('AMQMethods.h').write(generator.generate_header)
-  dest_dir.join('AMQMethods.m').write(generator.generate_implementation)
+  dest_dir.join('RMQMethods.h').write(generator.generate_header)
+  dest_dir.join('RMQMethods.m').write(generator.generate_implementation)
 end
 
 desc "Generate mapping between [classID, methodID] to method classes"
 task :generate_method_map do
   generator = GenerateMethodMap.new(xml)
-  dest_dir.join('AMQMethodMap.h').write(generator.generate_header)
-  dest_dir.join('AMQMethodMap.m').write(generator.generate_implementation)
+  dest_dir.join('RMQMethodMap.h').write(generator.generate_header)
+  dest_dir.join('RMQMethodMap.m').write(generator.generate_implementation)
 end
 
 desc "Generate basic properties"
 task :generate_basic_properties do
   generator = GenerateBasicProperties.new(xml)
-  dest_dir.join('AMQBasicProperties.h').write(generator.generate_header)
-  dest_dir.join('AMQBasicProperties.m').write(generator.generate_implementation)
+  dest_dir.join('RMQBasicProperties.h').write(generator.generate_header)
+  dest_dir.join('RMQBasicProperties.m').write(generator.generate_implementation)
 end
 
 desc "Generate everything (default)"

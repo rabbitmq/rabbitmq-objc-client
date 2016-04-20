@@ -1,6 +1,6 @@
 @objc class FramesetWaiterSpy : NSObject, RMQFramesetWaiter {
     var lastWaitedOnClass: AnyClass?
-    var lastFulfilledFrameset: AMQFrameset?
+    var lastFulfilledFrameset: RMQFrameset?
     var error: NSError?
 
     func waitOn(methodClass: AnyClass!) -> RMQFramesetWaitResult! {
@@ -12,7 +12,7 @@
         }
     }
 
-    func fulfill(frameset: AMQFrameset!) {
+    func fulfill(frameset: RMQFrameset!) {
         lastFulfilledFrameset = frameset
     }
 

@@ -1,4 +1,4 @@
-#import "AMQConstants.h"
+#import "RMQConstants.h"
 #import "RMQAllocatedChannel.h"
 #import "RMQFramesetSemaphoreWaiter.h"
 #import "RMQMultipleChannelAllocator.h"
@@ -46,7 +46,7 @@
 
 # pragma mark - RMQFrameHandler
 
-- (void)handleFrameset:(AMQFrameset *)frameset {
+- (void)handleFrameset:(RMQFrameset *)frameset {
     RMQAllocatedChannel *ch = self.channels[frameset.channelNumber];
     [ch handleFrameset:frameset];
 }
@@ -84,7 +84,7 @@
 }
 
 - (id<RMQChannel>)previouslyReleasedChannel {
-    for (UInt16 i = 1; i < AMQChannelLimit; i++) {
+    for (UInt16 i = 1; i < RMQChannelLimit; i++) {
         if (!self.channels[@(i)]) {
             RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(i)
                                                                  sender:self.sender
@@ -98,11 +98,11 @@
 }
 
 - (BOOL)atCapacity {
-    return self.channels.count == AMQChannelLimit;
+    return self.channels.count == RMQChannelLimit;
 }
 
 - (BOOL)atMaxIndex {
-    return self.channelNumber == AMQChannelLimit;
+    return self.channelNumber == RMQChannelLimit;
 }
 
 - (dispatch_queue_t)suspendedDispatchQueue:(UInt16)channelNumber {

@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface AMQURI : NSObject
+@interface RMQURI : NSObject
 @property (nonatomic,nonnull,readonly) NSString *scheme;
 @property (nonatomic,nonnull,readonly) NSString *host;
 @property (nonatomic,nonnull,readonly) NSString *vhost;

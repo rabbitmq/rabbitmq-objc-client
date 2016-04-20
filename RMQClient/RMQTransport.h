@@ -1,8 +1,8 @@
 #import <Foundation/Foundation.h>
-#import "AMQValues.h"
+#import "RMQValues.h"
 #import "RMQTransportDelegate.h"
 
-@protocol RMQTransport <AMQIncomingCallbackContext>
+@protocol RMQTransport <RMQIncomingCallbackContext>
 @property (nullable, nonatomic, readwrite) id<RMQTransportDelegate> delegate;
 - (BOOL)connectAndReturnError:(NSError * _Nullable * _Nullable)error;
 - (void)write:(nonnull NSData *)data;

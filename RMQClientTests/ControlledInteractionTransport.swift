@@ -52,8 +52,8 @@ enum TestDoubleTransportError: ErrorType {
         return self
     }
 
-    func serverSendsPayload(payload: AMQPayload, channelNumber: Int) -> Self {
-        serverSendsData(AMQFrame(channelNumber: channelNumber, payload: payload).amqEncoded())
+    func serverSendsPayload(payload: RMQPayload, channelNumber: Int) -> Self {
+        serverSendsData(RMQFrame(channelNumber: channelNumber, payload: payload).amqEncoded())
         return self
     }
 
@@ -69,15 +69,15 @@ enum TestDoubleTransportError: ErrorType {
         return self
     }
 
-    func assertClientSentMethod(amqMethod: AMQMethod, channelNumber: Int) -> Self {
+    func assertClientSentMethod(amqMethod: RMQMethod, channelNumber: Int) -> Self {
         if outboundData.isEmpty {
             XCTFail("Nothing sent. Expected \(amqMethod.dynamicType).")
         } else {
             let actual = outboundData.last!
-            let parser = AMQParser(data: actual)
-            let frame = AMQFrame(parser: parser)
+            let parser = RMQParser(data: actual)
+            let frame = RMQFrame(parser: parser)
             TestHelper.assertEqualBytes(
-                AMQFrame(channelNumber: channelNumber, payload: amqMethod).amqEncoded(),
+                RMQFrame(channelNumber: channelNumber, payload: amqMethod).amqEncoded(),
                 actual,
                 "\nExpected:\n\(amqMethod.dynamicType)\nGot:\n\(frame.payload.dynamicType)"
             )
@@ -85,7 +85,7 @@ enum TestDoubleTransportError: ErrorType {
         return self
     }
 
-    func assertClientSentMethods(methods: [AMQMethod], channelNumber: Int) -> Self {
+    func assertClientSentMethods(methods: [RMQMethod], channelNumber: Int) -> Self {
         if outboundData.isEmpty {
             XCTFail("nothing sent")
         } else {
@@ -96,7 +96,7 @@ enum TestDoubleTransportError: ErrorType {
                 decode(data)
             }
             let expected = methods.map { (method) -> NSData in
-                return AMQFrame(channelNumber: channelNumber, payload: method).amqEncoded()
+                return RMQFrame(channelNumber: channelNumber, payload: method).amqEncoded()
             }
             XCTAssertEqual(expected, actual, "\nAll outgoing methods: \(decoded)")
         }
@@ -106,16 +106,16 @@ enum TestDoubleTransportError: ErrorType {
     func assertClientSentProtocolHeader() -> Self {
         TestHelper.pollUntil { return self.outboundData.count > 0 }
         TestHelper.assertEqualBytes(
-            AMQProtocolHeader().amqEncoded(),
+            RMQProtocolHeader().amqEncoded(),
             outboundData.last!
         )
         return self
     }
 
     func decode(data: NSData) -> String {
-        let parser = AMQParser(data: data)
-        let frame = AMQFrame(parser: parser)
-        let decoded = frame.payload as? AMQMethod
+        let parser = RMQParser(data: data)
+        let frame = RMQFrame(parser: parser)
+        let decoded = frame.payload as? RMQMethod
         return "\(decoded?.dynamicType)"
     }
 }

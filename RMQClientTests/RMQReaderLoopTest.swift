@@ -7,11 +7,11 @@ class RMQReaderLoopTest: XCTestCase {
         let frameHandler = FrameHandlerSpy()
         let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
         let method = MethodFixtures.channelOpenOk()
-        let expectedFrameset = AMQFrameset(channelNumber: 42, method: method)
+        let expectedFrameset = RMQFrameset(channelNumber: 42, method: method)
 
         readerLoop.runOnce()
 
-        transport.serverSendsPayload(AMQHeartbeat(), channelNumber: 0)
+        transport.serverSendsPayload(RMQHeartbeat(), channelNumber: 0)
         transport.serverSendsPayload(method, channelNumber: 42)
 
         XCTAssertEqual(
@@ -26,7 +26,7 @@ class RMQReaderLoopTest: XCTestCase {
         let frameHandler = FrameHandlerSpy()
         let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
         let method = MethodFixtures.connectionStart()
-        let expectedFrameset = AMQFrameset(channelNumber: 42, method: method)
+        let expectedFrameset = RMQFrameset(channelNumber: 42, method: method)
 
         readerLoop.runOnce()
 
@@ -44,23 +44,23 @@ class RMQReaderLoopTest: XCTestCase {
         let frameHandler = FrameHandlerSpy()
         let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
         let method = MethodFixtures.basicGetOk("my.great.queue")
-        let content1 = AMQContentBody(data: "aa".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let content2 = AMQContentBody(data: "bb".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let contentHeader = AMQContentHeader(
+        let content1 = RMQContentBody(data: "aa".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let content2 = RMQContentBody(data: "bb".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let contentHeader = RMQContentHeader(
             classID: 10,
             bodySize: 999999,
             properties: [
-                AMQBasicContentType("text/flame")
+                RMQBasicContentType("text/flame")
             ]
         )
-        let expectedContentFrameset = AMQFrameset(
+        let expectedContentFrameset = RMQFrameset(
             channelNumber: 42,
             method: method,
             contentHeader: contentHeader,
             contentBodies: [content1, content2]
         )
         let nonContent = nonContentPayload()
-        let expectedNonContentFrameset = AMQFrameset(channelNumber: 42, method: nonContent)
+        let expectedNonContentFrameset = RMQFrameset(channelNumber: 42, method: nonContent)
 
         readerLoop.runOnce()
 
@@ -81,16 +81,16 @@ class RMQReaderLoopTest: XCTestCase {
         let frameHandler = FrameHandlerSpy()
         let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
         let method = MethodFixtures.basicGetOk("my.great.queue")
-        let content1 = AMQContentBody(data: "aa".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let content2 = AMQContentBody(data: "bb".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let contentHeader = AMQContentHeader(
+        let content1 = RMQContentBody(data: "aa".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let content2 = RMQContentBody(data: "bb".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let contentHeader = RMQContentHeader(
             classID: 10,
             bodySize: content1.amqEncoded().length + content2.amqEncoded().length,
             properties: [
-                AMQBasicContentType("text/flame")
+                RMQBasicContentType("text/flame")
             ]
         )
-        let expectedContentFrameset = AMQFrameset(
+        let expectedContentFrameset = RMQFrameset(
             channelNumber: 42,
             method: method,
             contentHeader: contentHeader,
@@ -113,8 +113,8 @@ class RMQReaderLoopTest: XCTestCase {
         let frameHandler = FrameHandlerSpy()
         let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
 
-        let deliver = AMQFrame(channelNumber: 42, payload: MethodFixtures.basicDeliver())
-        let header = AMQFrame(channelNumber: 42, payload: AMQContentHeader(classID: 60, bodySize: 0, properties: []))
+        let deliver = RMQFrame(channelNumber: 42, payload: MethodFixtures.basicDeliver())
+        let header = RMQFrame(channelNumber: 42, payload: RMQContentHeader(classID: 60, bodySize: 0, properties: []))
 
         readerLoop.runOnce()
 
@@ -133,20 +133,20 @@ class RMQReaderLoopTest: XCTestCase {
         let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
 
         let method = MethodFixtures.basicDeliver()
-        let deliver = AMQFrame(channelNumber: 42, payload: method)
-        let header = AMQContentHeader(classID: 60, bodySize: 0, properties: [])
-        let headerFrame = AMQFrame(channelNumber: 42, payload: header)
+        let deliver = RMQFrame(channelNumber: 42, payload: method)
+        let header = RMQContentHeader(classID: 60, bodySize: 0, properties: [])
+        let headerFrame = RMQFrame(channelNumber: 42, payload: header)
 
         readerLoop.runOnce()
 
         transport.serverSendsData(deliver.amqEncoded())
         transport.serverSendsData(headerFrame.amqEncoded())
 
-        XCTAssertEqual(AMQFrameset(channelNumber: 42, method: method, contentHeader: header, contentBodies: []),
+        XCTAssertEqual(RMQFrameset(channelNumber: 42, method: method, contentHeader: header, contentBodies: []),
                        frameHandler.lastReceivedFrameset())
     }
 
-    func nonContentPayload() -> AMQBasicDeliver {
-        return AMQBasicDeliver(consumerTag: AMQShortstr(""), deliveryTag: AMQLonglong(0), options: AMQBasicDeliverOptions.NoOptions, exchange: AMQShortstr(""), routingKey: AMQShortstr("somekey"))
+    func nonContentPayload() -> RMQBasicDeliver {
+        return RMQBasicDeliver(consumerTag: RMQShortstr(""), deliveryTag: RMQLonglong(0), options: RMQBasicDeliverOptions.NoOptions, exchange: RMQShortstr(""), routingKey: RMQShortstr("somekey"))
     }
 }

@@ -1,9 +1,9 @@
 import XCTest
 
-class AMQParserTest: XCTestCase {
+class RMQParserTest: XCTestCase {
 
     func testOctet() {
-        let parser = AMQParser(data: "\u{2}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{2}".dataUsingEncoding(NSUTF8StringEncoding)!)
         XCTAssertEqual(2, parser.parseOctet())
 
         for _ in 1...1000 {
@@ -12,7 +12,7 @@ class AMQParserTest: XCTestCase {
     }
 
     func testBoolean() {
-        let parser = AMQParser(data: "\u{1}\u{0}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{1}\u{0}".dataUsingEncoding(NSUTF8StringEncoding)!)
         XCTAssertTrue(parser.parseBoolean())
         XCTAssertFalse(parser.parseBoolean())
 
@@ -29,12 +29,12 @@ class AMQParserTest: XCTestCase {
         data.appendData(s.dataUsingEncoding(NSUTF8StringEncoding)!)
         data.appendData("stuffthatshouldn'tbeparsed".dataUsingEncoding(NSUTF8StringEncoding)!)
 
-        let parser = AMQParser(data: data)
+        let parser = RMQParser(data: data)
         XCTAssertEqual(s, parser.parseShortString())
     }
 
     func testShortStringWhenAlreadyRead() {
-        let parser = AMQParser(data: "\u{4}aaaa".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{4}aaaa".dataUsingEncoding(NSUTF8StringEncoding)!)
         XCTAssertEqual("aaaa", parser.parseShortString())
         for _ in 1...1000 {
             XCTAssertEqual("", parser.parseShortString())
@@ -42,18 +42,18 @@ class AMQParserTest: XCTestCase {
     }
 
     func testShortStringWhenNotEnoughDataToReadAfterLongString() {
-        let parser = AMQParser(data: "\u{0}\u{0}\u{0}\u{4}AAAA\u{4}BBB".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{4}AAAA\u{4}BBB".dataUsingEncoding(NSUTF8StringEncoding)!)
         XCTAssertEqual("AAAA", parser.parseLongString())
         XCTAssertEqual("", parser.parseShortString())
     }
 
     func testLongString() {
-        let parser = AMQParser(data: "\u{0}\u{0}\u{0}\u{4}AAAAbbbb".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{4}AAAAbbbb".dataUsingEncoding(NSUTF8StringEncoding)!)
         XCTAssertEqual("AAAA", parser.parseLongString())
     }
 
     func testLongStringWhenAlreadyRead() {
-        let parser = AMQParser(data: "\u{0}\u{0}\u{0}\u{4}AAAA".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{4}AAAA".dataUsingEncoding(NSUTF8StringEncoding)!)
         XCTAssertEqual("AAAA", parser.parseLongString())
         for _ in 1...1000 {
             XCTAssertEqual("", parser.parseLongString())
@@ -61,12 +61,12 @@ class AMQParserTest: XCTestCase {
     }
 
     func testLongStringWhenNotEnoughDataToRead() {
-        let parser = AMQParser(data: "\u{0}\u{0}\u{0}\u{4}AAA".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{4}AAA".dataUsingEncoding(NSUTF8StringEncoding)!)
         XCTAssertEqual("", parser.parseLongString())
     }
 
     func testLongStringWhenNotEnoughDataToReadAfterShortString() {
-        let parser = AMQParser(data: "\u{4}BBBB\u{0}\u{0}\u{0}\u{4}AAA".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{4}BBBB\u{0}\u{0}\u{0}\u{4}AAA".dataUsingEncoding(NSUTF8StringEncoding)!)
         XCTAssertEqual("BBBB", parser.parseShortString())
         XCTAssertEqual("", parser.parseLongString())
     }

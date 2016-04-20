@@ -6,7 +6,7 @@ module CodegenHelpers
   def objc_class_name(method)
     class_name = method.xpath('..').first[:name].capitalize
     method_name = method[:name].underscore.camelize
-    "AMQ#{class_name}#{method_name}"
+    "RMQ#{class_name}#{method_name}"
   end
 
   def do_not_edit
@@ -57,12 +57,12 @@ module CodegenHelpers
       camelized_name = f[:name].underscore.camelize(:lower)
       {
         base_property_options: %w(nonnull copy nonatomic),
-        decode_object: "[AMQ#{type} class]",
-        decode_type: "AMQ#{type} *",
+        decode_object: "[RMQ#{type} class]",
+        decode_type: "RMQ#{type} *",
         name: camelized_name,
         payload_argument: "self.#{camelized_name}",
-        pointer_type: "AMQ#{type} *",
-        type: "AMQ#{type}",
+        pointer_type: "RMQ#{type} *",
+        type: "RMQ#{type}",
       }
     }
   end

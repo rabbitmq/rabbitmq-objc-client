@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import "AMQValues.h"
+#import "RMQValues.h"
 #import "RMQChannel.h"
 #import "RMQChannelAllocator.h"
 #import "RMQConnectionDelegate.h"

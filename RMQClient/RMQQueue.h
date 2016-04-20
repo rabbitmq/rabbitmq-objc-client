@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import "AMQMethods.h"
+#import "RMQMethods.h"
 #import "RMQMessage.h"
 #import "RMQSender.h"
 
@@ -9,7 +9,7 @@
 @property (nonnull, copy, nonatomic, readonly) NSString *name;
 
 - (nonnull instancetype)initWithName:(nonnull NSString *)name
-                             options:(AMQQueueDeclareOptions)options
+                             options:(RMQQueueDeclareOptions)options
                              channel:(nonnull id <RMQChannel>)channel
                               sender:(nonnull id <RMQSender>)sender;
 
@@ -20,7 +20,7 @@
 - (nonnull RMQQueue *)publish:(nonnull NSString *)message;
 - (void)pop:(void (^ _Nonnull)(id<RMQMessage> _Nonnull message))handler;
 - (void)subscribe:(void (^ _Nonnull)(id<RMQMessage> _Nonnull message))handler;
-- (void)subscribe:(AMQBasicConsumeOptions)options
+- (void)subscribe:(RMQBasicConsumeOptions)options
           handler:(void (^ _Nonnull)(id<RMQMessage> _Nonnull message))handler;
 
 @end

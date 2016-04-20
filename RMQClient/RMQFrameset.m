@@ -1,18 +1,18 @@
-#import "AMQFrameset.h"
-#import "AMQFrame.h"
+#import "RMQFrameset.h"
+#import "RMQFrame.h"
 
-@interface AMQFrameset ()
+@interface RMQFrameset ()
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
-@property (nonatomic, readwrite) id<AMQMethod> method;
-@property (nonatomic, readwrite) AMQContentHeader *contentHeader;
+@property (nonatomic, readwrite) id<RMQMethod> method;
+@property (nonatomic, readwrite) RMQContentHeader *contentHeader;
 @property (nonatomic, readwrite) NSArray *contentBodies;
 @end
 
-@implementation AMQFrameset
+@implementation RMQFrameset
 
 - (instancetype)initWithChannelNumber:(NSNumber *)channelNumber
-                               method:(id<AMQMethod>)method
-                        contentHeader:(AMQContentHeader *)contentHeader
+                               method:(id<RMQMethod>)method
+                        contentHeader:(RMQContentHeader *)contentHeader
                         contentBodies:(NSArray *)contentBodies {
     self = [super init];
     if (self) {
@@ -25,21 +25,21 @@
 }
 
 - (instancetype)initWithChannelNumber:(NSNumber *)channelNumber
-                               method:(id<AMQMethod>)method {
+                               method:(id<RMQMethod>)method {
     return [self initWithChannelNumber:channelNumber
                                 method:method
-                         contentHeader:[AMQContentHeaderNone new]
+                         contentHeader:[RMQContentHeaderNone new]
                          contentBodies:@[]];
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQFrame alloc] initWithChannelNumber:self.channelNumber payload:self.method].amqEncoded];
+    [encoded appendData:[[RMQFrame alloc] initWithChannelNumber:self.channelNumber payload:self.method].amqEncoded];
     NSData *contentHeaderEncoded = self.contentHeader.amqEncoded;
     if (contentHeaderEncoded.length) {
-        [encoded appendData:[[AMQFrame alloc] initWithChannelNumber:self.channelNumber payload:self.contentHeader].amqEncoded];
-        for (AMQContentBody *body in self.contentBodies) {
-            [encoded appendData:[[AMQFrame alloc] initWithChannelNumber:self.channelNumber payload:body].amqEncoded];
+        [encoded appendData:[[RMQFrame alloc] initWithChannelNumber:self.channelNumber payload:self.contentHeader].amqEncoded];
+        for (RMQContentBody *body in self.contentBodies) {
+            [encoded appendData:[[RMQFrame alloc] initWithChannelNumber:self.channelNumber payload:body].amqEncoded];
         }
     }
     return encoded;
@@ -47,16 +47,16 @@
 
 - (NSData *)contentData {
     NSMutableData *allBodyData = [NSMutableData new];
-    for (AMQContentBody *b in self.contentBodies) {
+    for (RMQContentBody *b in self.contentBodies) {
         [allBodyData appendData:b.data];
     }
     return allBodyData;
 }
 
-- (AMQFrameset *)addBody:(AMQContentBody *)body {
+- (RMQFrameset *)addBody:(RMQContentBody *)body {
     NSArray *conjoinedContentBodies = [self.contentBodies arrayByAddingObject:body];
 
-    return [[AMQFrameset alloc] initWithChannelNumber:self.channelNumber
+    return [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber
                                                method:self.method
                                         contentHeader:self.contentHeader
                                         contentBodies:conjoinedContentBodies];

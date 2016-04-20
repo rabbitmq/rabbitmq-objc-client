@@ -1,13 +1,13 @@
-#import "AMQMethodDecoder.h"
-#import "AMQMethodMap.h"
+#import "RMQMethodDecoder.h"
+#import "RMQMethodMap.h"
 
-@interface AMQMethodDecoder ()
-@property (nonatomic, readwrite) AMQParser *parser;
+@interface RMQMethodDecoder ()
+@property (nonatomic, readwrite) RMQParser *parser;
 @end
 
-@implementation AMQMethodDecoder
+@implementation RMQMethodDecoder
 
-- (instancetype)initWithParser:(AMQParser *)parser {
+- (instancetype)initWithParser:(RMQParser *)parser {
     self = [super init];
     if (self) {
         self.parser = parser;
@@ -18,14 +18,14 @@
 - (id)decode {
     NSNumber *classID   = @([self.parser parseShortUInt]);
     NSNumber *methodID  = @([self.parser parseShortUInt]);
-    Class methodClass = AMQMethodMap.methodMap[@[classID, methodID]];
+    Class methodClass = RMQMethodMap.methodMap[@[classID, methodID]];
     NSArray *propertyClasses = [methodClass propertyClasses];
     NSMutableArray *decodedFrame = [NSMutableArray new];
     for (int i = 0; i < propertyClasses.count; i++) {
         Class propertyClass = propertyClasses[i];
         decodedFrame[i] = [[propertyClass alloc] initWithParser:self.parser];
     }
-    return [(id <AMQMethod>)[methodClass alloc] initWithDecodedFrame:decodedFrame];
+    return [(id <RMQMethod>)[methodClass alloc] initWithDecodedFrame:decodedFrame];
 }
 
 @end

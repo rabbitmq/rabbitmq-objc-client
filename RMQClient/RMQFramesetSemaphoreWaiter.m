@@ -1,9 +1,9 @@
-#import "AMQConstants.h"
+#import "RMQConstants.h"
 #import "RMQFramesetSemaphoreWaiter.h"
 #import "RMQChannel.h"
 
 @interface RMQFramesetSemaphoreWaiter ()
-@property (nonatomic, readwrite) AMQFrameset *lastFrameset;
+@property (nonatomic, readwrite) RMQFrameset *lastFrameset;
 @property (nonatomic, readwrite) RMQFramesetWaitResult *result;
 @property (nonatomic, readwrite) dispatch_semaphore_t semaphore;
 @property (nonatomic, readwrite) NSNumber *syncTimeout;
@@ -46,7 +46,7 @@
     return result;
 }
 
-- (void)fulfill:(AMQFrameset *)frameset {
+- (void)fulfill:(RMQFrameset *)frameset {
     self.lastFrameset = frameset;
     dispatch_semaphore_signal(self.semaphore);
 }

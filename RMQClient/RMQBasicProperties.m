@@ -1,91 +1,91 @@
 // This file is generated. Do not edit.
-#import "AMQBasicProperties.h"
+#import "RMQBasicProperties.h"
 
-@implementation AMQBasicProperties
+@implementation RMQBasicProperties
 + (NSArray *)properties {
-    return @[[AMQBasicContentType class],
-             [AMQBasicContentEncoding class],
-             [AMQBasicHeaders class],
-             [AMQBasicDeliveryMode class],
-             [AMQBasicPriority class],
-             [AMQBasicCorrelationId class],
-             [AMQBasicReplyTo class],
-             [AMQBasicExpiration class],
-             [AMQBasicMessageId class],
-             [AMQBasicTimestamp class],
-             [AMQBasicType class],
-             [AMQBasicUserId class],
-             [AMQBasicAppId class],
-             [AMQBasicReserved class]];
+    return @[[RMQBasicContentType class],
+             [RMQBasicContentEncoding class],
+             [RMQBasicHeaders class],
+             [RMQBasicDeliveryMode class],
+             [RMQBasicPriority class],
+             [RMQBasicCorrelationId class],
+             [RMQBasicReplyTo class],
+             [RMQBasicExpiration class],
+             [RMQBasicMessageId class],
+             [RMQBasicTimestamp class],
+             [RMQBasicType class],
+             [RMQBasicUserId class],
+             [RMQBasicAppId class],
+             [RMQBasicReserved class]];
 }
 @end
 
-@implementation AMQBasicContentType
+@implementation RMQBasicContentType
 + (NSUInteger)flagBit { return 32768; }
 - (NSUInteger)flagBit { return [self class].flagBit; }
 @end
 
-@implementation AMQBasicContentEncoding
+@implementation RMQBasicContentEncoding
 + (NSUInteger)flagBit { return 16384; }
 - (NSUInteger)flagBit { return [self class].flagBit; }
 @end
 
-@implementation AMQBasicHeaders
+@implementation RMQBasicHeaders
 + (NSUInteger)flagBit { return 8192; }
 - (NSUInteger)flagBit { return [self class].flagBit; }
 @end
 
-@implementation AMQBasicDeliveryMode
+@implementation RMQBasicDeliveryMode
 + (NSUInteger)flagBit { return 4096; }
 - (NSUInteger)flagBit { return [self class].flagBit; }
 @end
 
-@implementation AMQBasicPriority
+@implementation RMQBasicPriority
 + (NSUInteger)flagBit { return 2048; }
 - (NSUInteger)flagBit { return [self class].flagBit; }
 @end
 
-@implementation AMQBasicCorrelationId
+@implementation RMQBasicCorrelationId
 + (NSUInteger)flagBit { return 1024; }
 - (NSUInteger)flagBit { return [self class].flagBit; }
 @end
 
-@implementation AMQBasicReplyTo
+@implementation RMQBasicReplyTo
 + (NSUInteger)flagBit { return 512; }
 - (NSUInteger)flagBit { return [self class].flagBit; }
 @end
 
-@implementation AMQBasicExpiration
+@implementation RMQBasicExpiration
 + (NSUInteger)flagBit { return 256; }
 - (NSUInteger)flagBit { return [self class].flagBit; }
 @end
 
-@implementation AMQBasicMessageId
+@implementation RMQBasicMessageId
 + (NSUInteger)flagBit { return 128; }
 - (NSUInteger)flagBit { return [self class].flagBit; }
 @end
 
-@implementation AMQBasicTimestamp
+@implementation RMQBasicTimestamp
 + (NSUInteger)flagBit { return 64; }
 - (NSUInteger)flagBit { return [self class].flagBit; }
 @end
 
-@implementation AMQBasicType
+@implementation RMQBasicType
 + (NSUInteger)flagBit { return 32; }
 - (NSUInteger)flagBit { return [self class].flagBit; }
 @end
 
-@implementation AMQBasicUserId
+@implementation RMQBasicUserId
 + (NSUInteger)flagBit { return 16; }
 - (NSUInteger)flagBit { return [self class].flagBit; }
 @end
 
-@implementation AMQBasicAppId
+@implementation RMQBasicAppId
 + (NSUInteger)flagBit { return 8; }
 - (NSUInteger)flagBit { return [self class].flagBit; }
 @end
 
-@implementation AMQBasicReserved
+@implementation RMQBasicReserved
 + (NSUInteger)flagBit { return 4; }
 - (NSUInteger)flagBit { return [self class].flagBit; }
 @end

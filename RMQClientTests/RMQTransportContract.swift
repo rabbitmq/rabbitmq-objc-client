@@ -22,21 +22,21 @@ class RMQTransportContract {
         defer { self.transport.close() {} }
         
         var readData: NSData = NSData()
-        var connectionStart = AMQConnectionStart()
+        var connectionStart = RMQConnectionStart()
 
         try! self.transport.connect()
-        self.transport.write(AMQProtocolHeader().amqEncoded())
+        self.transport.write(RMQProtocolHeader().amqEncoded())
         XCTAssertEqual(0, readData.length)
         self.transport.readFrame() { receivedData in
             readData = receivedData
-            let parser = AMQParser(data: readData)
-            let frame = AMQFrame(parser: parser)
-            connectionStart = frame.payload as! AMQConnectionStart
+            let parser = RMQParser(data: readData)
+            let frame = RMQFrame(parser: parser)
+            connectionStart = frame.payload as! RMQConnectionStart
         }
 
         XCTAssert(TestHelper.pollUntil { return readData.length > 0 }, "didn't read")
-        XCTAssertEqual(AMQOctet(0), connectionStart.versionMajor)
-        XCTAssertEqual(AMQOctet(9), connectionStart.versionMinor)
+        XCTAssertEqual(RMQOctet(0), connectionStart.versionMajor)
+        XCTAssertEqual(RMQOctet(9), connectionStart.versionMinor)
 
         return self
     }

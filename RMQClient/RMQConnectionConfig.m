@@ -4,11 +4,11 @@
 @property (nonnull, nonatomic, readwrite) NSNumber *channelMax;
 @property (nonnull, nonatomic, readwrite) NSNumber *frameMax;
 @property (nonnull, nonatomic, readwrite) NSNumber *heartbeat;
-@property (nonnull, nonatomic, readwrite) AMQCredentials *credentials;
+@property (nonnull, nonatomic, readwrite) RMQCredentials *credentials;
 @end
 
 @implementation RMQConnectionConfig
-- (instancetype)initWithCredentials:(AMQCredentials *)credentials
+- (instancetype)initWithCredentials:(RMQCredentials *)credentials
                          channelMax:(NSNumber *)channelMax
                            frameMax:(NSNumber *)frameMax
                           heartbeat:(NSNumber *)heartbeat {

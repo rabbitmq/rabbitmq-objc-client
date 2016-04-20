@@ -1,7 +1,7 @@
-#import "AMQURI.h"
-#import "AMQConstants.h"
+#import "RMQURI.h"
+#import "RMQConstants.h"
 
-@interface AMQURI ()
+@interface RMQURI ()
 @property (nonatomic,nonnull,readwrite) NSString *scheme;
 @property (nonatomic,nonnull,readwrite) NSString *host;
 @property (nonatomic,nonnull,readwrite) NSString *vhost;
@@ -11,11 +11,11 @@
 @property (nonatomic,readwrite) BOOL isSSL;
 @end
 
-@implementation AMQURI
+@implementation RMQURI
 + (instancetype)parse:(NSString *)uri error:(NSError *__autoreleasing  _Nullable *)error {
     NSURLComponents *components = [NSURLComponents componentsWithString:uri];
     
-    if (![self isAMQPScheme:components.scheme]) {
+    if (![self isRMQPScheme:components.scheme]) {
         *error = [NSError errorWithDomain:RMQErrorDomain
                                      code:0
                                  userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Connection URI must use amqp or amqps schema (example: amqp://bus.megacorp.internal:5766), learn more at http://bit.ly/ks8MXK", nil)}];
@@ -29,7 +29,7 @@
         return nil;
     }
     
-    AMQURI *u = [[AMQURI alloc] init];
+    RMQURI *u = [[RMQURI alloc] init];
     u.host = components.host;
     u.vhost = vhost;
     u.username = components.user;
@@ -48,7 +48,7 @@
     return u;
 }
 
-+ (BOOL)isAMQPScheme:(NSString *)scheme {
++ (BOOL)isRMQPScheme:(NSString *)scheme {
     return [scheme isEqualToString:@"amqp"] || [scheme isEqualToString:@"amqps"];
 }
 

@@ -5,7 +5,7 @@ class IntegrationTests: XCTestCase {
     func testPop() {
         let frameMaxRequiringTwoFrames = 4096
         var messageContent = ""
-        for _ in 1...(frameMaxRequiringTwoFrames - AMQEmptyFrameSize) {
+        for _ in 1...(frameMaxRequiringTwoFrames - RMQEmptyFrameSize) {
             messageContent += "a"
         }
         messageContent += "bb"

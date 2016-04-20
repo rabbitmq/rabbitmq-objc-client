@@ -1,6 +1,6 @@
 #import "RMQReaderLoop.h"
-#import "AMQFrame.h"
-#import "AMQMethodDecoder.h"
+#import "RMQFrame.h"
+#import "RMQMethodDecoder.h"
 
 @interface RMQReaderLoop ()
 @property (nonatomic, readwrite) id<RMQTransport>transport;
@@ -22,7 +22,7 @@
     [self.transport readFrame:^(NSData * _Nonnull methodData) {
         // executing on a concurrent queue
         
-        AMQFrame *frame = [self frameWithData:methodData];
+        RMQFrame *frame = [self frameWithData:methodData];
 
         if (frame.isHeartbeat) {
             [self runOnce];
@@ -34,15 +34,15 @@
 
 # pragma mark - Private
 
-- (void)handleMethodFrame:(AMQFrame *)frame {
-    id<AMQMethod> method = (id<AMQMethod>)frame.payload;
+- (void)handleMethodFrame:(RMQFrame *)frame {
+    id<RMQMethod> method = (id<RMQMethod>)frame.payload;
 
     if (method.hasContent) {
         [self.transport readFrame:^(NSData * _Nonnull headerData) {
-            AMQFrame *headerFrame = [self frameWithData:headerData];
-            AMQContentHeader *header = (AMQContentHeader *)headerFrame.payload;
+            RMQFrame *headerFrame = [self frameWithData:headerData];
+            RMQContentHeader *header = (RMQContentHeader *)headerFrame.payload;
 
-            AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:frame.channelNumber
+            RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:frame.channelNumber
                                                                         method:method
                                                                  contentHeader:header
                                                                  contentBodies:@[]];
@@ -53,31 +53,31 @@
             }
         }];
     } else {
-        AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:frame.channelNumber
+        RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:frame.channelNumber
                                                                     method:method];
         [self.frameHandler handleFrameset:frameset];
     }
 }
 
-- (void)readBodiesForIncompleteFrameset:(AMQFrameset *)contentFrameset {
+- (void)readBodiesForIncompleteFrameset:(RMQFrameset *)contentFrameset {
     [self.transport readFrame:^(NSData * _Nonnull data) {
-        AMQFrame *frame = [self frameWithData:data];
+        RMQFrame *frame = [self frameWithData:data];
 
-        if ([frame.payload isKindOfClass:[AMQContentBody class]]) {
+        if ([frame.payload isKindOfClass:[RMQContentBody class]]) {
             [self frameset:contentFrameset
               addBodyFrame:frame];
         } else {
             [self.frameHandler handleFrameset:contentFrameset];
-            AMQFrameset *nonContentFrameset = [[AMQFrameset alloc] initWithChannelNumber:contentFrameset.channelNumber
-                                                                                  method:(id <AMQMethod>)frame.payload];
+            RMQFrameset *nonContentFrameset = [[RMQFrameset alloc] initWithChannelNumber:contentFrameset.channelNumber
+                                                                                  method:(id <RMQMethod>)frame.payload];
             [self.frameHandler handleFrameset:nonContentFrameset];
         }
     }];
 }
 
-- (void)frameset:(AMQFrameset *)frameset
-    addBodyFrame:(AMQFrame *)newFrame {
-    AMQFrameset *combinedFrameset = [frameset addBody:(AMQContentBody *)newFrame.payload];
+- (void)frameset:(RMQFrameset *)frameset
+    addBodyFrame:(RMQFrame *)newFrame {
+    RMQFrameset *combinedFrameset = [frameset addBody:(RMQContentBody *)newFrame.payload];
 
     if (frameset.contentHeader.bodySize.integerValue == combinedFrameset.contentData.length) {
         [self.frameHandler handleFrameset:combinedFrameset];
@@ -86,9 +86,9 @@
     }
 }
 
-- (AMQFrame *)frameWithData:(NSData *)data {
-    AMQParser *parser = [[AMQParser alloc] initWithData:data];
-    return [[AMQFrame alloc] initWithParser:parser];
+- (RMQFrame *)frameWithData:(NSData *)data {
+    RMQParser *parser = [[RMQParser alloc] initWithData:data];
+    return [[RMQFrame alloc] initWithParser:parser];
 }
 
 @end

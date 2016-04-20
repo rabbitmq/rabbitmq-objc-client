@@ -34,7 +34,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let sender = SenderSpy()
         let q = QueueHelper()
         let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, queue: q.dispatchQueue)
-        let frameset = AMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpenOk())
+        let frameset = RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpenOk())
 
         ch.activateWithDelegate(nil)
         q.suspend()
@@ -48,7 +48,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let sender = SenderSpy()
         let q = QueueHelper()
         let delegate = ConnectionDelegateSpy()
-        let openOk = AMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpenOk())
+        let openOk = RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpenOk())
         let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, queue: q.dispatchQueue)
 
         ch.activateWithDelegate(delegate)
@@ -61,7 +61,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         q.finish()
 
         XCTAssertEqual(
-            AMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpen()),
+            RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpen()),
             sender.sentFramesets.last!
         )
 
@@ -91,17 +91,17 @@ class RMQAllocatedChannelTest: XCTestCase {
         ch.activateWithDelegate(nil)
         ch.open()
         
-        waiter!.fulfill(AMQFrameset(channelNumber: 1, method: MethodFixtures.channelCloseOk()))
+        waiter!.fulfill(RMQFrameset(channelNumber: 1, method: MethodFixtures.channelCloseOk()))
         ch.blockingClose()
 
         XCTAssertEqual(
             [
-                AMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpen()),
-                AMQFrameset(channelNumber: 1, method: MethodFixtures.channelClose())
+                RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpen()),
+                RMQFrameset(channelNumber: 1, method: MethodFixtures.channelClose())
             ],
             sender.sentFramesets
         )
-        XCTAssertEqual(AMQChannelCloseOk.description(), waiter!.lastWaitedOnClass!.description())
+        XCTAssertEqual(RMQChannelCloseOk.description(), waiter!.lastWaitedOnClass!.description())
 
         q.suspend()
     }
@@ -131,14 +131,14 @@ class RMQAllocatedChannelTest: XCTestCase {
         XCTAssertEqual(0, sender.sentFramesets.count)
         q.finish()
 
-        let expectedQueueDeclare = AMQQueueDeclare(
-            reserved1: AMQShort(0),
-            queue: AMQShortstr("bagpuss"),
+        let expectedQueueDeclare = RMQQueueDeclare(
+            reserved1: RMQShort(0),
+            queue: RMQShortstr("bagpuss"),
             options: [.NoWait],
-            arguments: AMQTable([:])
+            arguments: RMQTable([:])
         )
         let actualFrame = sender.sentFramesets.last!
-        let actualMethod = actualFrame.method as! AMQQueueDeclare
+        let actualMethod = actualFrame.method as! RMQQueueDeclare
         XCTAssertEqual(expectedQueueDeclare, actualMethod)
     }
 
@@ -147,12 +147,12 @@ class RMQAllocatedChannelTest: XCTestCase {
         let q = QueueHelper()
         let channel = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, queue: q.dispatchQueue)
         channel.activateWithDelegate(nil)
-        let expectedMethod = AMQBasicConsume(
-            reserved1: AMQShort(0),
-            queue: AMQShortstr("a_queue_name"),
-            consumerTag: AMQShortstr(""),
+        let expectedMethod = RMQBasicConsume(
+            reserved1: RMQShort(0),
+            queue: RMQShortstr("a_queue_name"),
+            consumerTag: RMQShortstr(""),
             options: [.NoAck],
-            arguments: AMQTable([:])
+            arguments: RMQTable([:])
         )
 
         q.suspend()
@@ -160,9 +160,9 @@ class RMQAllocatedChannelTest: XCTestCase {
         channel.basicConsume("a_queue_name", options: [.NoAck]) { message in }
         XCTAssertNil(sender.lastSentMethod)
 
-        waiter!.fulfill(AMQFrameset(channelNumber: 1, method: MethodFixtures.basicConsumeOk("heres-ur-tag-bro")))
+        waiter!.fulfill(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicConsumeOk("heres-ur-tag-bro")))
         q.finish()
-        let receivedMethod = sender.lastSentMethod! as! AMQBasicConsume
+        let receivedMethod = sender.lastSentMethod! as! RMQBasicConsume
         XCTAssertEqual(expectedMethod, receivedMethod)
     }
 
@@ -190,12 +190,12 @@ class RMQAllocatedChannelTest: XCTestCase {
         let sender = SenderSpy()
         let q = QueueHelper()
         let channel = RMQAllocatedChannel(432, sender: sender, waiter: waiter!, queue: q.dispatchQueue)
-        let consumeOkMethod = AMQBasicConsumeOk(consumerTag: AMQShortstr("servergeneratedtag"))
-        let consumeOkFrameset = AMQFrameset(channelNumber: 432, method: consumeOkMethod)
+        let consumeOkMethod = RMQBasicConsumeOk(consumerTag: RMQShortstr("servergeneratedtag"))
+        let consumeOkFrameset = RMQFrameset(channelNumber: 432, method: consumeOkMethod)
         let deliverMethod = MethodFixtures.basicDeliver(consumerTag: "servergeneratedtag", deliveryTag: 123)
-        let deliverHeader = AMQContentHeader(classID: deliverMethod.classID(), bodySize: 123, properties: [])
-        let deliverBody = AMQContentBody(data: "Consumed!".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let deliverFrameset = AMQFrameset(channelNumber: 432, method: deliverMethod, contentHeader: deliverHeader, contentBodies: [deliverBody])
+        let deliverHeader = RMQContentHeader(classID: deliverMethod.classID(), bodySize: 123, properties: [])
+        let deliverBody = RMQContentBody(data: "Consumed!".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let deliverFrameset = RMQFrameset(channelNumber: 432, method: deliverMethod, contentHeader: deliverHeader, contentBodies: [deliverBody])
         let expectedMessage = RMQContentMessage(consumerTag: "servergeneratedtag", deliveryTag: 123, content: "Consumed!")
 
         channel.activateWithDelegate(nil)
@@ -226,7 +226,7 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         q.finish()
 
-        let expected = AMQFrameset(channelNumber: 1, method: MethodFixtures.basicGet("my-q", options: [.NoAck]))
+        let expected = RMQFrameset(channelNumber: 1, method: MethodFixtures.basicGet("my-q", options: [.NoAck]))
         let actual = sender.sentFramesets.last!
         XCTAssertEqual(expected, actual)
     }
@@ -234,11 +234,11 @@ class RMQAllocatedChannelTest: XCTestCase {
     func testBasicGetCallsCompletionHandlerWithMessage() {
         let sender = SenderSpy()
         let q = QueueHelper()
-        let getOkFrameset = AMQFrameset(
+        let getOkFrameset = RMQFrameset(
             channelNumber: 1,
             method: MethodFixtures.basicGetOk("my-q", deliveryTag: 1),
-            contentHeader: AMQContentHeader(classID: 60, bodySize: 123, properties: []),
-            contentBodies: [AMQContentBody(data: "hello".dataUsingEncoding(NSUTF8StringEncoding)!)]
+            contentHeader: RMQContentHeader(classID: 60, bodySize: 123, properties: []),
+            contentBodies: [RMQContentBody(data: "hello".dataUsingEncoding(NSUTF8StringEncoding)!)]
         )
         let expectedMessage = RMQContentMessage(consumerTag: "", deliveryTag: 1, content: "hello")
         let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, queue: q.dispatchQueue)
@@ -279,16 +279,16 @@ class RMQAllocatedChannelTest: XCTestCase {
     func testMultipleConsumersOnSameQueueReceiveMessages() {
         let q = QueueHelper()
         let ch = RMQAllocatedChannel(999, sender: SenderSpy(), waiter: waiter!, queue: q.dispatchQueue)
-        let consumeOkFrameset1 = AMQFrameset(channelNumber: 999, method: AMQBasicConsumeOk(consumerTag: AMQShortstr("servertag1")))
-        let consumeOkFrameset2 = AMQFrameset(channelNumber: 999, method: AMQBasicConsumeOk(consumerTag: AMQShortstr("servertag2")))
+        let consumeOkFrameset1 = RMQFrameset(channelNumber: 999, method: RMQBasicConsumeOk(consumerTag: RMQShortstr("servertag1")))
+        let consumeOkFrameset2 = RMQFrameset(channelNumber: 999, method: RMQBasicConsumeOk(consumerTag: RMQShortstr("servertag2")))
         let deliverMethod1 = MethodFixtures.basicDeliver(consumerTag: "servertag1", deliveryTag: 1)
-        let deliverHeader1 = AMQContentHeader(classID: deliverMethod1.classID(), bodySize: 123, properties: [])
-        let deliverBody1 = AMQContentBody(data: "A message for consumer 1".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let deliverFrameset1 = AMQFrameset(channelNumber: 999, method: deliverMethod1, contentHeader: deliverHeader1, contentBodies: [deliverBody1])
+        let deliverHeader1 = RMQContentHeader(classID: deliverMethod1.classID(), bodySize: 123, properties: [])
+        let deliverBody1 = RMQContentBody(data: "A message for consumer 1".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let deliverFrameset1 = RMQFrameset(channelNumber: 999, method: deliverMethod1, contentHeader: deliverHeader1, contentBodies: [deliverBody1])
         let deliverMethod2 = MethodFixtures.basicDeliver(consumerTag: "servertag2", deliveryTag: 1)
-        let deliverHeader2 = AMQContentHeader(classID: deliverMethod2.classID(), bodySize: 123, properties: [])
-        let deliverBody2 = AMQContentBody(data: "A message for consumer 2".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let deliverFrameset2 = AMQFrameset(channelNumber: 999, method: deliverMethod2, contentHeader: deliverHeader2, contentBodies: [deliverBody2])
+        let deliverHeader2 = RMQContentHeader(classID: deliverMethod2.classID(), bodySize: 123, properties: [])
+        let deliverBody2 = RMQContentBody(data: "A message for consumer 2".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let deliverFrameset2 = RMQFrameset(channelNumber: 999, method: deliverMethod2, contentHeader: deliverHeader2, contentBodies: [deliverBody2])
         let expectedMessage1 = RMQContentMessage(consumerTag: "servertag1", deliveryTag: 1, content: "A message for consumer 1")
         let expectedMessage2 = RMQContentMessage(consumerTag: "servertag2", deliveryTag: 1, content: "A message for consumer 2")
 
@@ -318,31 +318,31 @@ class RMQAllocatedChannelTest: XCTestCase {
     }
 
     func testBasicPublishSendsFramesetToSenderOnOwnQueue() {
-        let sender = SenderSpy(frameMax: 4 + AMQEmptyFrameSize)
+        let sender = SenderSpy(frameMax: 4 + RMQEmptyFrameSize)
         let q = QueueHelper()
         let ch = RMQAllocatedChannel(999, sender: sender, waiter: waiter!, queue: q.dispatchQueue)
         let message = "my great message yo"
-        let persistent = AMQBasicDeliveryMode(2)
+        let persistent = RMQBasicDeliveryMode(2)
 
-        let expectedMethod = AMQBasicPublish(
-            reserved1: AMQShort(0),
-            exchange: AMQShortstr(""),
-            routingKey: AMQShortstr("my.q"),
-            options: AMQBasicPublishOptions.NoOptions
+        let expectedMethod = RMQBasicPublish(
+            reserved1: RMQShort(0),
+            exchange: RMQShortstr(""),
+            routingKey: RMQShortstr("my.q"),
+            options: RMQBasicPublishOptions.NoOptions
         )
-        let expectedHeader = AMQContentHeader(
+        let expectedHeader = RMQContentHeader(
             classID: 60,
             bodySize: message.dataUsingEncoding(NSUTF8StringEncoding)!.length,
-            properties: [persistent, AMQBasicContentType("application/octet-stream"), AMQBasicPriority(0)]
+            properties: [persistent, RMQBasicContentType("application/octet-stream"), RMQBasicPriority(0)]
         )
         let expectedBodies = [
-            AMQContentBody(data: "my g".dataUsingEncoding(NSUTF8StringEncoding)!),
-            AMQContentBody(data: "reat".dataUsingEncoding(NSUTF8StringEncoding)!),
-            AMQContentBody(data: " mes".dataUsingEncoding(NSUTF8StringEncoding)!),
-            AMQContentBody(data: "sage".dataUsingEncoding(NSUTF8StringEncoding)!),
-            AMQContentBody(data: " yo".dataUsingEncoding(NSUTF8StringEncoding)!),
+            RMQContentBody(data: "my g".dataUsingEncoding(NSUTF8StringEncoding)!),
+            RMQContentBody(data: "reat".dataUsingEncoding(NSUTF8StringEncoding)!),
+            RMQContentBody(data: " mes".dataUsingEncoding(NSUTF8StringEncoding)!),
+            RMQContentBody(data: "sage".dataUsingEncoding(NSUTF8StringEncoding)!),
+            RMQContentBody(data: " yo".dataUsingEncoding(NSUTF8StringEncoding)!),
             ]
-        let expectedFrameset = AMQFrameset(
+        let expectedFrameset = RMQFrameset(
             channelNumber: 999,
             method: expectedMethod,
             contentHeader: expectedHeader,
@@ -364,30 +364,30 @@ class RMQAllocatedChannelTest: XCTestCase {
     }
 
     func testPublishWhenContentLengthIsMultipleOfFrameMax() {
-        let sender = SenderSpy(frameMax: 4 + AMQEmptyFrameSize)
+        let sender = SenderSpy(frameMax: 4 + RMQEmptyFrameSize)
         let q = QueueHelper()
         let channel = RMQAllocatedChannel(999, sender: sender, waiter: waiter!, queue: q.dispatchQueue)
         let messageContent = "12345678"
-        let expectedMethod = AMQBasicPublish(
-            reserved1: AMQShort(0),
-            exchange: AMQShortstr(""),
-            routingKey: AMQShortstr("my.q"),
-            options: AMQBasicPublishOptions.NoOptions
+        let expectedMethod = RMQBasicPublish(
+            reserved1: RMQShort(0),
+            exchange: RMQShortstr(""),
+            routingKey: RMQShortstr("my.q"),
+            options: RMQBasicPublishOptions.NoOptions
         )
         let expectedBodyData = messageContent.dataUsingEncoding(NSUTF8StringEncoding)!
-        let persistent = AMQBasicDeliveryMode(2)
-        let contentTypeOctetStream = AMQBasicContentType("application/octet-stream")
-        let lowPriority = AMQBasicPriority(0)
-        let expectedHeader = AMQContentHeader(
+        let persistent = RMQBasicDeliveryMode(2)
+        let contentTypeOctetStream = RMQBasicContentType("application/octet-stream")
+        let lowPriority = RMQBasicPriority(0)
+        let expectedHeader = RMQContentHeader(
             classID: 60,
             bodySize: expectedBodyData.length,
             properties: [persistent, contentTypeOctetStream, lowPriority]
         )
         let expectedBodies = [
-            AMQContentBody(data: "1234".dataUsingEncoding(NSUTF8StringEncoding)!),
-            AMQContentBody(data: "5678".dataUsingEncoding(NSUTF8StringEncoding)!),
+            RMQContentBody(data: "1234".dataUsingEncoding(NSUTF8StringEncoding)!),
+            RMQContentBody(data: "5678".dataUsingEncoding(NSUTF8StringEncoding)!),
             ]
-        let expectedFrameset = AMQFrameset(
+        let expectedFrameset = RMQFrameset(
             channelNumber: 999,
             method: expectedMethod,
             contentHeader: expectedHeader,
@@ -420,7 +420,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         q.finish()
 
         let expectedMethod = MethodFixtures.basicQos(32, options: [.Global])
-        let actualMethod = sender.lastSentMethod as! AMQBasicQos
+        let actualMethod = sender.lastSentMethod as! RMQBasicQos
         XCTAssertEqual(expectedMethod, actualMethod)
     }
 
@@ -438,7 +438,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         q.finish()
 
         let expectedMethod = MethodFixtures.basicQos(32, options: [])
-        let actualMethod = sender.lastSentMethod as! AMQBasicQos
+        let actualMethod = sender.lastSentMethod as! RMQBasicQos
         XCTAssertEqual(expectedMethod, actualMethod)
     }
 
@@ -452,7 +452,7 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         q.finish()
 
-        XCTAssertEqual(AMQBasicQosOk.self.description(), waiter?.lastWaitedOnClass!.description())
+        XCTAssertEqual(RMQBasicQosOk.self.description(), waiter?.lastWaitedOnClass!.description())
     }
 
     func testBasicQosSendsErrorToDelegateOnWaitError() {
@@ -484,8 +484,8 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         q.finish()
 
-        let expected = AMQBasicAck(deliveryTag: AMQLonglong(123), options: [.Multiple])
-        let actual: AMQBasicAck = sender.lastSentMethod as! AMQBasicAck
+        let expected = RMQBasicAck(deliveryTag: RMQLonglong(123), options: [.Multiple])
+        let actual: RMQBasicAck = sender.lastSentMethod as! RMQBasicAck
         XCTAssertEqual(expected, actual)
     }
 
@@ -502,8 +502,8 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         q.finish()
 
-        let expected = AMQBasicReject(deliveryTag: AMQLonglong(123), options: [.Requeue])
-        let actual: AMQBasicReject = sender.lastSentMethod as! AMQBasicReject
+        let expected = RMQBasicReject(deliveryTag: RMQLonglong(123), options: [.Requeue])
+        let actual: RMQBasicReject = sender.lastSentMethod as! RMQBasicReject
         XCTAssertEqual(expected, actual)
     }
 
@@ -520,8 +520,8 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         q.finish()
 
-        let expected = AMQBasicNack(deliveryTag: AMQLonglong(123), options: [.Multiple, .Requeue])
-        let actual: AMQBasicNack = sender.lastSentMethod as! AMQBasicNack
+        let expected = RMQBasicNack(deliveryTag: RMQLonglong(123), options: [.Multiple, .Requeue])
+        let actual: RMQBasicNack = sender.lastSentMethod as! RMQBasicNack
         XCTAssertEqual(expected, actual)
     }
     

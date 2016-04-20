@@ -1,82 +1,82 @@
 #import <Foundation/Foundation.h>
 @import Mantle;
-#import "AMQParser.h"
+#import "RMQParser.h"
 #import "RMQConnectionConfig.h"
 
-@protocol AMQEncodable <NSObject>
+@protocol RMQEncodable <NSObject>
 - (nonnull NSData *)amqEncoded;
 @end
 
-@protocol AMQParseable <NSObject>
-- (nonnull instancetype)initWithParser:(nonnull AMQParser *)parser;
+@protocol RMQParseable <NSObject>
+- (nonnull instancetype)initWithParser:(nonnull RMQParser *)parser;
 @end
 
-@protocol AMQFieldValue <NSObject,AMQEncodable,AMQParseable>
+@protocol RMQFieldValue <NSObject,RMQEncodable,RMQParseable>
 - (nonnull NSData *)amqFieldValueType;
 @end
 
-@interface AMQOctet : MTLModel<AMQEncodable,AMQParseable>
+@interface RMQOctet : MTLModel<RMQEncodable,RMQParseable>
 @property (nonatomic, readonly) NSUInteger integerValue;
 - (nonnull instancetype)init:(char)octet;
 @end
 
-@interface AMQBoolean : MTLModel<AMQEncodable,AMQFieldValue,AMQParseable>
+@interface RMQBoolean : MTLModel<RMQEncodable,RMQFieldValue,RMQParseable>
 @property (nonatomic, readonly) BOOL boolValue;
 - (nonnull instancetype)init:(BOOL)boolean;
 @end
 
-@interface AMQShort : MTLModel<AMQFieldValue>
+@interface RMQShort : MTLModel<RMQFieldValue>
 @property (nonatomic, readonly) NSUInteger integerValue;
 - (nonnull instancetype)init:(NSUInteger)val;
 @end
 
-@interface AMQLong : MTLModel<AMQFieldValue>
+@interface RMQLong : MTLModel<RMQFieldValue>
 @property (nonatomic, readonly) NSUInteger integerValue;
 - (nonnull instancetype)init:(NSUInteger)val;
 @end
 
-@interface AMQLonglong : MTLModel<AMQFieldValue>
+@interface RMQLonglong : MTLModel<RMQFieldValue>
 @property (nonatomic, readonly) uint64_t integerValue;
 - (nonnull instancetype)init:(uint64_t)val;
 @end
 
-@interface AMQShortstr : MTLModel<AMQFieldValue>
+@interface RMQShortstr : MTLModel<RMQFieldValue>
 @property (nonnull, nonatomic, copy, readonly) NSString *stringValue;
 - (nonnull instancetype)init:(nonnull NSString *)string;
 @end
 
-@interface AMQLongstr : MTLModel<AMQFieldValue>
+@interface RMQLongstr : MTLModel<RMQFieldValue>
 @property (nonnull, nonatomic, copy, readonly) NSString *stringValue;
 - (nonnull instancetype)init:(nonnull NSString *)string;
 @end
 
-@interface AMQTable : MTLModel<AMQFieldValue>
+@interface RMQTable : MTLModel<RMQFieldValue>
 - (nonnull instancetype)init:(nonnull NSDictionary *)dictionary;
 @end
 
-@interface AMQTimestamp : MTLModel<AMQFieldValue>
+@interface RMQTimestamp : MTLModel<RMQFieldValue>
 - (nonnull instancetype)init:(nonnull NSDate *)date;
 @end
 
-@interface AMQFieldValuePair : MTLModel<AMQEncodable>
+@interface RMQFieldValuePair : MTLModel<RMQEncodable>
 - (nonnull instancetype)initWithFieldName:(nonnull NSString *)fieldName
-                               fieldValue:(nonnull id <AMQEncodable,AMQFieldValue>)fieldValue;
+                               fieldValue:(nonnull id <RMQEncodable,RMQFieldValue>)fieldValue;
 @end
 
-@interface AMQCredentials : AMQLongstr
+@interface RMQCredentials : RMQLongstr
 - (nonnull instancetype)initWithUsername:(nonnull NSString *)username
                                 password:(nonnull NSString *)password;
 @end
 
-@protocol AMQIncomingCallbackContext <NSObject>
+@protocol RMQIncomingCallbackContext <NSObject>
 - (void)close:(void (^ _Nonnull)())onClose;
 @end
 
-@protocol AMQPayload <NSObject, AMQEncodable>
+@protocol RMQPayload <NSObject, RMQEncodable>
 - (nonnull NSNumber *)frameTypeID;
 @end
 
-@protocol AMQMethod <NSObject, AMQPayload>
+@protocol RMQMethod <NSObject, RMQPayload>
 + (nonnull NSArray *)propertyClasses;
 - (nonnull NSNumber *)classID;
 - (nonnull NSNumber *)methodID;
@@ -85,29 +85,29 @@
 - (BOOL)shouldHaltOnReceipt;
 @end
 
-@protocol AMQOutgoingPrecursor <NSObject>
-- (nonnull id<AMQMethod>)nextRequest;
+@protocol RMQOutgoingPrecursor <NSObject>
+- (nonnull id<RMQMethod>)nextRequest;
 @end
 
-@protocol AMQIncomingSync <NSObject,AMQMethod>
-- (nonnull id<AMQMethod>)replyWithConfig:(nonnull RMQConnectionConfig *)config;
+@protocol RMQIncomingSync <NSObject,RMQMethod>
+- (nonnull id<RMQMethod>)replyWithConfig:(nonnull RMQConnectionConfig *)config;
 @end
 
-@interface AMQContentHeader : MTLModel<AMQPayload>
+@interface RMQContentHeader : MTLModel<RMQPayload>
 @property (nonnull, nonatomic, copy, readonly) NSNumber *bodySize;
 - (nonnull instancetype)initWithClassID:(nonnull NSNumber *)classID
                                bodySize:(nonnull NSNumber *)bodySize
                              properties:(nonnull NSArray *)properties;
-- (nonnull instancetype)initWithParser:(nonnull AMQParser *)parser;
+- (nonnull instancetype)initWithParser:(nonnull RMQParser *)parser;
 @end
 
-@interface AMQContentHeaderNone : AMQContentHeader
+@interface RMQContentHeaderNone : RMQContentHeader
 @end
 
-@interface AMQContentBody : MTLModel<AMQPayload>
+@interface RMQContentBody : MTLModel<RMQPayload>
 @property (nonnull, nonatomic, readonly) NSData *data;
 @property (nonatomic, readonly) NSUInteger length;
 - (nonnull instancetype)initWithData:(nonnull NSData *)data;
-- (nonnull instancetype)initWithParser:(nonnull AMQParser *)parser
+- (nonnull instancetype)initWithParser:(nonnull RMQParser *)parser
                            payloadSize:(UInt32)payloadSize;
 @end

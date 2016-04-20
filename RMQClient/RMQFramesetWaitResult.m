@@ -2,12 +2,12 @@
 
 @interface RMQFramesetWaitResult ()
 @property (nonatomic, readwrite) NSError *error;
-@property (nonatomic, readwrite) AMQFrameset *frameset;
+@property (nonatomic, readwrite) RMQFrameset *frameset;
 @end
 
 @implementation RMQFramesetWaitResult
 
-- (instancetype)initWithFrameset:(AMQFrameset *)frameset error:(NSError *)error {
+- (instancetype)initWithFrameset:(RMQFrameset *)frameset error:(NSError *)error {
     self = [super init];
     if (self) {
         self.frameset = frameset;

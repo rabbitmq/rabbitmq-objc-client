@@ -1,5 +1,5 @@
 #import "RMQHandshaker.h"
-#import "AMQMethods.h"
+#import "RMQMethods.h"
 
 @interface RMQHandshaker ()
 @property (nonatomic, readwrite) id<RMQSender> sender;
@@ -21,10 +21,10 @@
     return self;
 }
 
-- (void)handleFrameset:(AMQFrameset *)frameset {
+- (void)handleFrameset:(RMQFrameset *)frameset {
     id method = frameset.method;
     if ([self shouldReply:method]) {
-        id<AMQMethod> reply = [method replyWithConfig:self.config];
+        id<RMQMethod> reply = [method replyWithConfig:self.config];
         [self.sender sendMethod:reply channelNumber:frameset.channelNumber];
         [self.readerLoop runOnce];
     } else {
@@ -34,8 +34,8 @@
 
 #pragma mark - Private
 
-- (BOOL)shouldReply:(id<AMQMethod>)amqMethod {
-    return [amqMethod conformsToProtocol:@protocol(AMQIncomingSync)];
+- (BOOL)shouldReply:(id<RMQMethod>)amqMethod {
+    return [amqMethod conformsToProtocol:@protocol(RMQIncomingSync)];
 }
 
 @end

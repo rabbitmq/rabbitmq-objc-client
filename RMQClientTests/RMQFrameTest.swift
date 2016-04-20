@@ -1,9 +1,9 @@
 import XCTest
 
-class AMQFrameTest: XCTestCase {
-    let heartbeatFrame = AMQFrame(channelNumber: 0, payload: AMQHeartbeat())
-    let heartbeatFrameWrongChannel = AMQFrame(channelNumber: 1, payload: AMQHeartbeat())
-    let nonHeartbeatFrame = AMQFrame(channelNumber: 0, payload: MethodFixtures.connectionStart())
+class RMQFrameTest: XCTestCase {
+    let heartbeatFrame = RMQFrame(channelNumber: 0, payload: RMQHeartbeat())
+    let heartbeatFrameWrongChannel = RMQFrame(channelNumber: 1, payload: RMQHeartbeat())
+    let nonHeartbeatFrame = RMQFrame(channelNumber: 0, payload: MethodFixtures.connectionStart())
     
     func testHeartbeatFrameChannelZeroIsAHeartbeat() {
         XCTAssert(heartbeatFrame.isHeartbeat())

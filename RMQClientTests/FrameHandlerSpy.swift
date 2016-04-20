@@ -1,11 +1,11 @@
 @objc class FrameHandlerSpy : NSObject, RMQFrameHandler {
-    var receivedFramesets: [AMQFrameset] = []
+    var receivedFramesets: [RMQFrameset] = []
 
-    func handleFrameset(frameset: AMQFrameset!) {
+    func handleFrameset(frameset: RMQFrameset!) {
         receivedFramesets.append(frameset)
     }
 
-    func lastReceivedFrameset() -> AMQFrameset? {
+    func lastReceivedFrameset() -> RMQFrameset? {
         return receivedFramesets.last
     }
 }

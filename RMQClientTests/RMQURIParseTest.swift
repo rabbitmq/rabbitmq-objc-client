@@ -1,9 +1,9 @@
 import XCTest
 
-class AMQURIParseTest: XCTestCase {
+class RMQURIParseTest: XCTestCase {
     
-    func testNonAMQPSchemesNotAllowed() {
-        XCTAssertThrowsError(try AMQURI.parse("amqpfoo://dev.rabbitmq.com")) { (error) in
+    func testNonRMQPSchemesNotAllowed() {
+        XCTAssertThrowsError(try RMQURI.parse("amqpfoo://dev.rabbitmq.com")) { (error) in
             do {
                 XCTAssertEqual(
                     "Connection URI must use amqp or amqps schema (example: amqp://bus.megacorp.internal:5766), learn more at http://bit.ly/ks8MXK",
@@ -13,8 +13,8 @@ class AMQURIParseTest: XCTestCase {
         }
     }
     
-    func testHandlesAMQPURIsWithoutPathPart() {
-        let val = try! AMQURI.parse("amqp://dev.rabbitmq.com")
+    func testHandlesRMQPURIsWithoutPathPart() {
+        let val = try! RMQURI.parse("amqp://dev.rabbitmq.com")
         XCTAssertEqual("/", val.vhost)
         XCTAssertEqual("dev.rabbitmq.com", val.host)
         XCTAssertEqual(5672, val.portNumber)
@@ -22,8 +22,8 @@ class AMQURIParseTest: XCTestCase {
         XCTAssertFalse(val.isSSL)
     }
     
-    func testHandlesAMQPSURIsWithoutPathPart() {
-        let val = try! AMQURI.parse("amqps://dev.rabbitmq.com")
+    func testHandlesRMQPSURIsWithoutPathPart() {
+        let val = try! RMQURI.parse("amqps://dev.rabbitmq.com")
         XCTAssertEqual("/", val.vhost)
         XCTAssertEqual("dev.rabbitmq.com", val.host)
         XCTAssertEqual(5671, val.portNumber)
@@ -32,22 +32,22 @@ class AMQURIParseTest: XCTestCase {
     }
     
     func testParsesVhostAsEmptyStringWhenPathIsJustASlash() {
-        let val = try! AMQURI.parse("amqp://dev.rabbitmq.com/")
+        let val = try! RMQURI.parse("amqp://dev.rabbitmq.com/")
         XCTAssertEqual("", val.vhost)
     }
     
     func testPercentEncodedSlashIsJustSlash() {
-        let val = try! AMQURI.parse("amqp://dev.rabbitmq.com/%2Fvault")
+        let val = try! RMQURI.parse("amqp://dev.rabbitmq.com/%2Fvault")
         XCTAssertEqual("/vault", val.vhost)
     }
     
     func testDoesNotIncludeSlashesWhenNoneAfterFirst() {
-        let val = try! AMQURI.parse("amqp://dev.rabbitmq.com/a.path.without.slashes")
+        let val = try! RMQURI.parse("amqp://dev.rabbitmq.com/a.path.without.slashes")
         XCTAssertEqual("a.path.without.slashes", val.vhost)
     }
     
     func testSlashesNotAllowedInVhost() {
-        XCTAssertThrowsError(try AMQURI.parse("amqp://dev.rabbitmq.com/a/path/with/slashes")) { (error) in
+        XCTAssertThrowsError(try RMQURI.parse("amqp://dev.rabbitmq.com/a/path/with/slashes")) { (error) in
             do {
                 XCTAssertEqual(
                     "amqp://dev.rabbitmq.com/a/path/with/slashes has multiple-segment path; please percent-encode any slashes in the vhost name (e.g. /production => %2Fproduction). Learn more at http://bit.ly/amqp-gem-and-connection-uris",
@@ -58,7 +58,7 @@ class AMQURIParseTest: XCTestCase {
     }
     
     func testParsesUsernameAndPassword() {
-        let val = try! AMQURI.parse("amqp://hedgehog:t0ps3kr3t@hub.megacorp.internal")
+        let val = try! RMQURI.parse("amqp://hedgehog:t0ps3kr3t@hub.megacorp.internal")
         XCTAssertEqual("/", val.vhost)
         XCTAssertEqual("hub.megacorp.internal", val.host)
         XCTAssertEqual(5672, val.portNumber)

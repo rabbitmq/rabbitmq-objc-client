@@ -1,12 +1,12 @@
-#import "AMQValues.h"
-#import "AMQBasicProperties.h"
+#import "RMQValues.h"
+#import "RMQBasicProperties.h"
 
-@interface AMQOctet ()
+@interface RMQOctet ()
 @property (nonatomic, readwrite) char octet;
 @property (nonatomic, readwrite) NSUInteger integerValue;
 @end
 
-@implementation AMQOctet
+@implementation RMQOctet
 
 - (instancetype)init:(char)octet {
     self = [super init];
@@ -17,7 +17,7 @@
     return self;
 }
 
-- (instancetype)initWithParser:(AMQParser *)parser {
+- (instancetype)initWithParser:(RMQParser *)parser {
     return [self init:[parser parseOctet]];
 }
 
@@ -28,11 +28,11 @@
 
 @end
 
-@interface AMQBoolean ()
+@interface RMQBoolean ()
 @property (nonatomic, readwrite) BOOL boolValue;
 @end
 
-@implementation AMQBoolean
+@implementation RMQBoolean
 
 - (instancetype)init:(BOOL)boolean {
     self = [super init];
@@ -42,7 +42,7 @@
     return self;
 }
 
-- (instancetype)initWithParser:(AMQParser *)parser {
+- (instancetype)initWithParser:(RMQParser *)parser {
     return [self init:[parser parseBoolean]];
 }
 
@@ -57,11 +57,11 @@
 
 @end
 
-@interface AMQShort ()
+@interface RMQShort ()
 @property (nonatomic, readwrite) NSUInteger integerValue;
 @end
 
-@implementation AMQShort
+@implementation RMQShort
 
 - (instancetype)init:(NSUInteger)val {
     self = [super init];
@@ -71,7 +71,7 @@
     return self;
 }
 
-- (instancetype)initWithParser:(AMQParser *)parser {
+- (instancetype)initWithParser:(RMQParser *)parser {
     return [self init:[parser parseShortUInt]];
 }
 
@@ -86,11 +86,11 @@
 
 @end
 
-@interface AMQLong ()
+@interface RMQLong ()
 @property (nonatomic, readwrite) NSUInteger integerValue;
 @end
 
-@implementation AMQLong
+@implementation RMQLong
 
 - (instancetype)init:(NSUInteger)val {
     self = [super init];
@@ -100,7 +100,7 @@
     return self;
 }
 
-- (instancetype)initWithParser:(AMQParser *)parser {
+- (instancetype)initWithParser:(RMQParser *)parser {
     return [self init:[parser parseLongUInt]];
 }
 
@@ -115,11 +115,11 @@
 
 @end
 
-@interface AMQLonglong ()
+@interface RMQLonglong ()
 @property (nonatomic, readwrite) uint64_t integerValue;
 @end
 
-@implementation AMQLonglong
+@implementation RMQLonglong
 
 - (instancetype)init:(uint64_t)val {
     self = [super init];
@@ -129,7 +129,7 @@
     return self;
 }
 
-- (instancetype)initWithParser:(AMQParser *)parser {
+- (instancetype)initWithParser:(RMQParser *)parser {
     return [self init:[parser parseLongLongUInt]];
 }
 
@@ -144,11 +144,11 @@
 
 @end
 
-@interface AMQShortstr ()
+@interface RMQShortstr ()
 @property (nonnull, nonatomic, copy, readwrite) NSString *stringValue;
 @end
 
-@implementation AMQShortstr
+@implementation RMQShortstr
 
 - (instancetype)init:(NSString *)string {
     self = [super init];
@@ -158,7 +158,7 @@
     return self;
 }
 
-- (instancetype)initWithParser:(AMQParser *)parser {
+- (instancetype)initWithParser:(RMQParser *)parser {
     return [self init:[parser parseShortString]];
 }
 
@@ -176,11 +176,11 @@
 }
 @end
 
-@interface AMQLongstr ()
+@interface RMQLongstr ()
 @property (nonnull, nonatomic, copy, readwrite) NSString *stringValue;
 @end
 
-@implementation AMQLongstr
+@implementation RMQLongstr
 
 - (instancetype)init:(NSString *)string {
     self = [super init];
@@ -190,14 +190,14 @@
     return self;
 }
 
-- (instancetype)initWithParser:(AMQParser *)parser {
+- (instancetype)initWithParser:(RMQParser *)parser {
     return [self init:[parser parseLongString]];
 }
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
     NSData *value = [self.stringValue dataUsingEncoding:NSUTF8StringEncoding];
-    [encoded appendData:[[AMQLong alloc] init:value.length].amqEncoded];
+    [encoded appendData:[[RMQLong alloc] init:value.length].amqEncoded];
     [encoded appendData:value];
     return encoded;
 }
@@ -208,11 +208,11 @@
 
 @end
 
-@interface AMQTable ()
+@interface RMQTable ()
 @property (nonnull, nonatomic, copy, readwrite) NSDictionary *dictionary;
 @end
 
-@implementation AMQTable
+@implementation RMQTable
 
 - (instancetype)init:(NSDictionary *)dictionary {
     self = [super init];
@@ -226,7 +226,7 @@
     return [self init:@{}];
 }
 
-- (instancetype)initWithParser:(AMQParser *)parser {
+- (instancetype)initWithParser:(RMQParser *)parser {
     return [self init:[parser parseFieldTable]];
 }
 
@@ -236,12 +236,12 @@
 
     for (NSString *key in keys) {
         id value = self.dictionary[key];
-        AMQFieldValuePair *pair = [[AMQFieldValuePair alloc] initWithFieldName:key
+        RMQFieldValuePair *pair = [[RMQFieldValuePair alloc] initWithFieldName:key
                                                                     fieldValue:value];
         [tableContents appendData:pair.amqEncoded];
     }
 
-    NSMutableData *fieldTable = [[[AMQLong alloc] init:tableContents.length].amqEncoded mutableCopy];
+    NSMutableData *fieldTable = [[[RMQLong alloc] init:tableContents.length].amqEncoded mutableCopy];
     [fieldTable appendData:tableContents];
 
     return fieldTable;
@@ -253,11 +253,11 @@
 
 @end
 
-@interface AMQTimestamp ()
+@interface RMQTimestamp ()
 @property (nonatomic, copy, readwrite) NSDate *date;
 @end
 
-@implementation AMQTimestamp
+@implementation RMQTimestamp
 
 - (instancetype)init:(NSDate *)date {
     self = [super init];
@@ -267,14 +267,14 @@
     return self;
 }
 
-- (instancetype)initWithParser:(AMQParser *)parser {
+- (instancetype)initWithParser:(RMQParser *)parser {
     NSTimeInterval interval = [parser parseLongLongUInt];
     return [self init:[NSDate dateWithTimeIntervalSince1970:interval]];
 }
 
 - (NSData *)amqEncoded {
     NSTimeInterval interval = self.date.timeIntervalSince1970;
-    AMQLonglong *numeric = [[AMQLonglong alloc] init:interval];
+    RMQLonglong *numeric = [[RMQLonglong alloc] init:interval];
     return numeric.amqEncoded;
 }
 
@@ -284,15 +284,15 @@
 
 @end
 
-@interface AMQFieldValuePair ()
+@interface RMQFieldValuePair ()
 @property (nonnull, nonatomic, copy) NSString *fieldName;
-@property (nonnull, nonatomic, copy) id<AMQEncodable,AMQFieldValue> fieldValue;
+@property (nonnull, nonatomic, copy) id<RMQEncodable,RMQFieldValue> fieldValue;
 @end
 
-@implementation AMQFieldValuePair
+@implementation RMQFieldValuePair
 
 - (instancetype)initWithFieldName:(NSString *)fieldName
-                       fieldValue:(id<AMQEncodable,AMQFieldValue>)fieldValue {
+                       fieldValue:(id<RMQEncodable,RMQFieldValue>)fieldValue {
     self = [super init];
     if (self) {
         self.fieldName = fieldName;
@@ -303,7 +303,7 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShortstr alloc] init:self.fieldName].amqEncoded];
+    [encoded appendData:[[RMQShortstr alloc] init:self.fieldName].amqEncoded];
     [encoded appendData:self.fieldValue.amqFieldValueType];
     [encoded appendData:self.fieldValue.amqEncoded];
     return encoded;
@@ -311,14 +311,14 @@
 
 @end
 
-@interface AMQCredentials ()
+@interface RMQCredentials ()
 
 @property (nonatomic, readwrite) NSString *username;
 @property (nonatomic, readwrite) NSString *password;
 
 @end
 
-@implementation AMQCredentials
+@implementation RMQCredentials
 
 - (instancetype)initWithUsername:(NSString *)username password:(NSString *)password {
     self = [super init];
@@ -341,23 +341,23 @@
 
     NSString *s = [[NSString alloc] initWithData:encodedContent
                                         encoding:NSUTF8StringEncoding];
-    return [[AMQLongstr alloc] init:s].amqEncoded;
+    return [[RMQLongstr alloc] init:s].amqEncoded;
 }
 
 @end
 
-@interface AMQContentHeader ()
+@interface RMQContentHeader ()
 @property (nonatomic, copy, readwrite) NSNumber *classID;
 @property (nonatomic, copy, readwrite) NSNumber *weight;
 @property (nonatomic, copy, readwrite) NSNumber *bodySize;
 @property (nonatomic, copy, readwrite) NSArray *properties;
 @end
 
-@implementation AMQContentHeader
+@implementation RMQContentHeader
 
 - (instancetype)initWithClassID:(NSNumber *)classID
                        bodySize:(NSNumber *)bodySize
-                     properties:(NSArray<AMQBasicValue> *)properties {
+                     properties:(NSArray<RMQBasicValue> *)properties {
     self = [super init];
     if (self) {
         self.classID = classID;
@@ -368,7 +368,7 @@
     return self;
 }
 
-- (instancetype)initWithParser:(AMQParser *)parser {
+- (instancetype)initWithParser:(RMQParser *)parser {
     NSNumber *classID = @([parser parseShortUInt]);
     [parser parseShortUInt]; // weight
     UInt64 bodySize = [parser parseLongLongUInt];
@@ -388,20 +388,20 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[AMQShort alloc] init:self.classID.integerValue].amqEncoded];
-    [encoded appendData:[[AMQShort alloc] init:self.weight.integerValue].amqEncoded];
-    [encoded appendData:[[AMQLonglong alloc] init:self.bodySize.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.weight.integerValue].amqEncoded];
+    [encoded appendData:[[RMQLonglong alloc] init:self.bodySize.integerValue].amqEncoded];
 
     NSSortDescriptor *byFlagBit = [[NSSortDescriptor alloc] initWithKey:@"flagBit" ascending:NO];
     NSArray *sortedProperties = [self.properties sortedArrayUsingDescriptors:@[byFlagBit]];
 
     NSUInteger flags = 0;
-    for (id <AMQBasicValue> property in sortedProperties) {
+    for (id <RMQBasicValue> property in sortedProperties) {
         flags |= property.flagBit;
     }
-    [encoded appendData:[[AMQShort alloc] init:flags].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:flags].amqEncoded];
 
-    for (id <AMQBasicValue> property in sortedProperties) {
+    for (id <RMQBasicValue> property in sortedProperties) {
         [encoded appendData:property.amqEncoded];
     }
 
@@ -409,24 +409,24 @@
 }
 
 - (NSArray *)propertyClassesWithFlags:(UInt16)flags {
-    NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id <AMQBasicValue> _Nonnull propertyClass, NSDictionary<NSString *,id> * _Nullable bindings) {
+    NSPredicate *pred = [NSPredicate predicateWithBlock:^BOOL(id <RMQBasicValue> _Nonnull propertyClass, NSDictionary<NSString *,id> * _Nullable bindings) {
         return (flags & [propertyClass flagBit]) != 0;
     }];
-    return [[[AMQBasicProperties class] properties] filteredArrayUsingPredicate:pred];
+    return [[[RMQBasicProperties class] properties] filteredArrayUsingPredicate:pred];
 }
 
 @end
 
-@implementation AMQContentHeaderNone
+@implementation RMQContentHeaderNone
 
 - (instancetype)initWithClassID:(NSNumber *)classID
                        bodySize:(NSNumber *)bodySize
-                     properties:(NSArray<AMQBasicValue> *)properties {
+                     properties:(NSArray<RMQBasicValue> *)properties {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
-- (instancetype)initWithParser:(AMQParser *)parser {
+- (instancetype)initWithParser:(RMQParser *)parser {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
@@ -441,12 +441,12 @@
 
 @end
 
-@interface AMQContentBody ()
+@interface RMQContentBody ()
 @property (nonatomic, readwrite) NSData *data;
 @property (nonatomic, readwrite) NSUInteger length;
 @end
 
-@implementation AMQContentBody
+@implementation RMQContentBody
 
 - (instancetype)initWithData:(NSData *)data {
     self = [super init];
@@ -457,7 +457,7 @@
     return self;
 }
 
-- (instancetype)initWithParser:(AMQParser *)parser payloadSize:(UInt32)payloadSize {
+- (instancetype)initWithParser:(RMQParser *)parser payloadSize:(UInt32)payloadSize {
     return [self initWithData:[parser parseLength:payloadSize]];
 }
 

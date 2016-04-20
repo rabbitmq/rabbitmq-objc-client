@@ -1,13 +1,13 @@
 #import "RMQQueue.h"
-#import "AMQMethods.h"
+#import "RMQMethods.h"
 #import "RMQConnection.h"
-#import "AMQBasicProperties.h"
-#import "AMQConstants.h"
+#import "RMQBasicProperties.h"
+#import "RMQConstants.h"
 #import "RMQChannel.h"
 
 @interface RMQQueue ()
 @property (nonatomic, copy, readwrite) NSString *name;
-@property (nonatomic, readwrite) AMQQueueDeclareOptions options;
+@property (nonatomic, readwrite) RMQQueueDeclareOptions options;
 @property (nonatomic, readwrite) id <RMQChannel> channel;
 @property (weak, nonatomic, readwrite) id <RMQSender> sender;
 @end
@@ -15,7 +15,7 @@
 @implementation RMQQueue
 
 - (instancetype)initWithName:(NSString *)name
-                     options:(AMQQueueDeclareOptions)options
+                     options:(RMQQueueDeclareOptions)options
                      channel:(id<RMQChannel>)channel
                       sender:(id<RMQSender>)sender {
    self = [super init];
@@ -31,7 +31,7 @@
 - (instancetype)initWithName:(NSString *)name
                      channel:(id<RMQChannel>)channel
                       sender:(id<RMQSender>)sender {
-    return [self initWithName:name options:AMQQueueDeclareNoOptions channel:channel sender:sender];
+    return [self initWithName:name options:RMQQueueDeclareNoOptions channel:channel sender:sender];
 }
 
 - (RMQQueue *)publish:(NSString *)message {
@@ -41,11 +41,11 @@
 
 - (void)pop:(void (^)(id<RMQMessage> _Nonnull))handler {
     [self.channel basicGet:self.name
-                   options:AMQBasicGetNoOptions
+                   options:RMQBasicGetNoOptions
          completionHandler:handler];
 }
 
-- (void)subscribe:(AMQBasicConsumeOptions)options
+- (void)subscribe:(RMQBasicConsumeOptions)options
           handler:(void (^)(id<RMQMessage> _Nonnull))handler {
     [self.channel basicConsume:self.name
                        options:options
@@ -53,7 +53,7 @@
 }
 
 - (void)subscribe:(void (^)(id<RMQMessage> _Nonnull))handler {
-    return [self subscribe:AMQBasicConsumeNoAck
+    return [self subscribe:RMQBasicConsumeNoAck
                    handler:handler];
 }
 

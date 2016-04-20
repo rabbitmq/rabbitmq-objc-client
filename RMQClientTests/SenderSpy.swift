@@ -1,18 +1,18 @@
 @objc class SenderSpy : NSObject, RMQSender {
-    var sentFramesets: [AMQFrameset] = []
-    var lastSentMethod: AMQMethod?
+    var sentFramesets: [RMQFrameset] = []
+    var lastSentMethod: RMQMethod?
     var frameMax: NSNumber
 
     init(frameMax aFrameMax: Int = 131072) {
         frameMax = aFrameMax
     }
 
-    func sendFrameset(frameset: AMQFrameset) {
+    func sendFrameset(frameset: RMQFrameset) {
         lastSentMethod = frameset.method
         sentFramesets.append(frameset)
     }
 
-    func sendMethod(amqMethod: AMQMethod, channelNumber: NSNumber) {
+    func sendMethod(amqMethod: RMQMethod, channelNumber: NSNumber) {
         lastSentMethod = amqMethod
     }
 

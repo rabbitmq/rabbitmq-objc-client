@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface AMQParser : NSObject
+@interface RMQParser : NSObject
 
 - (nonnull instancetype)initWithData:(nonnull NSData *)data;
 

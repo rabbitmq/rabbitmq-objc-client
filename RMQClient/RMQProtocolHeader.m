@@ -1,7 +1,7 @@
-#import "AMQProtocolHeader.h"
-#import "AMQMethods.h"
+#import "RMQProtocolHeader.h"
+#import "RMQMethods.h"
 
-@implementation AMQProtocolHeader
+@implementation RMQProtocolHeader
 
 - (NSData *)amqEncoded {
     char *buffer;
@@ -10,7 +10,7 @@
 }
 
 - (Class)expectedResponseClass {
-    return [AMQConnectionStart class];
+    return [RMQConnectionStart class];
 }
 
 @end

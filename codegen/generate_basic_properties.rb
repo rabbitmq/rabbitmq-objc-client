@@ -14,14 +14,14 @@ class GenerateBasicProperties
   def header
     <<-OBJC
 #{do_not_edit}
-#import "AMQValues.h"
+#import "RMQValues.h"
 
-@protocol AMQBasicValue <NSObject, AMQEncodable>
+@protocol RMQBasicValue <NSObject, RMQEncodable>
 + (NSUInteger)flagBit;
 - (NSUInteger)flagBit;
 @end
 
-@interface AMQBasicProperties : NSObject
+@interface RMQBasicProperties : NSObject
 + (NSArray *)properties;
 @end
 
@@ -31,9 +31,9 @@ class GenerateBasicProperties
   def implementation(fields)
     <<-OBJC
 #{implementation_start}
-#import "AMQBasicProperties.h"
+#import "RMQBasicProperties.h"
 
-@implementation AMQBasicProperties
+@implementation RMQBasicProperties
 + (NSArray *)properties {
     return @[#{fields.map {|f| "[#{basic_field_class(f)} class]"}.join(",\n             ")}];
 }
@@ -43,7 +43,7 @@ class GenerateBasicProperties
   end
 
   def basic_field_class(field)
-    "AMQBasic#{field[:name].underscore.camelize}"
+    "RMQBasic#{field[:name].underscore.camelize}"
   end
 
   def generate_header

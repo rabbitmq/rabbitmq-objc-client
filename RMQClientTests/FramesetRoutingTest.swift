@@ -5,11 +5,11 @@ class FramesetRoutingTest: XCTestCase {
     func testConsumerTriggeredWhenCorrectChannelAllocated() {
         let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
 
-        let consumeOkFrameset = AMQFrameset(
+        let consumeOkFrameset = RMQFrameset(
             channelNumber: 1,
-            method: AMQBasicConsumeOk(consumerTag: AMQShortstr("atag4u"))
+            method: RMQBasicConsumeOk(consumerTag: RMQShortstr("atag4u"))
         )
-        let deliverFrameset = AMQFrameset(
+        let deliverFrameset = RMQFrameset(
             channelNumber: 1,
             method: MethodFixtures.basicDeliver(consumerTag: "atag4u", deliveryTag: 1)
         )

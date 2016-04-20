@@ -15,7 +15,7 @@ class GenerateMethods
   def generate_header
     xml.xpath("//method").reduce(header) { |acc, method|
       class_name = objc_class_name(method)
-      protocols = ["AMQMethod"]
+      protocols = ["RMQMethod"]
       bits, fields, max_bit_length = bits_and_fields(method)
       constructor = constructor(fields)
       acc + template('methods_header_template').result(binding)
@@ -32,7 +32,7 @@ class GenerateMethods
       class_part = method.xpath('..').first[:name].capitalize
       has_content_value = objc_boolean(method[:content] == "1")
       should_halt_on_receipt_value =
-        objc_boolean(%w(AMQConnectionClose AMQConnectionCloseOk).include?(class_name))
+        objc_boolean(%w(RMQConnectionClose RMQConnectionCloseOk).include?(class_name))
       acc + template('methods_implementation_template').result(binding)
     }
   end
@@ -55,7 +55,7 @@ class GenerateMethods
     <<-OBJC
 #{header_start}
 @import Mantle;
-#import "AMQValues.h"
+#import "RMQValues.h"
 
       OBJC
   end
@@ -63,14 +63,14 @@ class GenerateMethods
   def implementation
     <<-OBJC
 #{implementation_start}
-#import "AMQMethods.h"
+#import "RMQMethods.h"
 
     OBJC
   end
 
   def bits_and_fields(method)
     original_fields = camelized_fields(method.xpath('field'))
-    bits = original_fields.select {|f| f[:type] == "AMQBit"}
+    bits = original_fields.select {|f| f[:type] == "RMQBit"}
     type = objc_class_name(method) + "Options"
     bit_name_lengths = ["nooptions".length] + bits.map {|b| b[:name].length}
     max_bit_length = bit_name_lengths.max
@@ -83,14 +83,14 @@ class GenerateMethods
 
   def collapse_bits_into_options(fields, type)
     fields.slice_when(&method(:bit_transitioning)).reduce([]) {|acc, field_group|
-      if field_group.first[:type] == "AMQBit"
+      if field_group.first[:type] == "RMQBit"
         acc + [{
           base_property_options: %w(nonatomic),
-          decode_object: "[AMQOctet class]",
-          decode_type: "AMQOctet *",
+          decode_object: "[RMQOctet class]",
+          decode_type: "RMQOctet *",
           decode_property_call: ".integerValue",
           name: "options",
-          payload_argument: "[[AMQOctet alloc] init:self.options]",
+          payload_argument: "[[RMQOctet alloc] init:self.options]",
           pointer_type: type + " ",
           type: type,
         }]
@@ -101,6 +101,6 @@ class GenerateMethods
   end
 
   def bit_transitioning(before, after)
-    before[:type] != after[:type] && [before[:type], after[:type]].include?('AMQBit')
+    before[:type] != after[:type] && [before[:type], after[:type]].include?('RMQBit')
   end
 end

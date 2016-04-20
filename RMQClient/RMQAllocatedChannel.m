@@ -1,9 +1,9 @@
-#import "AMQBasicProperties.h"
-#import "AMQConstants.h"
-#import "AMQFrame.h"
-#import "AMQMethodDecoder.h"
-#import "AMQMethodMap.h"
-#import "AMQMethods.h"
+#import "RMQBasicProperties.h"
+#import "RMQConstants.h"
+#import "RMQFrame.h"
+#import "RMQMethodDecoder.h"
+#import "RMQMethodMap.h"
+#import "RMQMethods.h"
 #import "RMQAllocatedChannel.h"
 #import "RMQConnectionDelegate.h"
 
@@ -67,13 +67,13 @@ typedef void (^Consumer)(id<RMQMessage>);
 }
 
 - (void)open {
-    AMQChannelOpen *outgoingMethod = [[AMQChannelOpen alloc] initWithReserved1:[[AMQShortstr alloc] init:@""]];
-    AMQFrameset *outgoingFrameset = [[AMQFrameset alloc] initWithChannelNumber:self.channelNumber method:outgoingMethod];
+    RMQChannelOpen *outgoingMethod = [[RMQChannelOpen alloc] initWithReserved1:[[RMQShortstr alloc] init:@""]];
+    RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:outgoingMethod];
 
     dispatch_async(self.queue, ^{
         [self.sender sendFrameset:outgoingFrameset];
 
-        RMQFramesetWaitResult *result = [self.waiter waitOn:[AMQChannelOpenOk class]];
+        RMQFramesetWaitResult *result = [self.waiter waitOn:[RMQChannelOpenOk class]];
         if (result.error) {
             [self.delegate connection:(RMQConnection *)self.sender failedToOpenChannel:self error:result.error];
         }
@@ -81,15 +81,15 @@ typedef void (^Consumer)(id<RMQMessage>);
 }
 
 - (void)blockingClose {
-    AMQChannelClose *close = [[AMQChannelClose alloc] initWithReplyCode:[[AMQShort alloc] init:200]
-                                                              replyText:[[AMQShortstr alloc] init:@"Goodbye"]
-                                                                classId:[[AMQShort alloc] init:0]
-                                                               methodId:[[AMQShort alloc] init:0]];
-    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:self.channelNumber method:close];
+    RMQChannelClose *close = [[RMQChannelClose alloc] initWithReplyCode:[[RMQShort alloc] init:200]
+                                                              replyText:[[RMQShortstr alloc] init:@"Goodbye"]
+                                                                classId:[[RMQShort alloc] init:0]
+                                                               methodId:[[RMQShort alloc] init:0]];
+    RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:close];
     dispatch_sync(self.queue, ^{
         [self.sender sendFrameset:frameset];
 
-        RMQFramesetWaitResult *result = [self.waiter waitOn:[AMQChannelCloseOk class]];
+        RMQFramesetWaitResult *result = [self.waiter waitOn:[RMQChannelCloseOk class]];
         if (result.error) {
             [self.delegate channel:self error:result.error];
         }
@@ -97,16 +97,16 @@ typedef void (^Consumer)(id<RMQMessage>);
 }
 
 - (RMQQueue *)queue:(NSString *)queueName
-            options:(AMQQueueDeclareOptions)options {
+            options:(RMQQueueDeclareOptions)options {
     RMQQueue *found = self.queues[queueName];
     if (found) {
         return found;
     } else {
-        AMQShort *ticket                     = [[AMQShort alloc] init:0];
-        AMQShortstr *amqQueueName            = [[AMQShortstr alloc] init:queueName];
-        AMQTable *arguments                  = [[AMQTable alloc] init:@{}];
-        AMQQueueDeclareOptions mergedOptions = options | AMQQueueDeclareNoWait;
-        AMQQueueDeclare *method              = [[AMQQueueDeclare alloc] initWithReserved1:ticket
+        RMQShort *ticket                     = [[RMQShort alloc] init:0];
+        RMQShortstr *amqQueueName            = [[RMQShortstr alloc] init:queueName];
+        RMQTable *arguments                  = [[RMQTable alloc] init:@{}];
+        RMQQueueDeclareOptions mergedOptions = options | RMQQueueDeclareNoWait;
+        RMQQueueDeclare *method              = [[RMQQueueDeclare alloc] initWithReserved1:ticket
                                                                                     queue:amqQueueName
                                                                                   options:mergedOptions
                                                                                 arguments:arguments];
@@ -122,20 +122,20 @@ typedef void (^Consumer)(id<RMQMessage>);
 }
 
 - (RMQQueue *)queue:(NSString *)queueName {
-    return [self queue:queueName options:AMQQueueDeclareNoOptions];
+    return [self queue:queueName options:RMQQueueDeclareNoOptions];
 }
 
 - (void)basicConsume:(NSString *)queueName
-             options:(AMQBasicConsumeOptions)options
+             options:(RMQBasicConsumeOptions)options
             consumer:(Consumer)consumer {
-    [self sendAsyncMethod:[[AMQBasicConsume alloc] initWithReserved1:[[AMQShort alloc] init:0]
-                                                               queue:[[AMQShortstr alloc] init:queueName]
-                                                         consumerTag:[[AMQShortstr alloc] init:@""]
+    [self sendAsyncMethod:[[RMQBasicConsume alloc] initWithReserved1:[[RMQShort alloc] init:0]
+                                                               queue:[[RMQShortstr alloc] init:queueName]
+                                                         consumerTag:[[RMQShortstr alloc] init:@""]
                                                              options:options
-                                                           arguments:[[AMQTable alloc] init:@{}]]
-                   waitOn:[AMQBasicConsumeOk class]
+                                                           arguments:[[RMQTable alloc] init:@{}]]
+                   waitOn:[RMQBasicConsumeOk class]
         completionHandler:^(RMQFramesetWaitResult *result) {
-            AMQBasicConsumeOk *consumeOk = (AMQBasicConsumeOk *)result.frameset.method;
+            RMQBasicConsumeOk *consumeOk = (RMQBasicConsumeOk *)result.frameset.method;
             self.consumers[consumeOk.consumerTag] = consumer;
         }];
 }
@@ -143,25 +143,25 @@ typedef void (^Consumer)(id<RMQMessage>);
 - (void)basicPublish:(NSString *)message
           routingKey:(NSString *)routingKey
             exchange:(NSString *)exchange {
-    AMQBasicPublish *publish = [[AMQBasicPublish alloc] initWithReserved1:[[AMQShort alloc] init:0]
-                                                                 exchange:[[AMQShortstr alloc] init:exchange]
-                                                               routingKey:[[AMQShortstr alloc] init:routingKey]
-                                                                  options:AMQBasicPublishNoOptions];
+    RMQBasicPublish *publish = [[RMQBasicPublish alloc] initWithReserved1:[[RMQShort alloc] init:0]
+                                                                 exchange:[[RMQShortstr alloc] init:exchange]
+                                                               routingKey:[[RMQShortstr alloc] init:routingKey]
+                                                                  options:RMQBasicPublishNoOptions];
     NSData *contentBodyData = [message dataUsingEncoding:NSUTF8StringEncoding];
-    AMQContentBody *contentBody = [[AMQContentBody alloc] initWithData:contentBodyData];
+    RMQContentBody *contentBody = [[RMQContentBody alloc] initWithData:contentBodyData];
 
-    AMQBasicDeliveryMode *persistent = [[AMQBasicDeliveryMode alloc] init:2];
-    AMQBasicContentType *octetStream = [[AMQBasicContentType alloc] init:@"application/octet-stream"];
-    AMQBasicPriority *lowPriority = [[AMQBasicPriority alloc] init:0];
+    RMQBasicDeliveryMode *persistent = [[RMQBasicDeliveryMode alloc] init:2];
+    RMQBasicContentType *octetStream = [[RMQBasicContentType alloc] init:@"application/octet-stream"];
+    RMQBasicPriority *lowPriority = [[RMQBasicPriority alloc] init:0];
 
     NSData *bodyData = contentBody.amqEncoded;
-    AMQContentHeader *contentHeader = [[AMQContentHeader alloc] initWithClassID:publish.classID
+    RMQContentHeader *contentHeader = [[RMQContentHeader alloc] initWithClassID:publish.classID
                                                                        bodySize:@(bodyData.length)
                                                                      properties:@[persistent, octetStream, lowPriority]];
 
     NSArray *contentBodies = [self contentBodiesFromData:bodyData
-                                              inChunksOf:self.sender.frameMax.integerValue - AMQEmptyFrameSize];
-    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:self.channelNumber
+                                              inChunksOf:self.sender.frameMax.integerValue - RMQEmptyFrameSize];
+    RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber
                                                                 method:publish
                                                          contentHeader:contentHeader
                                                          contentBodies:contentBodies];
@@ -172,15 +172,15 @@ typedef void (^Consumer)(id<RMQMessage>);
 }
 
 -  (void)basicGet:(NSString *)queue
-          options:(AMQBasicGetOptions)options
+          options:(RMQBasicGetOptions)options
 completionHandler:(void (^)(id<RMQMessage> _Nonnull))userCompletionHandler {
-    [self sendAsyncMethod:[[AMQBasicGet alloc] initWithReserved1:[[AMQShort alloc] init:0]
-                                                           queue:[[AMQShortstr alloc] init:queue]
+    [self sendAsyncMethod:[[RMQBasicGet alloc] initWithReserved1:[[RMQShort alloc] init:0]
+                                                           queue:[[RMQShortstr alloc] init:queue]
                                                          options:options]
-                   waitOn:[AMQBasicGetOk class]
+                   waitOn:[RMQBasicGetOk class]
         completionHandler:^(RMQFramesetWaitResult *result) {
-            AMQFrameset *getOkFrameset = result.frameset;
-            AMQBasicGetOk *getOk = (AMQBasicGetOk *)getOkFrameset.method;
+            RMQFrameset *getOkFrameset = result.frameset;
+            RMQBasicGetOk *getOk = (RMQBasicGetOk *)getOkFrameset.method;
             NSString *messageContent = [[NSString alloc] initWithData:getOkFrameset.contentData
                                                              encoding:NSUTF8StringEncoding];
             RMQContentMessage *message = [[RMQContentMessage alloc] initWithConsumerTag:@""
@@ -192,52 +192,52 @@ completionHandler:(void (^)(id<RMQMessage> _Nonnull))userCompletionHandler {
 
 - (void)basicQos:(NSNumber *)count
           global:(BOOL)isGlobal {
-    AMQBasicQosOptions options = AMQBasicQosNoOptions;
-    if (isGlobal) options     |= AMQBasicQosGlobal;
+    RMQBasicQosOptions options = RMQBasicQosNoOptions;
+    if (isGlobal) options     |= RMQBasicQosGlobal;
 
-    [self sendAsyncMethod:[[AMQBasicQos alloc] initWithPrefetchSize:[[AMQLong alloc] init:0]
-                                                      prefetchCount:[[AMQShort alloc] init:count.integerValue]
+    [self sendAsyncMethod:[[RMQBasicQos alloc] initWithPrefetchSize:[[RMQLong alloc] init:0]
+                                                      prefetchCount:[[RMQShort alloc] init:count.integerValue]
                                                             options:options]
-                   waitOn:[AMQBasicQosOk class]
+                   waitOn:[RMQBasicQosOk class]
         completionHandler:^(RMQFramesetWaitResult *result) {}];
 }
 
 - (void)ack:(NSNumber *)deliveryTag
-    options:(AMQBasicAckOptions)options {
-    [self sendAsyncMethod:[[AMQBasicAck alloc] initWithDeliveryTag:[[AMQLonglong alloc] init:deliveryTag.integerValue]
+    options:(RMQBasicAckOptions)options {
+    [self sendAsyncMethod:[[RMQBasicAck alloc] initWithDeliveryTag:[[RMQLonglong alloc] init:deliveryTag.integerValue]
                                                            options:options]];
 }
 
 - (void)ack:(NSNumber *)deliveryTag {
-    [self ack:deliveryTag options:AMQBasicAckNoOptions];
+    [self ack:deliveryTag options:RMQBasicAckNoOptions];
 }
 
 - (void)reject:(NSNumber *)deliveryTag
-       options:(AMQBasicRejectOptions)options {
-    [self sendAsyncMethod:[[AMQBasicReject alloc] initWithDeliveryTag:[[AMQLonglong alloc] init:deliveryTag.integerValue]
+       options:(RMQBasicRejectOptions)options {
+    [self sendAsyncMethod:[[RMQBasicReject alloc] initWithDeliveryTag:[[RMQLonglong alloc] init:deliveryTag.integerValue]
                                                               options:options]];
 }
 
 - (void)reject:(NSNumber *)deliveryTag {
-    [self reject:deliveryTag options:AMQBasicRejectNoOptions];
+    [self reject:deliveryTag options:RMQBasicRejectNoOptions];
 }
 
 - (void)nack:(NSNumber *)deliveryTag
-     options:(AMQBasicNackOptions)options {
-    [self sendAsyncMethod:[[AMQBasicNack alloc] initWithDeliveryTag:[[AMQLonglong alloc] init:deliveryTag.integerValue]
+     options:(RMQBasicNackOptions)options {
+    [self sendAsyncMethod:[[RMQBasicNack alloc] initWithDeliveryTag:[[RMQLonglong alloc] init:deliveryTag.integerValue]
                                                             options:options]];
 }
 
 - (void)nack:(NSNumber *)deliveryTag {
-    [self nack:deliveryTag options:AMQBasicNackNoOptions];
+    [self nack:deliveryTag options:RMQBasicNackNoOptions];
 }
 
 # pragma mark - RMQFrameHandler
 
-- (void)handleFrameset:(AMQFrameset *)frameset {
-    if ([frameset.method isKindOfClass:[AMQBasicDeliver class]]) {
+- (void)handleFrameset:(RMQFrameset *)frameset {
+    if ([frameset.method isKindOfClass:[RMQBasicDeliver class]]) {
         dispatch_async(self.queue, ^{
-            AMQBasicDeliver *deliver = (AMQBasicDeliver *)frameset.method;
+            RMQBasicDeliver *deliver = (RMQBasicDeliver *)frameset.method;
             NSString *content = [[NSString alloc] initWithData:frameset.contentData encoding:NSUTF8StringEncoding];
             Consumer consumer = self.consumers[deliver.consumerTag];
             if (consumer) {
@@ -254,18 +254,18 @@ completionHandler:(void (^)(id<RMQMessage> _Nonnull))userCompletionHandler {
 
 # pragma mark - Private
 
-- (void)sendAsyncMethod:(id<AMQMethod>)method {
-    AMQFrameset *frameset = [[AMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
+- (void)sendAsyncMethod:(id<RMQMethod>)method {
+    RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
 
     dispatch_async(self.queue, ^{
         [self.sender sendFrameset:frameset];
     });
 }
 
-- (void)sendAsyncMethod:(id<AMQMethod>)method
+- (void)sendAsyncMethod:(id<RMQMethod>)method
                  waitOn:(Class)waitClass
       completionHandler:(void (^)(RMQFramesetWaitResult *result))completionHandler {
-    AMQFrameset *outgoingFrameset = [[AMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
+    RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
     dispatch_async(self.queue, ^{
         [self.sender sendFrameset:outgoingFrameset];
 
@@ -284,13 +284,13 @@ completionHandler:(void (^)(id<RMQMessage> _Nonnull))userCompletionHandler {
     for (int i = 0; i < chunkCount; i++) {
         NSUInteger offset = i * chunkSize;
         NSData *subData = [data subdataWithRange:NSMakeRange(offset, chunkSize)];
-        AMQContentBody *body = [[AMQContentBody alloc] initWithData:subData];
+        RMQContentBody *body = [[RMQContentBody alloc] initWithData:subData];
         [bodies addObject:body];
     }
     NSUInteger lastChunkSize = data.length % chunkSize;
     if (lastChunkSize > 0) {
         NSData *lastData = [data subdataWithRange:NSMakeRange(data.length - lastChunkSize, lastChunkSize)];
-        [bodies addObject:[[AMQContentBody alloc] initWithData:lastData]];
+        [bodies addObject:[[RMQContentBody alloc] initWithData:lastData]];
     }
     return bodies;
 }
