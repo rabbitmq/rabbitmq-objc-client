@@ -61,4 +61,8 @@
 }
 - (void)reject:(NSNumber *)deliveryTag {
 }
+- (void)nack:(NSNumber *)deliveryTag options:(AMQBasicNackOptions)options {
+}
+- (void)nack:(NSNumber *)deliveryTag {
+}
 @end

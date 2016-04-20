@@ -107,4 +107,10 @@ enum ChannelSpyError: ErrorType {
 
     func reject(deliveryTag: NSNumber) {
     }
+
+    func nack(deliveryTag: NSNumber, options: AMQBasicNackOptions) {
+    }
+
+    func nack(deliveryTag: NSNumber) {
+    }
 }

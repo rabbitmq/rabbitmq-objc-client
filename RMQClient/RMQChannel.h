@@ -45,4 +45,9 @@ completionHandler:(void (^ _Nonnull)(id<RMQMessage> _Nonnull message))completion
 
 - (void)reject:(nonnull NSNumber *)deliveryTag;
 
+- (void)nack:(nonnull NSNumber *)deliveryTag
+     options:(AMQBasicNackOptions)options;
+
+- (void)nack:(nonnull NSNumber *)deliveryTag;
+
 @end

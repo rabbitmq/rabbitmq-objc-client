@@ -470,4 +470,22 @@ class RMQAllocatedChannelTest: XCTestCase {
         XCTAssertEqual(expected, actual)
     }
 
+    func testNackSendsABasicNack() {
+        let sender = SenderSpy()
+        let q = QueueHelper()
+        let channel = RMQAllocatedChannel(999, sender: sender, waiter: waiter!, queue: q.dispatchQueue)
+        channel.activateWithDelegate(nil)
+        q.suspend()
+
+        channel.nack(123, options: [.Multiple, .Requeue])
+
+        XCTAssertEqual(0, sender.sentFramesets.count)
+
+        q.finish()
+
+        let expected = AMQBasicNack(deliveryTag: AMQLonglong(123), options: [.Multiple, .Requeue])
+        let actual: AMQBasicNack = sender.lastSentMethod as! AMQBasicNack
+        XCTAssertEqual(expected, actual)
+    }
+    
 }
