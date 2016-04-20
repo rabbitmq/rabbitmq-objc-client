@@ -82,6 +82,7 @@ class TestHelper {
 
     static func handshakeAsync(transport: ControlledInteractionTransport, q: QueueHelper) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            while transport.outboundData.isEmpty { usleep(10) }
             transport.handshake()
         }
         q.finish()
