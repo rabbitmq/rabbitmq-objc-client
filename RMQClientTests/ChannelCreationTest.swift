@@ -35,6 +35,9 @@ class ChannelCreationTest: XCTestCase {
         TestHelper.handshakeAsync(transport!, q: q!)
 
         conn?.createChannel()
+
+        q?.finish()
+
         let actualDelegate: ConnectionDelegateSpy = allocator!.channels.last!.delegateSentToActivate! as! ConnectionDelegateSpy
         XCTAssertEqual(delegate!, actualDelegate)
     }

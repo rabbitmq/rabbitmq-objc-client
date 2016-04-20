@@ -149,9 +149,6 @@
                                                                        config:self.config
                                                             completionHandler:^{
                                                                 dispatch_semaphore_signal(semaphore);
-                                                                for (id<RMQChannel> ch in self.channels.allValues) {
-                                                                    [ch activateWithDelegate:self.delegate];
-                                                                }
                                                                 self.handshakeComplete = YES;
                                                                 if (self.closing) {
                                                                     self.closing = NO;
@@ -188,9 +185,9 @@
     id<RMQChannel> ch = self.channelAllocator.allocate;
     self.channels[ch.channelNumber] = ch;
 
-    if (self.handshakeComplete) {
+    dispatch_async(self.networkQueue, ^{
         [ch activateWithDelegate:self.delegate];
-    }
+    });
 
     [ch open];
 
