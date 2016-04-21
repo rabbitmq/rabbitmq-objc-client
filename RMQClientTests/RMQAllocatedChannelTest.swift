@@ -201,10 +201,11 @@ class RMQAllocatedChannelTest: XCTestCase {
         channel.activateWithDelegate(nil)
 
         var consumedMessage: RMQContentMessage?
+
+        waiter?.fulfill(consumeOkFrameset)
         channel.basicConsume("somequeue", options: []) { message in
             consumedMessage = message as? RMQContentMessage
         }
-        channel.handleFrameset(consumeOkFrameset)
         q.suspend().finish()
 
         XCTAssertNil(consumedMessage)
