@@ -20,13 +20,11 @@ class RMQConnectionTest: XCTestCase {
             channelAllocator: allocator,
             frameHandler: allocator,
             delegate: delegate,
-            delegateQueue: queueHelper.dispatchQueue,
+            delegateQueue: dispatch_get_main_queue(),
             networkQueue: queueHelper.dispatchQueue
         )
-        conn.start()
-
         XCTAssertNil(delegate.lastConnectionError)
-        queueHelper.finish()
+        conn.start()
         XCTAssertEqual("bad connection", delegate.lastConnectionError!.localizedDescription)
     }
 
@@ -47,7 +45,7 @@ class RMQConnectionTest: XCTestCase {
             channelAllocator: allocator,
             frameHandler: allocator,
             delegate: delegate,
-            delegateQueue: q.dispatchQueue,
+            delegateQueue: dispatch_get_main_queue(),
             networkQueue: q.dispatchQueue
         )
         conn.start()
@@ -61,7 +59,7 @@ class RMQConnectionTest: XCTestCase {
         let q = QueueHelper()
         let delegate = ConnectionDelegateSpy()
         TestHelper.startedConnection(transport,
-                                     delegateQueue: q.dispatchQueue,
+                                     delegateQueue: dispatch_get_main_queue(),
                                      networkQueue: q.dispatchQueue,
                                      delegate: delegate)
         transport.stubbedToProduceErrorOnWrite = "fail please"
@@ -141,7 +139,7 @@ class RMQConnectionTest: XCTestCase {
             channelAllocator: ChannelSpyAllocator(),
             frameHandler: FrameHandlerSpy(),
             delegate: ConnectionDelegateSpy(),
-            delegateQueue: q.dispatchQueue,
+            delegateQueue: dispatch_get_main_queue(),
             networkQueue: q.dispatchQueue
         )
         conn.start()
@@ -172,7 +170,7 @@ class RMQConnectionTest: XCTestCase {
             channelAllocator: allocator,
             frameHandler: FrameHandlerSpy(),
             delegate: ConnectionDelegateSpy(),
-            delegateQueue: q.dispatchQueue,
+            delegateQueue: dispatch_get_main_queue(),
             networkQueue: q.dispatchQueue
         )
         conn.start()

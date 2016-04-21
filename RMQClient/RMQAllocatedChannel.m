@@ -16,7 +16,7 @@ typedef void (^Consumer)(id<RMQMessage>);
 @property (nonatomic, readwrite) NSMutableDictionary *queues;
 @property (nonatomic, readwrite) NSNumber *prefetchCount;
 @property (nonatomic, readwrite) BOOL prefetchGlobal;
-@property (nonatomic, readwrite) dispatch_queue_t queue;
+@property (nonatomic, readwrite) id<RMQLocalSerialQueue> queue;
 @property (nonatomic, readwrite) BOOL active;
 @property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) id<RMQFramesetWaiter> waiter;
@@ -27,7 +27,7 @@ typedef void (^Consumer)(id<RMQMessage>);
 - (instancetype)init:(NSNumber *)channelNumber
               sender:(id<RMQSender>)sender
               waiter:(id<RMQFramesetWaiter>)waiter
-               queue:(dispatch_queue_t)queue {
+               queue:(id<RMQLocalSerialQueue>)queue {
     self = [super init];
     if (self) {
         self.queue = queue;
@@ -52,7 +52,7 @@ typedef void (^Consumer)(id<RMQMessage>);
 
 - (void)dealloc {
     if (!self.active) {
-        dispatch_resume(self.queue);
+        [self.queue resume];
     }
 }
 
@@ -62,7 +62,7 @@ typedef void (^Consumer)(id<RMQMessage>);
 
 - (void)activateWithDelegate:(id<RMQConnectionDelegate>)delegate {
     self.delegate = delegate;
-    dispatch_resume(self.queue);
+    [self.queue resume];
     self.active = YES;
 }
 
@@ -70,14 +70,14 @@ typedef void (^Consumer)(id<RMQMessage>);
     RMQChannelOpen *outgoingMethod = [[RMQChannelOpen alloc] initWithReserved1:[[RMQShortstr alloc] init:@""]];
     RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:outgoingMethod];
 
-    dispatch_async(self.queue, ^{
+    [self.queue enqueue:^{
         [self.sender sendFrameset:outgoingFrameset];
 
         RMQFramesetWaitResult *result = [self.waiter waitOn:[RMQChannelOpenOk class]];
         if (result.error) {
             [self.delegate connection:(RMQConnection *)self.sender failedToOpenChannel:self error:result.error];
         }
-    });
+    }];
 }
 
 - (void)blockingClose {
@@ -86,14 +86,16 @@ typedef void (^Consumer)(id<RMQMessage>);
                                                                 classId:[[RMQShort alloc] init:0]
                                                                methodId:[[RMQShort alloc] init:0]];
     RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:close];
-    dispatch_sync(self.queue, ^{
+
+    [self.queue blockingEnqueue:^{
         [self.sender sendFrameset:frameset];
 
         RMQFramesetWaitResult *result = [self.waiter waitOn:[RMQChannelCloseOk class]];
         if (result.error) {
             [self.delegate channel:self error:result.error];
         }
-    });
+    }];
+
 }
 
 - (RMQQueue *)queue:(NSString *)queueName
@@ -166,9 +168,9 @@ typedef void (^Consumer)(id<RMQMessage>);
                                                          contentHeader:contentHeader
                                                          contentBodies:contentBodies];
 
-    dispatch_async(self.queue, ^{
+    [self.queue enqueue:^{
         [self.sender sendFrameset:frameset];
-    });
+    }];
 }
 
 -  (void)basicGet:(NSString *)queue
@@ -236,7 +238,7 @@ completionHandler:(void (^)(id<RMQMessage> _Nonnull))userCompletionHandler {
 
 - (void)handleFrameset:(RMQFrameset *)frameset {
     if ([frameset.method isKindOfClass:[RMQBasicDeliver class]]) {
-        dispatch_async(self.queue, ^{
+        [self.queue enqueue:^{
             RMQBasicDeliver *deliver = (RMQBasicDeliver *)frameset.method;
             NSString *content = [[NSString alloc] initWithData:frameset.contentData encoding:NSUTF8StringEncoding];
             Consumer consumer = self.consumers[deliver.consumerTag];
@@ -246,7 +248,7 @@ completionHandler:(void (^)(id<RMQMessage> _Nonnull))userCompletionHandler {
                                                                                     content:content];
                 consumer(message);
             }
-        });
+        }];
     } else {
         [self.waiter fulfill:frameset];
     }
@@ -257,16 +259,16 @@ completionHandler:(void (^)(id<RMQMessage> _Nonnull))userCompletionHandler {
 - (void)sendAsyncMethod:(id<RMQMethod>)method {
     RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
 
-    dispatch_async(self.queue, ^{
+    [self.queue enqueue:^{
         [self.sender sendFrameset:frameset];
-    });
+    }];
 }
 
 - (void)sendAsyncMethod:(id<RMQMethod>)method
                  waitOn:(Class)waitClass
       completionHandler:(void (^)(RMQFramesetWaitResult *result))completionHandler {
     RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
-    dispatch_async(self.queue, ^{
+    [self.queue enqueue:^{
         [self.sender sendFrameset:outgoingFrameset];
 
         RMQFramesetWaitResult *result = [self.waiter waitOn:waitClass];
@@ -275,7 +277,7 @@ completionHandler:(void (^)(id<RMQMessage> _Nonnull))userCompletionHandler {
         } else {
             completionHandler(result);
         }
-    });
+    }];
 }
 
 - (NSArray *)contentBodiesFromData:(NSData *)data inChunksOf:(NSUInteger)chunkSize {

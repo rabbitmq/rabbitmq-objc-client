@@ -26,7 +26,7 @@ class ChannelCreationTest: XCTestCase {
                              channelAllocator: allocator!,
                              frameHandler: frameHandler,
                              delegate: delegate!,
-                             delegateQueue: q!.dispatchQueue,
+                             delegateQueue: dispatch_get_main_queue(),
                              networkQueue: q!.dispatchQueue)
     }
 

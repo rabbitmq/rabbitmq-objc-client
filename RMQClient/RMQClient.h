@@ -18,6 +18,7 @@
 #import <RMQClient/RMQSynchronizedMutableDictionary.h>
 #import <RMQClient/RMQTCPSocketTransport.h>
 #import <RMQClient/RMQUnallocatedChannel.h>
+#import <RMQClient/RMQGCDSerialQueue.h>
 
 //! Project version number for RMQClient.
 FOUNDATION_EXPORT double RMQClientVersionNumber;

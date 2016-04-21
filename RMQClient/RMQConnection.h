@@ -6,6 +6,7 @@
 #import "RMQFrameHandler.h"
 #import "RMQSender.h"
 #import "RMQTransport.h"
+#import "RMQLocalSerialQueue.h"
 
 @interface RMQConnection : NSObject<RMQFrameHandler, RMQSender, RMQTransportDelegate>
 
@@ -23,7 +24,7 @@
                              frameHandler:(nonnull id<RMQFrameHandler>)frameHandler
                                  delegate:(nullable id<RMQConnectionDelegate>)delegate
                             delegateQueue:(nonnull dispatch_queue_t)delegateQueue
-                             networkQueue:(nonnull dispatch_queue_t)networkQueue;
+                             networkQueue:(nonnull id<RMQLocalSerialQueue>)networkQueue;
 
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
                          channelMax:(nonnull NSNumber *)channelMax

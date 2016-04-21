@@ -8,6 +8,7 @@
 #import "RMQMultipleChannelAllocator.h"
 #import "RMQReaderLoop.h"
 #import "RMQTCPSocketTransport.h"
+#import "RMQGCDSerialQueue.h"
 
 @interface RMQConnection ()
 @property (copy, nonatomic, readwrite) NSString *vhost;
@@ -23,7 +24,7 @@
 @property (nonatomic, readwrite) NSNumber *frameMax;
 @property (nonatomic, weak, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) dispatch_queue_t delegateQueue;
-@property (nonatomic, readwrite) dispatch_queue_t networkQueue;
+@property (nonatomic, readwrite) id<RMQLocalSerialQueue> networkQueue;
 @property (nonatomic, readwrite) NSNumber *handshakeTimeout;
 @property (nonatomic, readwrite) BOOL closeRequested;
 @end
@@ -42,7 +43,7 @@
                      frameHandler:(nonnull id<RMQFrameHandler>)frameHandler
                          delegate:(id<RMQConnectionDelegate>)delegate
                     delegateQueue:(dispatch_queue_t)delegateQueue
-                     networkQueue:(nonnull dispatch_queue_t)networkQueue {
+                     networkQueue:(nonnull id<RMQLocalSerialQueue>)networkQueue {
     self = [super init];
     if (self) {
         RMQCredentials *credentials = [[RMQCredentials alloc] initWithUsername:user
@@ -109,7 +110,7 @@
                       frameHandler:allocator
                           delegate:delegate
                      delegateQueue:delegateQueue
-                      networkQueue:dispatch_queue_create("com.rabbitmq.RMQConnectionNetworkQueue", NULL)];
+                      networkQueue:[RMQGCDSerialQueue new]];
 }
 
 - (instancetype)initWithUri:(NSString *)uri
@@ -137,11 +138,11 @@
 
     [self.transport connectAndReturnError:&connectError];
     if (connectError) {
-        [self sendDelegateConnectionError:connectError];
+        [self.delegate connection:self failedToConnectWithError:connectError];
     } else {
         [self.transport write:[RMQProtocolHeader new].amqEncoded];
 
-        dispatch_async(self.networkQueue, ^{
+        [self.networkQueue enqueue:^{
             dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
             RMQHandshaker *handshaker = [[RMQHandshaker alloc] initWithSender:self
@@ -161,33 +162,33 @@
                                                  userInfo:@{NSLocalizedDescriptionKey: @"Handshake timed out."}];
                 [self.delegate connection:self failedToConnectWithError:error];
             }
-        });
+        }];
     }
 }
 
 - (void)close {
     self.closeRequested = YES;
-    dispatch_async(self.networkQueue, ^{
+    [self.networkQueue enqueue:^{
         [self closeAllChannels];
         [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:self.amqClose]];
-    });
+    }];
 }
 
 - (void)blockingClose {
     self.closeRequested = YES;
-    dispatch_sync(self.networkQueue, ^{
+    [self.networkQueue blockingEnqueue:^{
         [self closeAllChannels];
         [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:self.amqClose]];
-    });
+    }];
 }
 
 - (id<RMQChannel>)createChannel {
     id<RMQChannel> ch = self.channelAllocator.allocate;
     self.channels[ch.channelNumber] = ch;
 
-    dispatch_async(self.networkQueue, ^{
+    [self.networkQueue enqueue:^{
         [ch activateWithDelegate:self.delegate];
-    });
+    }];
 
     [ch open];
 
@@ -243,12 +244,6 @@
     for (id<RMQChannel> ch in self.channels.allValues) {
         [ch blockingClose];
     }
-}
-
-- (void)sendDelegateConnectionError:(NSError *)error {
-    dispatch_async(self.delegateQueue, ^{
-        [self.delegate connection:self failedToConnectWithError:error];
-    });
 }
 
 - (void)allocateChannelZero {

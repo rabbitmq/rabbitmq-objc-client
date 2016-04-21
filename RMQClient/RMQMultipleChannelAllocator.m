@@ -3,6 +3,7 @@
 #import "RMQFramesetSemaphoreWaiter.h"
 #import "RMQMultipleChannelAllocator.h"
 #import "RMQUnallocatedChannel.h"
+#import "RMQGCDSerialQueue.h"
 
 @interface RMQMultipleChannelAllocator ()
 @property (atomic, readwrite) UInt16 channelNumber;
@@ -104,9 +105,9 @@
     return self.channelNumber == RMQChannelLimit;
 }
 
-- (dispatch_queue_t)suspendedDispatchQueue:(UInt16)channelNumber {
-    dispatch_queue_t serialQueue = dispatch_queue_create([self queueName:channelNumber], NULL);
-    dispatch_suspend(serialQueue);
+- (RMQGCDSerialQueue *)suspendedDispatchQueue:(UInt16)channelNumber {
+    RMQGCDSerialQueue *serialQueue = [RMQGCDSerialQueue new];
+    [serialQueue suspend];
     return serialQueue;
 }
 

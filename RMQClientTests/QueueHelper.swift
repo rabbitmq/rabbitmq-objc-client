@@ -1,9 +1,9 @@
 class QueueHelper {
-    let dispatchQueue: dispatch_queue_t
+    let dispatchQueue: RMQGCDSerialQueue
 
     init() {
-        dispatchQueue = dispatch_queue_create("QueueHelperSerialQueue", nil)
-        dispatch_suspend(dispatchQueue)
+        dispatchQueue = RMQGCDSerialQueue()
+        dispatchQueue.suspend()
     }
 
     deinit {
@@ -11,18 +11,18 @@ class QueueHelper {
     }
 
     func resume() -> Self {
-        dispatch_resume(dispatchQueue)
+        dispatchQueue.resume()
         return self
     }
 
     func suspend() -> Self {
-        dispatch_suspend(dispatchQueue)
+        dispatchQueue.suspend()
         return self
     }
 
     func finish() -> Self {
         resume()
-        dispatch_sync(dispatchQueue) {}
+        dispatchQueue.blockingEnqueue {}
         suspend()
         return self
     }

@@ -77,7 +77,7 @@ class ConnectionTuningTest: XCTestCase {
             channelAllocator: allocator,
             frameHandler: allocator,
             delegate: nil,
-            delegateQueue: q.dispatchQueue,
+            delegateQueue: dispatch_get_main_queue(),
             networkQueue: q.dispatchQueue
         )
         connection.start()

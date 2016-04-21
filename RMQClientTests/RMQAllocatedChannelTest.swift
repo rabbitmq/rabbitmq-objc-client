@@ -9,7 +9,7 @@ class RMQAllocatedChannelTest: XCTestCase {
 
     func testObeysContract() {
         let sender = SenderSpy()
-        let channel = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, queue: dispatch_get_main_queue())
+        let channel = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, queue: RMQGCDSerialQueue())
         let contract = RMQChannelContract(channel)
 
         contract.check()
@@ -20,7 +20,7 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         let ch = RMQAllocatedChannel(1, sender: SenderSpy(), waiter: waiter!, queue: q.dispatchQueue)
         var called = false
-        dispatch_async(q.dispatchQueue) { called = true }
+        q.dispatchQueue.enqueue { called = true }
 
         XCTAssertFalse(called)
 
