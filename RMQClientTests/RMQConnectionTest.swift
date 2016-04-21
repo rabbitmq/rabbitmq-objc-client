@@ -80,6 +80,24 @@ class RMQConnectionTest: XCTestCase {
         XCTAssertEqual("foo", delegate.lastDisconnectError!.localizedDescription)
     }
 
+    func testTransportDisconnectNotificationsNotTransformedWhenCloseRequested() {
+        let delegate = ConnectionDelegateSpy()
+        let conn = RMQConnection(delegate: delegate)
+        conn.close()
+        conn.transport(nil, disconnectedWithError: nil)
+
+        XCTAssertFalse(delegate.disconnectCalled)
+    }
+
+    func testTransportDisconnectNotificationsTransformedWhenCloseNotRequested() {
+        let delegate = ConnectionDelegateSpy()
+        let conn = RMQConnection(delegate: delegate)
+        conn.transport(nil, disconnectedWithError: nil)
+
+        XCTAssertNil(delegate.lastDisconnectError)
+        XCTAssertTrue(delegate.disconnectCalled)
+    }
+
     func testClientInitiatedClosingAfterHandshake() {
         let (transport, q, conn, _) = TestHelper.connectionAfterHandshake()
 

@@ -3,6 +3,7 @@
     var lastConnectionError: NSError?
     var lastChannelOpenError: NSError?
     var lastWriteError: NSError?
+    var disconnectCalled = false
     var lastDisconnectError: NSError?
 
     func channel(channel: RMQChannel!, error: NSError!) {
@@ -22,6 +23,7 @@
     }
 
     func connection(connection: RMQConnection!, disconnectedWithError error: NSError!) {
+        disconnectCalled = true
         lastDisconnectError = error
     }
 }

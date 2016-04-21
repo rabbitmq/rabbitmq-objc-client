@@ -25,6 +25,7 @@
 @property (nonatomic, readwrite) dispatch_queue_t delegateQueue;
 @property (nonatomic, readwrite) dispatch_queue_t networkQueue;
 @property (nonatomic, readwrite) NSNumber *handshakeTimeout;
+@property (nonatomic, readwrite) BOOL closeRequested;
 @end
 
 @implementation RMQConnection
@@ -78,6 +79,7 @@
         self.delegate = delegate;
         self.delegateQueue = delegateQueue;
         self.networkQueue = networkQueue;
+        self.closeRequested = NO;
 
         [self allocateChannelZero];
     }
@@ -164,6 +166,7 @@
 }
 
 - (void)close {
+    self.closeRequested = YES;
     dispatch_async(self.networkQueue, ^{
         [self closeAllChannels];
         [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:self.amqClose]];
@@ -171,6 +174,7 @@
 }
 
 - (void)blockingClose {
+    self.closeRequested = YES;
     dispatch_sync(self.networkQueue, ^{
         [self closeAllChannels];
         [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:self.amqClose]];
@@ -228,7 +232,9 @@
 }
 
 - (void)transport:(id<RMQTransport>)transport disconnectedWithError:(NSError *)error {
-    [self.delegate connection:self disconnectedWithError:error];
+    if (!self.closeRequested) {
+        [self.delegate connection:self disconnectedWithError:error];
+    }
 }
 
 # pragma mark - Private
