@@ -234,14 +234,9 @@
 # pragma mark - Private
 
 - (void)closeAllChannels {
-    dispatch_group_t group = dispatch_group_create();
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     for (id<RMQChannel> ch in self.channels.allValues) {
-        dispatch_group_async(group, queue, ^{
-            [ch blockingClose];
-        });
+        [ch blockingClose];
     }
-    dispatch_group_wait(group, self.handshakeTimeoutFromNow);
 }
 
 - (void)sendDelegateConnectionError:(NSError *)error {
