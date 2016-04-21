@@ -29,6 +29,10 @@ class TestHelper {
         NSRunLoop.currentRunLoop().runUntilDate(NSDate().dateByAddingTimeInterval(time))
     }
 
+    static func dispatchTimeFromNow(seconds: Double) -> dispatch_time_t {
+        return dispatch_time(DISPATCH_TIME_NOW, Int64(seconds * Double(NSEC_PER_SEC)))
+    }
+
     static func assertEqualBytes(expected: NSData, _ actual: NSData, _ message: String = "") {
         if message == "" {
             XCTAssertEqual(expected, actual, "\n\nBytes not equal:\n\(expected)\n\(actual)")

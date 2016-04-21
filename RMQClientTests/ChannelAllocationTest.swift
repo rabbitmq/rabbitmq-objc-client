@@ -53,8 +53,7 @@ class ChannelAllocationTest: XCTestCase {
             }
         }
 
-        let timeout = dispatch_time(DISPATCH_TIME_NOW, Int64(10 * Double(NSEC_PER_SEC)))
-        XCTAssertEqual(0, dispatch_group_wait(group, timeout), "Timed out waiting for allocations")
+        XCTAssertEqual(0, dispatch_group_wait(group, TestHelper.dispatchTimeFromNow(10)), "Timed out waiting for allocations")
 
         let channelSets                    = [channelSet1, channelSet2, channelSet3]
         let expectedUniqueUnallocatedCount = channelSets.reduce(0, combine: sumUnallocated)
@@ -91,9 +90,7 @@ class ChannelAllocationTest: XCTestCase {
             }
         }
 
-        let timeout = dispatch_time(DISPATCH_TIME_NOW, Int64(10 * Double(NSEC_PER_SEC)))
-        XCTAssertEqual(0, dispatch_group_wait(group, timeout), "Timed out waiting for releases")
-
+        XCTAssertEqual(0, dispatch_group_wait(group, TestHelper.dispatchTimeFromNow(10)), "Timed out waiting for releases")
         XCTAssertEqual(1, allocator.allocate().channelNumber)
     }
 

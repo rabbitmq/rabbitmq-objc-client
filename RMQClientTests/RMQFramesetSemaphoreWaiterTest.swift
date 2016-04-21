@@ -13,10 +13,9 @@ class RMQFramesetSemaphoreWaiterTest: XCTestCase {
 
     func testIncorrectFramesetProducesError() {
         let waiter = RMQFramesetSemaphoreWaiter(syncTimeout: 10)
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC)))
         let deliveredFrameset = RMQFrameset(channelNumber: 1, method: MethodFixtures.basicConsumeOk("foo"))
 
-        dispatch_after(delayTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
+        dispatch_after(TestHelper.dispatchTimeFromNow(0.1), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
             waiter.fulfill(deliveredFrameset)
         }
         let result = waiter.waitOn(RMQChannelOpenOk.self)
@@ -28,10 +27,9 @@ class RMQFramesetSemaphoreWaiterTest: XCTestCase {
 
     func testCorrectFramesetProducesFramesetAndNoError() {
         let waiter = RMQFramesetSemaphoreWaiter(syncTimeout: 10)
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC)))
         let deliveredFrameset = RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpenOk())
 
-        dispatch_after(delayTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) { 
+        dispatch_after(TestHelper.dispatchTimeFromNow(0.1), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
             waiter.fulfill(deliveredFrameset)
         }
         let result = waiter.waitOn(RMQChannelOpenOk.self)
