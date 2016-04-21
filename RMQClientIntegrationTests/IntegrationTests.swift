@@ -20,7 +20,7 @@ class IntegrationTests: XCTestCase {
             delegateQueue: dispatch_get_main_queue()
         )
         conn.start()
-        defer { conn.close() }
+        defer { conn.blockingClose() }
 
         let ch = conn.createChannel()
         let q = ch.queue(generatedQueueName("pop"), options: [.AutoDelete, .Exclusive])
@@ -38,40 +38,44 @@ class IntegrationTests: XCTestCase {
         let delegate = RMQConnectionDelegateLogger()
         let conn = RMQConnection(uri: "amqp://guest:guest@localhost", delegate: delegate)
         conn.start()
-        defer { conn.close() }
+        defer { conn.blockingClose() }
 
+        let semaphore = dispatch_semaphore_create(0)
         let ch = conn.createChannel()
         let q = ch.queue(generatedQueueName("subscribe"), options: [.AutoDelete, .Exclusive])
 
-        var delivered = RMQContentMessage(consumerTag: "", deliveryTag: 0, content: "not delivered yet")
+        var delivered: RMQContentMessage?
 
         q.subscribe([.NoOptions]) { (message: RMQMessage) in
-            delivered = message as! RMQContentMessage
+            delivered = message as? RMQContentMessage
             ch.ack(message.deliveryTag)
+            dispatch_semaphore_signal(semaphore)
         }
 
         q.publish("my message")
 
-        XCTAssert(TestHelper.pollUntil { return delivered.content != "not delivered yet" })
+        XCTAssertEqual(0,
+                       dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(10)),
+                       "Timed out waiting for message")
 
-        XCTAssertEqual(1, delivered.deliveryTag)
-        XCTAssertEqual("my message", delivered.content)
+        XCTAssertEqual(1, delivered!.deliveryTag)
+        XCTAssertEqual("my message", delivered!.content)
     }
 
-    func testReject() {
+    func testRejectAndRequeueCausesSecondDelivery() {
         let conn = RMQConnection(uri: "amqp://guest:guest@localhost", delegate: nil)
         conn.start()
-        defer { conn.close() }
+        defer { conn.blockingClose() }
 
         let ch = conn.createChannel()
         let q = ch.queue(generatedQueueName("subscribeForReject"), options: [.AutoDelete, .Exclusive])
+        let semaphore = dispatch_semaphore_create(0)
 
         var isRejected = false
-        var handledReject = false
 
         q.subscribe([.NoOptions]) { (message: RMQMessage) in
             if isRejected {
-                handledReject = true
+                dispatch_semaphore_signal(semaphore)
             } else {
                 isRejected = true
                 ch.reject(message.deliveryTag, options: [.Requeue])
@@ -80,53 +84,63 @@ class IntegrationTests: XCTestCase {
 
         q.publish("my message")
 
-        XCTAssert(TestHelper.pollUntil { handledReject })
+        XCTAssertEqual(0,
+                       dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(10)),
+                       "Timed out waiting for second delivery")
     }
 
     func testMultipleConsumersOnSameChannel() {
         let conn = RMQConnection()
         conn.start()
-        defer { conn.close() }
+        defer { conn.blockingClose() }
 
         var set1 = Set<NSNumber>()
         var set2 = Set<NSNumber>()
         var set3 = Set<NSNumber>()
 
+        let messageCount = 1000
         let consumingChannel = conn.createChannel()
         let queueName = generatedQueueName("multiple-same-channel")
         let consumingQueue = consumingChannel.queue(queueName, options: [.AutoDelete, .Exclusive])
+        let semaphore = dispatch_semaphore_create(0);
 
         consumingQueue.subscribe { (message: RMQMessage) in
             set1.insert(message.deliveryTag)
+            if set1.count + set2.count + set3.count == messageCount {
+                dispatch_semaphore_signal(semaphore)
+            }
         }
 
         consumingQueue.subscribe { (message: RMQMessage) in
             set2.insert(message.deliveryTag)
+            if set1.count + set2.count + set3.count == messageCount {
+                dispatch_semaphore_signal(semaphore)
+            }
         }
 
         consumingQueue.subscribe { (message: RMQMessage) in
             set3.insert(message.deliveryTag)
+            if set1.count + set2.count + set3.count == messageCount {
+                dispatch_semaphore_signal(semaphore)
+            }
         }
-
-        sleep(2)
 
         let producingChannel = conn.createChannel()
         let producingQueue = producingChannel.queue(queueName, options: [.AutoDelete, .Exclusive])
 
-        for _ in 1...100 {
+        for _ in 1...messageCount {
             producingQueue.publish("hello")
         }
 
-        XCTAssert(
-            TestHelper.pollUntil { return set1.union(set2).union(set3).count == 100 },
-            "Timed out waiting for messages to arrive on single channel"
-        )
+        XCTAssertEqual(0,
+                       dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(50)),
+                       "Timed out waiting for messages to arrive on single channel")
 
         XCTAssertFalse(set1.isEmpty)
         XCTAssertFalse(set2.isEmpty)
         XCTAssertFalse(set3.isEmpty)
 
-        let expected: Set<NSNumber> = Set<NSNumber>().union((1...100).map { NSNumber(integer: $0) })
+        let expected: Set<NSNumber> = Set<NSNumber>().union((1...messageCount).map { NSNumber(integer: $0) })
         XCTAssertEqual(expected, set1.union(set2).union(set3))
     }
 
@@ -135,15 +149,20 @@ class IntegrationTests: XCTestCase {
         var consumingChannels: [RMQChannel] = []
         var consumingQueues: [RMQQueue] = []
         let queueName = generatedQueueName("concurrent-different-channels")
-        let conn = RMQConnection()
+        let semaphore = dispatch_semaphore_create(0)
+        let delegate = RMQConnectionDelegateLogger()
+        let conn = RMQConnection(uri: "amqp://guest:guest@localhost", delegate: delegate)
         conn.start()
-        defer { conn.close() }
+        defer { conn.blockingClose() }
 
         for _ in 1...100 {
             let ch = conn.createChannel()
             let q = ch.queue(queueName, options: [.AutoDelete, .Exclusive])
             q.subscribe { (message: RMQMessage) in
                 OSAtomicIncrement32(&counter)
+                if counter == 100 {
+                    dispatch_semaphore_signal(semaphore)
+                }
             }
             consumingChannels.append(ch)
             consumingQueues.append(q)
@@ -156,8 +175,9 @@ class IntegrationTests: XCTestCase {
             producingQueue.publish("hello")
         }
 
-        XCTAssert(
-            TestHelper.pollUntil { return counter == 100 },
+        XCTAssertEqual(
+            0,
+            dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(10)),
             "Timed out waiting for messages to arrive on different channels"
         )
     }
