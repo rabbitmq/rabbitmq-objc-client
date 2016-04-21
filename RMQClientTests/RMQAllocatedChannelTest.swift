@@ -246,10 +246,10 @@ class RMQAllocatedChannelTest: XCTestCase {
         ch.activateWithDelegate(nil)
 
         var receivedMessage: RMQContentMessage?
+        waiter?.fulfill(getOkFrameset)
         ch.basicGet("my-q", options: [.NoAck]) { m in
             receivedMessage = m as? RMQContentMessage
         }
-        ch.handleFrameset(getOkFrameset)
 
         q.suspend().finish()
 
