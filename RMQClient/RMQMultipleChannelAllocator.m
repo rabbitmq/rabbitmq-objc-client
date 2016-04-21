@@ -2,12 +2,11 @@
 #import "RMQAllocatedChannel.h"
 #import "RMQFramesetSemaphoreWaiter.h"
 #import "RMQMultipleChannelAllocator.h"
-#import "RMQSynchronizedMutableDictionary.h"
 #import "RMQUnallocatedChannel.h"
 
 @interface RMQMultipleChannelAllocator ()
 @property (atomic, readwrite) UInt16 channelNumber;
-@property (nonatomic, readwrite) RMQSynchronizedMutableDictionary *channels;
+@property (nonatomic, readwrite) NSMutableDictionary *channels;
 @property (nonatomic, readwrite) NSNumber *syncTimeout;
 @end
 
@@ -17,7 +16,7 @@
 - (instancetype)initWithChannelSyncTimeout:(NSNumber *)syncTimeout {
     self = [super init];
     if (self) {
-        self.channels = [RMQSynchronizedMutableDictionary new];
+        self.channels = [NSMutableDictionary new];
         self.channelNumber = 0;
         self.sender = nil;
         self.syncTimeout = syncTimeout;
