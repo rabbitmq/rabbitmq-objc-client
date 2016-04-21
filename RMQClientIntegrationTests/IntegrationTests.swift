@@ -98,7 +98,7 @@ class IntegrationTests: XCTestCase {
         var set2 = Set<NSNumber>()
         var set3 = Set<NSNumber>()
 
-        let messageCount = 1000
+        let messageCount = 2000
         let consumingChannel = conn.createChannel()
         let queueName = generatedQueueName("multiple-same-channel")
         let consumingQueue = consumingChannel.queue(queueName, options: [.AutoDelete, .Exclusive])
@@ -136,9 +136,11 @@ class IntegrationTests: XCTestCase {
                        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(50)),
                        "Timed out waiting for messages to arrive on single channel")
 
-        XCTAssertFalse(set1.isEmpty)
-        XCTAssertFalse(set2.isEmpty)
-        XCTAssertFalse(set3.isEmpty)
+        let emptyCount = [set1.isEmpty, set2.isEmpty, set3.isEmpty].reduce(0) { (acc, isEmpty) -> Int in
+            acc + (isEmpty ? 1 : 0)
+        }
+
+        XCTAssertLessThan(emptyCount, 2)
 
         let expected: Set<NSNumber> = Set<NSNumber>().union((1...messageCount).map { NSNumber(integer: $0) })
         XCTAssertEqual(expected, set1.union(set2).union(set3))
