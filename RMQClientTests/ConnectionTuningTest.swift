@@ -93,7 +93,7 @@ class ConnectionTuningTest: XCTestCase {
         let tune = RMQConnectionTune(channelMax: channelMax, frameMax: frameMax, heartbeat: heartbeat)
 
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            while transport.outboundData.isEmpty { usleep(10) }
+            while transport.readCallbacks.isEmpty { usleep(10) }
             transport
                 .serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
                 .serverSendsPayload(tune, channelNumber: 0)
