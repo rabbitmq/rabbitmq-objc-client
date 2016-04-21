@@ -165,17 +165,15 @@
 
 - (void)close {
     dispatch_async(self.networkQueue, ^{
-        dispatch_group_t group = dispatch_group_create();
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        for (id<RMQChannel> ch in self.channels.allValues) {
-            dispatch_group_async(group, queue, ^{
-                [ch blockingClose];
-            });
-        }
-        dispatch_group_wait(group, self.handshakeTimeoutFromNow);
+        [self closeAllChannels];
+        [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:self.amqClose]];
+    });
+}
 
-        RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:@0 method:self.amqClose];
-        [self sendFrameset:frameset];
+- (void)blockingClose {
+    dispatch_sync(self.networkQueue, ^{
+        [self closeAllChannels];
+        [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:self.amqClose]];
     });
 }
 
@@ -234,6 +232,17 @@
 }
 
 # pragma mark - Private
+
+- (void)closeAllChannels {
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    for (id<RMQChannel> ch in self.channels.allValues) {
+        dispatch_group_async(group, queue, ^{
+            [ch blockingClose];
+        });
+    }
+    dispatch_group_wait(group, self.handshakeTimeoutFromNow);
+}
 
 - (void)sendDelegateConnectionError:(NSError *)error {
     dispatch_async(self.delegateQueue, ^{

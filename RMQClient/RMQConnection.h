@@ -40,6 +40,7 @@
 
 - (void)start;
 - (void)close;
+- (void)blockingClose;
 - (nonnull id<RMQChannel>)createChannel;
 
 @end

@@ -93,6 +93,20 @@ class RMQConnectionTest: XCTestCase {
         XCTAssertFalse(transport.isConnected())
     }
 
+    func testBlockingCloseWaitsOnQueue() {
+        let (transport, q, conn, _) = TestHelper.connectionAfterHandshake()
+        q.resume()
+
+        conn.blockingClose()
+
+        transport.assertClientSentMethod(MethodFixtures.connectionClose(), channelNumber: 0)
+        XCTAssert(transport.isConnected())
+        transport.serverSendsPayload(MethodFixtures.connectionCloseOk(), channelNumber: 0)
+        XCTAssertFalse(transport.isConnected())
+
+        q.suspend()
+    }
+
     func testClientInitiatedClosingWaitsForHandshakeToComplete() {
         let transport = ControlledInteractionTransport()
         let q = QueueHelper()
