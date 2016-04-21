@@ -137,10 +137,11 @@
     if (connectError) {
         [self sendDelegateConnectionError:connectError];
     } else {
+        [self.transport write:[RMQProtocolHeader new].amqEncoded];
+
         dispatch_async(self.networkQueue, ^{
             dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
-            [self.transport write:[RMQProtocolHeader new].amqEncoded];
             RMQHandshaker *handshaker = [[RMQHandshaker alloc] initWithSender:self
                                                                        config:self.config
                                                             completionHandler:^{
