@@ -21,6 +21,14 @@
 
 - (nonnull RMQQueue *)queue:(nonnull NSString *)queueName;
 
+- (void)queueBind:(nonnull NSString *)queueName
+         exchange:(nonnull NSString *)exchangeName
+       routingKey:(nonnull NSString *)routingKey;
+
+- (void)queueUnbind:(nonnull NSString *)queueName
+           exchange:(nonnull NSString *)exchangeName
+         routingKey:(nonnull NSString *)routingKey;
+
 - (void)basicConsume:(nonnull NSString *)queueName
              options:(RMQBasicConsumeOptions)options
             consumer:(void (^ _Nonnull)(RMQMessage * _Nonnull))consumer;

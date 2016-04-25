@@ -129,6 +129,33 @@ typedef void (^Consumer)(RMQMessage *);
     return [self queue:queueName options:RMQQueueDeclareNoOptions];
 }
 
+- (void)queueBind:(NSString *)queueName
+         exchange:(NSString *)exchangeName
+       routingKey:(nonnull NSString *)routingKey {
+    [self sendAsyncMethod:[[RMQQueueBind alloc] initWithReserved1:[[RMQShort alloc] init:0]
+                                                            queue:[[RMQShortstr alloc] init:queueName]
+                                                         exchange:[[RMQShortstr alloc] init:exchangeName]
+                                                       routingKey:[[RMQShortstr alloc] init:routingKey]
+                                                          options:RMQQueueBindNoOptions
+                                                        arguments:[[RMQTable alloc] init:@{}]]
+                   waitOn:[RMQQueueBindOk class]
+        completionHandler:^(RMQFramesetWaitResult *result) {
+        }];
+}
+
+- (void)queueUnbind:(NSString *)queueName
+           exchange:(NSString *)exchangeName
+         routingKey:(NSString *)routingKey {
+    [self sendAsyncMethod:[[RMQQueueUnbind alloc] initWithReserved1:[[RMQShort alloc] init:0]
+                                                              queue:[[RMQShortstr alloc] init:queueName]
+                                                           exchange:[[RMQShortstr alloc] init:exchangeName]
+                                                         routingKey:[[RMQShortstr alloc] init:routingKey]
+                                                          arguments:[[RMQTable alloc] init:@{}]]
+                   waitOn:[RMQQueueUnbindOk class]
+        completionHandler:^(RMQFramesetWaitResult *result) {
+        }];
+}
+
 - (void)basicConsume:(NSString *)queueName
              options:(RMQBasicConsumeOptions)options
             consumer:(Consumer)consumer {

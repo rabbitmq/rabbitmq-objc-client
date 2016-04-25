@@ -53,6 +53,10 @@
 - (RMQQueue *)queue:(NSString *)queueName {
     return nil;
 }
+- (void)queueBind:(NSString *)queueName exchange:(NSString *)exchangeName routingKey:(nonnull NSString *)routingKey {
+}
+- (void)queueUnbind:(NSString *)queueName exchange:(NSString *)exchangeName routingKey:(NSString *)routingKey {
+}
 - (RMQQueueDeclareOk *)queueDeclare:(NSString *)queueName
                             options:(RMQQueueDeclareOptions)options {
     return nil;

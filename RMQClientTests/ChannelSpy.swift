@@ -74,6 +74,12 @@ enum ChannelSpyError: ErrorType {
         )
     }
 
+    func queueBind(queueName: String, exchange exchangeName: String, routingKey: String) {
+    }
+
+    func queueUnbind(queueName: String, exchange exchangeName: String, routingKey: String) {
+    }
+
     func basicConsume(queueName: String, options: RMQBasicConsumeOptions, consumer: (RMQMessage) -> Void) {
         lastReceivedBasicConsumeOptions = options
         lastReceivedBasicConsumeBlock = consumer

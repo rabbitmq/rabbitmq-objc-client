@@ -113,6 +113,14 @@ class MethodFixtures {
         )
     }
 
+    static func queueBind(name: String, exchangeName: String, routingKey: String) -> RMQQueueBind {
+        return RMQQueueBind(reserved1: RMQShort(0), queue: RMQShortstr(name), exchange: RMQShortstr(exchangeName), routingKey: RMQShortstr(routingKey), options: [], arguments: RMQTable([:]))
+    }
+
+    static func queueUnbind(name: String, exchangeName: String, routingKey: String) -> RMQQueueUnbind {
+        return RMQQueueUnbind(reserved1: RMQShort(0), queue: RMQShortstr(name), exchange: RMQShortstr(exchangeName), routingKey: RMQShortstr(routingKey), arguments: RMQTable([:]))
+    }
+
     static func basicConsumeOk(consumerTag: String) -> RMQBasicConsumeOk {
         return RMQBasicConsumeOk(consumerTag: RMQShortstr(consumerTag))
     }
