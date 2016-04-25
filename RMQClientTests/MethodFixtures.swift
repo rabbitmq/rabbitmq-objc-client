@@ -113,6 +113,10 @@ class MethodFixtures {
         )
     }
 
+    static func queueDeclareOk(name: String) -> RMQQueueDeclareOk {
+        return RMQQueueDeclareOk(queue: RMQShortstr(name), messageCount: RMQLong(0), consumerCount: RMQLong(0))
+    }
+
     static func queueBind(name: String, exchangeName: String, routingKey: String) -> RMQQueueBind {
         return RMQQueueBind(reserved1: RMQShort(0), queue: RMQShortstr(name), exchange: RMQShortstr(exchangeName), routingKey: RMQShortstr(routingKey), options: [], arguments: RMQTable([:]))
     }

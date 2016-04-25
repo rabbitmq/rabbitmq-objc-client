@@ -45,4 +45,40 @@ class QueueDeclarationTest: XCTestCase {
         XCTAssertEqual("bad news", delegate.lastChannelError?.localizedDescription)
     }
 
+    func testQueueWithEmptyNameGetsClientGeneratedName() {
+        let sender = SenderSpy()
+        let q = FakeSerialQueue()
+        let waiter = FramesetWaiterSpy()
+        let generator = StubNameGenerator()
+        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter, queue: q, nameGenerator: generator)
+
+        generator.nextName = "mouse-organ"
+        let rmqQueue = ch.queue("", options: [])
+
+        try! q.step()
+
+        let expectedFrameset = RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclare("mouse-organ", options: []))
+        XCTAssertEqual(expectedFrameset, sender.sentFramesets.last)
+        XCTAssertEqual("mouse-organ", rmqQueue.name)
+    }
+
+    func testQueueWithEmptyNameSendsErrorToDelegateOnNameCollision() {
+        let sender = SenderSpy()
+        let q = FakeSerialQueue()
+        let waiter = FramesetWaiterSpy()
+        let generator = StubNameGenerator()
+        let delegate = ConnectionDelegateSpy()
+        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter, queue: q, nameGenerator: generator)
+        ch.activateWithDelegate(delegate)
+
+        generator.nextName = "I-will-dupe"
+
+        ch.queue("", options: [])
+        try! q.step()
+        ch.queue("")
+        XCTAssertEqual(1, sender.sentFramesets.count)
+
+        XCTAssertEqual("Name collision when generating unique name.", delegate.lastChannelError?.localizedDescription)
+    }
+
 }

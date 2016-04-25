@@ -8,3 +8,4 @@ NSInteger const RMQConnectionErrorHandshakeTimedOut = 1;
 NSInteger const RMQChannelErrorUnallocated = 2;
 NSInteger const RMQChannelErrorWaitTimeout = 3;
 NSInteger const RMQChannelErrorIncorrectSyncMethod = 4;
+NSInteger const RMQChannelErrorQueueNameCollision = 5;

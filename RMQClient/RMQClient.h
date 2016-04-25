@@ -21,6 +21,7 @@
 #import <RMQClient/RMQGCDSerialQueue.h>
 #import <RMQClient/RMQSemaphoreWaiterFactory.h>
 #import <RMQClient/RMQSemaphoreWaiter.h>
+#import <RMQClient/RMQProcessInfoNameGenerator.h>
 
 //! Project version number for RMQClient.
 FOUNDATION_EXPORT double RMQClientVersionNumber;

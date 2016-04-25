@@ -8,3 +8,4 @@ extern NSInteger const RMQConnectionErrorHandshakeTimedOut;
 extern NSInteger const RMQChannelErrorUnallocated;
 extern NSInteger const RMQChannelErrorWaitTimeout;
 extern NSInteger const RMQChannelErrorIncorrectSyncMethod;
+extern NSInteger const RMQChannelErrorQueueNameCollision;

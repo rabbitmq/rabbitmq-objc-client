@@ -21,6 +21,7 @@ typedef void (^Consumer)(RMQMessage *);
 @property (nonatomic, readwrite) BOOL active;
 @property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) id<RMQFramesetWaiter> waiter;
+@property (nonatomic, readwrite) id<RMQNameGenerator> nameGenerator;
 @end
 
 @implementation RMQAllocatedChannel
@@ -28,7 +29,8 @@ typedef void (^Consumer)(RMQMessage *);
 - (instancetype)init:(NSNumber *)channelNumber
               sender:(id<RMQSender>)sender
               waiter:(id<RMQFramesetWaiter>)waiter
-               queue:(id<RMQLocalSerialQueue>)queue {
+               queue:(id<RMQLocalSerialQueue>)queue
+       nameGenerator:(id<RMQNameGenerator>)nameGenerator {
     self = [super init];
     if (self) {
         self.queue = queue;
@@ -42,8 +44,20 @@ typedef void (^Consumer)(RMQMessage *);
         self.prefetchGlobal = NO;
         self.delegate = nil;
         self.waiter = waiter;
+        self.nameGenerator = nameGenerator;
     }
     return self;
+}
+
+- (instancetype)init:(NSNumber *)channelNumber
+              sender:(id<RMQSender>)sender
+              waiter:(id<RMQFramesetWaiter>)waiter
+               queue:(id<RMQLocalSerialQueue>)queue {
+    return [self init:channelNumber
+               sender:sender
+               waiter:waiter
+                queue:queue
+        nameGenerator:nil];
 }
 
 - (instancetype)init
@@ -100,30 +114,13 @@ typedef void (^Consumer)(RMQMessage *);
 
 }
 
-- (RMQQueue *)queue:(NSString *)queueName
+- (RMQQueue *)queue:(NSString *)originalQueueName
             options:(RMQQueueDeclareOptions)options {
-    RMQQueue *found = self.queues[queueName];
+    RMQQueue *found = self.queues[originalQueueName];
     if (found) {
         return found;
     } else {
-        RMQShort *ticket                     = [[RMQShort alloc] init:0];
-        RMQShortstr *amqQueueName            = [[RMQShortstr alloc] init:queueName];
-        RMQTable *arguments                  = [[RMQTable alloc] init:@{}];
-        RMQQueueDeclare *method              = [[RMQQueueDeclare alloc] initWithReserved1:ticket
-                                                                                    queue:amqQueueName
-                                                                                  options:options
-                                                                                arguments:arguments];
-        [self sendAsyncMethod:method
-                       waitOn:[RMQQueueDeclareOk class]
-            completionHandler:^(RMQFramesetWaitResult *result) {
-            }];
-
-        RMQQueue *q = [[RMQQueue alloc] initWithName:queueName
-                                             options:options
-                                             channel:(id<RMQChannel>)self
-                                              sender:self.sender];
-        self.queues[q.name] = q;
-        return q;
+        return [self memoizedQueueDeclare:originalQueueName options:options];
     }
 }
 
@@ -316,6 +313,42 @@ completionHandler:(void (^)(RMQMessage * _Nonnull))userCompletionHandler {
 }
 
 # pragma mark - Private
+
+- (RMQQueue *)memoizedQueueDeclare:(NSString *)originalQueueName options:(RMQQueueDeclareOptions)options {
+    NSString *declaredQueueName = [originalQueueName isEqualToString:@""]
+    ? [self.nameGenerator generateWithPrefix:@"rmq-objc-client.gen-"]
+    : originalQueueName;
+
+    if (self.queues[declaredQueueName]) {
+        NSError *error = [NSError errorWithDomain:RMQErrorDomain
+                                             code:RMQChannelErrorQueueNameCollision
+                                         userInfo:@{NSLocalizedDescriptionKey: @"Name collision when generating unique name."}];
+        [self.delegate channel:self error:error];
+        return nil;
+    } else {
+        [self sendAsyncMethod:[self queueDeclareMethod:declaredQueueName options:options]
+                       waitOn:[RMQQueueDeclareOk class]
+            completionHandler:^(RMQFramesetWaitResult *result) {
+            }];
+
+        RMQQueue *q = [[RMQQueue alloc] initWithName:declaredQueueName
+                                             options:options
+                                             channel:(id<RMQChannel>)self
+                                              sender:self.sender];
+        self.queues[q.name] = q;
+        return q;
+    }
+}
+
+- (RMQQueueDeclare *)queueDeclareMethod:(NSString *)declaredQueueName options:(RMQQueueDeclareOptions)options {
+    RMQShort *ticket          = [[RMQShort alloc] init:0];
+    RMQShortstr *amqQueueName = [[RMQShortstr alloc] init:declaredQueueName];
+    RMQTable *arguments       = [[RMQTable alloc] init:@{}];
+    return [[RMQQueueDeclare alloc] initWithReserved1:ticket
+                                                queue:amqQueueName
+                                              options:options
+                                            arguments:arguments];
+}
 
 - (void)sendAsyncMethod:(id<RMQMethod>)method {
     RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];

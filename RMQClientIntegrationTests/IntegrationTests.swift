@@ -23,7 +23,7 @@ class IntegrationTests: XCTestCase {
         defer { conn.blockingClose() }
 
         let ch = conn.createChannel()
-        let q = ch.queue(generatedQueueName("pop"), options: [.AutoDelete, .Exclusive])
+        let q = ch.queue("", options: [.AutoDelete, .Exclusive])
 
         q.publish(messageContent)
 
@@ -41,7 +41,7 @@ class IntegrationTests: XCTestCase {
 
         let semaphore = dispatch_semaphore_create(0)
         let ch = conn.createChannel()
-        let q = ch.queue(generatedQueueName("subscribe"), options: [.AutoDelete, .Exclusive])
+        let q = ch.queue("", options: [.AutoDelete, .Exclusive])
 
         var delivered: RMQMessage?
 
@@ -67,7 +67,7 @@ class IntegrationTests: XCTestCase {
         defer { conn.blockingClose() }
 
         let ch = conn.createChannel()
-        let q = ch.queue(generatedQueueName("subscribeForReject"), options: [.AutoDelete, .Exclusive])
+        let q = ch.queue("", options: [.AutoDelete, .Exclusive])
         let semaphore = dispatch_semaphore_create(0)
 
         var isRejected = false
@@ -99,8 +99,7 @@ class IntegrationTests: XCTestCase {
 
         let messageCount = 2000
         let consumingChannel = conn.createChannel()
-        let queueName = generatedQueueName("multiple-same-channel")
-        let consumingQueue = consumingChannel.queue(queueName, options: [.AutoDelete, .Exclusive])
+        let consumingQueue = consumingChannel.queue("", options: [.AutoDelete, .Exclusive])
         let semaphore = dispatch_semaphore_create(0);
 
         consumingQueue.subscribe { (message: RMQMessage) in
@@ -125,7 +124,7 @@ class IntegrationTests: XCTestCase {
         }
 
         let producingChannel = conn.createChannel()
-        let producingQueue = producingChannel.queue(queueName, options: [.AutoDelete, .Exclusive])
+        let producingQueue = producingChannel.queue(consumingQueue.name, options: [.AutoDelete, .Exclusive])
 
         for _ in 1...messageCount {
             producingQueue.publish("hello")
@@ -149,16 +148,18 @@ class IntegrationTests: XCTestCase {
         var counter: Int32 = 0
         var consumingChannels: [RMQChannel] = []
         var consumingQueues: [RMQQueue] = []
-        let queueName = generatedQueueName("concurrent-different-channels")
         let semaphore = dispatch_semaphore_create(0)
         let delegate = RMQConnectionDelegateLogger()
         let conn = RMQConnection(uri: "amqp://guest:guest@localhost", delegate: delegate)
         conn.start()
         defer { conn.blockingClose() }
 
+        let producingChannel = conn.createChannel()
+        let producingQueue = producingChannel.queue("", options: [.AutoDelete, .Exclusive])
+
         for _ in 1...100 {
             let ch = conn.createChannel()
-            let q = ch.queue(queueName, options: [.AutoDelete, .Exclusive])
+            let q = ch.queue(producingQueue.name, options: [.AutoDelete, .Exclusive])
             q.subscribe { (message: RMQMessage) in
                 OSAtomicIncrement32(&counter)
                 if counter == 100 {
@@ -168,9 +169,6 @@ class IntegrationTests: XCTestCase {
             consumingChannels.append(ch)
             consumingQueues.append(q)
         }
-
-        let producingChannel = conn.createChannel()
-        let producingQueue = producingChannel.queue(queueName, options: [.AutoDelete, .Exclusive])
 
         for _ in 1...100 {
             producingQueue.publish("hello")
@@ -183,7 +181,4 @@ class IntegrationTests: XCTestCase {
         )
     }
 
-    func generatedQueueName(identifier: String) -> String {
-        return "rmqclient.integration-tests.\(identifier)\(NSProcessInfo.processInfo().globallyUniqueString)"
-    }
 }

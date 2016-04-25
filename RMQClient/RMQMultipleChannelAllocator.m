@@ -4,11 +4,13 @@
 #import "RMQMultipleChannelAllocator.h"
 #import "RMQUnallocatedChannel.h"
 #import "RMQGCDSerialQueue.h"
+#import "RMQProcessInfoNameGenerator.h"
 
 @interface RMQMultipleChannelAllocator ()
 @property (atomic, readwrite) UInt16 channelNumber;
 @property (nonatomic, readwrite) NSMutableDictionary *channels;
 @property (nonatomic, readwrite) NSNumber *syncTimeout;
+@property (nonatomic, readwrite) RMQProcessInfoNameGenerator *nameGenerator;
 @end
 
 @implementation RMQMultipleChannelAllocator
@@ -21,6 +23,7 @@
         self.channelNumber = 0;
         self.sender = nil;
         self.syncTimeout = syncTimeout;
+        self.nameGenerator = [RMQProcessInfoNameGenerator new];
     }
     return self;
 }
@@ -72,7 +75,8 @@
     RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(self.channelNumber)
                                                          sender:self.sender
                                                          waiter:waiter
-                                                          queue:[self suspendedDispatchQueue:self.channelNumber]];
+                                                          queue:[self suspendedDispatchQueue:self.channelNumber]
+                                                  nameGenerator:self.nameGenerator];
     self.channels[@(self.channelNumber)] = ch;
     self.channelNumber++;
     return ch;
@@ -89,7 +93,8 @@
             RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(i)
                                                                  sender:self.sender
                                                                  waiter:[[RMQFramesetSemaphoreWaiter alloc] initWithSyncTimeout:@2]
-                                                                  queue:[self suspendedDispatchQueue:i]];
+                                                                  queue:[self suspendedDispatchQueue:i]
+                                                          nameGenerator:self.nameGenerator];
             self.channels[@(i)] = ch;
             return ch;
         }
