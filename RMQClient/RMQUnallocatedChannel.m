@@ -25,7 +25,7 @@
 
 - (void)basicConsume:(NSString *)queueName
              options:(RMQBasicConsumeOptions)options
-            consumer:(void (^)(RMQMessage * _Nonnull))consumer {
+            consumer:(RMQConsumer)consumer {
     NSError *error = [NSError errorWithDomain:RMQErrorDomain code:RMQChannelErrorUnallocated userInfo:@{NSLocalizedDescriptionKey: @"Unallocated channel"}];
     [self.delegate channel:self error:error];
 }
@@ -36,7 +36,7 @@
           persistent:(BOOL)isPersistent {
 }
 
-- (void)basicGet:(NSString *)queue options:(RMQBasicGetOptions)options completionHandler:(void (^)(RMQMessage * _Nonnull))completionHandler {
+- (void)basicGet:(NSString *)queue options:(RMQBasicGetOptions)options completionHandler:(RMQConsumer)completionHandler {
 }
 
 - (RMQExchange *)defaultExchange {

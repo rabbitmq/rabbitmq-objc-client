@@ -20,7 +20,7 @@ class FramesetRoutingTest: XCTestCase {
         ch.activateWithDelegate(nil)
 
         var consumerTriggered = false
-        ch.basicConsume("foo", options: []) { message in
+        ch.basicConsume("foo", options: []) { (_, _) in
             consumerTriggered = true
         }
 

@@ -27,7 +27,7 @@ class IntegrationTests: XCTestCase {
 
         q.publish(messageContent)
 
-        q.pop { (m) in
+        q.pop { (_, m) in
             let expected = RMQMessage(consumerTag: "", deliveryTag: 1, content: messageContent)
             XCTAssertEqual(expected, m)
         }
@@ -45,7 +45,7 @@ class IntegrationTests: XCTestCase {
 
         var delivered: RMQMessage?
 
-        q.subscribe([.NoOptions]) { (message: RMQMessage) in
+        q.subscribe([.NoOptions]) { (_, message) in
             delivered = message
             ch.ack(message.deliveryTag)
             dispatch_semaphore_signal(semaphore)
@@ -72,7 +72,7 @@ class IntegrationTests: XCTestCase {
 
         var isRejected = false
 
-        q.subscribe([.NoOptions]) { (message: RMQMessage) in
+        q.subscribe([.NoOptions]) { (_, message) in
             if isRejected {
                 dispatch_semaphore_signal(semaphore)
             } else {
@@ -102,21 +102,21 @@ class IntegrationTests: XCTestCase {
         let consumingQueue = consumingChannel.queue("", options: [.AutoDelete, .Exclusive])
         let semaphore = dispatch_semaphore_create(0);
 
-        consumingQueue.subscribe { (message: RMQMessage) in
+        consumingQueue.subscribe { (_, message) in
             set1.insert(message.deliveryTag)
             if set1.count + set2.count + set3.count == messageCount {
                 dispatch_semaphore_signal(semaphore)
             }
         }
 
-        consumingQueue.subscribe { (message: RMQMessage) in
+        consumingQueue.subscribe { (_, message) in
             set2.insert(message.deliveryTag)
             if set1.count + set2.count + set3.count == messageCount {
                 dispatch_semaphore_signal(semaphore)
             }
         }
 
-        consumingQueue.subscribe { (message: RMQMessage) in
+        consumingQueue.subscribe { (_, message) in
             set3.insert(message.deliveryTag)
             if set1.count + set2.count + set3.count == messageCount {
                 dispatch_semaphore_signal(semaphore)
@@ -160,7 +160,7 @@ class IntegrationTests: XCTestCase {
         for _ in 1...100 {
             let ch = conn.createChannel()
             let q = ch.queue(producingQueue.name, options: [.AutoDelete, .Exclusive])
-            q.subscribe { (message: RMQMessage) in
+            q.subscribe { (_, message) in
                 OSAtomicIncrement32(&counter)
                 if counter == 100 {
                     dispatch_semaphore_signal(semaphore)

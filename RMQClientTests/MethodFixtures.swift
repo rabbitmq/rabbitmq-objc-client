@@ -141,8 +141,8 @@ class MethodFixtures {
         return RMQBasicPublish(reserved1: RMQShort(0), exchange: RMQShortstr(exchange), routingKey: RMQShortstr(routingKey), options: options)
     }
 
-    static func basicDeliver(consumerTag consumerTag: String = "", deliveryTag: UInt64 = 0) -> RMQBasicDeliver {
-        return RMQBasicDeliver(consumerTag: RMQShortstr(consumerTag), deliveryTag: RMQLonglong(deliveryTag), options: RMQBasicDeliverOptions.NoOptions, exchange: RMQShortstr(""), routingKey: RMQShortstr(""))
+    static func basicDeliver(consumerTag consumerTag: String = "", deliveryTag: UInt64 = 0, routingKey: String = "") -> RMQBasicDeliver {
+        return RMQBasicDeliver(consumerTag: RMQShortstr(consumerTag), deliveryTag: RMQLonglong(deliveryTag), options: RMQBasicDeliverOptions.NoOptions, exchange: RMQShortstr(""), routingKey: RMQShortstr(routingKey))
     }
 
     static func basicQos(prefetchCount: UInt, options: RMQBasicQosOptions) -> RMQBasicQos {

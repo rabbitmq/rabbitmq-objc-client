@@ -5,10 +5,10 @@ enum ChannelSpyError: ErrorType {
 @objc class ChannelSpy : NSObject, RMQChannel {
     var channelNumber: NSNumber
     var lastReceivedBasicConsumeOptions: RMQBasicConsumeOptions = []
-    var lastReceivedBasicConsumeBlock: ((RMQMessage) -> Void)?
+    var lastReceivedBasicConsumeBlock: RMQConsumer?
     var lastReceivedBasicGetQueue: String?
     var lastReceivedBasicGetOptions: RMQBasicGetOptions?
-    var lastReceivedBasicGetCompletionHandler: ((RMQMessage) -> Void)?
+    var lastReceivedBasicGetCompletionHandler: RMQConsumer?
     var lastReceivedBasicPublishMessage: String?
     var lastReceivedBasicPublishRoutingKey: String?
     var lastReceivedBasicPublishExchange: String?
@@ -87,7 +87,7 @@ enum ChannelSpyError: ErrorType {
     func queueUnbind(queueName: String, exchange exchangeName: String, routingKey: String) {
     }
 
-    func basicConsume(queueName: String, options: RMQBasicConsumeOptions, consumer: (RMQMessage) -> Void) {
+    func basicConsume(queueName: String, options: RMQBasicConsumeOptions, consumer: RMQConsumer) {
         lastReceivedBasicConsumeOptions = options
         lastReceivedBasicConsumeBlock = consumer
         if let msg = stubbedBasicConsumeError {
@@ -103,7 +103,7 @@ enum ChannelSpyError: ErrorType {
         lastReceivedBasicPublishPersistent = isPersistent
     }
 
-    func basicGet(queue: String, options: RMQBasicGetOptions, completionHandler: (RMQMessage) -> Void) {
+    func basicGet(queue: String, options: RMQBasicGetOptions, completionHandler: RMQConsumer) {
         lastReceivedBasicGetQueue = queue
         lastReceivedBasicGetOptions = options
         lastReceivedBasicGetCompletionHandler = completionHandler

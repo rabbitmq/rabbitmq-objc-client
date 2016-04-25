@@ -120,7 +120,7 @@ class RMQAllocatedChannelTest: XCTestCase {
             arguments: RMQTable([:])
         )
 
-        channel.basicConsume("a_queue_name", options: [.NoAck]) { message in }
+        channel.basicConsume("a_queue_name", options: [.NoAck]) { (_, _) in }
         XCTAssertNil(sender.lastSentMethod)
 
         waiter!.fulfill(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicConsumeOk("heres-ur-tag-bro")))
@@ -137,7 +137,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let channel = RMQAllocatedChannel(432, sender: sender, waiter: waiter!, queue: q)
         channel.activateWithDelegate(delegate)
 
-        channel.basicConsume("a_queue_name", options: []) { message in
+        channel.basicConsume("a_queue_name", options: []) { (_, _) in
             XCTFail("Should not be called")
         }
 
@@ -153,25 +153,31 @@ class RMQAllocatedChannelTest: XCTestCase {
         let channel = RMQAllocatedChannel(432, sender: sender, waiter: waiter!, queue: q)
         let consumeOkMethod = RMQBasicConsumeOk(consumerTag: RMQShortstr("servergeneratedtag"))
         let consumeOkFrameset = RMQFrameset(channelNumber: 432, method: consumeOkMethod)
-        let deliverMethod = MethodFixtures.basicDeliver(consumerTag: "servergeneratedtag", deliveryTag: 123)
+        let deliverMethod = MethodFixtures.basicDeliver(consumerTag: "servergeneratedtag", deliveryTag: 123, routingKey: "foo")
         let deliverHeader = RMQContentHeader(classID: deliverMethod.classID(), bodySize: 123, properties: [])
         let deliverBody = RMQContentBody(data: "Consumed!".dataUsingEncoding(NSUTF8StringEncoding)!)
         let deliverFrameset = RMQFrameset(channelNumber: 432, method: deliverMethod, contentHeader: deliverHeader, contentBodies: [deliverBody])
+        let expectedDeliveryInfo = RMQDeliveryInfo(routingKey: "foo")
         let expectedMessage = RMQMessage(consumerTag: "servergeneratedtag", deliveryTag: 123, content: "Consumed!")
 
         channel.activateWithDelegate(nil)
 
+        var receivedDeliveryInfo: RMQDeliveryInfo?
         var consumedMessage: RMQMessage?
 
         waiter?.fulfill(consumeOkFrameset)
-        channel.basicConsume("somequeue", options: []) { message in
+        channel.basicConsume("somequeue", options: []) { (di, message) in
+            receivedDeliveryInfo = di
             consumedMessage = message
         }
         try! q.step()
 
+        XCTAssertNil(receivedDeliveryInfo)
         XCTAssertNil(consumedMessage)
         channel.handleFrameset(deliverFrameset)
         try! q.step()
+
+        XCTAssertEqual(expectedDeliveryInfo, receivedDeliveryInfo)
         XCTAssertEqual(expectedMessage, consumedMessage)
     }
 
@@ -192,7 +198,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         XCTAssertEqual(expected, actual)
     }
 
-    func testBasicGetCallsCompletionHandlerWithMessage() {
+    func testBasicGetCallsCompletionHandlerWithMessageAndDeliveryInfo() {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
         let getOkFrameset = RMQFrameset(
@@ -201,13 +207,16 @@ class RMQAllocatedChannelTest: XCTestCase {
             contentHeader: RMQContentHeader(classID: 60, bodySize: 123, properties: []),
             contentBodies: [RMQContentBody(data: "hello".dataUsingEncoding(NSUTF8StringEncoding)!)]
         )
+        let expectedDeliveryInfo = RMQDeliveryInfo(routingKey: "my-q")
         let expectedMessage = RMQMessage(consumerTag: "", deliveryTag: 1, content: "hello")
         let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, queue: q)
         ch.activateWithDelegate(nil)
 
         var receivedMessage: RMQMessage?
+        var receivedDeliveryInfo: RMQDeliveryInfo?
         waiter?.fulfill(getOkFrameset)
-        ch.basicGet("my-q", options: [.NoAck]) { m in
+        ch.basicGet("my-q", options: [.NoAck]) { (di, m) in
+            receivedDeliveryInfo = di
             receivedMessage = m
         }
 
@@ -215,6 +224,7 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         ch.handleFrameset(getOkFrameset)
 
+        XCTAssertEqual(expectedDeliveryInfo, receivedDeliveryInfo)
         XCTAssertEqual(expectedMessage, receivedMessage)
     }
 
@@ -256,14 +266,14 @@ class RMQAllocatedChannelTest: XCTestCase {
         ch.activateWithDelegate(nil)
 
         var consumedMessage1: RMQMessage?
-        ch.basicConsume("sameq", options: []) { message in
+        ch.basicConsume("sameq", options: []) { (_, message) in
             consumedMessage1 = message
         }
         ch.handleFrameset(consumeOkFrameset1)
         try! q.step()
 
         var consumedMessage2: RMQMessage?
-        ch.basicConsume("sameq", options: []) { message in
+        ch.basicConsume("sameq", options: []) { (_, message) in
             consumedMessage2 = message
         }
         ch.handleFrameset(consumeOkFrameset2)

@@ -32,14 +32,14 @@ class RMQQueueTest: XCTestCase {
         let queue = RMQQueue(name: "great.queue", channel: channel, sender: sender)
 
         var receivedMessage: RMQMessage?
-        queue.pop() { m in
+        queue.pop() { (_, m) in
             receivedMessage = m
         }
 
         XCTAssertEqual("great.queue", channel.lastReceivedBasicGetQueue)
         XCTAssertEqual([], channel.lastReceivedBasicGetOptions)
         
-        channel.lastReceivedBasicGetCompletionHandler!(stubbedMessage)
+        channel.lastReceivedBasicGetCompletionHandler!(RMQDeliveryInfo(routingKey: ""), stubbedMessage)
         XCTAssertEqual(stubbedMessage, receivedMessage)
     }
 
@@ -48,12 +48,12 @@ class RMQQueueTest: XCTestCase {
         let queue = RMQQueue(name: "default options", channel: channel, sender: SenderSpy())
 
         var handlerCalled = false
-        queue.subscribe { RMQMessage in
+        queue.subscribe { (_, _) in
             handlerCalled = true
         }
 
         let message = RMQMessage(consumerTag: "", deliveryTag: 123, content: "I have default options!")
-        channel.lastReceivedBasicConsumeBlock!(message)
+        channel.lastReceivedBasicConsumeBlock!(RMQDeliveryInfo(routingKey: ""), message)
 
         XCTAssert(handlerCalled)
         XCTAssertEqual([.NoAck], channel.lastReceivedBasicConsumeOptions)
@@ -70,7 +70,7 @@ class RMQQueueTest: XCTestCase {
         }
 
         let message = RMQMessage(consumerTag: "", deliveryTag: 123, content: "I have custom options!")
-        channel.lastReceivedBasicConsumeBlock!(message)
+        channel.lastReceivedBasicConsumeBlock!(RMQDeliveryInfo(routingKey: ""), message)
 
         XCTAssert(handlerCalled)
         XCTAssertEqual([.NoWait], channel.lastReceivedBasicConsumeOptions)
