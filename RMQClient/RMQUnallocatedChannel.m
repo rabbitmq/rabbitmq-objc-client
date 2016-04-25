@@ -30,7 +30,15 @@
     [self.delegate channel:self error:error];
 }
 
-- (void)basicPublish:(NSString *)message routingKey:(NSString *)routingKey exchange:(NSString *)exchange {
+- (void)basicPublish:(NSString *)message
+          routingKey:(NSString *)routingKey
+            exchange:(NSString *)exchange {
+}
+
+- (void)basicPublish:(NSString *)message
+          routingKey:(NSString *)routingKey
+            exchange:(NSString *)exchange
+          persistent:(BOOL)isPersistent {
 }
 
 - (void)basicGet:(NSString *)queue options:(RMQBasicGetOptions)options completionHandler:(void (^)(id<RMQMessage> _Nonnull))completionHandler {

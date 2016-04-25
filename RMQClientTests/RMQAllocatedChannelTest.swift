@@ -305,7 +305,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let q = FakeSerialQueue()
         let ch = RMQAllocatedChannel(999, sender: sender, waiter: waiter!, queue: q)
         let message = "my great message yo"
-        let persistent = RMQBasicDeliveryMode(2)
+        let notPersistent = RMQBasicDeliveryMode(1)
 
         let expectedMethod = RMQBasicPublish(
             reserved1: RMQShort(0),
@@ -316,7 +316,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let expectedHeader = RMQContentHeader(
             classID: 60,
             bodySize: message.dataUsingEncoding(NSUTF8StringEncoding)!.length,
-            properties: [persistent, RMQBasicContentType("application/octet-stream"), RMQBasicPriority(0)]
+            properties: [notPersistent, RMQBasicContentType("application/octet-stream"), RMQBasicPriority(0)]
         )
         let expectedBodies = [
             RMQContentBody(data: "my g".dataUsingEncoding(NSUTF8StringEncoding)!),
@@ -331,8 +331,6 @@ class RMQAllocatedChannelTest: XCTestCase {
             contentHeader: expectedHeader,
             contentBodies: expectedBodies
         )
-
-        ch.activateWithDelegate(nil)
 
         ch.basicPublish(message, routingKey: "my.q", exchange: "")
 
@@ -378,7 +376,7 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         channel.activateWithDelegate(nil)
 
-        channel.basicPublish(messageContent, routingKey: "my.q", exchange: "")
+        channel.basicPublish(messageContent, routingKey: "my.q", exchange: "", persistent: true)
 
         try! q.step()
 

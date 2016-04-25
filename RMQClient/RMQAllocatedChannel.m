@@ -144,7 +144,8 @@ typedef void (^Consumer)(id<RMQMessage>);
 
 - (void)basicPublish:(NSString *)message
           routingKey:(NSString *)routingKey
-            exchange:(NSString *)exchange {
+            exchange:(NSString *)exchange
+          persistent:(BOOL)isPersistent {
     RMQBasicPublish *publish = [[RMQBasicPublish alloc] initWithReserved1:[[RMQShort alloc] init:0]
                                                                  exchange:[[RMQShortstr alloc] init:exchange]
                                                                routingKey:[[RMQShortstr alloc] init:routingKey]
@@ -152,14 +153,19 @@ typedef void (^Consumer)(id<RMQMessage>);
     NSData *contentBodyData = [message dataUsingEncoding:NSUTF8StringEncoding];
     RMQContentBody *contentBody = [[RMQContentBody alloc] initWithData:contentBodyData];
 
-    RMQBasicDeliveryMode *persistent = [[RMQBasicDeliveryMode alloc] init:2];
+    RMQBasicDeliveryMode *mode;
+    if (isPersistent) {
+        mode = [[RMQBasicDeliveryMode alloc] init:2];
+    } else {
+        mode = [[RMQBasicDeliveryMode alloc] init:1];
+    }
     RMQBasicContentType *octetStream = [[RMQBasicContentType alloc] init:@"application/octet-stream"];
     RMQBasicPriority *lowPriority = [[RMQBasicPriority alloc] init:0];
 
     NSData *bodyData = contentBody.amqEncoded;
     RMQContentHeader *contentHeader = [[RMQContentHeader alloc] initWithClassID:publish.classID
                                                                        bodySize:@(bodyData.length)
-                                                                     properties:@[persistent, octetStream, lowPriority]];
+                                                                     properties:@[mode, octetStream, lowPriority]];
 
     NSArray *contentBodies = [self contentBodiesFromData:bodyData
                                               inChunksOf:self.sender.frameMax.integerValue - RMQEmptyFrameSize];
@@ -171,6 +177,12 @@ typedef void (^Consumer)(id<RMQMessage>);
     [self.queue enqueue:^{
         [self.sender sendFrameset:frameset];
     }];
+}
+
+- (void)basicPublish:(NSString *)message
+          routingKey:(NSString *)routingKey
+            exchange:(NSString *)exchange {
+    [self basicPublish:message routingKey:routingKey exchange:exchange persistent:NO];
 }
 
 -  (void)basicGet:(NSString *)queue

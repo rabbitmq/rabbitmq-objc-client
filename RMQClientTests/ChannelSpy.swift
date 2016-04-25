@@ -12,6 +12,7 @@ enum ChannelSpyError: ErrorType {
     var lastReceivedBasicPublishMessage: String?
     var lastReceivedBasicPublishRoutingKey: String?
     var lastReceivedBasicPublishExchange: String?
+    var lastReceivedBasicPublishPersistent: Bool?
     var lastReceivedFrameset: RMQFrameset?
     var queues: [String: RMQQueue] = [:]
     var stubbedMessageCount: RMQLong = RMQLong(0)
@@ -82,10 +83,15 @@ enum ChannelSpyError: ErrorType {
         }
     }
 
-    func basicPublish(message: String, routingKey: String, exchange: String) {
+    func basicPublish(message: String, routingKey: String, exchange: String, persistent isPersistent: Bool) {
         lastReceivedBasicPublishMessage = message
         lastReceivedBasicPublishRoutingKey = routingKey
         lastReceivedBasicPublishExchange = exchange
+        lastReceivedBasicPublishPersistent = isPersistent
+    }
+
+    func basicPublish(message: String, routingKey: String, exchange: String) {
+        basicPublish(message, routingKey: routingKey, exchange: exchange, persistent: false)
     }
 
     func basicGet(queue: String, options: RMQBasicGetOptions, completionHandler: (RMQMessage) -> Void) {

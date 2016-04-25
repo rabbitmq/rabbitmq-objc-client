@@ -29,6 +29,11 @@
           routingKey:(nonnull NSString *)routingKey
             exchange:(nonnull NSString *)exchange;
 
+- (void)basicPublish:(nonnull NSString *)message
+          routingKey:(nonnull NSString *)routingKey
+            exchange:(nonnull NSString *)exchange
+          persistent:(BOOL)isPersistent;
+
 -  (void)basicGet:(nonnull NSString *)queue
           options:(RMQBasicGetOptions)options
 completionHandler:(void (^ _Nonnull)(id<RMQMessage> _Nonnull message))completionHandler;
