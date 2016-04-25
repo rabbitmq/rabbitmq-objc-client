@@ -67,4 +67,7 @@ completionHandler:(void (^ _Nonnull)(RMQMessage * _Nonnull message))completionHa
 - (nonnull RMQExchange *)fanout:(nonnull NSString *)name
                         options:(RMQExchangeDeclareOptions)options;
 
+- (nonnull RMQExchange *)direct:(nonnull NSString *)name
+                        options:(RMQExchangeDeclareOptions)options;
+
 @end

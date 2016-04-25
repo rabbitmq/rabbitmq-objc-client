@@ -140,4 +140,8 @@ enum ChannelSpyError: ErrorType {
     func fanout(name: String, options: RMQExchangeDeclareOptions) -> RMQExchange {
         return RMQExchange(name: name, channel: self)
     }
+
+    func direct(name: String, options: RMQExchangeDeclareOptions) -> RMQExchange {
+        return RMQExchange(name: name, channel: self)
+    }
 }
