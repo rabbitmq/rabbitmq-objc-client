@@ -28,4 +28,5 @@ Binary With Libraries**. Now drag `Carthage/Build/iOS/RMQClient.framework` into
 this list.
 1. If you don't already have one, click the '+' icon under **Build Phases** to add a
 **Copy Files** phase.
+1. Under **Destination**, choose **Frameworks**.
 1. Click the '+' and add RMQClient.framework. Ensure **Code Sign On Copy** is checked.
