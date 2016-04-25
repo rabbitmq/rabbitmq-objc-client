@@ -30,7 +30,7 @@ enum ChannelSpyError: ErrorType {
     }
 
     func defaultExchange() -> RMQExchange {
-        return RMQExchange()
+        return RMQExchange(channel: self)
     }
 
     func activateWithDelegate(delegate: RMQConnectionDelegate?) {

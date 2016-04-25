@@ -57,7 +57,7 @@ typedef void (^Consumer)(id<RMQMessage>);
 }
 
 - (RMQExchange *)defaultExchange {
-    return [RMQExchange new];
+    return [[RMQExchange alloc] initWithChannel:self];
 }
 
 - (void)activateWithDelegate:(id<RMQConnectionDelegate>)delegate {

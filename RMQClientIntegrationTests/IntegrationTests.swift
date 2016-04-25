@@ -82,7 +82,7 @@ class IntegrationTests: XCTestCase {
             }
         }
 
-        q.publish("my message")
+        ch.defaultExchange().publish("my message", routingKey: q.name)
 
         XCTAssertEqual(0,
                        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(10)),
