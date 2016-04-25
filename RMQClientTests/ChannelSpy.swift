@@ -31,7 +31,7 @@ enum ChannelSpyError: ErrorType {
     }
 
     func defaultExchange() -> RMQExchange {
-        return RMQExchange(channel: self)
+        return RMQExchange(name: "", channel: self)
     }
 
     func activateWithDelegate(delegate: RMQConnectionDelegate?) {
@@ -123,5 +123,8 @@ enum ChannelSpyError: ErrorType {
     }
 
     func nack(deliveryTag: NSNumber) {
+    }
+
+    func exchangeDeclare(name: String, type: String, options: RMQExchangeDeclareOptions) {
     }
 }

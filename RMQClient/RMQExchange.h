@@ -4,7 +4,8 @@
 
 @interface RMQExchange : NSObject
 
-- (instancetype)initWithChannel:(id<RMQChannel>)channel;
+- (instancetype)initWithName:(NSString *)name
+                     channel:(id<RMQChannel>)channel;
 
 - (void)publish:(NSString *)message routingKey:(NSString *)key persistent:(BOOL)isPersistent;
 - (void)publish:(NSString *)message routingKey:(NSString *)key;

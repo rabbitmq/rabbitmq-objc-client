@@ -57,7 +57,7 @@ typedef void (^Consumer)(RMQMessage *);
 }
 
 - (RMQExchange *)defaultExchange {
-    return [[RMQExchange alloc] initWithChannel:self];
+    return [[RMQExchange alloc] initWithName:@"" channel:self];
 }
 
 - (void)activateWithDelegate:(id<RMQConnectionDelegate>)delegate {
@@ -244,6 +244,19 @@ completionHandler:(void (^)(RMQMessage * _Nonnull))userCompletionHandler {
 
 - (void)nack:(NSNumber *)deliveryTag {
     [self nack:deliveryTag options:RMQBasicNackNoOptions];
+}
+
+- (void)exchangeDeclare:(NSString *)name
+                   type:(NSString *)type
+                options:(RMQExchangeDeclareOptions)options {
+    [self sendAsyncMethod:[[RMQExchangeDeclare alloc] initWithReserved1:[[RMQShort alloc] init:0]
+                                                               exchange:[[RMQShortstr alloc] init:name]
+                                                                   type:[[RMQShortstr alloc] init:type]
+                                                                options:options
+                                                              arguments:[[RMQTable alloc] init:@{}]]
+                   waitOn:[RMQExchangeDeclareOk class]
+        completionHandler:^(RMQFramesetWaitResult *result) {
+        }];
 }
 
 # pragma mark - RMQFrameHandler

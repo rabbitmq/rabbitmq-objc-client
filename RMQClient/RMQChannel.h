@@ -56,4 +56,8 @@ completionHandler:(void (^ _Nonnull)(RMQMessage * _Nonnull message))completionHa
 
 - (void)nack:(nonnull NSNumber *)deliveryTag;
 
+- (void)exchangeDeclare:(nonnull NSString *)name
+                   type:(nonnull NSString *)type
+                options:(RMQExchangeDeclareOptions)options;
+
 @end

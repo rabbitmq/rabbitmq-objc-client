@@ -74,4 +74,6 @@
 }
 - (void)nack:(NSNumber *)deliveryTag {
 }
+- (void)exchangeDeclare:(NSString *)name type:(NSString *)type options:(RMQExchangeDeclareOptions)options {
+}
 @end

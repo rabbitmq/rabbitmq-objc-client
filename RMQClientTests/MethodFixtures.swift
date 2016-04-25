@@ -136,4 +136,8 @@ class MethodFixtures {
     static func basicQos(prefetchCount: UInt, options: RMQBasicQosOptions) -> RMQBasicQos {
         return RMQBasicQos(prefetchSize: RMQLong(0), prefetchCount: RMQShort(prefetchCount), options: options)
     }
+
+    static func exchangeDeclare(name: String, type: String, options: RMQExchangeDeclareOptions) -> RMQExchangeDeclare {
+        return RMQExchangeDeclare(reserved1: RMQShort(0), exchange: RMQShortstr(name), type: RMQShortstr(type), options: options, arguments: RMQTable([:]))
+    }
 }
