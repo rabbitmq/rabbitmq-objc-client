@@ -96,10 +96,6 @@ enum ChannelSpyError: ErrorType {
         lastReceivedBasicPublishPersistent = isPersistent
     }
 
-    func basicPublish(message: String, routingKey: String, exchange: String) {
-        basicPublish(message, routingKey: routingKey, exchange: exchange, persistent: false)
-    }
-
     func basicGet(queue: String, options: RMQBasicGetOptions, completionHandler: (RMQMessage) -> Void) {
         lastReceivedBasicGetQueue = queue
         lastReceivedBasicGetOptions = options

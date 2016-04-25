@@ -39,7 +39,7 @@
 }
 
 - (void)publish:(NSString *)message {
-    [self.channel basicPublish:message routingKey:self.name exchange:@""];
+    [self publish:message persistent:NO];
 }
 
 - (void)pop:(void (^)(RMQMessage * _Nonnull))handler {

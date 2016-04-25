@@ -332,7 +332,7 @@ class RMQAllocatedChannelTest: XCTestCase {
             contentBodies: expectedBodies
         )
 
-        ch.basicPublish(message, routingKey: "my.q", exchange: "")
+        ch.basicPublish(message, routingKey: "my.q", exchange: "", persistent: false)
 
         XCTAssertEqual(0, sender.sentFramesets.count)
 

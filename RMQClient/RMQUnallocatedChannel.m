@@ -32,11 +32,6 @@
 
 - (void)basicPublish:(NSString *)message
           routingKey:(NSString *)routingKey
-            exchange:(NSString *)exchange {
-}
-
-- (void)basicPublish:(NSString *)message
-          routingKey:(NSString *)routingKey
             exchange:(NSString *)exchange
           persistent:(BOOL)isPersistent {
 }

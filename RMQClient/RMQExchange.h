@@ -9,5 +9,6 @@
 
 - (void)publish:(NSString *)message routingKey:(NSString *)key persistent:(BOOL)isPersistent;
 - (void)publish:(NSString *)message routingKey:(NSString *)key;
+- (void)publish:(NSString *)message;
 
 @end

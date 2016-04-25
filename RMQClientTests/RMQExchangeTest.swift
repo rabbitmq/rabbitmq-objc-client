@@ -12,6 +12,16 @@ class RMQExchangeTest: XCTestCase {
         XCTAssertEqual("", ch.lastReceivedBasicPublishExchange)
     }
 
+    func testPublishWithoutRoutingKeyUsesEmptyString() {
+        let ch = ChannelSpy(1)
+        let ex = RMQExchange(name: "", channel: ch)
+        ex.publish("foo")
+
+        XCTAssertEqual("foo", ch.lastReceivedBasicPublishMessage)
+        XCTAssertEqual("", ch.lastReceivedBasicPublishRoutingKey)
+        XCTAssertEqual("", ch.lastReceivedBasicPublishExchange)
+    }
+
     func testPublishWithPersistence() {
         let ch = ChannelSpy(1)
         let ex = RMQExchange(name: "some-ex", channel: ch)

@@ -25,9 +25,11 @@
 }
 
 - (void)publish:(NSString *)message routingKey:(NSString *)key {
-    [self.channel basicPublish:message
-                    routingKey:key
-                      exchange:self.name];
+    [self publish:message routingKey:key persistent:NO];
+}
+
+- (void)publish:(NSString *)message {
+    [self publish:message routingKey:@""];
 }
 
 @end
