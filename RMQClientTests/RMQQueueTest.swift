@@ -13,6 +13,18 @@ class RMQQueueTest: XCTestCase {
         XCTAssertEqual("", channel.lastReceivedBasicPublishExchange)
     }
 
+    func testPublishWithPersistence() {
+        let channel = ChannelSpy(42)
+        let queue = RMQQueue(name: "some.queue", channel: channel, sender: SenderSpy())
+
+        queue.publish("a message", persistent: true)
+
+        XCTAssertEqual("a message", channel.lastReceivedBasicPublishMessage)
+        XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
+        XCTAssertEqual("", channel.lastReceivedBasicPublishExchange)
+        XCTAssertEqual(true, channel.lastReceivedBasicPublishPersistent)
+    }
+
     func testPopDelegatesToChannelBasicGet() {
         let sender = SenderSpy()
         let stubbedMessage = RMQContentMessage(consumerTag: "", deliveryTag: 123, content: "hi there")

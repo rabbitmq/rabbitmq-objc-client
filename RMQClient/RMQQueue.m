@@ -34,9 +34,12 @@
     return [self initWithName:name options:RMQQueueDeclareNoOptions channel:channel sender:sender];
 }
 
-- (RMQQueue *)publish:(NSString *)message {
+- (void)publish:(NSString *)message persistent:(BOOL)isPersistent {
+    [self.channel basicPublish:message routingKey:self.name exchange:@"" persistent:isPersistent];
+}
+
+- (void)publish:(NSString *)message {
     [self.channel basicPublish:message routingKey:self.name exchange:@""];
-    return self;
 }
 
 - (void)pop:(void (^)(id<RMQMessage> _Nonnull))handler {
