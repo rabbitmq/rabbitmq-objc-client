@@ -104,11 +104,11 @@ class MethodFixtures {
         return RMQChannelCloseOk()
     }
 
-    static func queueDeclare(name: String) -> RMQQueueDeclare {
+    static func queueDeclare(name: String, options: RMQQueueDeclareOptions) -> RMQQueueDeclare {
         return RMQQueueDeclare(
             reserved1: RMQShort(0),
             queue: RMQShortstr(name),
-            options: RMQQueueDeclareOptions.Durable,
+            options: options,
             arguments: RMQTable([:])
         )
     }

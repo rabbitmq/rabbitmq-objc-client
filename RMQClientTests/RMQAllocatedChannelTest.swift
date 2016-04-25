@@ -107,27 +107,6 @@ class RMQAllocatedChannelTest: XCTestCase {
         XCTAssertEqual("waiting failed", delegate.lastChannelError?.localizedDescription)
     }
 
-    func testQueueSendsAQueueDeclareWithNoWait() {
-        let sender = SenderSpy()
-        let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, queue: q)
-
-        ch.queue("bagpuss")
-
-        XCTAssertEqual(0, sender.sentFramesets.count)
-        try! q.step()
-
-        let expectedQueueDeclare = RMQQueueDeclare(
-            reserved1: RMQShort(0),
-            queue: RMQShortstr("bagpuss"),
-            options: [.NoWait],
-            arguments: RMQTable([:])
-        )
-        let actualFrame = sender.sentFramesets.last!
-        let actualMethod = actualFrame.method as! RMQQueueDeclare
-        XCTAssertEqual(expectedQueueDeclare, actualMethod)
-    }
-
     func testBasicConsumeSendsBasicConsumeMethod() {
         let sender = SenderSpy()
         let q = FakeSerialQueue()

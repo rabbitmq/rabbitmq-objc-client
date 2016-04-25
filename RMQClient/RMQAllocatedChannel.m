@@ -109,12 +109,14 @@ typedef void (^Consumer)(RMQMessage *);
         RMQShort *ticket                     = [[RMQShort alloc] init:0];
         RMQShortstr *amqQueueName            = [[RMQShortstr alloc] init:queueName];
         RMQTable *arguments                  = [[RMQTable alloc] init:@{}];
-        RMQQueueDeclareOptions mergedOptions = options | RMQQueueDeclareNoWait;
         RMQQueueDeclare *method              = [[RMQQueueDeclare alloc] initWithReserved1:ticket
                                                                                     queue:amqQueueName
-                                                                                  options:mergedOptions
+                                                                                  options:options
                                                                                 arguments:arguments];
-        [self sendAsyncMethod:method];
+        [self sendAsyncMethod:method
+                       waitOn:[RMQQueueDeclareOk class]
+            completionHandler:^(RMQFramesetWaitResult *result) {
+            }];
 
         RMQQueue *q = [[RMQQueue alloc] initWithName:queueName
                                              options:options
