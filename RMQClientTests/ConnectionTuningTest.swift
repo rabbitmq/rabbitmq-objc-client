@@ -62,8 +62,8 @@ class ConnectionTuningTest: XCTestCase {
 
     // MARK: Helpers
 
-    func connectWithOptions(transport: ControlledInteractionTransport, _ channelMax: Int, _ frameMax: Int, _ heartbeat: Int) -> QueueHelper {
-        let q = QueueHelper()
+    func connectWithOptions(transport: ControlledInteractionTransport, _ channelMax: Int, _ frameMax: Int, _ heartbeat: Int) -> FakeSerialQueue {
+        let q = FakeSerialQueue()
         let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
         let connection = RMQConnection(
             transport: transport,
@@ -78,10 +78,11 @@ class ConnectionTuningTest: XCTestCase {
             frameHandler: allocator,
             delegate: nil,
             delegateQueue: dispatch_get_main_queue(),
-            networkQueue: q.dispatchQueue
+            networkQueue: q,
+            waiterFactory: FakeWaiterFactory()
         )
         connection.start()
-
+        try! q.step()
         return q
     }
 
@@ -89,17 +90,13 @@ class ConnectionTuningTest: XCTestCase {
         return RMQConnectionTuneOk(channelMax: channelMax, frameMax: frameMax, heartbeat: heartbeat)
     }
 
-    func negotiatedParamsGivenServerParams(transport: ControlledInteractionTransport, _ q: QueueHelper, _ channelMax: RMQShort, _ frameMax: RMQLong, _ heartbeat: RMQShort) -> RMQConnectionTuneOk {
+    func negotiatedParamsGivenServerParams(transport: ControlledInteractionTransport, _ q: FakeSerialQueue, _ channelMax: RMQShort, _ frameMax: RMQLong, _ heartbeat: RMQShort) -> RMQConnectionTuneOk {
         let tune = RMQConnectionTune(channelMax: channelMax, frameMax: frameMax, heartbeat: heartbeat)
 
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            while transport.readCallbacks.isEmpty { usleep(10) }
-            transport
-                .serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
-                .serverSendsPayload(tune, channelNumber: 0)
-                .serverSendsPayload(MethodFixtures.connectionOpenOk(), channelNumber: 0)
-        }
-        q.finish()
+        transport
+            .serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
+            .serverSendsPayload(tune, channelNumber: 0)
+            .serverSendsPayload(MethodFixtures.connectionOpenOk(), channelNumber: 0)
 
         let parser = RMQParser(data: transport.outboundData[transport.outboundData.count - 2])
         let frame = RMQFrame(parser: parser)

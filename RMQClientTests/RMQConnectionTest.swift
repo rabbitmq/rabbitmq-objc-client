@@ -21,7 +21,8 @@ class RMQConnectionTest: XCTestCase {
             frameHandler: allocator,
             delegate: delegate,
             delegateQueue: dispatch_get_main_queue(),
-            networkQueue: queueHelper.dispatchQueue
+            networkQueue: queueHelper.dispatchQueue,
+            waiterFactory: RMQSemaphoreWaiterFactory()
         )
         XCTAssertNil(delegate.lastConnectionError)
         conn.start()
@@ -46,7 +47,8 @@ class RMQConnectionTest: XCTestCase {
             frameHandler: allocator,
             delegate: delegate,
             delegateQueue: dispatch_get_main_queue(),
-            networkQueue: q.dispatchQueue
+            networkQueue: q.dispatchQueue,
+            waiterFactory: RMQSemaphoreWaiterFactory()
         )
         conn.start()
         q.finish()
@@ -56,14 +58,15 @@ class RMQConnectionTest: XCTestCase {
 
     func testTransportDelegateWriteErrorsAreTransformedIntoConnectionDelegateErrors() {
         let transport = ControlledInteractionTransport()
-        let q = QueueHelper()
+        let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
         TestHelper.startedConnection(transport,
                                      delegateQueue: dispatch_get_main_queue(),
-                                     networkQueue: q.dispatchQueue,
+                                     networkQueue: q,
                                      delegate: delegate)
         transport.stubbedToProduceErrorOnWrite = "fail please"
-        TestHelper.handshakeAsync(transport, q: q)
+        try! q.step()
+        transport.handshake()
 
         XCTAssertEqual("fail please", delegate.lastWriteError!.localizedDescription)
     }
@@ -101,7 +104,7 @@ class RMQConnectionTest: XCTestCase {
 
         conn.close()
 
-        q.finish()
+        try! q.step()
 
         transport.assertClientSentMethod(MethodFixtures.connectionClose(), channelNumber: 0)
         XCTAssert(transport.isConnected())
@@ -110,23 +113,28 @@ class RMQConnectionTest: XCTestCase {
     }
 
     func testBlockingCloseWaitsOnQueue() {
-        let (transport, q, conn, _) = TestHelper.connectionAfterHandshake()
-        q.resume()
+        let q = FakeSerialQueue()
+        let waiterFactory = FakeWaiterFactory()
+        let delegate = ConnectionDelegateSpy()
+        let transport = ControlledInteractionTransport()
+        let conn = RMQConnection(transport: transport, user: "", password: "", vhost: "", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 10, channelAllocator: ChannelSpyAllocator(), frameHandler: FrameHandlerSpy(), delegate: delegate, delegateQueue: dispatch_get_main_queue(), networkQueue: q, waiterFactory: waiterFactory)
+        conn.start()
+        try! q.step()
+        transport.handshake()
 
         conn.blockingClose()
 
         transport.assertClientSentMethod(MethodFixtures.connectionClose(), channelNumber: 0)
-        XCTAssert(transport.isConnected())
-        transport.serverSendsPayload(MethodFixtures.connectionCloseOk(), channelNumber: 0)
-        XCTAssertFalse(transport.isConnected())
 
-        q.suspend()
+        // TODO: expect close-ok before unblocking
     }
 
     func testClientInitiatedClosingWaitsForHandshakeToComplete() {
         let transport = ControlledInteractionTransport()
-        let q = QueueHelper()
+        let q = FakeSerialQueue()
         let tuneOk = MethodFixtures.connectionTuneOk()
+        let delegate = ConnectionDelegateSpy()
+        let waiterFactory = FakeWaiterFactory()
         let conn = RMQConnection(
             transport: transport,
             user: "",
@@ -135,23 +143,32 @@ class RMQConnectionTest: XCTestCase {
             channelMax: tuneOk.channelMax.integerValue,
             frameMax: tuneOk.frameMax.integerValue,
             heartbeat: tuneOk.heartbeat.integerValue,
-            handshakeTimeout: 10,
+            handshakeTimeout: 1,
             channelAllocator: ChannelSpyAllocator(),
             frameHandler: FrameHandlerSpy(),
-            delegate: ConnectionDelegateSpy(),
+            delegate: delegate,
             delegateQueue: dispatch_get_main_queue(),
-            networkQueue: q.dispatchQueue
+            networkQueue: q,
+            waiterFactory: waiterFactory
         )
         conn.start()
         conn.close()
 
-        TestHelper.handshakeAsync(transport, q: q)
+        XCTAssertEqual(2, q.items.count)
+        try! q.step()
+        transport.serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
+        transport.serverSendsPayload(MethodFixtures.connectionTune(), channelNumber: 0)
+        transport.serverSendsPayload(MethodFixtures.connectionOpenOk(), channelNumber: 0)
 
+        try! q.step()
         transport.assertClientSentMethods([MethodFixtures.connectionOpen(), MethodFixtures.connectionClose()],
                                           channelNumber: 0)
         XCTAssert(transport.isConnected())
+
         transport.serverSendsPayload(MethodFixtures.connectionCloseOk(), channelNumber: 0)
         XCTAssertFalse(transport.isConnected())
+
+        XCTAssertNil(delegate.lastConnectionError)
     }
 
     func testClientInitiatedClosingWaitsForChannelsToCloseBeforeSendingClose() {
@@ -171,7 +188,8 @@ class RMQConnectionTest: XCTestCase {
             frameHandler: FrameHandlerSpy(),
             delegate: ConnectionDelegateSpy(),
             delegateQueue: dispatch_get_main_queue(),
-            networkQueue: q.dispatchQueue
+            networkQueue: q.dispatchQueue,
+            waiterFactory: RMQSemaphoreWaiterFactory()
         )
         conn.start()
         TestHelper.handshakeAsync(transport, q: q)
@@ -197,11 +215,10 @@ class RMQConnectionTest: XCTestCase {
     }
 
     func testServerInitiatedClosing() {
-        let (transport, q, _, _) = TestHelper.connectionAfterHandshake()
+        let (transport, _, _, _) = TestHelper.connectionAfterHandshake()
 
         transport.serverSendsPayload(MethodFixtures.connectionClose(), channelNumber: 0)
 
-        q.finish()
         XCTAssertFalse(transport.isConnected())
         transport.assertClientSentMethod(MethodFixtures.connectionCloseOk(), channelNumber: 0)
     }

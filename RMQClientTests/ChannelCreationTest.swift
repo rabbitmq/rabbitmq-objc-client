@@ -27,7 +27,8 @@ class ChannelCreationTest: XCTestCase {
                              frameHandler: frameHandler,
                              delegate: delegate!,
                              delegateQueue: dispatch_get_main_queue(),
-                             networkQueue: q!.dispatchQueue)
+                             networkQueue: q!.dispatchQueue,
+                             waiterFactory: RMQSemaphoreWaiterFactory())
     }
 
     func testSendsChannelActivateIfHandshakeIsComplete() {

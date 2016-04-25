@@ -19,6 +19,8 @@
 #import <RMQClient/RMQTCPSocketTransport.h>
 #import <RMQClient/RMQUnallocatedChannel.h>
 #import <RMQClient/RMQGCDSerialQueue.h>
+#import <RMQClient/RMQSemaphoreWaiterFactory.h>
+#import <RMQClient/RMQSemaphoreWaiter.h>
 
 //! Project version number for RMQClient.
 FOUNDATION_EXPORT double RMQClientVersionNumber;

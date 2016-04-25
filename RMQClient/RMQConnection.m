@@ -9,6 +9,7 @@
 #import "RMQReaderLoop.h"
 #import "RMQTCPSocketTransport.h"
 #import "RMQGCDSerialQueue.h"
+#import "RMQSemaphoreWaiterFactory.h"
 
 @interface RMQConnection ()
 @property (copy, nonatomic, readwrite) NSString *vhost;
@@ -25,6 +26,7 @@
 @property (nonatomic, weak, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) dispatch_queue_t delegateQueue;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> networkQueue;
+@property (nonatomic, readwrite) id<RMQWaiterFactory> waiterFactory;
 @property (nonatomic, readwrite) NSNumber *handshakeTimeout;
 @property (nonatomic, readwrite) BOOL closeRequested;
 @end
@@ -43,7 +45,8 @@
                      frameHandler:(nonnull id<RMQFrameHandler>)frameHandler
                          delegate:(id<RMQConnectionDelegate>)delegate
                     delegateQueue:(dispatch_queue_t)delegateQueue
-                     networkQueue:(nonnull id<RMQLocalSerialQueue>)networkQueue {
+                     networkQueue:(nonnull id<RMQLocalSerialQueue>)networkQueue
+                    waiterFactory:(nonnull id<RMQWaiterFactory>)waiterFactory {
     self = [super init];
     if (self) {
         RMQCredentials *credentials = [[RMQCredentials alloc] initWithUsername:user
@@ -80,6 +83,7 @@
         self.delegate = delegate;
         self.delegateQueue = delegateQueue;
         self.networkQueue = networkQueue;
+        self.waiterFactory = waiterFactory;
         self.closeRequested = NO;
 
         [self allocateChannelZero];
@@ -110,7 +114,8 @@
                       frameHandler:allocator
                           delegate:delegate
                      delegateQueue:delegateQueue
-                      networkQueue:[RMQGCDSerialQueue new]];
+                      networkQueue:[RMQGCDSerialQueue new]
+                     waiterFactory:[RMQSemaphoreWaiterFactory new]];
 }
 
 - (instancetype)initWithUri:(NSString *)uri
@@ -143,12 +148,12 @@
         [self.transport write:[RMQProtocolHeader new].amqEncoded];
 
         [self.networkQueue enqueue:^{
-            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+            id<RMQWaiter> handshakeCompletion = [self.waiterFactory makeWithTimeout:self.handshakeTimeout];
 
             RMQHandshaker *handshaker = [[RMQHandshaker alloc] initWithSender:self
                                                                        config:self.config
                                                             completionHandler:^{
-                                                                dispatch_semaphore_signal(semaphore);
+                                                                [handshakeCompletion done];
                                                                 [self.readerLoop runOnce];
                                                             }];
             RMQReaderLoop *handshakeLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport
@@ -156,7 +161,7 @@
             handshaker.readerLoop = handshakeLoop;
             [handshakeLoop runOnce];
 
-            if (dispatch_semaphore_wait(semaphore, self.handshakeTimeoutFromNow) != 0) {
+            if (handshakeCompletion.timesOut) {
                 NSError *error = [NSError errorWithDomain:RMQErrorDomain
                                                      code:RMQConnectionErrorHandshakeTimedOut
                                                  userInfo:@{NSLocalizedDescriptionKey: @"Handshake timed out."}];

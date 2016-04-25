@@ -65,21 +65,23 @@ class TestHelper {
             frameHandler: allocator,
             delegate: delegate,
             delegateQueue: delegateQueue,
-            networkQueue: networkQueue
+            networkQueue: networkQueue,
+            waiterFactory: RMQSemaphoreWaiterFactory()
         )
         conn.start()
         return conn
     }
 
-    static func connectionAfterHandshake() -> (transport: ControlledInteractionTransport, q: QueueHelper, conn: RMQConnection, delegate: ConnectionDelegateSpy) {
+    static func connectionAfterHandshake() -> (transport: ControlledInteractionTransport, q: FakeSerialQueue, conn: RMQConnection, delegate: ConnectionDelegateSpy) {
         let transport = ControlledInteractionTransport()
-        let q = QueueHelper()
+        let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
         let conn = TestHelper.startedConnection(transport,
                                                 delegateQueue: dispatch_get_main_queue(),
-                                                networkQueue: q.dispatchQueue,
+                                                networkQueue: q,
                                                 delegate: delegate)
-        handshakeAsync(transport, q: q)
+        try! q.step()
+        transport.handshake()
 
         return (transport, q, conn, delegate)
     }
