@@ -13,6 +13,9 @@ enum ChannelSpyError: ErrorType {
     var lastReceivedBasicPublishRoutingKey: String?
     var lastReceivedBasicPublishExchange: String?
     var lastReceivedBasicPublishPersistent: Bool?
+    var lastReceivedQueueBindQueueName: String?
+    var lastReceivedQueueBindExchange: String?
+    var lastReceivedQueueBindRoutingKey: String?
     var lastReceivedFrameset: RMQFrameset?
     var queues: [String: RMQQueue] = [:]
     var stubbedMessageCount: RMQLong = RMQLong(0)
@@ -22,6 +25,7 @@ enum ChannelSpyError: ErrorType {
     var openCalled = false
     var blockingCloseCalled = false
     var delegateSentToActivate: RMQConnectionDelegate?
+
     override var description: String {
         return "Channel Spy \(channelNumber)"
     }
@@ -75,6 +79,9 @@ enum ChannelSpyError: ErrorType {
     }
 
     func queueBind(queueName: String, exchange exchangeName: String, routingKey: String) {
+        lastReceivedQueueBindQueueName = queueName
+        lastReceivedQueueBindExchange = exchangeName
+        lastReceivedQueueBindRoutingKey = routingKey
     }
 
     func queueUnbind(queueName: String, exchange exchangeName: String, routingKey: String) {

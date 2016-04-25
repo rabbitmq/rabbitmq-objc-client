@@ -76,4 +76,16 @@ class RMQQueueTest: XCTestCase {
         XCTAssertEqual([.NoWait], channel.lastReceivedBasicConsumeOptions)
     }
 
+    func testBindCallsBindOnChannel() {
+        let channel = ChannelSpy(123)
+        let ex = RMQExchange(name: "my-exchange", channel: channel)
+        let queue = RMQQueue(name: "bindy", channel: channel, sender: SenderSpy())
+
+        queue.bind(ex, routingKey: "foo")
+
+        XCTAssertEqual("bindy", channel.lastReceivedQueueBindQueueName)
+        XCTAssertEqual("my-exchange", channel.lastReceivedQueueBindExchange)
+        XCTAssertEqual("foo", channel.lastReceivedQueueBindRoutingKey)
+    }
+
 }

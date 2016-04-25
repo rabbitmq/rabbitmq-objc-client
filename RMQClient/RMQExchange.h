@@ -4,6 +4,8 @@
 
 @interface RMQExchange : NSObject
 
+@property (nonatomic, readonly) NSString *name;
+
 - (instancetype)initWithName:(NSString *)name
                      channel:(id<RMQChannel>)channel;
 
