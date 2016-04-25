@@ -66,7 +66,7 @@ class TestHelper {
             delegate: delegate,
             delegateQueue: delegateQueue,
             networkQueue: networkQueue,
-            waiterFactory: RMQSemaphoreWaiterFactory()
+            waiterFactory: FakeWaiterFactory()
         )
         conn.start()
         return conn
@@ -84,14 +84,6 @@ class TestHelper {
         transport.handshake()
 
         return (transport, q, conn, delegate)
-    }
-
-    static func handshakeAsync(transport: ControlledInteractionTransport, q: QueueHelper) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            while transport.readCallbacks.isEmpty { usleep(10) }
-            transport.handshake()
-        }
-        q.finish()
     }
 
 }

@@ -28,7 +28,7 @@ class ChannelCreationTest: XCTestCase {
                              delegate: delegate!,
                              delegateQueue: dispatch_get_main_queue(),
                              networkQueue: q!,
-                             waiterFactory: RMQSemaphoreWaiterFactory())
+                             waiterFactory: FakeWaiterFactory())
     }
 
     func testSendsChannelActivateIfHandshakeIsComplete() {
@@ -49,6 +49,7 @@ class ChannelCreationTest: XCTestCase {
         conn?.createChannel()
 
         XCTAssertNil(allocator!.channels.last!.delegateSentToActivate)
+        try! q?.step()
         try! q?.step()
         transport?.handshake()
         XCTAssertNotNil(allocator!.channels.last!.delegateSentToActivate)

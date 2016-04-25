@@ -6,7 +6,6 @@ class RMQConnectionTest: XCTestCase {
         let transport = ControlledInteractionTransport()
         transport.stubbedToThrowErrorOnConnect = "bad connection"
         let delegate = ConnectionDelegateSpy()
-        let queueHelper = QueueHelper()
         let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
         let conn = RMQConnection(
             transport: transport,
@@ -21,7 +20,7 @@ class RMQConnectionTest: XCTestCase {
             frameHandler: allocator,
             delegate: delegate,
             delegateQueue: dispatch_get_main_queue(),
-            networkQueue: queueHelper.dispatchQueue,
+            networkQueue: FakeSerialQueue(),
             waiterFactory: RMQSemaphoreWaiterFactory()
         )
         XCTAssertNil(delegate.lastConnectionError)
@@ -33,7 +32,7 @@ class RMQConnectionTest: XCTestCase {
         let transport = ControlledInteractionTransport()
         let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 10)
         let delegate = ConnectionDelegateSpy()
-        let q = QueueHelper()
+        let q = FakeSerialQueue()
         let conn = RMQConnection(
             transport: transport,
             user: "foo",
@@ -47,11 +46,11 @@ class RMQConnectionTest: XCTestCase {
             frameHandler: allocator,
             delegate: delegate,
             delegateQueue: dispatch_get_main_queue(),
-            networkQueue: q.dispatchQueue,
+            networkQueue: q,
             waiterFactory: RMQSemaphoreWaiterFactory()
         )
         conn.start()
-        q.finish()
+        try! q.step()
 
         XCTAssertEqual("Handshake timed out.", delegate.lastConnectionError?.localizedDescription)
     }
@@ -174,7 +173,8 @@ class RMQConnectionTest: XCTestCase {
     func testClientInitiatedClosingWaitsForChannelsToCloseBeforeSendingClose() {
         let transport = ControlledInteractionTransport()
         let allocator = ChannelSpyAllocator()
-        let q = QueueHelper()
+        let q = FakeSerialQueue()
+        let waiterFactory = FakeWaiterFactory()
         let conn = RMQConnection(
             transport: transport,
             user: "",
@@ -183,21 +183,24 @@ class RMQConnectionTest: XCTestCase {
             channelMax: 4,
             frameMax: 5,
             heartbeat: 6,
-            handshakeTimeout: 10,
+            handshakeTimeout: 100,
             channelAllocator: allocator,
             frameHandler: FrameHandlerSpy(),
             delegate: ConnectionDelegateSpy(),
             delegateQueue: dispatch_get_main_queue(),
-            networkQueue: q.dispatchQueue,
-            waiterFactory: RMQSemaphoreWaiterFactory()
+            networkQueue: q,
+            waiterFactory: waiterFactory
         )
         conn.start()
-        TestHelper.handshakeAsync(transport, q: q)
+        try! q.step()
+        transport.handshake()
 
         conn.createChannel()
         conn.createChannel()
         conn.createChannel()
-        q.finish()
+        try! q.step()
+        try! q.step()
+        try! q.step()
 
         transport.outboundData = []
 
@@ -205,7 +208,7 @@ class RMQConnectionTest: XCTestCase {
 
         XCTAssertEqual([], transport.outboundData)
 
-        q.finish()
+        try! q.step()
 
         for ch in allocator.channels[1...3] {
             XCTAssert(ch.blockingCloseCalled)
