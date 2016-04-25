@@ -2,7 +2,7 @@ import XCTest
 
 class ChannelCreationTest: XCTestCase {
     var conn: RMQConnection?
-    var q: QueueHelper?
+    var q: FakeSerialQueue?
     var allocator: ChannelSpyAllocator?
     var delegate: ConnectionDelegateSpy?
     var transport: ControlledInteractionTransport?
@@ -11,7 +11,7 @@ class ChannelCreationTest: XCTestCase {
         super.setUp()
 
         transport = ControlledInteractionTransport()
-        q = QueueHelper()
+        q = FakeSerialQueue()
         delegate = ConnectionDelegateSpy()
         allocator = ChannelSpyAllocator()
         let frameHandler = FrameHandlerSpy()
@@ -27,17 +27,18 @@ class ChannelCreationTest: XCTestCase {
                              frameHandler: frameHandler,
                              delegate: delegate!,
                              delegateQueue: dispatch_get_main_queue(),
-                             networkQueue: q!.dispatchQueue,
+                             networkQueue: q!,
                              waiterFactory: RMQSemaphoreWaiterFactory())
     }
 
     func testSendsChannelActivateIfHandshakeIsComplete() {
         conn?.start()
-        TestHelper.handshakeAsync(transport!, q: q!)
+        try! q?.step()
+        transport?.handshake()
 
         conn?.createChannel()
 
-        q?.finish()
+        try! q?.step()
 
         let actualDelegate: ConnectionDelegateSpy = allocator!.channels.last!.delegateSentToActivate! as! ConnectionDelegateSpy
         XCTAssertEqual(delegate!, actualDelegate)
@@ -48,13 +49,14 @@ class ChannelCreationTest: XCTestCase {
         conn?.createChannel()
 
         XCTAssertNil(allocator!.channels.last!.delegateSentToActivate)
-        TestHelper.handshakeAsync(transport!, q: q!)
+        try! q?.step()
+        transport?.handshake()
         XCTAssertNotNil(allocator!.channels.last!.delegateSentToActivate)
     }
 
     func testCallsOpenOnChannel() {
         conn!.createChannel()
-        q!.finish()
+        try! q?.step()
 
         XCTAssert(allocator!.channels.last!.openCalled)
     }
