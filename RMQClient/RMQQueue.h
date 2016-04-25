@@ -19,9 +19,9 @@
 
 - (void)publish:(nonnull NSString *)message persistent:(BOOL)isPersistent;
 - (void)publish:(nonnull NSString *)message;
-- (void)pop:(void (^ _Nonnull)(id<RMQMessage> _Nonnull message))handler;
-- (void)subscribe:(void (^ _Nonnull)(id<RMQMessage> _Nonnull message))handler;
+- (void)pop:(void (^ _Nonnull)(RMQMessage * _Nonnull message))handler;
+- (void)subscribe:(void (^ _Nonnull)(RMQMessage * _Nonnull message))handler;
 - (void)subscribe:(RMQBasicConsumeOptions)options
-          handler:(void (^ _Nonnull)(id<RMQMessage> _Nonnull message))handler;
+          handler:(void (^ _Nonnull)(RMQMessage * _Nonnull message))handler;
 
 @end

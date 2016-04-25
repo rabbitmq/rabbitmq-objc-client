@@ -1,12 +1,12 @@
 #import "RMQMessage.h"
 
-@interface RMQContentMessage ()
+@interface RMQMessage ()
 @property (nonnull, nonatomic, readwrite) NSString *consumerTag;
 @property (nonnull, nonatomic, readwrite) NSNumber *deliveryTag;
 @property (nonnull, nonatomic, readwrite) NSString *content;
 @end
 
-@implementation RMQContentMessage
+@implementation RMQMessage
 - (instancetype)initWithConsumerTag:(NSString *)consumerTag
                         deliveryTag:(NSNumber *)deliveryTag
                             content:(NSString *)content {

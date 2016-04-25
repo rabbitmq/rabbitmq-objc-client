@@ -28,9 +28,8 @@ class IntegrationTests: XCTestCase {
         q.publish(messageContent)
 
         q.pop { (m) in
-            let message = m as! RMQContentMessage
-            let expected = RMQContentMessage(consumerTag: "", deliveryTag: 1, content: messageContent)
-            XCTAssertEqual(expected, message)
+            let expected = RMQMessage(consumerTag: "", deliveryTag: 1, content: messageContent)
+            XCTAssertEqual(expected, m)
         }
     }
 
@@ -44,10 +43,10 @@ class IntegrationTests: XCTestCase {
         let ch = conn.createChannel()
         let q = ch.queue(generatedQueueName("subscribe"), options: [.AutoDelete, .Exclusive])
 
-        var delivered: RMQContentMessage?
+        var delivered: RMQMessage?
 
         q.subscribe([.NoOptions]) { (message: RMQMessage) in
-            delivered = message as? RMQContentMessage
+            delivered = message
             ch.ack(message.deliveryTag)
             dispatch_semaphore_signal(semaphore)
         }

@@ -7,7 +7,7 @@
 #import "RMQAllocatedChannel.h"
 #import "RMQConnectionDelegate.h"
 
-typedef void (^Consumer)(id<RMQMessage>);
+typedef void (^Consumer)(RMQMessage *);
 
 @interface RMQAllocatedChannel ()
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
@@ -187,7 +187,7 @@ typedef void (^Consumer)(id<RMQMessage>);
 
 -  (void)basicGet:(NSString *)queue
           options:(RMQBasicGetOptions)options
-completionHandler:(void (^)(id<RMQMessage> _Nonnull))userCompletionHandler {
+completionHandler:(void (^)(RMQMessage * _Nonnull))userCompletionHandler {
     [self sendAsyncMethod:[[RMQBasicGet alloc] initWithReserved1:[[RMQShort alloc] init:0]
                                                            queue:[[RMQShortstr alloc] init:queue]
                                                          options:options]
@@ -197,9 +197,9 @@ completionHandler:(void (^)(id<RMQMessage> _Nonnull))userCompletionHandler {
             RMQBasicGetOk *getOk = (RMQBasicGetOk *)getOkFrameset.method;
             NSString *messageContent = [[NSString alloc] initWithData:getOkFrameset.contentData
                                                              encoding:NSUTF8StringEncoding];
-            RMQContentMessage *message = [[RMQContentMessage alloc] initWithConsumerTag:@""
-                                                                            deliveryTag:@(getOk.deliveryTag.integerValue)
-                                                                                content:messageContent];
+            RMQMessage *message = [[RMQMessage alloc] initWithConsumerTag:@""
+                                                              deliveryTag:@(getOk.deliveryTag.integerValue)
+                                                                  content:messageContent];
             userCompletionHandler(message);
         }];
 }
@@ -255,9 +255,9 @@ completionHandler:(void (^)(id<RMQMessage> _Nonnull))userCompletionHandler {
             NSString *content = [[NSString alloc] initWithData:frameset.contentData encoding:NSUTF8StringEncoding];
             Consumer consumer = self.consumers[deliver.consumerTag];
             if (consumer) {
-                RMQContentMessage *message = [[RMQContentMessage alloc] initWithConsumerTag:deliver.consumerTag.stringValue
-                                                                                deliveryTag:@(deliver.deliveryTag.integerValue)
-                                                                                    content:content];
+                RMQMessage *message = [[RMQMessage alloc] initWithConsumerTag:deliver.consumerTag.stringValue
+                                                                  deliveryTag:@(deliver.deliveryTag.integerValue)
+                                                                      content:content];
                 consumer(message);
             }
         }];

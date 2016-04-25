@@ -27,13 +27,13 @@ class RMQQueueTest: XCTestCase {
 
     func testPopDelegatesToChannelBasicGet() {
         let sender = SenderSpy()
-        let stubbedMessage = RMQContentMessage(consumerTag: "", deliveryTag: 123, content: "hi there")
+        let stubbedMessage = RMQMessage(consumerTag: "", deliveryTag: 123, content: "hi there")
         let channel = ChannelSpy(42)
         let queue = RMQQueue(name: "great.queue", channel: channel, sender: sender)
 
-        var receivedMessage: RMQContentMessage?
+        var receivedMessage: RMQMessage?
         queue.pop() { m in
-            receivedMessage = m as? RMQContentMessage
+            receivedMessage = m
         }
 
         XCTAssertEqual("great.queue", channel.lastReceivedBasicGetQueue)
@@ -52,7 +52,7 @@ class RMQQueueTest: XCTestCase {
             handlerCalled = true
         }
 
-        let message = RMQContentMessage(consumerTag: "", deliveryTag: 123, content: "I have default options!")
+        let message = RMQMessage(consumerTag: "", deliveryTag: 123, content: "I have default options!")
         channel.lastReceivedBasicConsumeBlock!(message)
 
         XCTAssert(handlerCalled)
@@ -69,7 +69,7 @@ class RMQQueueTest: XCTestCase {
             handlerCalled = true
         }
 
-        let message = RMQContentMessage(consumerTag: "", deliveryTag: 123, content: "I have custom options!")
+        let message = RMQMessage(consumerTag: "", deliveryTag: 123, content: "I have custom options!")
         channel.lastReceivedBasicConsumeBlock!(message)
 
         XCTAssert(handlerCalled)

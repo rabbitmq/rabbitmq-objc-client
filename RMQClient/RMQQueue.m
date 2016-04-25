@@ -42,20 +42,20 @@
     [self.channel basicPublish:message routingKey:self.name exchange:@""];
 }
 
-- (void)pop:(void (^)(id<RMQMessage> _Nonnull))handler {
+- (void)pop:(void (^)(RMQMessage * _Nonnull))handler {
     [self.channel basicGet:self.name
                    options:RMQBasicGetNoOptions
          completionHandler:handler];
 }
 
 - (void)subscribe:(RMQBasicConsumeOptions)options
-          handler:(void (^)(id<RMQMessage> _Nonnull))handler {
+          handler:(void (^)(RMQMessage * _Nonnull))handler {
     [self.channel basicConsume:self.name
                        options:options
                       consumer:handler];
 }
 
-- (void)subscribe:(void (^)(id<RMQMessage> _Nonnull))handler {
+- (void)subscribe:(void (^)(RMQMessage * _Nonnull))handler {
     return [self subscribe:RMQBasicConsumeNoAck
                    handler:handler];
 }

@@ -178,15 +178,15 @@ class RMQAllocatedChannelTest: XCTestCase {
         let deliverHeader = RMQContentHeader(classID: deliverMethod.classID(), bodySize: 123, properties: [])
         let deliverBody = RMQContentBody(data: "Consumed!".dataUsingEncoding(NSUTF8StringEncoding)!)
         let deliverFrameset = RMQFrameset(channelNumber: 432, method: deliverMethod, contentHeader: deliverHeader, contentBodies: [deliverBody])
-        let expectedMessage = RMQContentMessage(consumerTag: "servergeneratedtag", deliveryTag: 123, content: "Consumed!")
+        let expectedMessage = RMQMessage(consumerTag: "servergeneratedtag", deliveryTag: 123, content: "Consumed!")
 
         channel.activateWithDelegate(nil)
 
-        var consumedMessage: RMQContentMessage?
+        var consumedMessage: RMQMessage?
 
         waiter?.fulfill(consumeOkFrameset)
         channel.basicConsume("somequeue", options: []) { message in
-            consumedMessage = message as? RMQContentMessage
+            consumedMessage = message
         }
         try! q.step()
 
@@ -222,14 +222,14 @@ class RMQAllocatedChannelTest: XCTestCase {
             contentHeader: RMQContentHeader(classID: 60, bodySize: 123, properties: []),
             contentBodies: [RMQContentBody(data: "hello".dataUsingEncoding(NSUTF8StringEncoding)!)]
         )
-        let expectedMessage = RMQContentMessage(consumerTag: "", deliveryTag: 1, content: "hello")
+        let expectedMessage = RMQMessage(consumerTag: "", deliveryTag: 1, content: "hello")
         let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, queue: q)
         ch.activateWithDelegate(nil)
 
-        var receivedMessage: RMQContentMessage?
+        var receivedMessage: RMQMessage?
         waiter?.fulfill(getOkFrameset)
         ch.basicGet("my-q", options: [.NoAck]) { m in
-            receivedMessage = m as? RMQContentMessage
+            receivedMessage = m
         }
 
         try! q.step()
@@ -271,21 +271,21 @@ class RMQAllocatedChannelTest: XCTestCase {
         let deliverHeader2 = RMQContentHeader(classID: deliverMethod2.classID(), bodySize: 123, properties: [])
         let deliverBody2 = RMQContentBody(data: "A message for consumer 2".dataUsingEncoding(NSUTF8StringEncoding)!)
         let deliverFrameset2 = RMQFrameset(channelNumber: 999, method: deliverMethod2, contentHeader: deliverHeader2, contentBodies: [deliverBody2])
-        let expectedMessage1 = RMQContentMessage(consumerTag: "servertag1", deliveryTag: 1, content: "A message for consumer 1")
-        let expectedMessage2 = RMQContentMessage(consumerTag: "servertag2", deliveryTag: 1, content: "A message for consumer 2")
+        let expectedMessage1 = RMQMessage(consumerTag: "servertag1", deliveryTag: 1, content: "A message for consumer 1")
+        let expectedMessage2 = RMQMessage(consumerTag: "servertag2", deliveryTag: 1, content: "A message for consumer 2")
 
         ch.activateWithDelegate(nil)
 
-        var consumedMessage1: RMQContentMessage?
+        var consumedMessage1: RMQMessage?
         ch.basicConsume("sameq", options: []) { message in
-            consumedMessage1 = message as? RMQContentMessage
+            consumedMessage1 = message
         }
         ch.handleFrameset(consumeOkFrameset1)
         try! q.step()
 
-        var consumedMessage2: RMQContentMessage?
+        var consumedMessage2: RMQMessage?
         ch.basicConsume("sameq", options: []) { message in
-            consumedMessage2 = message as? RMQContentMessage
+            consumedMessage2 = message
         }
         ch.handleFrameset(consumeOkFrameset2)
         try! q.step()
