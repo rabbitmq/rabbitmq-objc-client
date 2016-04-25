@@ -208,12 +208,6 @@ typedef void (^Consumer)(RMQMessage *);
     }];
 }
 
-- (void)basicPublish:(NSString *)message
-          routingKey:(NSString *)routingKey
-            exchange:(NSString *)exchange {
-    [self basicPublish:message routingKey:routingKey exchange:exchange persistent:NO];
-}
-
 -  (void)basicGet:(NSString *)queue
           options:(RMQBasicGetOptions)options
 completionHandler:(void (^)(RMQMessage * _Nonnull))userCompletionHandler {
