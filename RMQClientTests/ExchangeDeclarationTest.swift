@@ -47,4 +47,33 @@ class ExchangeDeclarationTest: XCTestCase {
         XCTAssertEqual("badness", delegate.lastChannelError?.localizedDescription)
     }
 
+    func testFanoutDeclaresAFanout() {
+        let sender = SenderSpy()
+        let waiter = FramesetWaiterSpy()
+        let q = FakeSerialQueue()
+        let ch = RMQAllocatedChannel(123, sender: sender, waiter: waiter, queue: q)
+
+        ch.fanout("my-exchange", options: [.Durable, .AutoDelete])
+        try! q.step()
+
+        let expectedFrameset = RMQFrameset(
+            channelNumber: 123,
+            method: MethodFixtures.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
+        )
+
+        XCTAssertEqual(expectedFrameset, sender.sentFramesets.last)
+    }
+
+    func testFanoutReturnsExistingFanoutWithSameNameEvenIfDifferentOptions() {
+        let sender = SenderSpy()
+        let waiter = FramesetWaiterSpy()
+        let q = FakeSerialQueue()
+        let ch = RMQAllocatedChannel(123, sender: sender, waiter: waiter, queue: q)
+
+        let ex1 = ch.fanout("my-exchange", options: [.Durable, .AutoDelete])
+        try! q.step()
+        let ex2 = ch.fanout("my-exchange", options: [.Durable])
+
+        XCTAssertEqual(ex1, ex2)
+    }
 }

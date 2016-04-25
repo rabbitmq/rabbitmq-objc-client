@@ -13,6 +13,7 @@ typedef void (^Consumer)(RMQMessage *);
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
 @property (nonatomic, readwrite) id <RMQSender> sender;
 @property (nonatomic, readwrite) NSMutableDictionary *consumers;
+@property (nonatomic, readwrite) NSMutableDictionary *exchanges;
 @property (nonatomic, readwrite) NSMutableDictionary *queues;
 @property (nonatomic, readwrite) NSNumber *prefetchCount;
 @property (nonatomic, readwrite) BOOL prefetchGlobal;
@@ -35,6 +36,7 @@ typedef void (^Consumer)(RMQMessage *);
         self.channelNumber = channelNumber;
         self.sender = sender;
         self.consumers = [NSMutableDictionary new];
+        self.exchanges = [NSMutableDictionary new];
         self.queues = [NSMutableDictionary new];
         self.prefetchCount = @0;
         self.prefetchGlobal = NO;
@@ -257,6 +259,17 @@ completionHandler:(void (^)(RMQMessage * _Nonnull))userCompletionHandler {
                    waitOn:[RMQExchangeDeclareOk class]
         completionHandler:^(RMQFramesetWaitResult *result) {
         }];
+}
+
+- (RMQExchange *)fanout:(NSString *)name options:(RMQExchangeDeclareOptions)options {
+    RMQExchange *exchange;
+    exchange = self.exchanges[name];
+    if (!exchange) {
+        [self exchangeDeclare:name type:@"fanout" options:options];
+        exchange = [[RMQExchange alloc] initWithName:name channel:self];
+        self.exchanges[name] = exchange;
+    }
+    return exchange;
 }
 
 # pragma mark - RMQFrameHandler
