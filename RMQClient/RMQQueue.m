@@ -39,6 +39,10 @@
     [self.channel queueBind:self.name exchange:exchange.name routingKey:routingKey];
 }
 
+- (void)bind:(RMQExchange *)exchange {
+    [self bind:exchange routingKey:@""];
+}
+
 - (void)publish:(NSString *)message persistent:(BOOL)isPersistent {
     [self.channel basicPublish:message routingKey:self.name exchange:@"" persistent:isPersistent];
 }

@@ -19,6 +19,7 @@
                               sender:(nonnull id <RMQSender>)sender;
 
 - (void)bind:(nonnull RMQExchange *)exchange routingKey:(nonnull NSString *)routingKey;
+- (void)bind:(nonnull RMQExchange *)exchange;
 - (void)publish:(nonnull NSString *)message persistent:(BOOL)isPersistent;
 - (void)publish:(nonnull NSString *)message;
 - (void)pop:(void (^ _Nonnull)(RMQMessage * _Nonnull message))handler;

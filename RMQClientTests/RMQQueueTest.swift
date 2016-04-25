@@ -88,4 +88,16 @@ class RMQQueueTest: XCTestCase {
         XCTAssertEqual("foo", channel.lastReceivedQueueBindRoutingKey)
     }
 
+    func testBindWithoutRoutingKeySendsEmptyStringRoutingKey() {
+        let channel = ChannelSpy(123)
+        let ex = RMQExchange(name: "my-exchange", channel: channel)
+        let queue = RMQQueue(name: "bindy", channel: channel, sender: SenderSpy())
+
+        queue.bind(ex)
+
+        XCTAssertEqual("bindy", channel.lastReceivedQueueBindQueueName)
+        XCTAssertEqual("my-exchange", channel.lastReceivedQueueBindExchange)
+        XCTAssertEqual("", channel.lastReceivedQueueBindRoutingKey)
+    }
+
 }
