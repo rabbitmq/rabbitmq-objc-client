@@ -10,8 +10,6 @@
 
 @property (nonnull, copy, nonatomic, readonly) NSNumber *channelNumber;
 
-- (nonnull RMQExchange *)defaultExchange;
-
 - (void)activateWithDelegate:(nullable id<RMQConnectionDelegate>)delegate;
 - (void)open;
 - (void)blockingClose;
@@ -60,14 +58,16 @@ completionHandler:(void (^ _Nonnull)(RMQMessage * _Nonnull message))completionHa
 
 - (void)nack:(nonnull NSNumber *)deliveryTag;
 
-- (void)exchangeDeclare:(nonnull NSString *)name
-                   type:(nonnull NSString *)type
-                options:(RMQExchangeDeclareOptions)options;
+- (nonnull RMQExchange *)defaultExchange;
 
 - (nonnull RMQExchange *)fanout:(nonnull NSString *)name
                         options:(RMQExchangeDeclareOptions)options;
 
 - (nonnull RMQExchange *)direct:(nonnull NSString *)name
                         options:(RMQExchangeDeclareOptions)options;
+
+- (void)exchangeDeclare:(nonnull NSString *)name
+                   type:(nonnull NSString *)type
+                options:(RMQExchangeDeclareOptions)options;
 
 @end
