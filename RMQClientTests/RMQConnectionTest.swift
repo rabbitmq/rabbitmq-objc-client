@@ -122,6 +122,7 @@ class RMQConnectionTest: XCTestCase {
 
         conn.blockingClose()
 
+        try! q.step()
         transport.assertClientSentMethod(MethodFixtures.connectionClose(), channelNumber: 0)
 
         // TODO: expect close-ok before unblocking

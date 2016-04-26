@@ -4,6 +4,7 @@ enum FakeSerialQueueError: ErrorType {
 
 @objc class FakeSerialQueue : NSObject, RMQLocalSerialQueue {
     var items: [() -> Void] = []
+    var blockingItems: [() -> Void] = []
     var index = 0
     var suspended = false
 
@@ -12,14 +13,8 @@ enum FakeSerialQueueError: ErrorType {
     }
 
     func blockingEnqueue(operation: (() -> Void)!) {
-        if suspended {
-        } else {
-            items.forEach { (op) in
-                op()
-            }
-            operation()
-            items = []
-        }
+        items.append(operation)
+        blockingItems.append(operation)
     }
 
     func suspend() {

@@ -78,32 +78,48 @@ class RMQAllocatedChannelTest: XCTestCase {
 
     func testBlockingCloseSendsCloseAndBlocksUntilCloseOkReceived() {
         let sender = SenderSpy()
-        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, commandQueue: FakeSerialQueue())
+        let q = FakeSerialQueue()
+        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, commandQueue: q)
         ch.activateWithDelegate(nil)
         ch.open()
         
         waiter!.fulfill(RMQFrameset(channelNumber: 1, method: MethodFixtures.channelCloseOk()))
         ch.blockingClose()
 
+        XCTAssertEqual(0, sender.sentFramesets.count)
+        XCTAssertEqual(2, q.items.count)
+        XCTAssertEqual(1, q.blockingItems.count)
+
+        try! q.step()
         XCTAssertEqual(
-            [
-                RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpen()),
-                RMQFrameset(channelNumber: 1, method: MethodFixtures.channelClose())
-            ],
-            sender.sentFramesets
+            RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpen()),
+            sender.sentFramesets.last
         )
+
+        try! q.step()
+        XCTAssertEqual(
+            RMQFrameset(channelNumber: 1, method: MethodFixtures.channelClose()),
+            sender.sentFramesets.last
+        )
+
         XCTAssertEqual(RMQChannelCloseOk.description(), waiter!.lastWaitedOnClass!.description())
     }
 
     func testBlockingCloseSendsMessageToDelegateIfWaitFails() {
         let sender = SenderSpy()
         let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, commandQueue: FakeSerialQueue())
+        let q = FakeSerialQueue()
+        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, commandQueue: q)
         ch.activateWithDelegate(delegate)
+
         ch.open()
+        ch.blockingClose()
+
+        try! q.step()
 
         waiter!.err("waiting failed")
-        ch.blockingClose()
+        try! q.step()
+
         XCTAssertEqual("waiting failed", delegate.lastChannelError?.localizedDescription)
     }
 
