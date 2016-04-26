@@ -25,7 +25,7 @@
                              frameHandler:(nonnull id<RMQFrameHandler>)frameHandler
                                  delegate:(nullable id<RMQConnectionDelegate>)delegate
                             delegateQueue:(nonnull dispatch_queue_t)delegateQueue
-                             networkQueue:(nonnull id<RMQLocalSerialQueue>)networkQueue
+                             commandQueue:(nonnull id<RMQLocalSerialQueue>)commandQueue
                             waiterFactory:(nonnull id<RMQWaiterFactory>)waiterFactory;
 
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri

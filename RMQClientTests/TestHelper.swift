@@ -44,7 +44,7 @@ class TestHelper {
     static func startedConnection(
         transport: RMQTransport,
         delegateQueue: dispatch_queue_t = dispatch_get_main_queue(),
-        networkQueue: RMQLocalSerialQueue = RMQGCDSerialQueue(),
+        commandQueue: RMQLocalSerialQueue = RMQGCDSerialQueue(),
         delegate: RMQConnectionDelegate? = nil,
         syncTimeout: Double = 0,
         user: String = "foo",
@@ -65,7 +65,7 @@ class TestHelper {
             frameHandler: allocator,
             delegate: delegate,
             delegateQueue: delegateQueue,
-            networkQueue: networkQueue,
+            commandQueue: commandQueue,
             waiterFactory: FakeWaiterFactory()
         )
         conn.start()
@@ -78,7 +78,7 @@ class TestHelper {
         let delegate = ConnectionDelegateSpy()
         let conn = TestHelper.startedConnection(transport,
                                                 delegateQueue: dispatch_get_main_queue(),
-                                                networkQueue: q,
+                                                commandQueue: q,
                                                 delegate: delegate)
         try! q.step()
         transport.handshake()

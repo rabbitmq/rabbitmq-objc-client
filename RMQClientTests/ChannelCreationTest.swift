@@ -27,7 +27,7 @@ class ChannelCreationTest: XCTestCase {
                              frameHandler: frameHandler,
                              delegate: delegate!,
                              delegateQueue: dispatch_get_main_queue(),
-                             networkQueue: q!,
+                             commandQueue: q!,
                              waiterFactory: FakeWaiterFactory())
     }
 

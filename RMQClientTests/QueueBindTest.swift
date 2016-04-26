@@ -6,7 +6,7 @@ class QueueBindTest: XCTestCase {
         let sender = SenderSpy()
         let waiter = FramesetWaiterSpy()
         let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(321, sender: sender, waiter: waiter, queue: q)
+        let ch = RMQAllocatedChannel(321, sender: sender, waiter: waiter, commandQueue: q)
 
         ch.queueBind("my-q", exchange: "my-exchange", routingKey: "hi")
 
@@ -24,7 +24,7 @@ class QueueBindTest: XCTestCase {
         let waiter = FramesetWaiterSpy()
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(321, sender: SenderSpy(), waiter: waiter, queue: q)
+        let ch = RMQAllocatedChannel(321, sender: SenderSpy(), waiter: waiter, commandQueue: q)
         ch.activateWithDelegate(delegate)
 
         ch.queueBind("my-q", exchange: "my-exchange", routingKey: "")
@@ -38,7 +38,7 @@ class QueueBindTest: XCTestCase {
         let waiter = FramesetWaiterSpy()
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(321, sender: SenderSpy(), waiter: waiter, queue: q)
+        let ch = RMQAllocatedChannel(321, sender: SenderSpy(), waiter: waiter, commandQueue: q)
         ch.activateWithDelegate(delegate)
 
         ch.queueBind("my-q", exchange: "my-exchange", routingKey: "")
@@ -53,7 +53,7 @@ class QueueBindTest: XCTestCase {
         let sender = SenderSpy()
         let waiter = FramesetWaiterSpy()
         let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(321, sender: sender, waiter: waiter, queue: q)
+        let ch = RMQAllocatedChannel(321, sender: sender, waiter: waiter, commandQueue: q)
 
         ch.queueUnbind("my-q", exchange: "my-exchange", routingKey: "hi")
 
@@ -71,7 +71,7 @@ class QueueBindTest: XCTestCase {
         let waiter = FramesetWaiterSpy()
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(321, sender: SenderSpy(), waiter: waiter, queue: q)
+        let ch = RMQAllocatedChannel(321, sender: SenderSpy(), waiter: waiter, commandQueue: q)
         ch.activateWithDelegate(delegate)
 
         ch.queueUnbind("my-q", exchange: "my-exchange", routingKey: "hi")
@@ -85,7 +85,7 @@ class QueueBindTest: XCTestCase {
         let waiter = FramesetWaiterSpy()
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(321, sender: SenderSpy(), waiter: waiter, queue: q)
+        let ch = RMQAllocatedChannel(321, sender: SenderSpy(), waiter: waiter, commandQueue: q)
         ch.activateWithDelegate(delegate)
 
         ch.queueUnbind("my-q", exchange: "my-exchange", routingKey: "hi")

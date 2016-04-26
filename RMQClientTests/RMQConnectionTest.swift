@@ -20,7 +20,7 @@ class RMQConnectionTest: XCTestCase {
             frameHandler: allocator,
             delegate: delegate,
             delegateQueue: dispatch_get_main_queue(),
-            networkQueue: FakeSerialQueue(),
+            commandQueue: FakeSerialQueue(),
             waiterFactory: RMQSemaphoreWaiterFactory()
         )
         XCTAssertNil(delegate.lastConnectionError)
@@ -46,7 +46,7 @@ class RMQConnectionTest: XCTestCase {
             frameHandler: allocator,
             delegate: delegate,
             delegateQueue: dispatch_get_main_queue(),
-            networkQueue: q,
+            commandQueue: q,
             waiterFactory: RMQSemaphoreWaiterFactory()
         )
         conn.start()
@@ -61,7 +61,7 @@ class RMQConnectionTest: XCTestCase {
         let delegate = ConnectionDelegateSpy()
         TestHelper.startedConnection(transport,
                                      delegateQueue: dispatch_get_main_queue(),
-                                     networkQueue: q,
+                                     commandQueue: q,
                                      delegate: delegate)
         transport.stubbedToProduceErrorOnWrite = "fail please"
         try! q.step()
@@ -116,7 +116,7 @@ class RMQConnectionTest: XCTestCase {
         let waiterFactory = FakeWaiterFactory()
         let delegate = ConnectionDelegateSpy()
         let transport = ControlledInteractionTransport()
-        let conn = RMQConnection(transport: transport, user: "", password: "", vhost: "", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 10, channelAllocator: ChannelSpyAllocator(), frameHandler: FrameHandlerSpy(), delegate: delegate, delegateQueue: dispatch_get_main_queue(), networkQueue: q, waiterFactory: waiterFactory)
+        let conn = RMQConnection(transport: transport, user: "", password: "", vhost: "", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 10, channelAllocator: ChannelSpyAllocator(), frameHandler: FrameHandlerSpy(), delegate: delegate, delegateQueue: dispatch_get_main_queue(), commandQueue: q, waiterFactory: waiterFactory)
         conn.start()
         try! q.step()
         transport.handshake()
@@ -147,7 +147,7 @@ class RMQConnectionTest: XCTestCase {
             frameHandler: FrameHandlerSpy(),
             delegate: delegate,
             delegateQueue: dispatch_get_main_queue(),
-            networkQueue: q,
+            commandQueue: q,
             waiterFactory: waiterFactory
         )
         conn.start()
@@ -188,7 +188,7 @@ class RMQConnectionTest: XCTestCase {
             frameHandler: FrameHandlerSpy(),
             delegate: ConnectionDelegateSpy(),
             delegateQueue: dispatch_get_main_queue(),
-            networkQueue: q,
+            commandQueue: q,
             waiterFactory: waiterFactory
         )
         conn.start()

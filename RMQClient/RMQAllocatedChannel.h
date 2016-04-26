@@ -8,11 +8,11 @@
 - (nonnull instancetype)init:(nonnull NSNumber *)channelNumber
                       sender:(nonnull id <RMQSender>)sender
                       waiter:(nonnull id<RMQFramesetWaiter>)waiter
-                       queue:(nonnull id<RMQLocalSerialQueue>)queue
+                commandQueue:(nonnull id<RMQLocalSerialQueue>)commandQueue
                nameGenerator:(nullable id<RMQNameGenerator>)nameGenerator;
 
 - (nonnull instancetype)init:(nonnull NSNumber *)channelNumber
                       sender:(nonnull id <RMQSender>)sender
                       waiter:(nonnull id<RMQFramesetWaiter>)waiter
-                       queue:(nonnull id<RMQLocalSerialQueue>)queue;
+                commandQueue:(nonnull id<RMQLocalSerialQueue>)commandQueue;
 @end

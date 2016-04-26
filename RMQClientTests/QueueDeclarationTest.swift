@@ -5,7 +5,7 @@ class QueueDeclarationTest: XCTestCase {
     func testQueueSendsAQueueDeclare() {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(1, sender: sender, waiter: FramesetWaiterSpy(), queue: q)
+        let ch = RMQAllocatedChannel(1, sender: sender, waiter: FramesetWaiterSpy(), commandQueue: q)
 
         ch.queue("bagpuss")
 
@@ -20,7 +20,7 @@ class QueueDeclarationTest: XCTestCase {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
         let waiter = FramesetWaiterSpy()
-        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter, queue: q)
+        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter, commandQueue: q)
 
         ch.queue("bagpuss")
 
@@ -34,7 +34,7 @@ class QueueDeclarationTest: XCTestCase {
         let q = FakeSerialQueue()
         let waiter = FramesetWaiterSpy()
         let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter, queue: q)
+        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter, commandQueue: q)
         ch.activateWithDelegate(delegate)
 
         ch.queue("bagpuss")
@@ -50,7 +50,7 @@ class QueueDeclarationTest: XCTestCase {
         let q = FakeSerialQueue()
         let waiter = FramesetWaiterSpy()
         let generator = StubNameGenerator()
-        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter, queue: q, nameGenerator: generator)
+        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter, commandQueue: q, nameGenerator: generator)
 
         generator.nextName = "mouse-organ"
         let rmqQueue = ch.queue("", options: [])
@@ -68,7 +68,7 @@ class QueueDeclarationTest: XCTestCase {
         let waiter = FramesetWaiterSpy()
         let generator = StubNameGenerator()
         let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter, queue: q, nameGenerator: generator)
+        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter, commandQueue: q, nameGenerator: generator)
         ch.activateWithDelegate(delegate)
 
         generator.nextName = "I-will-dupe"

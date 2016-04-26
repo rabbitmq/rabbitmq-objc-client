@@ -25,7 +25,7 @@
 @property (nonatomic, readwrite) NSNumber *frameMax;
 @property (nonatomic, weak, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) dispatch_queue_t delegateQueue;
-@property (nonatomic, readwrite) id<RMQLocalSerialQueue> networkQueue;
+@property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) id<RMQWaiterFactory> waiterFactory;
 @property (nonatomic, readwrite) NSNumber *handshakeTimeout;
 @property (nonatomic, readwrite) BOOL closeRequested;
@@ -45,7 +45,7 @@
                      frameHandler:(nonnull id<RMQFrameHandler>)frameHandler
                          delegate:(id<RMQConnectionDelegate>)delegate
                     delegateQueue:(dispatch_queue_t)delegateQueue
-                     networkQueue:(nonnull id<RMQLocalSerialQueue>)networkQueue
+                     commandQueue:(nonnull id<RMQLocalSerialQueue>)commandQueue
                     waiterFactory:(nonnull id<RMQWaiterFactory>)waiterFactory {
     self = [super init];
     if (self) {
@@ -82,7 +82,7 @@
         self.channels = [NSMutableDictionary new];
         self.delegate = delegate;
         self.delegateQueue = delegateQueue;
-        self.networkQueue = networkQueue;
+        self.commandQueue = commandQueue;
         self.waiterFactory = waiterFactory;
         self.closeRequested = NO;
 
@@ -114,7 +114,7 @@
                       frameHandler:allocator
                           delegate:delegate
                      delegateQueue:delegateQueue
-                      networkQueue:[RMQGCDSerialQueue new]
+                      commandQueue:[RMQGCDSerialQueue new]
                      waiterFactory:[RMQSemaphoreWaiterFactory new]];
 }
 
@@ -147,7 +147,7 @@
     } else {
         [self.transport write:[RMQProtocolHeader new].amqEncoded];
 
-        [self.networkQueue enqueue:^{
+        [self.commandQueue enqueue:^{
             id<RMQWaiter> handshakeCompletion = [self.waiterFactory makeWithTimeout:self.handshakeTimeout];
 
             RMQHandshaker *handshaker = [[RMQHandshaker alloc] initWithSender:self
@@ -173,7 +173,7 @@
 
 - (void)close {
     self.closeRequested = YES;
-    [self.networkQueue enqueue:^{
+    [self.commandQueue enqueue:^{
         [self closeAllChannels];
         [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:self.amqClose]];
     }];
@@ -181,7 +181,7 @@
 
 - (void)blockingClose {
     self.closeRequested = YES;
-    [self.networkQueue blockingEnqueue:^{
+    [self.commandQueue blockingEnqueue:^{
         [self closeAllChannels];
         [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:self.amqClose]];
     }];
@@ -191,7 +191,7 @@
     id<RMQChannel> ch = self.channelAllocator.allocate;
     self.channels[ch.channelNumber] = ch;
 
-    [self.networkQueue enqueue:^{
+    [self.commandQueue enqueue:^{
         [ch activateWithDelegate:self.delegate];
     }];
 

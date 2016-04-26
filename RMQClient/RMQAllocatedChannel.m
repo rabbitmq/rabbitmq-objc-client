@@ -16,7 +16,7 @@
 @property (nonatomic, readwrite) NSMutableDictionary *queues;
 @property (nonatomic, readwrite) NSNumber *prefetchCount;
 @property (nonatomic, readwrite) BOOL prefetchGlobal;
-@property (nonatomic, readwrite) id<RMQLocalSerialQueue> queue;
+@property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) BOOL active;
 @property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) id<RMQFramesetWaiter> waiter;
@@ -28,11 +28,11 @@
 - (instancetype)init:(NSNumber *)channelNumber
               sender:(id<RMQSender>)sender
               waiter:(id<RMQFramesetWaiter>)waiter
-               queue:(id<RMQLocalSerialQueue>)queue
+        commandQueue:(id<RMQLocalSerialQueue>)commandQueue
        nameGenerator:(id<RMQNameGenerator>)nameGenerator {
     self = [super init];
     if (self) {
-        self.queue = queue;
+        self.commandQueue = commandQueue;
         self.active = NO;
         self.channelNumber = channelNumber;
         self.sender = sender;
@@ -51,11 +51,11 @@
 - (instancetype)init:(NSNumber *)channelNumber
               sender:(id<RMQSender>)sender
               waiter:(id<RMQFramesetWaiter>)waiter
-               queue:(id<RMQLocalSerialQueue>)queue {
+        commandQueue:(id<RMQLocalSerialQueue>)commandQueue {
     return [self init:channelNumber
                sender:sender
                waiter:waiter
-                queue:queue
+         commandQueue:commandQueue
         nameGenerator:nil];
 }
 
@@ -67,7 +67,7 @@
 
 - (void)dealloc {
     if (!self.active) {
-        [self.queue resume];
+        [self.commandQueue resume];
     }
 }
 
@@ -77,7 +77,7 @@
 
 - (void)activateWithDelegate:(id<RMQConnectionDelegate>)delegate {
     self.delegate = delegate;
-    [self.queue resume];
+    [self.commandQueue resume];
     self.active = YES;
 }
 
@@ -85,7 +85,7 @@
     RMQChannelOpen *outgoingMethod = [[RMQChannelOpen alloc] initWithReserved1:[[RMQShortstr alloc] init:@""]];
     RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:outgoingMethod];
 
-    [self.queue enqueue:^{
+    [self.commandQueue enqueue:^{
         [self.sender sendFrameset:outgoingFrameset];
 
         RMQFramesetWaitResult *result = [self.waiter waitOn:[RMQChannelOpenOk class]];
@@ -102,7 +102,7 @@
                                                                methodId:[[RMQShort alloc] init:0]];
     RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:close];
 
-    [self.queue blockingEnqueue:^{
+    [self.commandQueue blockingEnqueue:^{
         [self.sender sendFrameset:frameset];
 
         RMQFramesetWaitResult *result = [self.waiter waitOn:[RMQChannelCloseOk class]];
@@ -201,7 +201,7 @@
                                                          contentHeader:contentHeader
                                                          contentBodies:contentBodies];
 
-    [self.queue enqueue:^{
+    [self.commandQueue enqueue:^{
         [self.sender sendFrameset:frameset];
     }];
 }
@@ -301,7 +301,7 @@ completionHandler:(RMQConsumer)userCompletionHandler {
 
 - (void)handleFrameset:(RMQFrameset *)frameset {
     if ([frameset.method isKindOfClass:[RMQBasicDeliver class]]) {
-        [self.queue enqueue:^{
+        [self.commandQueue enqueue:^{
             RMQBasicDeliver *deliver = (RMQBasicDeliver *)frameset.method;
             NSString *content = [[NSString alloc] initWithData:frameset.contentData encoding:NSUTF8StringEncoding];
             RMQConsumer consumer = self.consumers[deliver.consumerTag];
@@ -372,7 +372,7 @@ completionHandler:(RMQConsumer)userCompletionHandler {
 - (void)sendAsyncMethod:(id<RMQMethod>)method {
     RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
 
-    [self.queue enqueue:^{
+    [self.commandQueue enqueue:^{
         [self.sender sendFrameset:frameset];
     }];
 }
@@ -381,7 +381,7 @@ completionHandler:(RMQConsumer)userCompletionHandler {
                  waitOn:(Class)waitClass
       completionHandler:(void (^)(RMQFramesetWaitResult *result))completionHandler {
     RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
-    [self.queue enqueue:^{
+    [self.commandQueue enqueue:^{
         [self.sender sendFrameset:outgoingFrameset];
 
         RMQFramesetWaitResult *result = [self.waiter waitOn:waitClass];
