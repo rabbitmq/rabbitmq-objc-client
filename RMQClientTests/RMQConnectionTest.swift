@@ -19,7 +19,6 @@ class RMQConnectionTest: XCTestCase {
             channelAllocator: allocator,
             frameHandler: allocator,
             delegate: delegate,
-            delegateQueue: dispatch_get_main_queue(),
             commandQueue: FakeSerialQueue(),
             waiterFactory: RMQSemaphoreWaiterFactory()
         )
@@ -45,7 +44,6 @@ class RMQConnectionTest: XCTestCase {
             channelAllocator: allocator,
             frameHandler: allocator,
             delegate: delegate,
-            delegateQueue: dispatch_get_main_queue(),
             commandQueue: q,
             waiterFactory: RMQSemaphoreWaiterFactory()
         )
@@ -60,7 +58,6 @@ class RMQConnectionTest: XCTestCase {
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
         TestHelper.startedConnection(transport,
-                                     delegateQueue: dispatch_get_main_queue(),
                                      commandQueue: q,
                                      delegate: delegate)
         transport.stubbedToProduceErrorOnWrite = "fail please"
@@ -71,8 +68,9 @@ class RMQConnectionTest: XCTestCase {
     }
 
     func testTransportDelegateDisconnectErrorsAreTransformedIntoConnectionDelegateErrors() {
+        let transport = ControlledInteractionTransport()
         let delegate = ConnectionDelegateSpy()
-        let conn = RMQConnection(delegate: delegate)
+        let conn = TestHelper.startedConnection(transport, delegate: delegate)
         let e = NSError(domain: RMQErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "foo"])
 
         conn.transport(nil, disconnectedWithError: e)
@@ -90,9 +88,10 @@ class RMQConnectionTest: XCTestCase {
     }
 
     func testTransportDisconnectNotificationsTransformedWhenCloseNotRequested() {
+        let transport = ControlledInteractionTransport()
         let delegate = ConnectionDelegateSpy()
-        let conn = RMQConnection(delegate: delegate)
-        conn.transport(nil, disconnectedWithError: nil)
+        let conn = TestHelper.startedConnection(transport, delegate: delegate)
+        conn.transport(transport, disconnectedWithError: nil)
 
         XCTAssertNil(delegate.lastDisconnectError)
         XCTAssertTrue(delegate.disconnectCalled)
@@ -116,7 +115,7 @@ class RMQConnectionTest: XCTestCase {
         let waiterFactory = FakeWaiterFactory()
         let delegate = ConnectionDelegateSpy()
         let transport = ControlledInteractionTransport()
-        let conn = RMQConnection(transport: transport, user: "", password: "", vhost: "", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 10, channelAllocator: ChannelSpyAllocator(), frameHandler: FrameHandlerSpy(), delegate: delegate, delegateQueue: dispatch_get_main_queue(), commandQueue: q, waiterFactory: waiterFactory)
+        let conn = RMQConnection(transport: transport, user: "", password: "", vhost: "", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 10, channelAllocator: ChannelSpyAllocator(), frameHandler: FrameHandlerSpy(), delegate: delegate, commandQueue: q, waiterFactory: waiterFactory)
         conn.start()
         try! q.step()
         transport.handshake()
@@ -146,7 +145,6 @@ class RMQConnectionTest: XCTestCase {
             channelAllocator: ChannelSpyAllocator(),
             frameHandler: FrameHandlerSpy(),
             delegate: delegate,
-            delegateQueue: dispatch_get_main_queue(),
             commandQueue: q,
             waiterFactory: waiterFactory
         )
@@ -187,7 +185,6 @@ class RMQConnectionTest: XCTestCase {
             channelAllocator: allocator,
             frameHandler: FrameHandlerSpy(),
             delegate: ConnectionDelegateSpy(),
-            delegateQueue: dispatch_get_main_queue(),
             commandQueue: q,
             waiterFactory: waiterFactory
         )

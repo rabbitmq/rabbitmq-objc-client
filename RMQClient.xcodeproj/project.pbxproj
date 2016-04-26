@@ -74,6 +74,8 @@
 		AE8AD2691CC545ED00229444 /* RMQFramesetSemaphoreWaiterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8AD2681CC545ED00229444 /* RMQFramesetSemaphoreWaiterTest.swift */; };
 		AE8AD26B1CC54AAA00229444 /* RMQFramesetWaiter.h in Headers */ = {isa = PBXBuildFile; fileRef = AE8AD26A1CC54AAA00229444 /* RMQFramesetWaiter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE8AD26D1CC584F000229444 /* FramesetWaiterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8AD26C1CC584F000229444 /* FramesetWaiterSpy.swift */; };
+		AE929C791CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = AE929C771CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.h */; };
+		AE929C7A1CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = AE929C781CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.m */; };
 		AEA45EC81C43CBBE00FE1F62 /* RMQConnectionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA45EC71C43CBBE00FE1F62 /* RMQConnectionTest.swift */; };
 		AEA45ECA1C43D2B900FE1F62 /* RMQTransport.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA45EC91C43D2B900FE1F62 /* RMQTransport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEA45ED11C43F4DC00FE1F62 /* RMQTCPSocketTransport.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA45ECF1C43F4DC00FE1F62 /* RMQTCPSocketTransport.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -244,6 +246,8 @@
 		AE8AD2681CC545ED00229444 /* RMQFramesetSemaphoreWaiterTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQFramesetSemaphoreWaiterTest.swift; sourceTree = "<group>"; };
 		AE8AD26A1CC54AAA00229444 /* RMQFramesetWaiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQFramesetWaiter.h; sourceTree = "<group>"; };
 		AE8AD26C1CC584F000229444 /* FramesetWaiterSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FramesetWaiterSpy.swift; sourceTree = "<group>"; };
+		AE929C771CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQQueuingConnectionDelegateProxy.h; sourceTree = "<group>"; };
+		AE929C781CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQQueuingConnectionDelegateProxy.m; sourceTree = "<group>"; };
 		AEA45EC41C43C20F00FE1F62 /* RMQMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RMQMethods.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AEA45EC71C43CBBE00FE1F62 /* RMQConnectionTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RMQConnectionTest.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		AEA45EC91C43D2B900FE1F62 /* RMQTransport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RMQTransport.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -406,6 +410,8 @@
 				AEF1E8F91CBEA057000C7AB8 /* RMQHandshaker.h */,
 				AEF1E8FA1CBEA057000C7AB8 /* RMQHandshaker.m */,
 				AECDEC9E1CBC0E3600EA6E93 /* RMQConnectionDelegate.h */,
+				AE929C771CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.h */,
+				AE929C781CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.m */,
 				AEA8E5CE1CC65D2C005B5E1E /* RMQConnectionDelegateLogger.h */,
 				AEA8E5CF1CC65D2C005B5E1E /* RMQConnectionDelegateLogger.m */,
 				AEFFE6361C8EE7B30039D652 /* RMQConnectionConfig.h */,
@@ -582,6 +588,7 @@
 				AE80BAB31C4D47C100E6DFFD /* RMQParser.h in Headers */,
 				AE4E7F4E1C6A2A8900A441EC /* RMQConversations.h in Headers */,
 				AEEEF0821C4F9BFA0056A5EB /* RMQMethodDecoder.h in Headers */,
+				AE929C791CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.h in Headers */,
 				AEE445EB1C7373BF0082132C /* RMQBasicProperties.h in Headers */,
 				AE4E7F4A1C6A293D00A441EC /* RMQMethods.h in Headers */,
 				AE39BDA21C68B105000E7A77 /* RMQProtocolHeader.h in Headers */,
@@ -805,6 +812,7 @@
 				AEE7FEAE1C3BCD0F00DF8C4F /* RMQConnection.m in Sources */,
 				AEA45ED21C43F4DC00FE1F62 /* RMQTCPSocketTransport.m in Sources */,
 				AE744E3E1C86F43300A4C2FA /* RMQConstants.m in Sources */,
+				AE929C7A1CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.m in Sources */,
 				AE39BD9F1C68B019000E7A77 /* RMQValues.m in Sources */,
 				AE898D5C1C3C30D100AA3BF1 /* RMQURI.m in Sources */,
 				AEE445EC1C7373BF0082132C /* RMQBasicProperties.m in Sources */,

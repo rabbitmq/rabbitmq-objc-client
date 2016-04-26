@@ -10,6 +10,7 @@
 #import "RMQTCPSocketTransport.h"
 #import "RMQGCDSerialQueue.h"
 #import "RMQSemaphoreWaiterFactory.h"
+#import "RMQQueuingConnectionDelegateProxy.h"
 
 @interface RMQConnection ()
 @property (copy, nonatomic, readwrite) NSString *vhost;
@@ -24,7 +25,6 @@
 @property (nonatomic, readwrite) NSMutableDictionary *channels;
 @property (nonatomic, readwrite) NSNumber *frameMax;
 @property (nonatomic, weak, readwrite) id<RMQConnectionDelegate> delegate;
-@property (nonatomic, readwrite) dispatch_queue_t delegateQueue;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) id<RMQWaiterFactory> waiterFactory;
 @property (nonatomic, readwrite) NSNumber *handshakeTimeout;
@@ -44,7 +44,6 @@
                  channelAllocator:(nonnull id<RMQChannelAllocator>)channelAllocator
                      frameHandler:(nonnull id<RMQFrameHandler>)frameHandler
                          delegate:(id<RMQConnectionDelegate>)delegate
-                    delegateQueue:(dispatch_queue_t)delegateQueue
                      commandQueue:(nonnull id<RMQLocalSerialQueue>)commandQueue
                     waiterFactory:(nonnull id<RMQWaiterFactory>)waiterFactory {
     self = [super init];
@@ -81,7 +80,6 @@
 
         self.channels = [NSMutableDictionary new];
         self.delegate = delegate;
-        self.delegateQueue = delegateQueue;
         self.commandQueue = commandQueue;
         self.waiterFactory = waiterFactory;
         self.closeRequested = NO;
@@ -102,6 +100,8 @@
     RMQURI *amqURI = [RMQURI parse:uri error:&error];
     RMQTCPSocketTransport *transport = [[RMQTCPSocketTransport alloc] initWithHost:amqURI.host port:amqURI.portNumber];
     RMQMultipleChannelAllocator *allocator = [[RMQMultipleChannelAllocator alloc] initWithChannelSyncTimeout:syncTimeout];
+    RMQQueuingConnectionDelegateProxy *delegateProxy = [[RMQQueuingConnectionDelegateProxy alloc] initWithDelegate:delegate
+                                                                                                             queue:delegateQueue];
     return [self initWithTransport:transport
                               user:amqURI.username
                           password:amqURI.password
@@ -112,8 +112,7 @@
                   handshakeTimeout:syncTimeout
                   channelAllocator:allocator
                       frameHandler:allocator
-                          delegate:delegate
-                     delegateQueue:delegateQueue
+                          delegate:delegateProxy
                       commandQueue:[RMQGCDSerialQueue new]
                      waiterFactory:[RMQSemaphoreWaiterFactory new]];
 }

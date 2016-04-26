@@ -13,6 +13,7 @@
 
 @property (nonnull, copy, nonatomic, readonly) NSString *vhost;
 
+# pragma mark - Designated initializer (implementation only)
 - (nonnull instancetype)initWithTransport:(nonnull id<RMQTransport>)transport
                                      user:(nonnull NSString *)user
                                  password:(nonnull NSString *)password
@@ -24,10 +25,10 @@
                          channelAllocator:(nonnull id<RMQChannelAllocator>)channelAllocator
                              frameHandler:(nonnull id<RMQFrameHandler>)frameHandler
                                  delegate:(nullable id<RMQConnectionDelegate>)delegate
-                            delegateQueue:(nonnull dispatch_queue_t)delegateQueue
                              commandQueue:(nonnull id<RMQLocalSerialQueue>)commandQueue
                             waiterFactory:(nonnull id<RMQWaiterFactory>)waiterFactory;
 
+# pragma mark - User-facing initializers
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
                          channelMax:(nonnull NSNumber *)channelMax
                            frameMax:(nonnull NSNumber *)frameMax
@@ -41,6 +42,7 @@
 
 - (nonnull instancetype)initWithDelegate:(nullable id<RMQConnectionDelegate>)delegate;
 
+# pragma mark - Other methods
 - (void)start;
 - (void)close;
 - (void)blockingClose;

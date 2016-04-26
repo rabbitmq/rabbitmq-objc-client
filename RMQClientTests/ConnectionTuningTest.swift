@@ -77,7 +77,6 @@ class ConnectionTuningTest: XCTestCase {
             channelAllocator: allocator,
             frameHandler: allocator,
             delegate: nil,
-            delegateQueue: dispatch_get_main_queue(),
             commandQueue: q,
             waiterFactory: FakeWaiterFactory()
         )
