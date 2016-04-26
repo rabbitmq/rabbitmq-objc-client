@@ -187,14 +187,14 @@
 
 - (void)close {
     self.closeRequested = YES;
-    for (void (^operation)() in self.closeOperations) {
+    for (RMQOperation operation in self.closeOperations) {
         [self.commandQueue enqueue:operation];
     }
 }
 
 - (void)blockingClose {
     self.closeRequested = YES;
-    for (void (^operation)() in self.closeOperations) {
+    for (RMQOperation operation in self.closeOperations) {
         [self.commandQueue blockingEnqueue:operation];
     }
 }
