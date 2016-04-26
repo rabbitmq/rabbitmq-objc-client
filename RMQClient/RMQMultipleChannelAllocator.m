@@ -82,11 +82,6 @@
     return ch;
 }
 
-- (const char *)queueName:(UInt16)channelNumber {
-    return [[NSString stringWithFormat:@"com.rabbitmq.ChannelQueue%d", channelNumber]
-            cStringUsingEncoding:NSASCIIStringEncoding];
-}
-
 - (id<RMQChannel>)previouslyReleasedChannel {
     for (UInt16 i = 1; i < RMQChannelLimit; i++) {
         if (!self.channels[@(i)]) {
