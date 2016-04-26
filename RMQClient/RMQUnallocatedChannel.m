@@ -22,6 +22,7 @@
 }
 - (void)open {}
 - (void)blockingClose {}
+- (void)blockingWaitOn:(Class)method {}
 
 - (void)basicConsume:(NSString *)queueName
              options:(RMQBasicConsumeOptions)options

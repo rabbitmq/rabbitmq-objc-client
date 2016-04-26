@@ -8,11 +8,11 @@ enum FakeSerialQueueError: ErrorType {
     var index = 0
     var suspended = false
 
-    func enqueue(operation: (() -> Void)!) {
+    func enqueue(operation: RMQOperation!) {
         items.append(operation)
     }
 
-    func blockingEnqueue(operation: (() -> Void)!) {
+    func blockingEnqueue(operation: RMQOperation!) {
         items.append(operation)
         blockingItems.append(operation)
     }

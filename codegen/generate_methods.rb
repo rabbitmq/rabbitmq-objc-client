@@ -31,8 +31,6 @@ class GenerateMethods
       constructor = constructor(fields)
       class_part = method.xpath('..').first[:name].capitalize
       has_content_value = objc_boolean(method[:content] == "1")
-      should_halt_on_receipt_value =
-        objc_boolean(%w(RMQConnectionClose RMQConnectionCloseOk).include?(class_name))
       acc + template('methods_implementation_template').result(binding)
     }
   end

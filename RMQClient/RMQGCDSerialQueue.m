@@ -15,11 +15,11 @@
     return self;
 }
 
-- (void)enqueue:(void (^)())operation {
+- (void)enqueue:(RMQOperation)operation {
     dispatch_async(self.dispatchQueue, operation);
 }
 
-- (void)blockingEnqueue:(void (^)())operation {
+- (void)blockingEnqueue:(RMQOperation)operation {
     dispatch_sync(self.dispatchQueue, operation);
 }
 

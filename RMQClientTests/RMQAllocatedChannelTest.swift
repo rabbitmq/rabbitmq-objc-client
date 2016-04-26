@@ -123,6 +123,37 @@ class RMQAllocatedChannelTest: XCTestCase {
         XCTAssertEqual("waiting failed", delegate.lastChannelError?.localizedDescription)
     }
 
+    func testBlockingWaitOnBlocksUntilSpecifiedMethodReceived() {
+        let sender = SenderSpy()
+        let q = FakeSerialQueue()
+        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, commandQueue: q)
+
+        ch.blockingWaitOn(RMQConnectionCloseOk.self)
+        XCTAssertNil(waiter?.lastWaitedOnClass)
+
+        XCTAssertEqual(1, q.blockingItems.count)
+
+        waiter!.fulfill(RMQFrameset(channelNumber: 0, method: MethodFixtures.connectionCloseOk()))
+        try! q.step()
+
+        XCTAssertEqual("RMQConnectionCloseOk", waiter?.lastWaitedOnClass!.description())
+    }
+
+    func testBlockingWaitOnSendsMessageToDelegateIfWaitFails() {
+        let sender = SenderSpy()
+        let q = FakeSerialQueue()
+        let delegate = ConnectionDelegateSpy()
+        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, commandQueue: q)
+        ch.activateWithDelegate(delegate)
+
+        ch.blockingWaitOn(RMQConnectionCloseOk.self)
+
+        waiter!.err("Timed out, buddy.")
+        try! q.step()
+
+        XCTAssertEqual("Timed out, buddy.", delegate.lastChannelError?.localizedDescription)
+    }
+
     func testBasicConsumeSendsBasicConsumeMethod() {
         let sender = SenderSpy()
         let q = FakeSerialQueue()

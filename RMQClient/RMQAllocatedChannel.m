@@ -113,6 +113,15 @@
 
 }
 
+- (void)blockingWaitOn:(Class)method {
+    [self.commandQueue blockingEnqueue:^{
+        RMQFramesetWaitResult *result = [self.waiter waitOn:method];
+        if (result.error) {
+            [self.delegate channel:self error:result.error];
+        }
+    }];
+}
+
 - (RMQQueue *)queue:(NSString *)originalQueueName
             options:(RMQQueueDeclareOptions)options {
     RMQQueue *found = self.queues[originalQueueName];

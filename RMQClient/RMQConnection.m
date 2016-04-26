@@ -21,8 +21,9 @@
 @property (nonatomic, readwrite) RMQConnectionConfig *config;
 @property (nonatomic, readwrite) RMQReaderLoop *readerLoop;
 @property (nonatomic, readwrite) id <RMQChannelAllocator> channelAllocator;
+@property (nonatomic, readwrite) id <RMQChannel> channelZero;
 @property (nonatomic, readwrite) id <RMQFrameHandler> frameHandler;
-@property (nonatomic, readwrite) NSMutableDictionary *channels;
+@property (nonatomic, readwrite) NSMutableDictionary *userChannels;
 @property (nonatomic, readwrite) NSNumber *frameMax;
 @property (nonatomic, weak, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
@@ -78,13 +79,14 @@
         self.locale = @"en_GB";
         self.readerLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport frameHandler:self];
 
-        self.channels = [NSMutableDictionary new];
+        self.userChannels = [NSMutableDictionary new];
         self.delegate = delegate;
         self.commandQueue = commandQueue;
         self.waiterFactory = waiterFactory;
         self.closeRequested = NO;
 
-        [self allocateChannelZero];
+        self.channelZero = [self.channelAllocator allocate];
+        [self.channelZero activateWithDelegate:self.delegate];
     }
     return self;
 }
@@ -170,25 +172,9 @@
     }
 }
 
-- (void)close {
-    self.closeRequested = YES;
-    [self.commandQueue enqueue:^{
-        [self closeAllChannels];
-        [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:self.amqClose]];
-    }];
-}
-
-- (void)blockingClose {
-    self.closeRequested = YES;
-    [self.commandQueue blockingEnqueue:^{
-        [self closeAllChannels];
-        [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:self.amqClose]];
-    }];
-}
-
 - (id<RMQChannel>)createChannel {
     id<RMQChannel> ch = self.channelAllocator.allocate;
-    self.channels[ch.channelNumber] = ch;
+    self.userChannels[ch.channelNumber] = ch;
 
     [self.commandQueue enqueue:^{
         [ch activateWithDelegate:self.delegate];
@@ -197,6 +183,20 @@
     [ch open];
 
     return ch;
+}
+
+- (void)close {
+    self.closeRequested = YES;
+    for (void (^operation)() in self.closeOperations) {
+        [self.commandQueue enqueue:operation];
+    }
+}
+
+- (void)blockingClose {
+    self.closeRequested = YES;
+    for (void (^operation)() in self.closeOperations) {
+        [self.commandQueue blockingEnqueue:operation];
+    }
 }
 
 # pragma mark - RMQSender
@@ -223,11 +223,13 @@
         id<RMQMethod> reply = [method replyWithConfig:self.config];
         [self sendMethod:reply channelNumber:frameset.channelNumber];
     }
-    if (((id<RMQMethod>)method).shouldHaltOnReceipt) {
+
+    if ([method isKindOfClass:[RMQConnectionClose class]]) {
         [self.transport close:^{}];
+    } else {
+        [self.frameHandler handleFrameset:frameset];
+        [self.readerLoop runOnce];
     }
-    [self.frameHandler handleFrameset:frameset];
-    [self.readerLoop runOnce];
 }
 
 # pragma mark - RMQTransportDelegate
@@ -244,14 +246,17 @@
 
 # pragma mark - Private
 
-- (void)closeAllChannels {
-    for (id<RMQChannel> ch in self.channels.allValues) {
-        [ch blockingClose];
-    }
+- (NSArray *)closeOperations {
+    return @[^{[self closeAllChannels];},
+              ^{[self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:self.amqClose]];},
+              ^{[self.channelZero blockingWaitOn:[RMQConnectionCloseOk class]];},
+              ^{[self.transport close:^{}];}];
 }
 
-- (void)allocateChannelZero {
-    [self.channelAllocator allocate];
+- (void)closeAllChannels {
+    for (id<RMQChannel> ch in self.userChannels.allValues) {
+        [ch blockingClose];
+    }
 }
 
 - (RMQConnectionClose *)amqClose {
@@ -267,10 +272,6 @@
 
 - (BOOL)shouldSendNextRequest:(id<RMQMethod>)amqMethod {
     return [amqMethod conformsToProtocol:@protocol(RMQOutgoingPrecursor)];
-}
-
-- (dispatch_time_t)handshakeTimeoutFromNow {
-    return dispatch_time(DISPATCH_TIME_NOW, self.handshakeTimeout.doubleValue * NSEC_PER_SEC);
 }
 
 @end

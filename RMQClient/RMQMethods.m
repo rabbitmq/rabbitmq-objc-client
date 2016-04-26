@@ -24,7 +24,6 @@
 - (NSNumber *)methodID      { return @10; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithVersionMajor:(nonnull RMQOctet *)versionMajor
                                 versionMinor:(nonnull RMQOctet *)versionMinor
@@ -97,7 +96,6 @@
 - (NSNumber *)methodID      { return @11; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithClientProperties:(nonnull RMQTable *)clientProperties
                                        mechanism:(nonnull RMQShortstr *)mechanism
@@ -159,7 +157,6 @@
 - (NSNumber *)methodID      { return @20; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithChallenge:(nonnull RMQLongstr *)challenge {
     self = [super init];
@@ -206,7 +203,6 @@
 - (NSNumber *)methodID      { return @21; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithResponse:(nonnull RMQLongstr *)response {
     self = [super init];
@@ -257,7 +253,6 @@
 - (NSNumber *)methodID      { return @30; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithChannelMax:(nonnull RMQShort *)channelMax
                                   frameMax:(nonnull RMQLong *)frameMax
@@ -318,7 +313,6 @@
 - (NSNumber *)methodID      { return @31; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithChannelMax:(nonnull RMQShort *)channelMax
                                   frameMax:(nonnull RMQLong *)frameMax
@@ -379,7 +373,6 @@
 - (NSNumber *)methodID      { return @40; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithVirtualHost:(nonnull RMQShortstr *)virtualHost
                                   reserved1:(nonnull RMQShortstr *)reserved1
@@ -436,7 +429,6 @@
 - (NSNumber *)methodID      { return @41; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShortstr *)reserved1 {
     self = [super init];
@@ -489,7 +481,6 @@
 - (NSNumber *)methodID      { return @50; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return YES; }
 
 - (nonnull instancetype)initWithReplyCode:(nonnull RMQShort *)replyCode
                                 replyText:(nonnull RMQShortstr *)replyText
@@ -550,7 +541,6 @@
 - (NSNumber *)methodID      { return @51; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return YES; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -588,7 +578,6 @@
 - (NSNumber *)methodID      { return @60; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReason:(nonnull RMQShortstr *)reason {
     self = [super init];
@@ -634,7 +623,6 @@
 - (NSNumber *)methodID      { return @61; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -672,7 +660,6 @@
 - (NSNumber *)methodID      { return @10; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShortstr *)reserved1 {
     self = [super init];
@@ -719,7 +706,6 @@
 - (NSNumber *)methodID      { return @11; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull RMQLongstr *)reserved1 {
     self = [super init];
@@ -766,7 +752,6 @@
 - (NSNumber *)methodID      { return @20; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithOptions:(RMQChannelFlowOptions)options {
     self = [super init];
@@ -813,7 +798,6 @@
 - (NSNumber *)methodID      { return @21; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithOptions:(RMQChannelFlowOkOptions)options {
     self = [super init];
@@ -866,7 +850,6 @@
 - (NSNumber *)methodID      { return @40; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReplyCode:(nonnull RMQShort *)replyCode
                                 replyText:(nonnull RMQShortstr *)replyText
@@ -927,7 +910,6 @@
 - (NSNumber *)methodID      { return @41; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -973,7 +955,6 @@
 - (NSNumber *)methodID      { return @10; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
                                  exchange:(nonnull RMQShortstr *)exchange
@@ -1039,7 +1020,6 @@
 - (NSNumber *)methodID      { return @11; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -1081,7 +1061,6 @@
 - (NSNumber *)methodID      { return @20; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
                                  exchange:(nonnull RMQShortstr *)exchange
@@ -1137,7 +1116,6 @@
 - (NSNumber *)methodID      { return @21; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -1185,7 +1163,6 @@
 - (NSNumber *)methodID      { return @30; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
                               destination:(nonnull RMQShortstr *)destination
@@ -1256,7 +1233,6 @@
 - (NSNumber *)methodID      { return @31; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -1304,7 +1280,6 @@
 - (NSNumber *)methodID      { return @40; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
                               destination:(nonnull RMQShortstr *)destination
@@ -1375,7 +1350,6 @@
 - (NSNumber *)methodID      { return @51; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -1419,7 +1393,6 @@
 - (NSNumber *)methodID      { return @10; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
                                     queue:(nonnull RMQShortstr *)queue
@@ -1485,7 +1458,6 @@
 - (NSNumber *)methodID      { return @11; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithQueue:(nonnull RMQShortstr *)queue
                          messageCount:(nonnull RMQLong *)messageCount
@@ -1552,7 +1524,6 @@
 - (NSNumber *)methodID      { return @20; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
                                     queue:(nonnull RMQShortstr *)queue
@@ -1623,7 +1594,6 @@
 - (NSNumber *)methodID      { return @21; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -1669,7 +1639,6 @@
 - (NSNumber *)methodID      { return @50; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
                                     queue:(nonnull RMQShortstr *)queue
@@ -1735,7 +1704,6 @@
 - (NSNumber *)methodID      { return @51; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -1777,7 +1745,6 @@
 - (NSNumber *)methodID      { return @30; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
                                     queue:(nonnull RMQShortstr *)queue
@@ -1834,7 +1801,6 @@
 - (NSNumber *)methodID      { return @31; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithMessageCount:(nonnull RMQLong *)messageCount {
     self = [super init];
@@ -1885,7 +1851,6 @@
 - (NSNumber *)methodID      { return @40; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
                                     queue:(nonnull RMQShortstr *)queue
@@ -1942,7 +1907,6 @@
 - (NSNumber *)methodID      { return @41; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithMessageCount:(nonnull RMQLong *)messageCount {
     self = [super init];
@@ -1993,7 +1957,6 @@
 - (NSNumber *)methodID      { return @10; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithPrefetchSize:(nonnull RMQLong *)prefetchSize
                                prefetchCount:(nonnull RMQShort *)prefetchCount
@@ -2049,7 +2012,6 @@
 - (NSNumber *)methodID      { return @11; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -2095,7 +2057,6 @@
 - (NSNumber *)methodID      { return @20; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
                                     queue:(nonnull RMQShortstr *)queue
@@ -2162,7 +2123,6 @@
 - (NSNumber *)methodID      { return @21; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithConsumerTag:(nonnull RMQShortstr *)consumerTag {
     self = [super init];
@@ -2211,7 +2171,6 @@
 - (NSNumber *)methodID      { return @30; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithConsumerTag:(nonnull RMQShortstr *)consumerTag
                                     options:(RMQBasicCancelOptions)options {
@@ -2263,7 +2222,6 @@
 - (NSNumber *)methodID      { return @31; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithConsumerTag:(nonnull RMQShortstr *)consumerTag {
     self = [super init];
@@ -2316,7 +2274,6 @@
 - (NSNumber *)methodID      { return @40; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return YES; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
                                  exchange:(nonnull RMQShortstr *)exchange
@@ -2384,7 +2341,6 @@
 - (NSNumber *)methodID      { return @50; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return YES; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReplyCode:(nonnull RMQShort *)replyCode
                                 replyText:(nonnull RMQShortstr *)replyText
@@ -2454,7 +2410,6 @@
 - (NSNumber *)methodID      { return @60; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return YES; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithConsumerTag:(nonnull RMQShortstr *)consumerTag
                                 deliveryTag:(nonnull RMQLonglong *)deliveryTag
@@ -2525,7 +2480,6 @@
 - (NSNumber *)methodID      { return @70; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShort *)reserved1
                                     queue:(nonnull RMQShortstr *)queue
@@ -2590,7 +2544,6 @@
 - (NSNumber *)methodID      { return @71; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return YES; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull RMQLonglong *)deliveryTag
                                     options:(RMQBasicGetOkOptions)options
@@ -2657,7 +2610,6 @@
 - (NSNumber *)methodID      { return @72; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShortstr *)reserved1 {
     self = [super init];
@@ -2706,7 +2658,6 @@
 - (NSNumber *)methodID      { return @80; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull RMQLonglong *)deliveryTag
                                     options:(RMQBasicAckOptions)options {
@@ -2760,7 +2711,6 @@
 - (NSNumber *)methodID      { return @90; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull RMQLonglong *)deliveryTag
                                     options:(RMQBasicRejectOptions)options {
@@ -2812,7 +2762,6 @@
 - (NSNumber *)methodID      { return @100; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithOptions:(RMQBasicRecoverAsyncOptions)options {
     self = [super init];
@@ -2859,7 +2808,6 @@
 - (NSNumber *)methodID      { return @110; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithOptions:(RMQBasicRecoverOptions)options {
     self = [super init];
@@ -2905,7 +2853,6 @@
 - (NSNumber *)methodID      { return @111; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -2945,7 +2892,6 @@
 - (NSNumber *)methodID      { return @120; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithDeliveryTag:(nonnull RMQLonglong *)deliveryTag
                                     options:(RMQBasicNackOptions)options {
@@ -2996,7 +2942,6 @@
 - (NSNumber *)methodID      { return @10; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -3033,7 +2978,6 @@
 - (NSNumber *)methodID      { return @11; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -3070,7 +3014,6 @@
 - (NSNumber *)methodID      { return @20; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -3107,7 +3050,6 @@
 - (NSNumber *)methodID      { return @21; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -3144,7 +3086,6 @@
 - (NSNumber *)methodID      { return @30; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -3181,7 +3122,6 @@
 - (NSNumber *)methodID      { return @31; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {
@@ -3219,7 +3159,6 @@
 - (NSNumber *)methodID      { return @10; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 - (nonnull instancetype)initWithOptions:(RMQConfirmSelectOptions)options {
     self = [super init];
@@ -3265,7 +3204,6 @@
 - (NSNumber *)methodID      { return @11; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
-- (BOOL)shouldHaltOnReceipt { return NO; }
 
 
 - (instancetype)initWithDecodedFrame:(NSArray *)frame {

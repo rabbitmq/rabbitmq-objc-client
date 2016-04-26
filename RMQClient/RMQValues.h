@@ -82,7 +82,6 @@
 - (nonnull NSNumber *)methodID;
 - (nonnull instancetype)initWithDecodedFrame:(nonnull NSArray *)frame;
 - (BOOL)hasContent;
-- (BOOL)shouldHaltOnReceipt;
 @end
 
 @protocol RMQOutgoingPrecursor <NSObject>

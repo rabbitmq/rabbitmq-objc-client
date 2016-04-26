@@ -24,6 +24,7 @@ enum ChannelSpyError: ErrorType {
     var stubbedBasicConsumeError: String?
     var openCalled = false
     var blockingCloseCalled = false
+    var blockingWaitOnMethod: AnyClass?
     var delegateSentToActivate: RMQConnectionDelegate?
 
     override var description: String {
@@ -48,6 +49,10 @@ enum ChannelSpyError: ErrorType {
 
     func blockingClose() {
         blockingCloseCalled = true
+    }
+
+    func blockingWaitOn(method: AnyClass) {
+        blockingWaitOnMethod = method
     }
 
     func sendMethod(sendingMethod: RMQMethod,

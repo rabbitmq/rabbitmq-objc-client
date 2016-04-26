@@ -1,9 +1,11 @@
 #import <Foundation/Foundation.h>
 
+typedef void (^RMQOperation)();
+
 @protocol RMQLocalSerialQueue <NSObject>
 
-- (void)enqueue:(void (^)())operation;
-- (void)blockingEnqueue:(void (^)())operation;
+- (void)enqueue:(RMQOperation)operation;
+- (void)blockingEnqueue:(RMQOperation)operation;
 - (void)suspend;
 - (void)resume;
 

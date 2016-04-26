@@ -85,6 +85,13 @@ enum TestDoubleTransportError: ErrorType {
         return self
     }
 
+    func lastSentPayload() -> RMQPayload {
+        let actual = outboundData.last!
+        let parser = RMQParser(data: actual)
+        let frame = RMQFrame(parser: parser)
+        return frame.payload
+    }
+
     func assertClientSentMethods(methods: [RMQMethod], channelNumber: Int) -> Self {
         if outboundData.isEmpty {
             XCTFail("nothing sent")
