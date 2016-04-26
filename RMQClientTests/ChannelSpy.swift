@@ -141,7 +141,15 @@ enum ChannelSpyError: ErrorType {
         return RMQExchange(name: name, channel: self)
     }
 
+    func fanout(name: String) -> RMQExchange {
+        return fanout(name, options: [])
+    }
+
     func direct(name: String, options: RMQExchangeDeclareOptions) -> RMQExchange {
         return RMQExchange(name: name, channel: self)
+    }
+
+    func direct(name: String) -> RMQExchange {
+        return direct(name, options: [])
     }
 }

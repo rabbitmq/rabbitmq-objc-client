@@ -285,8 +285,16 @@ completionHandler:(RMQConsumer)userCompletionHandler {
     return [self memoizedExchangeDeclare:name type:@"fanout" options:options];
 }
 
+- (RMQExchange *)fanout:(NSString *)name {
+    return [self fanout:name options:RMQExchangeDeclareNoOptions];
+}
+
 - (RMQExchange *)direct:(NSString *)name options:(RMQExchangeDeclareOptions)options {
     return [self memoizedExchangeDeclare:name type:@"direct" options:options];
+}
+
+- (RMQExchange *)direct:(NSString *)name {
+    return [self direct:name options:RMQExchangeDeclareNoOptions];
 }
 
 # pragma mark - RMQFrameHandler

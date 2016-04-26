@@ -70,7 +70,7 @@ class ExchangeDeclarationTest: XCTestCase {
 
         let ex1 = ch.fanout("my-exchange", options: [.Durable, .AutoDelete])
         try! q.step()
-        let ex2 = ch.fanout("my-exchange", options: [.Durable])
+        let ex2 = ch.fanout("my-exchange")
 
         XCTAssertEqual(ex1, ex2)
     }
@@ -98,7 +98,7 @@ class ExchangeDeclarationTest: XCTestCase {
 
         let ex1 = ch.fanout("my-exchange", options: [.Durable, .AutoDelete])
         try! q.step()
-        let ex2 = ch.direct("my-exchange", options: [.Durable])
+        let ex2 = ch.direct("my-exchange")
 
         XCTAssertEqual(ex1, ex2)
     }

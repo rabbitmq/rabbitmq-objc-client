@@ -63,8 +63,12 @@ completionHandler:(RMQConsumer _Nonnull)completionHandler;
 - (nonnull RMQExchange *)fanout:(nonnull NSString *)name
                         options:(RMQExchangeDeclareOptions)options;
 
+- (nonnull RMQExchange *)fanout:(nonnull NSString *)name;
+
 - (nonnull RMQExchange *)direct:(nonnull NSString *)name
                         options:(RMQExchangeDeclareOptions)options;
+
+- (nonnull RMQExchange *)direct:(nonnull NSString *)name;
 
 - (void)exchangeDeclare:(nonnull NSString *)name
                    type:(nonnull NSString *)type

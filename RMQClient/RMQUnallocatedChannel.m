@@ -78,7 +78,13 @@
 - (RMQExchange *)fanout:(NSString *)name options:(RMQExchangeDeclareOptions)options {
     return nil;
 }
+- (RMQExchange *)fanout:(NSString *)name {
+    return [self fanout:name options:RMQExchangeDeclareNoOptions];
+}
 - (RMQExchange *)direct:(NSString *)name options:(RMQExchangeDeclareOptions)options {
     return nil;
+}
+- (RMQExchange *)direct:(NSString *)name {
+    return [self direct:name options:RMQExchangeDeclareNoOptions];
 }
 @end
