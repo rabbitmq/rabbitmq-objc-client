@@ -63,12 +63,12 @@ class ExchangeDeclarationTest: XCTestCase {
         XCTAssertEqual(expectedFrameset, sender.sentFramesets.last)
     }
 
-    func testFanoutReturnsExistingFanoutWithSameNameEvenIfDifferentOptions() {
+    func testFanoutReturnsExistingFanoutWithSameNameEvenIfDifferentOptionsOrTypes() {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
         let ch = RMQAllocatedChannel(123, sender: sender, waiter: FramesetWaiterSpy(), commandQueue: q)
 
-        let ex1 = ch.fanout("my-exchange", options: [.Durable, .AutoDelete])
+        let ex1 = ch.topic("my-exchange", options: [.Durable, .AutoDelete])
         try! q.step()
         let ex2 = ch.fanout("my-exchange")
 
@@ -101,5 +101,21 @@ class ExchangeDeclarationTest: XCTestCase {
         let ex2 = ch.direct("my-exchange")
 
         XCTAssertEqual(ex1, ex2)
+    }
+
+    func testTopicDeclaresATopicExchange() {
+        let sender = SenderSpy()
+        let q = FakeSerialQueue()
+        let ch = RMQAllocatedChannel(123, sender: sender, waiter: FramesetWaiterSpy(), commandQueue: q)
+
+        ch.topic("logs", options: [.Durable, .AutoDelete])
+        try! q.step()
+
+        let expectedFrameset = RMQFrameset(
+            channelNumber: 123,
+            method: MethodFixtures.exchangeDeclare("logs", type: "topic", options: [.Durable, .AutoDelete])
+        )
+
+        XCTAssertEqual(expectedFrameset, sender.sentFramesets.last)
     }
 }

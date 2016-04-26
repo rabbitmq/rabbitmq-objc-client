@@ -297,6 +297,14 @@ completionHandler:(RMQConsumer)userCompletionHandler {
     return [self direct:name options:RMQExchangeDeclareNoOptions];
 }
 
+- (RMQExchange *)topic:(NSString *)name options:(RMQExchangeDeclareOptions)options {
+    return [self memoizedExchangeDeclare:name type:@"topic" options:options];
+}
+
+- (RMQExchange *)topic:(NSString *)name {
+    return [self topic:name options:RMQExchangeDeclareNoOptions];
+}
+
 # pragma mark - RMQFrameHandler
 
 - (void)handleFrameset:(RMQFrameset *)frameset {
