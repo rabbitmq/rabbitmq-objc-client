@@ -2,7 +2,7 @@ import XCTest
 import CocoaAsyncSocket
 
 class RMQTCPSocketTransportTest: XCTestCase {
-    var transport: RMQTCPSocketTransport = RMQTCPSocketTransport(host: "localhost", port: 5672)
+    var transport: RMQTCPSocketTransport = RMQTCPSocketTransport(host: "localhost", port: 5672, useTLS: false)
 
     func testObeysContract() {
         RMQTransportContract(transport)
@@ -19,7 +19,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
 
     func testCallbacksAreRemovedAfterUse() {
         let callbacks = [:] as NSMutableDictionary
-        transport = RMQTCPSocketTransport(host: "localhost", port: 5672, callbackStorage: callbacks)
+        transport = RMQTCPSocketTransport(host: "localhost", port: 5672, useTLS: false, callbackStorage: callbacks)
 
         var finished = false
         try! transport.connect()
@@ -35,7 +35,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
     func testSendsErrorToDelegateWhenConnectionTimesOut() {
         let callbacks = RMQSynchronizedMutableDictionary()
         let delegate = TransportDelegateSpy()
-        transport = RMQTCPSocketTransport(host: "localhost", port: 123456, callbackStorage: callbacks)
+        transport = RMQTCPSocketTransport(host: "localhost", port: 123456, useTLS: false, callbackStorage: callbacks)
 
         transport.delegate = delegate
         try! transport.connect()
@@ -47,8 +47,9 @@ class RMQTCPSocketTransportTest: XCTestCase {
 
     func testExtendsReadWhenReadTimesOut() {
         let callbacks = RMQSynchronizedMutableDictionary()
-        transport = RMQTCPSocketTransport(host: "localhost", port: 123456, callbackStorage: callbacks)
+        transport = RMQTCPSocketTransport(host: "localhost", port: 123456, useTLS: false, callbackStorage: callbacks)
         let timeoutExtension = transport.socket(GCDAsyncSocket(), shouldTimeoutReadWithTag: 123, elapsed: 123, bytesDone: 999)
         XCTAssert(timeoutExtension > 0)
     }
+
 }

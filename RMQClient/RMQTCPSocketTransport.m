@@ -9,6 +9,7 @@ long writeTag = UINT32_MAX + 2;
 
 @property (nonatomic, readwrite) NSString *host;
 @property (nonatomic, readwrite) NSNumber *port;
+@property (nonatomic, readwrite) BOOL useTLS;
 @property (nonatomic, readwrite) BOOL _isConnected;
 @property (nonatomic, readwrite) GCDAsyncSocket *socket;
 @property (nonatomic, readwrite) id callbacks;
@@ -19,21 +20,30 @@ long writeTag = UINT32_MAX + 2;
 @implementation RMQTCPSocketTransport
 @synthesize delegate;
 
-- (instancetype)initWithHost:(NSString *)host port:(NSNumber *)port callbackStorage:(id)callbacks {
+- (instancetype)initWithHost:(NSString *)host
+                        port:(NSNumber *)port
+                      useTLS:(BOOL)useTLS
+             callbackStorage:(id)callbacks {
     self = [super init];
     if (self) {
         self.socket = [[GCDAsyncSocket alloc] initWithDelegate:self
                                                  delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)];
         self.host = host;
         self.port = port;
+        self.useTLS = useTLS;
         self.callbacks = callbacks;
         self.connectTimeout = @2;
     }
     return self;
 }
 
-- (instancetype)initWithHost:(NSString *)host port:(NSNumber *)port {
-    return [self initWithHost:host port:port callbackStorage:[RMQSynchronizedMutableDictionary new]];
+- (instancetype)initWithHost:(NSString *)host
+                        port:(NSNumber *)port
+                      useTLS:(BOOL)useTLS {
+    return [self initWithHost:host
+                         port:port
+                       useTLS:useTLS
+              callbackStorage:[RMQSynchronizedMutableDictionary new]];
 }
 
 - (instancetype)init

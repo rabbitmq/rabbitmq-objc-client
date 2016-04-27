@@ -92,8 +92,10 @@
                    delegate:(id<RMQConnectionDelegate>)delegate
               delegateQueue:(dispatch_queue_t)delegateQueue {
     NSError *error = NULL;
-    RMQURI *amqURI = [RMQURI parse:uri error:&error];
-    RMQTCPSocketTransport *transport = [[RMQTCPSocketTransport alloc] initWithHost:amqURI.host port:amqURI.portNumber];
+    RMQURI *rmqURI = [RMQURI parse:uri error:&error];
+    RMQTCPSocketTransport *transport = [[RMQTCPSocketTransport alloc] initWithHost:rmqURI.host
+                                                                              port:rmqURI.portNumber
+                                                                            useTLS:rmqURI.isTLS];
     RMQMultipleChannelAllocator *allocator = [[RMQMultipleChannelAllocator alloc] initWithChannelSyncTimeout:syncTimeout];
     RMQQueuingConnectionDelegateProxy *delegateProxy = [[RMQQueuingConnectionDelegateProxy alloc] initWithDelegate:delegate
                                                                                                              queue:delegateQueue];
@@ -101,13 +103,13 @@
                                                                                         queue:[RMQGCDSerialQueue new]
                                                                                 waiterFactory:[RMQSemaphoreWaiterFactory new]
                                                                                         clock:[RMQTickingClock new]];
-    RMQCredentials *credentials = [[RMQCredentials alloc] initWithUsername:amqURI.username
-                                                                  password:amqURI.password];
+    RMQCredentials *credentials = [[RMQCredentials alloc] initWithUsername:rmqURI.username
+                                                                  password:rmqURI.password];
     RMQConnectionConfig *config = [[RMQConnectionConfig alloc] initWithCredentials:credentials
                                                                         channelMax:channelMax
                                                                           frameMax:frameMax
                                                                          heartbeat:heartbeat
-                                                                             vhost:amqURI.vhost];
+                                                                             vhost:rmqURI.vhost];
     return [self initWithTransport:transport
                             config:config
                   handshakeTimeout:syncTimeout
