@@ -15,7 +15,7 @@
 + (instancetype)parse:(NSString *)uri error:(NSError *__autoreleasing  _Nullable *)error {
     NSURLComponents *components = [NSURLComponents componentsWithString:uri];
     
-    if (![self isRMQPScheme:components.scheme]) {
+    if (![self isValidScheme:components.scheme]) {
         *error = [NSError errorWithDomain:RMQErrorDomain
                                      code:0
                                  userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Connection URI must use amqp or amqps schema (example: amqp://bus.megacorp.internal:5766), learn more at http://bit.ly/ks8MXK", nil)}];
@@ -48,7 +48,7 @@
     return u;
 }
 
-+ (BOOL)isRMQPScheme:(NSString *)scheme {
++ (BOOL)isValidScheme:(NSString *)scheme {
     return [scheme isEqualToString:@"amqp"] || [scheme isEqualToString:@"amqps"];
 }
 
