@@ -77,7 +77,7 @@
 }
 
 - (RMQConnectionOpen *)connectionOpen {
-    return [[RMQConnectionOpen alloc] initWithVirtualHost:[[RMQShortstr alloc] init:@"/"]
+    return [[RMQConnectionOpen alloc] initWithVirtualHost:[[RMQShortstr alloc] init:self.config.vhost]
                                                 reserved1:[[RMQShortstr alloc] init:@""]
                                                   options:0];
 }

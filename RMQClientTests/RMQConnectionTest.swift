@@ -108,4 +108,19 @@ class RMQConnectionTest: XCTestCase {
         XCTAssert(heartbeatSender.signalActivityReceived)
     }
 
+    func testSendsConfiguredVHostWithConnectionOpen() {
+        let transport = ControlledInteractionTransport()
+        let q = FakeSerialQueue()
+        let conn = RMQConnection(transport: transport, user: "", password: "", vhost: "/myvhost", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 10, channelAllocator: ChannelSpyAllocator(), frameHandler: FrameHandlerSpy(), delegate: ConnectionDelegateSpy(), commandQueue: q, waiterFactory: FakeWaiterFactory(), heartbeatSender: HeartbeatSenderSpy())
+        conn.start()
+        try! q.step()
+
+        transport.handshake()
+
+        let parser = RMQParser(data: transport.outboundData.last!)
+        let outgoingConnectionOpen: RMQConnectionOpen = RMQFrame(parser: parser).payload as! RMQConnectionOpen
+
+        XCTAssertEqual("/myvhost", outgoingConnectionOpen.virtualHost.stringValue)
+    }
+
 }

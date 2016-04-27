@@ -15,7 +15,6 @@
 #import "RMQTickingClock.h"
 
 @interface RMQConnection ()
-@property (copy, nonatomic, readwrite) NSString *vhost;
 @property (strong, nonatomic, readwrite) id <RMQTransport> transport;
 @property (nonatomic, readwrite) RMQTable *clientProperties;
 @property (nonatomic, readwrite) NSString *mechanism;
@@ -58,10 +57,10 @@
         self.config = [[RMQConnectionConfig alloc] initWithCredentials:credentials
                                                             channelMax:channelMax
                                                               frameMax:frameMax
-                                                             heartbeat:heartbeat];
+                                                             heartbeat:heartbeat
+                                                                 vhost:vhost];
         self.handshakeTimeout = handshakeTimeout;
         self.frameMax = frameMax;
-        self.vhost = vhost;
         self.transport = transport;
         self.transport.delegate = self;
         self.channelAllocator = channelAllocator;
