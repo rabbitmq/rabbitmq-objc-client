@@ -94,4 +94,10 @@
 - (RMQExchange *)topic:(NSString *)name {
     return [self topic:name options:RMQExchangeDeclareNoOptions];
 }
+- (RMQExchange *)headers:(NSString *)name options:(RMQExchangeDeclareOptions)options {
+    return nil;
+}
+- (RMQExchange *)headers:(NSString *)name {
+    return [self headers:name options:RMQExchangeDeclareNoOptions];
+}
 @end

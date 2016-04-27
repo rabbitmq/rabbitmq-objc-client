@@ -76,6 +76,10 @@ completionHandler:(RMQConsumer _Nonnull)completionHandler;
 
 - (nonnull RMQExchange *)topic:(nonnull NSString *)name;
 
+- (nonnull RMQExchange *)headers:(nonnull NSString *)name
+                         options:(RMQExchangeDeclareOptions)options;
+- (nonnull RMQExchange *)headers:(nonnull NSString *)name;
+
 - (void)exchangeDeclare:(nonnull NSString *)name
                    type:(nonnull NSString *)type
                 options:(RMQExchangeDeclareOptions)options;

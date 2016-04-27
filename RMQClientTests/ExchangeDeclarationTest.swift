@@ -118,4 +118,20 @@ class ExchangeDeclarationTest: XCTestCase {
 
         XCTAssertEqual(expectedFrameset, sender.sentFramesets.last)
     }
+
+    func testHeadersDeclaresAHeadersExchange() {
+        let sender = SenderSpy()
+        let q = FakeSerialQueue()
+        let ch = RMQAllocatedChannel(123, sender: sender, waiter: FramesetWaiterSpy(), commandQueue: q)
+
+        ch.headers("myheadersex", options: [.Durable, .AutoDelete])
+        try! q.step()
+
+        let expectedFrameset = RMQFrameset(
+            channelNumber: 123,
+            method: MethodFixtures.exchangeDeclare("myheadersex", type: "headers", options: [.Durable, .AutoDelete])
+        )
+
+        XCTAssertEqual(expectedFrameset, sender.sentFramesets.last)
+    }
 }

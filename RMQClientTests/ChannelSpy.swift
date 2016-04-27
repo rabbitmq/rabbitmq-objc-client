@@ -165,4 +165,12 @@ enum ChannelSpyError: ErrorType {
     func topic(name: String) -> RMQExchange {
         return topic(name, options: [])
     }
+
+    func headers(name: String, options: RMQExchangeDeclareOptions) -> RMQExchange {
+        return RMQExchange(name: name, channel: self)
+    }
+
+    func headers(name: String) -> RMQExchange {
+        return headers(name, options: [])
+    }
 }
