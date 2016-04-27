@@ -1,15 +1,13 @@
 import XCTest
 
 class ConnectionTuningTest: XCTestCase {
-    let zeroHeartbeatUntilHeartbeatsAreHandled = RMQShort(0)
-
     func testUsesClientTuneOptionsWhenServersAreZeroes() {
         let transport = ControlledInteractionTransport()
         let q = connectWithOptions(transport, 12, 10, 9)
 
         XCTAssertEqual(
             clientTuneOk(
-                RMQShort(12), RMQLong(10), zeroHeartbeatUntilHeartbeatsAreHandled
+                RMQShort(12), RMQLong(10), RMQShort(9)
             ),
             negotiatedParamsGivenServerParams(
                 transport, q,
@@ -23,7 +21,7 @@ class ConnectionTuningTest: XCTestCase {
         let q = connectWithOptions(transport, 0, 0, 0)
         XCTAssertEqual(
             clientTuneOk(
-                RMQShort(12), RMQLong(10), zeroHeartbeatUntilHeartbeatsAreHandled
+                RMQShort(12), RMQLong(10), RMQShort(9)
             ),
             negotiatedParamsGivenServerParams(
                 transport, q,
@@ -37,7 +35,7 @@ class ConnectionTuningTest: XCTestCase {
         let q = connectWithOptions(transport, 11, 9, 8)
         XCTAssertEqual(
             clientTuneOk(
-                RMQShort(11),  RMQLong(9), zeroHeartbeatUntilHeartbeatsAreHandled
+                RMQShort(11),  RMQLong(9), RMQShort(8)
             ),
             negotiatedParamsGivenServerParams(
                 transport, q,
@@ -51,7 +49,7 @@ class ConnectionTuningTest: XCTestCase {
         let q = connectWithOptions(transport, 12, 11, 10)
         XCTAssertEqual(
             clientTuneOk(
-                RMQShort(11), RMQLong(10), zeroHeartbeatUntilHeartbeatsAreHandled
+                RMQShort(11), RMQLong(10), RMQShort(9)
             ),
             negotiatedParamsGivenServerParams(
                 transport, q,

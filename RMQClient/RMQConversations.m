@@ -34,7 +34,8 @@
                                                  serverValue:@(server.channelMax.integerValue)];
     NSNumber *frameMax   = [self negotiateBetweenClientValue:client.frameMax
                                                  serverValue:@(server.frameMax.integerValue)];
-    NSNumber *heartbeat  = @0;
+    NSNumber *heartbeat  = [self negotiateBetweenClientValue:client.heartbeat
+                                                 serverValue:@(server.heartbeat.integerValue)];
     return [[RMQConnectionTuneOk alloc] initWithChannelMax:[[RMQShort alloc] init:channelMax.integerValue]
                                                   frameMax:[[RMQLong alloc] init:frameMax.integerValue]
                                                  heartbeat:[[RMQShort alloc] init:heartbeat.integerValue]];
