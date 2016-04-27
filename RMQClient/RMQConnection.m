@@ -85,6 +85,7 @@
 }
 
 - (instancetype)initWithUri:(NSString *)uri
+                 verifyPeer:(BOOL)verifyPeer
                  channelMax:(NSNumber *)channelMax
                    frameMax:(NSNumber *)frameMax
                   heartbeat:(NSNumber *)heartbeat
@@ -95,7 +96,8 @@
     RMQURI *rmqURI = [RMQURI parse:uri error:&error];
     RMQTCPSocketTransport *transport = [[RMQTCPSocketTransport alloc] initWithHost:rmqURI.host
                                                                               port:rmqURI.portNumber
-                                                                            useTLS:rmqURI.isTLS];
+                                                                            useTLS:rmqURI.isTLS
+                                                                        verifyPeer:verifyPeer];
     RMQMultipleChannelAllocator *allocator = [[RMQMultipleChannelAllocator alloc] initWithChannelSyncTimeout:syncTimeout];
     RMQQueuingConnectionDelegateProxy *delegateProxy = [[RMQQueuingConnectionDelegateProxy alloc] initWithDelegate:delegate
                                                                                                              queue:delegateQueue];
@@ -121,14 +123,21 @@
 }
 
 - (instancetype)initWithUri:(NSString *)uri
+                 verifyPeer:(BOOL)verifyPeer
                    delegate:(id<RMQConnectionDelegate>)delegate {
     return [self initWithUri:uri
+                  verifyPeer:verifyPeer
                   channelMax:@(RMQChannelLimit)
                     frameMax:@131072
                    heartbeat:@0
                  syncTimeout:@10
                     delegate:delegate
                delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+}
+
+- (instancetype)initWithUri:(NSString *)uri
+                   delegate:(id<RMQConnectionDelegate>)delegate {
+    return [self initWithUri:uri verifyPeer:YES delegate:delegate];
 }
 
 - (instancetype)initWithDelegate:(id<RMQConnectionDelegate>)delegate {

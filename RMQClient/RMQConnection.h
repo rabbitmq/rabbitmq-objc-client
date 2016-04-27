@@ -27,6 +27,7 @@
 
 # pragma mark - User-facing initializers
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                         verifyPeer:(BOOL)verifyPeer
                          channelMax:(nonnull NSNumber *)channelMax
                            frameMax:(nonnull NSNumber *)frameMax
                           heartbeat:(nonnull NSNumber *)heartbeat
@@ -35,6 +36,10 @@
                       delegateQueue:(nonnull dispatch_queue_t)delegateQueue;
 
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate;
+
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                         verifyPeer:(BOOL)verifyPeer
                            delegate:(nullable id<RMQConnectionDelegate>)delegate;
 
 - (nonnull instancetype)initWithDelegate:(nullable id<RMQConnectionDelegate>)delegate;
