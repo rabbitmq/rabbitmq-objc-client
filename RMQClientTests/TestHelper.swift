@@ -41,6 +41,17 @@ class TestHelper {
         }
     }
 
+    static func connectionConfig(vhost vhost: String = "",
+                                       channelMax: Int = 123,
+                                       frameMax: Int = 321,
+                                       heartbeat: Int = 10) -> RMQConnectionConfig {
+        return RMQConnectionConfig(credentials: RMQCredentials(username: "foo", password: "bar"),
+                                   channelMax: channelMax,
+                                   frameMax: frameMax,
+                                   heartbeat: heartbeat,
+                                   vhost: vhost)
+    }
+
     static func startedConnection(
         transport: RMQTransport,
         commandQueue: RMQLocalSerialQueue = RMQGCDSerialQueue(),
@@ -53,12 +64,8 @@ class TestHelper {
         let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
         let conn = RMQConnection(
             transport: transport,
-            user: user,
-            password: password,
-            vhost: vhost,
-            channelMax: 65535,
-            frameMax: 131072,
-            heartbeat: 0,
+            config: RMQConnectionConfig(credentials: RMQCredentials(username: user, password: password),
+                channelMax: 65536, frameMax: 131072, heartbeat: 0, vhost: vhost),
             handshakeTimeout: 10,
             channelAllocator: allocator,
             frameHandler: allocator,

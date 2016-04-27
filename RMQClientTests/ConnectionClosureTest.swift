@@ -1,7 +1,6 @@
 import XCTest
 
 class ConnectionClosureTest: XCTestCase {
-
     func testCloseClosesAllChannels() {
         let transport = ControlledInteractionTransport()
         let allocator = ChannelSpyAllocator()
@@ -9,7 +8,15 @@ class ConnectionClosureTest: XCTestCase {
         let handshakeCount = 1
         let expectedCloseProcedureCount = 5
         let channelsToCreateCount = 2
-        let conn = RMQConnection(transport: transport, user: "", password: "", vhost: "", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 2, channelAllocator: allocator, frameHandler: FrameHandlerSpy(), delegate: ConnectionDelegateSpy(), commandQueue: q, waiterFactory: FakeWaiterFactory(), heartbeatSender: HeartbeatSenderSpy())
+        let conn = RMQConnection(transport: transport,
+                                 config: TestHelper.connectionConfig(),
+                                 handshakeTimeout: 2,
+                                 channelAllocator: allocator,
+                                 frameHandler: FrameHandlerSpy(),
+                                 delegate: ConnectionDelegateSpy(),
+                                 commandQueue: q,
+                                 waiterFactory: FakeWaiterFactory(),
+                                 heartbeatSender: HeartbeatSenderSpy())
 
         conn.start()
         try! q.step()
@@ -49,7 +56,15 @@ class ConnectionClosureTest: XCTestCase {
         let transport = ControlledInteractionTransport()
         let allocator = ChannelSpyAllocator()
         let q = FakeSerialQueue()
-        let conn = RMQConnection(transport: transport, user: "", password: "", vhost: "", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 2, channelAllocator: allocator, frameHandler: FrameHandlerSpy(), delegate: ConnectionDelegateSpy(), commandQueue: q, waiterFactory: FakeWaiterFactory(), heartbeatSender: HeartbeatSenderSpy())
+        let conn = RMQConnection(transport: transport,
+                                 config: TestHelper.connectionConfig(),
+                                 handshakeTimeout: 2,
+                                 channelAllocator: allocator,
+                                 frameHandler: FrameHandlerSpy(),
+                                 delegate: ConnectionDelegateSpy(),
+                                 commandQueue: q,
+                                 waiterFactory: FakeWaiterFactory(),
+                                 heartbeatSender: HeartbeatSenderSpy())
 
         conn.close()
 
@@ -66,7 +81,15 @@ class ConnectionClosureTest: XCTestCase {
         let allocator = ChannelSpyAllocator()
         let q = FakeSerialQueue()
         let heartbeatSender = HeartbeatSenderSpy()
-        let conn = RMQConnection(transport: transport, user: "", password: "", vhost: "", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 2, channelAllocator: allocator, frameHandler: FrameHandlerSpy(), delegate: ConnectionDelegateSpy(), commandQueue: q, waiterFactory: FakeWaiterFactory(), heartbeatSender: heartbeatSender)
+        let conn = RMQConnection(transport: transport,
+                                 config: TestHelper.connectionConfig(),
+                                 handshakeTimeout: 2,
+                                 channelAllocator: allocator,
+                                 frameHandler: FrameHandlerSpy(),
+                                 delegate: ConnectionDelegateSpy(),
+                                 commandQueue: q,
+                                 waiterFactory: FakeWaiterFactory(),
+                                 heartbeatSender: heartbeatSender)
 
         conn.close()
 
@@ -101,7 +124,15 @@ class ConnectionClosureTest: XCTestCase {
         let expectedCloseProcedureCount = 5
         let channelsToCreateCount = 2
         let heartbeatSender = HeartbeatSenderSpy()
-        let conn = RMQConnection(transport: transport, user: "", password: "", vhost: "", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 2, channelAllocator: allocator, frameHandler: FrameHandlerSpy(), delegate: ConnectionDelegateSpy(), commandQueue: q, waiterFactory: FakeWaiterFactory(), heartbeatSender: heartbeatSender)
+        let conn = RMQConnection(transport: transport,
+                                 config: TestHelper.connectionConfig(),
+                                 handshakeTimeout: 2,
+                                 channelAllocator: allocator,
+                                 frameHandler: FrameHandlerSpy(),
+                                 delegate: ConnectionDelegateSpy(),
+                                 commandQueue: q,
+                                 waiterFactory: FakeWaiterFactory(),
+                                 heartbeatSender: heartbeatSender)
 
         conn.start()
         try! q.step()

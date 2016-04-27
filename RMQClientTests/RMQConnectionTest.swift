@@ -1,7 +1,6 @@
 import XCTest
 
 class RMQConnectionTest: XCTestCase {
-
     func testImmediateConnectionErrorIsSentToDelegate() {
         let transport = ControlledInteractionTransport()
         transport.stubbedToThrowErrorOnConnect = "bad connection"
@@ -9,12 +8,7 @@ class RMQConnectionTest: XCTestCase {
         let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
         let conn = RMQConnection(
             transport: transport,
-            user: "foo",
-            password: "bar",
-            vhost: "",
-            channelMax: 123,
-            frameMax: 321,
-            heartbeat: 10,
+            config: TestHelper.connectionConfig(),
             handshakeTimeout: 10,
             channelAllocator: allocator,
             frameHandler: allocator,
@@ -35,12 +29,7 @@ class RMQConnectionTest: XCTestCase {
         let q = FakeSerialQueue()
         let conn = RMQConnection(
             transport: transport,
-            user: "foo",
-            password: "bar",
-            vhost: "",
-            channelMax: 123,
-            frameMax: 321,
-            heartbeat: 10,
+            config: TestHelper.connectionConfig(),
             handshakeTimeout: 0,
             channelAllocator: allocator,
             frameHandler: allocator,
@@ -101,7 +90,15 @@ class RMQConnectionTest: XCTestCase {
 
     func testSignalsActivityToHeartbeatSenderOnOutgoingFrameset() {
         let heartbeatSender = HeartbeatSenderSpy()
-        let conn = RMQConnection(transport: ControlledInteractionTransport(), user: "", password: "", vhost: "", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 10, channelAllocator: ChannelSpyAllocator(), frameHandler: FrameHandlerSpy(), delegate: ConnectionDelegateSpy(), commandQueue: FakeSerialQueue(), waiterFactory: FakeWaiterFactory(), heartbeatSender: heartbeatSender)
+        let conn = RMQConnection(transport: ControlledInteractionTransport(),
+                                 config: TestHelper.connectionConfig(),
+                                 handshakeTimeout: 10,
+                                 channelAllocator: ChannelSpyAllocator(),
+                                 frameHandler: FrameHandlerSpy(),
+                                 delegate: ConnectionDelegateSpy(),
+                                 commandQueue: FakeSerialQueue(),
+                                 waiterFactory: FakeWaiterFactory(),
+                                 heartbeatSender: heartbeatSender)
 
         XCTAssertFalse(heartbeatSender.signalActivityReceived)
         conn.sendFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpen()))
@@ -111,7 +108,15 @@ class RMQConnectionTest: XCTestCase {
     func testSendsConfiguredVHostWithConnectionOpen() {
         let transport = ControlledInteractionTransport()
         let q = FakeSerialQueue()
-        let conn = RMQConnection(transport: transport, user: "", password: "", vhost: "/myvhost", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 10, channelAllocator: ChannelSpyAllocator(), frameHandler: FrameHandlerSpy(), delegate: ConnectionDelegateSpy(), commandQueue: q, waiterFactory: FakeWaiterFactory(), heartbeatSender: HeartbeatSenderSpy())
+        let conn = RMQConnection(transport: transport,
+                                 config: TestHelper.connectionConfig(vhost: "/myvhost"),
+                                 handshakeTimeout: 10,
+                                 channelAllocator: ChannelSpyAllocator(),
+                                 frameHandler: FrameHandlerSpy(),
+                                 delegate: ConnectionDelegateSpy(),
+                                 commandQueue: q,
+                                 waiterFactory: FakeWaiterFactory(),
+                                 heartbeatSender: HeartbeatSenderSpy())
         conn.start()
         try! q.step()
 

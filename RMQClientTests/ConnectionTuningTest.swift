@@ -76,12 +76,7 @@ class ConnectionTuningTest: XCTestCase {
         let q = FakeSerialQueue()
         let connection = RMQConnection(
             transport: transport,
-            user: "foo",
-            password: "bar",
-            vhost: "baz",
-            channelMax: channelMax,
-            frameMax: frameMax,
-            heartbeat: heartbeat,
+            config: TestHelper.connectionConfig(channelMax: channelMax, frameMax: frameMax, heartbeat: heartbeat),
             handshakeTimeout: 10,
             channelAllocator: ChannelSpyAllocator(),
             frameHandler: FrameHandlerSpy(),
@@ -99,7 +94,11 @@ class ConnectionTuningTest: XCTestCase {
         return RMQConnectionTuneOk(channelMax: channelMax, frameMax: frameMax, heartbeat: heartbeat)
     }
 
-    func negotiatedParamsGivenServerParams(transport: ControlledInteractionTransport, _ q: FakeSerialQueue, _ channelMax: RMQShort, _ frameMax: RMQLong, _ heartbeat: RMQShort) -> RMQConnectionTuneOk {
+    func negotiatedParamsGivenServerParams(transport: ControlledInteractionTransport,
+                                           _ q: FakeSerialQueue,
+                                             _ channelMax: RMQShort,
+                                               _ frameMax: RMQLong,
+                                                 _ heartbeat: RMQShort) -> RMQConnectionTuneOk {
         let tune = RMQConnectionTune(channelMax: channelMax, frameMax: frameMax, heartbeat: heartbeat)
 
         transport

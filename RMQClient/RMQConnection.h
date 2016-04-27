@@ -16,12 +16,7 @@
 
 # pragma mark - Designated initializer (implementation only)
 - (nonnull instancetype)initWithTransport:(nonnull id<RMQTransport>)transport
-                                     user:(nonnull NSString *)user
-                                 password:(nonnull NSString *)password
-                                    vhost:(nonnull NSString *)vhost
-                               channelMax:(nonnull NSNumber *)channelMax
-                                 frameMax:(nonnull NSNumber *)frameMax
-                                heartbeat:(nonnull NSNumber *)heartbeat
+                                   config:(nonnull RMQConnectionConfig *)config
                          handshakeTimeout:(nonnull NSNumber *)handshakeTimeout
                          channelAllocator:(nonnull id<RMQChannelAllocator>)channelAllocator
                              frameHandler:(nonnull id<RMQFrameHandler>)frameHandler

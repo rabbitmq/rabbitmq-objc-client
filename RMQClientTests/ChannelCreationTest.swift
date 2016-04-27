@@ -16,12 +16,7 @@ class ChannelCreationTest: XCTestCase {
         allocator = ChannelSpyAllocator()
         let frameHandler = FrameHandlerSpy()
         conn = RMQConnection(transport: transport!,
-                             user: "",
-                             password: "",
-                             vhost: "",
-                             channelMax: 10,
-                             frameMax: 2,
-                             heartbeat: 3,
+                             config: TestHelper.connectionConfig(),
                              handshakeTimeout: 10,
                              channelAllocator: allocator!,
                              frameHandler: frameHandler,

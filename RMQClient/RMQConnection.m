@@ -37,12 +37,7 @@
 @implementation RMQConnection
 
 - (instancetype)initWithTransport:(id<RMQTransport>)transport
-                             user:(NSString *)user
-                         password:(NSString *)password
-                            vhost:(NSString *)vhost
-                       channelMax:(NSNumber *)channelMax
-                         frameMax:(NSNumber *)frameMax
-                        heartbeat:(NSNumber *)heartbeat
+                           config:(RMQConnectionConfig *)config
                  handshakeTimeout:(NSNumber *)handshakeTimeout
                  channelAllocator:(nonnull id<RMQChannelAllocator>)channelAllocator
                      frameHandler:(nonnull id<RMQFrameHandler>)frameHandler
@@ -52,15 +47,9 @@
                   heartbeatSender:(nonnull id<RMQHeartbeatSender>)heartbeatSender {
     self = [super init];
     if (self) {
-        RMQCredentials *credentials = [[RMQCredentials alloc] initWithUsername:user
-                                                                      password:password];
-        self.config = [[RMQConnectionConfig alloc] initWithCredentials:credentials
-                                                            channelMax:channelMax
-                                                              frameMax:frameMax
-                                                             heartbeat:heartbeat
-                                                                 vhost:vhost];
+        self.config = config;
         self.handshakeTimeout = handshakeTimeout;
-        self.frameMax = frameMax;
+        self.frameMax = config.frameMax;
         self.transport = transport;
         self.transport.delegate = self;
         self.channelAllocator = channelAllocator;
@@ -112,13 +101,15 @@
                                                                                         queue:[RMQGCDSerialQueue new]
                                                                                 waiterFactory:[RMQSemaphoreWaiterFactory new]
                                                                                         clock:[RMQTickingClock new]];
+    RMQCredentials *credentials = [[RMQCredentials alloc] initWithUsername:amqURI.username
+                                                                  password:amqURI.password];
+    RMQConnectionConfig *config = [[RMQConnectionConfig alloc] initWithCredentials:credentials
+                                                                        channelMax:channelMax
+                                                                          frameMax:frameMax
+                                                                         heartbeat:heartbeat
+                                                                             vhost:amqURI.vhost];
     return [self initWithTransport:transport
-                              user:amqURI.username
-                          password:amqURI.password
-                             vhost:amqURI.vhost
-                        channelMax:channelMax
-                          frameMax:frameMax
-                         heartbeat:heartbeat
+                            config:config
                   handshakeTimeout:syncTimeout
                   channelAllocator:allocator
                       frameHandler:allocator
