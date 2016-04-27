@@ -99,9 +99,10 @@
     RMQMultipleChannelAllocator *allocator = [[RMQMultipleChannelAllocator alloc] initWithChannelSyncTimeout:syncTimeout];
     RMQQueuingConnectionDelegateProxy *delegateProxy = [[RMQQueuingConnectionDelegateProxy alloc] initWithDelegate:delegate
                                                                                                              queue:delegateQueue];
+    RMQSemaphoreWaiterFactory *waiterFactory = [RMQSemaphoreWaiterFactory new];
     RMQGCDHeartbeatSender *heartbeatSender = [[RMQGCDHeartbeatSender alloc] initWithTransport:transport
                                                                                         queue:[RMQGCDSerialQueue new]
-                                                                                waiterFactory:[RMQSemaphoreWaiterFactory new]
+                                                                                waiterFactory:waiterFactory
                                                                                         clock:[RMQTickingClock new]];
     RMQCredentials *credentials = [[RMQCredentials alloc] initWithUsername:rmqURI.username
                                                                   password:rmqURI.password];
@@ -117,7 +118,7 @@
                       frameHandler:allocator
                           delegate:delegateProxy
                       commandQueue:[RMQGCDSerialQueue new]
-                     waiterFactory:[RMQSemaphoreWaiterFactory new]
+                     waiterFactory:waiterFactory
                    heartbeatSender:heartbeatSender];
 }
 
