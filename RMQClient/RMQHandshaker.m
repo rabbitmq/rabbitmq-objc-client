@@ -3,19 +3,21 @@
 @interface RMQHandshaker ()
 @property (nonatomic, readwrite) id<RMQSender> sender;
 @property (nonatomic, readwrite) RMQConnectionConfig *config;
-@property (nonatomic, readwrite) void (^completionHandler)();
+@property (nonatomic, readwrite) void (^completionHandler)(NSNumber *heartbeatInterval);
+@property (nonatomic, readwrite) NSNumber *heartbeatInterval;
 @end
 
 @implementation RMQHandshaker
 
 - (instancetype)initWithSender:(id<RMQSender>)sender
                         config:(RMQConnectionConfig *)config
-             completionHandler:(void (^)())completionHandler {
+             completionHandler:(void (^)(NSNumber *heartbeatInterval))completionHandler {
     self = [super init];
     if (self) {
         self.sender = sender;
         self.config = config;
         self.completionHandler = completionHandler;
+        self.heartbeatInterval = @0;
     }
     return self;
 }
@@ -26,11 +28,14 @@
         [self sendMethod:self.startOk channelNumber:frameset.channelNumber];
         [self.readerLoop runOnce];
     } else if ([method isKindOfClass:[RMQConnectionTune class]]) {
-        [self sendMethod:[self tuneOkForTune:method] channelNumber:frameset.channelNumber];
+        RMQConnectionTuneOk *tuneOk = [self tuneOkForTune:method];
+        self.heartbeatInterval = @(tuneOk.heartbeat.integerValue);
+
+        [self sendMethod:tuneOk channelNumber:frameset.channelNumber];
         [self sendMethod:self.connectionOpen channelNumber:frameset.channelNumber];
         [self.readerLoop runOnce];
     } else {
-        self.completionHandler();
+        self.completionHandler(self.heartbeatInterval);
     }
 }
 

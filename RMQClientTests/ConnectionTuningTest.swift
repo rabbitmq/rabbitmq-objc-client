@@ -58,11 +58,22 @@ class ConnectionTuningTest: XCTestCase {
         )
     }
 
+    func testSendsNegotiatedHeartbeatToHeartbeatSender() {
+        let transport = ControlledInteractionTransport()
+        let heartbeatSender = HeartbeatSenderSpy()
+        let q = connectWithOptions(transport, 1, 1, 99, heartbeatSender: heartbeatSender)
+        XCTAssertNil(heartbeatSender.heartbeatIntervalReceived)
+        negotiatedParamsGivenServerParams(transport, q,
+                                          RMQShort(11), RMQLong(10), RMQShort(0))
+        XCTAssertEqual(99, heartbeatSender.heartbeatIntervalReceived)
+    }
+
     // MARK: Helpers
 
-    func connectWithOptions(transport: ControlledInteractionTransport, _ channelMax: Int, _ frameMax: Int, _ heartbeat: Int) -> FakeSerialQueue {
+    func connectWithOptions(transport: ControlledInteractionTransport,
+                            _ channelMax: Int, _ frameMax: Int, _ heartbeat: Int,
+                              heartbeatSender: RMQHeartbeatSender = HeartbeatSenderSpy()) -> FakeSerialQueue {
         let q = FakeSerialQueue()
-        let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
         let connection = RMQConnection(
             transport: transport,
             user: "foo",
@@ -72,11 +83,12 @@ class ConnectionTuningTest: XCTestCase {
             frameMax: frameMax,
             heartbeat: heartbeat,
             handshakeTimeout: 10,
-            channelAllocator: allocator,
-            frameHandler: allocator,
+            channelAllocator: ChannelSpyAllocator(),
+            frameHandler: FrameHandlerSpy(),
             delegate: nil,
             commandQueue: q,
-            waiterFactory: FakeWaiterFactory()
+            waiterFactory: FakeWaiterFactory(),
+            heartbeatSender: heartbeatSender
         )
         connection.start()
         try! q.step()

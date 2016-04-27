@@ -7,9 +7,9 @@ class ConnectionClosureTest: XCTestCase {
         let allocator = ChannelSpyAllocator()
         let q = FakeSerialQueue()
         let handshakeCount = 1
-        let expectedCloseProcedureCount = 4
+        let expectedCloseProcedureCount = 5
         let channelsToCreateCount = 2
-        let conn = RMQConnection(transport: transport, user: "", password: "", vhost: "", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 2, channelAllocator: allocator, frameHandler: FrameHandlerSpy(), delegate: ConnectionDelegateSpy(), commandQueue: q, waiterFactory: FakeWaiterFactory())
+        let conn = RMQConnection(transport: transport, user: "", password: "", vhost: "", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 2, channelAllocator: allocator, frameHandler: FrameHandlerSpy(), delegate: ConnectionDelegateSpy(), commandQueue: q, waiterFactory: FakeWaiterFactory(), heartbeatSender: HeartbeatSenderSpy())
 
         conn.start()
         try! q.step()
@@ -49,7 +49,7 @@ class ConnectionClosureTest: XCTestCase {
         let transport = ControlledInteractionTransport()
         let allocator = ChannelSpyAllocator()
         let q = FakeSerialQueue()
-        let conn = RMQConnection(transport: transport, user: "", password: "", vhost: "", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 2, channelAllocator: allocator, frameHandler: FrameHandlerSpy(), delegate: ConnectionDelegateSpy(), commandQueue: q, waiterFactory: FakeWaiterFactory())
+        let conn = RMQConnection(transport: transport, user: "", password: "", vhost: "", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 2, channelAllocator: allocator, frameHandler: FrameHandlerSpy(), delegate: ConnectionDelegateSpy(), commandQueue: q, waiterFactory: FakeWaiterFactory(), heartbeatSender: HeartbeatSenderSpy())
 
         conn.close()
 
@@ -61,11 +61,30 @@ class ConnectionClosureTest: XCTestCase {
         XCTAssertEqual("RMQConnectionCloseOk", allocator.channels[0].blockingWaitOnMethod!.description())
     }
 
+    func testCloseShutsDownHeartbeatSender() {
+        let transport = ControlledInteractionTransport()
+        let allocator = ChannelSpyAllocator()
+        let q = FakeSerialQueue()
+        let heartbeatSender = HeartbeatSenderSpy()
+        let conn = RMQConnection(transport: transport, user: "", password: "", vhost: "", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 2, channelAllocator: allocator, frameHandler: FrameHandlerSpy(), delegate: ConnectionDelegateSpy(), commandQueue: q, waiterFactory: FakeWaiterFactory(), heartbeatSender: heartbeatSender)
+
+        conn.close()
+
+        try! q.step()
+        try! q.step()
+        try! q.step()
+
+        XCTAssertFalse(heartbeatSender.stopReceived)
+        try! q.step()
+        XCTAssertTrue(heartbeatSender.stopReceived)
+    }
+
     func testCloseClosesTransport() {
         let (transport, q, conn, _) = TestHelper.connectionAfterHandshake()
 
         conn.close()
 
+        try! q.step()
         try! q.step()
         try! q.step()
         try! q.step()
@@ -79,9 +98,10 @@ class ConnectionClosureTest: XCTestCase {
         let transport = ControlledInteractionTransport()
         let allocator = ChannelSpyAllocator()
         let q = FakeSerialQueue()
-        let expectedCloseProcedureCount = 4
+        let expectedCloseProcedureCount = 5
         let channelsToCreateCount = 2
-        let conn = RMQConnection(transport: transport, user: "", password: "", vhost: "", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 2, channelAllocator: allocator, frameHandler: FrameHandlerSpy(), delegate: ConnectionDelegateSpy(), commandQueue: q, waiterFactory: FakeWaiterFactory())
+        let heartbeatSender = HeartbeatSenderSpy()
+        let conn = RMQConnection(transport: transport, user: "", password: "", vhost: "", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 2, channelAllocator: allocator, frameHandler: FrameHandlerSpy(), delegate: ConnectionDelegateSpy(), commandQueue: q, waiterFactory: FakeWaiterFactory(), heartbeatSender: heartbeatSender)
 
         conn.start()
         try! q.step()
@@ -112,6 +132,10 @@ class ConnectionClosureTest: XCTestCase {
         try! q.step()
 
         XCTAssertEqual("RMQConnectionCloseOk", allocator.channels[0].blockingWaitOnMethod!.description())
+
+        try! q.step()
+
+        XCTAssertTrue(heartbeatSender.stopReceived)
 
         try! q.step()
 

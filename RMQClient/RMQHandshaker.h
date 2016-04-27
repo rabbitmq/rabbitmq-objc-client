@@ -9,5 +9,5 @@
 @property (nonatomic, readwrite) RMQReaderLoop *readerLoop;
 - (instancetype)initWithSender:(id<RMQSender>)sender
                         config:(RMQConnectionConfig *)config
-             completionHandler:(void (^)())completionHandler;
+             completionHandler:(void (^)(NSNumber *heartbeatInterval))completionHandler;
 @end

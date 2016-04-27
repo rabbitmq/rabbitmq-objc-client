@@ -27,7 +27,8 @@ class ChannelCreationTest: XCTestCase {
                              frameHandler: frameHandler,
                              delegate: delegate!,
                              commandQueue: q!,
-                             waiterFactory: FakeWaiterFactory())
+                             waiterFactory: FakeWaiterFactory(),
+                             heartbeatSender: HeartbeatSenderSpy())
     }
 
     func testSendsChannelActivateIfHandshakeIsComplete() {

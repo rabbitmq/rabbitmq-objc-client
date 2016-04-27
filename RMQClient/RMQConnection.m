@@ -1,16 +1,18 @@
+#import "RMQConnection.h"
 #import "RMQConstants.h"
 #import "RMQFrame.h"
-#import "RMQMethods.h"
-#import "RMQProtocolHeader.h"
-#import "RMQURI.h"
-#import "RMQConnection.h"
-#import "RMQHandshaker.h"
-#import "RMQMultipleChannelAllocator.h"
-#import "RMQReaderLoop.h"
-#import "RMQTCPSocketTransport.h"
+#import "RMQGCDHeartbeatSender.h"
 #import "RMQGCDSerialQueue.h"
-#import "RMQSemaphoreWaiterFactory.h"
+#import "RMQHandshaker.h"
+#import "RMQMethods.h"
+#import "RMQMultipleChannelAllocator.h"
+#import "RMQProtocolHeader.h"
 #import "RMQQueuingConnectionDelegateProxy.h"
+#import "RMQReaderLoop.h"
+#import "RMQSemaphoreWaiterFactory.h"
+#import "RMQTCPSocketTransport.h"
+#import "RMQURI.h"
+#import "RMQTickingClock.h"
 
 @interface RMQConnection ()
 @property (copy, nonatomic, readwrite) NSString *vhost;
@@ -30,6 +32,7 @@
 @property (nonatomic, readwrite) id<RMQWaiterFactory> waiterFactory;
 @property (nonatomic, readwrite) NSNumber *handshakeTimeout;
 @property (nonatomic, readwrite) BOOL closeRequested;
+@property (nonatomic, readwrite) id<RMQHeartbeatSender> heartbeatSender;
 @end
 
 @implementation RMQConnection
@@ -46,7 +49,8 @@
                      frameHandler:(nonnull id<RMQFrameHandler>)frameHandler
                          delegate:(id<RMQConnectionDelegate>)delegate
                      commandQueue:(nonnull id<RMQLocalSerialQueue>)commandQueue
-                    waiterFactory:(nonnull id<RMQWaiterFactory>)waiterFactory {
+                    waiterFactory:(nonnull id<RMQWaiterFactory>)waiterFactory
+                  heartbeatSender:(nonnull id<RMQHeartbeatSender>)heartbeatSender {
     self = [super init];
     if (self) {
         RMQCredentials *credentials = [[RMQCredentials alloc] initWithUsername:user
@@ -83,6 +87,7 @@
         self.delegate = delegate;
         self.commandQueue = commandQueue;
         self.waiterFactory = waiterFactory;
+        self.heartbeatSender = heartbeatSender;
         self.closeRequested = NO;
 
         self.channelZero = [self.channelAllocator allocate];
@@ -104,6 +109,10 @@
     RMQMultipleChannelAllocator *allocator = [[RMQMultipleChannelAllocator alloc] initWithChannelSyncTimeout:syncTimeout];
     RMQQueuingConnectionDelegateProxy *delegateProxy = [[RMQQueuingConnectionDelegateProxy alloc] initWithDelegate:delegate
                                                                                                              queue:delegateQueue];
+    RMQGCDHeartbeatSender *heartbeatSender = [[RMQGCDHeartbeatSender alloc] initWithTransport:transport
+                                                                                        queue:[RMQGCDSerialQueue new]
+                                                                                waiterFactory:[RMQSemaphoreWaiterFactory new]
+                                                                                        clock:[RMQTickingClock new]];
     return [self initWithTransport:transport
                               user:amqURI.username
                           password:amqURI.password
@@ -116,7 +125,8 @@
                       frameHandler:allocator
                           delegate:delegateProxy
                       commandQueue:[RMQGCDSerialQueue new]
-                     waiterFactory:[RMQSemaphoreWaiterFactory new]];
+                     waiterFactory:[RMQSemaphoreWaiterFactory new]
+                   heartbeatSender:heartbeatSender];
 }
 
 - (instancetype)initWithUri:(NSString *)uri
@@ -153,7 +163,8 @@
 
             RMQHandshaker *handshaker = [[RMQHandshaker alloc] initWithSender:self
                                                                        config:self.config
-                                                            completionHandler:^{
+                                                            completionHandler:^(NSNumber *heartbeatInterval) {
+                                                                [self.heartbeatSender startWithInterval:heartbeatInterval];
                                                                 [handshakeCompletion done];
                                                                 [self.readerLoop runOnce];
                                                             }];
@@ -203,6 +214,7 @@
 
 - (void)sendFrameset:(RMQFrameset *)frameset {
     [self.transport write:frameset.amqEncoded];
+    [self.heartbeatSender signalActivity];
 }
 
 # pragma mark - RMQFrameHandler
@@ -237,6 +249,7 @@
     return @[^{[self closeAllChannels];},
               ^{[self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:self.amqClose]];},
               ^{[self.channelZero blockingWaitOn:[RMQConnectionCloseOk class]];},
+              ^{[self.heartbeatSender stop];},
               ^{[self.transport close:^{}];}];
 }
 

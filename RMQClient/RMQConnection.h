@@ -4,6 +4,7 @@
 #import "RMQChannelAllocator.h"
 #import "RMQConnectionDelegate.h"
 #import "RMQFrameHandler.h"
+#import "RMQHeartbeatSender.h"
 #import "RMQSender.h"
 #import "RMQTransport.h"
 #import "RMQLocalSerialQueue.h"
@@ -26,7 +27,8 @@
                              frameHandler:(nonnull id<RMQFrameHandler>)frameHandler
                                  delegate:(nullable id<RMQConnectionDelegate>)delegate
                              commandQueue:(nonnull id<RMQLocalSerialQueue>)commandQueue
-                            waiterFactory:(nonnull id<RMQWaiterFactory>)waiterFactory;
+                            waiterFactory:(nonnull id<RMQWaiterFactory>)waiterFactory
+                          heartbeatSender:(nonnull id<RMQHeartbeatSender>)heartbeatSender;
 
 # pragma mark - User-facing initializers
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri

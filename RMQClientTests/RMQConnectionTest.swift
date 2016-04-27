@@ -20,7 +20,8 @@ class RMQConnectionTest: XCTestCase {
             frameHandler: allocator,
             delegate: delegate,
             commandQueue: FakeSerialQueue(),
-            waiterFactory: RMQSemaphoreWaiterFactory()
+            waiterFactory: RMQSemaphoreWaiterFactory(),
+            heartbeatSender: HeartbeatSenderSpy()
         )
         XCTAssertNil(delegate.lastConnectionError)
         conn.start()
@@ -45,7 +46,8 @@ class RMQConnectionTest: XCTestCase {
             frameHandler: allocator,
             delegate: delegate,
             commandQueue: q,
-            waiterFactory: RMQSemaphoreWaiterFactory()
+            waiterFactory: RMQSemaphoreWaiterFactory(),
+            heartbeatSender: HeartbeatSenderSpy()
         )
         conn.start()
         try! q.step()
@@ -95,6 +97,15 @@ class RMQConnectionTest: XCTestCase {
 
         XCTAssertNil(delegate.lastDisconnectError)
         XCTAssertTrue(delegate.disconnectCalled)
+    }
+
+    func testSignalsActivityToHeartbeatSenderOnOutgoingFrameset() {
+        let heartbeatSender = HeartbeatSenderSpy()
+        let conn = RMQConnection(transport: ControlledInteractionTransport(), user: "", password: "", vhost: "", channelMax: 10, frameMax: 11, heartbeat: 12, handshakeTimeout: 10, channelAllocator: ChannelSpyAllocator(), frameHandler: FrameHandlerSpy(), delegate: ConnectionDelegateSpy(), commandQueue: FakeSerialQueue(), waiterFactory: FakeWaiterFactory(), heartbeatSender: heartbeatSender)
+
+        XCTAssertFalse(heartbeatSender.signalActivityReceived)
+        conn.sendFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpen()))
+        XCTAssert(heartbeatSender.signalActivityReceived)
     }
 
 }

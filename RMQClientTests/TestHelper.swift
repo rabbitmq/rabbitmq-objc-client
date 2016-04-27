@@ -64,7 +64,8 @@ class TestHelper {
             frameHandler: allocator,
             delegate: delegate,
             commandQueue: commandQueue,
-            waiterFactory: FakeWaiterFactory()
+            waiterFactory: FakeWaiterFactory(),
+            heartbeatSender: HeartbeatSenderSpy()
         )
         conn.start()
         return conn
