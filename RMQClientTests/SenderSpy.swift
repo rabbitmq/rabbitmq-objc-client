@@ -12,10 +12,6 @@
         sentFramesets.append(frameset)
     }
 
-    func sendMethod(amqMethod: RMQMethod, channelNumber: NSNumber) {
-        lastSentMethod = amqMethod
-    }
-
     override func isEqual(object: AnyObject?) -> Bool {
         return object!.isKindOfClass(SenderSpy.self);
     }

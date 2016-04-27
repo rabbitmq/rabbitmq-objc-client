@@ -201,15 +201,6 @@
 
 # pragma mark - RMQSender
 
-- (void)sendMethod:(id<RMQMethod>)amqMethod channelNumber:(NSNumber *)channelNumber {
-    RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:channelNumber method:amqMethod];
-    [self sendFrameset:frameset];
-    if ([self shouldSendNextRequest:amqMethod]) {
-        id<RMQMethod> followOn = [(id <RMQOutgoingPrecursor>)amqMethod nextRequest];
-        [self sendMethod:followOn channelNumber:channelNumber];
-    }
-}
-
 - (void)sendFrameset:(RMQFrameset *)frameset {
     [self.transport write:frameset.amqEncoded];
 }
@@ -219,12 +210,8 @@
 - (void)handleFrameset:(RMQFrameset *)frameset {
     id method = frameset.method;
 
-    if ([self shouldReply:method]) {
-        id<RMQMethod> reply = [method replyWithConfig:self.config];
-        [self sendMethod:reply channelNumber:frameset.channelNumber];
-    }
-
     if ([method isKindOfClass:[RMQConnectionClose class]]) {
+        [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:[RMQConnectionCloseOk new]]];
         [self.transport close:^{}];
     } else {
         [self.frameHandler handleFrameset:frameset];
@@ -264,14 +251,6 @@
                                                replyText:[[RMQShortstr alloc] init:@"Goodbye"]
                                                  classId:[[RMQShort alloc] init:0]
                                                 methodId:[[RMQShort alloc] init:0]];
-}
-
-- (BOOL)shouldReply:(id<RMQMethod>)amqMethod {
-    return [amqMethod conformsToProtocol:@protocol(RMQIncomingSync)];
-}
-
-- (BOOL)shouldSendNextRequest:(id<RMQMethod>)amqMethod {
-    return [amqMethod conformsToProtocol:@protocol(RMQOutgoingPrecursor)];
 }
 
 @end

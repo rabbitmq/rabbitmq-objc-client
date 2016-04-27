@@ -42,8 +42,6 @@
 		AE41C5531C4FC88F00129207 /* MethodFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE41C5521C4FC88F00129207 /* MethodFixtures.swift */; };
 		AE4E7F4A1C6A293D00A441EC /* RMQMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = AE4E7F491C6A293D00A441EC /* RMQMethods.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE4E7F4B1C6A297900A441EC /* RMQMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA45EC41C43C20F00FE1F62 /* RMQMethods.m */; };
-		AE4E7F4E1C6A2A8900A441EC /* RMQConversations.h in Headers */ = {isa = PBXBuildFile; fileRef = AE4E7F4C1C6A2A8900A441EC /* RMQConversations.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		AE4E7F4F1C6A2A8900A441EC /* RMQConversations.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4E7F4D1C6A2A8900A441EC /* RMQConversations.m */; };
 		AE541F431C7E132700C17932 /* ConnectionTuningTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE541F421C7E132700C17932 /* ConnectionTuningTest.swift */; };
 		AE5934551C870C0E00560A73 /* RMQAllocatedChannelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5934541C870C0E00560A73 /* RMQAllocatedChannelTest.swift */; };
 		AE5934591C87353400560A73 /* FramesetRoutingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5934581C87353400560A73 /* FramesetRoutingTest.swift */; };
@@ -213,8 +211,6 @@
 		AE41C5521C4FC88F00129207 /* MethodFixtures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MethodFixtures.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		AE41C5621C51A2D500129207 /* RMQTransportContract.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RMQTransportContract.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		AE4E7F491C6A293D00A441EC /* RMQMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RMQMethods.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		AE4E7F4C1C6A2A8900A441EC /* RMQConversations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RMQConversations.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		AE4E7F4D1C6A2A8900A441EC /* RMQConversations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RMQConversations.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AE541F421C7E132700C17932 /* ConnectionTuningTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ConnectionTuningTest.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		AE5934541C870C0E00560A73 /* RMQAllocatedChannelTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RMQAllocatedChannelTest.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		AE5934581C87353400560A73 /* FramesetRoutingTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FramesetRoutingTest.swift; sourceTree = "<group>"; };
@@ -492,8 +488,6 @@
 				AEE445EA1C7373BF0082132C /* RMQBasicProperties.m */,
 				AE4E7F491C6A293D00A441EC /* RMQMethods.h */,
 				AEA45EC41C43C20F00FE1F62 /* RMQMethods.m */,
-				AE4E7F4C1C6A2A8900A441EC /* RMQConversations.h */,
-				AE4E7F4D1C6A2A8900A441EC /* RMQConversations.m */,
 				AEADA37F1C71F59A00012D61 /* RMQMethodMap.h */,
 				AEADA3801C71F59A00012D61 /* RMQMethodMap.m */,
 				AE39BDA01C68B105000E7A77 /* RMQProtocolHeader.h */,
@@ -589,7 +583,6 @@
 				AE744E371C85A20700A4C2FA /* RMQFrameset.h in Headers */,
 				AEE7FEB51C3BD16200DF8C4F /* RMQQueue.h in Headers */,
 				AE80BAB31C4D47C100E6DFFD /* RMQParser.h in Headers */,
-				AE4E7F4E1C6A2A8900A441EC /* RMQConversations.h in Headers */,
 				AEEEF0821C4F9BFA0056A5EB /* RMQMethodDecoder.h in Headers */,
 				AE929C791CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.h in Headers */,
 				AEE445EB1C7373BF0082132C /* RMQBasicProperties.h in Headers */,
@@ -802,7 +795,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AE4E7F4F1C6A2A8900A441EC /* RMQConversations.m in Sources */,
 				AE8AD2671CC53B0D00229444 /* RMQFramesetWaitResult.m in Sources */,
 				AEEB514E1CAC7780009F37D2 /* RMQSynchronizedMutableDictionary.m in Sources */,
 				AEADA3821C71F59A00012D61 /* RMQMethodMap.m in Sources */,

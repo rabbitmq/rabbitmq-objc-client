@@ -68,10 +68,6 @@
                                 password:(nonnull NSString *)password;
 @end
 
-@protocol RMQIncomingCallbackContext <NSObject>
-- (void)close:(void (^ _Nonnull)())onClose;
-@end
-
 @protocol RMQPayload <NSObject, RMQEncodable>
 - (nonnull NSNumber *)frameTypeID;
 @end
@@ -82,14 +78,6 @@
 - (nonnull NSNumber *)methodID;
 - (nonnull instancetype)initWithDecodedFrame:(nonnull NSArray *)frame;
 - (BOOL)hasContent;
-@end
-
-@protocol RMQOutgoingPrecursor <NSObject>
-- (nonnull id<RMQMethod>)nextRequest;
-@end
-
-@protocol RMQIncomingSync <NSObject,RMQMethod>
-- (nonnull id<RMQMethod>)replyWithConfig:(nonnull RMQConnectionConfig *)config;
 @end
 
 @interface RMQContentHeader : MTLModel<RMQPayload>

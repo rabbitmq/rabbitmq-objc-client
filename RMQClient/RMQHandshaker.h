@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "RMQFrameHandler.h"
+#import "RMQMethods.h"
 #import "RMQSender.h"
 #import "RMQConnectionConfig.h"
 #import "RMQReaderLoop.h"
