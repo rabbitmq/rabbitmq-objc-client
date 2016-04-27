@@ -59,24 +59,24 @@ long writeTag = UINT32_MAX + 2;
                        tag:writeTag];
 }
 
-struct __attribute__((__packed__)) RMQPHeader {
+struct __attribute__((__packed__)) AMQPHeader {
     UInt8  type;
     UInt16 channel;
     UInt32 size;
 };
 
-#define RMQP_HEADER_SIZE 7
-#define RMQP_FINAL_OCTET_SIZE 1
+#define AMQP_HEADER_SIZE 7
+#define AMQP_FINAL_OCTET_SIZE 1
 
 - (void)readFrame:(void (^)(NSData * _Nonnull))complete {
-    [self read:RMQP_HEADER_SIZE complete:^(NSData * _Nonnull data) {
-        const struct RMQPHeader *header;
-        header = (const struct RMQPHeader *)data.bytes;
+    [self read:AMQP_HEADER_SIZE complete:^(NSData * _Nonnull data) {
+        const struct AMQPHeader *header;
+        header = (const struct AMQPHeader *)data.bytes;
         
         UInt32 hostSize = CFSwapInt32BigToHost(header->size);
         
         [self read:hostSize complete:^(NSData * _Nonnull payload) {
-            [self read:RMQP_FINAL_OCTET_SIZE complete:^(NSData * _Nonnull frameEnd) {
+            [self read:AMQP_FINAL_OCTET_SIZE complete:^(NSData * _Nonnull frameEnd) {
                 NSMutableData *allData = [data mutableCopy];
                 [allData appendData:payload];
                 complete(allData);

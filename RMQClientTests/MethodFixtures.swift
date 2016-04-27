@@ -25,7 +25,7 @@ class MethodFixtures {
                 "product"      : RMQLongstr("RabbitMQ"),
                 "version"      : RMQLongstr("3.6.0"),
                 ]),
-            mechanisms: RMQLongstr("RMQPLAIN PLAIN"),
+            mechanisms: RMQLongstr("AMQPLAIN PLAIN"),
             locales: RMQLongstr("en_US")
         )
     }

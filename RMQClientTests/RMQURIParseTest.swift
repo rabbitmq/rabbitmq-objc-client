@@ -2,7 +2,7 @@ import XCTest
 
 class RMQURIParseTest: XCTestCase {
     
-    func testNonRMQPSchemesNotAllowed() {
+    func testNonAMQPSchemesNotAllowed() {
         XCTAssertThrowsError(try RMQURI.parse("amqpfoo://dev.rabbitmq.com")) { (error) in
             do {
                 XCTAssertEqual(
@@ -13,7 +13,7 @@ class RMQURIParseTest: XCTestCase {
         }
     }
     
-    func testHandlesRMQPURIsWithoutPathPart() {
+    func testHandlesAMQPURIsWithoutPathPart() {
         let val = try! RMQURI.parse("amqp://dev.rabbitmq.com")
         XCTAssertEqual("/", val.vhost)
         XCTAssertEqual("dev.rabbitmq.com", val.host)
@@ -22,7 +22,7 @@ class RMQURIParseTest: XCTestCase {
         XCTAssertFalse(val.isSSL)
     }
     
-    func testHandlesRMQPSURIsWithoutPathPart() {
+    func testHandlesAMQPSURIsWithoutPathPart() {
         let val = try! RMQURI.parse("amqps://dev.rabbitmq.com")
         XCTAssertEqual("/", val.vhost)
         XCTAssertEqual("dev.rabbitmq.com", val.host)
