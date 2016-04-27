@@ -19,7 +19,7 @@ class RMQURIParseTest: XCTestCase {
         XCTAssertEqual("dev.rabbitmq.com", val.host)
         XCTAssertEqual(5672, val.portNumber)
         XCTAssertEqual("amqp", val.scheme)
-        XCTAssertFalse(val.isSSL)
+        XCTAssertFalse(val.isTLS)
     }
     
     func testHandlesAMQPSURIsWithoutPathPart() {
@@ -28,7 +28,7 @@ class RMQURIParseTest: XCTestCase {
         XCTAssertEqual("dev.rabbitmq.com", val.host)
         XCTAssertEqual(5671, val.portNumber)
         XCTAssertEqual("amqps", val.scheme)
-        XCTAssertTrue(val.isSSL)
+        XCTAssertTrue(val.isTLS)
     }
     
     func testParsesVhostAsEmptyStringWhenPathIsJustASlash() {
@@ -63,7 +63,7 @@ class RMQURIParseTest: XCTestCase {
         XCTAssertEqual("hub.megacorp.internal", val.host)
         XCTAssertEqual(5672, val.portNumber)
         XCTAssertEqual("amqp", val.scheme)
-        XCTAssertFalse(val.isSSL)
+        XCTAssertFalse(val.isTLS)
         XCTAssertEqual("hedgehog", val.username)
         XCTAssertEqual("t0ps3kr3t", val.password)
     }

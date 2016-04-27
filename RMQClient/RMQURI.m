@@ -8,7 +8,7 @@
 @property (nonatomic,nonnull,readwrite) NSNumber *portNumber;
 @property (nonatomic,nonnull,readwrite) NSString *username;
 @property (nonatomic,nonnull,readwrite) NSString *password;
-@property (nonatomic,readwrite) BOOL isSSL;
+@property (nonatomic,readwrite) BOOL isTLS;
 @end
 
 @implementation RMQURI
@@ -38,11 +38,11 @@
     if ([components.scheme isEqualToString:@"amqp"]) {
         u.portNumber = @5672;
         u.scheme = @"amqp";
-        u.isSSL = NO;
+        u.isTLS = NO;
     } else if ([components.scheme isEqualToString:@"amqps"]) {
         u.portNumber = @5671;
         u.scheme = @"amqps";
-        u.isSSL = YES;
+        u.isTLS = YES;
     }
     
     return u;
