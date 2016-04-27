@@ -21,6 +21,7 @@
 #import <RMQClient/RMQSemaphoreWaiterFactory.h>
 #import <RMQClient/RMQSemaphoreWaiter.h>
 #import <RMQClient/RMQProcessInfoNameGenerator.h>
+#import <RMQClient/RMQQueuingConnectionDelegateProxy.h>
 #import <RMQClient/RMQGCDHeartbeatSender.h>
 #import <RMQClient/RMQTickingClock.h>
 
