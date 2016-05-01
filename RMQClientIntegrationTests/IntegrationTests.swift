@@ -150,19 +150,21 @@ class IntegrationTests: XCTestCase {
         var consumingQueues: [RMQQueue] = []
         let semaphore = dispatch_semaphore_create(0)
         let delegate = RMQConnectionDelegateLogger()
-        let conn = RMQConnection(uri: "amqp://guest:guest@localhost", delegate: delegate)
+        let channelCount: Int32 = 500
+        let conn = RMQConnection(uri: "amqp://guest:guest@localhost", channelMax: 501, frameMax: 131072, heartbeat: 10,
+                                 syncTimeout: 60, delegate: delegate, delegateQueue: dispatch_get_main_queue())
         conn.start()
         defer { conn.blockingClose() }
 
         let producingChannel = conn.createChannel()
         let producingQueue = producingChannel.queue("", options: [.AutoDelete, .Exclusive])
 
-        for _ in 1...100 {
+        for _ in 1...channelCount {
             let ch = conn.createChannel()
             let q = ch.queue(producingQueue.name, options: [.AutoDelete, .Exclusive])
             q.subscribe { (_, message) in
                 OSAtomicIncrement32(&counter)
-                if counter == 100 {
+                if counter == channelCount {
                     dispatch_semaphore_signal(semaphore)
                 }
             }
@@ -170,7 +172,7 @@ class IntegrationTests: XCTestCase {
             consumingQueues.append(q)
         }
 
-        for _ in 1...100 {
+        for _ in 1...channelCount {
             producingQueue.publish("hello")
         }
 
