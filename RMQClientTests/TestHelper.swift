@@ -54,7 +54,7 @@ class TestHelper {
 
     static func startedConnection(
         transport: RMQTransport,
-        commandQueue: RMQLocalSerialQueue = RMQGCDSerialQueue(),
+        commandQueue: RMQLocalSerialQueue = RMQGCDSerialQueue(name: "started connection command queue"),
         delegate: RMQConnectionDelegate? = nil,
         syncTimeout: Double = 0,
         user: String = "foo",

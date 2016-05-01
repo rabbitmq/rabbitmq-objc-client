@@ -9,7 +9,7 @@ class RMQAllocatedChannelTest: XCTestCase {
 
     func testObeysContract() {
         let sender = SenderSpy()
-        let channel = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, commandQueue: RMQGCDSerialQueue())
+        let channel = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, commandQueue: RMQGCDSerialQueue(name: "channel command queue"))
         let contract = RMQChannelContract(channel)
 
         contract.check()

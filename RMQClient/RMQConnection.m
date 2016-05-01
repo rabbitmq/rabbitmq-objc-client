@@ -100,8 +100,9 @@
     RMQQueuingConnectionDelegateProxy *delegateProxy = [[RMQQueuingConnectionDelegateProxy alloc] initWithDelegate:delegate
                                                                                                              queue:delegateQueue];
     RMQSemaphoreWaiterFactory *waiterFactory = [RMQSemaphoreWaiterFactory new];
+    RMQGCDSerialQueue *heartbeatQueue = [[RMQGCDSerialQueue alloc] initWithName:@"heartbeat sender"];
     RMQGCDHeartbeatSender *heartbeatSender = [[RMQGCDHeartbeatSender alloc] initWithTransport:transport
-                                                                                        queue:[RMQGCDSerialQueue new]
+                                                                                        queue:heartbeatQueue
                                                                                 waiterFactory:waiterFactory
                                                                                         clock:[RMQTickingClock new]];
     RMQCredentials *credentials = [[RMQCredentials alloc] initWithUsername:rmqURI.username
@@ -117,7 +118,7 @@
                   channelAllocator:allocator
                       frameHandler:allocator
                           delegate:delegateProxy
-                      commandQueue:[RMQGCDSerialQueue new]
+                      commandQueue:[[RMQGCDSerialQueue alloc] initWithName:@"connection commands"]
                      waiterFactory:waiterFactory
                    heartbeatSender:heartbeatSender];
 }

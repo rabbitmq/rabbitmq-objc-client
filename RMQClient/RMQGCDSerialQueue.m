@@ -1,18 +1,25 @@
 #import "RMQGCDSerialQueue.h"
 
 @interface RMQGCDSerialQueue ()
+@property (nonatomic, readwrite) NSString *name;
 @property (nonatomic, readwrite) dispatch_queue_t dispatchQueue;
 @end
 
 @implementation RMQGCDSerialQueue
 
-- (instancetype)init
-{
+- (instancetype)initWithName:(NSString *)name {
     self = [super init];
     if (self) {
-        self.dispatchQueue = dispatch_queue_create("RMQGCDSerialQueue", NULL);
+        self.name = name;
+        NSString *qName = [NSString stringWithFormat:@"RMQGCDSerialQueue (%@)", name];
+        self.dispatchQueue = dispatch_queue_create([qName cStringUsingEncoding:NSUTF8StringEncoding], NULL);
     }
     return self;
+}
+
+- (instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 - (void)enqueue:(RMQOperation)operation {

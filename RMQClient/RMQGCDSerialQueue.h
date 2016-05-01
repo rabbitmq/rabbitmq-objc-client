@@ -3,4 +3,6 @@
 
 @interface RMQGCDSerialQueue : NSObject <RMQLocalSerialQueue>
 
+- (instancetype)initWithName:(NSString *)name;
+
 @end

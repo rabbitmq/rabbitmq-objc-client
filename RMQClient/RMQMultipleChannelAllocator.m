@@ -106,7 +106,7 @@
 }
 
 - (RMQGCDSerialQueue *)suspendedDispatchQueue:(UInt16)channelNumber {
-    RMQGCDSerialQueue *serialQueue = [RMQGCDSerialQueue new];
+    RMQGCDSerialQueue *serialQueue = [[RMQGCDSerialQueue alloc] initWithName:[NSString stringWithFormat:@"channel %d", channelNumber]];
     [serialQueue suspend];
     return serialQueue;
 }
