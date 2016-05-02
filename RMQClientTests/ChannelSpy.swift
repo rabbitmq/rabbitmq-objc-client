@@ -1,7 +1,3 @@
-enum ChannelSpyError: ErrorType {
-    case ArbitraryError(localizedDescription: String)
-}
-
 @objc class ChannelSpy : NSObject, RMQChannel {
     var channelNumber: NSNumber
     var lastReceivedBasicConsumeOptions: RMQBasicConsumeOptions = []
