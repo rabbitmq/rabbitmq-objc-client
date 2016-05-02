@@ -3,26 +3,21 @@
 
 @interface RMQGCDHeartbeatSender ()
 @property (nonatomic, readwrite) id<RMQTransport> transport;
-@property (nonatomic, readwrite) id<RMQLocalSerialQueue> queue;
-@property (nonatomic, readwrite) id<RMQWaiterFactory> waiterFactory;
 @property (nonatomic, readwrite) id<RMQClock> clock;
-@property (nonatomic, readwrite) BOOL active;
-@property (nonatomic, readwrite) NSDate *lastBeatAt;
+@property (nonatomic, readwrite) dispatch_source_t timer;
+@property (atomic, readwrite) NSDate *lastBeatAt;
 @end
 
 @implementation RMQGCDHeartbeatSender
 
 - (instancetype)initWithTransport:(id<RMQTransport>)transport
-                            queue:(id<RMQLocalSerialQueue>)queue
-                    waiterFactory:(id<RMQWaiterFactory>)waiterFactory
                             clock:(id<RMQClock>)clock {
     self = [super init];
     if (self) {
-        self.active = NO;
-        self.transport = transport;
-        self.queue = queue;
-        self.waiterFactory = waiterFactory;
         self.clock = clock;
+        dispatch_queue_t q = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
+        self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, q);
+        self.transport = transport;
         [self signalActivity];
     }
     return self;
@@ -34,12 +29,19 @@
 }
 
 - (void)startWithInterval:(NSNumber *)intervalSeconds {
-    self.active = YES;
-    [self beatAfterInterval:intervalSeconds];
+    double leewaySeconds = 1;
+    dispatch_source_set_timer(self.timer,
+                              DISPATCH_TIME_NOW,
+                              intervalSeconds.doubleValue * NSEC_PER_SEC,
+                              leewaySeconds * NSEC_PER_SEC);
+    dispatch_source_set_event_handler(self.timer, ^{
+        if ([self intervalPassed:intervalSeconds]) [self.transport write:self.heartbeatData];
+    });
+    dispatch_resume(self.timer);
 }
 
 - (void)stop {
-    self.active = NO;
+    dispatch_suspend(self.timer);
 }
 
 - (void)signalActivity {
@@ -47,15 +49,6 @@
 }
 
 # pragma mark - Private
-
-- (void)beatAfterInterval:(NSNumber *)intervalSeconds {
-    [self.queue enqueue:^{
-        id<RMQWaiter> waiter = [self.waiterFactory makeWithTimeout:intervalSeconds];
-        [waiter timesOut];
-        if ([self intervalPassed:intervalSeconds]) [self.transport write:self.heartbeatData];
-        if (self.active)                           [self beatAfterInterval:intervalSeconds];
-    }];
-}
 
 - (BOOL)intervalPassed:(NSNumber *)intervalSeconds {
     return [self.clock.read timeIntervalSinceDate:self.lastBeatAt] > intervalSeconds.doubleValue;

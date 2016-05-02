@@ -8,8 +8,6 @@
 @interface RMQGCDHeartbeatSender : NSObject <RMQHeartbeatSender>
 
 - (instancetype)initWithTransport:(id<RMQTransport>)transport
-                            queue:(id<RMQLocalSerialQueue>)queue
-                    waiterFactory:(id<RMQWaiterFactory>)waiterFactory
                             clock:(id<RMQClock>)clock;
 
 @end
