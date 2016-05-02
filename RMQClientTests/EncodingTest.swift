@@ -35,6 +35,8 @@ import XCTest
 }
 
 class EncodingTest: XCTestCase {
+    let rmqTrue = RMQBoolean(true)
+    let rmqFalse = RMQBoolean(false)
 
     func testRoundTripMethod() {
         let payload = RMQConnectionStart(
@@ -276,15 +278,17 @@ class EncodingTest: XCTestCase {
         let massHysteria = "\(massHysteriaKeyLength)mass_hysteriaF\(massHysteriaTableLength)\(ghost)"
         let fieldPairs = "\(cats)\(dogs)\(massHysteria)\(sacrifice)"
         let expectedData = "\(fieldTableLength)\(fieldPairs)".dataUsingEncoding(NSUTF8StringEncoding)
-        
-        let fieldTable = RMQTable([
-            "has_cats": RMQBoolean(true),
-            "has_dogs": RMQBoolean(false),
-            "mass_hysteria": RMQTable([
-                "ghost": RMQBoolean(false),
-            ]),
+
+        let subDict: [String: RMQBoolean] = [
+            "ghost": RMQBoolean(false),
+            ]
+        let dict: [String: RMQFieldValue] = [
+            "has_cats": rmqTrue,
+            "has_dogs": rmqFalse,
+            "mass_hysteria": RMQTable(subDict),
             "sacrifice": RMQLongstr("forty years of darkness"),
-        ])
+            ]
+        let fieldTable = RMQTable(dict)
 
         TestHelper.assertEqualBytes(expectedData!, fieldTable.amqEncoded())
     }
