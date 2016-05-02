@@ -104,21 +104,24 @@ class IntegrationTests: XCTestCase {
 
         consumingQueue.subscribe { (_, message) in
             set1.insert(message.deliveryTag)
-            if set1.count + set2.count + set3.count == messageCount {
+            let currentCount: Int = set1.count + set2.count + set3.count
+            if currentCount == messageCount {
                 dispatch_semaphore_signal(semaphore)
             }
         }
 
         consumingQueue.subscribe { (_, message) in
             set2.insert(message.deliveryTag)
-            if set1.count + set2.count + set3.count == messageCount {
+            let currentCount: Int = set1.count + set2.count + set3.count
+            if currentCount == messageCount {
                 dispatch_semaphore_signal(semaphore)
             }
         }
 
         consumingQueue.subscribe { (_, message) in
             set3.insert(message.deliveryTag)
-            if set1.count + set2.count + set3.count == messageCount {
+            let currentCount: Int = set1.count + set2.count + set3.count
+            if currentCount == messageCount {
                 dispatch_semaphore_signal(semaphore)
             }
         }

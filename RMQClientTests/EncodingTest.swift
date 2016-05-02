@@ -39,10 +39,14 @@ class EncodingTest: XCTestCase {
     let rmqFalse = RMQBoolean(false)
 
     func testRoundTripMethod() {
+        let subDict: [String: RMQShortstr] = ["bar": RMQShortstr("baz")]
+        let dict: [String: RMQTable] = [
+            "foo": RMQTable(subDict)
+        ]
         let payload = RMQConnectionStart(
             versionMajor: RMQOctet(0),
             versionMinor: RMQOctet(9),
-            serverProperties: RMQTable(["foo": RMQTable(["bar": RMQShortstr("baz")])]),
+            serverProperties: RMQTable(dict),
             mechanisms: RMQLongstr("PLAIN_JANE"),
             locales: RMQLongstr("en_PIRATE")
         )
