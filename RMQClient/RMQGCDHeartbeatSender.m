@@ -41,7 +41,7 @@
 }
 
 - (void)stop {
-    dispatch_suspend(self.timer);
+    dispatch_source_cancel(self.timer);
 }
 
 - (void)signalActivity {
