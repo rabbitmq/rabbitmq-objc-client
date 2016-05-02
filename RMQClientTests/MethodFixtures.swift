@@ -1,53 +1,55 @@
 import UIKit
 
 class MethodFixtures {
+    static let rmqTrue = RMQBoolean(true)
+
     static func connectionStart() -> RMQConnectionStart {
-        let dict: [String : RMQBoolean] = [
-            "authentication_failure_close" : RMQBoolean(true),
-            "basic.nack"                   : RMQBoolean(true),
-            "connection.blocked"           : RMQBoolean(true),
-            "consumer_cancel_notify"       : RMQBoolean(true),
-            "consumer_priorities"          : RMQBoolean(true),
-            "exchange_exchange_bindings"   : RMQBoolean(true),
-            "per_consumer_qos"             : RMQBoolean(true),
-            "publisher_confirms"           : RMQBoolean(true)
+        let dict: [String: RMQBoolean] = [
+            "authentication_failure_close" : rmqTrue,
+            "basic.nack"                   : rmqTrue,
+            "connection.blocked"           : rmqTrue,
+            "consumer_cancel_notify"       : rmqTrue,
+            "consumer_priorities"          : rmqTrue,
+            "exchange_exchange_bindings"   : rmqTrue,
+            "per_consumer_qos"             : rmqTrue,
+            "publisher_confirms"           : rmqTrue
         ]
-        let capabilities = RMQTable(dict)
+        let serverPropertiesDict: [String: RMQFieldValue] = [
+            "capabilities" : RMQTable(dict),
+            "cluster_name" : RMQLongstr("rabbit@myapp.cfapps.pez.pivotal.io"),
+            "copyright"    : RMQLongstr("Copyright (C) 2007-2015 Pivotal Software, Inc."),
+            "information"  : RMQLongstr("Licensed under the MPL.  See http://www.rabbitmq.com/"),
+            "platform"     : RMQLongstr("Erlang/OTP"),
+            "product"      : RMQLongstr("RabbitMQ"),
+            "version"      : RMQLongstr("3.6.0")
+        ]
         return RMQConnectionStart(
             versionMajor: RMQOctet(0),
             versionMinor: RMQOctet(9),
-            serverProperties: RMQTable([
-                "capabilities" : capabilities,
-                "cluster_name" : RMQLongstr("rabbit@myapp.cfapps.pez.pivotal.io"),
-                "copyright"    : RMQLongstr("Copyright (C) 2007-2015 Pivotal Software, Inc."),
-                "information"  : RMQLongstr("Licensed under the MPL.  See http://www.rabbitmq.com/"),
-                "platform"     : RMQLongstr("Erlang/OTP"),
-                "product"      : RMQLongstr("RabbitMQ"),
-                "version"      : RMQLongstr("3.6.0"),
-                ]),
+            serverProperties: RMQTable(serverPropertiesDict),
             mechanisms: RMQLongstr("AMQPLAIN PLAIN"),
             locales: RMQLongstr("en_US")
         )
     }
 
     static func connectionStartOk(user user: String = "foo", password: String = "bar") -> RMQConnectionStartOk {
-        let capabilities = RMQTable([
-            "publisher_confirms": RMQBoolean(true),
-            "consumer_cancel_notify": RMQBoolean(true),
-            "exchange_exchange_bindings": RMQBoolean(true),
-            "basic.nack": RMQBoolean(true),
-            "connection.blocked": RMQBoolean(true),
-            "authentication_failure_close": RMQBoolean(true),
-            ])
-        let clientProperties = RMQTable([
-            "capabilities" : capabilities,
-            "product"     : RMQLongstr("RMQClient"),
-            "platform"    : RMQLongstr("iOS"),
-            "version"     : RMQLongstr("0.0.1"),
-            "information" : RMQLongstr("https://github.com/camelpunch/RMQClient")
-            ])
+        let capabilitiesDict: [String: RMQBoolean] = [
+            "publisher_confirms"           : rmqTrue,
+            "consumer_cancel_notify"       : rmqTrue,
+            "exchange_exchange_bindings"   : rmqTrue,
+            "basic.nack"                   : rmqTrue,
+            "connection.blocked"           : rmqTrue,
+            "authentication_failure_close" : rmqTrue
+        ]
+        let clientPropertiesDict: [String: RMQFieldValue] = [
+            "capabilities" : RMQTable(capabilitiesDict),
+            "product"      : RMQLongstr("RMQClient"),
+            "platform"     : RMQLongstr("iOS"),
+            "version"      : RMQLongstr("0.0.1"),
+            "information"  : RMQLongstr("https://github.com/camelpunch/RMQClient")
+        ]
         return RMQConnectionStartOk(
-            clientProperties: clientProperties,
+            clientProperties: RMQTable(clientPropertiesDict),
             mechanism: RMQShortstr("PLAIN"),
             response: RMQCredentials(username: user, password: password),
             locale: RMQShortstr("en_GB")
