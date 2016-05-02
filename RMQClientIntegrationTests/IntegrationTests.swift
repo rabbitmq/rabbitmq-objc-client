@@ -123,6 +123,8 @@ class IntegrationTests: XCTestCase {
             }
         }
 
+        sleep(1)
+
         let producingChannel = conn.createChannel()
         let producingQueue = producingChannel.queue(consumingQueue.name, options: [.AutoDelete, .Exclusive])
 
