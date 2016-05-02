@@ -21,9 +21,7 @@
 }
 
 - (BOOL)timesOut {
-    BOOL success = dispatch_semaphore_wait(self.semaphore, self.syncTimeoutFromNow) != 0;
-    self.semaphore = nil;
-    return success;
+    return dispatch_semaphore_wait(self.semaphore, self.syncTimeoutFromNow) != 0;
 }
 
 # pragma mark - Private
