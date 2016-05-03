@@ -24,6 +24,7 @@
 #import <RMQClient/RMQQueuingConnectionDelegateProxy.h>
 #import <RMQClient/RMQGCDHeartbeatSender.h>
 #import <RMQClient/RMQTickingClock.h>
+#import <RMQClient/RMQPKCS12CertificateConverter.h>
 
 //! Project version number for RMQClient.
 FOUNDATION_EXPORT double RMQClientVersionNumber;

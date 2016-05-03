@@ -120,6 +120,11 @@
 		AEC4D1D71C74C1AC00D7D585 /* RMQSender.h in Headers */ = {isa = PBXBuildFile; fileRef = AEC4D1D61C74C1AC00D7D585 /* RMQSender.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AECDEC9F1CBC0E3600EA6E93 /* RMQConnectionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = AECDEC9E1CBC0E3600EA6E93 /* RMQConnectionDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AECDECA11CBC4A4F00EA6E93 /* ConnectionDelegateSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECDECA01CBC4A4F00EA6E93 /* ConnectionDelegateSpy.swift */; };
+		AEDBFF231CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = AEDBFF211CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AEDBFF241CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF221CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.m */; };
+		AEDBFF261CD8E31B0004DB67 /* RMQCertificateConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = AEDBFF251CD8E31B0004DB67 /* RMQCertificateConverter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AEDBFF2A1CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF291CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift */; };
+		AEDBFF2C1CD8E4850004DB67 /* CertificateFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF2B1CD8E4850004DB67 /* CertificateFixtures.swift */; };
 		AEE445E11C7338FE0082132C /* RMQReaderLoop.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE445DF1C7338FE0082132C /* RMQReaderLoop.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEE445E21C7338FE0082132C /* RMQReaderLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE445E01C7338FE0082132C /* RMQReaderLoop.m */; };
 		AEE445E51C7341CB0082132C /* RMQFrameHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE445E31C7341CB0082132C /* RMQFrameHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -299,6 +304,11 @@
 		AEC4D1D61C74C1AC00D7D585 /* RMQSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQSender.h; sourceTree = "<group>"; };
 		AECDEC9E1CBC0E3600EA6E93 /* RMQConnectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQConnectionDelegate.h; sourceTree = "<group>"; };
 		AECDECA01CBC4A4F00EA6E93 /* ConnectionDelegateSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionDelegateSpy.swift; sourceTree = "<group>"; };
+		AEDBFF211CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQPKCS12CertificateConverter.h; sourceTree = "<group>"; };
+		AEDBFF221CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQPKCS12CertificateConverter.m; sourceTree = "<group>"; };
+		AEDBFF251CD8E31B0004DB67 /* RMQCertificateConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQCertificateConverter.h; sourceTree = "<group>"; };
+		AEDBFF291CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQPKCS12CertificateConverterTest.swift; sourceTree = "<group>"; };
+		AEDBFF2B1CD8E4850004DB67 /* CertificateFixtures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CertificateFixtures.swift; sourceTree = "<group>"; };
 		AEE445DF1C7338FE0082132C /* RMQReaderLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQReaderLoop.h; sourceTree = "<group>"; };
 		AEE445E01C7338FE0082132C /* RMQReaderLoop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQReaderLoop.m; sourceTree = "<group>"; };
 		AEE445E31C7341CB0082132C /* RMQFrameHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQFrameHandler.h; sourceTree = "<group>"; };
@@ -448,6 +458,25 @@
 			name = Connection;
 			sourceTree = "<group>";
 		};
+		AEDBFF271CD8E36F0004DB67 /* TLS */ = {
+			isa = PBXGroup;
+			children = (
+				AEDBFF251CD8E31B0004DB67 /* RMQCertificateConverter.h */,
+				AEDBFF211CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.h */,
+				AEDBFF221CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.m */,
+			);
+			name = TLS;
+			sourceTree = "<group>";
+		};
+		AEDBFF281CD8E3960004DB67 /* TLS */ = {
+			isa = PBXGroup;
+			children = (
+				AEDBFF291CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift */,
+				AEDBFF2B1CD8E4850004DB67 /* CertificateFixtures.swift */,
+			);
+			name = TLS;
+			sourceTree = "<group>";
+		};
 		AEE7FE871C3BCA6000DF8C4F = {
 			isa = PBXGroup;
 			children = (
@@ -479,6 +508,7 @@
 				AEA8A75D1CC97C1700371E38 /* RMQGCDSerialQueue.h */,
 				AEA8A75E1CC97C1700371E38 /* RMQGCDSerialQueue.m */,
 				AEA8A7751CCA103700371E38 /* Connection */,
+				AEDBFF271CD8E36F0004DB67 /* TLS */,
 				AE82798F1C8DBDF80013ADD1 /* Channels */,
 				AEE445E31C7341CB0082132C /* RMQFrameHandler.h */,
 				AEE7FEB31C3BD16200DF8C4F /* RMQQueue.h */,
@@ -534,6 +564,7 @@
 				AEE7FEA21C3BCA6000DF8C4F /* Info.plist */,
 				AEEB8B4B1C7DC64A002D3FCE /* Test Doubles */,
 				AEF1E8F31CBE4A8B000C7AB8 /* Connection */,
+				AEDBFF281CD8E3960004DB67 /* TLS */,
 				AE26FA2F1C970E9A00CDBBAA /* Channels */,
 				AE41C5521C4FC88F00129207 /* MethodFixtures.swift */,
 				AE111BD61C57B33300F88277 /* TestHelper.swift */,
@@ -644,6 +675,8 @@
 				AE9595391CD0BC1E0039418C /* RMQGCDHeartbeatSender.h in Headers */,
 				AE95953F1CD0E7E00039418C /* RMQClock.h in Headers */,
 				AE9595441CD0EF4A0039418C /* RMQTickingClock.h in Headers */,
+				AEDBFF261CD8E31B0004DB67 /* RMQCertificateConverter.h in Headers */,
+				AEDBFF231CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.h in Headers */,
 				AEE7FE951C3BCA6000DF8C4F /* RMQClient.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -860,6 +893,7 @@
 				AE744E341C85A1B000A4C2FA /* RMQFrame.m in Sources */,
 				AE8AD2631CC53AEB00229444 /* RMQFramesetSemaphoreWaiter.m in Sources */,
 				AEEEF0831C4F9BFA0056A5EB /* RMQMethodDecoder.m in Sources */,
+				AEDBFF241CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.m in Sources */,
 				AEA8E5D11CC65D2C005B5E1E /* RMQConnectionDelegateLogger.m in Sources */,
 				AE09C8381CCE64F400FA6915 /* RMQProcessInfoNameGenerator.m in Sources */,
 				AE8279891C8D88120013ADD1 /* RMQMultipleChannelAllocator.m in Sources */,
@@ -878,6 +912,7 @@
 				AE59345B1C8735FA00560A73 /* ChannelSpy.swift in Sources */,
 				AE8AD25C1CC4E67F00229444 /* RMQUnallocatedChannelTest.swift in Sources */,
 				AE9595361CD0BA240039418C /* HeartbeatSenderSpy.swift in Sources */,
+				AEDBFF2C1CD8E4850004DB67 /* CertificateFixtures.swift in Sources */,
 				AEA8A7641CC985EC00371E38 /* FakeSerialQueue.swift in Sources */,
 				AE09C83A1CCE65B100FA6915 /* StubNameGenerator.swift in Sources */,
 				AE541F431C7E132700C17932 /* ConnectionTuningTest.swift in Sources */,
@@ -900,6 +935,7 @@
 				AEADA37E1C71D64A00012D61 /* ControlledInteractionTransport.swift in Sources */,
 				AE26FA281C90309F00CDBBAA /* RMQFrameTest.swift in Sources */,
 				AE5934551C870C0E00560A73 /* RMQAllocatedChannelTest.swift in Sources */,
+				AEDBFF2A1CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift in Sources */,
 				AECDECA11CBC4A4F00EA6E93 /* ConnectionDelegateSpy.swift in Sources */,
 				AE59345D1C87375F00560A73 /* ChannelSpyAllocator.swift in Sources */,
 				AEF1E8F71CBE5E6A000C7AB8 /* TransportDelegateSpy.swift in Sources */,
