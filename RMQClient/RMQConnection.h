@@ -9,6 +9,7 @@
 #import "RMQTransport.h"
 #import "RMQLocalSerialQueue.h"
 #import "RMQWaiterFactory.h"
+#import "RMQTLSOptions.h"
 
 @interface RMQConnection : NSObject<RMQFrameHandler, RMQSender, RMQTransportDelegate>
 
@@ -35,7 +36,7 @@
                       delegateQueue:(nonnull dispatch_queue_t)delegateQueue;
 
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
-                         verifyPeer:(BOOL)verifyPeer
+                         tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
                          channelMax:(nonnull NSNumber *)channelMax
                            frameMax:(nonnull NSNumber *)frameMax
                           heartbeat:(nonnull NSNumber *)heartbeat
@@ -47,7 +48,7 @@
                            delegate:(nullable id<RMQConnectionDelegate>)delegate;
 
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
-                         verifyPeer:(BOOL)verifyPeer
+                         tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
                            delegate:(nullable id<RMQConnectionDelegate>)delegate;
 
 - (nonnull instancetype)initWithDelegate:(nullable id<RMQConnectionDelegate>)delegate;

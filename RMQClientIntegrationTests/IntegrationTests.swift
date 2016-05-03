@@ -35,7 +35,9 @@ class IntegrationTests: XCTestCase {
 
     func testSubscribe() {
         let delegate = RMQConnectionDelegateLogger()
-        let conn = RMQConnection(uri: "amqps://guest:guest@localhost", verifyPeer: false, delegate: delegate)
+        let conn = RMQConnection(uri: "amqps://guest:guest@localhost",
+                                 tlsOptions: RMQTLSOptions(useTLS: true, peerName: "localhost", verifyPeer: false),
+                                 delegate: delegate)
         conn.start()
         defer { conn.blockingClose() }
 

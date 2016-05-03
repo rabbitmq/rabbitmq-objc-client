@@ -127,6 +127,7 @@
 		AEDBFF2C1CD8E4850004DB67 /* CertificateFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF2B1CD8E4850004DB67 /* CertificateFixtures.swift */; };
 		AEDBFF301CD8FAF70004DB67 /* RMQTLSOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = AEDBFF2E1CD8FAF70004DB67 /* RMQTLSOptions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEDBFF311CD8FAF70004DB67 /* RMQTLSOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF2F1CD8FAF70004DB67 /* RMQTLSOptions.m */; };
+		AEDBFF2D1CD8F67B0004DB67 /* CertificateFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF2B1CD8E4850004DB67 /* CertificateFixtures.swift */; };
 		AEE445E11C7338FE0082132C /* RMQReaderLoop.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE445DF1C7338FE0082132C /* RMQReaderLoop.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEE445E21C7338FE0082132C /* RMQReaderLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE445E01C7338FE0082132C /* RMQReaderLoop.m */; };
 		AEE445E51C7341CB0082132C /* RMQFrameHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE445E31C7341CB0082132C /* RMQFrameHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -850,6 +851,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AEA8A77B1CCA733400371E38 /* FakeSerialQueue.swift in Sources */,
+				AEDBFF2D1CD8F67B0004DB67 /* CertificateFixtures.swift in Sources */,
 				AE09C8011CCE0D4700FA6915 /* FramesetWaiterSpy.swift in Sources */,
 				AEEB8B561C7DF043002D3FCE /* RMQTransportContract.swift in Sources */,
 				AEA45EE21C440FFD00FE1F62 /* IntegrationTests.swift in Sources */,

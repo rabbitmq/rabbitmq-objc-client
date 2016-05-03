@@ -1,6 +1,7 @@
 #import "RMQTCPSocketTransport.h"
 #import "RMQSynchronizedMutableDictionary.h"
 #import "RMQConstants.h"
+#import "RMQPKCS12CertificateConverter.h"
 
 long closeTag = UINT32_MAX + 1;
 long writeTag = UINT32_MAX + 2;
@@ -14,6 +15,7 @@ long writeTag = UINT32_MAX + 2;
 @property (nonatomic, readwrite) GCDAsyncSocket *socket;
 @property (nonatomic, readwrite) id callbacks;
 @property (nonatomic, readwrite) NSNumber *connectTimeout;
+@property (nonatomic, readwrite) NSData *pkcs12data;
 
 @end
 

@@ -37,6 +37,7 @@
 
 @implementation RMQConnection
 
+// internal
 - (instancetype)initWithTransport:(id<RMQTransport>)transport
                            config:(RMQConnectionConfig *)config
                  handshakeTimeout:(NSNumber *)handshakeTimeout
@@ -85,8 +86,9 @@
     return self;
 }
 
+// TLS and tune options
 - (instancetype)initWithUri:(NSString *)uri
-                 verifyPeer:(BOOL)verifyPeer
+                 tlsOptions:(RMQTLSOptions *)tlsOptions
                  channelMax:(NSNumber *)channelMax
                    frameMax:(NSNumber *)frameMax
                   heartbeat:(NSNumber *)heartbeat
@@ -96,9 +98,6 @@
     NSError *error = NULL;
     RMQURI *rmqURI = [RMQURI parse:uri error:&error];
 
-    RMQTLSOptions *tlsOptions = [[RMQTLSOptions alloc] initWithUseTLS:rmqURI.isTLS
-                                                             peerName:rmqURI.host
-                                                           verifyPeer:verifyPeer];
     RMQTCPSocketTransport *transport = [[RMQTCPSocketTransport alloc] initWithHost:rmqURI.host
                                                                               port:rmqURI.portNumber
                                                                         tlsOptions:tlsOptions];
@@ -126,6 +125,7 @@
                    heartbeatSender:heartbeatSender];
 }
 
+// tune options, no TLS
 - (instancetype)initWithUri:(NSString *)uri
                  channelMax:(NSNumber *)channelMax
                    frameMax:(NSNumber *)frameMax
@@ -134,7 +134,7 @@
                    delegate:(id<RMQConnectionDelegate>)delegate
               delegateQueue:(dispatch_queue_t)delegateQueue {
     return [self initWithUri:uri
-                  verifyPeer:YES
+                  tlsOptions:[[RMQTLSOptions alloc] initWithUseTLS:NO peerName:@"" verifyPeer:NO]
                   channelMax:channelMax
                     frameMax:frameMax
                    heartbeat:heartbeat
@@ -143,11 +143,12 @@
                delegateQueue:delegateQueue];
 }
 
+// TLS, no tune options
 - (instancetype)initWithUri:(NSString *)uri
-                 verifyPeer:(BOOL)verifyPeer
+                 tlsOptions:(RMQTLSOptions *)tlsOptions
                    delegate:(id<RMQConnectionDelegate>)delegate {
     return [self initWithUri:uri
-                  verifyPeer:verifyPeer
+                  tlsOptions:tlsOptions
                   channelMax:@(RMQChannelLimit)
                     frameMax:@131072
                    heartbeat:@0
@@ -156,15 +157,20 @@
                delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
 }
 
+// no TLS, no tune options
 - (instancetype)initWithUri:(NSString *)uri
                    delegate:(id<RMQConnectionDelegate>)delegate {
-    return [self initWithUri:uri verifyPeer:YES delegate:delegate];
+    return [self initWithUri:uri
+                  tlsOptions:[[RMQTLSOptions alloc] initWithUseTLS:NO peerName:@"" verifyPeer:NO]
+                    delegate:delegate];
 }
 
+// local, default credentials
 - (instancetype)initWithDelegate:(id<RMQConnectionDelegate>)delegate {
     return [self initWithUri:@"amqp://guest:guest@localhost" delegate:delegate];
 }
 
+// local, default credentials, no delegate
 - (instancetype)init
 {
     return [self initWithDelegate:nil];
