@@ -9,8 +9,7 @@ long writeTag = UINT32_MAX + 2;
 
 @property (nonatomic, readwrite) NSString *host;
 @property (nonatomic, readwrite) NSNumber *port;
-@property (nonatomic, readwrite) BOOL useTLS;
-@property (nonatomic, readwrite) BOOL verifyPeer;
+@property (nonatomic, readwrite) RMQTLSOptions *tlsOptions;
 @property (nonatomic, readwrite) BOOL _isConnected;
 @property (nonatomic, readwrite) GCDAsyncSocket *socket;
 @property (nonatomic, readwrite) id callbacks;
@@ -23,8 +22,7 @@ long writeTag = UINT32_MAX + 2;
 
 - (instancetype)initWithHost:(NSString *)host
                         port:(NSNumber *)port
-                      useTLS:(BOOL)useTLS
-                  verifyPeer:(BOOL)verifyPeer
+                  tlsOptions:(RMQTLSOptions *)tlsOptions
              callbackStorage:(id)callbacks {
     self = [super init];
     if (self) {
@@ -32,8 +30,7 @@ long writeTag = UINT32_MAX + 2;
                                                  delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)];
         self.host = host;
         self.port = port;
-        self.useTLS = useTLS;
-        self.verifyPeer = verifyPeer;
+        self.tlsOptions = tlsOptions;
         self.callbacks = callbacks;
         self.connectTimeout = @2;
     }
@@ -42,22 +39,11 @@ long writeTag = UINT32_MAX + 2;
 
 - (instancetype)initWithHost:(NSString *)host
                         port:(NSNumber *)port
-                      useTLS:(BOOL)useTLS
-                  verifyPeer:(BOOL)verifyPeer {
+                  tlsOptions:(RMQTLSOptions *)tlsOptions {
     return [self initWithHost:host
                          port:port
-                       useTLS:useTLS
-                   verifyPeer:verifyPeer
+                   tlsOptions:tlsOptions
               callbackStorage:[RMQSynchronizedMutableDictionary new]];
-}
-
-- (instancetype)initWithHost:(NSString *)host
-                        port:(NSNumber *)port
-                      useTLS:(BOOL)useTLS {
-    return [self initWithHost:host
-                         port:port
-                       useTLS:useTLS
-                   verifyPeer:YES];
 }
 
 - (instancetype)init
@@ -70,8 +56,8 @@ long writeTag = UINT32_MAX + 2;
     BOOL success = [self.socket connectToHost:self.host
                                        onPort:self.port.unsignedIntegerValue
                                         error:error];
-    if (self.useTLS) {
-        [self.socket startTLS:@{GCDAsyncSocketManuallyEvaluateTrust: @(!self.verifyPeer),
+    if (self.tlsOptions.useTLS) {
+        [self.socket startTLS:@{GCDAsyncSocketManuallyEvaluateTrust: @(!self.tlsOptions.verifyPeer),
                                 GCDAsyncSocketSSLPeerName: self.host}];
     }
     return success;

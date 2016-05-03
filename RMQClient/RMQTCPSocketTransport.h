@@ -1,22 +1,17 @@
 #import <Foundation/Foundation.h>
 #import "RMQTransport.h"
+#import "RMQTLSOptions.h"
 @import CocoaAsyncSocket;
 
 @interface RMQTCPSocketTransport : NSObject<RMQTransport,GCDAsyncSocketDelegate>
 
 - (nonnull instancetype)initWithHost:(nonnull NSString *)host
-                                port:(nonnull NSNumber *)port
-                              useTLS:(BOOL)useTLS
-                          verifyPeer:(BOOL)verifyPeer
+                                port:(nonnull NSNumber *)por
+                          tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
                      callbackStorage:(nonnull id)callbacks;
 
 - (nonnull instancetype)initWithHost:(nonnull NSString *)host
                                 port:(nonnull NSNumber *)port
-                              useTLS:(BOOL)useTLS
-                          verifyPeer:(BOOL)verifyPeer;
-
-- (nonnull instancetype)initWithHost:(nonnull NSString *)host
-                                port:(nonnull NSNumber *)port
-                              useTLS:(BOOL)useTLS;
+                          tlsOptions:(nonnull RMQTLSOptions *)tlsOptions;
 
 @end

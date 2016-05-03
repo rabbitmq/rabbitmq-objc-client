@@ -125,6 +125,8 @@
 		AEDBFF261CD8E31B0004DB67 /* RMQCertificateConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = AEDBFF251CD8E31B0004DB67 /* RMQCertificateConverter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEDBFF2A1CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF291CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift */; };
 		AEDBFF2C1CD8E4850004DB67 /* CertificateFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF2B1CD8E4850004DB67 /* CertificateFixtures.swift */; };
+		AEDBFF301CD8FAF70004DB67 /* RMQTLSOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = AEDBFF2E1CD8FAF70004DB67 /* RMQTLSOptions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AEDBFF311CD8FAF70004DB67 /* RMQTLSOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF2F1CD8FAF70004DB67 /* RMQTLSOptions.m */; };
 		AEE445E11C7338FE0082132C /* RMQReaderLoop.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE445DF1C7338FE0082132C /* RMQReaderLoop.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEE445E21C7338FE0082132C /* RMQReaderLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE445E01C7338FE0082132C /* RMQReaderLoop.m */; };
 		AEE445E51C7341CB0082132C /* RMQFrameHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE445E31C7341CB0082132C /* RMQFrameHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -309,6 +311,8 @@
 		AEDBFF251CD8E31B0004DB67 /* RMQCertificateConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQCertificateConverter.h; sourceTree = "<group>"; };
 		AEDBFF291CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQPKCS12CertificateConverterTest.swift; sourceTree = "<group>"; };
 		AEDBFF2B1CD8E4850004DB67 /* CertificateFixtures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CertificateFixtures.swift; sourceTree = "<group>"; };
+		AEDBFF2E1CD8FAF70004DB67 /* RMQTLSOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQTLSOptions.h; sourceTree = "<group>"; };
+		AEDBFF2F1CD8FAF70004DB67 /* RMQTLSOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQTLSOptions.m; sourceTree = "<group>"; };
 		AEE445DF1C7338FE0082132C /* RMQReaderLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQReaderLoop.h; sourceTree = "<group>"; };
 		AEE445E01C7338FE0082132C /* RMQReaderLoop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQReaderLoop.m; sourceTree = "<group>"; };
 		AEE445E31C7341CB0082132C /* RMQFrameHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQFrameHandler.h; sourceTree = "<group>"; };
@@ -464,6 +468,8 @@
 				AEDBFF251CD8E31B0004DB67 /* RMQCertificateConverter.h */,
 				AEDBFF211CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.h */,
 				AEDBFF221CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.m */,
+				AEDBFF2E1CD8FAF70004DB67 /* RMQTLSOptions.h */,
+				AEDBFF2F1CD8FAF70004DB67 /* RMQTLSOptions.m */,
 			);
 			name = TLS;
 			sourceTree = "<group>";
@@ -677,6 +683,7 @@
 				AE9595441CD0EF4A0039418C /* RMQTickingClock.h in Headers */,
 				AEDBFF261CD8E31B0004DB67 /* RMQCertificateConverter.h in Headers */,
 				AEDBFF231CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.h in Headers */,
+				AEDBFF301CD8FAF70004DB67 /* RMQTLSOptions.h in Headers */,
 				AEE7FE951C3BCA6000DF8C4F /* RMQClient.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -867,6 +874,7 @@
 				AE8AD2671CC53B0D00229444 /* RMQFramesetWaitResult.m in Sources */,
 				AEEB514E1CAC7780009F37D2 /* RMQSynchronizedMutableDictionary.m in Sources */,
 				AEADA3821C71F59A00012D61 /* RMQMethodMap.m in Sources */,
+				AEDBFF311CD8FAF70004DB67 /* RMQTLSOptions.m in Sources */,
 				AEA8A7721CCA100300371E38 /* RMQSemaphoreWaiter.m in Sources */,
 				AE4E7F4B1C6A297900A441EC /* RMQMethods.m in Sources */,
 				AE39BDA31C68B105000E7A77 /* RMQProtocolHeader.m in Sources */,

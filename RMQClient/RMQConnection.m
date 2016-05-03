@@ -13,6 +13,7 @@
 #import "RMQTCPSocketTransport.h"
 #import "RMQURI.h"
 #import "RMQTickingClock.h"
+#import "RMQTLSOptions.h"
 
 @interface RMQConnection ()
 @property (strong, nonatomic, readwrite) id <RMQTransport> transport;
@@ -94,10 +95,12 @@
               delegateQueue:(dispatch_queue_t)delegateQueue {
     NSError *error = NULL;
     RMQURI *rmqURI = [RMQURI parse:uri error:&error];
+
+    RMQTLSOptions *tlsOptions = [[RMQTLSOptions alloc] initWithUseTLS:rmqURI.isTLS
+                                                           verifyPeer:verifyPeer];
     RMQTCPSocketTransport *transport = [[RMQTCPSocketTransport alloc] initWithHost:rmqURI.host
                                                                               port:rmqURI.portNumber
-                                                                            useTLS:rmqURI.isTLS
-                                                                        verifyPeer:verifyPeer];
+                                                                        tlsOptions:tlsOptions];
     RMQMultipleChannelAllocator *allocator = [[RMQMultipleChannelAllocator alloc] initWithChannelSyncTimeout:syncTimeout];
     RMQQueuingConnectionDelegateProxy *delegateProxy = [[RMQQueuingConnectionDelegateProxy alloc] initWithDelegate:delegate
                                                                                                              queue:delegateQueue];
