@@ -125,9 +125,10 @@
 		AEDBFF261CD8E31B0004DB67 /* RMQCertificateConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = AEDBFF251CD8E31B0004DB67 /* RMQCertificateConverter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEDBFF2A1CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF291CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift */; };
 		AEDBFF2C1CD8E4850004DB67 /* CertificateFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF2B1CD8E4850004DB67 /* CertificateFixtures.swift */; };
+		AEDBFF2D1CD8F67B0004DB67 /* CertificateFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF2B1CD8E4850004DB67 /* CertificateFixtures.swift */; };
 		AEDBFF301CD8FAF70004DB67 /* RMQTLSOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = AEDBFF2E1CD8FAF70004DB67 /* RMQTLSOptions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEDBFF311CD8FAF70004DB67 /* RMQTLSOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF2F1CD8FAF70004DB67 /* RMQTLSOptions.m */; };
-		AEDBFF2D1CD8F67B0004DB67 /* CertificateFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF2B1CD8E4850004DB67 /* CertificateFixtures.swift */; };
+		AEDBFF331CD907D80004DB67 /* RMQTLSOptionsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF321CD907D80004DB67 /* RMQTLSOptionsTest.swift */; };
 		AEE445E11C7338FE0082132C /* RMQReaderLoop.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE445DF1C7338FE0082132C /* RMQReaderLoop.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEE445E21C7338FE0082132C /* RMQReaderLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE445E01C7338FE0082132C /* RMQReaderLoop.m */; };
 		AEE445E51C7341CB0082132C /* RMQFrameHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE445E31C7341CB0082132C /* RMQFrameHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -314,6 +315,7 @@
 		AEDBFF2B1CD8E4850004DB67 /* CertificateFixtures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CertificateFixtures.swift; sourceTree = "<group>"; };
 		AEDBFF2E1CD8FAF70004DB67 /* RMQTLSOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQTLSOptions.h; sourceTree = "<group>"; };
 		AEDBFF2F1CD8FAF70004DB67 /* RMQTLSOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQTLSOptions.m; sourceTree = "<group>"; };
+		AEDBFF321CD907D80004DB67 /* RMQTLSOptionsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQTLSOptionsTest.swift; sourceTree = "<group>"; };
 		AEE445DF1C7338FE0082132C /* RMQReaderLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQReaderLoop.h; sourceTree = "<group>"; };
 		AEE445E01C7338FE0082132C /* RMQReaderLoop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQReaderLoop.m; sourceTree = "<group>"; };
 		AEE445E31C7341CB0082132C /* RMQFrameHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQFrameHandler.h; sourceTree = "<group>"; };
@@ -480,6 +482,7 @@
 			children = (
 				AEDBFF291CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift */,
 				AEDBFF2B1CD8E4850004DB67 /* CertificateFixtures.swift */,
+				AEDBFF321CD907D80004DB67 /* RMQTLSOptionsTest.swift */,
 			);
 			name = TLS;
 			sourceTree = "<group>";
@@ -933,6 +936,7 @@
 				AE8AD2691CC545ED00229444 /* RMQFramesetSemaphoreWaiterTest.swift in Sources */,
 				AEEB51501CADC42E009F37D2 /* RMQSynchronizedMutableDictionaryTest.swift in Sources */,
 				AEEB8B551C7DEDE5002D3FCE /* ControlledInteractionTransportTest.swift in Sources */,
+				AEDBFF331CD907D80004DB67 /* RMQTLSOptionsTest.swift in Sources */,
 				AE09C83C1CCE680F00FA6915 /* RMQProcessInfoNameGeneratorTest.swift in Sources */,
 				AE8279851C8D86110013ADD1 /* ChannelAllocationTest.swift in Sources */,
 				AE09C8321CCE589800FA6915 /* QueueDeclarationTest.swift in Sources */,

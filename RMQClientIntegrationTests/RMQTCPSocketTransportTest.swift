@@ -3,7 +3,7 @@ import CocoaAsyncSocket
 
 class RMQTCPSocketTransportTest: XCTestCase {
     var transport: RMQTCPSocketTransport = RMQTCPSocketTransport(host: "localhost", port: 5672,
-                                                                 tlsOptions: RMQTLSOptions(useTLS: false, peerName: "foo", verifyPeer: false))
+                                                                 tlsOptions: RMQTLSOptions.noTLS())
 
     func testObeysContract() {
         RMQTransportContract(transport)
@@ -21,7 +21,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
     func testCallbacksAreRemovedAfterUse() {
         let callbacks = [:] as NSMutableDictionary
         transport = RMQTCPSocketTransport(host: "localhost", port: 5672,
-                                          tlsOptions: RMQTLSOptions(useTLS: false, peerName: "foo", verifyPeer: false),
+                                          tlsOptions: RMQTLSOptions.noTLS(),
                                           callbackStorage: callbacks)
 
         var finished = false
@@ -39,7 +39,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
         let callbacks = RMQSynchronizedMutableDictionary()
         let delegate = TransportDelegateSpy()
         transport = RMQTCPSocketTransport(host: "localhost", port: 123456,
-                                          tlsOptions: RMQTLSOptions(useTLS: false, peerName: "foo", verifyPeer: false),
+                                          tlsOptions: RMQTLSOptions.noTLS(),
                                           callbackStorage: callbacks)
 
         transport.delegate = delegate
@@ -53,7 +53,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
     func testExtendsReadWhenReadTimesOut() {
         let callbacks = RMQSynchronizedMutableDictionary()
         transport = RMQTCPSocketTransport(host: "localhost", port: 123456,
-                                          tlsOptions: RMQTLSOptions(useTLS: false, peerName: "foo", verifyPeer: false),
+                                          tlsOptions: RMQTLSOptions.noTLS(),
                                           callbackStorage: callbacks)
         let timeoutExtension = transport.socket(GCDAsyncSocket(), shouldTimeoutReadWithTag: 123, elapsed: 123, bytesDone: 999)
         XCTAssert(timeoutExtension > 0)
@@ -62,7 +62,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
     func testConnectsViaTLS() {
         let semaphore = dispatch_semaphore_create(0)
         transport = RMQTCPSocketTransport(host: "localhost", port: 5671,
-                                          tlsOptions: RMQTLSOptions(useTLS: true, peerName: "localhost", verifyPeer: false))
+                                          tlsOptions: RMQTLSOptions(peerName: "localhost", verifyPeer: false, pkcs12: nil))
         try! transport.connect()
         transport.write(RMQProtocolHeader().amqEncoded())
 

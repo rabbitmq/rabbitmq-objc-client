@@ -135,7 +135,7 @@
                    delegate:(id<RMQConnectionDelegate>)delegate
               delegateQueue:(dispatch_queue_t)delegateQueue {
     return [self initWithUri:uri
-                  tlsOptions:[[RMQTLSOptions alloc] initWithUseTLS:NO peerName:@"" verifyPeer:NO]
+                  tlsOptions:[RMQTLSOptions noTLS]
                   channelMax:channelMax
                     frameMax:frameMax
                    heartbeat:heartbeat
@@ -162,7 +162,7 @@
 - (instancetype)initWithUri:(NSString *)uri
                    delegate:(id<RMQConnectionDelegate>)delegate {
     return [self initWithUri:uri
-                  tlsOptions:[[RMQTLSOptions alloc] initWithUseTLS:NO peerName:@"" verifyPeer:NO]
+                  tlsOptions:[RMQTLSOptions noTLS]
                     delegate:delegate];
 }
 

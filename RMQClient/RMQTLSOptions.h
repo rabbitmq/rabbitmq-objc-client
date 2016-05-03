@@ -6,9 +6,10 @@
 @property (nonatomic, readonly) NSString *peerName;
 @property (nonatomic, readonly) BOOL verifyPeer;
 
-- (instancetype)initWithUseTLS:(BOOL)useTLS
-                      peerName:(NSString *)peerName
-                    verifyPeer:(BOOL)verifyPeer;
++ (instancetype)noTLS;
+- (instancetype)initWithPeerName:(NSString *)peerName
+                      verifyPeer:(BOOL)verifyPeer
+                          pkcs12:(NSData *)pkcs12data;
 
 - (NSDictionary *)startTLSOptions;
 - (NSString *)authMechanism;
