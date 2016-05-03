@@ -11,5 +11,6 @@
                     verifyPeer:(BOOL)verifyPeer;
 
 - (NSDictionary *)startTLSOptions;
+- (NSString *)authMechanism;
 
 @end

@@ -26,4 +26,8 @@
              GCDAsyncSocketSSLPeerName: self.peerName};
 }
 
+- (NSString *)authMechanism {
+    return @"PLAIN";
+}
+
 @end

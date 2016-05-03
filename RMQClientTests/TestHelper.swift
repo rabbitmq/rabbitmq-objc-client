@@ -49,7 +49,8 @@ class TestHelper {
                                    channelMax: channelMax,
                                    frameMax: frameMax,
                                    heartbeat: heartbeat,
-                                   vhost: vhost)
+                                   vhost: vhost,
+                                   authMechanism: "PLAIN")
     }
 
     static func startedConnection(
@@ -65,7 +66,7 @@ class TestHelper {
         let conn = RMQConnection(
             transport: transport,
             config: RMQConnectionConfig(credentials: RMQCredentials(username: user, password: password),
-                channelMax: 65536, frameMax: 131072, heartbeat: 0, vhost: vhost),
+                channelMax: 65536, frameMax: 131072, heartbeat: 0, vhost: vhost, authMechanism: "PLAIN"),
             handshakeTimeout: 10,
             channelAllocator: allocator,
             frameHandler: allocator,

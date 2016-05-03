@@ -8,9 +8,11 @@
 @property (nonnull, nonatomic, readonly) NSNumber *heartbeat;
 @property (nonnull, nonatomic, readonly) NSString *vhost;
 @property (nonnull, nonatomic, readonly) RMQCredentials *credentials;
+@property (nonnull, nonatomic, readonly) NSString *authMechanism;
 - (nonnull instancetype)initWithCredentials:(nonnull RMQCredentials *)credentials
                                  channelMax:(nonnull NSNumber *)channelMax
                                    frameMax:(nonnull NSNumber *)frameMax
                                   heartbeat:(nonnull NSNumber *)heartbeat
-                                      vhost:(nonnull NSString *)vhost;
+                                      vhost:(nonnull NSString *)vhost
+                              authMechanism:(nonnull NSString *)authMechanism;
 @end

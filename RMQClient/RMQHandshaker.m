@@ -58,7 +58,7 @@
                                     @"information"  : [[RMQLongstr alloc] init:@"https://github.com/rabbitmq/rabbitmq-objc-client"]}];
 
     return [[RMQConnectionStartOk alloc] initWithClientProperties:clientProperties
-                                                        mechanism:[[RMQShortstr alloc] init:@"PLAIN"]
+                                                        mechanism:[[RMQShortstr alloc] init:self.config.authMechanism]
                                                          response:self.config.credentials
                                                            locale:[[RMQShortstr alloc] init:@"en_GB"]];
 }

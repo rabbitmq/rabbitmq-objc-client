@@ -113,7 +113,8 @@
                                                                         channelMax:channelMax
                                                                           frameMax:frameMax
                                                                          heartbeat:heartbeat
-                                                                             vhost:rmqURI.vhost];
+                                                                             vhost:rmqURI.vhost
+                                                                     authMechanism:tlsOptions.authMechanism];
     return [self initWithTransport:transport
                             config:config
                   handshakeTimeout:syncTimeout
