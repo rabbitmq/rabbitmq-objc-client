@@ -97,6 +97,7 @@
     RMQURI *rmqURI = [RMQURI parse:uri error:&error];
 
     RMQTLSOptions *tlsOptions = [[RMQTLSOptions alloc] initWithUseTLS:rmqURI.isTLS
+                                                             peerName:rmqURI.host
                                                            verifyPeer:verifyPeer];
     RMQTCPSocketTransport *transport = [[RMQTCPSocketTransport alloc] initWithHost:rmqURI.host
                                                                               port:rmqURI.portNumber

@@ -57,8 +57,7 @@ long writeTag = UINT32_MAX + 2;
                                        onPort:self.port.unsignedIntegerValue
                                         error:error];
     if (self.tlsOptions.useTLS) {
-        [self.socket startTLS:@{GCDAsyncSocketManuallyEvaluateTrust: @(!self.tlsOptions.verifyPeer),
-                                GCDAsyncSocketSSLPeerName: self.host}];
+        [self.socket startTLS:self.tlsOptions.startTLSOptions];
     }
     return success;
 }
