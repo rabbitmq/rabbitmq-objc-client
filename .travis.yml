@@ -7,6 +7,9 @@ before_install:
   - brew update
   - brew outdated xctool || brew upgrade xctool
   - brew install rabbitmq
+  - cp .travis/etc/* /usr/local/etc/rabbitmq/
   - brew services start rabbitmq
 before_script:
   - carthage bootstrap --platform iOS
+after_failure:
+  - cat /usr/local/var/log/rabbitmq/rabbit@localhost.log
