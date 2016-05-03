@@ -59,9 +59,10 @@ long writeTag = UINT32_MAX + 2;
                                        onPort:self.port.unsignedIntegerValue
                                         error:error];
     if (self.tlsOptions.useTLS) {
-        [self.socket startTLS:self.tlsOptions.startTLSOptions];
+        return [self tlsUpgradeWithError:error];
+    } else {
+        return success;
     }
-    return success;
 }
 
 - (void)close:(void (^)())onClose {
@@ -125,6 +126,16 @@ struct __attribute__((__packed__)) AMQPHeader {
     if (foundCallback) {
         foundCallback();
     }
+}
+
+- (BOOL)tlsUpgradeWithError:(NSError **)error {
+    NSArray *certificates = [self.tlsOptions certificatesWithError:error];
+    if (*error) return NO;
+    NSMutableDictionary *opts = [@{GCDAsyncSocketManuallyEvaluateTrust: @(!self.tlsOptions.verifyPeer),
+                                   GCDAsyncSocketSSLPeerName: self.tlsOptions.peerName} mutableCopy];
+    if (certificates.count > 0) opts[GCDAsyncSocketSSLCertificates] = certificates;
+    [self.socket startTLS:opts];
+    return YES;
 }
 
 - (dispatch_time_t)connectTimeoutFromNow {

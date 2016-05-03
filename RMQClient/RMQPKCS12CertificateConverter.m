@@ -19,6 +19,8 @@
 }
 
 - (NSArray *)certificatesWithError:(NSError *__autoreleasing *)error {
+    if (self.data.length == 0) return @[];
+
     SecIdentityRef identity;
     [self parseIdentity:self.data identity:&identity error:error];
 
@@ -33,10 +35,9 @@
 
 - (void)parseIdentity:(NSData *)data identity:(SecIdentityRef *)identity error:(NSError **)error {
     CFDataRef cfData = (__bridge CFDataRef)data;
-    OSStatus status = errSecSuccess;
     NSDictionary *options = @{ (__bridge NSString*)kSecImportExportPassphrase : self.password };
     CFArrayRef items = CFArrayCreate(NULL, 0, 0, NULL);
-    status = SecPKCS12Import(cfData, (__bridge CFDictionaryRef)options, &items);
+    OSStatus status = SecPKCS12Import(cfData, (__bridge CFDictionaryRef)options, &items);
 
     switch (status) {
         case errSecSuccess:

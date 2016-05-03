@@ -62,7 +62,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
     func testConnectsViaTLS() {
         let semaphore = dispatch_semaphore_create(0)
         transport = RMQTCPSocketTransport(host: "localhost", port: 5671,
-                                          tlsOptions: RMQTLSOptions(peerName: "localhost", verifyPeer: false, pkcs12: nil))
+                                          tlsOptions: RMQTLSOptions(peerName: "localhost", verifyPeer: false, pkcs12: nil, pkcs12Password: ""))
         try! transport.connect()
         transport.write(RMQProtocolHeader().amqEncoded())
 
@@ -76,6 +76,41 @@ class RMQTCPSocketTransportTest: XCTestCase {
                        "Timed out waiting for read")
         let parser = RMQParser(data: receivedData!)
         XCTAssert(RMQFrame(parser: parser).payload.isKindOfClass(RMQConnectionStart))
+    }
+
+    func testConnectsViaTLSWithClientCert() {
+        let semaphore = dispatch_semaphore_create(0)
+        let tlsOptions = RMQTLSOptions(
+            peerName: "localhost",
+            verifyPeer: false,
+            pkcs12: CertificateFixtures.guestBunniesP12(),
+            pkcs12Password: "bunnies"
+        )
+        transport = RMQTCPSocketTransport(host: "localhost", port: 5671, tlsOptions: tlsOptions)
+        try! transport.connect()
+        transport.write(RMQProtocolHeader().amqEncoded())
+
+        var receivedData: NSData?
+        transport.readFrame { data in
+            receivedData = data
+            dispatch_semaphore_signal(semaphore)
+        }
+
+        XCTAssertEqual(0, dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(2)),
+                       "Timed out waiting for read")
+        let parser = RMQParser(data: receivedData!)
+        XCTAssert(RMQFrame(parser: parser).payload.isKindOfClass(RMQConnectionStart))
+    }
+
+    func testThrowsWhenTLSPasswordIncorrect() {
+        let tlsOptions = RMQTLSOptions(
+            peerName: "localhost",
+            verifyPeer: false,
+            pkcs12: CertificateFixtures.guestBunniesP12(),
+            pkcs12Password: "incorrect-password"
+        )
+        transport = RMQTCPSocketTransport(host: "localhost", port: 5671, tlsOptions: tlsOptions)
+        XCTAssertThrowsError(try transport.connect())
     }
 
 }

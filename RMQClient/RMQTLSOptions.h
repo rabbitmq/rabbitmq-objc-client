@@ -9,9 +9,10 @@
 + (instancetype)noTLS;
 - (instancetype)initWithPeerName:(NSString *)peerName
                       verifyPeer:(BOOL)verifyPeer
-                          pkcs12:(NSData *)pkcs12data;
+                          pkcs12:(NSData *)pkcs12data
+                  pkcs12Password:(NSString *)password;
 
-- (NSDictionary *)startTLSOptions;
 - (NSString *)authMechanism;
+- (NSArray *)certificatesWithError:(NSError **)error;
 
 @end

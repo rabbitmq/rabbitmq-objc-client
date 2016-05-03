@@ -28,7 +28,7 @@ class RMQPKCS12CertificateConverterTest: XCTestCase {
     }
 
     func testGarbageDataThrowsError() {
-        let p12 = "".dataUsingEncoding(NSUTF8StringEncoding)!
+        let p12 = "somegarbage".dataUsingEncoding(NSUTF8StringEncoding)!
         let converter = RMQPKCS12CertificateConverter(data: p12, password: "bunnies")
 
         XCTAssertThrowsError(try converter.certificates()) { (error) in
@@ -39,6 +39,14 @@ class RMQPKCS12CertificateConverterTest: XCTestCase {
                 )
             }
         }
+    }
+
+    func testReturnsEmptyCertificatesWhenNoP12DataProvided() {
+        let converter = RMQPKCS12CertificateConverter(
+            data: "".dataUsingEncoding(NSUTF8StringEncoding),
+            password: "ez123"
+        )
+        XCTAssertEqual(0, try! converter.certificates().count)
     }
 
 }
