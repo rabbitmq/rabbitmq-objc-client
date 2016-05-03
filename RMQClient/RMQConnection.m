@@ -123,6 +123,23 @@
 }
 
 - (instancetype)initWithUri:(NSString *)uri
+                 channelMax:(NSNumber *)channelMax
+                   frameMax:(NSNumber *)frameMax
+                  heartbeat:(NSNumber *)heartbeat
+                syncTimeout:(NSNumber *)syncTimeout
+                   delegate:(id<RMQConnectionDelegate>)delegate
+              delegateQueue:(dispatch_queue_t)delegateQueue {
+    return [self initWithUri:uri
+                  verifyPeer:YES
+                  channelMax:channelMax
+                    frameMax:frameMax
+                   heartbeat:heartbeat
+                 syncTimeout:syncTimeout
+                    delegate:delegate
+               delegateQueue:delegateQueue];
+}
+
+- (instancetype)initWithUri:(NSString *)uri
                  verifyPeer:(BOOL)verifyPeer
                    delegate:(id<RMQConnectionDelegate>)delegate {
     return [self initWithUri:uri
