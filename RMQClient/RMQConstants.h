@@ -3,6 +3,7 @@
 extern NSInteger const RMQEmptyFrameSize;
 extern NSInteger const RMQChannelLimit;
 extern NSString * const RMQErrorDomain;
+extern NSString * const RMQClientVersion;
 
 extern NSInteger const RMQConnectionErrorHandshakeTimedOut;
 extern NSInteger const RMQChannelErrorUnallocated;

@@ -1,4 +1,5 @@
 #import "RMQHandshaker.h"
+#import "RMQConstants.h"
 
 @interface RMQHandshaker ()
 @property (nonatomic, readwrite) id<RMQSender> sender;
@@ -42,18 +43,19 @@
 #pragma mark - Private
 
 - (RMQConnectionStartOk *)startOk {
-    RMQTable *capabilities = [[RMQTable alloc] init:@{@"publisher_confirms": [[RMQBoolean alloc] init:YES],
-                                                      @"consumer_cancel_notify": [[RMQBoolean alloc] init:YES],
-                                                      @"exchange_exchange_bindings": [[RMQBoolean alloc] init:YES],
-                                                      @"basic.nack": [[RMQBoolean alloc] init:YES],
-                                                      @"connection.blocked": [[RMQBoolean alloc] init:YES],
-                                                      @"authentication_failure_close": [[RMQBoolean alloc] init:YES]}];
+    RMQBoolean *yes = [[RMQBoolean alloc] init:YES];
+    RMQTable *capabilities = [[RMQTable alloc] init:@{@"publisher_confirms"           : yes,
+                                                      @"consumer_cancel_notify"       : yes,
+                                                      @"exchange_exchange_bindings"   : yes,
+                                                      @"basic.nack"                   : yes,
+                                                      @"connection.blocked"           : yes,
+                                                      @"authentication_failure_close" : yes}];
     RMQTable *clientProperties = [[RMQTable alloc] init:
                                   @{@"capabilities" : capabilities,
                                     @"product"      : [[RMQLongstr alloc] init:@"RMQClient"],
                                     @"platform"     : [[RMQLongstr alloc] init:@"iOS"],
-                                    @"version"      : [[RMQLongstr alloc] init:@"0.0.1"],
-                                    @"information"  : [[RMQLongstr alloc] init:@"https://github.com/camelpunch/RMQClient"]}];
+                                    @"version"      : [[RMQLongstr alloc] init:RMQClientVersion],
+                                    @"information"  : [[RMQLongstr alloc] init:@"https://github.com/rabbitmq/rabbitmq-objc-client"]}];
 
     return [[RMQConnectionStartOk alloc] initWithClientProperties:clientProperties
                                                         mechanism:[[RMQShortstr alloc] init:@"PLAIN"]
