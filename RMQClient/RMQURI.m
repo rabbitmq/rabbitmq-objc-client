@@ -1,5 +1,5 @@
 #import "RMQURI.h"
-#import "RMQConstants.h"
+#import "RMQErrors.h"
 
 @interface RMQURI ()
 @property (nonatomic,nonnull,readwrite) NSString *scheme;

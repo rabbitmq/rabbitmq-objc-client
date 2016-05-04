@@ -14,7 +14,7 @@
 #import "RMQURI.h"
 #import "RMQTickingClock.h"
 #import "RMQTLSOptions.h"
-#import "RMQConnectionErrors.h"
+#import "RMQErrors.h"
 
 NSInteger const RMQChannelLimit = 65535;
 
@@ -206,7 +206,7 @@ NSInteger const RMQChannelLimit = 65535;
 
             if (handshakeCompletion.timesOut) {
                 NSError *error = [NSError errorWithDomain:RMQErrorDomain
-                                                     code:RMQConnectionErrorHandshakeTimedOut
+                                                     code:RMQErrorConnectionHandshakeTimedOut
                                                  userInfo:@{NSLocalizedDescriptionKey: @"Handshake timed out."}];
                 [self.delegate connection:self failedToConnectWithError:error];
             }

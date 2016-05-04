@@ -1,5 +1,5 @@
 #import "RMQUnallocatedChannel.h"
-#import "RMQConstants.h"
+#import "RMQErrors.h"
 #import "RMQConnectionDelegate.h"
 
 @interface RMQUnallocatedChannel ()

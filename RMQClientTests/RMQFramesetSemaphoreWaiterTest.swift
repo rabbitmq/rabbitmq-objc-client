@@ -7,7 +7,7 @@ class RMQFramesetSemaphoreWaiterTest: XCTestCase {
         let result = waiter.waitOn(RMQChannelOpenOk.self)
 
         XCTAssertNil(result.frameset)
-        XCTAssertEqual(RMQChannelErrorWaitTimeout, result.error.code)
+        XCTAssertEqual(RMQChannelError.WaitTimeout.rawValue, result.error.code)
         XCTAssertEqual("Timed out waiting for RMQChannelOpenOk.", result.error.localizedDescription)
     }
 
@@ -21,7 +21,7 @@ class RMQFramesetSemaphoreWaiterTest: XCTestCase {
         let result = waiter.waitOn(RMQChannelOpenOk.self)
 
         XCTAssertEqual(deliveredFrameset, result.frameset)
-        XCTAssertEqual(RMQChannelErrorIncorrectSyncMethod, result.error.code)
+        XCTAssertEqual(RMQChannelError.IncorrectSyncMethod.rawValue, result.error.code)
         XCTAssertEqual("Expected RMQChannelOpenOk, got RMQBasicConsumeOk.", result.error.localizedDescription)
     }
 

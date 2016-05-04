@@ -1,6 +1,6 @@
-#import "RMQConstants.h"
-#import "RMQFramesetSemaphoreWaiter.h"
 #import "RMQChannel.h"
+#import "RMQErrors.h"
+#import "RMQFramesetSemaphoreWaiter.h"
 
 @interface RMQFramesetSemaphoreWaiter ()
 @property (nonatomic, readwrite) RMQFrameset *lastFrameset;

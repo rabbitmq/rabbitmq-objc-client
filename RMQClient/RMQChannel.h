@@ -4,6 +4,13 @@
 #import "RMQFrameHandler.h"
 #import "RMQQueue.h"
 
+typedef NS_ENUM(NSInteger, RMQChannelError) {
+    RMQChannelErrorUnallocated = 1,
+    RMQChannelErrorWaitTimeout,
+    RMQChannelErrorIncorrectSyncMethod,
+    RMQChannelErrorQueueNameCollision,
+};
+
 @protocol RMQConnectionDelegate;
 
 @protocol RMQChannel <NSObject, RMQFrameHandler>

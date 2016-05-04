@@ -20,7 +20,7 @@ class RMQPKCS12CertificateConverterTest: XCTestCase {
         XCTAssertThrowsError(try converter.certificates()) { (error) in
             do {
                 XCTAssertEqual(
-                    RMQConnectionErrorTLSCertificateAuthFailure,
+                    RMQError.TLSCertificateAuthFailure.rawValue,
                     (error as NSError).code
                 )
             }
@@ -34,7 +34,7 @@ class RMQPKCS12CertificateConverterTest: XCTestCase {
         XCTAssertThrowsError(try converter.certificates()) { (error) in
             do {
                 XCTAssertEqual(
-                    RMQConnectionErrorTLSCertificateDecodeError,
+                    RMQError.TLSCertificateDecodeError.rawValue,
                     (error as NSError).code
                 )
             }

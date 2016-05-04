@@ -1,6 +1,6 @@
 #import <UIKit/UIKit.h>
 #import <RMQClient/RMQConnection.h>
-#import <RMQClient/RMQConnectionErrors.h>
+#import <RMQClient/RMQErrors.h>
 #import <RMQClient/RMQBasicProperties.h>
 #import <RMQClient/RMQConstants.h>
 #import <RMQClient/RMQFrame.h>

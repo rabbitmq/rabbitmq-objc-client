@@ -1,6 +1,6 @@
 #import "RMQPKCS12CertificateConverter.h"
 #import "RMQConstants.h"
-#import "RMQConnectionErrors.h"
+#import "RMQErrors.h"
 
 @interface RMQPKCS12CertificateConverter ()
 @property (nonatomic, readwrite) NSData *data;
@@ -48,13 +48,13 @@
 
         case errSecAuthFailed:
             *error = [NSError errorWithDomain:RMQErrorDomain
-                                         code:RMQConnectionErrorTLSCertificateAuthFailure
+                                         code:RMQErrorTLSCertificateAuthFailure
                                      userInfo:@{NSLocalizedDescriptionKey: @"TLS certificate authentication failed. Incorrect password?"}];
             break;
 
         case errSecDecode:
             *error = [NSError errorWithDomain:RMQErrorDomain
-                                         code:RMQConnectionErrorTLSCertificateDecodeError
+                                         code:RMQErrorTLSCertificateDecodeError
                                      userInfo:@{NSLocalizedDescriptionKey: @"TLS certificate decoding error. Corrupt PKCS12 data?"}];
             break;
 

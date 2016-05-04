@@ -1,5 +1,0 @@
-#import <Foundation/Foundation.h>
-
-extern NSInteger const RMQConnectionErrorHandshakeTimedOut;
-extern NSInteger const RMQConnectionErrorTLSCertificateAuthFailure;
-extern NSInteger const RMQConnectionErrorTLSCertificateDecodeError;

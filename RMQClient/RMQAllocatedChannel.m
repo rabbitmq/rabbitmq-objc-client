@@ -1,5 +1,5 @@
 #import "RMQBasicProperties.h"
-#import "RMQConstants.h"
+#import "RMQErrors.h"
 #import "RMQFrame.h"
 #import "RMQMethodDecoder.h"
 #import "RMQMethodMap.h"

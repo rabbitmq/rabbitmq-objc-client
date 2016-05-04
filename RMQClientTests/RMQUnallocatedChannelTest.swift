@@ -7,7 +7,7 @@ class RMQUnallocatedChannelTest: XCTestCase {
         let ch = RMQUnallocatedChannel()
         ch.activateWithDelegate(delegate)
         ch.basicConsume("foo", options: []) { (_) in }
-        XCTAssertEqual(RMQChannelErrorUnallocated, delegate.lastChannelError!.code)
+        XCTAssertEqual(RMQChannelError.Unallocated.rawValue, delegate.lastChannelError?.code)
         XCTAssertEqual("Unallocated channel", delegate.lastChannelError!.localizedDescription)
     }
 
