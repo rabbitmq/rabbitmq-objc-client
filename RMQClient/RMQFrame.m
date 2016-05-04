@@ -2,6 +2,8 @@
 #import "RMQMethodDecoder.h"
 #import "RMQHeartbeat.h"
 
+NSInteger const RMQEmptyFrameSize = 8;
+
 @interface RMQFrame ()
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
 @property (nonatomic, readwrite) id<RMQPayload> payload;

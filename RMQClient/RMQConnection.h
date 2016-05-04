@@ -11,6 +11,8 @@
 #import "RMQWaiterFactory.h"
 #import "RMQTLSOptions.h"
 
+extern NSInteger const RMQChannelLimit;
+
 @interface RMQConnection : NSObject<RMQFrameHandler, RMQSender, RMQTransportDelegate>
 
 @property (nonnull, copy, nonatomic, readonly) NSString *vhost;

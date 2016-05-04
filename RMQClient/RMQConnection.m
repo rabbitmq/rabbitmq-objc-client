@@ -14,6 +14,9 @@
 #import "RMQURI.h"
 #import "RMQTickingClock.h"
 #import "RMQTLSOptions.h"
+#import "RMQConnectionErrors.h"
+
+NSInteger const RMQChannelLimit = 65535;
 
 @interface RMQConnection ()
 @property (strong, nonatomic, readwrite) id <RMQTransport> transport;

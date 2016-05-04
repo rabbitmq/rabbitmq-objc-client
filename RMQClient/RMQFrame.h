@@ -7,6 +7,8 @@ typedef NS_ENUM(char, RMQFrameType) {
     RMQFrameTypeHeartbeat = 8
 };
 
+extern NSInteger const RMQEmptyFrameSize;
+
 @interface RMQFrame : MTLModel<RMQEncodable,RMQParseable>
 @property (nonnull, nonatomic, copy, readonly) NSNumber *channelNumber;
 @property (nonnull, nonatomic, readonly) id<RMQPayload> payload;

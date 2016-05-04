@@ -1,5 +1,6 @@
 #import "RMQPKCS12CertificateConverter.h"
 #import "RMQConstants.h"
+#import "RMQConnectionErrors.h"
 
 @interface RMQPKCS12CertificateConverter ()
 @property (nonatomic, readwrite) NSData *data;

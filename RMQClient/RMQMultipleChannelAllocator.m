@@ -1,4 +1,4 @@
-#import "RMQConstants.h"
+#import "RMQConnection.h"
 #import "RMQAllocatedChannel.h"
 #import "RMQFramesetSemaphoreWaiter.h"
 #import "RMQMultipleChannelAllocator.h"

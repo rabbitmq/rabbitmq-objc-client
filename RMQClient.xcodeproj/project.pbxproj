@@ -116,6 +116,8 @@
 		AEADA37E1C71D64A00012D61 /* ControlledInteractionTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEADA37D1C71D64A00012D61 /* ControlledInteractionTransport.swift */; };
 		AEADA3811C71F59A00012D61 /* RMQMethodMap.h in Headers */ = {isa = PBXBuildFile; fileRef = AEADA37F1C71F59A00012D61 /* RMQMethodMap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEADA3821C71F59A00012D61 /* RMQMethodMap.m in Sources */ = {isa = PBXBuildFile; fileRef = AEADA3801C71F59A00012D61 /* RMQMethodMap.m */; };
+		AEB5F15A1CDA4299001C82FF /* RMQConnectionErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = AEB5F1591CDA4299001C82FF /* RMQConnectionErrors.m */; };
+		AEB5F15C1CDA4360001C82FF /* RMQConnectionErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = AEB5F15B1CDA42A5001C82FF /* RMQConnectionErrors.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEBF7D671CBD197D006EA2E4 /* ChannelCreationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBF7D661CBD197D006EA2E4 /* ChannelCreationTest.swift */; };
 		AEC4D1D71C74C1AC00D7D585 /* RMQSender.h in Headers */ = {isa = PBXBuildFile; fileRef = AEC4D1D61C74C1AC00D7D585 /* RMQSender.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AECDEC9F1CBC0E3600EA6E93 /* RMQConnectionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = AECDEC9E1CBC0E3600EA6E93 /* RMQConnectionDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -303,6 +305,8 @@
 		AEADA37D1C71D64A00012D61 /* ControlledInteractionTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ControlledInteractionTransport.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		AEADA37F1C71F59A00012D61 /* RMQMethodMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RMQMethodMap.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		AEADA3801C71F59A00012D61 /* RMQMethodMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RMQMethodMap.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		AEB5F1591CDA4299001C82FF /* RMQConnectionErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQConnectionErrors.m; sourceTree = "<group>"; };
+		AEB5F15B1CDA42A5001C82FF /* RMQConnectionErrors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMQConnectionErrors.h; sourceTree = "<group>"; };
 		AEBF7D661CBD197D006EA2E4 /* ChannelCreationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelCreationTest.swift; sourceTree = "<group>"; };
 		AEC4D1D61C74C1AC00D7D585 /* RMQSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQSender.h; sourceTree = "<group>"; };
 		AECDEC9E1CBC0E3600EA6E93 /* RMQConnectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQConnectionDelegate.h; sourceTree = "<group>"; };
@@ -439,6 +443,8 @@
 				AEC4D1D61C74C1AC00D7D585 /* RMQSender.h */,
 				AEE7FEAB1C3BCD0F00DF8C4F /* RMQConnection.h */,
 				AEE7FEAC1C3BCD0F00DF8C4F /* RMQConnection.m */,
+				AEB5F15B1CDA42A5001C82FF /* RMQConnectionErrors.h */,
+				AEB5F1591CDA4299001C82FF /* RMQConnectionErrors.m */,
 				AEA45EC91C43D2B900FE1F62 /* RMQTransport.h */,
 				AEF1E8F41CBE5810000C7AB8 /* RMQTransportDelegate.h */,
 				AEA45ECF1C43F4DC00FE1F62 /* RMQTCPSocketTransport.h */,
@@ -684,6 +690,7 @@
 				AE9595441CD0EF4A0039418C /* RMQTickingClock.h in Headers */,
 				AEDBFF231CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.h in Headers */,
 				AEDBFF301CD8FAF70004DB67 /* RMQTLSOptions.h in Headers */,
+				AEB5F15C1CDA4360001C82FF /* RMQConnectionErrors.h in Headers */,
 				AEE7FE951C3BCA6000DF8C4F /* RMQClient.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -889,6 +896,7 @@
 				AE39BD9F1C68B019000E7A77 /* RMQValues.m in Sources */,
 				AE898D5C1C3C30D100AA3BF1 /* RMQURI.m in Sources */,
 				AEE445EC1C7373BF0082132C /* RMQBasicProperties.m in Sources */,
+				AEB5F15A1CDA4299001C82FF /* RMQConnectionErrors.m in Sources */,
 				AE82798D1C8DBD6B0013ADD1 /* RMQUnallocatedChannel.m in Sources */,
 				AE80BAB41C4D47C100E6DFFD /* RMQParser.m in Sources */,
 				AE95953A1CD0BC1E0039418C /* RMQGCDHeartbeatSender.m in Sources */,
