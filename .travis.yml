@@ -10,6 +10,7 @@ before_install:
   - cp .travis/etc/* /usr/local/etc/rabbitmq/
   - /usr/local/sbin/rabbitmq-plugins enable --offline rabbitmq_auth_mechanism_ssl
   - brew services start rabbitmq
+  - sleep 2
   - /usr/local/sbin/rabbitmqctl add_user "O=client,CN=guest" bunnies
   - /usr/local/sbin/rabbitmqctl set_permissions "O=client,CN=guest" ".*" ".*" ".*"
 before_script:
