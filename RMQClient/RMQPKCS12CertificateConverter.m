@@ -35,8 +35,8 @@
 
 - (void)parseIdentity:(NSData *)data identity:(SecIdentityRef *)identity error:(NSError **)error {
     CFDataRef cfData = (__bridge CFDataRef)data;
-    NSDictionary *options = @{ (__bridge NSString*)kSecImportExportPassphrase : self.password };
-    CFArrayRef items = CFArrayCreate(NULL, 0, 0, NULL);
+    NSDictionary *options = @{(__bridge NSString *)kSecImportExportPassphrase: self.password};
+    CFArrayRef items = NULL;
     OSStatus status = SecPKCS12Import(cfData, (__bridge CFDictionaryRef)options, &items);
 
     switch (status) {
