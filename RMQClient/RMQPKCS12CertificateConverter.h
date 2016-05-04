@@ -1,9 +1,10 @@
 #import <Foundation/Foundation.h>
-#import "RMQCertificateConverter.h"
 
-@interface RMQPKCS12CertificateConverter : NSObject <RMQCertificateConverter>
+@interface RMQPKCS12CertificateConverter : NSObject
 
 - (instancetype)initWithData:(NSData *)data
                     password:(NSString *)password;
+
+- (NSArray *)certificatesWithError:(NSError **)error;
 
 @end

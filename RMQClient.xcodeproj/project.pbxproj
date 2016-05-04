@@ -122,7 +122,6 @@
 		AECDECA11CBC4A4F00EA6E93 /* ConnectionDelegateSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECDECA01CBC4A4F00EA6E93 /* ConnectionDelegateSpy.swift */; };
 		AEDBFF231CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = AEDBFF211CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEDBFF241CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF221CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.m */; };
-		AEDBFF261CD8E31B0004DB67 /* RMQCertificateConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = AEDBFF251CD8E31B0004DB67 /* RMQCertificateConverter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEDBFF2A1CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF291CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift */; };
 		AEDBFF2C1CD8E4850004DB67 /* CertificateFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF2B1CD8E4850004DB67 /* CertificateFixtures.swift */; };
 		AEDBFF2D1CD8F67B0004DB67 /* CertificateFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF2B1CD8E4850004DB67 /* CertificateFixtures.swift */; };
@@ -310,7 +309,6 @@
 		AECDECA01CBC4A4F00EA6E93 /* ConnectionDelegateSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionDelegateSpy.swift; sourceTree = "<group>"; };
 		AEDBFF211CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQPKCS12CertificateConverter.h; sourceTree = "<group>"; };
 		AEDBFF221CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQPKCS12CertificateConverter.m; sourceTree = "<group>"; };
-		AEDBFF251CD8E31B0004DB67 /* RMQCertificateConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQCertificateConverter.h; sourceTree = "<group>"; };
 		AEDBFF291CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQPKCS12CertificateConverterTest.swift; sourceTree = "<group>"; };
 		AEDBFF2B1CD8E4850004DB67 /* CertificateFixtures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CertificateFixtures.swift; sourceTree = "<group>"; };
 		AEDBFF2E1CD8FAF70004DB67 /* RMQTLSOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQTLSOptions.h; sourceTree = "<group>"; };
@@ -472,7 +470,6 @@
 		AEDBFF271CD8E36F0004DB67 /* TLS */ = {
 			isa = PBXGroup;
 			children = (
-				AEDBFF251CD8E31B0004DB67 /* RMQCertificateConverter.h */,
 				AEDBFF211CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.h */,
 				AEDBFF221CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.m */,
 				AEDBFF2E1CD8FAF70004DB67 /* RMQTLSOptions.h */,
@@ -685,7 +682,6 @@
 				AE9595391CD0BC1E0039418C /* RMQGCDHeartbeatSender.h in Headers */,
 				AE95953F1CD0E7E00039418C /* RMQClock.h in Headers */,
 				AE9595441CD0EF4A0039418C /* RMQTickingClock.h in Headers */,
-				AEDBFF261CD8E31B0004DB67 /* RMQCertificateConverter.h in Headers */,
 				AEDBFF231CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.h in Headers */,
 				AEDBFF301CD8FAF70004DB67 /* RMQTLSOptions.h in Headers */,
 				AEE7FE951C3BCA6000DF8C4F /* RMQClient.h in Headers */,
