@@ -50,11 +50,15 @@
                                                       @"basic.nack"                   : yes,
                                                       @"connection.blocked"           : yes,
                                                       @"authentication_failure_close" : yes}];
+
+    NSBundle *bundle = [NSBundle bundleWithIdentifier:@"io.pivotal.RMQClient"];
+    NSString *version = bundle.infoDictionary[@"CFBundleShortVersionString"];
+
     RMQTable *clientProperties = [[RMQTable alloc] init:
                                   @{@"capabilities" : capabilities,
                                     @"product"      : [[RMQLongstr alloc] init:@"RMQClient"],
                                     @"platform"     : [[RMQLongstr alloc] init:@"iOS"],
-                                    @"version"      : [[RMQLongstr alloc] init:RMQClientVersion],
+                                    @"version"      : [[RMQLongstr alloc] init:version],
                                     @"information"  : [[RMQLongstr alloc] init:@"https://github.com/rabbitmq/rabbitmq-objc-client"]}];
 
     return [[RMQConnectionStartOk alloc] initWithClientProperties:clientProperties

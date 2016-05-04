@@ -92,4 +92,9 @@ class TestHelper {
         return (transport, q, conn, delegate)
     }
 
+    static func frameworkVersion() -> String {
+        let bundle = NSBundle(identifier: "io.pivotal.RMQClient")!
+        return bundle.infoDictionary!["CFBundleShortVersionString"] as! String
+    }
+
 }

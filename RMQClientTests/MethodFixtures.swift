@@ -32,7 +32,7 @@ class MethodFixtures {
         )
     }
 
-    static func connectionStartOk(user user: String = "foo", password: String = "bar") -> RMQConnectionStartOk {
+    static func connectionStartOk(user user: String = "foo", password: String = "bar", version: String = "0.0.1") -> RMQConnectionStartOk {
         let capabilitiesDict: [String: RMQBoolean] = [
             "publisher_confirms"           : rmqTrue,
             "consumer_cancel_notify"       : rmqTrue,
@@ -45,8 +45,8 @@ class MethodFixtures {
             "capabilities" : RMQTable(capabilitiesDict),
             "product"      : RMQLongstr("RMQClient"),
             "platform"     : RMQLongstr("iOS"),
-            "version"      : RMQLongstr("0.0.1"),
-            "information"  : RMQLongstr("https://github.com/camelpunch/RMQClient")
+            "version"      : RMQLongstr(version),
+            "information"  : RMQLongstr("https://github.com/rabbitmq/rabbitmq-objc-client")
         ]
         return RMQConnectionStartOk(
             clientProperties: RMQTable(clientPropertiesDict),
