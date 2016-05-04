@@ -8,6 +8,7 @@ before_install:
   - brew outdated xctool || brew upgrade xctool
   - brew install rabbitmq
   - cp .travis/etc/* /usr/local/etc/rabbitmq/
+  - rabbitmq-plugins enable --offline rabbitmq_auth_mechanism_ssl
   - brew services start rabbitmq
 before_script:
   - carthage bootstrap --platform iOS
