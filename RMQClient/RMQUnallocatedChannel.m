@@ -27,7 +27,7 @@
 - (void)basicConsume:(NSString *)queueName
              options:(RMQBasicConsumeOptions)options
             consumer:(RMQConsumer)consumer {
-    NSError *error = [NSError errorWithDomain:RMQErrorDomain code:RMQChannelErrorUnallocated userInfo:@{NSLocalizedDescriptionKey: @"Unallocated channel"}];
+    NSError *error = [NSError errorWithDomain:RMQErrorDomain code:RMQErrorChannelUnallocated userInfo:@{NSLocalizedDescriptionKey: @"Unallocated channel"}];
     [self.delegate channel:self error:error];
 }
 

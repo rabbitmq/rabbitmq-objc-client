@@ -31,13 +31,13 @@
     if (dispatch_semaphore_wait(self.semaphore, self.syncTimeoutFromNow) != 0) {
         NSString *msg = [NSString stringWithFormat:@"Timed out waiting for %@.", methodClass];
         NSError *error = [NSError errorWithDomain:RMQErrorDomain
-                                             code:RMQChannelErrorWaitTimeout
+                                             code:RMQErrorChannelWaitTimeout
                                          userInfo:@{NSLocalizedDescriptionKey: msg}];
         result = [[RMQFramesetWaitResult alloc] initWithFrameset:nil error:error];
     } else if (![self.lastFrameset.method isKindOfClass:methodClass]) {
         NSString *msg = [NSString stringWithFormat:@"Expected %@, got %@.", methodClass, [self.lastFrameset.method class]];
         NSError *error = [NSError errorWithDomain:RMQErrorDomain
-                                             code:RMQChannelErrorIncorrectSyncMethod
+                                             code:RMQErrorChannelIncorrectSyncMethod
                                          userInfo:@{NSLocalizedDescriptionKey: msg}];
         result = [[RMQFramesetWaitResult alloc] initWithFrameset:self.lastFrameset error:error];
     } else {

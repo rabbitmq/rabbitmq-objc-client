@@ -365,7 +365,7 @@ completionHandler:(RMQConsumer)userCompletionHandler {
 
     if (self.queues[declaredQueueName]) {
         NSError *error = [NSError errorWithDomain:RMQErrorDomain
-                                             code:RMQChannelErrorQueueNameCollision
+                                             code:RMQErrorChannelQueueNameCollision
                                          userInfo:@{NSLocalizedDescriptionKey: @"Name collision when generating unique name."}];
         [self.delegate channel:self error:error];
         return nil;
