@@ -28,10 +28,17 @@ class IntegrationTests: XCTestCase {
 
         q.publish(messageContent)
 
+        let semaphore = dispatch_semaphore_create(0)
+        let expected = RMQMessage(consumerTag: "", deliveryTag: 1, content: messageContent)
+        var actual: RMQMessage?
         q.pop { (_, m) in
-            let expected = RMQMessage(consumerTag: "", deliveryTag: 1, content: messageContent)
-            XCTAssertEqual(expected, m)
+            actual = m
+            dispatch_semaphore_signal(semaphore)
         }
+
+        XCTAssertEqual(0, dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(2)),
+                       "Timed out waiting for pop block to execute")
+        XCTAssertEqual(expected, actual)
     }
 
     func testSubscribe() {
