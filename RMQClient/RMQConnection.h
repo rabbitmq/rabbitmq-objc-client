@@ -47,10 +47,14 @@ extern NSInteger const RMQChannelLimit;
                       delegateQueue:(nonnull dispatch_queue_t)delegateQueue;
 
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                         tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
                            delegate:(nullable id<RMQConnectionDelegate>)delegate;
 
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
-                         tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
+                         verifyPeer:(BOOL)verifyPeer
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate;
+
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
                            delegate:(nullable id<RMQConnectionDelegate>)delegate;
 
 - (nonnull instancetype)initWithDelegate:(nullable id<RMQConnectionDelegate>)delegate;

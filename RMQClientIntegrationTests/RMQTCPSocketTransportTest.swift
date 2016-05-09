@@ -2,8 +2,11 @@ import XCTest
 import CocoaAsyncSocket
 
 class RMQTCPSocketTransportTest: XCTestCase {
-    var transport: RMQTCPSocketTransport = RMQTCPSocketTransport(host: "localhost", port: 5672,
-                                                                 tlsOptions: RMQTLSOptions.noTLS())
+    static let noTLS = RMQTLSOptions.fromURI("amqp://localhost")
+    let noTLS = RMQTLSOptions.fromURI("amqp://localhost")
+    var transport: RMQTCPSocketTransport = RMQTCPSocketTransport(host: "localhost",
+                                                                 port: 5672,
+                                                                 tlsOptions: noTLS)
 
     func testObeysContract() {
         RMQTransportContract(transport)
@@ -21,7 +24,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
     func testCallbacksAreRemovedAfterUse() {
         let callbacks = [:] as NSMutableDictionary
         transport = RMQTCPSocketTransport(host: "localhost", port: 5672,
-                                          tlsOptions: RMQTLSOptions.noTLS(),
+                                          tlsOptions: noTLS,
                                           callbackStorage: callbacks)
 
         var finished = false
@@ -39,7 +42,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
         let callbacks = RMQSynchronizedMutableDictionary()
         let delegate = TransportDelegateSpy()
         transport = RMQTCPSocketTransport(host: "localhost", port: 123456,
-                                          tlsOptions: RMQTLSOptions.noTLS(),
+                                          tlsOptions: noTLS,
                                           callbackStorage: callbacks)
 
         transport.delegate = delegate
@@ -53,7 +56,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
     func testExtendsReadWhenReadTimesOut() {
         let callbacks = RMQSynchronizedMutableDictionary()
         transport = RMQTCPSocketTransport(host: "localhost", port: 123456,
-                                          tlsOptions: RMQTLSOptions.noTLS(),
+                                          tlsOptions: noTLS,
                                           callbackStorage: callbacks)
         let timeoutExtension = transport.socket(GCDAsyncSocket(), shouldTimeoutReadWithTag: 123, elapsed: 123, bytesDone: 999)
         XCTAssert(timeoutExtension > 0)

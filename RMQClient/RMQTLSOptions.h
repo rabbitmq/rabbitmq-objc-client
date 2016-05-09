@@ -6,7 +6,8 @@
 @property (nonatomic, readonly) NSString *peerName;
 @property (nonatomic, readonly) BOOL verifyPeer;
 
-+ (instancetype)noTLS;
++ (instancetype)fromURI:(NSString *)uri verifyPeer:(BOOL)verifyPeer;
++ (instancetype)fromURI:(NSString *)uri;
 - (instancetype)initWithPeerName:(NSString *)peerName
                       verifyPeer:(BOOL)verifyPeer
                           pkcs12:(NSData *)pkcs12data

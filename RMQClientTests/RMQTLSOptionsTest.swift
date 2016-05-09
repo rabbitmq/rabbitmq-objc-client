@@ -2,11 +2,6 @@ import XCTest
 
 class RMQTLSOptionsTest: XCTestCase {
 
-    func testNoTLS() {
-        let opts = RMQTLSOptions.noTLS()
-        XCTAssertFalse(opts.useTLS)
-    }
-
     func testAuthMechanismIsPlainWhenNoPKCS12Provided() {
         let opts = RMQTLSOptions(peerName: "yokelboast",
                                  verifyPeer: true,
@@ -29,6 +24,25 @@ class RMQTLSOptionsTest: XCTestCase {
                                  pkcs12: CertificateFixtures.guestBunniesP12(),
                                  pkcs12Password: "bunnies")
         XCTAssertEqual(1, try! opts.certificates().count)
+    }
+
+    func testAmqpsUriIsParsedWithVerifyPeerEnabled() {
+        let opts = RMQTLSOptions.fromURI("amqps://user:password@hosty.foo")
+        XCTAssert(opts.useTLS)
+        XCTAssertEqual("PLAIN", opts.authMechanism())
+        XCTAssert(opts.verifyPeer)
+        XCTAssertEqual("hosty.foo", opts.peerName)
+    }
+
+    func testAmqpsUriWithVerifyPeerDisabled() {
+        let opts = RMQTLSOptions.fromURI("amqps://user:password@localhost", verifyPeer: false)
+        XCTAssertFalse(opts.verifyPeer)
+    }
+
+    func testAmqpUriIsParsedAsNonTLS() {
+        let opts = RMQTLSOptions.fromURI("amqp://user:password@hosty.foo")
+        XCTAssertEqual("PLAIN", opts.authMechanism())
+        XCTAssertFalse(opts.useTLS)
     }
 
 }

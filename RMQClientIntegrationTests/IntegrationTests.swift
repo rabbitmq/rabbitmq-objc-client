@@ -163,7 +163,8 @@ class IntegrationTests: XCTestCase {
         let semaphore = dispatch_semaphore_create(0)
         let delegate = RMQConnectionDelegateLogger()
         let channelCount: Int32 = 500
-        let conn = RMQConnection(uri: "amqp://guest:guest@localhost",
+        let conn = RMQConnection(uri: "amqps://guest:guest@localhost",
+                                 tlsOptions: RMQTLSOptions.fromURI("amqps://guest:guest@localhost", verifyPeer: false),
                                  channelMax: 501, frameMax: 131072, heartbeat: 10, syncTimeout: 60,
                                  delegate: delegate, delegateQueue: dispatch_get_main_queue())
         conn.start()

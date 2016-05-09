@@ -1,6 +1,7 @@
 #import "RMQTLSOptions.h"
 #import "RMQTCPSocketTransport.h"
 #import "RMQPKCS12CertificateConverter.h"
+#import "RMQURI.h"
 
 @interface RMQTLSOptions ()
 @property (nonatomic, readwrite) BOOL useTLS;
@@ -12,8 +13,17 @@
 
 @implementation RMQTLSOptions
 
-+ (instancetype)noTLS {
-    return [[RMQTLSOptions alloc] initWithUseTLS:NO peerName:@"" verifyPeer:NO pkcs12:nil pkcs12Password:@""];
++ (instancetype)fromURI:(NSString *)s verifyPeer:(BOOL)verifyPeer {
+    RMQURI *uri = [RMQURI parse:s error:NULL];
+    return [[RMQTLSOptions alloc] initWithUseTLS:uri.isTLS
+                                        peerName:uri.host
+                                      verifyPeer:verifyPeer
+                                          pkcs12:nil
+                                  pkcs12Password:nil];
+}
+
++ (instancetype)fromURI:(NSString *)uri {
+    return [RMQTLSOptions fromURI:uri verifyPeer:YES];
 }
 
 - (instancetype)initWithPeerName:(NSString *)peerName
