@@ -2,13 +2,50 @@ import XCTest
 
 class RMQUnallocatedChannelTest: XCTestCase {
 
-    func testSendsErrorToDelegateWhenBasicConsumeAttempted() {
+    func assertSendsErrorToDelegate(delegate: ConnectionDelegateSpy, _ blockIndex: Int) {
+        XCTAssertEqual(RMQError.ChannelUnallocated.rawValue, delegate.lastChannelError?.code)
+        XCTAssertEqual("Unallocated channel", delegate.lastChannelError?.localizedDescription,
+                       "Didn't get error when running block \(blockIndex)")
+    }
+
+    func testSendsErrorToDelegateWhenUsageAttempted() {
         let delegate = ConnectionDelegateSpy()
         let ch = RMQUnallocatedChannel()
         ch.activateWithDelegate(delegate)
-        ch.basicConsume("foo", options: []) { (_) in }
-        XCTAssertEqual(RMQError.ChannelUnallocated.rawValue, delegate.lastChannelError?.code)
-        XCTAssertEqual("Unallocated channel", delegate.lastChannelError!.localizedDescription)
+
+        let blocks: [() -> Void] = [
+            { ch.ack(1) },
+            { ch.basicConsume("foo", options: []) { (_) in } },
+            { ch.basicGet("foo", options: []) { (_, _) in } },
+            { ch.basicPublish("hi", routingKey: "yo", exchange: "hmm", persistent: false) },
+            { ch.basicQos(2, global: false) },
+            { ch.blockingWaitOn(RMQConnectionStart.self) },
+            { ch.defaultExchange() },
+            { ch.exchangeDeclare("", type: "", options: []) },
+            { ch.fanout("") },
+            { ch.direct("") },
+            { ch.topic("") },
+            { ch.headers("") },
+            { ch.nack(1) },
+            { ch.queue("foo") },
+            { ch.queueBind("", exchange: "", routingKey: "") },
+            { ch.queueUnbind("", exchange: "", routingKey: "") },
+            { ch.reject(1) },
+        ]
+
+        for (index, run) in blocks.enumerate() {
+            delegate.lastChannelError = nil
+            run()
+            assertSendsErrorToDelegate(delegate, index)
+        }
+    }
+
+    func testCloseMethodsDoNotProduceError() {
+        let delegate = ConnectionDelegateSpy()
+        let ch = RMQUnallocatedChannel()
+        ch.activateWithDelegate(delegate)
+        ch.blockingClose()
+        XCTAssertNil(delegate.lastChannelError)
     }
 
 }
