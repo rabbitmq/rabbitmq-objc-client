@@ -1,5 +1,6 @@
 import XCTest
 
+// see steps in .travis.yml to set up your system for running these tests
 class IntegrationTests: XCTestCase {
     
     func testPop() {
