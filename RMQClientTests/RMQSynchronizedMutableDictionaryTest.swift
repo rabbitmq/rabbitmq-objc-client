@@ -6,19 +6,19 @@ class RMQSynchronizedMutableDictionaryTest: XCTestCase {
         let sharedDictionary = RMQSynchronizedMutableDictionary()
 
         sharedDictionary[1] = "sandwich"
-        sharedDictionary[2] = "prosciutto"
+        sharedDictionary["meat"] = "prosciutto"
         sharedDictionary[3] = "pastrami"
 
         let actual1: String = sharedDictionary[1] as! String
         XCTAssertEqual("sandwich", actual1)
-        let actual2: String = sharedDictionary[2] as! String
+        let actual2: String = sharedDictionary["meat"] as! String
         XCTAssertEqual("prosciutto", actual2)
         let actual3: String = sharedDictionary[3] as! String
         XCTAssertEqual("pastrami", actual3)
 
-        sharedDictionary.removeObjectForKey(2)
-
-        XCTAssertNil(sharedDictionary[2])
+        sharedDictionary.removeObjectForKey("meat")
+        let f = sharedDictionary["meat"] as! String?
+        XCTAssertNil(f)
 
         XCTAssertEqual(2, sharedDictionary.count)
     }

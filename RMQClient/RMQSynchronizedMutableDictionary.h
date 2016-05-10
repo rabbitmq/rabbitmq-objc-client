@@ -2,7 +2,7 @@
 
 @interface RMQSynchronizedMutableDictionary : NSObject
 @property (nonatomic, readonly) NSUInteger count;
-- (id)objectForKeyedSubscript:(NSNumber *)key;
-- (void)setObject:(id)obj forKeyedSubscript:(NSNumber *)key;
-- (void)removeObjectForKey:(NSNumber *)key;
+- (nullable id)objectForKeyedSubscript:(nonnull id)key;
+- (void)setObject:(nonnull id)obj forKeyedSubscript:(nonnull id)key;
+- (void)removeObjectForKey:(nonnull id)key;
 @end

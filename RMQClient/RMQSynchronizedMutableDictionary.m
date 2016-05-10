@@ -18,20 +18,20 @@
     return self;
 }
 
-- (id)objectForKeyedSubscript:(NSNumber *)key {
+- (id)objectForKeyedSubscript:(id)key {
     @synchronized (self.lock) {
         return self.backingDictionary[key];
     }
 }
 
-- (void)setObject:(id)obj forKeyedSubscript:(NSNumber *)key {
+- (void)setObject:(id)obj forKeyedSubscript:(nonnull id<NSCopying>)key {
     @synchronized (self.lock) {
         self.backingDictionary[key] = obj;
         self.count++;
     }
 }
 
-- (void)removeObjectForKey:(NSNumber *)key {
+- (void)removeObjectForKey:(id)key {
     @synchronized (self.lock) {
         [self.backingDictionary removeObjectForKey:key];
         self.count--;
