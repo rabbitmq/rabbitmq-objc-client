@@ -195,7 +195,7 @@ class IntegrationTests: XCTestCase {
 
         XCTAssertEqual(
             0,
-            dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(60)),
+            dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(30)),
             "Timed out waiting for messages to arrive on different channels"
         )
     }
