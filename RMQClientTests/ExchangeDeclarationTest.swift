@@ -4,9 +4,9 @@ class ExchangeDeclarationTest: XCTestCase {
 
     func testExchangeDeclareSendsAnExchangeDeclare() {
         let sender = SenderSpy()
-        let waiter = FramesetWaiterSpy()
+        let validator = RMQFramesetValidator()
         let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(123, sender: sender, waiter: waiter, commandQueue: q)
+        let ch = RMQAllocatedChannel(123, sender: sender, validator: validator, commandQueue: q)
 
         ch.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
         try! q.step()
@@ -20,38 +20,39 @@ class ExchangeDeclarationTest: XCTestCase {
     }
 
     func testExchangeDeclareWaitsOnDeclareOk() {
-        let waiter = FramesetWaiterSpy()
+        let validator = RMQFramesetValidator()
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(123, sender: SenderSpy(), waiter: waiter, commandQueue: q)
+        let ch = RMQAllocatedChannel(123, sender: SenderSpy(), validator: validator, commandQueue: q)
         ch.activateWithDelegate(delegate)
 
         ch.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
         try! q.step()
+        ch.handleFrameset(RMQFrameset(channelNumber: 123, method: MethodFixtures.exchangeDeclareOk()))
         try! q.step()
 
-        XCTAssertEqual("RMQExchangeDeclareOk", waiter.lastWaitedOnClass?.description())
+        XCTAssertNil(delegate.lastChannelError)
     }
 
-    func testExchangeDeclareSendsWaitErrorsToDelegate() {
-        let waiter = FramesetWaiterSpy()
+    func testExchangeDeclareSendsvalidatorrorsToDelegate() {
+        let validator = RMQFramesetValidator()
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(123, sender: SenderSpy(), waiter: waiter, commandQueue: q)
+        let ch = RMQAllocatedChannel(123, sender: SenderSpy(), validator: validator, commandQueue: q)
         ch.activateWithDelegate(delegate)
 
         ch.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
         try! q.step()
-        waiter.err("badness")
+        ch.handleFrameset(RMQFrameset(channelNumber: 123, method: MethodFixtures.queueDeclareOk("wrong method")))
         try! q.step()
 
-        XCTAssertEqual("badness", delegate.lastChannelError?.localizedDescription)
+        XCTAssertEqual(RMQError.ChannelIncorrectSyncMethod.rawValue, delegate.lastChannelError?.code)
     }
 
     func testFanoutDeclaresAFanout() {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(123, sender: sender, waiter: FramesetWaiterSpy(), commandQueue: q)
+        let ch = RMQAllocatedChannel(123, sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
 
         ch.fanout("my-exchange", options: [.Durable, .AutoDelete])
         try! q.step()
@@ -67,7 +68,7 @@ class ExchangeDeclarationTest: XCTestCase {
     func testFanoutReturnsExistingFanoutWithSameNameEvenIfDifferentOptionsOrTypes() {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(123, sender: sender, waiter: FramesetWaiterSpy(), commandQueue: q)
+        let ch = RMQAllocatedChannel(123, sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
 
         let ex1 = ch.topic("my-exchange", options: [.Durable, .AutoDelete])
         try! q.step()
@@ -79,7 +80,7 @@ class ExchangeDeclarationTest: XCTestCase {
     func testDirectDeclaresADirectExchange() {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(123, sender: sender, waiter: FramesetWaiterSpy(), commandQueue: q)
+        let ch = RMQAllocatedChannel(123, sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
 
         ch.direct("logs", options: [.Durable, .AutoDelete])
         try! q.step()
@@ -95,7 +96,7 @@ class ExchangeDeclarationTest: XCTestCase {
     func testDirectReturnsExistingExchangeWithSameNameEvenIfDifferentOptionsOrTypes() {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(123, sender: sender, waiter: FramesetWaiterSpy(), commandQueue: q)
+        let ch = RMQAllocatedChannel(123, sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
 
         let ex1 = ch.fanout("my-exchange", options: [.Durable, .AutoDelete])
         try! q.step()
@@ -107,7 +108,7 @@ class ExchangeDeclarationTest: XCTestCase {
     func testTopicDeclaresATopicExchange() {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(123, sender: sender, waiter: FramesetWaiterSpy(), commandQueue: q)
+        let ch = RMQAllocatedChannel(123, sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
 
         ch.topic("logs", options: [.Durable, .AutoDelete])
         try! q.step()
@@ -123,7 +124,7 @@ class ExchangeDeclarationTest: XCTestCase {
     func testHeadersDeclaresAHeadersExchange() {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(123, sender: sender, waiter: FramesetWaiterSpy(), commandQueue: q)
+        let ch = RMQAllocatedChannel(123, sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
 
         ch.headers("myheadersex", options: [.Durable, .AutoDelete])
         try! q.step()

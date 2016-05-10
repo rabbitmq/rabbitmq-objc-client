@@ -19,7 +19,7 @@
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) BOOL active;
 @property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
-@property (nonatomic, readwrite) id<RMQFramesetWaiter> waiter;
+@property (nonatomic, readwrite) RMQFramesetValidator *validator;
 @property (nonatomic, readwrite) id<RMQNameGenerator> nameGenerator;
 @end
 
@@ -27,7 +27,7 @@
 
 - (instancetype)init:(NSNumber *)channelNumber
               sender:(id<RMQSender>)sender
-              waiter:(id<RMQFramesetWaiter>)waiter
+           validator:(RMQFramesetValidator *)validator
         commandQueue:(id<RMQLocalSerialQueue>)commandQueue
        nameGenerator:(id<RMQNameGenerator>)nameGenerator {
     self = [super init];
@@ -42,7 +42,7 @@
         self.prefetchCount = @0;
         self.prefetchGlobal = NO;
         self.delegate = nil;
-        self.waiter = waiter;
+        self.validator = validator;
         self.nameGenerator = nameGenerator;
     }
     return self;
@@ -50,11 +50,11 @@
 
 - (instancetype)init:(NSNumber *)channelNumber
               sender:(id<RMQSender>)sender
-              waiter:(id<RMQFramesetWaiter>)waiter
+           validator:(RMQFramesetValidator *)validator
         commandQueue:(id<RMQLocalSerialQueue>)commandQueue {
     return [self init:channelNumber
                sender:sender
-               waiter:waiter
+            validator:validator
          commandQueue:commandQueue
         nameGenerator:nil];
 }
@@ -85,7 +85,7 @@
     RMQChannelOpen *outgoingMethod = [[RMQChannelOpen alloc] initWithReserved1:[[RMQShortstr alloc] init:@""]];
 
     [self sendAsyncMethod:outgoingMethod waitOn:[RMQChannelOpenOk class]
-        completionHandler:^(RMQFramesetWaitResult *result) {
+        completionHandler:^(RMQFramesetValidationResult *result) {
         }];
 }
 
@@ -102,7 +102,7 @@
     }];
 
     [self.commandQueue blockingEnqueue:^{
-        RMQFramesetWaitResult *result = [self.waiter waitOn:[RMQChannelCloseOk class]];
+        RMQFramesetValidationResult *result = [self.validator expect:[RMQChannelCloseOk class]];
         if (result.error) {
             [self.delegate channel:self error:result.error];
         }
@@ -116,7 +116,7 @@
     }];
     
     [self.commandQueue blockingEnqueue:^{
-        RMQFramesetWaitResult *result = [self.waiter waitOn:method];
+        RMQFramesetValidationResult *result = [self.validator expect:method];
         if (result.error) {
             [self.delegate channel:self error:result.error];
         }
@@ -147,7 +147,7 @@
                                                           options:RMQQueueBindNoOptions
                                                         arguments:[[RMQTable alloc] init:@{}]]
                    waitOn:[RMQQueueBindOk class]
-        completionHandler:^(RMQFramesetWaitResult *result) {
+        completionHandler:^(RMQFramesetValidationResult *result) {
         }];
 }
 
@@ -160,7 +160,7 @@
                                                          routingKey:[[RMQShortstr alloc] init:routingKey]
                                                           arguments:[[RMQTable alloc] init:@{}]]
                    waitOn:[RMQQueueUnbindOk class]
-        completionHandler:^(RMQFramesetWaitResult *result) {
+        completionHandler:^(RMQFramesetValidationResult *result) {
         }];
 }
 
@@ -173,7 +173,7 @@
                                                              options:options
                                                            arguments:[[RMQTable alloc] init:@{}]]
                    waitOn:[RMQBasicConsumeOk class]
-        completionHandler:^(RMQFramesetWaitResult *result) {
+        completionHandler:^(RMQFramesetValidationResult *result) {
             RMQBasicConsumeOk *consumeOk = (RMQBasicConsumeOk *)result.frameset.method;
             self.consumers[consumeOk.consumerTag] = consumer;
         }];
@@ -223,7 +223,7 @@ completionHandler:(RMQConsumer)userCompletionHandler {
                                                            queue:[[RMQShortstr alloc] init:queue]
                                                          options:options]
                    waitOn:[RMQBasicGetOk class]
-        completionHandler:^(RMQFramesetWaitResult *result) {
+        completionHandler:^(RMQFramesetValidationResult *result) {
             RMQFrameset *getOkFrameset = result.frameset;
             RMQBasicGetOk *getOk = (RMQBasicGetOk *)getOkFrameset.method;
             NSString *messageContent = [[NSString alloc] initWithData:getOkFrameset.contentData
@@ -245,7 +245,7 @@ completionHandler:(RMQConsumer)userCompletionHandler {
                                                       prefetchCount:[[RMQShort alloc] init:count.integerValue]
                                                             options:options]
                    waitOn:[RMQBasicQosOk class]
-        completionHandler:^(RMQFramesetWaitResult *result) {}];
+        completionHandler:^(RMQFramesetValidationResult *result) {}];
 }
 
 - (void)ack:(NSNumber *)deliveryTag
@@ -287,7 +287,7 @@ completionHandler:(RMQConsumer)userCompletionHandler {
                                                                 options:options
                                                               arguments:[[RMQTable alloc] init:@{}]]
                    waitOn:[RMQExchangeDeclareOk class]
-        completionHandler:^(RMQFramesetWaitResult *result) {
+        completionHandler:^(RMQFramesetValidationResult *result) {
         }];
 }
 
@@ -341,7 +341,7 @@ completionHandler:(RMQConsumer)userCompletionHandler {
         }];
     } else {
 //        NSLog(@"%@: Handling %@", self.channelNumber, [frameset.method class]);
-        [self.waiter fulfill:frameset];
+        [self.validator fulfill:frameset];
         [self.commandQueue resume];
     }
 }
@@ -379,7 +379,7 @@ completionHandler:(RMQConsumer)userCompletionHandler {
                                               sender:self.sender];
         [self sendAsyncMethod:[self queueDeclareMethod:declaredQueueName options:options]
                        waitOn:[RMQQueueDeclareOk class]
-            completionHandler:^(RMQFramesetWaitResult *result) {}];
+            completionHandler:^(RMQFramesetValidationResult *result) {}];
 
         self.queues[q.name] = q;
         return q;
@@ -406,7 +406,7 @@ completionHandler:(RMQConsumer)userCompletionHandler {
 
 - (void)sendAsyncMethod:(id<RMQMethod>)method
                  waitOn:(Class)waitClass
-      completionHandler:(void (^)(RMQFramesetWaitResult *result))completionHandler {
+      completionHandler:(void (^)(RMQFramesetValidationResult *result))completionHandler {
     RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
 
     [self.commandQueue enqueue:^{
@@ -415,7 +415,7 @@ completionHandler:(RMQConsumer)userCompletionHandler {
     }];
 
     [self.commandQueue enqueue:^{
-        RMQFramesetWaitResult *result = [self.waiter waitOn:waitClass];
+        RMQFramesetValidationResult *result = [self.validator expect:waitClass];
         if (result.error) {
             [self.delegate channel:self error:result.error];
         } else {

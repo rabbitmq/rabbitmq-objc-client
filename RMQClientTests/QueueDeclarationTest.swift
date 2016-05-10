@@ -5,7 +5,7 @@ class QueueDeclarationTest: XCTestCase {
     func testQueueSendsAQueueDeclare() {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(1, sender: sender, waiter: FramesetWaiterSpy(), commandQueue: q)
+        let ch = RMQAllocatedChannel(1, sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
 
         ch.queue("bagpuss")
 
@@ -19,40 +19,43 @@ class QueueDeclarationTest: XCTestCase {
     func testQueueWaitsForDeclareOk() {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
-        let waiter = FramesetWaiterSpy()
-        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter, commandQueue: q)
-
-        ch.queue("bagpuss")
-
-        try! q.step()
-        try! q.step()
-
-        XCTAssertEqual("RMQQueueDeclareOk", waiter.lastWaitedOnClass?.description())
-    }
-
-    func testQueueSendsWaitErrorsToDelegate() {
-        let sender = SenderSpy()
-        let q = FakeSerialQueue()
-        let waiter = FramesetWaiterSpy()
+        let validator = RMQFramesetValidator()
         let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter, commandQueue: q)
+        let ch = RMQAllocatedChannel(1, sender: sender, validator: validator, commandQueue: q)
         ch.activateWithDelegate(delegate)
 
         ch.queue("bagpuss")
 
         try! q.step()
-        waiter.err("bad news")
+        ch.handleFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("bagpuss")))
         try! q.step()
 
-        XCTAssertEqual("bad news", delegate.lastChannelError?.localizedDescription)
+        XCTAssertNil(delegate.lastChannelError)
+    }
+
+    func testQueueSendsvalidatorrorsToDelegate() {
+        let sender = SenderSpy()
+        let q = FakeSerialQueue()
+        let validator = RMQFramesetValidator()
+        let delegate = ConnectionDelegateSpy()
+        let ch = RMQAllocatedChannel(1, sender: sender, validator: validator, commandQueue: q)
+        ch.activateWithDelegate(delegate)
+
+        ch.queue("bagpuss")
+
+        try! q.step()
+        ch.handleFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.connectionStartOk()))
+        try! q.step()
+
+        XCTAssertEqual(RMQError.ChannelIncorrectSyncMethod.rawValue, delegate.lastChannelError?.code)
     }
 
     func testQueueWithEmptyNameGetsClientGeneratedName() {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
-        let waiter = FramesetWaiterSpy()
+        let validator = RMQFramesetValidator()
         let generator = StubNameGenerator()
-        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter, commandQueue: q, nameGenerator: generator)
+        let ch = RMQAllocatedChannel(1, sender: sender, validator: validator, commandQueue: q, nameGenerator: generator)
 
         generator.nextName = "mouse-organ"
         let rmqQueue = ch.queue("", options: [])
@@ -67,10 +70,10 @@ class QueueDeclarationTest: XCTestCase {
     func testQueueWithEmptyNameSendsErrorToDelegateOnNameCollision() {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
-        let waiter = FramesetWaiterSpy()
+        let validator = RMQFramesetValidator()
         let generator = StubNameGenerator()
         let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter, commandQueue: q, nameGenerator: generator)
+        let ch = RMQAllocatedChannel(1, sender: sender, validator: validator, commandQueue: q, nameGenerator: generator)
         ch.activateWithDelegate(delegate)
 
         generator.nextName = "I-will-dupe"

@@ -123,8 +123,16 @@ class MethodFixtures {
         return RMQQueueBind(reserved1: RMQShort(0), queue: RMQShortstr(name), exchange: RMQShortstr(exchangeName), routingKey: RMQShortstr(routingKey), options: [], arguments: RMQTable([:]))
     }
 
+    static func queueBindOk() -> RMQQueueBindOk {
+        return RMQQueueBindOk(decodedFrame: [])
+    }
+
     static func queueUnbind(name: String, exchangeName: String, routingKey: String) -> RMQQueueUnbind {
         return RMQQueueUnbind(reserved1: RMQShort(0), queue: RMQShortstr(name), exchange: RMQShortstr(exchangeName), routingKey: RMQShortstr(routingKey), arguments: RMQTable([:]))
+    }
+
+    static func queueUnbindOk() -> RMQQueueUnbindOk {
+        return RMQQueueUnbindOk(decodedFrame: [])
     }
 
     static func basicConsumeOk(consumerTag: String) -> RMQBasicConsumeOk {
@@ -151,7 +159,15 @@ class MethodFixtures {
         return RMQBasicQos(prefetchSize: RMQLong(0), prefetchCount: RMQShort(prefetchCount), options: options)
     }
 
+    static func basicQosOk() -> RMQBasicQosOk {
+        return RMQBasicQosOk(decodedFrame: [])
+    }
+
     static func exchangeDeclare(name: String, type: String, options: RMQExchangeDeclareOptions) -> RMQExchangeDeclare {
         return RMQExchangeDeclare(reserved1: RMQShort(0), exchange: RMQShortstr(name), type: RMQShortstr(type), options: options, arguments: RMQTable([:]))
+    }
+
+    static func exchangeDeclareOk() -> RMQExchangeDeclareOk {
+        return RMQExchangeDeclareOk(decodedFrame: [])
     }
 }

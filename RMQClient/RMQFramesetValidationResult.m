@@ -1,11 +1,11 @@
-#import "RMQFramesetWaitResult.h"
+#import "RMQFramesetValidationResult.h"
 
-@interface RMQFramesetWaitResult ()
+@interface RMQFramesetValidationResult ()
 @property (nonatomic, readwrite) NSError *error;
 @property (nonatomic, readwrite) RMQFrameset *frameset;
 @end
 
-@implementation RMQFramesetWaitResult
+@implementation RMQFramesetValidationResult
 
 - (instancetype)initWithFrameset:(RMQFrameset *)frameset error:(NSError *)error {
     self = [super init];

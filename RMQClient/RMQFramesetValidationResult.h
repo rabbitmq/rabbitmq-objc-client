@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "RMQFrameset.h"
 
-@interface RMQFramesetWaitResult : NSObject
+@interface RMQFramesetValidationResult : NSObject
 @property (nonatomic, readonly) NSError *error;
 @property (nonatomic, readonly) RMQFrameset *frameset;
 

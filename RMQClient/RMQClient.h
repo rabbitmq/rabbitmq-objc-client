@@ -11,7 +11,7 @@
 #import <RMQClient/RMQURI.h>
 #import <RMQClient/RMQAllocatedChannel.h>
 #import <RMQClient/RMQConnectionDelegateLogger.h>
-#import <RMQClient/RMQFramesetSemaphoreWaiter.h>
+#import <RMQClient/RMQFramesetValidator.h>
 #import <RMQClient/RMQHandshaker.h>
 #import <RMQClient/RMQMultipleChannelAllocator.h>
 #import <RMQClient/RMQReaderLoop.h>

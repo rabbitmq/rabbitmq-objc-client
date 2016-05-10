@@ -1,13 +1,13 @@
 #import "RMQChannel.h"
 #import "RMQErrors.h"
-#import "RMQFramesetSemaphoreWaiter.h"
+#import "RMQFramesetValidator.h"
 
-@interface RMQFramesetSemaphoreWaiter ()
+@interface RMQFramesetValidator ()
 @property (nonatomic, readwrite) RMQFrameset *lastFrameset;
-@property (nonatomic, readwrite) RMQFramesetWaitResult *result;
+@property (nonatomic, readwrite) RMQFramesetValidationResult *result;
 @end
 
-@implementation RMQFramesetSemaphoreWaiter
+@implementation RMQFramesetValidator
 
 - (instancetype)init {
     self = [super init];
@@ -17,16 +17,16 @@
     return self;
 }
 
-- (RMQFramesetWaitResult *)waitOn:(Class)methodClass {
-    RMQFramesetWaitResult *result;
+- (RMQFramesetValidationResult *)expect:(Class)methodClass {
+    RMQFramesetValidationResult *result;
     if (![self.lastFrameset.method isKindOfClass:methodClass]) {
         NSString *msg = [NSString stringWithFormat:@"Expected %@, got %@.", methodClass, [self.lastFrameset.method class]];
         NSError *error = [NSError errorWithDomain:RMQErrorDomain
                                              code:RMQErrorChannelIncorrectSyncMethod
                                          userInfo:@{NSLocalizedDescriptionKey: msg}];
-        result = [[RMQFramesetWaitResult alloc] initWithFrameset:self.lastFrameset error:error];
+        result = [[RMQFramesetValidationResult alloc] initWithFrameset:self.lastFrameset error:error];
     } else {
-        result = [[RMQFramesetWaitResult alloc] initWithFrameset:self.lastFrameset error:nil];
+        result = [[RMQFramesetValidationResult alloc] initWithFrameset:self.lastFrameset error:nil];
     }
     return result;
 }

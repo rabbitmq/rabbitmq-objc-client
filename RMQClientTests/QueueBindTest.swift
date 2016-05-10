@@ -4,9 +4,9 @@ class QueueBindTest: XCTestCase {
 
     func testQueueBindSendsAQueueBind() {
         let sender = SenderSpy()
-        let waiter = FramesetWaiterSpy()
+        let validator = RMQFramesetValidator()
         let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(321, sender: sender, waiter: waiter, commandQueue: q)
+        let ch = RMQAllocatedChannel(321, sender: sender, validator: validator, commandQueue: q)
 
         ch.queueBind("my-q", exchange: "my-exchange", routingKey: "hi")
 
@@ -21,41 +21,42 @@ class QueueBindTest: XCTestCase {
     }
 
     func testQueueBindWaitsOnBindOk() {
-        let waiter = FramesetWaiterSpy()
+        let validator = RMQFramesetValidator()
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(321, sender: SenderSpy(), waiter: waiter, commandQueue: q)
+        let ch = RMQAllocatedChannel(321, sender: SenderSpy(), validator: validator, commandQueue: q)
         ch.activateWithDelegate(delegate)
 
         ch.queueBind("my-q", exchange: "my-exchange", routingKey: "")
 
         try! q.step()
+        ch.handleFrameset(RMQFrameset(channelNumber: 321, method: MethodFixtures.queueBindOk()))
         try! q.step()
 
-        XCTAssertEqual("RMQQueueBindOk", waiter.lastWaitedOnClass?.description())
+        XCTAssertNil(delegate.lastChannelError)
     }
 
-    func testQueueBindSendsWaitErrorsToDelegate() {
-        let waiter = FramesetWaiterSpy()
+    func testQueueBindSendsvalidatorrorsToDelegate() {
+        let validator = RMQFramesetValidator()
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(321, sender: SenderSpy(), waiter: waiter, commandQueue: q)
+        let ch = RMQAllocatedChannel(321, sender: SenderSpy(), validator: validator, commandQueue: q)
         ch.activateWithDelegate(delegate)
 
         ch.queueBind("my-q", exchange: "my-exchange", routingKey: "")
 
         try! q.step()
-        waiter.err("foo")
+        ch.handleFrameset(RMQFrameset(channelNumber: 321, method: MethodFixtures.basicGetOk("wrong method")))
         try! q.step()
 
-        XCTAssertEqual("foo", delegate.lastChannelError?.localizedDescription)
+        XCTAssertEqual(RMQError.ChannelIncorrectSyncMethod.rawValue, delegate.lastChannelError?.code)
     }
 
     func testQueueUnbindSendsUnbind() {
         let sender = SenderSpy()
-        let waiter = FramesetWaiterSpy()
+        let validator = RMQFramesetValidator()
         let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(321, sender: sender, waiter: waiter, commandQueue: q)
+        let ch = RMQAllocatedChannel(321, sender: sender, validator: validator, commandQueue: q)
 
         ch.queueUnbind("my-q", exchange: "my-exchange", routingKey: "hi")
 
@@ -70,34 +71,35 @@ class QueueBindTest: XCTestCase {
     }
 
     func testQueueUnbindWaitsOnUnbindOk() {
-        let waiter = FramesetWaiterSpy()
+        let validator = RMQFramesetValidator()
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(321, sender: SenderSpy(), waiter: waiter, commandQueue: q)
+        let ch = RMQAllocatedChannel(321, sender: SenderSpy(), validator: validator, commandQueue: q)
         ch.activateWithDelegate(delegate)
 
         ch.queueUnbind("my-q", exchange: "my-exchange", routingKey: "hi")
 
         try! q.step()
+        ch.handleFrameset(RMQFrameset(channelNumber: 321, method: MethodFixtures.queueUnbindOk()))
         try! q.step()
 
-        XCTAssertEqual("RMQQueueUnbindOk", waiter.lastWaitedOnClass?.description())
+        XCTAssertNil(delegate.lastChannelError)
     }
 
-    func testQueueUnbindSendsWaitErrorsToDelegate() {
-        let waiter = FramesetWaiterSpy()
+    func testQueueUnbindSendsvalidatorrorsToDelegate() {
+        let validator = RMQFramesetValidator()
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(321, sender: SenderSpy(), waiter: waiter, commandQueue: q)
+        let ch = RMQAllocatedChannel(321, sender: SenderSpy(), validator: validator, commandQueue: q)
         ch.activateWithDelegate(delegate)
 
         ch.queueUnbind("my-q", exchange: "my-exchange", routingKey: "hi")
 
         try! q.step()
-        waiter.err("Oh no")
+        ch.handleFrameset(RMQFrameset(channelNumber: 321, method: MethodFixtures.queueDeclareOk("wrong method")))
         try! q.step()
 
-        XCTAssertEqual("Oh no", delegate.lastChannelError?.localizedDescription)
+        XCTAssertEqual(RMQError.ChannelIncorrectSyncMethod.rawValue, delegate.lastChannelError?.code)
     }
 
 }

@@ -1,6 +1,6 @@
 #import "RMQConnection.h"
 #import "RMQAllocatedChannel.h"
-#import "RMQFramesetSemaphoreWaiter.h"
+#import "RMQFramesetValidator.h"
 #import "RMQMultipleChannelAllocator.h"
 #import "RMQUnallocatedChannel.h"
 #import "RMQGCDSerialQueue.h"
@@ -71,10 +71,9 @@
 }
 
 - (id<RMQChannel>)newAllocation {
-    RMQFramesetSemaphoreWaiter *waiter = [RMQFramesetSemaphoreWaiter new];
     RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(self.channelNumber)
                                                          sender:self.sender
-                                                         waiter:waiter
+                                                      validator:[RMQFramesetValidator new]
                                                    commandQueue:[self suspendedDispatchQueue:self.channelNumber]
                                                   nameGenerator:self.nameGenerator];
     self.channels[@(self.channelNumber)] = ch;
@@ -87,7 +86,7 @@
         if (!self.channels[@(i)]) {
             RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(i)
                                                                  sender:self.sender
-                                                                 waiter:[RMQFramesetSemaphoreWaiter new]
+                                                              validator:[RMQFramesetValidator new]
                                                            commandQueue:[self suspendedDispatchQueue:i]
                                                           nameGenerator:self.nameGenerator];
             self.channels[@(i)] = ch;

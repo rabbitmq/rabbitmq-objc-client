@@ -1,13 +1,13 @@
 import XCTest
 
-class RMQFramesetSemaphoreWaiterTest: XCTestCase {
+class RMQFramesetValidatorTest: XCTestCase {
     
     func testIncorrectFramesetProducesError() {
-        let waiter = RMQFramesetSemaphoreWaiter()
+        let validator = RMQFramesetValidator()
         let deliveredFrameset = RMQFrameset(channelNumber: 1, method: MethodFixtures.basicConsumeOk("foo"))
 
-        waiter.fulfill(deliveredFrameset)
-        let result = waiter.waitOn(RMQChannelOpenOk.self)
+        validator.fulfill(deliveredFrameset)
+        let result = validator.expect(RMQChannelOpenOk.self)
 
         XCTAssertEqual(deliveredFrameset, result.frameset)
         XCTAssertEqual(RMQError.ChannelIncorrectSyncMethod.rawValue, result.error.code)
@@ -15,11 +15,11 @@ class RMQFramesetSemaphoreWaiterTest: XCTestCase {
     }
 
     func testCorrectFramesetProducesFramesetAndNoError() {
-        let waiter = RMQFramesetSemaphoreWaiter()
+        let validator = RMQFramesetValidator()
         let deliveredFrameset = RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpenOk())
 
-        waiter.fulfill(deliveredFrameset)
-        let result = waiter.waitOn(RMQChannelOpenOk.self)
+        validator.fulfill(deliveredFrameset)
+        let result = validator.expect(RMQChannelOpenOk.self)
 
         XCTAssertEqual(deliveredFrameset, result.frameset)
         XCTAssertNil(result.error)
