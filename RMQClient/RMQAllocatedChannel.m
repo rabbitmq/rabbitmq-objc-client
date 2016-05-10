@@ -83,10 +83,8 @@
 
 - (void)open {
     RMQChannelOpen *outgoingMethod = [[RMQChannelOpen alloc] initWithReserved1:[[RMQShortstr alloc] init:@""]];
-
-    [self sendAsyncMethod:outgoingMethod waitOn:[RMQChannelOpenOk class]
-        completionHandler:^(RMQFramesetValidationResult *result) {
-        }];
+    [self sendSyncMethod:outgoingMethod
+                   waitOn:[RMQChannelOpenOk class]];
 }
 
 - (void)blockingClose {
@@ -140,43 +138,39 @@
 - (void)queueBind:(NSString *)queueName
          exchange:(NSString *)exchangeName
        routingKey:(nonnull NSString *)routingKey {
-    [self sendAsyncMethod:[[RMQQueueBind alloc] initWithReserved1:[[RMQShort alloc] init:0]
-                                                            queue:[[RMQShortstr alloc] init:queueName]
-                                                         exchange:[[RMQShortstr alloc] init:exchangeName]
-                                                       routingKey:[[RMQShortstr alloc] init:routingKey]
-                                                          options:RMQQueueBindNoOptions
-                                                        arguments:[[RMQTable alloc] init:@{}]]
-                   waitOn:[RMQQueueBindOk class]
-        completionHandler:^(RMQFramesetValidationResult *result) {
-        }];
+    [self sendSyncMethod:[[RMQQueueBind alloc] initWithReserved1:[[RMQShort alloc] init:0]
+                                                           queue:[[RMQShortstr alloc] init:queueName]
+                                                        exchange:[[RMQShortstr alloc] init:exchangeName]
+                                                      routingKey:[[RMQShortstr alloc] init:routingKey]
+                                                         options:RMQQueueBindNoOptions
+                                                       arguments:[[RMQTable alloc] init:@{}]]
+                  waitOn:[RMQQueueBindOk class]];
 }
 
 - (void)queueUnbind:(NSString *)queueName
            exchange:(NSString *)exchangeName
          routingKey:(NSString *)routingKey {
-    [self sendAsyncMethod:[[RMQQueueUnbind alloc] initWithReserved1:[[RMQShort alloc] init:0]
-                                                              queue:[[RMQShortstr alloc] init:queueName]
-                                                           exchange:[[RMQShortstr alloc] init:exchangeName]
-                                                         routingKey:[[RMQShortstr alloc] init:routingKey]
-                                                          arguments:[[RMQTable alloc] init:@{}]]
-                   waitOn:[RMQQueueUnbindOk class]
-        completionHandler:^(RMQFramesetValidationResult *result) {
-        }];
+    [self sendSyncMethod:[[RMQQueueUnbind alloc] initWithReserved1:[[RMQShort alloc] init:0]
+                                                             queue:[[RMQShortstr alloc] init:queueName]
+                                                          exchange:[[RMQShortstr alloc] init:exchangeName]
+                                                        routingKey:[[RMQShortstr alloc] init:routingKey]
+                                                         arguments:[[RMQTable alloc] init:@{}]]
+                  waitOn:[RMQQueueUnbindOk class]];
 }
 
 - (void)basicConsume:(NSString *)queueName
              options:(RMQBasicConsumeOptions)options
             consumer:(RMQConsumer)consumer {
-    [self sendAsyncMethod:[[RMQBasicConsume alloc] initWithReserved1:[[RMQShort alloc] init:0]
-                                                               queue:[[RMQShortstr alloc] init:queueName]
-                                                         consumerTag:[[RMQShortstr alloc] init:@""]
-                                                             options:options
-                                                           arguments:[[RMQTable alloc] init:@{}]]
-                   waitOn:[RMQBasicConsumeOk class]
-        completionHandler:^(RMQFramesetValidationResult *result) {
-            RMQBasicConsumeOk *consumeOk = (RMQBasicConsumeOk *)result.frameset.method;
-            self.consumers[consumeOk.consumerTag] = consumer;
-        }];
+    [self sendSyncMethod:[[RMQBasicConsume alloc] initWithReserved1:[[RMQShort alloc] init:0]
+                                                              queue:[[RMQShortstr alloc] init:queueName]
+                                                        consumerTag:[[RMQShortstr alloc] init:@""]
+                                                            options:options
+                                                          arguments:[[RMQTable alloc] init:@{}]]
+                  waitOn:[RMQBasicConsumeOk class]
+       completionHandler:^(RMQFramesetValidationResult *result) {
+           RMQBasicConsumeOk *consumeOk = (RMQBasicConsumeOk *)result.frameset.method;
+           self.consumers[consumeOk.consumerTag] = consumer;
+       }];
 }
 
 - (void)basicPublish:(NSString *)message
@@ -219,21 +213,21 @@
 -  (void)basicGet:(NSString *)queue
           options:(RMQBasicGetOptions)options
 completionHandler:(RMQConsumer)userCompletionHandler {
-    [self sendAsyncMethod:[[RMQBasicGet alloc] initWithReserved1:[[RMQShort alloc] init:0]
-                                                           queue:[[RMQShortstr alloc] init:queue]
-                                                         options:options]
-                   waitOn:[RMQBasicGetOk class]
-        completionHandler:^(RMQFramesetValidationResult *result) {
-            RMQFrameset *getOkFrameset = result.frameset;
-            RMQBasicGetOk *getOk = (RMQBasicGetOk *)getOkFrameset.method;
-            NSString *messageContent = [[NSString alloc] initWithData:getOkFrameset.contentData
-                                                             encoding:NSUTF8StringEncoding];
-            RMQMessage *message = [[RMQMessage alloc] initWithConsumerTag:@""
-                                                              deliveryTag:@(getOk.deliveryTag.integerValue)
-                                                                  content:messageContent];
-            RMQDeliveryInfo *deliveryInfo = [[RMQDeliveryInfo alloc] initWithRoutingKey:getOk.routingKey.stringValue];
-            userCompletionHandler(deliveryInfo, message);
-        }];
+    [self sendSyncMethod:[[RMQBasicGet alloc] initWithReserved1:[[RMQShort alloc] init:0]
+                                                          queue:[[RMQShortstr alloc] init:queue]
+                                                        options:options]
+                  waitOn:[RMQBasicGetOk class]
+       completionHandler:^(RMQFramesetValidationResult *result) {
+           RMQFrameset *getOkFrameset = result.frameset;
+           RMQBasicGetOk *getOk = (RMQBasicGetOk *)getOkFrameset.method;
+           NSString *messageContent = [[NSString alloc] initWithData:getOkFrameset.contentData
+                                                            encoding:NSUTF8StringEncoding];
+           RMQMessage *message = [[RMQMessage alloc] initWithConsumerTag:@""
+                                                             deliveryTag:@(getOk.deliveryTag.integerValue)
+                                                                 content:messageContent];
+           RMQDeliveryInfo *deliveryInfo = [[RMQDeliveryInfo alloc] initWithRoutingKey:getOk.routingKey.stringValue];
+           userCompletionHandler(deliveryInfo, message);
+       }];
 }
 
 - (void)basicQos:(NSNumber *)count
@@ -241,11 +235,10 @@ completionHandler:(RMQConsumer)userCompletionHandler {
     RMQBasicQosOptions options = RMQBasicQosNoOptions;
     if (isGlobal) options     |= RMQBasicQosGlobal;
 
-    [self sendAsyncMethod:[[RMQBasicQos alloc] initWithPrefetchSize:[[RMQLong alloc] init:0]
-                                                      prefetchCount:[[RMQShort alloc] init:count.integerValue]
-                                                            options:options]
-                   waitOn:[RMQBasicQosOk class]
-        completionHandler:^(RMQFramesetValidationResult *result) {}];
+    [self sendSyncMethod:[[RMQBasicQos alloc] initWithPrefetchSize:[[RMQLong alloc] init:0]
+                                                     prefetchCount:[[RMQShort alloc] init:count.integerValue]
+                                                           options:options]
+                  waitOn:[RMQBasicQosOk class]];
 }
 
 - (void)ack:(NSNumber *)deliveryTag
@@ -281,14 +274,12 @@ completionHandler:(RMQConsumer)userCompletionHandler {
 - (void)exchangeDeclare:(NSString *)name
                    type:(NSString *)type
                 options:(RMQExchangeDeclareOptions)options {
-    [self sendAsyncMethod:[[RMQExchangeDeclare alloc] initWithReserved1:[[RMQShort alloc] init:0]
-                                                               exchange:[[RMQShortstr alloc] init:name]
-                                                                   type:[[RMQShortstr alloc] init:type]
-                                                                options:options
-                                                              arguments:[[RMQTable alloc] init:@{}]]
-                   waitOn:[RMQExchangeDeclareOk class]
-        completionHandler:^(RMQFramesetValidationResult *result) {
-        }];
+    [self sendSyncMethod:[[RMQExchangeDeclare alloc] initWithReserved1:[[RMQShort alloc] init:0]
+                                                              exchange:[[RMQShortstr alloc] init:name]
+                                                                  type:[[RMQShortstr alloc] init:type]
+                                                               options:options
+                                                             arguments:[[RMQTable alloc] init:@{}]]
+                  waitOn:[RMQExchangeDeclareOk class]];
 }
 
 - (RMQExchange *)fanout:(NSString *)name options:(RMQExchangeDeclareOptions)options {
@@ -340,7 +331,6 @@ completionHandler:(RMQConsumer)userCompletionHandler {
             }
         }];
     } else {
-//        NSLog(@"%@: Handling %@", self.channelNumber, [frameset.method class]);
         [self.validator fulfill:frameset];
         [self.commandQueue resume];
     }
@@ -377,10 +367,8 @@ completionHandler:(RMQConsumer)userCompletionHandler {
                                              options:options
                                              channel:(id<RMQChannel>)self
                                               sender:self.sender];
-        [self sendAsyncMethod:[self queueDeclareMethod:declaredQueueName options:options]
-                       waitOn:[RMQQueueDeclareOk class]
-            completionHandler:^(RMQFramesetValidationResult *result) {}];
-
+        [self sendSyncMethod:[self queueDeclareMethod:declaredQueueName options:options]
+                       waitOn:[RMQQueueDeclareOk class]];
         self.queues[q.name] = q;
         return q;
     }
@@ -404,9 +392,9 @@ completionHandler:(RMQConsumer)userCompletionHandler {
     }];
 }
 
-- (void)sendAsyncMethod:(id<RMQMethod>)method
-                 waitOn:(Class)waitClass
-      completionHandler:(void (^)(RMQFramesetValidationResult *result))completionHandler {
+- (void)sendSyncMethod:(id<RMQMethod>)method
+                waitOn:(Class)waitClass
+     completionHandler:(void (^)(RMQFramesetValidationResult *result))completionHandler {
     RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
 
     [self.commandQueue enqueue:^{
@@ -422,6 +410,13 @@ completionHandler:(RMQConsumer)userCompletionHandler {
             completionHandler(result);
         }
     }];
+}
+
+- (void)sendSyncMethod:(id<RMQMethod>)method
+                waitOn:(Class)waitClass {
+    [self sendSyncMethod:method
+                  waitOn:waitClass
+       completionHandler:^(RMQFramesetValidationResult *result) {}];
 }
 
 - (NSArray *)contentBodiesFromData:(NSData *)data inChunksOf:(NSUInteger)chunkSize {
