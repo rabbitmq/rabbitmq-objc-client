@@ -84,7 +84,7 @@
 - (void)open {
     RMQChannelOpen *outgoingMethod = [[RMQChannelOpen alloc] initWithReserved1:[[RMQShortstr alloc] init:@""]];
     [self sendSyncMethod:outgoingMethod
-                   waitOn:[RMQChannelOpenOk class]];
+                  waitOn:[RMQChannelOpenOk class]];
 }
 
 - (void)blockingClose {
@@ -368,7 +368,7 @@ completionHandler:(RMQConsumer)userCompletionHandler {
                                              channel:(id<RMQChannel>)self
                                               sender:self.sender];
         [self sendSyncMethod:[self queueDeclareMethod:declaredQueueName options:options]
-                       waitOn:[RMQQueueDeclareOk class]];
+                      waitOn:[RMQQueueDeclareOk class]];
         self.queues[q.name] = q;
         return q;
     }
