@@ -30,6 +30,10 @@ typedef NS_ENUM(int32_t, RMQGCDSerialQueueStatus) {
     return nil;
 }
 
+- (void)dealloc {
+    [self resume];
+}
+
 - (void)enqueue:(RMQOperation)operation {
     dispatch_async(self.dispatchQueue, operation);
 }
