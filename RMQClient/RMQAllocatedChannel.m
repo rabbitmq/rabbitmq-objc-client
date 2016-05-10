@@ -83,16 +83,10 @@
 
 - (void)open {
     RMQChannelOpen *outgoingMethod = [[RMQChannelOpen alloc] initWithReserved1:[[RMQShortstr alloc] init:@""]];
-    RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:outgoingMethod];
 
-    [self.commandQueue enqueue:^{
-        [self.sender sendFrameset:outgoingFrameset];
-
-        RMQFramesetWaitResult *result = [self.waiter waitOn:[RMQChannelOpenOk class]];
-        if (result.error) {
-            [self.delegate connection:(RMQConnection *)self.sender failedToOpenChannel:self error:result.error];
-        }
-    }];
+    [self sendAsyncMethod:outgoingMethod waitOn:[RMQChannelOpenOk class]
+        completionHandler:^(RMQFramesetWaitResult *result) {
+        }];
 }
 
 - (void)blockingClose {
@@ -103,8 +97,11 @@
     RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:close];
 
     [self.commandQueue blockingEnqueue:^{
+        [self.commandQueue suspend];
         [self.sender sendFrameset:frameset];
+    }];
 
+    [self.commandQueue blockingEnqueue:^{
         RMQFramesetWaitResult *result = [self.waiter waitOn:[RMQChannelCloseOk class]];
         if (result.error) {
             [self.delegate channel:self error:result.error];
@@ -114,6 +111,10 @@
 }
 
 - (void)blockingWaitOn:(Class)method {
+    [self.commandQueue blockingEnqueue:^{
+        [self.commandQueue suspend];
+    }];
+    
     [self.commandQueue blockingEnqueue:^{
         RMQFramesetWaitResult *result = [self.waiter waitOn:method];
         if (result.error) {
@@ -339,7 +340,9 @@ completionHandler:(RMQConsumer)userCompletionHandler {
             }
         }];
     } else {
+//        NSLog(@"%@: Handling %@", self.channelNumber, [frameset.method class]);
         [self.waiter fulfill:frameset];
+        [self.commandQueue resume];
     }
 }
 
@@ -370,15 +373,14 @@ completionHandler:(RMQConsumer)userCompletionHandler {
         [self.delegate channel:self error:error];
         return nil;
     } else {
-        [self sendAsyncMethod:[self queueDeclareMethod:declaredQueueName options:options]
-                       waitOn:[RMQQueueDeclareOk class]
-            completionHandler:^(RMQFramesetWaitResult *result) {
-            }];
-
         RMQQueue *q = [[RMQQueue alloc] initWithName:declaredQueueName
                                              options:options
                                              channel:(id<RMQChannel>)self
                                               sender:self.sender];
+        [self sendAsyncMethod:[self queueDeclareMethod:declaredQueueName options:options]
+                       waitOn:[RMQQueueDeclareOk class]
+            completionHandler:^(RMQFramesetWaitResult *result) {}];
+
         self.queues[q.name] = q;
         return q;
     }
@@ -406,9 +408,13 @@ completionHandler:(RMQConsumer)userCompletionHandler {
                  waitOn:(Class)waitClass
       completionHandler:(void (^)(RMQFramesetWaitResult *result))completionHandler {
     RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
-    [self.commandQueue enqueue:^{
-        [self.sender sendFrameset:outgoingFrameset];
 
+    [self.commandQueue enqueue:^{
+        [self.commandQueue suspend];
+        [self.sender sendFrameset:outgoingFrameset];
+    }];
+
+    [self.commandQueue enqueue:^{
         RMQFramesetWaitResult *result = [self.waiter waitOn:waitClass];
         if (result.error) {
             [self.delegate channel:self error:result.error];

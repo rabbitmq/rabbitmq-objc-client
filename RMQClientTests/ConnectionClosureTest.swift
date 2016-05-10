@@ -103,14 +103,29 @@ class ConnectionClosureTest: XCTestCase {
     }
 
     func testCloseClosesTransport() {
-        let (transport, q, conn, _) = TestHelper.connectionAfterHandshake()
+        let numCloseOpsBeforeTransportClose = 4
+        let transport = ControlledInteractionTransport()
+        let allocator = ChannelSpyAllocator()
+        let q = FakeSerialQueue()
+        let heartbeatSender = HeartbeatSenderSpy()
+        let conn = RMQConnection(transport: transport,
+                                 config: TestHelper.connectionConfig(),
+                                 handshakeTimeout: 2,
+                                 channelAllocator: allocator,
+                                 frameHandler: FrameHandlerSpy(),
+                                 delegate: ConnectionDelegateSpy(),
+                                 commandQueue: q,
+                                 waiterFactory: FakeWaiterFactory(),
+                                 heartbeatSender: heartbeatSender)
+        conn.start()
+        try! q.step()
+        transport.handshake()
 
         conn.close()
 
-        try! q.step()
-        try! q.step()
-        try! q.step()
-        try! q.step()
+        for _ in 1...numCloseOpsBeforeTransportClose {
+            try! q.step()
+        }
 
         XCTAssertTrue(transport.connected)
         try! q.step()

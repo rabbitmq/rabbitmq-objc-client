@@ -71,7 +71,7 @@
 }
 
 - (id<RMQChannel>)newAllocation {
-    RMQFramesetSemaphoreWaiter *waiter = [[RMQFramesetSemaphoreWaiter alloc] initWithSyncTimeout:self.syncTimeout];
+    RMQFramesetSemaphoreWaiter *waiter = [RMQFramesetSemaphoreWaiter new];
     RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(self.channelNumber)
                                                          sender:self.sender
                                                          waiter:waiter
@@ -87,7 +87,7 @@
         if (!self.channels[@(i)]) {
             RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(i)
                                                                  sender:self.sender
-                                                                 waiter:[[RMQFramesetSemaphoreWaiter alloc] initWithSyncTimeout:self.syncTimeout]
+                                                                 waiter:[RMQFramesetSemaphoreWaiter new]
                                                            commandQueue:[self suspendedDispatchQueue:i]
                                                           nameGenerator:self.nameGenerator];
             self.channels[@(i)] = ch;

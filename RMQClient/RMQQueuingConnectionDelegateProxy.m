@@ -29,12 +29,6 @@
     });
 }
 
-- (void)connection:(RMQConnection *)connection failedToOpenChannel:(id<RMQChannel>)channel error:(NSError *)error {
-    dispatch_async(self.queue, ^{
-        [self.delegate connection:connection failedToOpenChannel:channel error:error];
-    });
-}
-
 - (void)connection:(RMQConnection *)connection failedToWriteWithError:(NSError *)error {
     dispatch_async(self.queue, ^{
         [self.delegate connection:connection failedToWriteWithError:error];

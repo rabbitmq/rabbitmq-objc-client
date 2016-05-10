@@ -28,11 +28,26 @@ class RMQGCDSerialQueueTest: XCTestCase {
         var foo = 1
         q.suspend()
         q.enqueue { foo += 1 }
-        sleep(1)
+        TestHelper.run(0.2)
         XCTAssertEqual(1, foo)
         q.resume()
         q.blockingEnqueue {}
         XCTAssertEqual(2, foo)
+    }
+
+    func testCannotOverResumeOrSuspend() {
+        let q = RMQGCDSerialQueue(name: "over-resume test")
+        q.resume()
+        q.resume()
+        q.suspend()
+        q.suspend()
+        q.resume()
+
+        var foo: String?
+        q.blockingEnqueue {
+            foo = "bar"
+        }
+        XCTAssertEqual("bar", foo)
     }
 
 }

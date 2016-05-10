@@ -6,10 +6,6 @@
     NSLog(@"Received connection: %@ failedToConnectWithError: %@", connection, error);
 }
 
-- (void)connection:(RMQConnection *)connection failedToOpenChannel:(id<RMQChannel>)channel error:(NSError *)error {
-    NSLog(@"Received connection: %@ failedToOpenChannel: %@ error: %@", connection, channel, error);
-}
-
 - (void)connection:(RMQConnection *)connection failedToWriteWithError:(NSError *)error {
     NSLog(@"Received connection: %@ failedToWriteWithError: %@", connection, error);
 }

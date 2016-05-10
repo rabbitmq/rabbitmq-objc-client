@@ -165,41 +165,37 @@ class IntegrationTests: XCTestCase {
 
     func testConcurrentDeliveryOnDifferentChannels() {
         var counter: Int32 = 0
-        var consumingChannels: [RMQChannel] = []
-        var consumingQueues: [RMQQueue] = []
         let semaphore = dispatch_semaphore_create(0)
         let delegate = RMQConnectionDelegateLogger()
-        let channelCount: Int32 = 500
-        let conn = RMQConnection(uri: "amqps://guest:guest@localhost",
-                                 tlsOptions: RMQTLSOptions.fromURI("amqps://guest:guest@localhost", verifyPeer: false),
-                                 channelMax: 501, frameMax: 131072, heartbeat: 10, syncTimeout: 60,
-                                 delegate: delegate, delegateQueue: dispatch_get_main_queue())
+        let channelCount = 600
+        let messageCount: Int32 = 600
+        let conn = RMQConnection(uri: "amqp://guest:guest@localhost",
+                                 channelMax: channelCount + 1, frameMax: 131072, heartbeat: 100, syncTimeout: 60,
+                                 delegate: delegate, delegateQueue: dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0))
         conn.start()
         defer { conn.blockingClose() }
 
         let producingChannel = conn.createChannel()
-        let producingQueue = producingChannel.queue("", options: [.AutoDelete, .Exclusive])
+        let producingQueue = producingChannel.queue("some-queue", options: [.AutoDelete, .Exclusive])
 
         for _ in 1...channelCount {
             let ch = conn.createChannel()
             let q = ch.queue(producingQueue.name, options: [.AutoDelete, .Exclusive])
             q.subscribe { (_, message) in
                 OSAtomicIncrement32(&counter)
-                if counter == channelCount {
+                if counter == messageCount {
                     dispatch_semaphore_signal(semaphore)
                 }
             }
-            consumingChannels.append(ch)
-            consumingQueues.append(q)
         }
 
-        for _ in 1...channelCount {
+        for _ in 1...messageCount {
             producingQueue.publish("hello")
         }
 
         XCTAssertEqual(
             0,
-            dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(10)),
+            dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(60)),
             "Timed out waiting for messages to arrive on different channels"
         )
     }

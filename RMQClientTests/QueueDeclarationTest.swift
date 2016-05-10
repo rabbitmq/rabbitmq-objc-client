@@ -25,6 +25,7 @@ class QueueDeclarationTest: XCTestCase {
         ch.queue("bagpuss")
 
         try! q.step()
+        try! q.step()
 
         XCTAssertEqual("RMQQueueDeclareOk", waiter.lastWaitedOnClass?.description())
     }
@@ -39,6 +40,7 @@ class QueueDeclarationTest: XCTestCase {
 
         ch.queue("bagpuss")
 
+        try! q.step()
         waiter.err("bad news")
         try! q.step()
 

@@ -1,8 +1,15 @@
 #import "RMQGCDSerialQueue.h"
+#import <libkern/OSAtomic.h>
+
+typedef NS_ENUM(int32_t, RMQGCDSerialQueueStatus) {
+    RMQGCDSerialQueueStatusNormal = 1,
+    RMQGCDSerialQueueStatusSuspended,
+};
 
 @interface RMQGCDSerialQueue ()
 @property (nonatomic, readwrite) NSString *name;
 @property (nonatomic, readwrite) dispatch_queue_t dispatchQueue;
+@property (atomic, readwrite) volatile int32_t status;
 @end
 
 @implementation RMQGCDSerialQueue
@@ -11,6 +18,7 @@
     self = [super init];
     if (self) {
         self.name = name;
+        self.status = RMQGCDSerialQueueStatusNormal;
         NSString *qName = [NSString stringWithFormat:@"RMQGCDSerialQueue (%@)", name];
         self.dispatchQueue = dispatch_queue_create([qName cStringUsingEncoding:NSUTF8StringEncoding], NULL);
     }
@@ -31,11 +39,31 @@
 }
 
 - (void)suspend {
-    dispatch_suspend(self.dispatchQueue);
+    if (self.status == RMQGCDSerialQueueStatusSuspended) {
+        return;
+    }
+    while (true) {
+        if (OSAtomicCompareAndSwap32(self.status,
+                                     RMQGCDSerialQueueStatusSuspended,
+                                     &_status)) {
+            dispatch_suspend(self.dispatchQueue);
+            return;
+        }
+    }
 }
 
 - (void)resume {
-    dispatch_resume(self.dispatchQueue);
+    if (self.status == RMQGCDSerialQueueStatusNormal) {
+        return;
+    }
+    while (true) {
+        if (OSAtomicCompareAndSwap32(self.status,
+                                     RMQGCDSerialQueueStatusNormal,
+                                     &_status)) {
+            dispatch_resume(self.dispatchQueue);
+            return;
+        }
+    }
 }
 
 @end

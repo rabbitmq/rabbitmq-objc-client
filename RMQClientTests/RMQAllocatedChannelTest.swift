@@ -15,7 +15,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         contract.check()
     }
 
-    func testExpectsSuspendedDispatchQueueAndResumesOnActivation() {
+    func testResumesCommandQueueOnActivation() {
         let q = FakeSerialQueue()
         q.suspend()
 
@@ -69,11 +69,11 @@ class RMQAllocatedChannelTest: XCTestCase {
         ch.activateWithDelegate(delegate)
 
         ch.open()
-
+        try! q.step()
         waiter?.err("foo")
         try! q.step()
 
-        XCTAssertEqual("foo", delegate.lastChannelOpenError!.localizedDescription)
+        XCTAssertEqual("foo", delegate.lastChannelError!.localizedDescription)
     }
 
     func testBlockingCloseSendsCloseAndBlocksUntilCloseOkReceived() {
@@ -82,25 +82,28 @@ class RMQAllocatedChannelTest: XCTestCase {
         let ch = RMQAllocatedChannel(1, sender: sender, waiter: waiter!, commandQueue: q)
         ch.activateWithDelegate(nil)
         ch.open()
-        
-        waiter!.fulfill(RMQFrameset(channelNumber: 1, method: MethodFixtures.channelCloseOk()))
+
         ch.blockingClose()
 
         XCTAssertEqual(0, sender.sentFramesets.count)
-        XCTAssertEqual(2, q.items.count)
-        XCTAssertEqual(1, q.blockingItems.count)
+        XCTAssertEqual(2, q.blockingItems.count)
 
         try! q.step()
         XCTAssertEqual(
             RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpen()),
             sender.sentFramesets.last
         )
+        ch.handleFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpenOk()))
+        try! q.step()
 
         try! q.step()
         XCTAssertEqual(
             RMQFrameset(channelNumber: 1, method: MethodFixtures.channelClose()),
             sender.sentFramesets.last
         )
+
+        XCTAssertEqual(RMQChannelOpenOk.description(), waiter!.lastWaitedOnClass!.description())
+        try! q.step()
 
         XCTAssertEqual(RMQChannelCloseOk.description(), waiter!.lastWaitedOnClass!.description())
     }
@@ -113,10 +116,12 @@ class RMQAllocatedChannelTest: XCTestCase {
         ch.activateWithDelegate(delegate)
 
         ch.open()
+        try! q.step()
+        try! q.step()
+
         ch.blockingClose()
 
         try! q.step()
-
         waiter!.err("waiting failed")
         try! q.step()
 
@@ -131,9 +136,10 @@ class RMQAllocatedChannelTest: XCTestCase {
         ch.blockingWaitOn(RMQConnectionCloseOk.self)
         XCTAssertNil(waiter?.lastWaitedOnClass)
 
-        XCTAssertEqual(1, q.blockingItems.count)
+        XCTAssertEqual(2, q.blockingItems.count)
 
-        waiter!.fulfill(RMQFrameset(channelNumber: 0, method: MethodFixtures.connectionCloseOk()))
+        try! q.step()
+        ch.handleFrameset(RMQFrameset(channelNumber: 0, method: MethodFixtures.connectionCloseOk()))
         try! q.step()
 
         XCTAssertEqual("RMQConnectionCloseOk", waiter?.lastWaitedOnClass!.description())
@@ -148,6 +154,7 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         ch.blockingWaitOn(RMQConnectionCloseOk.self)
 
+        try! q.step()
         waiter!.err("Timed out, buddy.")
         try! q.step()
 
@@ -188,6 +195,7 @@ class RMQAllocatedChannelTest: XCTestCase {
             XCTFail("Should not be called")
         }
 
+        try! q.step()
         waiter!.err("fooey")
         try! q.step()
 
@@ -217,6 +225,7 @@ class RMQAllocatedChannelTest: XCTestCase {
             receivedDeliveryInfo = di
             consumedMessage = message
         }
+        try! q.step()
         try! q.step()
 
         XCTAssertNil(receivedDeliveryInfo)
@@ -261,15 +270,14 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         var receivedMessage: RMQMessage?
         var receivedDeliveryInfo: RMQDeliveryInfo?
-        waiter?.fulfill(getOkFrameset)
         ch.basicGet("my-q", options: [.NoAck]) { (di, m) in
             receivedDeliveryInfo = di
             receivedMessage = m
         }
 
         try! q.step()
-
         ch.handleFrameset(getOkFrameset)
+        try! q.step()
 
         XCTAssertEqual(expectedDeliveryInfo, receivedDeliveryInfo)
         XCTAssertEqual(expectedMessage, receivedMessage)
@@ -288,6 +296,7 @@ class RMQAllocatedChannelTest: XCTestCase {
             XCTFail("Should not be called")
         }
 
+        try! q.step()
         waiter!.err("oh no!")
         try! q.step()
 
@@ -316,6 +325,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         ch.basicConsume("sameq", options: []) { (_, message) in
             consumedMessage1 = message
         }
+        try! q.step()
         ch.handleFrameset(consumeOkFrameset1)
         try! q.step()
 
@@ -323,6 +333,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         ch.basicConsume("sameq", options: []) { (_, message) in
             consumedMessage2 = message
         }
+        try! q.step()
         ch.handleFrameset(consumeOkFrameset2)
         try! q.step()
 
@@ -465,7 +476,11 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         try! q.step()
 
-        XCTAssertEqual(RMQBasicQosOk.self.description(), waiter?.lastWaitedOnClass!.description())
+        XCTAssert(q.suspended)
+
+        try! q.step()
+
+        XCTAssertEqual(RMQBasicQosOk.self.description(), waiter!.lastWaitedOnClass!.description())
     }
 
     func testBasicQosSendsErrorToDelegateOnWaitError() {
@@ -477,6 +492,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         channel.basicQos(64, global: false)
 
         waiter?.err("bad stuff")
+        try! q.step()
         try! q.step()
 
         XCTAssertEqual("bad stuff", delegate.lastChannelError?.localizedDescription)

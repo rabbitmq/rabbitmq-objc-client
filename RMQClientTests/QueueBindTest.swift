@@ -30,6 +30,7 @@ class QueueBindTest: XCTestCase {
         ch.queueBind("my-q", exchange: "my-exchange", routingKey: "")
 
         try! q.step()
+        try! q.step()
 
         XCTAssertEqual("RMQQueueBindOk", waiter.lastWaitedOnClass?.description())
     }
@@ -43,6 +44,7 @@ class QueueBindTest: XCTestCase {
 
         ch.queueBind("my-q", exchange: "my-exchange", routingKey: "")
 
+        try! q.step()
         waiter.err("foo")
         try! q.step()
 
@@ -77,6 +79,7 @@ class QueueBindTest: XCTestCase {
         ch.queueUnbind("my-q", exchange: "my-exchange", routingKey: "hi")
 
         try! q.step()
+        try! q.step()
 
         XCTAssertEqual("RMQQueueUnbindOk", waiter.lastWaitedOnClass?.description())
     }
@@ -90,6 +93,7 @@ class QueueBindTest: XCTestCase {
 
         ch.queueUnbind("my-q", exchange: "my-exchange", routingKey: "hi")
 
+        try! q.step()
         waiter.err("Oh no")
         try! q.step()
 

@@ -27,7 +27,7 @@ class ExchangeDeclarationTest: XCTestCase {
         ch.activateWithDelegate(delegate)
 
         ch.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
-
+        try! q.step()
         try! q.step()
 
         XCTAssertEqual("RMQExchangeDeclareOk", waiter.lastWaitedOnClass?.description())
@@ -41,6 +41,7 @@ class ExchangeDeclarationTest: XCTestCase {
         ch.activateWithDelegate(delegate)
 
         ch.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
+        try! q.step()
         waiter.err("badness")
         try! q.step()
 

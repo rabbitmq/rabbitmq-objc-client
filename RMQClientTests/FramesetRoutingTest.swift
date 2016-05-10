@@ -19,15 +19,18 @@ class FramesetRoutingTest: XCTestCase {
 
         ch.activateWithDelegate(nil)
 
-        var consumerTriggered = false
+        let semaphore = dispatch_semaphore_create(0)
         ch.basicConsume("foo", options: []) { (_, _) in
-            consumerTriggered = true
+            dispatch_semaphore_signal(semaphore)
         }
+
+        TestHelper.run(0.5)
 
         allocator.handleFrameset(consumeOkFrameset)
         allocator.handleFrameset(deliverFrameset)
 
-        XCTAssert(TestHelper.pollUntil { consumerTriggered }, "Timed out waiting for consumer frameset to be routed")
+        XCTAssertEqual(0, dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(10)),
+                       "Timed out waiting for consumer frameset to be routed")
     }
 
 }
