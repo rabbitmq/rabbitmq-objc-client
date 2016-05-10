@@ -9,29 +9,25 @@
 @property (nonatomic, copy, readwrite) NSString *name;
 @property (nonatomic, readwrite) RMQQueueDeclareOptions options;
 @property (nonatomic, readwrite) id <RMQChannel> channel;
-@property (weak, nonatomic, readwrite) id <RMQSender> sender;
 @end
 
 @implementation RMQQueue
 
 - (instancetype)initWithName:(NSString *)name
                      options:(RMQQueueDeclareOptions)options
-                     channel:(id<RMQChannel>)channel
-                      sender:(id<RMQSender>)sender {
+                     channel:(id<RMQChannel>)channel {
    self = [super init];
     if (self) {
         self.name = name;
         self.options = options;
         self.channel = channel;
-        self.sender = sender;
     }
     return self;
 }
 
 - (instancetype)initWithName:(NSString *)name
-                     channel:(id<RMQChannel>)channel
-                      sender:(id<RMQSender>)sender {
-    return [self initWithName:name options:RMQQueueDeclareNoOptions channel:channel sender:sender];
+                     channel:(id<RMQChannel>)channel {
+    return [self initWithName:name options:RMQQueueDeclareNoOptions channel:channel];
 }
 
 - (void)bind:(RMQExchange *)exchange

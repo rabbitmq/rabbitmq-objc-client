@@ -3,6 +3,7 @@
 #import "RMQFramesetValidator.h"
 #import "RMQLocalSerialQueue.h"
 #import "RMQNameGenerator.h"
+#import "RMQSender.h"
 
 @interface RMQAllocatedChannel : MTLModel <RMQChannel>
 - (nonnull instancetype)init:(nonnull NSNumber *)channelNumber

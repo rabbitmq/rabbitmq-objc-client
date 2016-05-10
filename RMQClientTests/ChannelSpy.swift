@@ -60,7 +60,7 @@
         if let foundQueue = queues[queueName] {
             return foundQueue;
         } else {
-            let q = RMQQueue(name: queueName, channel: self, sender: SenderSpy())
+            let q = RMQQueue(name: queueName, channel: self)
             queues[queueName] = q
             return q
         }

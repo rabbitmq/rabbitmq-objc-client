@@ -4,7 +4,7 @@ class RMQQueueTest: XCTestCase {
 
     func testPublishSendsBasicPublishToChannel() {
         let channel = ChannelSpy(42)
-        let queue = RMQQueue(name: "some.queue", channel: channel, sender: SenderSpy())
+        let queue = RMQQueue(name: "some.queue", channel: channel)
 
         queue.publish("a message")
 
@@ -15,7 +15,7 @@ class RMQQueueTest: XCTestCase {
 
     func testPublishWithPersistence() {
         let channel = ChannelSpy(42)
-        let queue = RMQQueue(name: "some.queue", channel: channel, sender: SenderSpy())
+        let queue = RMQQueue(name: "some.queue", channel: channel)
 
         queue.publish("a message", persistent: true)
 
@@ -26,10 +26,9 @@ class RMQQueueTest: XCTestCase {
     }
 
     func testPopDelegatesToChannelBasicGet() {
-        let sender = SenderSpy()
         let stubbedMessage = RMQMessage(consumerTag: "", deliveryTag: 123, content: "hi there")
         let channel = ChannelSpy(42)
-        let queue = RMQQueue(name: "great.queue", channel: channel, sender: sender)
+        let queue = RMQQueue(name: "great.queue", channel: channel)
 
         var receivedMessage: RMQMessage?
         queue.pop() { (_, m) in
@@ -45,7 +44,7 @@ class RMQQueueTest: XCTestCase {
 
     func testSubscribeSendsABasicConsumeToChannelWithAutoAck() {
         let channel = ChannelSpy(123)
-        let queue = RMQQueue(name: "default options", channel: channel, sender: SenderSpy())
+        let queue = RMQQueue(name: "default options", channel: channel)
 
         var handlerCalled = false
         queue.subscribe { (_, _) in
@@ -61,7 +60,7 @@ class RMQQueueTest: XCTestCase {
 
     func testSubscribeWithOptionsSendsOptionsToChannel() {
         let channel = ChannelSpy(123)
-        let queue = RMQQueue(name: "custom options", channel: channel, sender: SenderSpy())
+        let queue = RMQQueue(name: "custom options", channel: channel)
 
         var handlerCalled = false
 
@@ -79,7 +78,7 @@ class RMQQueueTest: XCTestCase {
     func testBindCallsBindOnChannel() {
         let channel = ChannelSpy(123)
         let ex = RMQExchange(name: "my-exchange", channel: channel)
-        let queue = RMQQueue(name: "bindy", channel: channel, sender: SenderSpy())
+        let queue = RMQQueue(name: "bindy", channel: channel)
 
         queue.bind(ex, routingKey: "foo")
 
@@ -91,7 +90,7 @@ class RMQQueueTest: XCTestCase {
     func testBindWithoutRoutingKeySendsEmptyStringRoutingKey() {
         let channel = ChannelSpy(123)
         let ex = RMQExchange(name: "my-exchange", channel: channel)
-        let queue = RMQQueue(name: "bindy", channel: channel, sender: SenderSpy())
+        let queue = RMQQueue(name: "bindy", channel: channel)
 
         queue.bind(ex)
 

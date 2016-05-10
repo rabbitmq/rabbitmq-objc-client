@@ -1,7 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "RMQMethods.h"
 #import "RMQMessage.h"
-#import "RMQSender.h"
 #import "RMQExchange.h"
 #import "RMQConsumer.h"
 
@@ -12,12 +11,10 @@
 
 - (nonnull instancetype)initWithName:(nonnull NSString *)name
                              options:(RMQQueueDeclareOptions)options
-                             channel:(nonnull id <RMQChannel>)channel
-                              sender:(nonnull id <RMQSender>)sender;
+                             channel:(nonnull id <RMQChannel>)channel;
 
 - (nonnull instancetype)initWithName:(nonnull NSString *)name
-                             channel:(nonnull id <RMQChannel>)channel
-                              sender:(nonnull id <RMQSender>)sender;
+                             channel:(nonnull id <RMQChannel>)channel;
 
 - (void)bind:(nonnull RMQExchange *)exchange routingKey:(nonnull NSString *)routingKey;
 - (void)bind:(nonnull RMQExchange *)exchange;

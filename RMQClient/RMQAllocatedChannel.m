@@ -348,8 +348,7 @@ completionHandler:(RMQConsumer)userCompletionHandler {
     } else {
         RMQQueue *q = [[RMQQueue alloc] initWithName:declaredQueueName
                                              options:options
-                                             channel:(id<RMQChannel>)self
-                                              sender:self.sender];
+                                             channel:(id<RMQChannel>)self];
         [self.dispatcher sendSyncMethod:[self queueDeclareMethod:declaredQueueName options:options]
                                  waitOn:[RMQQueueDeclareOk class]];
         self.queues[q.name] = q;
