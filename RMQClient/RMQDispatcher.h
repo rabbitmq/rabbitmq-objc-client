@@ -13,6 +13,9 @@
 - (void)sendSyncMethod:(id<RMQMethod>)method
                 waitOn:(Class)waitClass;
 
+- (void)sendSyncMethodBlocking:(id<RMQMethod>)method
+                        waitOn:(Class)waitClass;
+
 - (void)sendAsyncMethod:(id<RMQMethod>)method;
 
 @end

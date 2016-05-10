@@ -88,20 +88,8 @@
                                                               replyText:[[RMQShortstr alloc] init:@"Goodbye"]
                                                                 classId:[[RMQShort alloc] init:0]
                                                                methodId:[[RMQShort alloc] init:0]];
-    RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:close];
-
-    [self.commandQueue blockingEnqueue:^{
-        [self.commandQueue suspend];
-        [self.sender sendFrameset:frameset];
-    }];
-
-    [self.commandQueue blockingEnqueue:^{
-        RMQFramesetValidationResult *result = [self.validator expect:[RMQChannelCloseOk class]];
-        if (result.error) {
-            [self.delegate channel:self error:result.error];
-        }
-    }];
-
+    [self.dispatcher sendSyncMethodBlocking:close
+                                     waitOn:[RMQChannelCloseOk class]];
 }
 
 - (void)blockingWaitOn:(Class)method {

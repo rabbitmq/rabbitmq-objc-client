@@ -57,6 +57,22 @@
        completionHandler:^(RMQFramesetValidationResult *result) {}];
 }
 
+- (void)sendSyncMethodBlocking:(id<RMQMethod>)method
+                        waitOn:(Class)waitClass {
+    [self.commandQueue blockingEnqueue:^{
+        RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
+        [self.commandQueue suspend];
+        [self.sender sendFrameset:frameset];
+    }];
+
+    [self.commandQueue blockingEnqueue:^{
+        RMQFramesetValidationResult *result = [self.validator expect:[RMQChannelCloseOk class]];
+        if (result.error) {
+            [self.delegate channel:self.channel error:result.error];
+        }
+    }];
+}
+
 - (void)sendAsyncMethod:(id<RMQMethod>)method {
     [self.commandQueue enqueue:^{
         RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
