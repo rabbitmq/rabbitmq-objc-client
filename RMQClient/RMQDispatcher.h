@@ -18,4 +18,6 @@
 
 - (void)sendAsyncMethod:(id<RMQMethod>)method;
 
+- (void)blockingWaitOn:(Class)method;
+
 @end

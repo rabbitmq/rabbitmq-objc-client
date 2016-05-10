@@ -30,6 +30,19 @@
     [self.commandQueue resume];
 }
 
+- (void)blockingWaitOn:(Class)method {
+    [self.commandQueue blockingEnqueue:^{
+        [self.commandQueue suspend];
+    }];
+
+    [self.commandQueue blockingEnqueue:^{
+        RMQFramesetValidationResult *result = [self.validator expect:method];
+        if (result.error) {
+            [self.delegate channel:self.channel error:result.error];
+        }
+    }];
+}
+
 - (void)sendSyncMethod:(id<RMQMethod>)method
                 waitOn:(Class)waitClass
      completionHandler:(void (^)(RMQFramesetValidationResult *result))completionHandler {

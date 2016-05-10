@@ -93,16 +93,7 @@
 }
 
 - (void)blockingWaitOn:(Class)method {
-    [self.commandQueue blockingEnqueue:^{
-        [self.commandQueue suspend];
-    }];
-    
-    [self.commandQueue blockingEnqueue:^{
-        RMQFramesetValidationResult *result = [self.validator expect:method];
-        if (result.error) {
-            [self.delegate channel:self error:result.error];
-        }
-    }];
+    [self.dispatcher blockingWaitOn:method];
 }
 
 - (RMQQueue *)queue:(NSString *)originalQueueName
