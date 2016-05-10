@@ -17,7 +17,6 @@
 @property (nonatomic, readwrite) NSNumber *prefetchCount;
 @property (nonatomic, readwrite) BOOL prefetchGlobal;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
-@property (nonatomic, readwrite) BOOL active;
 @property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) RMQFramesetValidator *validator;
 @property (nonatomic, readwrite) id<RMQNameGenerator> nameGenerator;
@@ -33,7 +32,6 @@
     self = [super init];
     if (self) {
         self.commandQueue = commandQueue;
-        self.active = NO;
         self.channelNumber = channelNumber;
         self.sender = sender;
         self.consumers = [NSMutableDictionary new];
@@ -66,9 +64,7 @@
 }
 
 - (void)dealloc {
-    if (!self.active) {
-        [self.commandQueue resume];
-    }
+    [self.commandQueue resume];
 }
 
 - (RMQExchange *)defaultExchange {
@@ -78,7 +74,6 @@
 - (void)activateWithDelegate:(id<RMQConnectionDelegate>)delegate {
     self.delegate = delegate;
     [self.commandQueue resume];
-    self.active = YES;
 }
 
 - (void)open {
