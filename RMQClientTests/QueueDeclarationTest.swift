@@ -6,6 +6,7 @@ class QueueDeclarationTest: XCTestCase {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
         let ch = RMQAllocatedChannel(1, sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
+        ch.activateWithDelegate(nil)
 
         ch.queue("bagpuss")
 
@@ -56,6 +57,7 @@ class QueueDeclarationTest: XCTestCase {
         let validator = RMQFramesetValidator()
         let generator = StubNameGenerator()
         let ch = RMQAllocatedChannel(1, sender: sender, validator: validator, commandQueue: q, nameGenerator: generator)
+        ch.activateWithDelegate(nil)
 
         generator.nextName = "mouse-organ"
         let rmqQueue = ch.queue("", options: [])

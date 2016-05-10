@@ -35,10 +35,9 @@
     if (self) {
         self.commandQueue = commandQueue;
         self.channelNumber = channelNumber;
-        self.dispatcher = [[RMQSuspendResumeDispatcher alloc] initWithChannel:self
-                                                                       sender:sender
-                                                                    validator:validator
-                                                                 commandQueue:commandQueue];
+        self.dispatcher = [[RMQSuspendResumeDispatcher alloc] initWithSender:sender
+                                                                   validator:validator
+                                                                commandQueue:commandQueue];
         self.sender = sender;
         self.consumers = [NSMutableDictionary new];
         self.exchanges = [NSMutableDictionary new];
@@ -74,7 +73,7 @@
 }
 
 - (void)activateWithDelegate:(id<RMQConnectionDelegate>)delegate {
-    [self.dispatcher activateWithDelegate:delegate];
+    [self.dispatcher activateWithChannel:self delegate:delegate];
     self.delegate = delegate;
 }
 

@@ -10,13 +10,12 @@
 
 @implementation RMQSuspendResumeDispatcher
 
-- (instancetype)initWithChannel:(id<RMQChannel>)channel
-                         sender:(id<RMQSender>)sender
-                      validator:(RMQFramesetValidator *)validator
-                   commandQueue:(id<RMQLocalSerialQueue>)commandQueue {
+- (instancetype)initWithSender:(id<RMQSender>)sender
+                     validator:(RMQFramesetValidator *)validator
+                  commandQueue:(id<RMQLocalSerialQueue>)commandQueue {
     self = [super init];
     if (self) {
-        self.channel = channel;
+        self.channel = nil;
         self.sender = sender;
         self.validator = validator;
         self.commandQueue = commandQueue;
@@ -24,7 +23,9 @@
     return self;
 }
 
-- (void)activateWithDelegate:(id<RMQConnectionDelegate>)delegate {
+- (void)activateWithChannel:(id<RMQChannel>)channel
+                   delegate:(id<RMQConnectionDelegate>)delegate {
+    self.channel = channel;
     self.delegate = delegate;
     [self.commandQueue resume];
 }
@@ -32,9 +33,9 @@
 - (void)sendSyncMethod:(id<RMQMethod>)method
                 waitOn:(Class)waitClass
      completionHandler:(void (^)(RMQFramesetValidationResult *result))completionHandler {
-    RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channel.channelNumber method:method];
-
     [self.commandQueue enqueue:^{
+        RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber
+                                                                            method:method];
         [self.commandQueue suspend];
         [self.sender sendFrameset:outgoingFrameset];
     }];
@@ -57,9 +58,8 @@
 }
 
 - (void)sendAsyncMethod:(id<RMQMethod>)method {
-    RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channel.channelNumber method:method];
-
     [self.commandQueue enqueue:^{
+        RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
         [self.sender sendFrameset:frameset];
     }];
 }
@@ -67,6 +67,12 @@
 - (void)handleFrameset:(RMQFrameset *)frameset {
     [self.validator fulfill:frameset];
     [self.commandQueue resume];
+}
+
+# pragma mark - Private
+
+- (NSNumber *)channelNumber {
+    return self.channel.channelNumber;
 }
 
 @end

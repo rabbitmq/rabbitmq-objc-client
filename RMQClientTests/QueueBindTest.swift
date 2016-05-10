@@ -7,6 +7,7 @@ class QueueBindTest: XCTestCase {
         let validator = RMQFramesetValidator()
         let q = FakeSerialQueue()
         let ch = RMQAllocatedChannel(321, sender: sender, validator: validator, commandQueue: q)
+        ch.activateWithDelegate(nil)
 
         ch.queueBind("my-q", exchange: "my-exchange", routingKey: "hi")
 
@@ -57,6 +58,7 @@ class QueueBindTest: XCTestCase {
         let validator = RMQFramesetValidator()
         let q = FakeSerialQueue()
         let ch = RMQAllocatedChannel(321, sender: sender, validator: validator, commandQueue: q)
+        ch.activateWithDelegate(nil)
 
         ch.queueUnbind("my-q", exchange: "my-exchange", routingKey: "hi")
 

@@ -7,6 +7,7 @@ class ExchangeDeclarationTest: XCTestCase {
         let validator = RMQFramesetValidator()
         let q = FakeSerialQueue()
         let ch = RMQAllocatedChannel(123, sender: sender, validator: validator, commandQueue: q)
+        ch.activateWithDelegate(nil)
 
         ch.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
         try! q.step()
@@ -53,6 +54,7 @@ class ExchangeDeclarationTest: XCTestCase {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
         let ch = RMQAllocatedChannel(123, sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
+        ch.activateWithDelegate(nil)
 
         ch.fanout("my-exchange", options: [.Durable, .AutoDelete])
         try! q.step()
@@ -81,6 +83,7 @@ class ExchangeDeclarationTest: XCTestCase {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
         let ch = RMQAllocatedChannel(123, sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
+        ch.activateWithDelegate(nil)
 
         ch.direct("logs", options: [.Durable, .AutoDelete])
         try! q.step()
@@ -109,6 +112,7 @@ class ExchangeDeclarationTest: XCTestCase {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
         let ch = RMQAllocatedChannel(123, sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
+        ch.activateWithDelegate(nil)
 
         ch.topic("logs", options: [.Durable, .AutoDelete])
         try! q.step()
@@ -125,6 +129,7 @@ class ExchangeDeclarationTest: XCTestCase {
         let sender = SenderSpy()
         let q = FakeSerialQueue()
         let ch = RMQAllocatedChannel(123, sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
+        ch.activateWithDelegate(nil)
 
         ch.headers("myheadersex", options: [.Durable, .AutoDelete])
         try! q.step()

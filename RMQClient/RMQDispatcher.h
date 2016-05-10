@@ -3,7 +3,8 @@
 
 @protocol RMQDispatcher <NSObject, RMQFrameHandler>
 
-- (void)activateWithDelegate:(id<RMQConnectionDelegate>)delegate;
+- (void)activateWithChannel:(id<RMQChannel>)channel
+                   delegate:(id<RMQConnectionDelegate>)delegate;
 
 - (void)sendSyncMethod:(id<RMQMethod>)method
                 waitOn:(Class)waitClass
