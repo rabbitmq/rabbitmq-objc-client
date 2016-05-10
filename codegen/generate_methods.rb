@@ -28,6 +28,7 @@ class GenerateMethods
       class_name = objc_class_name(method)
       class_id = method.xpath('..').first[:index]
       method_id = method[:index]
+      response_name = objc_response_name(method)
       constructor = constructor(fields)
       class_part = method.xpath('..').first[:name].capitalize
       has_content_value = objc_boolean(method[:content] == "1")

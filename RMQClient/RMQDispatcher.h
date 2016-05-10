@@ -10,14 +10,11 @@
                    delegate:(id<RMQConnectionDelegate>)delegate;
 
 - (void)sendSyncMethod:(id<RMQMethod>)method
-                waitOn:(Class)waitClass
      completionHandler:(void (^)(RMQFramesetValidationResult *result))completionHandler;
 
-- (void)sendSyncMethod:(id<RMQMethod>)method
-                waitOn:(Class)waitClass;
+- (void)sendSyncMethod:(id<RMQMethod>)method;
 
-- (void)sendSyncMethodBlocking:(id<RMQMethod>)method
-                        waitOn:(Class)waitClass;
+- (void)sendSyncMethodBlocking:(id<RMQMethod>)method;
 
 - (void)sendAsyncMethod:(id<RMQMethod>)method;
 

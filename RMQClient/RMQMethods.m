@@ -22,6 +22,7 @@
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @10; }
+- (Class)syncResponse       { return [RMQConnectionStartOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -94,6 +95,7 @@
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @11; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -155,6 +157,7 @@
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @20; }
+- (Class)syncResponse       { return [RMQConnectionSecureOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -201,6 +204,7 @@
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @21; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -251,6 +255,7 @@
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @30; }
+- (Class)syncResponse       { return [RMQConnectionTuneOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -311,6 +316,7 @@
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @31; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -371,6 +377,7 @@
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @40; }
+- (Class)syncResponse       { return [RMQConnectionOpenOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -427,6 +434,7 @@
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @41; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -479,6 +487,7 @@
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @50; }
+- (Class)syncResponse       { return [RMQConnectionCloseOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -539,6 +548,7 @@
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @51; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -576,6 +586,7 @@
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @60; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -621,6 +632,7 @@
 }
 - (NSNumber *)classID       { return @10; }
 - (NSNumber *)methodID      { return @61; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -658,6 +670,7 @@
 }
 - (NSNumber *)classID       { return @20; }
 - (NSNumber *)methodID      { return @10; }
+- (Class)syncResponse       { return [RMQChannelOpenOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -704,6 +717,7 @@
 }
 - (NSNumber *)classID       { return @20; }
 - (NSNumber *)methodID      { return @11; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -750,6 +764,7 @@
 }
 - (NSNumber *)classID       { return @20; }
 - (NSNumber *)methodID      { return @20; }
+- (Class)syncResponse       { return [RMQChannelFlowOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -796,6 +811,7 @@
 }
 - (NSNumber *)classID       { return @20; }
 - (NSNumber *)methodID      { return @21; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -848,6 +864,7 @@
 }
 - (NSNumber *)classID       { return @20; }
 - (NSNumber *)methodID      { return @40; }
+- (Class)syncResponse       { return [RMQChannelCloseOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -908,6 +925,7 @@
 }
 - (NSNumber *)classID       { return @20; }
 - (NSNumber *)methodID      { return @41; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -953,6 +971,7 @@
 }
 - (NSNumber *)classID       { return @40; }
 - (NSNumber *)methodID      { return @10; }
+- (Class)syncResponse       { return [RMQExchangeDeclareOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -1018,6 +1037,7 @@
 }
 - (NSNumber *)classID       { return @40; }
 - (NSNumber *)methodID      { return @11; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -1059,6 +1079,7 @@
 }
 - (NSNumber *)classID       { return @40; }
 - (NSNumber *)methodID      { return @20; }
+- (Class)syncResponse       { return [RMQExchangeDeleteOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -1114,6 +1135,7 @@
 }
 - (NSNumber *)classID       { return @40; }
 - (NSNumber *)methodID      { return @21; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -1161,6 +1183,7 @@
 }
 - (NSNumber *)classID       { return @40; }
 - (NSNumber *)methodID      { return @30; }
+- (Class)syncResponse       { return [RMQExchangeBindOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -1231,6 +1254,7 @@
 }
 - (NSNumber *)classID       { return @40; }
 - (NSNumber *)methodID      { return @31; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -1278,6 +1302,7 @@
 }
 - (NSNumber *)classID       { return @40; }
 - (NSNumber *)methodID      { return @40; }
+- (Class)syncResponse       { return [RMQExchangeUnbindOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -1348,6 +1373,7 @@
 }
 - (NSNumber *)classID       { return @40; }
 - (NSNumber *)methodID      { return @51; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -1391,6 +1417,7 @@
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @10; }
+- (Class)syncResponse       { return [RMQQueueDeclareOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -1456,6 +1483,7 @@
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @11; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -1522,6 +1550,7 @@
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @20; }
+- (Class)syncResponse       { return [RMQQueueBindOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -1592,6 +1621,7 @@
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @21; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -1637,6 +1667,7 @@
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @50; }
+- (Class)syncResponse       { return [RMQQueueUnbindOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -1702,6 +1733,7 @@
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @51; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -1743,6 +1775,7 @@
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @30; }
+- (Class)syncResponse       { return [RMQQueuePurgeOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -1799,6 +1832,7 @@
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @31; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -1849,6 +1883,7 @@
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @40; }
+- (Class)syncResponse       { return [RMQQueueDeleteOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -1905,6 +1940,7 @@
 }
 - (NSNumber *)classID       { return @50; }
 - (NSNumber *)methodID      { return @41; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -1955,6 +1991,7 @@
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @10; }
+- (Class)syncResponse       { return [RMQBasicQosOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -2010,6 +2047,7 @@
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @11; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -2055,6 +2093,7 @@
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @20; }
+- (Class)syncResponse       { return [RMQBasicConsumeOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -2121,6 +2160,7 @@
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @21; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -2169,6 +2209,7 @@
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @30; }
+- (Class)syncResponse       { return [RMQBasicCancelOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -2220,6 +2261,7 @@
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @31; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -2272,6 +2314,7 @@
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @40; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return YES; }
 
@@ -2339,6 +2382,7 @@
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @50; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return YES; }
 
@@ -2408,6 +2452,7 @@
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @60; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return YES; }
 
@@ -2478,6 +2523,7 @@
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @70; }
+- (Class)syncResponse       { return [RMQBasicGetOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -2542,6 +2588,7 @@
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @71; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return YES; }
 
@@ -2608,6 +2655,7 @@
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @72; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -2656,6 +2704,7 @@
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @80; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -2709,6 +2758,7 @@
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @90; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -2760,6 +2810,7 @@
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @100; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -2806,6 +2857,7 @@
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @110; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -2851,6 +2903,7 @@
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @111; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -2890,6 +2943,7 @@
 }
 - (NSNumber *)classID       { return @60; }
 - (NSNumber *)methodID      { return @120; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -2940,6 +2994,7 @@
 }
 - (NSNumber *)classID       { return @90; }
 - (NSNumber *)methodID      { return @10; }
+- (Class)syncResponse       { return [RMQTxSelectOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -2976,6 +3031,7 @@
 }
 - (NSNumber *)classID       { return @90; }
 - (NSNumber *)methodID      { return @11; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -3012,6 +3068,7 @@
 }
 - (NSNumber *)classID       { return @90; }
 - (NSNumber *)methodID      { return @20; }
+- (Class)syncResponse       { return [RMQTxCommitOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -3048,6 +3105,7 @@
 }
 - (NSNumber *)classID       { return @90; }
 - (NSNumber *)methodID      { return @21; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -3084,6 +3142,7 @@
 }
 - (NSNumber *)classID       { return @90; }
 - (NSNumber *)methodID      { return @30; }
+- (Class)syncResponse       { return [RMQTxRollbackOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -3120,6 +3179,7 @@
 }
 - (NSNumber *)classID       { return @90; }
 - (NSNumber *)methodID      { return @31; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -3157,6 +3217,7 @@
 }
 - (NSNumber *)classID       { return @85; }
 - (NSNumber *)methodID      { return @10; }
+- (Class)syncResponse       { return [RMQConfirmSelectOk class]; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 
@@ -3202,6 +3263,7 @@
 }
 - (NSNumber *)classID       { return @85; }
 - (NSNumber *)methodID      { return @11; }
+- (Class)syncResponse       { return nil; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return NO; }
 

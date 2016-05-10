@@ -13,6 +13,7 @@
 }
 - (NSNumber *)classID       { return @<%= class_id %>; }
 - (NSNumber *)methodID      { return @<%= method_id %>; }
+- (Class)syncResponse       { return <%= response_name ? "[#{response_name} class]" : "nil" %>; }
 - (NSNumber *)frameTypeID   { return @1; }
 - (BOOL)hasContent          { return <%= has_content_value %>; }
 

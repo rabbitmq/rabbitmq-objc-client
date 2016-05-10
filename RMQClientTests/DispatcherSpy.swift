@@ -1,9 +1,7 @@
 @objc class DispatcherSpy : NSObject, RMQDispatcher {
     var lastSyncMethod: RMQMethod?
-    var lastSyncWaitedOn: String?
     var lastSyncMethodHandler: (RMQFramesetValidationResult! -> Void)?
     var lastBlockingSyncMethod: RMQMethod?
-    var lastBlockingSyncWaitedOn: String?
     var syncMethodsSent: [RMQMethod] = []
     var lastAsyncFrameset: RMQFrameset?
     var lastAsyncMethod: RMQMethod?
@@ -29,21 +27,19 @@
         lastAsyncFrameset = frameset
     }
 
-    func sendSyncMethod(method: RMQMethod!, waitOn: AnyClass!, completionHandler: (RMQFramesetValidationResult! -> Void)) {
+    func sendSyncMethod(method: RMQMethod!, completionHandler: (RMQFramesetValidationResult! -> Void)) {
         syncMethodsSent.append(method)
         lastSyncMethod = method
-        lastSyncWaitedOn = waitOn.description()
         lastSyncMethodHandler = completionHandler
     }
 
-    func sendSyncMethod(method: RMQMethod!, waitOn: AnyClass!) {
-        sendSyncMethod(method, waitOn: waitOn) { _ in }
+    func sendSyncMethod(method: RMQMethod!) {
+        sendSyncMethod(method) { _ in }
     }
 
-    func sendSyncMethodBlocking(method: RMQMethod!, waitOn: AnyClass!) {
+    func sendSyncMethodBlocking(method: RMQMethod!) {
         syncMethodsSent.append(method)
         lastBlockingSyncMethod = method
-        lastBlockingSyncWaitedOn = waitOn.description()
     }
 
     func handleFrameset(frameset: RMQFrameset!) {

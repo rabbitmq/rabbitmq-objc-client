@@ -9,6 +9,14 @@ module CodegenHelpers
     "RMQ#{class_name}#{method_name}"
   end
 
+  def objc_response_name(method)
+    if method.xpath('response').any?
+      class_name = method.xpath('..').first[:name].capitalize
+      response_name = method.xpath('response').first[:name].underscore.camelize
+      "RMQ#{class_name}#{response_name}"
+    end
+  end
+
   def do_not_edit
     <<-OBJC.chomp
 // This file is generated. Do not edit.

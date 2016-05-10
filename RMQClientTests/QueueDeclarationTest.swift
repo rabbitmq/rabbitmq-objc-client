@@ -12,7 +12,6 @@ class QueueDeclarationTest: XCTestCase {
         let expectedMethod = MethodFixtures.queueDeclare("bagpuss", options: [])
 
         XCTAssertEqual(expectedMethod, dispatcher.lastSyncMethod as? RMQQueueDeclare)
-        XCTAssertEqual("RMQQueueDeclareOk", dispatcher.lastSyncWaitedOn)
     }
 
     func testQueueWithEmptyNameGetsClientGeneratedName() {

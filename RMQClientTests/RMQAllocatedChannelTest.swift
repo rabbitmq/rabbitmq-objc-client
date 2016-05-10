@@ -50,7 +50,6 @@ class RMQAllocatedChannelTest: XCTestCase {
         ch.open()
 
         XCTAssertEqual(MethodFixtures.channelOpen(), dispatcher.lastSyncMethod as? RMQChannelOpen)
-        XCTAssertEqual("RMQChannelOpenOk", dispatcher.lastSyncWaitedOn)
     }
 
     func testBlockingCloseSendsCloseAndBlocksUntilCloseOkReceived() {
@@ -64,7 +63,6 @@ class RMQAllocatedChannelTest: XCTestCase {
         ch.blockingClose()
 
         XCTAssertEqual(MethodFixtures.channelClose(), dispatcher.lastBlockingSyncMethod as? RMQChannelClose)
-        XCTAssertEqual("RMQChannelCloseOk", dispatcher.lastBlockingSyncWaitedOn)
     }
 
     func testBlockingWaitOnDelegatesToDispatcher() {
@@ -91,7 +89,6 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         XCTAssertEqual(MethodFixtures.basicConsume("foo", consumerTag: "", options: [.Exclusive]),
                        dispatcher.lastSyncMethod as? RMQBasicConsume)
-        XCTAssertEqual("RMQBasicConsumeOk", dispatcher.lastSyncWaitedOn)
     }
 
     func testBasicConsumeCallsCallbackWhenMessageIsDelivered() {
@@ -139,7 +136,6 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         XCTAssertEqual(MethodFixtures.basicGet("queuey", options: [.NoAck]),
                        dispatcher.lastSyncMethod as? RMQBasicGet)
-        XCTAssertEqual("RMQBasicGetOk", dispatcher.lastSyncWaitedOn)
     }
     
     func testBasicGetCallsCompletionHandlerWithMessageAndDeliveryInfo() {
@@ -300,7 +296,6 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         XCTAssertEqual(MethodFixtures.basicQos(1, options: [.Global]),
                        dispatcher.lastSyncMethod as? RMQBasicQos)
-        XCTAssertEqual("RMQBasicQosOk", dispatcher.lastSyncWaitedOn)
     }
 
     func testAckSendsABasicAck() {

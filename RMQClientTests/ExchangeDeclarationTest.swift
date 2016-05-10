@@ -12,7 +12,6 @@ class ExchangeDeclarationTest: XCTestCase {
         let expectedMethod = MethodFixtures.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
 
         XCTAssertEqual(expectedMethod, dispatcher.lastSyncMethod as? RMQExchangeDeclare)
-        XCTAssertEqual("RMQExchangeDeclareOk", dispatcher.lastSyncWaitedOn)
     }
 
     func testFanoutDeclaresAFanout() {

@@ -19,6 +19,9 @@ import XCTest
     func methodID() -> NSNumber {
         return 999
     }
+    func syncResponse() -> AnyClass {
+        return NSNull.self
+    }
     func hasContent() -> Bool {
         return false
     }

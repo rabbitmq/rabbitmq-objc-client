@@ -12,7 +12,6 @@ class QueueBindTest: XCTestCase {
         let expectedMethod = MethodFixtures.queueBind("my-q", exchangeName: "my-exchange", routingKey: "hi")
 
         XCTAssertEqual(expectedMethod, dispatcher.lastSyncMethod as? RMQQueueBind)
-        XCTAssertEqual("RMQQueueBindOk", dispatcher.lastSyncWaitedOn)
     }
 
     func testQueueUnbindSendsUnbind() {
@@ -25,7 +24,6 @@ class QueueBindTest: XCTestCase {
         let expectedMethod = MethodFixtures.queueUnbind("my-q", exchangeName: "my-exchange", routingKey: "hi")
 
         XCTAssertEqual(expectedMethod, dispatcher.lastSyncMethod as? RMQQueueUnbind)
-        XCTAssertEqual("RMQQueueUnbindOk", dispatcher.lastSyncWaitedOn)
     }
 
 }

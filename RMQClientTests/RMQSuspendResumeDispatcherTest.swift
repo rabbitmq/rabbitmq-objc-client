@@ -17,7 +17,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         let ch = RMQAllocatedChannel(123, contentBodySize: 1, dispatcher: dispatcher, commandQueue: q)
         dispatcher.activateWithChannel(ch, delegate: nil)
 
-        dispatcher.sendSyncMethod(MethodFixtures.basicGet(), waitOn: RMQBasicGetOk.self)
+        dispatcher.sendSyncMethod(MethodFixtures.basicGet())
 
         try! q.step()
 
@@ -33,7 +33,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         let ch = RMQAllocatedChannel(123, contentBodySize: 1, dispatcher: dispatcher, commandQueue: q)
         dispatcher.activateWithChannel(ch, delegate: delegate)
 
-        dispatcher.sendSyncMethod(MethodFixtures.basicGet(), waitOn: RMQBasicGetOk.self)
+        dispatcher.sendSyncMethod(MethodFixtures.basicGet())
 
         try! q.step()
 
@@ -48,10 +48,11 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         let q = FakeSerialQueue()
         let sender = SenderSpy()
         let dispatcher = RMQSuspendResumeDispatcher(sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
+        let delegate = ConnectionDelegateSpy()
         let ch = RMQAllocatedChannel(123, contentBodySize: 1, dispatcher: dispatcher, commandQueue: q)
-        dispatcher.activateWithChannel(ch, delegate: nil)
+        dispatcher.activateWithChannel(ch, delegate: delegate)
 
-        dispatcher.sendSyncMethodBlocking(MethodFixtures.basicGet(), waitOn: RMQBasicGetOk.self)
+        dispatcher.sendSyncMethodBlocking(MethodFixtures.basicGet())
 
         XCTAssertEqual(2, q.blockingItems.count)
 
@@ -59,6 +60,11 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
 
         let expectedFrameset = RMQFrameset(channelNumber: 123, method: MethodFixtures.basicGet())
         XCTAssertEqual(expectedFrameset, sender.sentFramesets.last!)
+
+        ch.handleFrameset(RMQFrameset(channelNumber: 123, method: MethodFixtures.basicGetOk("foo")))
+        try! q.step()
+
+        XCTAssertNil(delegate.lastChannelError)
     }
 
     func testBlockingErrorsSentToDelegate() {
@@ -69,7 +75,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         let delegate = ConnectionDelegateSpy()
         dispatcher.activateWithChannel(ch, delegate: delegate)
 
-        dispatcher.sendSyncMethodBlocking(MethodFixtures.basicGet(), waitOn: RMQBasicGetOk.self)
+        dispatcher.sendSyncMethodBlocking(MethodFixtures.basicGet())
 
         try! q.step()
         try! q.step()

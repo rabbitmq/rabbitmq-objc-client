@@ -44,7 +44,6 @@
 }
 
 - (void)sendSyncMethod:(id<RMQMethod>)method
-                waitOn:(Class)waitClass
      completionHandler:(void (^)(RMQFramesetValidationResult *result))completionHandler {
     [self.commandQueue enqueue:^{
         RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber
@@ -54,7 +53,7 @@
     }];
 
     [self.commandQueue enqueue:^{
-        RMQFramesetValidationResult *result = [self.validator expect:waitClass];
+        RMQFramesetValidationResult *result = [self.validator expect:method.syncResponse];
         if (result.error) {
             [self.delegate channel:self.channel error:result.error];
         } else {
@@ -63,15 +62,12 @@
     }];
 }
 
-- (void)sendSyncMethod:(id<RMQMethod>)method
-                waitOn:(Class)waitClass {
+- (void)sendSyncMethod:(id<RMQMethod>)method {
     [self sendSyncMethod:method
-                  waitOn:waitClass
        completionHandler:^(RMQFramesetValidationResult *result) {}];
 }
 
-- (void)sendSyncMethodBlocking:(id<RMQMethod>)method
-                        waitOn:(Class)waitClass {
+- (void)sendSyncMethodBlocking:(id<RMQMethod>)method {
     [self.commandQueue blockingEnqueue:^{
         RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
         [self.commandQueue suspend];
@@ -79,7 +75,7 @@
     }];
 
     [self.commandQueue blockingEnqueue:^{
-        RMQFramesetValidationResult *result = [self.validator expect:[RMQChannelCloseOk class]];
+        RMQFramesetValidationResult *result = [self.validator expect:method.syncResponse];
         if (result.error) {
             [self.delegate channel:self.channel error:result.error];
         }

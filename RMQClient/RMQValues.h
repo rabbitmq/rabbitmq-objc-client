@@ -76,6 +76,7 @@
 + (nonnull NSArray *)propertyClasses;
 - (nonnull NSNumber *)classID;
 - (nonnull NSNumber *)methodID;
+- (nonnull Class)syncResponse;
 - (nonnull instancetype)initWithDecodedFrame:(nonnull NSArray *)frame;
 - (BOOL)hasContent;
 @end
