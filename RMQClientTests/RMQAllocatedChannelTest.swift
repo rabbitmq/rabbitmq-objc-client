@@ -1,213 +1,103 @@
 import XCTest
 
 class RMQAllocatedChannelTest: XCTestCase {
-    var waiter: RMQFramesetValidator?
-
-    override func setUp() {
-        waiter = RMQFramesetValidator()
-    }
 
     func testObeysContract() {
         let sender = SenderSpy()
-        let channel = RMQAllocatedChannel(1, sender: sender, validator: waiter!, commandQueue: RMQGCDSerialQueue(name: "channel command queue"))
-        let contract = RMQChannelContract(channel)
+        let q = RMQGCDSerialQueue(name: "channel command queue")
+        let dispatcher = RMQSuspendResumeDispatcher(sender: sender,
+                                                    validator: RMQFramesetValidator(),
+                                                    commandQueue: q)
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
+        let contract = RMQChannelContract(ch)
 
         contract.check()
     }
 
-    func testResumesCommandQueueOnActivation() {
+    func testActivatingActivatesDispatcher() {
         let q = FakeSerialQueue()
-        q.suspend()
+        let delegate = ConnectionDelegateSpy()
+        let dispatcher = DispatcherSpy()
 
-        let ch = RMQAllocatedChannel(1, sender: SenderSpy(), validator: waiter!, commandQueue: q)
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
 
-        ch.activateWithDelegate(nil)
+        ch.activateWithDelegate(delegate)
 
-        XCTAssertFalse(q.suspended)
+        XCTAssertEqual(ch, dispatcher.activatedWithChannel as? RMQAllocatedChannel)
+        XCTAssertEqual(delegate, dispatcher.activatedWithDelegate as? ConnectionDelegateSpy)
     }
 
-    func testIncomingSyncFramesetsAreSentToWaiter() {
-        let sender = SenderSpy()
-        let ch = RMQAllocatedChannel(1, sender: sender, validator: waiter!, commandQueue: FakeSerialQueue())
-        let frameset = RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpenOk())
+    func testIncomingSyncFramesetsAreSentToDispatcher() {
+        let q = FakeSerialQueue()
+        let dispatcher = DispatcherSpy()
 
-        ch.activateWithDelegate(nil)
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
 
+        let frameset = RMQFrameset(channelNumber: 1, method: MethodFixtures.basicGetOk("route-me"))
         ch.handleFrameset(frameset)
 
-        XCTAssertNil(waiter?.expect(RMQChannelOpenOk.self).error)
+        XCTAssertEqual(frameset, dispatcher.lastFramesetHandled)
     }
 
     func testOpeningSendsAChannelOpen() {
-        let sender = SenderSpy()
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
-        let openOk = RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpenOk())
-        let ch = RMQAllocatedChannel(1, sender: sender, validator: waiter!, commandQueue: q)
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
 
         ch.activateWithDelegate(delegate)
 
         ch.open()
-        XCTAssert(sender.sentFramesets.isEmpty, "Something was sent prematurely!")
 
-        ch.handleFrameset(openOk)
-        try! q.step()
-
-        XCTAssertEqual(
-            RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpen()),
-            sender.sentFramesets.last!
-        )
-
-        XCTAssertNil(delegate.lastChannelOpenError)
-    }
-
-    func testOpeningFailsIfWaitFails() {
-        let sender = SenderSpy()
-        let q = FakeSerialQueue()
-        let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(1, sender: sender, validator: waiter!, commandQueue: q)
-        ch.activateWithDelegate(delegate)
-
-        ch.open()
-        try! q.step()
-        ch.handleFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicGetOk("wrong method")))
-        try! q.step()
-
-        XCTAssertEqual(RMQError.ChannelIncorrectSyncMethod.rawValue, delegate.lastChannelError!.code)
+        XCTAssertEqual(MethodFixtures.channelOpen(), dispatcher.lastSyncMethod as? RMQChannelOpen)
+        XCTAssertEqual("RMQChannelOpenOk", dispatcher.lastSyncWaitedOn)
     }
 
     func testBlockingCloseSendsCloseAndBlocksUntilCloseOkReceived() {
-        let sender = SenderSpy()
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(1, sender: sender, validator: waiter!, commandQueue: q)
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
         ch.activateWithDelegate(delegate)
 
         ch.open()
         ch.blockingClose()
 
-        XCTAssertEqual(0, sender.sentFramesets.count)
-        XCTAssertEqual(2, q.blockingItems.count)
-
-        try! q.step()
-        XCTAssertEqual(
-            RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpen()),
-            sender.sentFramesets.last
-        )
-
-        ch.handleFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpenOk()))
-        try! q.step()
-
-        try! q.step()
-        XCTAssertEqual(
-            RMQFrameset(channelNumber: 1, method: MethodFixtures.channelClose()),
-            sender.sentFramesets.last
-        )
-
-        ch.handleFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.channelCloseOk()))
-        try! q.step()
-
-        XCTAssertNil(delegate.lastChannelError)
+        XCTAssertEqual(MethodFixtures.channelClose(), dispatcher.lastBlockingSyncMethod as? RMQChannelClose)
+        XCTAssertEqual("RMQChannelCloseOk", dispatcher.lastBlockingSyncWaitedOn)
     }
 
-    func testBlockingCloseSendsMessageToDelegateIfWaitFails() {
-        let sender = SenderSpy()
-        let delegate = ConnectionDelegateSpy()
-        let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(1, sender: sender, validator: waiter!, commandQueue: q)
-        ch.activateWithDelegate(delegate)
-
-        ch.open()
-        try! q.step()
-        try! q.step()
-
-        ch.blockingClose()
-
-        try! q.step()
-        ch.handleFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.connectionTuneOk()))
-        try! q.step()
-
-        XCTAssertEqual(RMQError.ChannelIncorrectSyncMethod.rawValue, delegate.lastChannelError?.code)
-    }
-
-    func testBlockingWaitOnBlocksUntilSpecifiedMethodReceived() {
-        let sender = SenderSpy()
-        let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(1, sender: sender, validator: waiter!, commandQueue: q)
-
-        ch.blockingWaitOn(RMQConnectionCloseOk.self)
-        XCTAssertNotNil(waiter?.expect(RMQConnectionCloseOk.self).error)
-
-        XCTAssertEqual(2, q.blockingItems.count)
-
-        try! q.step()
-        ch.handleFrameset(RMQFrameset(channelNumber: 0, method: MethodFixtures.connectionCloseOk()))
-        try! q.step()
-
-        XCTAssertNil(waiter?.expect(RMQConnectionCloseOk.self).error)
-    }
-
-    func testBlockingWaitOnSendsMessageToDelegateIfWaitFails() {
-        let sender = SenderSpy()
+    func testBlockingWaitOnDelegatesToDispatcher() {
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(1, sender: sender, validator: waiter!, commandQueue: q)
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
         ch.activateWithDelegate(delegate)
 
-        ch.blockingWaitOn(RMQConnectionCloseOk.self)
+        ch.blockingWaitOn(RMQChannelCloseOk.self)
 
-        try! q.step()
-        ch.handleFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicConsumeOk("wrong method")))
-        try! q.step()
-
-        XCTAssertEqual(RMQError.ChannelIncorrectSyncMethod.rawValue, delegate.lastChannelError?.code)
+        XCTAssertEqual("RMQChannelCloseOk", dispatcher.lastBlockingWaitOn)
     }
 
     func testBasicConsumeSendsBasicConsumeMethod() {
-        let sender = SenderSpy()
-        let q = FakeSerialQueue()
-        let channel = RMQAllocatedChannel(1, sender: sender, validator: waiter!, commandQueue: q)
-        channel.activateWithDelegate(nil)
-        let expectedMethod = RMQBasicConsume(
-            reserved1: RMQShort(0),
-            queue: RMQShortstr("a_queue_name"),
-            consumerTag: RMQShortstr(""),
-            options: [.NoAck],
-            arguments: RMQTable([:])
-        )
-
-        channel.basicConsume("a_queue_name", options: [.NoAck]) { (_, _) in }
-        XCTAssertNil(sender.lastSentMethod)
-
-        waiter!.fulfill(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicConsumeOk("heres-ur-tag-bro")))
-        try! q.step()
-        let receivedMethod = sender.lastSentMethod! as! RMQBasicConsume
-        XCTAssertEqual(expectedMethod, receivedMethod)
-    }
-
-    func testBasicConsumeSendsErrorToDelegateOnWaitError() {
-        let sender = SenderSpy()
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
 
-        let channel = RMQAllocatedChannel(432, sender: sender, validator: waiter!, commandQueue: q)
-        channel.activateWithDelegate(delegate)
+        ch.activateWithDelegate(delegate)
 
-        channel.basicConsume("a_queue_name", options: []) { (_, _) in
-            XCTFail("Should not be called")
-        }
+        ch.basicConsume("foo", options: [.Exclusive]) { (_, _) in }
 
-        try! q.step()
-        channel.handleFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicGetOk("wrong method")))
-        try! q.step()
-
-        XCTAssertEqual(RMQError.ChannelIncorrectSyncMethod.rawValue, delegate.lastChannelError?.code)
+        XCTAssertEqual(MethodFixtures.basicConsume("foo", consumerTag: "", options: [.Exclusive]),
+                       dispatcher.lastSyncMethod as? RMQBasicConsume)
+        XCTAssertEqual("RMQBasicConsumeOk", dispatcher.lastSyncWaitedOn)
     }
 
     func testBasicConsumeCallsCallbackWhenMessageIsDelivered() {
-        let sender = SenderSpy()
         let q = FakeSerialQueue()
-        let channel = RMQAllocatedChannel(432, sender: sender, validator: waiter!, commandQueue: q)
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(432, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
         let consumeOkMethod = RMQBasicConsumeOk(consumerTag: RMQShortstr("servergeneratedtag"))
         let consumeOkFrameset = RMQFrameset(channelNumber: 432, method: consumeOkMethod)
         let deliverMethod = MethodFixtures.basicDeliver(consumerTag: "servergeneratedtag", deliveryTag: 123, routingKey: "foo")
@@ -217,47 +107,42 @@ class RMQAllocatedChannelTest: XCTestCase {
         let expectedDeliveryInfo = RMQDeliveryInfo(routingKey: "foo")
         let expectedMessage = RMQMessage(consumerTag: "servergeneratedtag", deliveryTag: 123, content: "Consumed!")
 
-        channel.activateWithDelegate(nil)
+        ch.activateWithDelegate(nil)
 
         var receivedDeliveryInfo: RMQDeliveryInfo?
         var consumedMessage: RMQMessage?
 
-        waiter?.fulfill(consumeOkFrameset)
-        channel.basicConsume("somequeue", options: []) { (di, message) in
+        ch.basicConsume("somequeue", options: []) { (di, message) in
             receivedDeliveryInfo = di
             consumedMessage = message
         }
-        try! q.step()
-        try! q.step()
+        dispatcher.lastSyncMethodHandler!(RMQFramesetValidationResult(frameset: consumeOkFrameset, error: nil))
 
         XCTAssertNil(receivedDeliveryInfo)
         XCTAssertNil(consumedMessage)
-        channel.handleFrameset(deliverFrameset)
+        ch.handleFrameset(deliverFrameset)
         try! q.step()
 
         XCTAssertEqual(expectedDeliveryInfo, receivedDeliveryInfo)
         XCTAssertEqual(expectedMessage, consumedMessage)
     }
 
-    func testBasicGetSendsBasicGet() {
-        let sender = SenderSpy()
+    func testBasicGetSendsBasicGetMethod() {
         let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(1, sender: sender, validator: waiter!, commandQueue: q)
-        ch.activateWithDelegate(nil)
+        let delegate = ConnectionDelegateSpy()
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
 
-        ch.basicGet("my-q", options: [.NoAck]) { _ in }
+        ch.activateWithDelegate(delegate)
 
-        XCTAssertEqual(0, sender.sentFramesets.count)
+        ch.basicGet("queuey", options: [.NoAck]) { (_, _) in }
 
-        try! q.step()
-
-        let expected = RMQFrameset(channelNumber: 1, method: MethodFixtures.basicGet("my-q", options: [.NoAck]))
-        let actual = sender.sentFramesets.last!
-        XCTAssertEqual(expected, actual)
+        XCTAssertEqual(MethodFixtures.basicGet("queuey", options: [.NoAck]),
+                       dispatcher.lastSyncMethod as? RMQBasicGet)
+        XCTAssertEqual("RMQBasicGetOk", dispatcher.lastSyncWaitedOn)
     }
-
+    
     func testBasicGetCallsCompletionHandlerWithMessageAndDeliveryInfo() {
-        let sender = SenderSpy()
         let q = FakeSerialQueue()
         let getOkFrameset = RMQFrameset(
             channelNumber: 1,
@@ -267,8 +152,8 @@ class RMQAllocatedChannelTest: XCTestCase {
         )
         let expectedDeliveryInfo = RMQDeliveryInfo(routingKey: "my-q")
         let expectedMessage = RMQMessage(consumerTag: "", deliveryTag: 1, content: "hello")
-        let ch = RMQAllocatedChannel(1, sender: sender, validator: waiter!, commandQueue: q)
-        ch.activateWithDelegate(nil)
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
 
         var receivedMessage: RMQMessage?
         var receivedDeliveryInfo: RMQDeliveryInfo?
@@ -277,37 +162,16 @@ class RMQAllocatedChannelTest: XCTestCase {
             receivedMessage = m
         }
 
-        try! q.step()
-        ch.handleFrameset(getOkFrameset)
-        try! q.step()
+        dispatcher.lastSyncMethodHandler!(RMQFramesetValidationResult(frameset: getOkFrameset, error: nil))
 
         XCTAssertEqual(expectedDeliveryInfo, receivedDeliveryInfo)
         XCTAssertEqual(expectedMessage, receivedMessage)
     }
 
-    func testBasicGetSendsErrorToDelegateOnWaitError() {
-        let sender = SenderSpy()
-        let q = FakeSerialQueue()
-        let delegate = ConnectionDelegateSpy()
-
-        let channel = RMQAllocatedChannel(432, sender: sender, validator: waiter!, commandQueue: q)
-        channel.activateWithDelegate(delegate)
-
-        q.suspend()
-        channel.basicGet("naughty-q", options: []) { _ in
-            XCTFail("Should not be called")
-        }
-
-        try! q.step()
-        channel.handleFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicConsumeOk("wrong method")))
-        try! q.step()
-
-        XCTAssertEqual(RMQError.ChannelIncorrectSyncMethod.rawValue, delegate.lastChannelError?.code)
-    }
-
     func testMultipleConsumersOnSameQueueReceiveMessages() {
         let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(999, sender: SenderSpy(), validator: waiter!, commandQueue: q)
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(999, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
         let consumeOkFrameset1 = RMQFrameset(channelNumber: 999, method: RMQBasicConsumeOk(consumerTag: RMQShortstr("servertag1")))
         let consumeOkFrameset2 = RMQFrameset(channelNumber: 999, method: RMQBasicConsumeOk(consumerTag: RMQShortstr("servertag2")))
         let deliverMethod1 = MethodFixtures.basicDeliver(consumerTag: "servertag1", deliveryTag: 1)
@@ -327,17 +191,13 @@ class RMQAllocatedChannelTest: XCTestCase {
         ch.basicConsume("sameq", options: []) { (_, message) in
             consumedMessage1 = message
         }
-        try! q.step()
-        ch.handleFrameset(consumeOkFrameset1)
-        try! q.step()
+        dispatcher.lastSyncMethodHandler!(RMQFramesetValidationResult(frameset: consumeOkFrameset1, error: nil))
 
         var consumedMessage2: RMQMessage?
         ch.basicConsume("sameq", options: []) { (_, message) in
             consumedMessage2 = message
         }
-        try! q.step()
-        ch.handleFrameset(consumeOkFrameset2)
-        try! q.step()
+        dispatcher.lastSyncMethodHandler!(RMQFramesetValidationResult(frameset: consumeOkFrameset2, error: nil))
 
         ch.handleFrameset(deliverFrameset1)
         ch.handleFrameset(deliverFrameset2)
@@ -349,10 +209,10 @@ class RMQAllocatedChannelTest: XCTestCase {
         XCTAssertEqual(expectedMessage2, consumedMessage2)
     }
 
-    func testBasicPublishSendsFramesetToSenderOnOwnQueue() {
-        let sender = SenderSpy(frameMax: 4 + RMQEmptyFrameSize)
+    func testBasicPublishSendsAsyncFrameset() {
         let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(999, sender: sender, validator: waiter!, commandQueue: q)
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(999, contentBodySize: 4, dispatcher: dispatcher, commandQueue: q)
         let message = "my great message yo"
         let notPersistent = RMQBasicDeliveryMode(1)
 
@@ -383,19 +243,15 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         ch.basicPublish(message, routingKey: "my.q", exchange: "", persistent: false)
 
-        XCTAssertEqual(0, sender.sentFramesets.count)
-
-        try! q.step()
-
-        XCTAssertEqual(5, sender.sentFramesets.last!.contentBodies.count)
-        XCTAssertEqual(expectedBodies, sender.sentFramesets.last!.contentBodies)
-        XCTAssertEqual(expectedFrameset, sender.sentFramesets.last!)
+        XCTAssertEqual(5, dispatcher.lastAsyncFrameset!.contentBodies.count)
+        XCTAssertEqual(expectedBodies, dispatcher.lastAsyncFrameset!.contentBodies)
+        XCTAssertEqual(expectedFrameset, dispatcher.lastAsyncFrameset!)
     }
 
     func testPublishWhenContentLengthIsMultipleOfFrameMax() {
-        let sender = SenderSpy(frameMax: 4 + RMQEmptyFrameSize)
         let q = FakeSerialQueue()
-        let channel = RMQAllocatedChannel(999, sender: sender, validator: waiter!, commandQueue: q)
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(999, contentBodySize: 4, dispatcher: dispatcher, commandQueue: q)
         let messageContent = "12345678"
         let expectedMethod = RMQBasicPublish(
             reserved1: RMQShort(0),
@@ -423,132 +279,70 @@ class RMQAllocatedChannelTest: XCTestCase {
             contentBodies: expectedBodies
         )
 
-        channel.activateWithDelegate(nil)
+        ch.activateWithDelegate(nil)
 
-        channel.basicPublish(messageContent, routingKey: "my.q", exchange: "", persistent: true)
+        ch.basicPublish(messageContent, routingKey: "my.q", exchange: "", persistent: true)
 
-        try! q.step()
-
-        XCTAssertEqual(2, sender.sentFramesets.last!.contentBodies.count)
-        XCTAssertEqual(expectedBodies, sender.sentFramesets.last!.contentBodies)
-        XCTAssertEqual(expectedFrameset, sender.sentFramesets.last!)
+        XCTAssertEqual(2, dispatcher.lastAsyncFrameset!.contentBodies.count)
+        XCTAssertEqual(expectedBodies, dispatcher.lastAsyncFrameset!.contentBodies)
+        XCTAssertEqual(expectedFrameset, dispatcher.lastAsyncFrameset!)
     }
 
     func testBasicQosSendsBasicQosGlobal() {
-        let sender = SenderSpy()
-        let q = FakeSerialQueue()
-        let channel = RMQAllocatedChannel(999, sender: sender, validator: waiter!, commandQueue: q)
-        channel.activateWithDelegate(nil)
-        q.suspend()
-
-        channel.basicQos(32, global: true)
-
-        XCTAssertNil(sender.lastSentMethod)
-
-        try! q.step()
-
-        let expectedMethod = MethodFixtures.basicQos(32, options: [.Global])
-        let actualMethod = sender.lastSentMethod as! RMQBasicQos
-        XCTAssertEqual(expectedMethod, actualMethod)
-    }
-
-    func testBasicQosSendsBasicQosNonGlobal() {
-        let sender = SenderSpy()
-        let q = FakeSerialQueue()
-        let channel = RMQAllocatedChannel(999, sender: sender, validator: waiter!, commandQueue: q)
-        channel.activateWithDelegate(nil)
-
-        channel.basicQos(32, global: false)
-
-        XCTAssertNil(sender.lastSentMethod)
-
-        try! q.step()
-
-        let expectedMethod = MethodFixtures.basicQos(32, options: [])
-        let actualMethod = sender.lastSentMethod as! RMQBasicQos
-        XCTAssertEqual(expectedMethod, actualMethod)
-    }
-
-    func testBasicQosWaitsOnBasicQosOk() {
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
-        let channel = RMQAllocatedChannel(999, sender: SenderSpy(), validator: waiter!, commandQueue: q)
-        channel.activateWithDelegate(delegate)
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
 
-        channel.basicQos(64, global: false)
+        ch.activateWithDelegate(delegate)
 
-        try! q.step()
-        channel.handleFrameset(RMQFrameset(channelNumber: 999, method: MethodFixtures.basicQosOk()))
-        try! q.step()
+        ch.basicQos(1, global: true)
 
-        XCTAssertNil(delegate.lastChannelError)
-    }
-
-    func testBasicQosSendsErrorToDelegateOnWaitError() {
-        let q = FakeSerialQueue()
-        let delegate = ConnectionDelegateSpy()
-        let channel = RMQAllocatedChannel(999, sender: SenderSpy(), validator: waiter!, commandQueue: q)
-        channel.activateWithDelegate(delegate)
-
-        channel.basicQos(64, global: false)
-
-        try! q.step()
-        channel.handleFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicGetOk("wrong method")))
-        try! q.step()
-
-        XCTAssertEqual(RMQError.ChannelIncorrectSyncMethod.rawValue, delegate.lastChannelError?.code)
+        XCTAssertEqual(MethodFixtures.basicQos(1, options: [.Global]),
+                       dispatcher.lastSyncMethod as? RMQBasicQos)
+        XCTAssertEqual("RMQBasicQosOk", dispatcher.lastSyncWaitedOn)
     }
 
     func testAckSendsABasicAck() {
-        let sender = SenderSpy()
         let q = FakeSerialQueue()
+        let delegate = ConnectionDelegateSpy()
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
 
-        let channel = RMQAllocatedChannel(999, sender: sender, validator: waiter!, commandQueue: q)
-        channel.activateWithDelegate(nil)
+        ch.activateWithDelegate(delegate)
 
-        channel.ack(123, options: [.Multiple])
+        ch.ack(123, options: [.Multiple])
 
-        XCTAssertEqual(0, sender.sentFramesets.count)
-
-        try! q.step()
-
-        let expected = RMQBasicAck(deliveryTag: RMQLonglong(123), options: [.Multiple])
-        let actual: RMQBasicAck = sender.lastSentMethod as! RMQBasicAck
-        XCTAssertEqual(expected, actual)
+        XCTAssertEqual(MethodFixtures.basicAck(123, options: [.Multiple]),
+                       dispatcher.lastAsyncMethod as? RMQBasicAck)
     }
-
+    
     func testRejectSendsABasicReject() {
-        let sender = SenderSpy()
         let q = FakeSerialQueue()
-        let channel = RMQAllocatedChannel(999, sender: sender, validator: waiter!, commandQueue: q)
-        channel.activateWithDelegate(nil)
+        let delegate = ConnectionDelegateSpy()
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
 
-        channel.reject(123, options: [.Requeue])
+        ch.activateWithDelegate(delegate)
 
-        XCTAssertEqual(0, sender.sentFramesets.count)
+        ch.reject(123, options: [.Requeue])
 
-        try! q.step()
-
-        let expected = RMQBasicReject(deliveryTag: RMQLonglong(123), options: [.Requeue])
-        let actual: RMQBasicReject = sender.lastSentMethod as! RMQBasicReject
-        XCTAssertEqual(expected, actual)
+        XCTAssertEqual(MethodFixtures.basicReject(123, options: [.Requeue]),
+                       dispatcher.lastAsyncMethod as? RMQBasicReject)
     }
-
+    
     func testNackSendsABasicNack() {
-        let sender = SenderSpy()
         let q = FakeSerialQueue()
-        let channel = RMQAllocatedChannel(999, sender: sender, validator: waiter!, commandQueue: q)
-        channel.activateWithDelegate(nil)
+        let delegate = ConnectionDelegateSpy()
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
 
-        channel.nack(123, options: [.Multiple, .Requeue])
+        ch.activateWithDelegate(delegate)
 
-        XCTAssertEqual(0, sender.sentFramesets.count)
+        ch.nack(123, options: [.Requeue])
 
-        try! q.step()
-
-        let expected = RMQBasicNack(deliveryTag: RMQLonglong(123), options: [.Multiple, .Requeue])
-        let actual: RMQBasicNack = sender.lastSentMethod as! RMQBasicNack
-        XCTAssertEqual(expected, actual)
+        XCTAssertEqual(MethodFixtures.basicNack(123, options: [.Requeue]),
+                       dispatcher.lastAsyncMethod as? RMQBasicNack)
     }
     
 }

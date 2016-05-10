@@ -1,7 +1,10 @@
 #import <Foundation/Foundation.h>
 #import "RMQConnectionDelegate.h"
+#import "RMQFramesetValidationResult.h"
 
 @protocol RMQDispatcher <NSObject, RMQFrameHandler>
+
+- (void)blockingWaitOn:(Class)method;
 
 - (void)activateWithChannel:(id<RMQChannel>)channel
                    delegate:(id<RMQConnectionDelegate>)delegate;
@@ -18,6 +21,6 @@
 
 - (void)sendAsyncMethod:(id<RMQMethod>)method;
 
-- (void)blockingWaitOn:(Class)method;
+- (void)sendAsyncFrameset:(RMQFrameset *)frameset;
 
 @end

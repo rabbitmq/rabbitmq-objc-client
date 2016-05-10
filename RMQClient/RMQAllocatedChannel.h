@@ -1,19 +1,18 @@
 #import <Foundation/Foundation.h>
 #import "RMQChannel.h"
-#import "RMQFramesetValidator.h"
 #import "RMQLocalSerialQueue.h"
 #import "RMQNameGenerator.h"
-#import "RMQSender.h"
+#import "RMQDispatcher.h"
 
 @interface RMQAllocatedChannel : MTLModel <RMQChannel>
 - (nonnull instancetype)init:(nonnull NSNumber *)channelNumber
-                      sender:(nonnull id <RMQSender>)sender
-                   validator:(nonnull RMQFramesetValidator *)validator
+             contentBodySize:(nonnull NSNumber *)contentBodySize
+                  dispatcher:(nonnull id<RMQDispatcher>)dispatcher
                 commandQueue:(nonnull id<RMQLocalSerialQueue>)commandQueue
                nameGenerator:(nullable id<RMQNameGenerator>)nameGenerator;
 
 - (nonnull instancetype)init:(nonnull NSNumber *)channelNumber
-                      sender:(nonnull id <RMQSender>)sender
-                   validator:(nonnull RMQFramesetValidator *)validator
+             contentBodySize:(nonnull NSNumber *)contentBodySize
+                  dispatcher:(nonnull id<RMQDispatcher>)dispatcher
                 commandQueue:(nonnull id<RMQLocalSerialQueue>)commandQueue;
 @end

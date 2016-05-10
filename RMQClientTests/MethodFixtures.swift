@@ -135,8 +135,20 @@ class MethodFixtures {
         return RMQQueueUnbindOk(decodedFrame: [])
     }
 
+    static func basicAck(deliveryTag: UInt64, options: RMQBasicAckOptions) -> RMQBasicAck {
+        return RMQBasicAck(deliveryTag: RMQLonglong(deliveryTag), options: options)
+    }
+
+    static func basicConsume(queueName: String, consumerTag: String, options: RMQBasicConsumeOptions) -> RMQBasicConsume {
+        return RMQBasicConsume(reserved1: RMQShort(0), queue: RMQShortstr(queueName), consumerTag: RMQShortstr(consumerTag), options: options, arguments: RMQTable([:]))
+    }
+
     static func basicConsumeOk(consumerTag: String) -> RMQBasicConsumeOk {
         return RMQBasicConsumeOk(consumerTag: RMQShortstr(consumerTag))
+    }
+
+    static func basicDeliver(consumerTag consumerTag: String = "", deliveryTag: UInt64 = 0, routingKey: String = "") -> RMQBasicDeliver {
+        return RMQBasicDeliver(consumerTag: RMQShortstr(consumerTag), deliveryTag: RMQLonglong(deliveryTag), options: RMQBasicDeliverOptions.NoOptions, exchange: RMQShortstr(""), routingKey: RMQShortstr(routingKey))
     }
 
     static func basicGet(queue: String = "my.queue", options: RMQBasicGetOptions = []) -> RMQBasicGet {
@@ -147,12 +159,12 @@ class MethodFixtures {
         return RMQBasicGetOk(deliveryTag: RMQLonglong(deliveryTag), options: RMQBasicGetOkOptions.NoOptions, exchange: RMQShortstr(""), routingKey: RMQShortstr(routingKey), messageCount: RMQLong(0))
     }
 
-    static func basicPublish(message: String, routingKey: String, exchange: String = "", options: RMQBasicPublishOptions = []) -> RMQBasicPublish {
-        return RMQBasicPublish(reserved1: RMQShort(0), exchange: RMQShortstr(exchange), routingKey: RMQShortstr(routingKey), options: options)
+    static func basicNack(deliveryTag: UInt64, options: RMQBasicNackOptions) -> RMQBasicNack {
+        return RMQBasicNack(deliveryTag: RMQLonglong(deliveryTag), options: options)
     }
 
-    static func basicDeliver(consumerTag consumerTag: String = "", deliveryTag: UInt64 = 0, routingKey: String = "") -> RMQBasicDeliver {
-        return RMQBasicDeliver(consumerTag: RMQShortstr(consumerTag), deliveryTag: RMQLonglong(deliveryTag), options: RMQBasicDeliverOptions.NoOptions, exchange: RMQShortstr(""), routingKey: RMQShortstr(routingKey))
+    static func basicPublish(message: String, routingKey: String, exchange: String = "", options: RMQBasicPublishOptions = []) -> RMQBasicPublish {
+        return RMQBasicPublish(reserved1: RMQShort(0), exchange: RMQShortstr(exchange), routingKey: RMQShortstr(routingKey), options: options)
     }
 
     static func basicQos(prefetchCount: UInt, options: RMQBasicQosOptions) -> RMQBasicQos {
@@ -161,6 +173,10 @@ class MethodFixtures {
 
     static func basicQosOk() -> RMQBasicQosOk {
         return RMQBasicQosOk(decodedFrame: [])
+    }
+
+    static func basicReject(deliveryTag: UInt64, options: RMQBasicRejectOptions) -> RMQBasicReject {
+        return RMQBasicReject(deliveryTag: RMQLonglong(deliveryTag), options: options)
     }
 
     static func exchangeDeclare(name: String, type: String, options: RMQExchangeDeclareOptions) -> RMQExchangeDeclare {

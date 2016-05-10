@@ -5,6 +5,8 @@
 #import "RMQUnallocatedChannel.h"
 #import "RMQGCDSerialQueue.h"
 #import "RMQProcessInfoNameGenerator.h"
+#import "RMQFrame.h"
+#import "RMQSuspendResumeDispatcher.h"
 
 @interface RMQMultipleChannelAllocator ()
 @property (atomic, readwrite) UInt16 channelNumber;
@@ -71,10 +73,14 @@
 }
 
 - (id<RMQChannel>)newAllocation {
+    RMQGCDSerialQueue *commandQueue = [self suspendedDispatchQueue:self.channelNumber];
+    RMQSuspendResumeDispatcher *dispatcher = [[RMQSuspendResumeDispatcher alloc] initWithSender:self.sender
+                                                                                      validator:[RMQFramesetValidator new]
+                                                                                   commandQueue:commandQueue];
     RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(self.channelNumber)
-                                                         sender:self.sender
-                                                      validator:[RMQFramesetValidator new]
-                                                   commandQueue:[self suspendedDispatchQueue:self.channelNumber]
+                                                contentBodySize:@(self.sender.frameMax.integerValue - RMQEmptyFrameSize)
+                                                     dispatcher:dispatcher
+                                                   commandQueue:commandQueue
                                                   nameGenerator:self.nameGenerator];
     self.channels[@(self.channelNumber)] = ch;
     self.channelNumber++;
@@ -84,9 +90,13 @@
 - (id<RMQChannel>)previouslyReleasedChannel {
     for (UInt16 i = 1; i < RMQChannelLimit; i++) {
         if (!self.channels[@(i)]) {
+            RMQGCDSerialQueue *commandQueue = [self suspendedDispatchQueue:i];
+            RMQSuspendResumeDispatcher *dispatcher = [[RMQSuspendResumeDispatcher alloc] initWithSender:self.sender
+                                                                                              validator:[RMQFramesetValidator new]
+                                                                                           commandQueue:commandQueue];
             RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(i)
-                                                                 sender:self.sender
-                                                              validator:[RMQFramesetValidator new]
+                                                        contentBodySize:@(self.sender.frameMax.integerValue - RMQEmptyFrameSize)
+                                                             dispatcher:dispatcher
                                                            commandQueue:[self suspendedDispatchQueue:i]
                                                           nameGenerator:self.nameGenerator];
             self.channels[@(i)] = ch;

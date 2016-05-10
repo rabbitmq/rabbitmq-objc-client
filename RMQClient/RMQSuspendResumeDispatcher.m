@@ -86,11 +86,14 @@
     }];
 }
 
-- (void)sendAsyncMethod:(id<RMQMethod>)method {
+- (void)sendAsyncFrameset:(RMQFrameset *)frameset {
     [self.commandQueue enqueue:^{
-        RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
         [self.sender sendFrameset:frameset];
     }];
+}
+
+- (void)sendAsyncMethod:(id<RMQMethod>)method {
+    [self sendAsyncFrameset:[[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method]];
 }
 
 - (void)handleFrameset:(RMQFrameset *)frameset {

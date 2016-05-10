@@ -3,142 +3,84 @@ import XCTest
 class ExchangeDeclarationTest: XCTestCase {
 
     func testExchangeDeclareSendsAnExchangeDeclare() {
-        let sender = SenderSpy()
-        let validator = RMQFramesetValidator()
-        let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(123, sender: sender, validator: validator, commandQueue: q)
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue())
         ch.activateWithDelegate(nil)
 
         ch.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
-        try! q.step()
 
-        let expectedFrameset = RMQFrameset(
-            channelNumber: 123,
-            method: MethodFixtures.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
-        )
+        let expectedMethod = MethodFixtures.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
 
-        XCTAssertEqual(expectedFrameset, sender.sentFramesets.last)
-    }
-
-    func testExchangeDeclareWaitsOnDeclareOk() {
-        let validator = RMQFramesetValidator()
-        let q = FakeSerialQueue()
-        let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(123, sender: SenderSpy(), validator: validator, commandQueue: q)
-        ch.activateWithDelegate(delegate)
-
-        ch.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
-        try! q.step()
-        ch.handleFrameset(RMQFrameset(channelNumber: 123, method: MethodFixtures.exchangeDeclareOk()))
-        try! q.step()
-
-        XCTAssertNil(delegate.lastChannelError)
-    }
-
-    func testExchangeDeclareSendsvalidatorrorsToDelegate() {
-        let validator = RMQFramesetValidator()
-        let q = FakeSerialQueue()
-        let delegate = ConnectionDelegateSpy()
-        let ch = RMQAllocatedChannel(123, sender: SenderSpy(), validator: validator, commandQueue: q)
-        ch.activateWithDelegate(delegate)
-
-        ch.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
-        try! q.step()
-        ch.handleFrameset(RMQFrameset(channelNumber: 123, method: MethodFixtures.queueDeclareOk("wrong method")))
-        try! q.step()
-
-        XCTAssertEqual(RMQError.ChannelIncorrectSyncMethod.rawValue, delegate.lastChannelError?.code)
+        XCTAssertEqual(expectedMethod, dispatcher.lastSyncMethod as? RMQExchangeDeclare)
+        XCTAssertEqual("RMQExchangeDeclareOk", dispatcher.lastSyncWaitedOn)
     }
 
     func testFanoutDeclaresAFanout() {
-        let sender = SenderSpy()
-        let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(123, sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue())
+
         ch.activateWithDelegate(nil)
 
         ch.fanout("my-exchange", options: [.Durable, .AutoDelete])
-        try! q.step()
 
-        let expectedFrameset = RMQFrameset(
-            channelNumber: 123,
-            method: MethodFixtures.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
-        )
+        let expectedMethod = MethodFixtures.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
 
-        XCTAssertEqual(expectedFrameset, sender.sentFramesets.last)
-    }
-
-    func testFanoutReturnsExistingFanoutWithSameNameEvenIfDifferentOptionsOrTypes() {
-        let sender = SenderSpy()
-        let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(123, sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
-
-        let ex1 = ch.topic("my-exchange", options: [.Durable, .AutoDelete])
-        try! q.step()
-        let ex2 = ch.fanout("my-exchange")
-
-        XCTAssertEqual(ex1, ex2)
+        XCTAssertEqual(expectedMethod, dispatcher.lastSyncMethod as? RMQExchangeDeclare)
     }
 
     func testDirectDeclaresADirectExchange() {
-        let sender = SenderSpy()
-        let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(123, sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue())
+
         ch.activateWithDelegate(nil)
 
-        ch.direct("logs", options: [.Durable, .AutoDelete])
-        try! q.step()
+        ch.direct("my-exchange", options: [.Durable, .AutoDelete])
 
-        let expectedFrameset = RMQFrameset(
-            channelNumber: 123,
-            method: MethodFixtures.exchangeDeclare("logs", type: "direct", options: [.Durable, .AutoDelete])
-        )
+        let expectedMethod = MethodFixtures.exchangeDeclare("my-exchange", type: "direct", options: [.Durable, .AutoDelete])
 
-        XCTAssertEqual(expectedFrameset, sender.sentFramesets.last)
-    }
-
-    func testDirectReturnsExistingExchangeWithSameNameEvenIfDifferentOptionsOrTypes() {
-        let sender = SenderSpy()
-        let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(123, sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
-
-        let ex1 = ch.fanout("my-exchange", options: [.Durable, .AutoDelete])
-        try! q.step()
-        let ex2 = ch.direct("my-exchange")
-
-        XCTAssertEqual(ex1, ex2)
+        XCTAssertEqual(expectedMethod, dispatcher.lastSyncMethod as? RMQExchangeDeclare)
     }
 
     func testTopicDeclaresATopicExchange() {
-        let sender = SenderSpy()
-        let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(123, sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue())
+
         ch.activateWithDelegate(nil)
 
-        ch.topic("logs", options: [.Durable, .AutoDelete])
-        try! q.step()
+        ch.topic("my-exchange", options: [.Durable, .AutoDelete])
 
-        let expectedFrameset = RMQFrameset(
-            channelNumber: 123,
-            method: MethodFixtures.exchangeDeclare("logs", type: "topic", options: [.Durable, .AutoDelete])
-        )
+        let expectedMethod = MethodFixtures.exchangeDeclare("my-exchange", type: "topic", options: [.Durable, .AutoDelete])
 
-        XCTAssertEqual(expectedFrameset, sender.sentFramesets.last)
+        XCTAssertEqual(expectedMethod, dispatcher.lastSyncMethod as? RMQExchangeDeclare)
     }
 
     func testHeadersDeclaresAHeadersExchange() {
-        let sender = SenderSpy()
-        let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(123, sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue())
+
         ch.activateWithDelegate(nil)
 
-        ch.headers("myheadersex", options: [.Durable, .AutoDelete])
-        try! q.step()
+        ch.headers("my-exchange", options: [.Durable, .AutoDelete])
 
-        let expectedFrameset = RMQFrameset(
-            channelNumber: 123,
-            method: MethodFixtures.exchangeDeclare("myheadersex", type: "headers", options: [.Durable, .AutoDelete])
-        )
+        let expectedMethod = MethodFixtures.exchangeDeclare("my-exchange", type: "headers", options: [.Durable, .AutoDelete])
 
-        XCTAssertEqual(expectedFrameset, sender.sentFramesets.last)
+        XCTAssertEqual(expectedMethod, dispatcher.lastSyncMethod as? RMQExchangeDeclare)
     }
+
+    func testExchangeTypeMethodsReturnFirstWithSameNameEvenIfDifferentOptionsOrTypes() {
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue())
+
+        ch.activateWithDelegate(nil)
+
+        let ex1 = ch.topic("my-exchange", options: [.Durable, .AutoDelete])
+        let ex2 = ch.fanout("my-exchange")
+        let ex3 = ch.direct("my-exchange")
+        let ex4 = ch.headers("my-exchange", options: [.Durable])
+
+        XCTAssertEqual(ex1, ex2)
+        XCTAssertEqual(ex2, ex3)
+        XCTAssertEqual(ex3, ex4)
+    }
+
 }

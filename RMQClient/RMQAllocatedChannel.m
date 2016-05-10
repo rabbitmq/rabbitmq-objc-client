@@ -1,6 +1,5 @@
 #import "RMQBasicProperties.h"
 #import "RMQErrors.h"
-#import "RMQFrame.h"
 #import "RMQMethodDecoder.h"
 #import "RMQMethodMap.h"
 #import "RMQMethods.h"
@@ -11,8 +10,8 @@
 
 @interface RMQAllocatedChannel ()
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
+@property (nonatomic, readwrite) NSNumber *contentBodySize;
 @property (nonatomic, readwrite) id <RMQDispatcher> dispatcher;
-@property (nonatomic, readwrite) id <RMQSender> sender;
 @property (nonatomic, readwrite) NSMutableDictionary *consumers;
 @property (nonatomic, readwrite) NSMutableDictionary *exchanges;
 @property (nonatomic, readwrite) NSMutableDictionary *queues;
@@ -20,44 +19,40 @@
 @property (nonatomic, readwrite) BOOL prefetchGlobal;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
-@property (nonatomic, readwrite) RMQFramesetValidator *validator;
 @property (nonatomic, readwrite) id<RMQNameGenerator> nameGenerator;
 @end
 
 @implementation RMQAllocatedChannel
 
 - (instancetype)init:(NSNumber *)channelNumber
-              sender:(id<RMQSender>)sender
-           validator:(RMQFramesetValidator *)validator
+     contentBodySize:(NSNumber *)contentBodySize
+          dispatcher:(id<RMQDispatcher>)dispatcher
         commandQueue:(id<RMQLocalSerialQueue>)commandQueue
        nameGenerator:(id<RMQNameGenerator>)nameGenerator {
     self = [super init];
     if (self) {
-        self.commandQueue = commandQueue;
         self.channelNumber = channelNumber;
-        self.dispatcher = [[RMQSuspendResumeDispatcher alloc] initWithSender:sender
-                                                                   validator:validator
-                                                                commandQueue:commandQueue];
-        self.sender = sender;
+        self.contentBodySize = contentBodySize;
+        self.dispatcher = dispatcher;
+        self.commandQueue = commandQueue;
         self.consumers = [NSMutableDictionary new];
         self.exchanges = [NSMutableDictionary new];
         self.queues = [NSMutableDictionary new];
         self.prefetchCount = @0;
         self.prefetchGlobal = NO;
         self.delegate = nil;
-        self.validator = validator;
         self.nameGenerator = nameGenerator;
     }
     return self;
 }
 
 - (instancetype)init:(NSNumber *)channelNumber
-              sender:(id<RMQSender>)sender
-           validator:(RMQFramesetValidator *)validator
+     contentBodySize:(nonnull NSNumber *)contentBodySize
+          dispatcher:(id<RMQDispatcher>)dispatcher
         commandQueue:(id<RMQLocalSerialQueue>)commandQueue {
     return [self init:channelNumber
-               sender:sender
-            validator:validator
+      contentBodySize:contentBodySize
+           dispatcher:dispatcher
          commandQueue:commandQueue
         nameGenerator:nil];
 }
@@ -174,15 +169,13 @@
                                                                      properties:@[mode, octetStream, lowPriority]];
 
     NSArray *contentBodies = [self contentBodiesFromData:bodyData
-                                              inChunksOf:self.sender.frameMax.integerValue - RMQEmptyFrameSize];
+                                              inChunksOf:self.contentBodySize.integerValue];
     RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber
                                                                 method:publish
                                                          contentHeader:contentHeader
                                                          contentBodies:contentBodies];
 
-    [self.commandQueue enqueue:^{
-        [self.sender sendFrameset:frameset];
-    }];
+    [self.dispatcher sendAsyncFrameset:frameset];
 }
 
 -  (void)basicGet:(NSString *)queue
