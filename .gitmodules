@@ -1,6 +1,0 @@
-[submodule "Carthage/Checkouts/CocoaAsyncSocket"]
-	path = Carthage/Checkouts/CocoaAsyncSocket
-	url = https://github.com/robbiehanson/CocoaAsyncSocket.git
-[submodule "Carthage/Checkouts/Mantle"]
-	path = Carthage/Checkouts/Mantle
-	url = https://github.com/Mantle/Mantle.git
