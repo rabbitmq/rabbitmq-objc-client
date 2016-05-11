@@ -1,2 +1,2 @@
-github "robbiehanson/CocoaAsyncSocket" "562bae6af6dbd7e1891293dae20b9f79a2fd7228"
-github "Mantle/Mantle" "cdb82df5dd3a7e4cfab6dfbc48df20dcc80b4e13"
+github "robbiehanson/CocoaAsyncSocket" "7.4.3"
+github "Mantle/Mantle" "2.0.7"

@@ -1,2 +1,2 @@
-github "robbiehanson/CocoaAsyncSocket" "master"
-github "Mantle/Mantle" "master"
+github "robbiehanson/CocoaAsyncSocket" ~> 7.4
+github "Mantle/Mantle"
