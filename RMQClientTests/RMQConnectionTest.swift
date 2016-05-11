@@ -155,7 +155,8 @@ class RMQConnectionTest: XCTestCase {
         let delegate = ConnectionDelegateSpy()
         let conn = RMQConnection(uri: "amqps://other:wise@valid`oops", delegate: delegate)
         conn.start()
-        XCTAssertNotNil(delegate.lastConnectionError)
+        XCTAssert(TestHelper.pollUntil { delegate.lastConnectionError != nil },
+                  "Timed out waiting for a connection error with invalid URI")
     }
 
 }
