@@ -1,4 +1,5 @@
 Carthage/Build
+Carthage/Checkouts
 *.xcscmblueprint
 xcuserdata
 notes.txt
