@@ -14,7 +14,8 @@
 @implementation RMQTLSOptions
 
 + (instancetype)fromURI:(NSString *)s verifyPeer:(BOOL)verifyPeer {
-    RMQURI *uri = [RMQURI parse:s error:NULL];
+    NSError *error = NULL;
+    RMQURI *uri = [RMQURI parse:s error:&error];
     return [[RMQTLSOptions alloc] initWithUseTLS:uri.isTLS
                                         peerName:uri.host
                                       verifyPeer:verifyPeer

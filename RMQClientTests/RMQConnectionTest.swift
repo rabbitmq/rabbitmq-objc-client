@@ -151,4 +151,11 @@ class RMQConnectionTest: XCTestCase {
         XCTAssertEqual("/myvhost", outgoingConnectionOpen.virtualHost.stringValue)
     }
 
+    func testSpecialCharsInURISendsErrorToDelegate() {
+        let delegate = ConnectionDelegateSpy()
+        let conn = RMQConnection(uri: "amqps://other:wise@valid`oops", delegate: delegate)
+        conn.start()
+        XCTAssertNotNil(delegate.lastConnectionError)
+    }
+
 }
