@@ -21,7 +21,7 @@ burdening Objective-C developers with Swift baggage.
    Run carthage, for example in a new project:
 
    ```
-   carthage bootstrap --platform iOS --use-submodules
+   carthage bootstrap --platform iOS
    ```
 1. In your Xcode project, in the **Build Phases** section of your target, open up **Link
 Binary With Libraries**. Now drag `Carthage/Build/iOS/RMQClient.framework` into
