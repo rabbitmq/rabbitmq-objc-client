@@ -12,6 +12,7 @@
 
 - (void)activateWithDelegate:(nullable id<RMQConnectionDelegate>)delegate;
 - (void)open;
+- (void)close;
 - (void)blockingClose;
 - (void)blockingWaitOn:(nonnull Class)method;
 

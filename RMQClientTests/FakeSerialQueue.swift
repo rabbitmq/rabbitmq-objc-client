@@ -32,4 +32,14 @@ enum FakeSerialQueueError: ErrorType {
         items[index]()
         index += 1
     }
+
+    func finish() throws {
+        while index < items.count {
+            try step()
+        }
+    }
+
+    func pendingItemsCount() -> Int {
+        return items.count - index
+    }
 }

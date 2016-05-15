@@ -7,6 +7,7 @@ typedef NS_ENUM(NSInteger, RMQError) {
     RMQErrorTLSCertificateAuthFailure,
     RMQErrorTLSCertificateDecodeError,
 
+    RMQErrorChannelClosed,
     RMQErrorChannelUnallocated,
     RMQErrorChannelWaitTimeout,
     RMQErrorChannelIncorrectSyncMethod,

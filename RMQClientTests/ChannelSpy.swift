@@ -19,6 +19,7 @@
     var lastReceivedQueueDeclareOptions: RMQQueueDeclareOptions = []
     var stubbedBasicConsumeError: String?
     var openCalled = false
+    var closeCalled = false
     var blockingCloseCalled = false
     var blockingWaitOnMethod: AnyClass?
     var delegateSentToActivate: RMQConnectionDelegate?
@@ -41,6 +42,10 @@
 
     func open() {
         openCalled = true
+    }
+
+    func close() {
+        closeCalled = true
     }
 
     func blockingClose() {

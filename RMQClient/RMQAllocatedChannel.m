@@ -77,6 +77,13 @@
     [self.dispatcher sendSyncMethod:outgoingMethod];
 }
 
+- (void)close {
+    [self.dispatcher sendSyncMethod:[[RMQChannelClose alloc] initWithReplyCode:[[RMQShort alloc] init:200]
+                                                                     replyText:[[RMQShortstr alloc] init:@"Goodbye"]
+                                                                       classId:[[RMQShort alloc] init:0]
+                                                                      methodId:[[RMQShort alloc] init:0]]];
+}
+
 - (void)blockingClose {
     RMQChannelClose *close = [[RMQChannelClose alloc] initWithReplyCode:[[RMQShort alloc] init:200]
                                                               replyText:[[RMQShortstr alloc] init:@"Goodbye"]

@@ -1,4 +1,5 @@
 #import "RMQSuspendResumeDispatcher.h"
+#import "RMQErrors.h"
 
 @interface RMQSuspendResumeDispatcher ()
 @property (nonatomic, readwrite) id<RMQChannel> channel;
@@ -6,6 +7,7 @@
 @property (nonatomic, readwrite) RMQFramesetValidator *validator;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
+@property (nonatomic, readwrite) BOOL channelCloseRequested;
 @end
 
 @implementation RMQSuspendResumeDispatcher
@@ -19,6 +21,7 @@
         self.sender = sender;
         self.validator = validator;
         self.commandQueue = commandQueue;
+        self.channelCloseRequested = NO;
     }
     return self;
 }
@@ -32,7 +35,9 @@
 
 - (void)blockingWaitOn:(Class)method {
     [self.commandQueue blockingEnqueue:^{
-        [self.commandQueue suspend];
+        [self checkNotAlreadyClosed:^{
+            [self.commandQueue suspend];
+        }];
     }];
 
     [self.commandQueue blockingEnqueue:^{
@@ -46,18 +51,26 @@
 - (void)sendSyncMethod:(id<RMQMethod>)method
      completionHandler:(void (^)(RMQFramesetValidationResult *result))completionHandler {
     [self.commandQueue enqueue:^{
-        RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber
-                                                                            method:method];
-        [self.commandQueue suspend];
-        [self.sender sendFrameset:outgoingFrameset];
+        [self checkNotAlreadyClosed:^{
+            if ([method isKindOfClass:[RMQChannelClose class]]) {
+                self.channelCloseRequested = YES;
+            }
+
+            RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber
+                                                                                method:method];
+            [self.commandQueue suspend];
+            [self.sender sendFrameset:outgoingFrameset];
+        }];
     }];
 
     [self.commandQueue enqueue:^{
-        RMQFramesetValidationResult *result = [self.validator expect:method.syncResponse];
-        if (result.error) {
-            [self.delegate channel:self.channel error:result.error];
-        } else {
-            completionHandler(result);
+        if (!self.channelCloseRequested) {
+            RMQFramesetValidationResult *result = [self.validator expect:method.syncResponse];
+            if (result.error) {
+                [self.delegate channel:self.channel error:result.error];
+            } else {
+                completionHandler(result);
+            }
         }
     }];
 }
@@ -69,9 +82,11 @@
 
 - (void)sendSyncMethodBlocking:(id<RMQMethod>)method {
     [self.commandQueue blockingEnqueue:^{
-        RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
-        [self.commandQueue suspend];
-        [self.sender sendFrameset:frameset];
+        [self checkNotAlreadyClosed:^{
+            RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
+            [self.commandQueue suspend];
+            [self.sender sendFrameset:frameset];
+        }];
     }];
 
     [self.commandQueue blockingEnqueue:^{
@@ -84,7 +99,9 @@
 
 - (void)sendAsyncFrameset:(RMQFrameset *)frameset {
     [self.commandQueue enqueue:^{
-        [self.sender sendFrameset:frameset];
+        [self checkNotAlreadyClosed:^{
+            [self.sender sendFrameset:frameset];
+        }];
     }];
 }
 
@@ -101,6 +118,21 @@
 
 - (NSNumber *)channelNumber {
     return self.channel.channelNumber;
+}
+
+- (void)checkNotAlreadyClosed:(void (^)())operation {
+    if (self.channelCloseRequested) {
+        [self sendChannelClosedError];
+    } else {
+        operation();
+    }
+}
+
+- (void)sendChannelClosedError {
+    NSError *error = [NSError errorWithDomain:RMQErrorDomain
+                                         code:RMQErrorChannelClosed
+                                     userInfo:@{NSLocalizedDescriptionKey: @"Cannot use channel after it has been closed."}];
+    [self.delegate channel:self.channel error:error];
 }
 
 @end

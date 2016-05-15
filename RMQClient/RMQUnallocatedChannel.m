@@ -23,6 +23,8 @@
 
 - (void)open {}
 
+- (void)close {}
+
 - (void)blockingClose {}
 
 - (void)blockingWaitOn:(Class)method {

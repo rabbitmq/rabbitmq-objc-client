@@ -52,6 +52,19 @@ class RMQAllocatedChannelTest: XCTestCase {
         XCTAssertEqual(MethodFixtures.channelOpen(), dispatcher.lastSyncMethod as? RMQChannelOpen)
     }
 
+    func testCloseSendsClose() {
+        let q = FakeSerialQueue()
+        let delegate = ConnectionDelegateSpy()
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
+
+        ch.activateWithDelegate(delegate)
+
+        ch.close()
+
+        XCTAssertEqual(MethodFixtures.channelClose(), dispatcher.lastSyncMethod as? RMQChannelClose)
+    }
+
     func testBlockingCloseSendsCloseAndBlocksUntilCloseOkReceived() {
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
