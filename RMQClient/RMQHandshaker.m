@@ -1,5 +1,4 @@
 #import "RMQHandshaker.h"
-#import "RMQConstants.h"
 
 @interface RMQHandshaker ()
 @property (nonatomic, readwrite) id<RMQSender> sender;

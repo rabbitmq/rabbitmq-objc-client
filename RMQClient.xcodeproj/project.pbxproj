@@ -54,8 +54,6 @@
 		AE744E341C85A1B000A4C2FA /* RMQFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = AE744E321C85A1B000A4C2FA /* RMQFrame.m */; };
 		AE744E371C85A20700A4C2FA /* RMQFrameset.h in Headers */ = {isa = PBXBuildFile; fileRef = AE744E351C85A20700A4C2FA /* RMQFrameset.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE744E381C85A20700A4C2FA /* RMQFrameset.m in Sources */ = {isa = PBXBuildFile; fileRef = AE744E361C85A20700A4C2FA /* RMQFrameset.m */; };
-		AE744E3D1C86F43300A4C2FA /* RMQConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = AE744E3B1C86F43300A4C2FA /* RMQConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		AE744E3E1C86F43300A4C2FA /* RMQConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = AE744E3C1C86F43300A4C2FA /* RMQConstants.m */; };
 		AE80BAB31C4D47C100E6DFFD /* RMQParser.h in Headers */ = {isa = PBXBuildFile; fileRef = AE80BAB11C4D47C100E6DFFD /* RMQParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE80BAB41C4D47C100E6DFFD /* RMQParser.m in Sources */ = {isa = PBXBuildFile; fileRef = AE80BAB21C4D47C100E6DFFD /* RMQParser.m */; };
 		AE8279851C8D86110013ADD1 /* ChannelAllocationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8279841C8D86110013ADD1 /* ChannelAllocationTest.swift */; };
@@ -247,8 +245,6 @@
 		AE744E321C85A1B000A4C2FA /* RMQFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQFrame.m; sourceTree = "<group>"; };
 		AE744E351C85A20700A4C2FA /* RMQFrameset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RMQFrameset.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		AE744E361C85A20700A4C2FA /* RMQFrameset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQFrameset.m; sourceTree = "<group>"; };
-		AE744E3B1C86F43300A4C2FA /* RMQConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQConstants.h; sourceTree = "<group>"; };
-		AE744E3C1C86F43300A4C2FA /* RMQConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQConstants.m; sourceTree = "<group>"; };
 		AE80BAB11C4D47C100E6DFFD /* RMQParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQParser.h; sourceTree = "<group>"; };
 		AE80BAB21C4D47C100E6DFFD /* RMQParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RMQParser.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AE8279841C8D86110013ADD1 /* ChannelAllocationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelAllocationTest.swift; sourceTree = "<group>"; };
@@ -547,8 +543,6 @@
 				AEE7FEB81C3BD2B400DF8C4F /* RMQExchange.m */,
 				AEEB514B1CAC7780009F37D2 /* RMQSynchronizedMutableDictionary.h */,
 				AEEB514C1CAC7780009F37D2 /* RMQSynchronizedMutableDictionary.m */,
-				AE744E3B1C86F43300A4C2FA /* RMQConstants.h */,
-				AE744E3C1C86F43300A4C2FA /* RMQConstants.m */,
 				AE39BD9C1C68B019000E7A77 /* RMQValues.h */,
 				AE39BD9D1C68B019000E7A77 /* RMQValues.m */,
 				AE26FA291C9032E400CDBBAA /* RMQHeartbeat.h */,
@@ -685,7 +679,6 @@
 				AEA8A76A1CC98E2500371E38 /* RMQWaiterFactory.h in Headers */,
 				AEA8A76D1CCA0F8300371E38 /* RMQSemaphoreWaiterFactory.h in Headers */,
 				AEA8A7711CCA100300371E38 /* RMQSemaphoreWaiter.h in Headers */,
-				AE744E3D1C86F43300A4C2FA /* RMQConstants.h in Headers */,
 				AE09C8341CCE648300FA6915 /* RMQNameGenerator.h in Headers */,
 				AE09C8371CCE64F400FA6915 /* RMQProcessInfoNameGenerator.h in Headers */,
 				AEF0F7C61CCEC944007DAF85 /* RMQDeliveryInfo.h in Headers */,
@@ -900,7 +893,6 @@
 				AEE7FEAE1C3BCD0F00DF8C4F /* RMQConnection.m in Sources */,
 				AEA45ED21C43F4DC00FE1F62 /* RMQTCPSocketTransport.m in Sources */,
 				AE96A76A1CE1F16600C772AA /* RMQSuspendResumeDispatcher.m in Sources */,
-				AE744E3E1C86F43300A4C2FA /* RMQConstants.m in Sources */,
 				AE929C7A1CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.m in Sources */,
 				AE39BD9F1C68B019000E7A77 /* RMQValues.m in Sources */,
 				AE898D5C1C3C30D100AA3BF1 /* RMQURI.m in Sources */,

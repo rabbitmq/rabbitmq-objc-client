@@ -2,7 +2,6 @@
 #import <RMQClient/RMQConnection.h>
 #import <RMQClient/RMQErrors.h>
 #import <RMQClient/RMQBasicProperties.h>
-#import <RMQClient/RMQConstants.h>
 #import <RMQClient/RMQFrame.h>
 #import <RMQClient/RMQHeartbeat.h>
 #import <RMQClient/RMQMethodDecoder.h>

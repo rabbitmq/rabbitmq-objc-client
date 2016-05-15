@@ -1,5 +1,4 @@
 #import "RMQConnection.h"
-#import "RMQConstants.h"
 #import "RMQFrame.h"
 #import "RMQGCDHeartbeatSender.h"
 #import "RMQGCDSerialQueue.h"

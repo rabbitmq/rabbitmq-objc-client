@@ -1,6 +1,5 @@
 #import "RMQTCPSocketTransport.h"
 #import "RMQSynchronizedMutableDictionary.h"
-#import "RMQConstants.h"
 #import "RMQPKCS12CertificateConverter.h"
 
 long closeTag = UINT32_MAX + 1;

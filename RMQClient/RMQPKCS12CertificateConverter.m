@@ -1,5 +1,4 @@
 #import "RMQPKCS12CertificateConverter.h"
-#import "RMQConstants.h"
 #import "RMQErrors.h"
 
 @interface RMQPKCS12CertificateConverter ()

@@ -2,7 +2,6 @@
 #import "RMQMethods.h"
 #import "RMQConnection.h"
 #import "RMQBasicProperties.h"
-#import "RMQConstants.h"
 #import "RMQChannel.h"
 
 @interface RMQQueue ()
