@@ -13,13 +13,12 @@
 @implementation RMQSuspendResumeDispatcher
 
 - (instancetype)initWithSender:(id<RMQSender>)sender
-                     validator:(RMQFramesetValidator *)validator
                   commandQueue:(id<RMQLocalSerialQueue>)commandQueue {
     self = [super init];
     if (self) {
         self.channel = nil;
         self.sender = sender;
-        self.validator = validator;
+        self.validator = [RMQFramesetValidator new];
         self.commandQueue = commandQueue;
         self.channelCloseRequested = NO;
     }

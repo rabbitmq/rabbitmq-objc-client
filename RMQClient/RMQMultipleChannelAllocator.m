@@ -75,7 +75,6 @@
 - (id<RMQChannel>)newAllocation {
     RMQGCDSerialQueue *commandQueue = [self suspendedDispatchQueue:self.channelNumber];
     RMQSuspendResumeDispatcher *dispatcher = [[RMQSuspendResumeDispatcher alloc] initWithSender:self.sender
-                                                                                      validator:[RMQFramesetValidator new]
                                                                                    commandQueue:commandQueue];
     RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(self.channelNumber)
                                                 contentBodySize:@(self.sender.frameMax.integerValue - RMQEmptyFrameSize)
@@ -92,7 +91,6 @@
         if (!self.channels[@(i)]) {
             RMQGCDSerialQueue *commandQueue = [self suspendedDispatchQueue:i];
             RMQSuspendResumeDispatcher *dispatcher = [[RMQSuspendResumeDispatcher alloc] initWithSender:self.sender
-                                                                                              validator:[RMQFramesetValidator new]
                                                                                            commandQueue:commandQueue];
             RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(i)
                                                         contentBodySize:@(self.sender.frameMax.integerValue - RMQEmptyFrameSize)

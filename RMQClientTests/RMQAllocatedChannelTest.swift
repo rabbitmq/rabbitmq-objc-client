@@ -5,9 +5,7 @@ class RMQAllocatedChannelTest: XCTestCase {
     func testObeysContract() {
         let sender = SenderSpy()
         let q = RMQGCDSerialQueue(name: "channel command queue")
-        let dispatcher = RMQSuspendResumeDispatcher(sender: sender,
-                                                    validator: RMQFramesetValidator(),
-                                                    commandQueue: q)
+        let dispatcher = RMQSuspendResumeDispatcher(sender: sender, commandQueue: q)
         let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
         let contract = RMQChannelContract(ch)
 

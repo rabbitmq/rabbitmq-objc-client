@@ -5,7 +5,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
     func testActivatingResumesQueue() {
         let q = FakeSerialQueue()
         q.suspend()
-        let dispatcher = RMQSuspendResumeDispatcher(sender: SenderSpy(), validator: RMQFramesetValidator(), commandQueue: q)
+        let dispatcher = RMQSuspendResumeDispatcher(sender: SenderSpy(), commandQueue: q)
         dispatcher.activateWithChannel(nil, delegate: nil)
         XCTAssertFalse(q.suspended)
     }
@@ -13,7 +13,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
     func testSyncMethodsSentToSender() {
         let q = FakeSerialQueue()
         let sender = SenderSpy()
-        let dispatcher = RMQSuspendResumeDispatcher(sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
+        let dispatcher = RMQSuspendResumeDispatcher(sender: sender, commandQueue: q)
         let ch = RMQAllocatedChannel(123, contentBodySize: 1, dispatcher: dispatcher, commandQueue: q)
         dispatcher.activateWithChannel(ch, delegate: nil)
 
@@ -29,7 +29,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         let q = FakeSerialQueue()
         let sender = SenderSpy()
         let delegate = ConnectionDelegateSpy()
-        let dispatcher = RMQSuspendResumeDispatcher(sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
+        let dispatcher = RMQSuspendResumeDispatcher(sender: sender, commandQueue: q)
         let ch = RMQAllocatedChannel(123, contentBodySize: 1, dispatcher: dispatcher, commandQueue: q)
         dispatcher.activateWithChannel(ch, delegate: delegate)
 
@@ -47,7 +47,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
     func testBlockingSyncMethodsSentToSender() {
         let q = FakeSerialQueue()
         let sender = SenderSpy()
-        let dispatcher = RMQSuspendResumeDispatcher(sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
+        let dispatcher = RMQSuspendResumeDispatcher(sender: sender, commandQueue: q)
         let delegate = ConnectionDelegateSpy()
         let ch = RMQAllocatedChannel(123, contentBodySize: 1, dispatcher: dispatcher, commandQueue: q)
         dispatcher.activateWithChannel(ch, delegate: delegate)
@@ -70,7 +70,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
     func testBlockingErrorsSentToDelegate() {
         let q = FakeSerialQueue()
         let sender = SenderSpy()
-        let dispatcher = RMQSuspendResumeDispatcher(sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
+        let dispatcher = RMQSuspendResumeDispatcher(sender: sender, commandQueue: q)
         let ch = RMQAllocatedChannel(123, contentBodySize: 1, dispatcher: dispatcher, commandQueue: q)
         let delegate = ConnectionDelegateSpy()
         dispatcher.activateWithChannel(ch, delegate: delegate)
@@ -89,7 +89,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         let q = FakeSerialQueue()
         let sender = SenderSpy()
         let delegate = ConnectionDelegateSpy()
-        let dispatcher = RMQSuspendResumeDispatcher(sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
+        let dispatcher = RMQSuspendResumeDispatcher(sender: sender, commandQueue: q)
         let ch = RMQAllocatedChannel(123, contentBodySize: 1, dispatcher: dispatcher, commandQueue: q)
         dispatcher.activateWithChannel(ch, delegate: delegate)
 
@@ -105,7 +105,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         let q = FakeSerialQueue()
         let sender = SenderSpy()
         let delegate = ConnectionDelegateSpy()
-        let dispatcher = RMQSuspendResumeDispatcher(sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
+        let dispatcher = RMQSuspendResumeDispatcher(sender: sender, commandQueue: q)
         let ch = RMQAllocatedChannel(123, contentBodySize: 1, dispatcher: dispatcher, commandQueue: q)
         dispatcher.activateWithChannel(ch, delegate: delegate)
 
@@ -204,7 +204,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         let q = FakeSerialQueue()
         let sender = SenderSpy()
         let delegate = ConnectionDelegateSpy()
-        let dispatcher = RMQSuspendResumeDispatcher(sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
+        let dispatcher = RMQSuspendResumeDispatcher(sender: sender, commandQueue: q)
         let ch = RMQAllocatedChannel(123, contentBodySize: 1, dispatcher: dispatcher, commandQueue: q)
         dispatcher.activateWithChannel(ch, delegate: delegate)
 
@@ -228,7 +228,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         let q = FakeSerialQueue()
         let sender = SenderSpy()
         let delegate = ConnectionDelegateSpy()
-        let dispatcher = RMQSuspendResumeDispatcher(sender: sender, validator: RMQFramesetValidator(), commandQueue: q)
+        let dispatcher = RMQSuspendResumeDispatcher(sender: sender, commandQueue: q)
         let ch = RMQAllocatedChannel(123, contentBodySize: 1, dispatcher: dispatcher, commandQueue: q)
         dispatcher.activateWithChannel(ch, delegate: delegate)
 

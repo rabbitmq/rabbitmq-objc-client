@@ -7,7 +7,6 @@
 @interface RMQSuspendResumeDispatcher : NSObject <RMQDispatcher>
 
 - (instancetype)initWithSender:(id<RMQSender>)sender
-                     validator:(RMQFramesetValidator *)validator
                   commandQueue:(id<RMQLocalSerialQueue>)commandQueue;
 
 @end
