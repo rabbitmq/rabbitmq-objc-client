@@ -17,7 +17,7 @@
     
     if (![self isValidScheme:components.scheme]) {
         *error = [NSError errorWithDomain:RMQErrorDomain
-                                     code:0
+                                     code:RMQErrorInvalidScheme
                                  userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Connection URI must use amqp or amqps schema (example: amqp://bus.megacorp.internal:5766), learn more at http://bit.ly/ks8MXK", nil)}];
         return nil;
     }
@@ -61,7 +61,7 @@
     
     if (numberOfSlashes > 2) {
         NSString *msg = [NSString stringWithFormat:@"%@ has multiple-segment path; please percent-encode any slashes in the vhost name (e.g. /production => %%2Fproduction). Learn more at http://bit.ly/amqp-gem-and-connection-uris", components.URL];
-        *error = [NSError errorWithDomain:RMQErrorDomain code:0 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(msg, nil)}];
+        *error = [NSError errorWithDomain:RMQErrorDomain code:RMQErrorInvalidPath userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(msg, nil)}];
         return nil;
     } else if (components.path.length == 0) {
         return @"/";

@@ -3,11 +3,11 @@ import XCTest
 class RMQURIParseTest: XCTestCase {
     
     func testNonAMQPSchemesNotAllowed() {
-        XCTAssertThrowsError(try RMQURI.parse("amqpfoo://dev.rabbitmq.com")) { (error) in
+        XCTAssertThrowsError(try RMQURI.parse("amqpfoo://dev.rabbitmq.com")) { error in
             do {
                 XCTAssertEqual(
-                    "Connection URI must use amqp or amqps schema (example: amqp://bus.megacorp.internal:5766), learn more at http://bit.ly/ks8MXK",
-                    (error as NSError).localizedDescription
+                    RMQError.InvalidScheme.rawValue,
+                    (error as NSError).code
                 )
             }
         }
@@ -50,8 +50,8 @@ class RMQURIParseTest: XCTestCase {
         XCTAssertThrowsError(try RMQURI.parse("amqp://dev.rabbitmq.com/a/path/with/slashes")) { (error) in
             do {
                 XCTAssertEqual(
-                    "amqp://dev.rabbitmq.com/a/path/with/slashes has multiple-segment path; please percent-encode any slashes in the vhost name (e.g. /production => %2Fproduction). Learn more at http://bit.ly/amqp-gem-and-connection-uris",
-                    (error as NSError).localizedDescription
+                    RMQError.InvalidPath.rawValue,
+                    (error as NSError).code
                 )
             }
         }

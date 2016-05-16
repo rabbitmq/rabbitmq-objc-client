@@ -12,4 +12,7 @@ typedef NS_ENUM(NSInteger, RMQError) {
     RMQErrorChannelWaitTimeout,
     RMQErrorChannelIncorrectSyncMethod,
     RMQErrorChannelQueueNameCollision,
+
+    RMQErrorInvalidPath,
+    RMQErrorInvalidScheme,
 };
