@@ -158,8 +158,8 @@ class IntegrationTests: XCTestCase {
                        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(50)),
                        "Timed out waiting for messages to arrive on single channel")
 
-        let emptyCount = [set1.isEmpty, set2.isEmpty, set3.isEmpty].reduce(0) { (acc, isEmpty) -> Int in
-            acc + (isEmpty ? 1 : 0)
+        let emptyCount = [set1, set2, set3].reduce(0) { (acc, set) -> Int in
+            acc + (set.isEmpty ? 1 : 0)
         }
 
         XCTAssertLessThan(emptyCount, 2)
