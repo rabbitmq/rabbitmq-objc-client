@@ -33,4 +33,17 @@ class RMQExchangeTest: XCTestCase {
         XCTAssertEqual(true, ch.lastReceivedBasicPublishPersistent)
     }
 
+    func testDeleteCallsDeleteOnChannel() {
+        let ch = ChannelSpy(1)
+        let ex = RMQExchange(name: "deletable", channel: ch)
+        
+        ex.delete()
+        XCTAssertEqual("deletable", ch.lastReceivedExchangeDeleteExchangeName)
+        XCTAssertEqual([], ch.lastReceivedExchangeDeleteOptions)
+
+        ex.delete([.IfUnused])
+        XCTAssertEqual("deletable", ch.lastReceivedExchangeDeleteExchangeName)
+        XCTAssertEqual([.IfUnused], ch.lastReceivedExchangeDeleteOptions)
+    }
+
 }

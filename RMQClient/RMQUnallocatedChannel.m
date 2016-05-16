@@ -149,6 +149,11 @@ completionHandler:(RMQConsumer)completionHandler {
     return [self headers:name options:RMQExchangeDeclareNoOptions];
 }
 
+- (void)exchangeDelete:(NSString *)name
+               options:(RMQExchangeDeleteOptions)options {
+    [self err];
+}
+
 # pragma mark - Private
 
 - (void)err {

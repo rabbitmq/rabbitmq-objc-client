@@ -17,6 +17,14 @@
     return self;
 }
 
+- (void)delete:(RMQExchangeDeleteOptions)options {
+    [self.channel exchangeDelete:self.name options:options];
+}
+
+- (void)delete {
+    [self delete:RMQExchangeDeleteNoOptions];
+}
+
 - (void)publish:(NSString *)message routingKey:(NSString *)key persistent:(BOOL)isPersistent {
     [self.channel basicPublish:message
                     routingKey:key

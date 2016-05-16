@@ -26,6 +26,7 @@ class RMQUnallocatedChannelTest: XCTestCase {
             { ch.direct("") },
             { ch.topic("") },
             { ch.headers("") },
+            { ch.exchangeDelete("", options: []) },
             { ch.nack(1) },
             { ch.queue("foo") },
             { ch.queueDelete("foo", options: []) },

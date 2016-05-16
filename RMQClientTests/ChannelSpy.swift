@@ -14,6 +14,8 @@
     var lastReceivedQueueBindRoutingKey: String?
     var lastReceivedQueueDeleteQueueName: String?
     var lastReceivedQueueDeleteOptions: RMQQueueDeleteOptions?
+    var lastReceivedExchangeDeleteExchangeName: String?
+    var lastReceivedExchangeDeleteOptions: RMQExchangeDeleteOptions?
     var lastReceivedFrameset: RMQFrameset?
     var queues: [String: RMQQueue] = [:]
     var stubbedMessageCount: RMQLong = RMQLong(0)
@@ -180,5 +182,10 @@
 
     func headers(name: String) -> RMQExchange {
         return headers(name, options: [])
+    }
+
+    func exchangeDelete(name: String, options: RMQExchangeDeleteOptions) {
+        lastReceivedExchangeDeleteExchangeName = name
+        lastReceivedExchangeDeleteOptions = options
     }
 }

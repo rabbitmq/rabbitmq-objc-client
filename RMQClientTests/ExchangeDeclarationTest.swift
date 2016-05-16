@@ -82,4 +82,22 @@ class ExchangeDeclarationTest: XCTestCase {
         XCTAssertEqual(ex3, ex4)
     }
 
+    func testExchangeDeleteSendsAnExchangeDelete() {
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(123, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue())
+        ch.exchangeDelete("my exchange", options: [.IfUnused])
+        XCTAssertEqual(MethodFixtures.exchangeDelete("my exchange", options: [.IfUnused]),
+                       dispatcher.lastSyncMethod as? RMQExchangeDelete)
+    }
+
+    func testExchangeDeclareAfterDeleteSendsAFreshDeclare() {
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(123, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue())
+        ch.fanout("my exchange")
+        ch.exchangeDelete("my exchange", options: [])
+        dispatcher.lastSyncMethod = nil
+        ch.fanout("my exchange")
+        XCTAssertEqual(MethodFixtures.exchangeDeclare("my exchange", type: "fanout", options: []), dispatcher.lastSyncMethod as? RMQExchangeDeclare)
+    }
+
 }

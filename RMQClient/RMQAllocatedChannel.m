@@ -289,6 +289,14 @@ completionHandler:(RMQConsumer)userCompletionHandler {
     return [self headers:name options:RMQExchangeDeclareNoOptions];
 }
 
+- (void)exchangeDelete:(NSString *)name
+               options:(RMQExchangeDeleteOptions)options {
+    [self.exchanges removeObjectForKey:name];
+    [self.dispatcher sendSyncMethod:[[RMQExchangeDelete alloc] initWithReserved1:[[RMQShort alloc] init:0]
+                                                                        exchange:[[RMQShortstr alloc] init:name]
+                                                                         options:options]];
+}
+
 # pragma mark - RMQFrameHandler
 
 - (void)handleFrameset:(RMQFrameset *)frameset {

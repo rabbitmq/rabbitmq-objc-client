@@ -190,4 +190,8 @@ class MethodFixtures {
     static func exchangeDeclareOk() -> RMQExchangeDeclareOk {
         return RMQExchangeDeclareOk(decodedFrame: [])
     }
+
+    static func exchangeDelete(name: String, options: RMQExchangeDeleteOptions) -> RMQExchangeDelete {
+        return RMQExchangeDelete(reserved1: RMQShort(0), exchange: RMQShortstr(name), options: options)
+    }
 }

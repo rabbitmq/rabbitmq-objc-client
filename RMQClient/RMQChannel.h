@@ -88,4 +88,7 @@ completionHandler:(RMQConsumer _Nonnull)completionHandler;
                    type:(nonnull NSString *)type
                 options:(RMQExchangeDeclareOptions)options;
 
+- (void)exchangeDelete:(nonnull NSString *)name
+               options:(RMQExchangeDeleteOptions)options;
+
 @end
