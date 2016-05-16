@@ -92,6 +92,10 @@ completionHandler:(RMQConsumer _Nonnull)completionHandler;
          destination:(nonnull NSString *)destinationName
           routingKey:(nonnull NSString *)routingKey;
 
+- (void)exchangeUnbind:(nonnull NSString *)sourceName
+           destination:(nonnull NSString *)destinationName
+            routingKey:(nonnull NSString *)routingKey;
+
 - (void)exchangeDelete:(nonnull NSString *)name
                options:(RMQExchangeDeleteOptions)options;
 

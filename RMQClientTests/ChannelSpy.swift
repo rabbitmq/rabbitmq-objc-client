@@ -28,6 +28,10 @@
     var lastReceivedExchangeBindSourceName: String?
     var lastReceivedExchangeBindRoutingKey: String?
 
+    var lastReceivedExchangeUnbindDestinationName: String?
+    var lastReceivedExchangeUnbindSourceName: String?
+    var lastReceivedExchangeUnbindRoutingKey: String?
+
     var lastReceivedExchangeDeleteExchangeName: String?
     var lastReceivedExchangeDeleteOptions: RMQExchangeDeleteOptions?
 
@@ -174,6 +178,12 @@
         lastReceivedExchangeBindSourceName = sourceName
         lastReceivedExchangeBindDestinationName = destinationName
         lastReceivedExchangeBindRoutingKey = routingKey
+    }
+
+    func exchangeUnbind(sourceName: String, destination destinationName: String, routingKey: String) {
+        lastReceivedExchangeUnbindSourceName = sourceName
+        lastReceivedExchangeUnbindDestinationName = destinationName
+        lastReceivedExchangeUnbindRoutingKey = routingKey
     }
 
     func fanout(name: String, options: RMQExchangeDeclareOptions) -> RMQExchange {

@@ -62,4 +62,20 @@ class RMQExchangeTest: XCTestCase {
         XCTAssertEqual("foo", ch.lastReceivedExchangeBindRoutingKey)
     }
 
+    func testUnbindCallsUnbindOnChannel() {
+        let ch = ChannelSpy(1)
+        let ex1 = RMQExchange(name: "ex1", channel: ch)
+        let ex2 = RMQExchange(name: "ex2", channel: ch)
+
+        ex1.unbind(ex2)
+        XCTAssertEqual("ex1", ch.lastReceivedExchangeUnbindDestinationName)
+        XCTAssertEqual("ex2", ch.lastReceivedExchangeUnbindSourceName)
+        XCTAssertEqual("", ch.lastReceivedExchangeUnbindRoutingKey)
+
+        ex1.unbind(ex2, routingKey: "foo")
+        XCTAssertEqual("ex1", ch.lastReceivedExchangeUnbindDestinationName)
+        XCTAssertEqual("ex2", ch.lastReceivedExchangeUnbindSourceName)
+        XCTAssertEqual("foo", ch.lastReceivedExchangeUnbindRoutingKey)
+    }
+
 }

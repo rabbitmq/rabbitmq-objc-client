@@ -12,6 +12,8 @@
 
 - (void)bind:(RMQExchange *)source routingKey:(NSString *)routingKey;
 - (void)bind:(RMQExchange *)source;
+- (void)unbind:(RMQExchange *)source routingKey:(NSString *)routingKey;
+- (void)unbind:(RMQExchange *)source;
 - (void)delete:(RMQExchangeDeleteOptions)options;
 - (void)delete;
 - (void)publish:(NSString *)message routingKey:(NSString *)key persistent:(BOOL)isPersistent;

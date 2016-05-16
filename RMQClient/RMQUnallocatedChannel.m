@@ -119,6 +119,12 @@ completionHandler:(RMQConsumer)completionHandler {
     [self err];
 }
 
+- (void)exchangeUnbind:(NSString *)sourceName
+           destination:(NSString *)destinationName
+            routingKey:(NSString *)routingKey {
+    [self err];
+}
+
 - (RMQExchange *)fanout:(NSString *)name options:(RMQExchangeDeclareOptions)options {
     [self err];
     return nil;

@@ -23,6 +23,7 @@ class RMQUnallocatedChannelTest: XCTestCase {
             { ch.defaultExchange() },
             { ch.exchangeDeclare("", type: "", options: []) },
             { ch.exchangeBind("", destination: "", routingKey: "") },
+            { ch.exchangeUnbind("", destination: "", routingKey: "") },
             { ch.fanout("") },
             { ch.direct("") },
             { ch.topic("") },
