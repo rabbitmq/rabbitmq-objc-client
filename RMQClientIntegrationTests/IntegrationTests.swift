@@ -24,9 +24,14 @@ class IntegrationTests: XCTestCase {
         defer { conn.blockingClose() }
 
         let ch = conn.createChannel()
+        let src = ch.fanout("src", options: [.AutoDelete])
+        let dst = ch.fanout("dest", options: [.AutoDelete])
         let q = ch.queue("", options: [.AutoDelete, .Exclusive])
 
-        q.publish(messageContent)
+        dst.bind(src)
+        q.bind(dst)
+
+        src.publish(messageContent)
 
         let semaphore = dispatch_semaphore_create(0)
         let expected = RMQMessage(consumerTag: "", deliveryTag: 1, content: messageContent)

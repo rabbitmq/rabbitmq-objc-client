@@ -46,4 +46,20 @@ class RMQExchangeTest: XCTestCase {
         XCTAssertEqual([.IfUnused], ch.lastReceivedExchangeDeleteOptions)
     }
 
+    func testBindCallsBindOnChannel() {
+        let ch = ChannelSpy(1)
+        let ex1 = RMQExchange(name: "ex1", channel: ch)
+        let ex2 = RMQExchange(name: "ex2", channel: ch)
+
+        ex1.bind(ex2)
+        XCTAssertEqual("ex1", ch.lastReceivedExchangeBindDestinationName)
+        XCTAssertEqual("ex2", ch.lastReceivedExchangeBindSourceName)
+        XCTAssertEqual("", ch.lastReceivedExchangeBindRoutingKey)
+
+        ex1.bind(ex2, routingKey: "foo")
+        XCTAssertEqual("ex1", ch.lastReceivedExchangeBindDestinationName)
+        XCTAssertEqual("ex2", ch.lastReceivedExchangeBindSourceName)
+        XCTAssertEqual("foo", ch.lastReceivedExchangeBindRoutingKey)
+    }
+
 }

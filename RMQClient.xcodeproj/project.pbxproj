@@ -70,6 +70,7 @@
 		AE8AD2661CC53B0D00229444 /* RMQFramesetValidationResult.h in Headers */ = {isa = PBXBuildFile; fileRef = AE8AD2641CC53B0D00229444 /* RMQFramesetValidationResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE8AD2671CC53B0D00229444 /* RMQFramesetValidationResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8AD2651CC53B0D00229444 /* RMQFramesetValidationResult.m */; };
 		AE8AD2691CC545ED00229444 /* RMQFramesetValidatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8AD2681CC545ED00229444 /* RMQFramesetValidatorTest.swift */; };
+		AE8B18E71CEA62DF006E36B1 /* ExchangeBindTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8B18E61CEA62DF006E36B1 /* ExchangeBindTest.swift */; };
 		AE929C791CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = AE929C771CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE929C7A1CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = AE929C781CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.m */; };
 		AE929C7C1CD00EB7001A6524 /* ConnectionClosureTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE929C7B1CD00EB7001A6524 /* ConnectionClosureTest.swift */; };
@@ -261,6 +262,7 @@
 		AE8AD2641CC53B0D00229444 /* RMQFramesetValidationResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQFramesetValidationResult.h; sourceTree = "<group>"; };
 		AE8AD2651CC53B0D00229444 /* RMQFramesetValidationResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQFramesetValidationResult.m; sourceTree = "<group>"; };
 		AE8AD2681CC545ED00229444 /* RMQFramesetValidatorTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQFramesetValidatorTest.swift; sourceTree = "<group>"; };
+		AE8B18E61CEA62DF006E36B1 /* ExchangeBindTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExchangeBindTest.swift; sourceTree = "<group>"; };
 		AE929C771CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQQueuingConnectionDelegateProxy.h; sourceTree = "<group>"; };
 		AE929C781CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQQueuingConnectionDelegateProxy.m; sourceTree = "<group>"; };
 		AE929C7B1CD00EB7001A6524 /* ConnectionClosureTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionClosureTest.swift; sourceTree = "<group>"; };
@@ -396,6 +398,7 @@
 				AE8AD25B1CC4E67F00229444 /* RMQUnallocatedChannelTest.swift */,
 				AE8AD2681CC545ED00229444 /* RMQFramesetValidatorTest.swift */,
 				AE09C82D1CCE369C00FA6915 /* ExchangeDeclarationTest.swift */,
+				AE8B18E61CEA62DF006E36B1 /* ExchangeBindTest.swift */,
 				AE09C8311CCE589800FA6915 /* QueueDeclarationTest.swift */,
 				AE09C82F1CCE495300FA6915 /* QueueBindTest.swift */,
 				AE09C83B1CCE680F00FA6915 /* RMQProcessInfoNameGeneratorTest.swift */,
@@ -948,6 +951,7 @@
 				AE8279851C8D86110013ADD1 /* ChannelAllocationTest.swift in Sources */,
 				AE09C8321CCE589800FA6915 /* QueueDeclarationTest.swift in Sources */,
 				AE929C7C1CD00EB7001A6524 /* ConnectionClosureTest.swift in Sources */,
+				AE8B18E71CEA62DF006E36B1 /* ExchangeBindTest.swift in Sources */,
 				AEA8A7661CC987FA00371E38 /* FakeSerialQueueTest.swift in Sources */,
 				AE9595411CD0E80E0039418C /* FakeClock.swift in Sources */,
 				AE26FA2E1C970DF100CDBBAA /* RMQChannelContract.swift in Sources */,

@@ -254,6 +254,17 @@ completionHandler:(RMQConsumer)userCompletionHandler {
                                                                         arguments:[[RMQTable alloc] init:@{}]]];
 }
 
+- (void)exchangeBind:(NSString *)sourceName
+         destination:(NSString *)destinationName
+          routingKey:(NSString *)routingKey {
+    [self.dispatcher sendSyncMethod:[[RMQExchangeBind alloc] initWithReserved1:[[RMQShort alloc] init:0]
+                                                                   destination:[[RMQShortstr alloc] init:destinationName]
+                                                                        source:[[RMQShortstr alloc] init:sourceName]
+                                                                    routingKey:[[RMQShortstr alloc] init:routingKey]
+                                                                       options:RMQExchangeBindNoOptions
+                                                                     arguments:[[RMQTable alloc] init:@{}]]];
+}
+
 - (RMQExchange *)fanout:(NSString *)name options:(RMQExchangeDeclareOptions)options {
     return [self memoizedExchangeDeclare:name type:@"fanout" options:options];
 }

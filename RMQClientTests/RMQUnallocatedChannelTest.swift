@@ -22,6 +22,7 @@ class RMQUnallocatedChannelTest: XCTestCase {
             { ch.blockingWaitOn(RMQConnectionStart.self) },
             { ch.defaultExchange() },
             { ch.exchangeDeclare("", type: "", options: []) },
+            { ch.exchangeBind("", destination: "", routingKey: "") },
             { ch.fanout("") },
             { ch.direct("") },
             { ch.topic("") },

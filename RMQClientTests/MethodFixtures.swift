@@ -191,6 +191,10 @@ class MethodFixtures {
         return RMQExchangeDeclareOk(decodedFrame: [])
     }
 
+    static func exchangeBind(source: String, destination: String, routingKey: String) -> RMQExchangeBind {
+        return RMQExchangeBind(reserved1: RMQShort(0), destination: RMQShortstr(destination), source: RMQShortstr(source), routingKey: RMQShortstr(routingKey), options: [], arguments: RMQTable([:]))
+    }
+
     static func exchangeDelete(name: String, options: RMQExchangeDeleteOptions) -> RMQExchangeDelete {
         return RMQExchangeDelete(reserved1: RMQShort(0), exchange: RMQShortstr(name), options: options)
     }

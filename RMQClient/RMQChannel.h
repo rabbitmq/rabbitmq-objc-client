@@ -88,6 +88,10 @@ completionHandler:(RMQConsumer _Nonnull)completionHandler;
                    type:(nonnull NSString *)type
                 options:(RMQExchangeDeclareOptions)options;
 
+- (void)exchangeBind:(nonnull NSString *)sourceName
+         destination:(nonnull NSString *)destinationName
+          routingKey:(nonnull NSString *)routingKey;
+
 - (void)exchangeDelete:(nonnull NSString *)name
                options:(RMQExchangeDeleteOptions)options;
 

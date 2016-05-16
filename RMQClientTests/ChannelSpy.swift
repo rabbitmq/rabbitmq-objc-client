@@ -1,21 +1,32 @@
 @objc class ChannelSpy : NSObject, RMQChannel {
     var channelNumber: NSNumber
+
     var lastReceivedBasicConsumeOptions: RMQBasicConsumeOptions = []
     var lastReceivedBasicConsumeBlock: RMQConsumer?
+
     var lastReceivedBasicGetQueue: String?
     var lastReceivedBasicGetOptions: RMQBasicGetOptions?
     var lastReceivedBasicGetCompletionHandler: RMQConsumer?
+
     var lastReceivedBasicPublishMessage: String?
     var lastReceivedBasicPublishRoutingKey: String?
     var lastReceivedBasicPublishExchange: String?
     var lastReceivedBasicPublishPersistent: Bool?
+
     var lastReceivedQueueBindQueueName: String?
     var lastReceivedQueueBindExchange: String?
     var lastReceivedQueueBindRoutingKey: String?
+
     var lastReceivedQueueDeleteQueueName: String?
     var lastReceivedQueueDeleteOptions: RMQQueueDeleteOptions?
+
+    var lastReceivedExchangeBindDestinationName: String?
+    var lastReceivedExchangeBindSourceName: String?
+    var lastReceivedExchangeBindRoutingKey: String?
+
     var lastReceivedExchangeDeleteExchangeName: String?
     var lastReceivedExchangeDeleteOptions: RMQExchangeDeleteOptions?
+
     var lastReceivedFrameset: RMQFrameset?
     var queues: [String: RMQQueue] = [:]
     var stubbedMessageCount: RMQLong = RMQLong(0)
@@ -150,6 +161,12 @@
     }
 
     func exchangeDeclare(name: String, type: String, options: RMQExchangeDeclareOptions) {
+    }
+
+    func exchangeBind(sourceName: String, destination destinationName: String, routingKey: String) {
+        lastReceivedExchangeBindSourceName = sourceName
+        lastReceivedExchangeBindDestinationName = destinationName
+        lastReceivedExchangeBindRoutingKey = routingKey
     }
 
     func fanout(name: String, options: RMQExchangeDeclareOptions) -> RMQExchange {
