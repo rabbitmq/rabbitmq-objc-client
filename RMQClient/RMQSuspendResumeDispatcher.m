@@ -114,9 +114,7 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 
 - (void)handleFrameset:(RMQFrameset *)frameset {
     if (self.state != DispatcherStateClosedByServer && [self isClose:frameset.method]) {
-        self.state = DispatcherStateClosedByServer;
-        [self.sender sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:self.channelNumber
-                                                                      method:[RMQChannelCloseOk new]]];
+        [self processServerClose:(RMQChannelClose *)frameset.method];
     } else if (self.state != DispatcherStateClosedByServer) {
         [self.validator fulfill:frameset];
     }
@@ -136,6 +134,16 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
     } else if (![self isClose:method]) {
         [self sendChannelClosedError];
     }
+}
+
+- (void)processServerClose:(RMQChannelClose *)close {
+    self.state = DispatcherStateClosedByServer;
+    NSError *error = [NSError errorWithDomain:RMQErrorDomain
+                                         code:close.replyCode.integerValue
+                                     userInfo:@{NSLocalizedDescriptionKey: close.replyText.stringValue}];
+    [self.delegate channel:self.channel error:error];
+    [self.sender sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:self.channelNumber
+                                                                  method:[RMQChannelCloseOk new]]];
 }
 
 - (void)sendChannelClosedError {

@@ -223,11 +223,24 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         XCTAssertFalse(called)
     }
 
+    func testServerCloseSendsErrorToDelegateWithCloseReasonWhen404() {
+        let (dispatcher, _, _, delegate, _) = setupActivated()
+        let close = RMQChannelClose(
+            replyCode: RMQShort(404),
+            replyText: RMQShortstr("NOT_FOUND - no exchange 'yomoney' in vhost '/'"),
+            classId: RMQShort(60),
+            methodId: RMQShort(40)
+        )
+        dispatcher.handleFrameset(RMQFrameset(channelNumber: 123, method: close))
+        XCTAssertEqual(RMQError.NotFound.rawValue, delegate.lastChannelError?.code)
+        XCTAssertEqual("NOT_FOUND - no exchange 'yomoney' in vhost '/'", delegate.lastChannelError?.localizedDescription)
+    }
+
     func testServerCloseTriggersErrorsForFutureOperations() {
         let (dispatcher, q, _, delegate, _) = setupActivated()
         dispatcher.handleFrameset(RMQFrameset(channelNumber: 123, method: MethodFixtures.channelClose()))
         dispatcher.sendSyncMethod(MethodFixtures.basicGet())
-        XCTAssertNil(delegate.lastChannelError)
+        delegate.lastChannelError = nil
         try! q.step()
         XCTAssertEqual(RMQError.ChannelClosed.rawValue, delegate.lastChannelError?.code)
     }
@@ -243,6 +256,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         let (dispatcher, q, sender, delegate, _) = setupActivated()
         dispatcher.handleFrameset(RMQFrameset(channelNumber: 123, method: MethodFixtures.channelClose()))
 
+        delegate.lastChannelError = nil
         sender.lastSentMethod = nil
         dispatcher.sendSyncMethodBlocking(MethodFixtures.channelClose())
         try! q.finish()

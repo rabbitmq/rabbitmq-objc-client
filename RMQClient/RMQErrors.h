@@ -13,6 +13,8 @@ typedef NS_ENUM(NSInteger, RMQError) {
     RMQErrorChannelIncorrectSyncMethod,
     RMQErrorChannelQueueNameCollision,
 
-    RMQErrorInvalidPath,
     RMQErrorInvalidScheme,
+
+    RMQErrorInvalidPath                 = 402,
+    RMQErrorNotFound                    = 404,
 };
