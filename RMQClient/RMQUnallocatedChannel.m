@@ -64,6 +64,11 @@ completionHandler:(RMQConsumer)completionHandler {
     return [self queue:queueName options:RMQQueueDeclareNoOptions];
 }
 
+- (void)queueDelete:(NSString *)queueName
+            options:(RMQQueueDeleteOptions)options {
+    [self err];
+}
+
 - (void)queueBind:(NSString *)queueName exchange:(NSString *)exchangeName routingKey:(nonnull NSString *)routingKey {
     [self err];
 }

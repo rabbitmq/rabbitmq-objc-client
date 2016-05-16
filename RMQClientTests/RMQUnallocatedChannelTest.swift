@@ -28,6 +28,7 @@ class RMQUnallocatedChannelTest: XCTestCase {
             { ch.headers("") },
             { ch.nack(1) },
             { ch.queue("foo") },
+            { ch.queueDelete("foo", options: []) },
             { ch.queueBind("", exchange: "", routingKey: "") },
             { ch.queueUnbind("", exchange: "", routingKey: "") },
             { ch.reject(1) },

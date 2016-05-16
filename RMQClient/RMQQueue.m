@@ -38,6 +38,14 @@
     [self bind:exchange routingKey:@""];
 }
 
+- (void)delete:(RMQQueueDeleteOptions)options {
+    [self.channel queueDelete:self.name options:options];
+}
+
+- (void)delete {
+    [self delete:RMQQueueDeleteNoOptions];
+}
+
 - (void)publish:(NSString *)message persistent:(BOOL)isPersistent {
     [self.channel basicPublish:message routingKey:self.name exchange:@"" persistent:isPersistent];
 }

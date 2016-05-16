@@ -99,4 +99,17 @@ class RMQQueueTest: XCTestCase {
         XCTAssertEqual("", channel.lastReceivedQueueBindRoutingKey)
     }
 
+    func testDeleteCallsDeleteOnChannel() {
+        let channel = ChannelSpy(123)
+        let queue = RMQQueue(name: "deletable", channel: channel)
+
+        queue.delete()
+        XCTAssertEqual("deletable", channel.lastReceivedQueueDeleteQueueName)
+        XCTAssertEqual([], channel.lastReceivedQueueDeleteOptions)
+
+        queue.delete([.IfEmpty])
+        XCTAssertEqual("deletable", channel.lastReceivedQueueDeleteQueueName)
+        XCTAssertEqual([.IfEmpty], channel.lastReceivedQueueDeleteOptions)
+    }
+
 }

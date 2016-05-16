@@ -46,4 +46,22 @@ class QueueDeclarationTest: XCTestCase {
         XCTAssertEqual(RMQError.ChannelQueueNameCollision.rawValue, delegate.lastChannelError?.code)
     }
 
+    func testQueueDeleteSendsAQueueDelete() {
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(123, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue())
+        ch.queueDelete("my queue", options: [.IfUnused])
+        XCTAssertEqual(MethodFixtures.queueDelete("my queue", options: [.IfUnused]),
+                       dispatcher.lastSyncMethod as? RMQQueueDelete)
+    }
+
+    func testQueueDeclareAfterDeleteSendsAFreshDeclare() {
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(123, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue())
+        ch.queue("my queue")
+        ch.queueDelete("my queue", options: [])
+        dispatcher.lastSyncMethod = nil
+        ch.queue("my queue")
+        XCTAssertEqual(MethodFixtures.queueDeclare("my queue", options: []), dispatcher.lastSyncMethod as? RMQQueueDeclare)
+    }
+
 }

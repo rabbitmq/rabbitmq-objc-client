@@ -110,6 +110,14 @@
     return [self queue:queueName options:RMQQueueDeclareNoOptions];
 }
 
+- (void)queueDelete:(NSString *)queueName
+            options:(RMQQueueDeleteOptions)options {
+    [self.queues removeObjectForKey:queueName];
+    [self.dispatcher sendSyncMethod:[[RMQQueueDelete alloc] initWithReserved1:[[RMQShort alloc] init:0]
+                                                                        queue:[[RMQShortstr alloc] init:queueName]
+                                                                      options:options]];
+}
+
 - (void)queueBind:(NSString *)queueName
          exchange:(NSString *)exchangeName
        routingKey:(nonnull NSString *)routingKey {

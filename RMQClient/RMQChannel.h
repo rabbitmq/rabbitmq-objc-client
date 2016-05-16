@@ -21,6 +21,9 @@
 
 - (nonnull RMQQueue *)queue:(nonnull NSString *)queueName;
 
+- (void)queueDelete:(nonnull NSString *)queueName
+            options:(RMQQueueDeleteOptions)options;
+
 - (void)queueBind:(nonnull NSString *)queueName
          exchange:(nonnull NSString *)exchangeName
        routingKey:(nonnull NSString *)routingKey;

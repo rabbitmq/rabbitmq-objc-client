@@ -12,6 +12,8 @@
     var lastReceivedQueueBindQueueName: String?
     var lastReceivedQueueBindExchange: String?
     var lastReceivedQueueBindRoutingKey: String?
+    var lastReceivedQueueDeleteQueueName: String?
+    var lastReceivedQueueDeleteOptions: RMQQueueDeleteOptions?
     var lastReceivedFrameset: RMQFrameset?
     var queues: [String: RMQQueue] = [:]
     var stubbedMessageCount: RMQLong = RMQLong(0)
@@ -82,6 +84,11 @@
             messageCount: stubbedMessageCount,
             consumerCount: stubbedConsumerCount
         )
+    }
+
+    func queueDelete(queueName: String, options: RMQQueueDeleteOptions) {
+        lastReceivedQueueDeleteQueueName = queueName
+        lastReceivedQueueDeleteOptions = options
     }
 
     func queueBind(queueName: String, exchange exchangeName: String, routingKey: String) {
