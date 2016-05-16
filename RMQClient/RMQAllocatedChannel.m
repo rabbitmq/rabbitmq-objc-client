@@ -1,12 +1,9 @@
 #import "RMQBasicProperties.h"
 #import "RMQErrors.h"
-#import "RMQMethodDecoder.h"
-#import "RMQMethodMap.h"
 #import "RMQMethods.h"
 #import "RMQAllocatedChannel.h"
 #import "RMQConnectionDelegate.h"
 #import "RMQDeliveryInfo.h"
-#import "RMQSuspendResumeDispatcher.h"
 
 @interface RMQAllocatedChannel ()
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
