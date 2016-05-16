@@ -76,7 +76,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
     func testAsyncFramesetSendsFrameset() {
         let (dispatcher, q, sender, _, _) = setupActivated()
 
-        let frameset = RMQFrameset(channelNumber: 123, method: MethodFixtures.channelClose())
+        let frameset = RMQFrameset(channelNumber: 123, method: MethodFixtures.basicAck(1, options: []))
         dispatcher.sendAsyncFrameset(frameset)
 
         try! q.step()
@@ -184,6 +184,22 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         XCTAssertNil(delegate.lastChannelError)
     }
 
+    func testAdditionalClientClosuresHaveNoEffect() {
+        let (dispatcher, q, sender, delegate, _) = setupActivated()
+
+        dispatcher.sendSyncMethod(MethodFixtures.channelClose())
+        try! q.step()
+        dispatcher.handleFrameset(RMQFrameset(channelNumber: 123, method: MethodFixtures.channelCloseOk()))
+        try! q.step()
+
+        sender.lastSentMethod = nil
+        dispatcher.sendSyncMethodBlocking(MethodFixtures.channelClose())
+        try! q.step()
+
+        XCTAssertNil(delegate.lastChannelError)
+        XCTAssertNil(sender.lastSentMethod)
+    }
+
     // MARK: Server close tests
 
     func testServerCloseCausesCloseOkToBeSentInResponse() {
@@ -221,6 +237,18 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         q.suspend()
         dispatcher.handleFrameset(RMQFrameset(channelNumber: 123, method: MethodFixtures.channelClose()))
         XCTAssertFalse(q.suspended)
+    }
+
+    func testClientCloseFollowingServerCloseHasNoEffect() {
+        let (dispatcher, q, sender, delegate, _) = setupActivated()
+        dispatcher.handleFrameset(RMQFrameset(channelNumber: 123, method: MethodFixtures.channelClose()))
+
+        sender.lastSentMethod = nil
+        dispatcher.sendSyncMethodBlocking(MethodFixtures.channelClose())
+        try! q.finish()
+
+        XCTAssertNil(delegate.lastChannelError)
+        XCTAssertNil(sender.lastSentMethod)
     }
 
     // MARK: Helpers
