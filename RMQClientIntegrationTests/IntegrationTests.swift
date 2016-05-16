@@ -200,4 +200,39 @@ class IntegrationTests: XCTestCase {
         )
     }
 
+    func testClientChannelCloseCausesFutureOperationsToFail() {
+        let delegate = ConnectionDelegateSpy()
+        let conn = RMQConnection(delegate: delegate)
+        conn.start()
+        let ch = conn.createChannel()
+
+        ch.close()
+
+        XCTAssert(
+            TestHelper.pollUntil {
+                ch.basicQos(1, global: false)
+                return delegate.lastChannelError?.code == RMQError.ChannelClosed.rawValue
+            }
+        )
+    }
+
+    func testServerChannelCloseCausesFutureOperationsToFail() {
+        let delegate = ConnectionDelegateSpy()
+        let conn = RMQConnection(delegate: delegate)
+        conn.start()
+        let ch = conn.createChannel()
+
+        causeServerChannelClose(ch)
+
+        XCTAssert(
+            TestHelper.pollUntil {
+                ch.basicQos(1, global: false)
+                return delegate.lastChannelError?.code == RMQError.ChannelClosed.rawValue
+            }
+        )
+    }
+
+    private func causeServerChannelClose(ch: RMQChannel) {
+        ch.basicPublish("", routingKey: "a route that can't be found", exchange: "a non-existent exchange", persistent: false)
+    }
 }

@@ -1,13 +1,19 @@
 #import "RMQSuspendResumeDispatcher.h"
 #import "RMQErrors.h"
 
+typedef NS_ENUM(NSUInteger, DispatcherState) {
+    DispatcherStateOpen = 1,
+    DispatcherStateClosedByClient,
+    DispatcherStateClosedByServer,
+};
+
 @interface RMQSuspendResumeDispatcher ()
 @property (nonatomic, readwrite) id<RMQChannel> channel;
 @property (nonatomic, readwrite) id<RMQSender> sender;
 @property (nonatomic, readwrite) RMQFramesetValidator *validator;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
-@property (nonatomic, readwrite) BOOL channelCloseRequested;
+@property (nonatomic, readwrite) DispatcherState state;
 @end
 
 @implementation RMQSuspendResumeDispatcher
@@ -20,7 +26,7 @@
         self.sender = sender;
         self.validator = [RMQFramesetValidator new];
         self.commandQueue = commandQueue;
-        self.channelCloseRequested = NO;
+        self.state = DispatcherStateOpen;
     }
     return self;
 }
@@ -34,7 +40,7 @@
 
 - (void)blockingWaitOn:(Class)method {
     [self.commandQueue blockingEnqueue:^{
-        [self checkNotAlreadyClosed:^{
+        [self handleClosure:^{
             [self.commandQueue suspend];
         }];
     }];
@@ -50,9 +56,9 @@
 - (void)sendSyncMethod:(id<RMQMethod>)method
      completionHandler:(void (^)(RMQFramesetValidationResult *result))completionHandler {
     [self.commandQueue enqueue:^{
-        [self checkNotAlreadyClosed:^{
+        [self handleClosure:^{
             if ([method isKindOfClass:[RMQChannelClose class]]) {
-                self.channelCloseRequested = YES;
+                self.state = DispatcherStateClosedByClient;
             }
 
             RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber
@@ -63,13 +69,11 @@
     }];
 
     [self.commandQueue enqueue:^{
-        if (!self.channelCloseRequested) {
-            RMQFramesetValidationResult *result = [self.validator expect:method.syncResponse];
-            if (result.error) {
-                [self.delegate channel:self.channel error:result.error];
-            } else {
-                completionHandler(result);
-            }
+        RMQFramesetValidationResult *result = [self.validator expect:method.syncResponse];
+        if (self.state == DispatcherStateOpen && result.error) {
+            [self.delegate channel:self.channel error:result.error];
+        } else if (self.state == DispatcherStateOpen) {
+            completionHandler(result);
         }
     }];
 }
@@ -81,7 +85,7 @@
 
 - (void)sendSyncMethodBlocking:(id<RMQMethod>)method {
     [self.commandQueue blockingEnqueue:^{
-        [self checkNotAlreadyClosed:^{
+        [self handleClosure:^{
             RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
             [self.commandQueue suspend];
             [self.sender sendFrameset:frameset];
@@ -98,7 +102,7 @@
 
 - (void)sendAsyncFrameset:(RMQFrameset *)frameset {
     [self.commandQueue enqueue:^{
-        [self checkNotAlreadyClosed:^{
+        [self handleClosure:^{
             [self.sender sendFrameset:frameset];
         }];
     }];
@@ -109,7 +113,13 @@
 }
 
 - (void)handleFrameset:(RMQFrameset *)frameset {
-    [self.validator fulfill:frameset];
+    if (self.state != DispatcherStateClosedByServer && [frameset.method isKindOfClass:[RMQChannelClose class]]) {
+        self.state = DispatcherStateClosedByServer;
+        [self.sender sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:self.channelNumber
+                                                                      method:[RMQChannelCloseOk new]]];
+    } else if (self.state != DispatcherStateClosedByServer) {
+        [self.validator fulfill:frameset];
+    }
     [self.commandQueue resume];
 }
 
@@ -119,8 +129,8 @@
     return self.channel.channelNumber;
 }
 
-- (void)checkNotAlreadyClosed:(void (^)())operation {
-    if (self.channelCloseRequested) {
+- (void)handleClosure:(void (^)())operation {
+    if (self.state != DispatcherStateOpen) {
         [self sendChannelClosedError];
     } else {
         operation();
