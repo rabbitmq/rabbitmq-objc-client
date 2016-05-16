@@ -38,6 +38,15 @@
     [self bind:exchange routingKey:@""];
 }
 
+- (void)unbind:(RMQExchange *)exchange
+    routingKey:(NSString *)routingKey {
+    [self.channel queueUnbind:self.name exchange:exchange.name routingKey:routingKey];
+}
+
+- (void)unbind:(RMQExchange *)exchange {
+    [self unbind:exchange routingKey:@""];
+}
+
 - (void)delete:(RMQQueueDeleteOptions)options {
     [self.channel queueDelete:self.name options:options];
 }

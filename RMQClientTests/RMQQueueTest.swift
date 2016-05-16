@@ -99,6 +99,30 @@ class RMQQueueTest: XCTestCase {
         XCTAssertEqual("", channel.lastReceivedQueueBindRoutingKey)
     }
 
+    func testUnbindCallsUnbindOnChannel() {
+        let channel = ChannelSpy(123)
+        let ex = RMQExchange(name: "my-exchange", channel: channel)
+        let queue = RMQQueue(name: "unbindy", channel: channel)
+
+        queue.unbind(ex, routingKey: "foo")
+
+        XCTAssertEqual("unbindy", channel.lastReceivedQueueUnbindQueueName)
+        XCTAssertEqual("my-exchange", channel.lastReceivedQueueUnbindExchange)
+        XCTAssertEqual("foo", channel.lastReceivedQueueUnbindRoutingKey)
+    }
+    
+    func testUnbindWithoutRoutingKeySendsEmptyStringRoutingKey() {
+        let channel = ChannelSpy(123)
+        let ex = RMQExchange(name: "my-exchange", channel: channel)
+        let queue = RMQQueue(name: "unbindy", channel: channel)
+
+        queue.unbind(ex)
+
+        XCTAssertEqual("unbindy", channel.lastReceivedQueueUnbindQueueName)
+        XCTAssertEqual("my-exchange", channel.lastReceivedQueueUnbindExchange)
+        XCTAssertEqual("", channel.lastReceivedQueueUnbindRoutingKey)
+    }
+    
     func testDeleteCallsDeleteOnChannel() {
         let channel = ChannelSpy(123)
         let queue = RMQQueue(name: "deletable", channel: channel)

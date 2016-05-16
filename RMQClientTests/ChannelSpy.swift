@@ -17,6 +17,10 @@
     var lastReceivedQueueBindExchange: String?
     var lastReceivedQueueBindRoutingKey: String?
 
+    var lastReceivedQueueUnbindQueueName: String?
+    var lastReceivedQueueUnbindExchange: String?
+    var lastReceivedQueueUnbindRoutingKey: String?
+
     var lastReceivedQueueDeleteQueueName: String?
     var lastReceivedQueueDeleteOptions: RMQQueueDeleteOptions?
 
@@ -111,6 +115,9 @@
     }
 
     func queueUnbind(queueName: String, exchange exchangeName: String, routingKey: String) {
+        lastReceivedQueueUnbindQueueName = queueName
+        lastReceivedQueueUnbindExchange = exchangeName
+        lastReceivedQueueUnbindRoutingKey = routingKey
     }
 
     func basicConsume(queueName: String, options: RMQBasicConsumeOptions, consumer: RMQConsumer) {

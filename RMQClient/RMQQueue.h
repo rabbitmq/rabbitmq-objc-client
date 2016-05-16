@@ -18,6 +18,8 @@
 
 - (void)bind:(nonnull RMQExchange *)exchange routingKey:(nonnull NSString *)routingKey;
 - (void)bind:(nonnull RMQExchange *)exchange;
+- (void)unbind:(nonnull RMQExchange *)exchange routingKey:(nonnull NSString *)routingKey;
+- (void)unbind:(nonnull RMQExchange *)exchange;
 - (void)delete:(RMQQueueDeleteOptions)options;
 - (void)delete;
 - (void)publish:(nonnull NSString *)message persistent:(BOOL)isPersistent;
