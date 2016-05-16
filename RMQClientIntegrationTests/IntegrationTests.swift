@@ -204,6 +204,8 @@ class IntegrationTests: XCTestCase {
         let delegate = ConnectionDelegateSpy()
         let conn = RMQConnection(delegate: delegate)
         conn.start()
+        defer { conn.blockingClose() }
+
         let ch = conn.createChannel()
 
         ch.close()
@@ -220,6 +222,8 @@ class IntegrationTests: XCTestCase {
         let delegate = ConnectionDelegateSpy()
         let conn = RMQConnection(delegate: delegate)
         conn.start()
+        defer { conn.blockingClose() }
+
         let ch = conn.createChannel()
 
         causeServerChannelClose(ch)
