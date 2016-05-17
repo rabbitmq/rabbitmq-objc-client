@@ -7,26 +7,26 @@
 @protocol RMQChannel;
 
 @interface RMQQueue : NSObject
-@property (nonnull, copy, nonatomic, readonly) NSString *name;
+@property (copy, nonatomic, readonly) NSString *name;
 
-- (nonnull instancetype)initWithName:(nonnull NSString *)name
-                             options:(RMQQueueDeclareOptions)options
-                             channel:(nonnull id <RMQChannel>)channel;
+- (instancetype)initWithName:(NSString *)name
+                     options:(RMQQueueDeclareOptions)options
+                     channel:(id <RMQChannel>)channel;
 
-- (nonnull instancetype)initWithName:(nonnull NSString *)name
-                             channel:(nonnull id <RMQChannel>)channel;
+- (instancetype)initWithName:(NSString *)name
+                     channel:(id <RMQChannel>)channel;
 
-- (void)bind:(nonnull RMQExchange *)exchange routingKey:(nonnull NSString *)routingKey;
-- (void)bind:(nonnull RMQExchange *)exchange;
-- (void)unbind:(nonnull RMQExchange *)exchange routingKey:(nonnull NSString *)routingKey;
-- (void)unbind:(nonnull RMQExchange *)exchange;
+- (void)bind:(RMQExchange *)exchange routingKey:(NSString *)routingKey;
+- (void)bind:(RMQExchange *)exchange;
+- (void)unbind:(RMQExchange *)exchange routingKey:(NSString *)routingKey;
+- (void)unbind:(RMQExchange *)exchange;
 - (void)delete:(RMQQueueDeleteOptions)options;
 - (void)delete;
-- (void)publish:(nonnull NSString *)message persistent:(BOOL)isPersistent;
-- (void)publish:(nonnull NSString *)message;
-- (void)pop:(RMQConsumerDeliveryHandler _Nonnull)handler;
-- (void)subscribe:(RMQConsumerDeliveryHandler _Nonnull)handler;
+- (void)publish:(NSString *)message persistent:(BOOL)isPersistent;
+- (void)publish:(NSString *)message;
+- (void)pop:(RMQConsumerDeliveryHandler)handler;
+- (void)subscribe:(RMQConsumerDeliveryHandler)handler;
 - (void)subscribe:(RMQBasicConsumeOptions)options
-          handler:(RMQConsumerDeliveryHandler _Nonnull)handler;
+          handler:(RMQConsumerDeliveryHandler)handler;
 
 @end

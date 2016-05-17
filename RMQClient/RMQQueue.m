@@ -30,7 +30,7 @@
 }
 
 - (void)bind:(RMQExchange *)exchange
-  routingKey:(nonnull NSString *)routingKey {
+  routingKey:(NSString *)routingKey {
     [self.channel queueBind:self.name exchange:exchange.name routingKey:routingKey];
 }
 
@@ -76,7 +76,7 @@
                       consumer:handler];
 }
 
-- (void)subscribe:(RMQConsumerDeliveryHandler _Nonnull)handler {
+- (void)subscribe:(RMQConsumerDeliveryHandler)handler {
     return [self subscribe:RMQBasicConsumeNoAck
                    handler:handler];
 }
