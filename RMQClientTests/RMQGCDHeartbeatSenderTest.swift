@@ -43,7 +43,7 @@ class RMQGCDHeartbeatSenderTest: XCTestCase {
         let handler = sender.startWithInterval(1)
         sender.stop()
 
-        clock.advance(1)
+        clock.advance(1.01)
         sender.signalActivity()
         handler()
 
