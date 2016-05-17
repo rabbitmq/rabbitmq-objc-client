@@ -2,7 +2,7 @@
 #import "RMQMethods.h"
 #import "RMQMessage.h"
 #import "RMQExchange.h"
-#import "RMQConsumer.h"
+#import "RMQConsumerDeliveryHandler.h"
 
 @protocol RMQChannel;
 
@@ -24,9 +24,9 @@
 - (void)delete;
 - (void)publish:(nonnull NSString *)message persistent:(BOOL)isPersistent;
 - (void)publish:(nonnull NSString *)message;
-- (void)pop:(RMQConsumer _Nonnull)handler;
-- (void)subscribe:(RMQConsumer _Nonnull)handler;
+- (void)pop:(RMQConsumerDeliveryHandler _Nonnull)handler;
+- (void)subscribe:(RMQConsumerDeliveryHandler _Nonnull)handler;
 - (void)subscribe:(RMQBasicConsumeOptions)options
-          handler:(RMQConsumer _Nonnull)handler;
+          handler:(RMQConsumerDeliveryHandler _Nonnull)handler;
 
 @end

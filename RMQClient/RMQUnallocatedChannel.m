@@ -33,7 +33,7 @@
 
 - (void)basicConsume:(NSString *)queueName
              options:(RMQBasicConsumeOptions)options
-            consumer:(RMQConsumer)consumer {
+            consumer:(RMQConsumerDeliveryHandler)consumer {
     [self err];
 }
 
@@ -46,7 +46,7 @@
 
 -  (void)basicGet:(NSString *)queue
           options:(RMQBasicGetOptions)options
-completionHandler:(RMQConsumer)completionHandler {
+completionHandler:(RMQConsumerDeliveryHandler)completionHandler {
     [self err];
 }
 

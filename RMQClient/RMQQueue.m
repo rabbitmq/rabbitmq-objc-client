@@ -63,20 +63,20 @@
     [self publish:message persistent:NO];
 }
 
-- (void)pop:(RMQConsumer)handler {
+- (void)pop:(RMQConsumerDeliveryHandler)handler {
     [self.channel basicGet:self.name
                    options:RMQBasicGetNoOptions
          completionHandler:handler];
 }
 
 - (void)subscribe:(RMQBasicConsumeOptions)options
-          handler:(RMQConsumer)handler {
+          handler:(RMQConsumerDeliveryHandler)handler {
     [self.channel basicConsume:self.name
                        options:options
                       consumer:handler];
 }
 
-- (void)subscribe:(RMQConsumer _Nonnull)handler {
+- (void)subscribe:(RMQConsumerDeliveryHandler _Nonnull)handler {
     return [self subscribe:RMQBasicConsumeNoAck
                    handler:handler];
 }

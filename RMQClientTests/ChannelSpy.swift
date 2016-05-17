@@ -2,11 +2,11 @@
     var channelNumber: NSNumber
 
     var lastReceivedBasicConsumeOptions: RMQBasicConsumeOptions = []
-    var lastReceivedBasicConsumeBlock: RMQConsumer?
+    var lastReceivedBasicConsumeBlock: RMQConsumerDeliveryHandler?
 
     var lastReceivedBasicGetQueue: String?
     var lastReceivedBasicGetOptions: RMQBasicGetOptions?
-    var lastReceivedBasicGetCompletionHandler: RMQConsumer?
+    var lastReceivedBasicGetCompletionHandler: RMQConsumerDeliveryHandler?
 
     var lastReceivedBasicPublishMessage: String?
     var lastReceivedBasicPublishRoutingKey: String?
@@ -124,7 +124,7 @@
         lastReceivedQueueUnbindRoutingKey = routingKey
     }
 
-    func basicConsume(queueName: String, options: RMQBasicConsumeOptions, consumer: RMQConsumer) {
+    func basicConsume(queueName: String, options: RMQBasicConsumeOptions, consumer: RMQConsumerDeliveryHandler) {
         lastReceivedBasicConsumeOptions = options
         lastReceivedBasicConsumeBlock = consumer
         if let msg = stubbedBasicConsumeError {
@@ -140,7 +140,7 @@
         lastReceivedBasicPublishPersistent = isPersistent
     }
 
-    func basicGet(queue: String, options: RMQBasicGetOptions, completionHandler: RMQConsumer) {
+    func basicGet(queue: String, options: RMQBasicGetOptions, completionHandler: RMQConsumerDeliveryHandler) {
         lastReceivedBasicGetQueue = queue
         lastReceivedBasicGetOptions = options
         lastReceivedBasicGetCompletionHandler = completionHandler

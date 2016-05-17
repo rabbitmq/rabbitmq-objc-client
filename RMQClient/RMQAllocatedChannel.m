@@ -138,7 +138,7 @@
 
 - (void)basicConsume:(NSString *)queueName
              options:(RMQBasicConsumeOptions)options
-            consumer:(RMQConsumer)consumer {
+            consumer:(RMQConsumerDeliveryHandler)consumer {
     [self.dispatcher sendSyncMethod:[[RMQBasicConsume alloc] initWithReserved1:[[RMQShort alloc] init:0]
                                                                          queue:[[RMQShortstr alloc] init:queueName]
                                                                    consumerTag:[[RMQShortstr alloc] init:@""]
@@ -187,7 +187,7 @@
 
 -  (void)basicGet:(NSString *)queue
           options:(RMQBasicGetOptions)options
-completionHandler:(RMQConsumer)userCompletionHandler {
+completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
     [self.dispatcher sendSyncMethod:[[RMQBasicGet alloc] initWithReserved1:[[RMQShort alloc] init:0]
                                                                      queue:[[RMQShortstr alloc] init:queue]
                                                                    options:options]
@@ -322,7 +322,7 @@ completionHandler:(RMQConsumer)userCompletionHandler {
         [self.commandQueue enqueue:^{
             RMQBasicDeliver *deliver = (RMQBasicDeliver *)frameset.method;
             NSString *content = [[NSString alloc] initWithData:frameset.contentData encoding:NSUTF8StringEncoding];
-            RMQConsumer consumer = self.consumers[deliver.consumerTag];
+            RMQConsumerDeliveryHandler consumer = self.consumers[deliver.consumerTag];
             if (consumer) {
                 RMQMessage *message = [[RMQMessage alloc] initWithConsumerTag:deliver.consumerTag.stringValue
                                                                   deliveryTag:@(deliver.deliveryTag.integerValue)

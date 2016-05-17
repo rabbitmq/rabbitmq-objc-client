@@ -34,7 +34,7 @@
 
 - (void)basicConsume:(nonnull NSString *)queueName
              options:(RMQBasicConsumeOptions)options
-            consumer:(RMQConsumer _Nonnull)consumer;
+            consumer:(RMQConsumerDeliveryHandler _Nonnull)consumer;
 
 - (void)basicPublish:(nonnull NSString *)message
           routingKey:(nonnull NSString *)routingKey
@@ -43,7 +43,7 @@
 
 -  (void)basicGet:(nonnull NSString *)queue
           options:(RMQBasicGetOptions)options
-completionHandler:(RMQConsumer _Nonnull)completionHandler;
+completionHandler:(RMQConsumerDeliveryHandler _Nonnull)completionHandler;
 
 - (void)basicQos:(nonnull NSNumber *)count
           global:(BOOL)isGlobal;

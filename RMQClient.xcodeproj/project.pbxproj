@@ -160,7 +160,7 @@
 		AEEEF0831C4F9BFA0056A5EB /* RMQMethodDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = AEEEF0811C4F9BFA0056A5EB /* RMQMethodDecoder.m */; };
 		AEF0F7C61CCEC944007DAF85 /* RMQDeliveryInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = AEF0F7C41CCEC944007DAF85 /* RMQDeliveryInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEF0F7C71CCEC944007DAF85 /* RMQDeliveryInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = AEF0F7C51CCEC944007DAF85 /* RMQDeliveryInfo.m */; };
-		AEF0F7CD1CCECFDC007DAF85 /* RMQConsumer.h in Headers */ = {isa = PBXBuildFile; fileRef = AEF0F7CC1CCECF87007DAF85 /* RMQConsumer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AEF0F7CD1CCECFDC007DAF85 /* RMQConsumerDeliveryHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = AEF0F7CC1CCECF87007DAF85 /* RMQConsumerDeliveryHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEF1E8F21CBE453D000C7AB8 /* ConnectionDelegateSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECDECA01CBC4A4F00EA6E93 /* ConnectionDelegateSpy.swift */; };
 		AEF1E8F51CBE5810000C7AB8 /* RMQTransportDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = AEF1E8F41CBE5810000C7AB8 /* RMQTransportDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEF1E8F71CBE5E6A000C7AB8 /* TransportDelegateSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF1E8F61CBE5E6A000C7AB8 /* TransportDelegateSpy.swift */; };
@@ -350,7 +350,7 @@
 		AEEEF0811C4F9BFA0056A5EB /* RMQMethodDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RMQMethodDecoder.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AEF0F7C41CCEC944007DAF85 /* RMQDeliveryInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQDeliveryInfo.h; sourceTree = "<group>"; };
 		AEF0F7C51CCEC944007DAF85 /* RMQDeliveryInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQDeliveryInfo.m; sourceTree = "<group>"; };
-		AEF0F7CC1CCECF87007DAF85 /* RMQConsumer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMQConsumer.h; sourceTree = "<group>"; };
+		AEF0F7CC1CCECF87007DAF85 /* RMQConsumerDeliveryHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMQConsumerDeliveryHandler.h; sourceTree = "<group>"; };
 		AEF1E8F41CBE5810000C7AB8 /* RMQTransportDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQTransportDelegate.h; sourceTree = "<group>"; };
 		AEF1E8F61CBE5E6A000C7AB8 /* TransportDelegateSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransportDelegateSpy.swift; sourceTree = "<group>"; };
 		AEF1E8F91CBEA057000C7AB8 /* RMQHandshaker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQHandshaker.h; sourceTree = "<group>"; };
@@ -537,7 +537,7 @@
 				AEE445E31C7341CB0082132C /* RMQFrameHandler.h */,
 				AEE7FEB31C3BD16200DF8C4F /* RMQQueue.h */,
 				AEE7FEB41C3BD16200DF8C4F /* RMQQueue.m */,
-				AEF0F7CC1CCECF87007DAF85 /* RMQConsumer.h */,
+				AEF0F7CC1CCECF87007DAF85 /* RMQConsumerDeliveryHandler.h */,
 				AEF0F7C41CCEC944007DAF85 /* RMQDeliveryInfo.h */,
 				AEF0F7C51CCEC944007DAF85 /* RMQDeliveryInfo.m */,
 				AE05DA6A1C6A0848009E68C7 /* RMQMessage.h */,
@@ -687,7 +687,7 @@
 				AEF0F7C61CCEC944007DAF85 /* RMQDeliveryInfo.h in Headers */,
 				AE929C791CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.h in Headers */,
 				AE9595341CD0B98F0039418C /* RMQHeartbeatSender.h in Headers */,
-				AEF0F7CD1CCECFDC007DAF85 /* RMQConsumer.h in Headers */,
+				AEF0F7CD1CCECFDC007DAF85 /* RMQConsumerDeliveryHandler.h in Headers */,
 				AE9595391CD0BC1E0039418C /* RMQGCDHeartbeatSender.h in Headers */,
 				AE95953F1CD0E7E00039418C /* RMQClock.h in Headers */,
 				AE9595441CD0EF4A0039418C /* RMQTickingClock.h in Headers */,
