@@ -316,16 +316,11 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
 - (void)handleFrameset:(RMQFrameset *)frameset {
     if ([frameset.method isKindOfClass:[RMQBasicDeliver class]]) {
         [self.commandQueue enqueue:^{
-            RMQBasicDeliver *deliver = (RMQBasicDeliver *)frameset.method;
-            NSString *content = [[NSString alloc] initWithData:frameset.contentData encoding:NSUTF8StringEncoding];
-            RMQConsumerDeliveryHandler consumer = self.consumerHandlers[deliver.consumerTag.stringValue];
-            if (consumer) {
-                RMQMessage *message = [[RMQMessage alloc] initWithConsumerTag:deliver.consumerTag.stringValue
-                                                                  deliveryTag:@(deliver.deliveryTag.integerValue)
-                                                                      content:content];
-                RMQDeliveryInfo *deliveryInfo = [[RMQDeliveryInfo alloc] initWithRoutingKey:deliver.routingKey.stringValue];
-                consumer(deliveryInfo, message);
-            }
+            [self handleBasicDeliver:frameset];
+        }];
+    } else if ([frameset.method isKindOfClass:[RMQBasicCancel class]]) {
+        [self.commandQueue enqueue:^{
+            [self handleBasicCancel:frameset];
         }];
     } else {
         [self.dispatcher handleFrameset:frameset];
@@ -333,6 +328,25 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
 }
 
 # pragma mark - Private
+
+- (void)handleBasicDeliver:(RMQFrameset *)frameset {
+    RMQBasicDeliver *deliver = (RMQBasicDeliver *)frameset.method;
+    NSString *content = [[NSString alloc] initWithData:frameset.contentData encoding:NSUTF8StringEncoding];
+    RMQConsumerDeliveryHandler consumer = self.consumerHandlers[deliver.consumerTag.stringValue];
+    if (consumer) {
+        RMQMessage *message = [[RMQMessage alloc] initWithConsumerTag:deliver.consumerTag.stringValue
+                                                          deliveryTag:@(deliver.deliveryTag.integerValue)
+                                                              content:content];
+        RMQDeliveryInfo *deliveryInfo = [[RMQDeliveryInfo alloc] initWithRoutingKey:deliver.routingKey.stringValue];
+        consumer(deliveryInfo, message);
+    }
+}
+
+- (void)handleBasicCancel:(RMQFrameset *)frameset {
+    RMQBasicCancel *cancel = (RMQBasicCancel *)frameset.method;
+    NSString *consumerTag = cancel.consumerTag.stringValue;
+    [self.consumerHandlers removeObjectForKey:consumerTag];
+}
 
 - (RMQExchange *)memoizedExchangeDeclare:(NSString *)name
                                     type:(NSString *)type

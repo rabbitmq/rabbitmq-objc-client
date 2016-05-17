@@ -90,6 +90,26 @@ class ConsumeTest: XCTestCase {
         XCTAssertFalse(consumerCalled)
     }
 
+    func testServerCancelRemovesExtantConsumer() {
+        let q = FakeSerialQueue()
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(432, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
+
+        var consumerCalled = false
+        let consumer = ch.basicConsume("my q", options: []) { _ in
+            consumerCalled = true
+        }
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 432, method: MethodFixtures.basicConsumeOk(consumer.tag)))
+
+        ch.handleFrameset(RMQFrameset(channelNumber: 123, method: MethodFixtures.basicCancel(consumer.tag)))
+        try! q.step()
+
+        ch.handleFrameset(deliverFrameset(consumer.tag, routingKey: "foo", content: "message", channelNumber: 432))
+        try! q.step()
+
+        XCTAssertFalse(consumerCalled)
+    }
+
     // MARK: Helpers
 
     func deliverFrameset(consumerTag: String, routingKey: String, content: String, channelNumber: Int) -> RMQFrameset {
