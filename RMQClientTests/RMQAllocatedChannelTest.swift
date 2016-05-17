@@ -124,7 +124,7 @@ class RMQAllocatedChannelTest: XCTestCase {
             receivedDeliveryInfo = di
             consumedMessage = message
         }
-        dispatcher.lastSyncMethodHandler!(RMQFramesetValidationResult(frameset: consumeOkFrameset, error: nil))
+        dispatcher.lastSyncMethodHandler!(consumeOkFrameset)
 
         XCTAssertNil(receivedDeliveryInfo)
         XCTAssertNil(consumedMessage)
@@ -169,7 +169,7 @@ class RMQAllocatedChannelTest: XCTestCase {
             receivedMessage = m
         }
 
-        dispatcher.lastSyncMethodHandler!(RMQFramesetValidationResult(frameset: getOkFrameset, error: nil))
+        dispatcher.lastSyncMethodHandler!(getOkFrameset)
 
         XCTAssertEqual(expectedDeliveryInfo, receivedDeliveryInfo)
         XCTAssertEqual(expectedMessage, receivedMessage)
@@ -198,13 +198,13 @@ class RMQAllocatedChannelTest: XCTestCase {
         ch.basicConsume("sameq", options: []) { (_, message) in
             consumedMessage1 = message
         }
-        dispatcher.lastSyncMethodHandler!(RMQFramesetValidationResult(frameset: consumeOkFrameset1, error: nil))
+        dispatcher.lastSyncMethodHandler!(consumeOkFrameset1)
 
         var consumedMessage2: RMQMessage?
         ch.basicConsume("sameq", options: []) { (_, message) in
             consumedMessage2 = message
         }
-        dispatcher.lastSyncMethodHandler!(RMQFramesetValidationResult(frameset: consumeOkFrameset2, error: nil))
+        dispatcher.lastSyncMethodHandler!(consumeOkFrameset2)
 
         ch.handleFrameset(deliverFrameset1)
         ch.handleFrameset(deliverFrameset2)

@@ -1,6 +1,6 @@
 @objc class DispatcherSpy : NSObject, RMQDispatcher {
     var lastSyncMethod: RMQMethod?
-    var lastSyncMethodHandler: (RMQFramesetValidationResult! -> Void)?
+    var lastSyncMethodHandler: (RMQFrameset! -> Void)?
     var lastBlockingSyncMethod: RMQMethod?
     var syncMethodsSent: [RMQMethod] = []
     var lastAsyncFrameset: RMQFrameset?
@@ -27,7 +27,7 @@
         lastAsyncFrameset = frameset
     }
 
-    func sendSyncMethod(method: RMQMethod!, completionHandler: (RMQFramesetValidationResult! -> Void)) {
+    func sendSyncMethod(method: RMQMethod!, completionHandler: (RMQFrameset! -> Void)) {
         syncMethodsSent.append(method)
         lastSyncMethod = method
         lastSyncMethodHandler = completionHandler

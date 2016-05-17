@@ -144,8 +144,8 @@
                                                                    consumerTag:[[RMQShortstr alloc] init:@""]
                                                                        options:options
                                                                      arguments:[[RMQTable alloc] init:@{}]]
-                  completionHandler:^(RMQFramesetValidationResult *result) {
-                      RMQBasicConsumeOk *consumeOk = (RMQBasicConsumeOk *)result.frameset.method;
+                  completionHandler:^(RMQFrameset *frameset) {
+                      RMQBasicConsumeOk *consumeOk = (RMQBasicConsumeOk *)frameset.method;
                       self.consumers[consumeOk.consumerTag] = consumer;
                   }];
 }
@@ -191,10 +191,9 @@ completionHandler:(RMQConsumer)userCompletionHandler {
     [self.dispatcher sendSyncMethod:[[RMQBasicGet alloc] initWithReserved1:[[RMQShort alloc] init:0]
                                                                      queue:[[RMQShortstr alloc] init:queue]
                                                                    options:options]
-                  completionHandler:^(RMQFramesetValidationResult *result) {
-                      RMQFrameset *getOkFrameset = result.frameset;
-                      RMQBasicGetOk *getOk = (RMQBasicGetOk *)getOkFrameset.method;
-                      NSString *messageContent = [[NSString alloc] initWithData:getOkFrameset.contentData
+                  completionHandler:^(RMQFrameset *frameset) {
+                      RMQBasicGetOk *getOk = (RMQBasicGetOk *)frameset.method;
+                      NSString *messageContent = [[NSString alloc] initWithData:frameset.contentData
                                                                        encoding:NSUTF8StringEncoding];
                       RMQMessage *message = [[RMQMessage alloc] initWithConsumerTag:@""
                                                                         deliveryTag:@(getOk.deliveryTag.integerValue)

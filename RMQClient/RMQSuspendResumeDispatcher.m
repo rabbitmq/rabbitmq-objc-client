@@ -54,7 +54,7 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 }
 
 - (void)sendSyncMethod:(id<RMQMethod>)method
-     completionHandler:(void (^)(RMQFramesetValidationResult *result))completionHandler {
+     completionHandler:(void (^)(RMQFrameset *frameset))completionHandler {
     [self.commandQueue enqueue:^{
         [self processOutgoing:method executeOrErr:^{
             if ([self isClose:method]) {
@@ -73,14 +73,14 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
         if (self.channelIsOpen && result.error) {
             [self.delegate channel:self.channel error:result.error];
         } else if (self.channelIsOpen) {
-            completionHandler(result);
+            completionHandler(result.frameset);
         }
     }];
 }
 
 - (void)sendSyncMethod:(id<RMQMethod>)method {
     [self sendSyncMethod:method
-       completionHandler:^(RMQFramesetValidationResult *result) {}];
+       completionHandler:^(RMQFrameset *frameset) {}];
 }
 
 - (void)sendSyncMethodBlocking:(id<RMQMethod>)method {

@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "RMQConnectionDelegate.h"
-#import "RMQFramesetValidationResult.h"
+#import "RMQFrameset.h"
 
 @protocol RMQDispatcher <NSObject, RMQFrameHandler>
 
@@ -10,7 +10,7 @@
                    delegate:(id<RMQConnectionDelegate>)delegate;
 
 - (void)sendSyncMethod:(id<RMQMethod>)method
-     completionHandler:(void (^)(RMQFramesetValidationResult *result))completionHandler;
+     completionHandler:(void (^)(RMQFrameset *frameset))completionHandler;
 
 - (void)sendSyncMethod:(id<RMQMethod>)method;
 
