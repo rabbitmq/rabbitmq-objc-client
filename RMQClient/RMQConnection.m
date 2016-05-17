@@ -1,5 +1,5 @@
 #import "RMQConnection.h"
-#import "RMQConnectionRecoveryNone.h"
+#import "RMQConnectionShutdown.h"
 #import "RMQFrame.h"
 #import "RMQGCDHeartbeatSender.h"
 #import "RMQGCDSerialQueue.h"
@@ -108,9 +108,9 @@ NSInteger const RMQChannelLimit = 65535;
     RMQSemaphoreWaiterFactory *waiterFactory = [RMQSemaphoreWaiterFactory new];
     RMQGCDHeartbeatSender *heartbeatSender = [[RMQGCDHeartbeatSender alloc] initWithTransport:transport
                                                                                         clock:[RMQTickingClock new]];
-    RMQConnectionRecoveryNone *noConnectionRecovery = [[RMQConnectionRecoveryNone alloc] initWithConnection:self
-                                                                                           channelAllocator:allocator
-                                                                                            heartbeatSender:heartbeatSender];
+    RMQConnectionShutdown *noConnectionRecovery = [[RMQConnectionShutdown alloc] initWithConnection:self
+                                                                                   channelAllocator:allocator
+                                                                                    heartbeatSender:heartbeatSender];
     RMQCredentials *credentials = [[RMQCredentials alloc] initWithUsername:rmqURI.username
                                                                   password:rmqURI.password];
     RMQConnectionConfig *config = [[RMQConnectionConfig alloc] initWithCredentials:credentials

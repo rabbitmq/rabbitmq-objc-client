@@ -3,7 +3,7 @@
 #import "RMQChannelAllocator.h"
 #import "RMQHeartbeatSender.h"
 
-@interface RMQConnectionRecoveryNone : NSObject <RMQConnectionRecovery>
+@interface RMQConnectionShutdown : NSObject <RMQConnectionRecovery>
 
 - (instancetype)initWithConnection:(id<RMQStarter>)connection
                   channelAllocator:(id<RMQChannelAllocator>)allocator

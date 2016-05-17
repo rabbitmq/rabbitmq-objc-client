@@ -1,12 +1,12 @@
-#import "RMQConnectionRecoveryNone.h"
+#import "RMQConnectionShutdown.h"
 
-@interface RMQConnectionRecoveryNone ()
+@interface RMQConnectionShutdown ()
 @property (nonatomic, readwrite) id<RMQStarter> connection;
 @property (nonatomic, readwrite) id<RMQChannelAllocator> allocator;
 @property (nonatomic, readwrite) id<RMQHeartbeatSender> heartbeatSender;
 @end
 
-@implementation RMQConnectionRecoveryNone
+@implementation RMQConnectionShutdown
 
 - (instancetype)initWithConnection:(id<RMQStarter>)connection
                   channelAllocator:(id<RMQChannelAllocator>)allocator
