@@ -63,8 +63,7 @@ class RMQQueueTest: XCTestCase {
         let queue = RMQQueue(name: "custom options", channel: channel)
 
         var handlerCalled = false
-
-        queue.subscribe([.NoWait]) { RMQMessage in
+        queue.subscribe([.Exclusive]) { _ in
             handlerCalled = true
         }
 
@@ -72,7 +71,19 @@ class RMQQueueTest: XCTestCase {
         channel.lastReceivedBasicConsumeBlock!(RMQDeliveryInfo(routingKey: ""), message)
 
         XCTAssert(handlerCalled)
-        XCTAssertEqual([.NoWait], channel.lastReceivedBasicConsumeOptions)
+        XCTAssertEqual([.Exclusive], channel.lastReceivedBasicConsumeOptions)
+    }
+
+    func testCancellingASubscriptionSendsBasicCancelToChannel() {
+        let channel = ChannelSpy(123)
+        let queue = RMQQueue(name: "cancelling", channel: channel)
+
+        let consumer = queue.subscribe() { _ in }
+        XCTAssertNotNil(consumer.tag)
+
+        consumer.cancel()
+
+        XCTAssertEqual(consumer.tag, channel.lastReceivedBasicCancelConsumerTag)
     }
 
     func testBindCallsBindOnChannel() {

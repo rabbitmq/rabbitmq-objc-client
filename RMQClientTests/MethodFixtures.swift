@@ -151,6 +151,10 @@ class MethodFixtures {
         return RMQBasicConsumeOk(consumerTag: RMQShortstr(consumerTag))
     }
 
+    static func basicCancel(consumerTag: String) -> RMQBasicCancel {
+        return RMQBasicCancel(consumerTag: RMQShortstr(consumerTag), options: [])
+    }
+
     static func basicDeliver(consumerTag consumerTag: String = "", deliveryTag: UInt64 = 0, routingKey: String = "") -> RMQBasicDeliver {
         return RMQBasicDeliver(consumerTag: RMQShortstr(consumerTag), deliveryTag: RMQLonglong(deliveryTag), options: RMQBasicDeliverOptions.NoOptions, exchange: RMQShortstr(""), routingKey: RMQShortstr(routingKey))
     }

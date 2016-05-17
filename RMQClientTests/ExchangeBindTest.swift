@@ -4,7 +4,7 @@ class ExchangeBindTest: XCTestCase {
 
     func testExchangeBindSendsAnExchangeBind() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue())
+        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator())
 
         ch.exchangeBind("source", destination: "dest", routingKey: "somekey")
 
@@ -14,7 +14,7 @@ class ExchangeBindTest: XCTestCase {
 
     func testExchangeUnbindSendsAnExchangeUnbind() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue())
+        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator())
 
         ch.exchangeUnbind("sauce", destination: "dest", routingKey: "yale")
 

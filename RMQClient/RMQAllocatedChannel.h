@@ -10,9 +10,4 @@
                   dispatcher:(nonnull id<RMQDispatcher>)dispatcher
                 commandQueue:(nonnull id<RMQLocalSerialQueue>)commandQueue
                nameGenerator:(nullable id<RMQNameGenerator>)nameGenerator;
-
-- (nonnull instancetype)init:(nonnull NSNumber *)channelNumber
-             contentBodySize:(nonnull NSNumber *)contentBodySize
-                  dispatcher:(nonnull id<RMQDispatcher>)dispatcher
-                commandQueue:(nonnull id<RMQLocalSerialQueue>)commandQueue;
 @end

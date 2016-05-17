@@ -33,6 +33,8 @@
 		AE26FA2E1C970DF100CDBBAA /* RMQChannelContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE26FA2D1C970DF100CDBBAA /* RMQChannelContract.swift */; };
 		AE26FA311C97157700CDBBAA /* ChannelSpyTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE26FA301C97157700CDBBAA /* ChannelSpyTest.swift */; };
 		AE26FA331C999BBF00CDBBAA /* RMQParserTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE26FA321C999BBF00CDBBAA /* RMQParserTest.swift */; };
+		AE3415381CEB23490071177A /* RMQConsumer.h in Headers */ = {isa = PBXBuildFile; fileRef = AE3415361CEB23490071177A /* RMQConsumer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AE3415391CEB23490071177A /* RMQConsumer.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3415371CEB23490071177A /* RMQConsumer.m */; };
 		AE39BD9E1C68B019000E7A77 /* RMQValues.h in Headers */ = {isa = PBXBuildFile; fileRef = AE39BD9C1C68B019000E7A77 /* RMQValues.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE39BD9F1C68B019000E7A77 /* RMQValues.m in Sources */ = {isa = PBXBuildFile; fileRef = AE39BD9D1C68B019000E7A77 /* RMQValues.m */; };
 		AE39BDA21C68B105000E7A77 /* RMQProtocolHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = AE39BDA01C68B105000E7A77 /* RMQProtocolHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -225,6 +227,8 @@
 		AE26FA2D1C970DF100CDBBAA /* RMQChannelContract.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQChannelContract.swift; sourceTree = "<group>"; };
 		AE26FA301C97157700CDBBAA /* ChannelSpyTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelSpyTest.swift; sourceTree = "<group>"; };
 		AE26FA321C999BBF00CDBBAA /* RMQParserTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQParserTest.swift; sourceTree = "<group>"; };
+		AE3415361CEB23490071177A /* RMQConsumer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQConsumer.h; sourceTree = "<group>"; };
+		AE3415371CEB23490071177A /* RMQConsumer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQConsumer.m; sourceTree = "<group>"; };
 		AE39BD9C1C68B019000E7A77 /* RMQValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQValues.h; sourceTree = "<group>"; };
 		AE39BD9D1C68B019000E7A77 /* RMQValues.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RMQValues.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AE39BDA01C68B105000E7A77 /* RMQProtocolHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RMQProtocolHeader.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -537,6 +541,8 @@
 				AEE445E31C7341CB0082132C /* RMQFrameHandler.h */,
 				AEE7FEB31C3BD16200DF8C4F /* RMQQueue.h */,
 				AEE7FEB41C3BD16200DF8C4F /* RMQQueue.m */,
+				AE3415361CEB23490071177A /* RMQConsumer.h */,
+				AE3415371CEB23490071177A /* RMQConsumer.m */,
 				AEF0F7CC1CCECF87007DAF85 /* RMQConsumerDeliveryHandler.h */,
 				AEF0F7C41CCEC944007DAF85 /* RMQDeliveryInfo.h */,
 				AEF0F7C51CCEC944007DAF85 /* RMQDeliveryInfo.m */,
@@ -695,6 +701,7 @@
 				AE96A76C1CE1F2F000C772AA /* RMQDispatcher.h in Headers */,
 				AEDBFF301CD8FAF70004DB67 /* RMQTLSOptions.h in Headers */,
 				AE96A7691CE1F16600C772AA /* RMQSuspendResumeDispatcher.h in Headers */,
+				AE3415381CEB23490071177A /* RMQConsumer.h in Headers */,
 				AEB5F15C1CDA4360001C82FF /* RMQErrors.h in Headers */,
 				AEE7FE951C3BCA6000DF8C4F /* RMQClient.h in Headers */,
 			);
@@ -904,6 +911,7 @@
 				AE80BAB41C4D47C100E6DFFD /* RMQParser.m in Sources */,
 				AE95953A1CD0BC1E0039418C /* RMQGCDHeartbeatSender.m in Sources */,
 				AEFFE6391C8EE7B30039D652 /* RMQConnectionConfig.m in Sources */,
+				AE3415391CEB23490071177A /* RMQConsumer.m in Sources */,
 				AE744E381C85A20700A4C2FA /* RMQFrameset.m in Sources */,
 				AE05DA6D1C6A0848009E68C7 /* RMQMessage.m in Sources */,
 				AE9595451CD0EF4A0039418C /* RMQTickingClock.m in Sources */,

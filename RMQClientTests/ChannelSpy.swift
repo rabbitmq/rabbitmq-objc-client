@@ -4,6 +4,8 @@
     var lastReceivedBasicConsumeOptions: RMQBasicConsumeOptions = []
     var lastReceivedBasicConsumeBlock: RMQConsumerDeliveryHandler?
 
+    var lastReceivedBasicCancelConsumerTag: String?
+
     var lastReceivedBasicGetQueue: String?
     var lastReceivedBasicGetOptions: RMQBasicGetOptions?
     var lastReceivedBasicGetCompletionHandler: RMQConsumerDeliveryHandler?
@@ -124,13 +126,18 @@
         lastReceivedQueueUnbindRoutingKey = routingKey
     }
 
-    func basicConsume(queueName: String, options: RMQBasicConsumeOptions, consumer: RMQConsumerDeliveryHandler) {
+    func basicConsume(queueName: String, options: RMQBasicConsumeOptions, handler: RMQConsumerDeliveryHandler) -> RMQConsumer {
         lastReceivedBasicConsumeOptions = options
-        lastReceivedBasicConsumeBlock = consumer
+        lastReceivedBasicConsumeBlock = handler
         if let msg = stubbedBasicConsumeError {
             let e = NSError(domain: RMQErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: msg])
             delegateSentToActivate?.channel(self, error: e)
         }
+        return RMQConsumer(consumerTag: "channel spy consumer tag", channel: self)
+    }
+
+    func basicCancel(consumerTag: String) {
+        lastReceivedBasicCancelConsumerTag = consumerTag
     }
 
     func basicPublish(message: String, routingKey: String, exchange: String, persistent isPersistent: Bool) {

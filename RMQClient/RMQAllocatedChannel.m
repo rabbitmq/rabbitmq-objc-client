@@ -9,7 +9,7 @@
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
 @property (nonatomic, readwrite) NSNumber *contentBodySize;
 @property (nonatomic, readwrite) id <RMQDispatcher> dispatcher;
-@property (nonatomic, readwrite) NSMutableDictionary *consumers;
+@property (nonatomic, readwrite) NSMutableDictionary *consumerHandlers;
 @property (nonatomic, readwrite) NSMutableDictionary *exchanges;
 @property (nonatomic, readwrite) NSMutableDictionary *queues;
 @property (nonatomic, readwrite) NSNumber *prefetchCount;
@@ -32,7 +32,7 @@
         self.contentBodySize = contentBodySize;
         self.dispatcher = dispatcher;
         self.commandQueue = commandQueue;
-        self.consumers = [NSMutableDictionary new];
+        self.consumerHandlers = [NSMutableDictionary new];
         self.exchanges = [NSMutableDictionary new];
         self.queues = [NSMutableDictionary new];
         self.prefetchCount = @0;
@@ -41,17 +41,6 @@
         self.nameGenerator = nameGenerator;
     }
     return self;
-}
-
-- (instancetype)init:(NSNumber *)channelNumber
-     contentBodySize:(nonnull NSNumber *)contentBodySize
-          dispatcher:(id<RMQDispatcher>)dispatcher
-        commandQueue:(id<RMQLocalSerialQueue>)commandQueue {
-    return [self init:channelNumber
-      contentBodySize:contentBodySize
-           dispatcher:dispatcher
-         commandQueue:commandQueue
-        nameGenerator:nil];
 }
 
 - (instancetype)init
@@ -136,18 +125,25 @@
                                                                     arguments:[[RMQTable alloc] init:@{}]]];
 }
 
-- (void)basicConsume:(NSString *)queueName
-             options:(RMQBasicConsumeOptions)options
-            consumer:(RMQConsumerDeliveryHandler)consumer {
+- (RMQConsumer *)basicConsume:(NSString *)queueName
+                      options:(RMQBasicConsumeOptions)options
+                      handler:(RMQConsumerDeliveryHandler)handler {
+    NSString *consumerTag = [self.nameGenerator generateWithPrefix:@"rmq-objc-client.gen-"];
     [self.dispatcher sendSyncMethod:[[RMQBasicConsume alloc] initWithReserved1:[[RMQShort alloc] init:0]
                                                                          queue:[[RMQShortstr alloc] init:queueName]
-                                                                   consumerTag:[[RMQShortstr alloc] init:@""]
+                                                                   consumerTag:[[RMQShortstr alloc] init:consumerTag]
                                                                        options:options
                                                                      arguments:[[RMQTable alloc] init:@{}]]
                   completionHandler:^(RMQFrameset *frameset) {
-                      RMQBasicConsumeOk *consumeOk = (RMQBasicConsumeOk *)frameset.method;
-                      self.consumers[consumeOk.consumerTag] = consumer;
+                      self.consumerHandlers[consumerTag] = handler;
                   }];
+    return [[RMQConsumer alloc] initWithConsumerTag:consumerTag channel:self];
+}
+
+- (void)basicCancel:(NSString *)consumerTag {
+    [self.consumerHandlers removeObjectForKey:consumerTag];
+    [self.dispatcher sendSyncMethod:[[RMQBasicCancel alloc] initWithConsumerTag:[[RMQShortstr alloc] init:consumerTag]
+                                                                        options:RMQBasicCancelNoOptions]];
 }
 
 - (void)basicPublish:(NSString *)message
@@ -322,7 +318,7 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
         [self.commandQueue enqueue:^{
             RMQBasicDeliver *deliver = (RMQBasicDeliver *)frameset.method;
             NSString *content = [[NSString alloc] initWithData:frameset.contentData encoding:NSUTF8StringEncoding];
-            RMQConsumerDeliveryHandler consumer = self.consumers[deliver.consumerTag];
+            RMQConsumerDeliveryHandler consumer = self.consumerHandlers[deliver.consumerTag.stringValue];
             if (consumer) {
                 RMQMessage *message = [[RMQMessage alloc] initWithConsumerTag:deliver.consumerTag.stringValue
                                                                   deliveryTag:@(deliver.deliveryTag.integerValue)

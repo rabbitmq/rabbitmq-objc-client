@@ -69,14 +69,14 @@
          completionHandler:handler];
 }
 
-- (void)subscribe:(RMQBasicConsumeOptions)options
-          handler:(RMQConsumerDeliveryHandler)handler {
-    [self.channel basicConsume:self.name
-                       options:options
-                      consumer:handler];
+- (RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options
+                   handler:(RMQConsumerDeliveryHandler)handler {
+    return [self.channel basicConsume:self.name
+                              options:options
+                              handler:handler];
 }
 
-- (void)subscribe:(RMQConsumerDeliveryHandler)handler {
+- (RMQConsumer *)subscribe:(RMQConsumerDeliveryHandler)handler {
     return [self subscribe:RMQBasicConsumeNoAck
                    handler:handler];
 }

@@ -4,7 +4,7 @@ class QueueDeclarationTest: XCTestCase {
 
     func testQueueSendsAQueueDeclare() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue())
+        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator())
         ch.activateWithDelegate(nil)
 
         ch.queue("bagpuss")
@@ -48,7 +48,7 @@ class QueueDeclarationTest: XCTestCase {
 
     func testQueueDeleteSendsAQueueDelete() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(123, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue())
+        let ch = RMQAllocatedChannel(123, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator())
         ch.queueDelete("my queue", options: [.IfUnused])
         XCTAssertEqual(MethodFixtures.queueDelete("my queue", options: [.IfUnused]),
                        dispatcher.lastSyncMethod as? RMQQueueDelete)
@@ -56,7 +56,7 @@ class QueueDeclarationTest: XCTestCase {
 
     func testQueueDeclareAfterDeleteSendsAFreshDeclare() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(123, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue())
+        let ch = RMQAllocatedChannel(123, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator())
         ch.queue("my queue")
         ch.queueDelete("my queue", options: [])
         dispatcher.lastSyncMethod = nil

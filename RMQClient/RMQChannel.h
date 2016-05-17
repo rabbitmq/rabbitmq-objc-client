@@ -32,9 +32,11 @@
            exchange:(nonnull NSString *)exchangeName
          routingKey:(nonnull NSString *)routingKey;
 
-- (void)basicConsume:(nonnull NSString *)queueName
-             options:(RMQBasicConsumeOptions)options
-            consumer:(RMQConsumerDeliveryHandler _Nonnull)consumer;
+- (nonnull RMQConsumer *)basicConsume:(nonnull NSString *)queueName
+                              options:(RMQBasicConsumeOptions)options
+                              handler:(RMQConsumerDeliveryHandler _Nonnull)handler;
+
+- (void)basicCancel:(nonnull NSString *)consumerTag;
 
 - (void)basicPublish:(nonnull NSString *)message
           routingKey:(nonnull NSString *)routingKey

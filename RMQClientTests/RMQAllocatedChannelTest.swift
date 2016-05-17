@@ -6,7 +6,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let sender = SenderSpy()
         let q = RMQGCDSerialQueue(name: "channel command queue")
         let dispatcher = RMQSuspendResumeDispatcher(sender: sender, commandQueue: q)
-        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
         let contract = RMQChannelContract(ch)
 
         contract.check()
@@ -17,7 +17,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let delegate = ConnectionDelegateSpy()
         let dispatcher = DispatcherSpy()
 
-        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
 
         ch.activateWithDelegate(delegate)
 
@@ -29,7 +29,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let q = FakeSerialQueue()
         let dispatcher = DispatcherSpy()
 
-        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
 
         let frameset = RMQFrameset(channelNumber: 1, method: MethodFixtures.basicGetOk("route-me"))
         ch.handleFrameset(frameset)
@@ -41,7 +41,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
 
         ch.activateWithDelegate(delegate)
 
@@ -54,7 +54,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
 
         ch.activateWithDelegate(delegate)
 
@@ -67,7 +67,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
         ch.activateWithDelegate(delegate)
 
         ch.open()
@@ -80,7 +80,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
         ch.activateWithDelegate(delegate)
 
         ch.blockingWaitOn(RMQChannelCloseOk.self)
@@ -92,34 +92,46 @@ class RMQAllocatedChannelTest: XCTestCase {
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
+        let nameGenerator = StubNameGenerator()
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: nameGenerator)
 
         ch.activateWithDelegate(delegate)
 
+        nameGenerator.nextName = "a tag"
         ch.basicConsume("foo", options: [.Exclusive]) { (_, _) in }
 
-        XCTAssertEqual(MethodFixtures.basicConsume("foo", consumerTag: "", options: [.Exclusive]),
+        XCTAssertEqual(MethodFixtures.basicConsume("foo", consumerTag: "a tag", options: [.Exclusive]),
                        dispatcher.lastSyncMethod as? RMQBasicConsume)
+    }
+
+    func testBasicConsumeReturnsConsumerInstanceWithGeneratedTag() {
+        let q = FakeSerialQueue()
+        let dispatcher = DispatcherSpy()
+        let nameGenerator = StubNameGenerator()
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: nameGenerator)
+        nameGenerator.nextName = "stubbed tag"
+
+        let consumer = ch.basicConsume("foo", options: [.Exclusive]) { (_, _) in }
+
+        XCTAssertEqual("stubbed tag", consumer.tag)
     }
 
     func testBasicConsumeCallsCallbackWhenMessageIsDelivered() {
         let q = FakeSerialQueue()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(432, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
-        let consumeOkMethod = RMQBasicConsumeOk(consumerTag: RMQShortstr("servergeneratedtag"))
+        let nameGenerator = StubNameGenerator()
+        let ch = RMQAllocatedChannel(432, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: nameGenerator)
+        let consumeOkMethod = RMQBasicConsumeOk(consumerTag: RMQShortstr("tag"))
         let consumeOkFrameset = RMQFrameset(channelNumber: 432, method: consumeOkMethod)
-        let deliverMethod = MethodFixtures.basicDeliver(consumerTag: "servergeneratedtag", deliveryTag: 123, routingKey: "foo")
-        let deliverHeader = RMQContentHeader(classID: deliverMethod.classID(), bodySize: 123, properties: [])
-        let deliverBody = RMQContentBody(data: "Consumed!".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let deliverFrameset = RMQFrameset(channelNumber: 432, method: deliverMethod, contentHeader: deliverHeader, contentBodies: [deliverBody])
+        let incomingDeliver = deliverFrameset("tag", routingKey: "foo", content: "Consumed!", channelNumber: 432)
         let expectedDeliveryInfo = RMQDeliveryInfo(routingKey: "foo")
-        let expectedMessage = RMQMessage(consumerTag: "servergeneratedtag", deliveryTag: 123, content: "Consumed!")
+        let expectedMessage = RMQMessage(consumerTag: "tag", deliveryTag: 123, content: "Consumed!")
 
         ch.activateWithDelegate(nil)
 
+        nameGenerator.nextName = "tag"
         var receivedDeliveryInfo: RMQDeliveryInfo?
         var consumedMessage: RMQMessage?
-
         ch.basicConsume("somequeue", options: []) { (di, message) in
             receivedDeliveryInfo = di
             consumedMessage = message
@@ -128,18 +140,54 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         XCTAssertNil(receivedDeliveryInfo)
         XCTAssertNil(consumedMessage)
-        ch.handleFrameset(deliverFrameset)
+        ch.handleFrameset(incomingDeliver)
         try! q.step()
 
         XCTAssertEqual(expectedDeliveryInfo, receivedDeliveryInfo)
         XCTAssertEqual(expectedMessage, consumedMessage)
     }
 
+    func testBasicCancelSendsBasicCancelMethod() {
+        let q = FakeSerialQueue()
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(432, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
+
+        ch.basicCancel("my tag")
+
+        XCTAssertEqual(MethodFixtures.basicCancel("my tag"), dispatcher.lastSyncMethod as? RMQBasicCancel)
+    }
+
+    func testBasicCancelRemovesConsumer() {
+        let q = FakeSerialQueue()
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(432, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
+
+        var consumerCalled = false
+        let consumer = ch.basicConsume("my q", options: []) { _ in
+            consumerCalled = true
+        }
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 432, method: MethodFixtures.basicConsumeOk(consumer.tag)))
+
+        ch.basicCancel(consumer.tag)
+
+        ch.handleFrameset(deliverFrameset(consumer.tag, routingKey: "foo", content: "message", channelNumber: 432))
+        try! q.step()
+
+        XCTAssertFalse(consumerCalled)
+    }
+
+    func deliverFrameset(consumerTag: String, routingKey: String, content: String, channelNumber: Int) -> RMQFrameset {
+        let deliverMethod = MethodFixtures.basicDeliver(consumerTag: consumerTag, deliveryTag: 123, routingKey: routingKey)
+        let deliverHeader = RMQContentHeader(classID: deliverMethod.classID(), bodySize: 123, properties: [])
+        let deliverBody = RMQContentBody(data: content.dataUsingEncoding(NSUTF8StringEncoding)!)
+        return RMQFrameset(channelNumber: channelNumber, method: deliverMethod, contentHeader: deliverHeader, contentBodies: [deliverBody])
+    }
+
     func testBasicGetSendsBasicGetMethod() {
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
 
         ch.activateWithDelegate(delegate)
 
@@ -160,7 +208,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let expectedDeliveryInfo = RMQDeliveryInfo(routingKey: "my-q")
         let expectedMessage = RMQMessage(consumerTag: "", deliveryTag: 1, content: "hello")
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
 
         var receivedMessage: RMQMessage?
         var receivedDeliveryInfo: RMQDeliveryInfo?
@@ -178,28 +226,31 @@ class RMQAllocatedChannelTest: XCTestCase {
     func testMultipleConsumersOnSameQueueReceiveMessages() {
         let q = FakeSerialQueue()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(999, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
+        let nameGenerator = StubNameGenerator()
+        let ch = RMQAllocatedChannel(999, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: nameGenerator)
         let consumeOkFrameset1 = RMQFrameset(channelNumber: 999, method: RMQBasicConsumeOk(consumerTag: RMQShortstr("servertag1")))
         let consumeOkFrameset2 = RMQFrameset(channelNumber: 999, method: RMQBasicConsumeOk(consumerTag: RMQShortstr("servertag2")))
-        let deliverMethod1 = MethodFixtures.basicDeliver(consumerTag: "servertag1", deliveryTag: 1)
+        let deliverMethod1 = MethodFixtures.basicDeliver(consumerTag: "tag1", deliveryTag: 1)
         let deliverHeader1 = RMQContentHeader(classID: deliverMethod1.classID(), bodySize: 123, properties: [])
         let deliverBody1 = RMQContentBody(data: "A message for consumer 1".dataUsingEncoding(NSUTF8StringEncoding)!)
         let deliverFrameset1 = RMQFrameset(channelNumber: 999, method: deliverMethod1, contentHeader: deliverHeader1, contentBodies: [deliverBody1])
-        let deliverMethod2 = MethodFixtures.basicDeliver(consumerTag: "servertag2", deliveryTag: 1)
+        let deliverMethod2 = MethodFixtures.basicDeliver(consumerTag: "tag2", deliveryTag: 1)
         let deliverHeader2 = RMQContentHeader(classID: deliverMethod2.classID(), bodySize: 123, properties: [])
         let deliverBody2 = RMQContentBody(data: "A message for consumer 2".dataUsingEncoding(NSUTF8StringEncoding)!)
         let deliverFrameset2 = RMQFrameset(channelNumber: 999, method: deliverMethod2, contentHeader: deliverHeader2, contentBodies: [deliverBody2])
-        let expectedMessage1 = RMQMessage(consumerTag: "servertag1", deliveryTag: 1, content: "A message for consumer 1")
-        let expectedMessage2 = RMQMessage(consumerTag: "servertag2", deliveryTag: 1, content: "A message for consumer 2")
+        let expectedMessage1 = RMQMessage(consumerTag: "tag1", deliveryTag: 1, content: "A message for consumer 1")
+        let expectedMessage2 = RMQMessage(consumerTag: "tag2", deliveryTag: 1, content: "A message for consumer 2")
 
         ch.activateWithDelegate(nil)
 
+        nameGenerator.nextName = "tag1"
         var consumedMessage1: RMQMessage?
         ch.basicConsume("sameq", options: []) { (_, message) in
             consumedMessage1 = message
         }
         dispatcher.lastSyncMethodHandler!(consumeOkFrameset1)
 
+        nameGenerator.nextName = "tag2"
         var consumedMessage2: RMQMessage?
         ch.basicConsume("sameq", options: []) { (_, message) in
             consumedMessage2 = message
@@ -219,7 +270,7 @@ class RMQAllocatedChannelTest: XCTestCase {
     func testBasicPublishSendsAsyncFrameset() {
         let q = FakeSerialQueue()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(999, contentBodySize: 4, dispatcher: dispatcher, commandQueue: q)
+        let ch = RMQAllocatedChannel(999, contentBodySize: 4, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
         let message = "my great message yo"
         let notPersistent = RMQBasicDeliveryMode(1)
 
@@ -258,7 +309,7 @@ class RMQAllocatedChannelTest: XCTestCase {
     func testPublishWhenContentLengthIsMultipleOfFrameMax() {
         let q = FakeSerialQueue()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(999, contentBodySize: 4, dispatcher: dispatcher, commandQueue: q)
+        let ch = RMQAllocatedChannel(999, contentBodySize: 4, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
         let messageContent = "12345678"
         let expectedMethod = RMQBasicPublish(
             reserved1: RMQShort(0),
@@ -299,7 +350,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
 
         ch.activateWithDelegate(delegate)
 
@@ -313,7 +364,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
 
         ch.activateWithDelegate(delegate)
 
@@ -327,7 +378,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
 
         ch.activateWithDelegate(delegate)
 
@@ -341,7 +392,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q)
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
 
         ch.activateWithDelegate(delegate)
 

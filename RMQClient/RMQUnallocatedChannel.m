@@ -31,10 +31,14 @@
     [self err];
 }
 
-- (void)basicConsume:(NSString *)queueName
-             options:(RMQBasicConsumeOptions)options
-            consumer:(RMQConsumerDeliveryHandler)consumer {
+- (RMQConsumer *)basicConsume:(NSString *)queueName
+                      options:(RMQBasicConsumeOptions)options
+                      handler:(RMQConsumerDeliveryHandler)handler {
     [self err];
+    return nil;
+}
+
+- (void)basicCancel:(NSString *)consumerTag {
 }
 
 - (void)basicPublish:(NSString *)message
