@@ -3,9 +3,7 @@ class ConnectionHelper {
                                        channelMax: Int = 123,
                                        frameMax: Int = 321,
                                        heartbeat: Int = 10) -> RMQConnectionConfig {
-        let nullRecovery = RMQConnectionShutdown(connection: StarterSpy(),
-                                                 channelAllocator: ChannelSpyAllocator(),
-                                                 heartbeatSender: HeartbeatSenderSpy())
+        let nullRecovery = RMQConnectionShutdown(heartbeatSender: HeartbeatSenderSpy())
         return RMQConnectionConfig(credentials: RMQCredentials(username: "foo", password: "bar"),
                                    channelMax: channelMax,
                                    frameMax: frameMax,

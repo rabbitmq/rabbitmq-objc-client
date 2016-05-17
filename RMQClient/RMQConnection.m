@@ -108,9 +108,7 @@ NSInteger const RMQChannelLimit = 65535;
     RMQSemaphoreWaiterFactory *waiterFactory = [RMQSemaphoreWaiterFactory new];
     RMQGCDHeartbeatSender *heartbeatSender = [[RMQGCDHeartbeatSender alloc] initWithTransport:transport
                                                                                         clock:[RMQTickingClock new]];
-    RMQConnectionShutdown *noConnectionRecovery = [[RMQConnectionShutdown alloc] initWithConnection:self
-                                                                                   channelAllocator:allocator
-                                                                                    heartbeatSender:heartbeatSender];
+    RMQConnectionShutdown *noConnectionRecovery = [[RMQConnectionShutdown alloc] initWithHeartbeatSender:heartbeatSender];
     RMQCredentials *credentials = [[RMQCredentials alloc] initWithUsername:rmqURI.username
                                                                   password:rmqURI.password];
     RMQConnectionConfig *config = [[RMQConnectionConfig alloc] initWithCredentials:credentials
