@@ -9,7 +9,7 @@ class ConnectionClosureTest: XCTestCase {
         let expectedCloseProcedureCount = 5
         let channelsToCreateCount = 2
         let conn = RMQConnection(transport: transport,
-                                 config: TestHelper.connectionConfig(),
+                                 config: ConnectionHelper.connectionConfig(),
                                  handshakeTimeout: 2,
                                  channelAllocator: allocator,
                                  frameHandler: FrameHandlerSpy(),
@@ -42,7 +42,7 @@ class ConnectionClosureTest: XCTestCase {
     }
 
     func testCloseSendsCloseMethod() {
-        let (transport, q, conn, _) = TestHelper.connectionAfterHandshake()
+        let (transport, q, conn, _) = ConnectionHelper.connectionAfterHandshake()
 
         conn.close()
 
@@ -57,7 +57,7 @@ class ConnectionClosureTest: XCTestCase {
         let allocator = ChannelSpyAllocator()
         let q = FakeSerialQueue()
         let conn = RMQConnection(transport: transport,
-                                 config: TestHelper.connectionConfig(),
+                                 config: ConnectionHelper.connectionConfig(),
                                  handshakeTimeout: 2,
                                  channelAllocator: allocator,
                                  frameHandler: FrameHandlerSpy(),
@@ -82,7 +82,7 @@ class ConnectionClosureTest: XCTestCase {
         let q = FakeSerialQueue()
         let heartbeatSender = HeartbeatSenderSpy()
         let conn = RMQConnection(transport: transport,
-                                 config: TestHelper.connectionConfig(),
+                                 config: ConnectionHelper.connectionConfig(),
                                  handshakeTimeout: 2,
                                  channelAllocator: allocator,
                                  frameHandler: FrameHandlerSpy(),
@@ -109,7 +109,7 @@ class ConnectionClosureTest: XCTestCase {
         let q = FakeSerialQueue()
         let heartbeatSender = HeartbeatSenderSpy()
         let conn = RMQConnection(transport: transport,
-                                 config: TestHelper.connectionConfig(),
+                                 config: ConnectionHelper.connectionConfig(),
                                  handshakeTimeout: 2,
                                  channelAllocator: allocator,
                                  frameHandler: FrameHandlerSpy(),
@@ -140,7 +140,7 @@ class ConnectionClosureTest: XCTestCase {
         let channelsToCreateCount = 2
         let heartbeatSender = HeartbeatSenderSpy()
         let conn = RMQConnection(transport: transport,
-                                 config: TestHelper.connectionConfig(),
+                                 config: ConnectionHelper.connectionConfig(),
                                  handshakeTimeout: 2,
                                  channelAllocator: allocator,
                                  frameHandler: FrameHandlerSpy(),
@@ -188,13 +188,43 @@ class ConnectionClosureTest: XCTestCase {
         XCTAssertFalse(transport.connected)
     }
 
-    func testServerInitiatedClosing() {
-        let (transport, _, _, _) = TestHelper.connectionAfterHandshake()
+    func testServerInitiatedClosureDisconnectsTransport() {
+        let (transport, _, _, _) = ConnectionHelper.connectionAfterHandshake()
 
         transport.serverSendsPayload(MethodFixtures.connectionClose(), channelNumber: 0)
         
         XCTAssertFalse(transport.isConnected())
         transport.assertClientSentMethod(MethodFixtures.connectionCloseOk(), channelNumber: 0)
+    }
+
+    func testServerInitiatedClosureTriggersConnectionRecovery() {
+        let transport = ControlledInteractionTransport()
+        let recovery = RecoverySpy()
+        let q = FakeSerialQueue()
+        let credentials = RMQCredentials(username: "foo", password: "bar")
+        let config = RMQConnectionConfig(credentials: credentials,
+                                         channelMax: 10,
+                                         frameMax: 100,
+                                         heartbeat: 10,
+                                         vhost: "",
+                                         authMechanism: "PLAIN",
+                                         recovery: recovery)
+        let conn = RMQConnection(transport: transport,
+                                 config: config,
+                                 handshakeTimeout: 10,
+                                 channelAllocator: ChannelSpyAllocator(),
+                                 frameHandler: FrameHandlerSpy(),
+                                 delegate: ConnectionDelegateSpy(),
+                                 commandQueue: q,
+                                 waiterFactory: FakeWaiterFactory(),
+                                 heartbeatSender: HeartbeatSenderSpy())
+        conn.start()
+        try! q.step()
+        transport.handshake()
+
+        transport.serverSendsPayload(MethodFixtures.connectionClose(), channelNumber: 0)
+
+        XCTAssert(recovery.recoverCalled)
     }
 
 }

@@ -46,6 +46,7 @@
     var openCalled = false
     var closeCalled = false
     var blockingCloseCalled = false
+    var recoverCalled = false
     var blockingWaitOnMethod: AnyClass?
     var delegateSentToActivate: RMQConnectionDelegate?
 

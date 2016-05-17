@@ -8,7 +8,7 @@ class RMQConnectionTest: XCTestCase {
         let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
         let conn = RMQConnection(
             transport: transport,
-            config: TestHelper.connectionConfig(),
+            config: ConnectionHelper.connectionConfig(),
             handshakeTimeout: 10,
             channelAllocator: allocator,
             frameHandler: allocator,
@@ -29,7 +29,7 @@ class RMQConnectionTest: XCTestCase {
         let q = FakeSerialQueue()
         let conn = RMQConnection(
             transport: transport,
-            config: TestHelper.connectionConfig(),
+            config: ConnectionHelper.connectionConfig(),
             handshakeTimeout: 0,
             channelAllocator: allocator,
             frameHandler: allocator,
@@ -48,9 +48,9 @@ class RMQConnectionTest: XCTestCase {
         let transport = ControlledInteractionTransport()
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
-        TestHelper.startedConnection(transport,
-                                     commandQueue: q,
-                                     delegate: delegate)
+        ConnectionHelper.startedConnection(transport,
+                                           commandQueue: q,
+                                           delegate: delegate)
         transport.stubbedToProduceErrorOnWrite = "fail please"
         try! q.step()
         transport.handshake()
@@ -61,7 +61,7 @@ class RMQConnectionTest: XCTestCase {
     func testTransportDelegateDisconnectErrorsAreTransformedIntoConnectionDelegateErrors() {
         let transport = ControlledInteractionTransport()
         let delegate = ConnectionDelegateSpy()
-        let conn = TestHelper.startedConnection(transport, delegate: delegate)
+        let conn = ConnectionHelper.startedConnection(transport, delegate: delegate)
         let e = NSError(domain: RMQErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "foo"])
 
         conn.transport(nil, disconnectedWithError: e)
@@ -81,7 +81,7 @@ class RMQConnectionTest: XCTestCase {
     func testTransportDisconnectNotificationsTransformedWhenCloseNotRequested() {
         let transport = ControlledInteractionTransport()
         let delegate = ConnectionDelegateSpy()
-        let conn = TestHelper.startedConnection(transport, delegate: delegate)
+        let conn = ConnectionHelper.startedConnection(transport, delegate: delegate)
         conn.transport(transport, disconnectedWithError: nil)
 
         XCTAssertNil(delegate.lastDisconnectError)
@@ -91,7 +91,7 @@ class RMQConnectionTest: XCTestCase {
     func testSignalsActivityToHeartbeatSenderOnOutgoingFrameset() {
         let heartbeatSender = HeartbeatSenderSpy()
         let conn = RMQConnection(transport: ControlledInteractionTransport(),
-                                 config: TestHelper.connectionConfig(),
+                                 config: ConnectionHelper.connectionConfig(),
                                  handshakeTimeout: 10,
                                  channelAllocator: ChannelSpyAllocator(),
                                  frameHandler: FrameHandlerSpy(),
@@ -109,7 +109,7 @@ class RMQConnectionTest: XCTestCase {
         let transport = ControlledInteractionTransport()
         let q = FakeSerialQueue()
         let conn = RMQConnection(transport: transport,
-                                 config: TestHelper.connectionConfig(vhost: ""),
+                                 config: ConnectionHelper.connectionConfig(vhost: ""),
                                  handshakeTimeout: 10,
                                  channelAllocator: ChannelSpyAllocator(),
                                  frameHandler: FrameHandlerSpy(),
@@ -132,7 +132,7 @@ class RMQConnectionTest: XCTestCase {
         let transport = ControlledInteractionTransport()
         let q = FakeSerialQueue()
         let conn = RMQConnection(transport: transport,
-                                 config: TestHelper.connectionConfig(vhost: "/myvhost"),
+                                 config: ConnectionHelper.connectionConfig(vhost: "/myvhost"),
                                  handshakeTimeout: 10,
                                  channelAllocator: ChannelSpyAllocator(),
                                  frameHandler: FrameHandlerSpy(),

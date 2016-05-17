@@ -1,4 +1,5 @@
 #import "RMQConnection.h"
+#import "RMQConnectionRecoveryNone.h"
 #import "RMQFrame.h"
 #import "RMQGCDHeartbeatSender.h"
 #import "RMQGCDSerialQueue.h"
@@ -107,6 +108,9 @@ NSInteger const RMQChannelLimit = 65535;
     RMQSemaphoreWaiterFactory *waiterFactory = [RMQSemaphoreWaiterFactory new];
     RMQGCDHeartbeatSender *heartbeatSender = [[RMQGCDHeartbeatSender alloc] initWithTransport:transport
                                                                                         clock:[RMQTickingClock new]];
+    RMQConnectionRecoveryNone *noConnectionRecovery = [[RMQConnectionRecoveryNone alloc] initWithConnection:self
+                                                                                           channelAllocator:allocator
+                                                                                            heartbeatSender:heartbeatSender];
     RMQCredentials *credentials = [[RMQCredentials alloc] initWithUsername:rmqURI.username
                                                                   password:rmqURI.password];
     RMQConnectionConfig *config = [[RMQConnectionConfig alloc] initWithCredentials:credentials
@@ -114,7 +118,8 @@ NSInteger const RMQChannelLimit = 65535;
                                                                           frameMax:frameMax
                                                                          heartbeat:heartbeat
                                                                              vhost:rmqURI.vhost
-                                                                     authMechanism:tlsOptions.authMechanism];
+                                                                     authMechanism:tlsOptions.authMechanism
+                                                                          recovery:noConnectionRecovery];
     return [self initWithTransport:transport
                             config:config
                   handshakeTimeout:syncTimeout
@@ -255,6 +260,7 @@ NSInteger const RMQChannelLimit = 65535;
     if ([method isKindOfClass:[RMQConnectionClose class]]) {
         [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:[RMQConnectionCloseOk new]]];
         [self.transport close:^{}];
+        [self.recovery recover];
     } else {
         [self.frameHandler handleFrameset:frameset];
         [self.readerLoop runOnce];
@@ -294,6 +300,10 @@ NSInteger const RMQChannelLimit = 65535;
                                                replyText:[[RMQShortstr alloc] init:@"Goodbye"]
                                                  classId:[[RMQShort alloc] init:0]
                                                 methodId:[[RMQShort alloc] init:0]];
+}
+
+- (id<RMQConnectionRecovery>)recovery {
+    return self.config.recovery;
 }
 
 @end

@@ -76,7 +76,7 @@ class ConnectionTuningTest: XCTestCase {
         let q = FakeSerialQueue()
         let connection = RMQConnection(
             transport: transport,
-            config: TestHelper.connectionConfig(channelMax: channelMax, frameMax: frameMax, heartbeat: heartbeat),
+            config: ConnectionHelper.connectionConfig(channelMax: channelMax, frameMax: frameMax, heartbeat: heartbeat),
             handshakeTimeout: 10,
             channelAllocator: ChannelSpyAllocator(),
             frameHandler: FrameHandlerSpy(),

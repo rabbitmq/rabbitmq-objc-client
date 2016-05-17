@@ -10,6 +10,7 @@
 #import <RMQClient/RMQURI.h>
 #import <RMQClient/RMQAllocatedChannel.h>
 #import <RMQClient/RMQConnectionDelegateLogger.h>
+#import <RMQClient/RMQConnectionRecoveryNone.h>
 #import <RMQClient/RMQSuspendResumeDispatcher.h>
 #import <RMQClient/RMQFramesetValidator.h>
 #import <RMQClient/RMQHandshaker.h>

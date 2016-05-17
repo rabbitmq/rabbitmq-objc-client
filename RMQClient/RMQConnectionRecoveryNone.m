@@ -1,0 +1,32 @@
+#import "RMQConnectionRecoveryNone.h"
+
+@interface RMQConnectionRecoveryNone ()
+@property (nonatomic, readwrite) id<RMQStarter> connection;
+@property (nonatomic, readwrite) id<RMQChannelAllocator> allocator;
+@property (nonatomic, readwrite) id<RMQHeartbeatSender> heartbeatSender;
+@end
+
+@implementation RMQConnectionRecoveryNone
+
+- (instancetype)initWithConnection:(id<RMQStarter>)connection
+                  channelAllocator:(id<RMQChannelAllocator>)allocator
+                   heartbeatSender:(id<RMQHeartbeatSender>)heartbeatSender {
+    self = [super init];
+    if (self) {
+        self.connection = connection;
+        self.allocator = allocator;
+        self.heartbeatSender = heartbeatSender;
+    }
+    return self;
+}
+
+- (instancetype)init {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (void)recover {
+    [self.heartbeatSender stop];
+}
+
+@end

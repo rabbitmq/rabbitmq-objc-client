@@ -7,6 +7,7 @@
 @property (nonnull, nonatomic, readwrite) NSString *vhost;
 @property (nonnull, nonatomic, readwrite) RMQCredentials *credentials;
 @property (nonnull, nonatomic, readwrite) NSString *authMechanism;
+@property (nonnull, nonatomic, readwrite) id<RMQConnectionRecovery> recovery;
 @end
 
 @implementation RMQConnectionConfig
@@ -15,7 +16,8 @@
                            frameMax:(NSNumber *)frameMax
                           heartbeat:(NSNumber *)heartbeat
                               vhost:(nonnull NSString *)vhost
-                      authMechanism:(nonnull NSString *)authMechanism {
+                      authMechanism:(nonnull NSString *)authMechanism
+                           recovery:(nonnull id<RMQConnectionRecovery>)recovery {
     self = [super init];
     if (self) {
         self.credentials = credentials;
@@ -24,6 +26,7 @@
         self.heartbeat = heartbeat;
         self.vhost = vhost;
         self.authMechanism = authMechanism;
+        self.recovery = recovery;
     }
     return self;
 }
