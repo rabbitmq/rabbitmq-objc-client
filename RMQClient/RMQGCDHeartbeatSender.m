@@ -28,16 +28,19 @@
     return nil;
 }
 
-- (void)startWithInterval:(NSNumber *)intervalSeconds {
+- (void (^)())startWithInterval:(NSNumber *)intervalSeconds {
+    void (^eventHandler)() = ^{
+        if ([self intervalPassed:intervalSeconds]) [self.transport write:self.heartbeatData];
+    };
     double leewaySeconds = 1;
     dispatch_source_set_timer(self.timer,
                               DISPATCH_TIME_NOW,
                               intervalSeconds.doubleValue * NSEC_PER_SEC,
                               leewaySeconds * NSEC_PER_SEC);
-    dispatch_source_set_event_handler(self.timer, ^{
-        if ([self intervalPassed:intervalSeconds]) [self.transport write:self.heartbeatData];
-    });
+    dispatch_source_set_event_handler(self.timer, eventHandler);
     dispatch_resume(self.timer);
+
+    return eventHandler;
 }
 
 - (void)stop {

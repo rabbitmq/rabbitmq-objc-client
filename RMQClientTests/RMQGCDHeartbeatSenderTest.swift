@@ -1,8 +1,6 @@
 import XCTest
 
 class RMQGCDHeartbeatSenderTest: XCTestCase {
-    var oneSecond = 1.01
-
     func makeSender() -> (sender: RMQGCDHeartbeatSender, transport: ControlledInteractionTransport, clock: FakeClock) {
         let transport = ControlledInteractionTransport()
         let clock = FakeClock()
@@ -12,45 +10,42 @@ class RMQGCDHeartbeatSenderTest: XCTestCase {
         return (sender, transport, clock)
     }
 
-    func testSendsHeartbeats() {
+    func testSendsHeartbeatsRegularly() {
         let (sender, transport, clock) = makeSender()
         let beat = RMQHeartbeat().amqEncoded()
 
-        sender.startWithInterval(1)
-        defer { sender.stop() }
+        let handler = sender.startWithInterval(1)
+        sender.stop() // don't let scheduled runs interfere with test runs
 
-        clock.advance(oneSecond)
-        clock.advance(oneSecond)
-
-        TestHelper.run(1.5)
+        clock.advance(1.01)
+        handler()
+        clock.advance(1)
+        handler()
 
         XCTAssertEqual([beat, beat], transport.outboundData)
     }
 
     func testDoesNotBeatIfIntervalNotPassed() {
         let (sender, transport, clock) = makeSender()
-        let beat = RMQHeartbeat().amqEncoded()
 
-        sender.startWithInterval(1)
-        defer { sender.stop() }
+        let handler = sender.startWithInterval(1)
+        sender.stop()
 
-        TestHelper.run(1)
+        clock.advance(0.99)
+        handler()
 
         XCTAssertEqual([], transport.outboundData)
     }
 
     func testDoesNotBeatIfActivityRecentlySignalled() {
         let (sender, transport, clock) = makeSender()
-        let beat = RMQHeartbeat().amqEncoded()
 
-        sender.startWithInterval(1)
-        defer { sender.stop() }
+        let handler = sender.startWithInterval(1)
+        sender.stop()
 
-        clock.advance(oneSecond)
-        clock.advance(oneSecond)
+        clock.advance(1)
         sender.signalActivity()
-
-        TestHelper.run(1)
+        handler()
 
         XCTAssertEqual([], transport.outboundData)
     }
