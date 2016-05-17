@@ -171,7 +171,7 @@ class MethodFixtures {
         return RMQBasicNack(deliveryTag: RMQLonglong(deliveryTag), options: options)
     }
 
-    static func basicPublish(message: String, routingKey: String, exchange: String = "", options: RMQBasicPublishOptions = []) -> RMQBasicPublish {
+    static func basicPublish(routingKey: String, exchange: String = "", options: RMQBasicPublishOptions = []) -> RMQBasicPublish {
         return RMQBasicPublish(reserved1: RMQShort(0), exchange: RMQShortstr(exchange), routingKey: RMQShortstr(routingKey), options: options)
     }
 

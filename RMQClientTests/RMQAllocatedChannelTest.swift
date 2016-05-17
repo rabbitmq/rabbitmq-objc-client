@@ -274,12 +274,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let message = "my great message yo"
         let notPersistent = RMQBasicDeliveryMode(1)
 
-        let expectedMethod = RMQBasicPublish(
-            reserved1: RMQShort(0),
-            exchange: RMQShortstr(""),
-            routingKey: RMQShortstr("my.q"),
-            options: RMQBasicPublishOptions.NoOptions
-        )
+        let expectedMethod = MethodFixtures.basicPublish("my.q", exchange: "", options: [])
         let expectedHeader = RMQContentHeader(
             classID: 60,
             bodySize: message.dataUsingEncoding(NSUTF8StringEncoding)!.length,
@@ -311,12 +306,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = RMQAllocatedChannel(999, contentBodySize: 4, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
         let messageContent = "12345678"
-        let expectedMethod = RMQBasicPublish(
-            reserved1: RMQShort(0),
-            exchange: RMQShortstr(""),
-            routingKey: RMQShortstr("my.q"),
-            options: RMQBasicPublishOptions.NoOptions
-        )
+        let expectedMethod = MethodFixtures.basicPublish("my.q", exchange: "", options: [])
         let expectedBodyData = messageContent.dataUsingEncoding(NSUTF8StringEncoding)!
         let persistent = RMQBasicDeliveryMode(2)
         let contentTypeOctetStream = RMQBasicContentType("application/octet-stream")
