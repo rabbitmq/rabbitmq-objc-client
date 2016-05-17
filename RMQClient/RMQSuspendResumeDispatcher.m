@@ -40,7 +40,7 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 
 - (void)blockingWaitOn:(Class)method {
     [self.commandQueue blockingEnqueue:^{
-        [self handleClosure:nil operation:^{
+        [self processOutgoing:nil executeOrErr:^{
             [self.commandQueue suspend];
         }];
     }];
@@ -56,9 +56,9 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 - (void)sendSyncMethod:(id<RMQMethod>)method
      completionHandler:(void (^)(RMQFramesetValidationResult *result))completionHandler {
     [self.commandQueue enqueue:^{
-        [self handleClosure:method operation:^{
+        [self processOutgoing:method executeOrErr:^{
             if ([self isClose:method]) {
-                self.state = DispatcherStateClosedByClient;
+                [self processClientClose];
             }
 
             RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber
@@ -70,9 +70,9 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 
     [self.commandQueue enqueue:^{
         RMQFramesetValidationResult *result = [self.validator expect:method.syncResponse];
-        if (self.state == DispatcherStateOpen && result.error) {
+        if (self.channelIsOpen && result.error) {
             [self.delegate channel:self.channel error:result.error];
-        } else if (self.state == DispatcherStateOpen) {
+        } else if (self.channelIsOpen) {
             completionHandler(result);
         }
     }];
@@ -85,7 +85,7 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 
 - (void)sendSyncMethodBlocking:(id<RMQMethod>)method {
     [self.commandQueue blockingEnqueue:^{
-        [self handleClosure:method operation:^{
+        [self processOutgoing:method executeOrErr:^{
             RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
             [self.commandQueue suspend];
             [self.sender sendFrameset:frameset];
@@ -94,7 +94,7 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 
     [self.commandQueue blockingEnqueue:^{
         RMQFramesetValidationResult *result = [self.validator expect:method.syncResponse];
-        if (self.state == DispatcherStateOpen && result.error) {
+        if (self.channelIsOpen && result.error) {
             [self.delegate channel:self.channel error:result.error];
         }
     }];
@@ -102,7 +102,7 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 
 - (void)sendAsyncFrameset:(RMQFrameset *)frameset {
     [self.commandQueue enqueue:^{
-        [self handleClosure:frameset.method operation:^{
+        [self processOutgoing:frameset.method executeOrErr:^{
             [self.sender sendFrameset:frameset];
         }];
     }];
@@ -113,9 +113,9 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 }
 
 - (void)handleFrameset:(RMQFrameset *)frameset {
-    if (self.state != DispatcherStateClosedByServer && [self isClose:frameset.method]) {
+    if (!self.channelAlreadyClosedByServer && [self isClose:frameset.method]) {
         [self processServerClose:(RMQChannelClose *)frameset.method];
-    } else if (self.state != DispatcherStateClosedByServer) {
+    } else if (self.channelIsOpen) {
         [self.validator fulfill:frameset];
     }
     [self.commandQueue resume];
@@ -123,17 +123,17 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 
 # pragma mark - Private
 
-- (NSNumber *)channelNumber {
-    return self.channel.channelNumber;
-}
-
-- (void)handleClosure:(id<RMQMethod>)method
-            operation:(void (^)())operation {
-    if (self.state == DispatcherStateOpen) {
+- (void)processOutgoing:(id<RMQMethod>)method
+           executeOrErr:(void (^)())operation {
+    if (self.channelIsOpen) {
         operation();
     } else if (![self isClose:method]) {
         [self sendChannelClosedError];
     }
+}
+
+- (void)processClientClose {
+    self.state = DispatcherStateClosedByClient;
 }
 
 - (void)processServerClose:(RMQChannelClose *)close {
@@ -153,8 +153,20 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
     [self.delegate channel:self.channel error:error];
 }
 
+- (BOOL)channelIsOpen {
+    return self.state == DispatcherStateOpen;
+}
+
+- (BOOL)channelAlreadyClosedByServer {
+    return self.state == DispatcherStateClosedByServer;
+}
+
 - (BOOL)isClose:(id<RMQMethod>)method {
     return [method isKindOfClass:[RMQChannelClose class]];
+}
+
+- (NSNumber *)channelNumber {
+    return self.channel.channelNumber;
 }
 
 @end
