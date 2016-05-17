@@ -31,7 +31,7 @@ class RMQGCDHeartbeatSenderTest: XCTestCase {
         let handler = sender.startWithInterval(1)
         sender.stop()
 
-        clock.advance(0.99)
+        clock.advance(1)
         handler()
 
         XCTAssertEqual([], transport.outboundData)
