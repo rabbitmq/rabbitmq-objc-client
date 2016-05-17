@@ -36,6 +36,7 @@
 		AE3415381CEB23490071177A /* RMQConsumer.h in Headers */ = {isa = PBXBuildFile; fileRef = AE3415361CEB23490071177A /* RMQConsumer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE3415391CEB23490071177A /* RMQConsumer.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3415371CEB23490071177A /* RMQConsumer.m */; };
 		AE34153B1CEB56ED0071177A /* ConsumeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE34153A1CEB56ED0071177A /* ConsumeTest.swift */; };
+		AE3415461CEB7FF20071177A /* RMQStarter.h in Headers */ = {isa = PBXBuildFile; fileRef = AE3415451CEB7FF20071177A /* RMQStarter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE39BD9E1C68B019000E7A77 /* RMQValues.h in Headers */ = {isa = PBXBuildFile; fileRef = AE39BD9C1C68B019000E7A77 /* RMQValues.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE39BD9F1C68B019000E7A77 /* RMQValues.m in Sources */ = {isa = PBXBuildFile; fileRef = AE39BD9D1C68B019000E7A77 /* RMQValues.m */; };
 		AE39BDA21C68B105000E7A77 /* RMQProtocolHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = AE39BDA01C68B105000E7A77 /* RMQProtocolHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -231,6 +232,7 @@
 		AE3415361CEB23490071177A /* RMQConsumer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQConsumer.h; sourceTree = "<group>"; };
 		AE3415371CEB23490071177A /* RMQConsumer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQConsumer.m; sourceTree = "<group>"; };
 		AE34153A1CEB56ED0071177A /* ConsumeTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsumeTest.swift; sourceTree = "<group>"; };
+		AE3415451CEB7FF20071177A /* RMQStarter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQStarter.h; sourceTree = "<group>"; };
 		AE39BD9C1C68B019000E7A77 /* RMQValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQValues.h; sourceTree = "<group>"; };
 		AE39BD9D1C68B019000E7A77 /* RMQValues.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RMQValues.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AE39BDA01C68B105000E7A77 /* RMQProtocolHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RMQProtocolHeader.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -453,6 +455,7 @@
 			isa = PBXGroup;
 			children = (
 				AEC4D1D61C74C1AC00D7D585 /* RMQSender.h */,
+				AE3415451CEB7FF20071177A /* RMQStarter.h */,
 				AEE7FEAB1C3BCD0F00DF8C4F /* RMQConnection.h */,
 				AEE7FEAC1C3BCD0F00DF8C4F /* RMQConnection.m */,
 				AEA45EC91C43D2B900FE1F62 /* RMQTransport.h */,
@@ -706,6 +709,7 @@
 				AE96A7691CE1F16600C772AA /* RMQSuspendResumeDispatcher.h in Headers */,
 				AE3415381CEB23490071177A /* RMQConsumer.h in Headers */,
 				AEB5F15C1CDA4360001C82FF /* RMQErrors.h in Headers */,
+				AE3415461CEB7FF20071177A /* RMQStarter.h in Headers */,
 				AEE7FE951C3BCA6000DF8C4F /* RMQClient.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

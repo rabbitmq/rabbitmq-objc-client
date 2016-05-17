@@ -10,10 +10,11 @@
 #import "RMQLocalSerialQueue.h"
 #import "RMQWaiterFactory.h"
 #import "RMQTLSOptions.h"
+#import "RMQStarter.h"
 
 extern NSInteger const RMQChannelLimit;
 
-@interface RMQConnection : NSObject<RMQFrameHandler, RMQSender, RMQTransportDelegate>
+@interface RMQConnection : NSObject<RMQFrameHandler, RMQSender, RMQStarter, RMQTransportDelegate>
 
 @property (nonnull, copy, nonatomic, readonly) NSString *vhost;
 
@@ -60,7 +61,6 @@ extern NSInteger const RMQChannelLimit;
 - (nonnull instancetype)initWithDelegate:(nullable id<RMQConnectionDelegate>)delegate;
 
 # pragma mark - Other methods
-- (void)start;
 - (void)close;
 - (void)blockingClose;
 - (nonnull id<RMQChannel>)createChannel;
