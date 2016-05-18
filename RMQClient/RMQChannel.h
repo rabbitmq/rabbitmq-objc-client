@@ -14,6 +14,7 @@
 - (void)open;
 - (void)close;
 - (void)blockingClose;
+- (void)recover;
 - (void)blockingWaitOn:(nonnull Class)method;
 
 - (nonnull RMQQueue *)queue:(nonnull NSString *)queueName

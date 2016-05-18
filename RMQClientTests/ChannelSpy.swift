@@ -78,6 +78,10 @@
         blockingCloseCalled = true
     }
 
+    func recover() {
+        recoverCalled = true
+    }
+
     func blockingWaitOn(method: AnyClass) {
         blockingWaitOnMethod = method
     }

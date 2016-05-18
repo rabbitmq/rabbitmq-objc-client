@@ -13,7 +13,6 @@
 @property (nonatomic, readwrite) NSMutableDictionary *exchanges;
 @property (nonatomic, readwrite) NSMutableDictionary *queues;
 @property (nonatomic, readwrite) NSNumber *prefetchCount;
-@property (nonatomic, readwrite) BOOL prefetchGlobal;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) id<RMQNameGenerator> nameGenerator;
@@ -37,8 +36,7 @@
         self.consumerHandlers = [NSMutableDictionary new];
         self.exchanges = [NSMutableDictionary new];
         self.queues = [NSMutableDictionary new];
-        self.prefetchCount = @0;
-        self.prefetchGlobal = NO;
+        self.prefetchCount = @1;
         self.delegate = nil;
         self.nameGenerator = nameGenerator;
         self.allocator = allocator;
@@ -83,6 +81,11 @@
                                                                methodId:[[RMQShort alloc] init:0]];
     [self.dispatcher sendSyncMethodBlocking:close];
     [self.allocator releaseChannelNumber:self.channelNumber];
+}
+
+- (void)recover {
+    [self open];
+    [self basicQos:self.prefetchCount global:YES];
 }
 
 - (void)blockingWaitOn:(Class)method {
@@ -213,7 +216,10 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
 
     [self.dispatcher sendSyncMethod:[[RMQBasicQos alloc] initWithPrefetchSize:[[RMQLong alloc] init:0]
                                                                 prefetchCount:[[RMQShort alloc] init:count.integerValue]
-                                                                      options:options]];
+                                                                      options:options]
+                  completionHandler:^(RMQFrameset *frameset) {
+                      self.prefetchCount = count;
+                  }];
 }
 
 - (void)ack:(NSNumber *)deliveryTag

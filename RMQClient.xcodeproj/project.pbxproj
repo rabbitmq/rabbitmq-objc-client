@@ -56,6 +56,7 @@
 		AE40C74A1CB272F000CC7B97 /* CocoaAsyncSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE1E0EC81CB2613A008285DD /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE40C7511CB2749800CC7B97 /* Mantle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE1E0ECA1CB2613E008285DD /* Mantle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE41C5531C4FC88F00129207 /* MethodFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE41C5521C4FC88F00129207 /* MethodFixtures.swift */; };
+		AE43841B1CEC9DAD000A4A7A /* ChannelRecoveryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE43841A1CEC9DAD000A4A7A /* ChannelRecoveryTest.swift */; };
 		AE48F9341CE22CA200296A23 /* RMQSuspendResumeDispatcherTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE48F9331CE22CA200296A23 /* RMQSuspendResumeDispatcherTest.swift */; };
 		AE4E7F4A1C6A293D00A441EC /* RMQMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = AE4E7F491C6A293D00A441EC /* RMQMethods.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE4E7F4B1C6A297900A441EC /* RMQMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA45EC41C43C20F00FE1F62 /* RMQMethods.m */; };
@@ -277,6 +278,7 @@
 		AE3E0E371C56416F00186BA7 /* EncodingTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = EncodingTest.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		AE41C5521C4FC88F00129207 /* MethodFixtures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MethodFixtures.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		AE41C5621C51A2D500129207 /* RMQTransportContract.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RMQTransportContract.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		AE43841A1CEC9DAD000A4A7A /* ChannelRecoveryTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelRecoveryTest.swift; sourceTree = "<group>"; };
 		AE48F9331CE22CA200296A23 /* RMQSuspendResumeDispatcherTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQSuspendResumeDispatcherTest.swift; sourceTree = "<group>"; };
 		AE4E7F491C6A293D00A441EC /* RMQMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RMQMethods.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		AE541F421C7E132700C17932 /* ConnectionTuningTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ConnectionTuningTest.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -475,6 +477,7 @@
 			children = (
 				AE34153C1CEB714F0071177A /* RMQConnectionShutdownTest.swift */,
 				AE3415521CEBC2F90071177A /* RMQConnectionRecoverTest.swift */,
+				AE43841A1CEC9DAD000A4A7A /* ChannelRecoveryTest.swift */,
 			);
 			name = Recovery;
 			sourceTree = "<group>";
@@ -1059,6 +1062,7 @@
 				AE48F9341CE22CA200296A23 /* RMQSuspendResumeDispatcherTest.swift in Sources */,
 				AE09C8031CCE112C00FA6915 /* RMQSemaphoreWaiterTest.swift in Sources */,
 				AE26FA311C97157700CDBBAA /* ChannelSpyTest.swift in Sources */,
+				AE43841B1CEC9DAD000A4A7A /* ChannelRecoveryTest.swift in Sources */,
 				AEE445E81C7342EE0082132C /* RMQReaderLoopTest.swift in Sources */,
 				AEBF7D671CBD197D006EA2E4 /* ChannelCreationTest.swift in Sources */,
 				AE8AD2691CC545ED00229444 /* RMQFramesetValidatorTest.swift in Sources */,

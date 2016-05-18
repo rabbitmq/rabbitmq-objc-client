@@ -27,6 +27,8 @@
 
 - (void)blockingClose {}
 
+- (void)recover {}
+
 - (void)blockingWaitOn:(Class)method {
     [self err];
 }

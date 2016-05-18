@@ -37,7 +37,7 @@ class RMQConnectionRecoverTest: XCTestCase {
         XCTAssert(conn.startCalled)
     }
 
-    func testReopensChannelsKeptByAllocator() {
+    func testRecoversChannelsKeptByAllocator() {
         let allocator = ChannelSpyAllocator()
         let q = FakeSerialQueue()
         let recover = RMQConnectionRecover(interval: 3,
@@ -55,18 +55,18 @@ class RMQConnectionRecoverTest: XCTestCase {
         try! q.step()
         try! q.step()
 
-        XCTAssertFalse(ch0.openCalled)
-        XCTAssertFalse(ch1.openCalled)
-        XCTAssertFalse(ch2.openCalled)
-        XCTAssertFalse(ch3.openCalled)
+        XCTAssertFalse(ch0.recoverCalled)
+        XCTAssertFalse(ch1.recoverCalled)
+        XCTAssertFalse(ch2.recoverCalled)
+        XCTAssertFalse(ch3.recoverCalled)
 
         try! q.step()
 
-        XCTAssertFalse(ch0.openCalled)
-        XCTAssertFalse(ch2.openCalled)
+        XCTAssertFalse(ch0.recoverCalled)
+        XCTAssertFalse(ch2.recoverCalled)
 
-        XCTAssertTrue(ch1.openCalled)
-        XCTAssertTrue(ch3.openCalled)
+        XCTAssertTrue(ch1.recoverCalled)
+        XCTAssertTrue(ch3.recoverCalled)
     }
 
 }
