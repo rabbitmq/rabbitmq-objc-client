@@ -9,7 +9,7 @@
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
 @property (nonatomic, readwrite) NSNumber *contentBodySize;
 @property (nonatomic, readwrite) id <RMQDispatcher> dispatcher;
-@property (nonatomic, readwrite) NSMutableDictionary *consumerHandlers;
+@property (nonatomic, readwrite) NSMutableDictionary *consumers;
 @property (nonatomic, readwrite) NSMutableDictionary *exchanges;
 @property (nonatomic, readwrite) NSMutableDictionary *queues;
 @property (nonatomic, readwrite) NSNumber *prefetchCountPerConsumer;
@@ -34,7 +34,7 @@
         self.contentBodySize = contentBodySize;
         self.dispatcher = dispatcher;
         self.commandQueue = commandQueue;
-        self.consumerHandlers = [NSMutableDictionary new];
+        self.consumers = [NSMutableDictionary new];
         self.exchanges = [NSMutableDictionary new];
         self.queues = [NSMutableDictionary new];
         self.prefetchCountPerConsumer = nil;
@@ -149,19 +149,22 @@
                       options:(RMQBasicConsumeOptions)options
                       handler:(RMQConsumerDeliveryHandler)handler {
     NSString *consumerTag = [self.nameGenerator generateWithPrefix:@"rmq-objc-client.gen-"];
+    RMQConsumer *consumer = [[RMQConsumer alloc] initWithConsumerTag:consumerTag
+                                                             handler:handler
+                                                             channel:self];
     [self.dispatcher sendSyncMethod:[[RMQBasicConsume alloc] initWithReserved1:[[RMQShort alloc] init:0]
                                                                          queue:[[RMQShortstr alloc] init:queueName]
                                                                    consumerTag:[[RMQShortstr alloc] init:consumerTag]
                                                                        options:options
                                                                      arguments:[[RMQTable alloc] init:@{}]]
                   completionHandler:^(RMQFrameset *frameset) {
-                      self.consumerHandlers[consumerTag] = handler;
+                      self.consumers[consumerTag] = consumer;
                   }];
-    return [[RMQConsumer alloc] initWithConsumerTag:consumerTag channel:self];
+    return consumer;
 }
 
 - (void)basicCancel:(NSString *)consumerTag {
-    [self.consumerHandlers removeObjectForKey:consumerTag];
+    [self.consumers removeObjectForKey:consumerTag];
     [self.dispatcher sendSyncMethod:[[RMQBasicCancel alloc] initWithConsumerTag:[[RMQShortstr alloc] init:consumerTag]
                                                                         options:RMQBasicCancelNoOptions]];
 }
@@ -359,20 +362,20 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
 - (void)handleBasicDeliver:(RMQFrameset *)frameset {
     RMQBasicDeliver *deliver = (RMQBasicDeliver *)frameset.method;
     NSString *content = [[NSString alloc] initWithData:frameset.contentData encoding:NSUTF8StringEncoding];
-    RMQConsumerDeliveryHandler consumer = self.consumerHandlers[deliver.consumerTag.stringValue];
+    RMQConsumer *consumer = self.consumers[deliver.consumerTag.stringValue];
     if (consumer) {
         RMQMessage *message = [[RMQMessage alloc] initWithConsumerTag:deliver.consumerTag.stringValue
                                                           deliveryTag:@(deliver.deliveryTag.integerValue)
                                                               content:content];
         RMQDeliveryInfo *deliveryInfo = [[RMQDeliveryInfo alloc] initWithRoutingKey:deliver.routingKey.stringValue];
-        consumer(deliveryInfo, message);
+        consumer.handler(deliveryInfo, message);
     }
 }
 
 - (void)handleBasicCancel:(RMQFrameset *)frameset {
     RMQBasicCancel *cancel = (RMQBasicCancel *)frameset.method;
     NSString *consumerTag = cancel.consumerTag.stringValue;
-    [self.consumerHandlers removeObjectForKey:consumerTag];
+    [self.consumers removeObjectForKey:consumerTag];
 }
 
 - (RMQExchange *)memoizedExchangeDeclare:(NSString *)name
