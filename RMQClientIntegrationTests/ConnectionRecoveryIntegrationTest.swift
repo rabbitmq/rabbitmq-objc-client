@@ -27,7 +27,16 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
     }
 
 //    func testReenablesConsumers() {
-//        let conn = RMQConnection()
+//        let uri = "amqp://guest:guest@localhost"
+//        let conn = RMQConnection(uri: uri,
+//                                 tlsOptions: RMQTLSOptions.fromURI(uri),
+//                                 channelMax: 1000,
+//                                 frameMax: 131072,
+//                                 heartbeat: 10,
+//                                 syncTimeout: 10,
+//                                 delegate: RMQConnectionDelegateLogger(),
+//                                 delegateQueue: dispatch_get_main_queue(),
+//                                 recover: true)
 //        conn.start()
 //        let ch = conn.createChannel()
 //        let q = ch.queue("")
@@ -40,7 +49,8 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
 //        }
 //
 //        q.publish("before close")
-//        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5))
+//        XCTAssertEqual(0, dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5)),
+//                       "Timed out waiting for message")
 //
 //        try! closeAllConnections()
 //

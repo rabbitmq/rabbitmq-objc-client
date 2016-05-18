@@ -49,4 +49,12 @@ class RMQGCDHeartbeatSenderTest: XCTestCase {
 
         XCTAssertEqual([], transport.outboundData)
     }
+
+    func testCanBeStoppedAndStartedWithoutOverResumeException() {
+        let (sender, _, _) = makeSender()
+
+        sender.startWithInterval(0.01)
+        sender.stop()
+        sender.startWithInterval(0.01)
+    }
 }

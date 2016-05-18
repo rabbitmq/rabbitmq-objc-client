@@ -50,4 +50,21 @@ class RMQGCDSerialQueueTest: XCTestCase {
         XCTAssertEqual("bar", foo)
     }
 
+    func testDelayedEnqueue() {
+        let q = RMQGCDSerialQueue(name: "delay test")
+        let semaphore = dispatch_semaphore_create(0)
+        var items: [String] = []
+        q.delayedBy(0.01) {
+            items.append("delayed")
+            dispatch_semaphore_signal(semaphore)
+        }
+        q.enqueue {
+            items.append("enqueued")
+        }
+
+        XCTAssertEqual(0, dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(2)),
+                       "Timed out waiting for queue to finish")
+        XCTAssertEqual(["enqueued", "delayed"], items)
+    }
+
 }

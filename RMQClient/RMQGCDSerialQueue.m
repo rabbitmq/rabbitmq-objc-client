@@ -42,6 +42,13 @@ typedef NS_ENUM(int32_t, RMQGCDSerialQueueStatus) {
     dispatch_sync(self.dispatchQueue, operation);
 }
 
+- (void)delayedBy:(NSNumber *)delay
+          enqueue:(RMQOperation)operation {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay.doubleValue * NSEC_PER_SEC)),
+                   self.dispatchQueue,
+                   operation);
+}
+
 - (void)suspend {
     if (self.status == RMQGCDSerialQueueStatusSuspended) {
         return;

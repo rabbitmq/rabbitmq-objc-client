@@ -6,6 +6,7 @@
 @property (nonatomic, readwrite) id<RMQClock> clock;
 @property (nonatomic, readwrite) dispatch_source_t timer;
 @property (atomic, readwrite) NSDate *lastBeatAt;
+@property (nonatomic, readwrite) dispatch_queue_t dispatchQueue;
 @end
 
 @implementation RMQGCDHeartbeatSender
@@ -15,8 +16,7 @@
     self = [super init];
     if (self) {
         self.clock = clock;
-        dispatch_queue_t q = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
-        self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, q);
+        self.dispatchQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
         self.transport = transport;
         [self signalActivity];
     }
@@ -29,6 +29,8 @@
 }
 
 - (void (^)())startWithInterval:(NSNumber *)intervalSeconds {
+    self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.dispatchQueue);
+    
     void (^eventHandler)() = ^{
         if ([self intervalPassed:intervalSeconds]) [self.transport write:self.heartbeatData];
     };
@@ -45,6 +47,7 @@
 
 - (void)stop {
     dispatch_source_cancel(self.timer);
+    self.timer = nil;
 }
 
 - (void)signalActivity {

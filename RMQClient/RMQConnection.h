@@ -31,6 +31,17 @@ extern NSInteger const RMQChannelLimit;
 
 # pragma mark - User-facing initializers
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                         tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
+                         channelMax:(nonnull NSNumber *)channelMax
+                           frameMax:(nonnull NSNumber *)frameMax
+                          heartbeat:(nonnull NSNumber *)heartbeat
+                        syncTimeout:(nonnull NSNumber *)syncTimeout
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate
+                      delegateQueue:(nonnull dispatch_queue_t)delegateQueue
+                            recover:(BOOL)shouldRecover;
+
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                         tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
                          channelMax:(nonnull NSNumber *)channelMax
                            frameMax:(nonnull NSNumber *)frameMax
                           heartbeat:(nonnull NSNumber *)heartbeat
@@ -39,7 +50,6 @@ extern NSInteger const RMQChannelLimit;
                       delegateQueue:(nonnull dispatch_queue_t)delegateQueue;
 
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
-                         tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
                          channelMax:(nonnull NSNumber *)channelMax
                            frameMax:(nonnull NSNumber *)frameMax
                           heartbeat:(nonnull NSNumber *)heartbeat

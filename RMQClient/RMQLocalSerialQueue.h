@@ -6,6 +6,8 @@ typedef void (^RMQOperation)();
 
 - (void)enqueue:(RMQOperation)operation;
 - (void)blockingEnqueue:(RMQOperation)operation;
+- (void)delayedBy:(NSNumber *)delay
+          enqueue:(RMQOperation)operation;
 - (void)suspend;
 - (void)resume;
 
