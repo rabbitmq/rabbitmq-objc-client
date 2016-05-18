@@ -16,3 +16,6 @@ before_script:
   - /usr/local/sbin/rabbitmqctl set_permissions "O=client,CN=guest" ".*" ".*" ".*"
 after_failure:
   - cat /usr/local/var/log/rabbitmq/rabbit@localhost.log
+cache:
+  directories:
+  - $HOME/Library/Caches/org.carthage.CarthageKit
