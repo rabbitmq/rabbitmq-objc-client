@@ -12,6 +12,7 @@ before_install:
   - brew services start rabbitmq
 before_script:
   - bin/bootstrap-if-needed
+  - until lsof -i:5672; do echo "Waiting for RabbitMQ to start"; sleep 1; done
   - /usr/local/sbin/rabbitmqctl add_user "O=client,CN=guest" bunnies
   - /usr/local/sbin/rabbitmqctl set_permissions "O=client,CN=guest" ".*" ".*" ".*"
 after_failure:
