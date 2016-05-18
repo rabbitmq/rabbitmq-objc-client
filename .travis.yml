@@ -18,4 +18,4 @@ after_failure:
   - cat /usr/local/var/log/rabbitmq/rabbit@localhost.log
 cache:
   directories:
-  - $HOME/Library/Caches/org.carthage.CarthageKit
+  - Carthage
