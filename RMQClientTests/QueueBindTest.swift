@@ -4,7 +4,7 @@ class QueueBindTest: XCTestCase {
 
     func testQueueBindSendsAQueueBind() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator())
+        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
         ch.activateWithDelegate(nil)
 
         ch.queueBind("my-q", exchange: "my-exchange", routingKey: "hi")
@@ -16,7 +16,7 @@ class QueueBindTest: XCTestCase {
 
     func testQueueUnbindSendsUnbind() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator())
+        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
         ch.activateWithDelegate(nil)
 
         ch.queueUnbind("my-q", exchange: "my-exchange", routingKey: "hi")

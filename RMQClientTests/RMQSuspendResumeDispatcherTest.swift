@@ -272,7 +272,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         let sender = SenderSpy()
         let delegate = ConnectionDelegateSpy()
         let dispatcher = RMQSuspendResumeDispatcher(sender: sender, commandQueue: q)
-        let ch = RMQAllocatedChannel(123, contentBodySize: 1, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
+        let ch = RMQAllocatedChannel(123, contentBodySize: 1, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
         dispatcher.activateWithChannel(ch, delegate: delegate)
         return (dispatcher, q, sender, delegate, ch)
     }

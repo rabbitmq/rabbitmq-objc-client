@@ -32,6 +32,11 @@
     }];
     [self.commandQueue delayedBy:self.interval enqueue:^{
         [self.connection start];
+        [self.commandQueue enqueue:^{
+            for (id<RMQChannel> ch in self.allocator.allocatedUserChannels) {
+                [ch open];
+            }
+        }];
     }];
 }
 

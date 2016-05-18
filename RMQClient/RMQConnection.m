@@ -113,14 +113,14 @@ NSInteger const RMQChannelLimit = 65535;
     RMQCredentials *credentials = [[RMQCredentials alloc] initWithUsername:rmqURI.username
                                                                   password:rmqURI.password];
 
+    RMQGCDSerialQueue *commandQueue = [[RMQGCDSerialQueue alloc] initWithName:@"connection commands"];
     id<RMQConnectionRecovery> recovery;
     if (shouldRecover) {
-        RMQGCDSerialQueue *recoveryQueue = [[RMQGCDSerialQueue alloc] initWithName:@"connection recovery"];
         recovery = [[RMQConnectionRecover alloc] initWithInterval:@3
                                                        connection:self
                                                  channelAllocator:allocator
                                                   heartbeatSender:heartbeatSender
-                                                     commandQueue:recoveryQueue];
+                                                     commandQueue:commandQueue];
     } else {
         recovery = [[RMQConnectionShutdown alloc] initWithHeartbeatSender:heartbeatSender];
     }
@@ -138,7 +138,7 @@ NSInteger const RMQChannelLimit = 65535;
                   channelAllocator:allocator
                       frameHandler:allocator
                           delegate:delegateProxy
-                      commandQueue:[[RMQGCDSerialQueue alloc] initWithName:@"connection commands"]
+                      commandQueue:commandQueue
                      waiterFactory:waiterFactory
                    heartbeatSender:heartbeatSender];
 }

@@ -49,6 +49,14 @@
     }
 }
 
+- (NSArray *)allocatedUserChannels {
+    NSMutableArray *userChannels = [self.channels.allValues mutableCopy];
+    [userChannels removeObjectAtIndex:0];
+    return [userChannels sortedArrayUsingComparator:^NSComparisonResult(id<RMQChannel> ch1, id<RMQChannel> ch2) {
+        return ch1.channelNumber > ch2.channelNumber;
+    }];
+}
+
 # pragma mark - RMQFrameHandler
 
 - (void)handleFrameset:(RMQFrameset *)frameset {
@@ -80,7 +88,8 @@
                                                 contentBodySize:@(self.sender.frameMax.integerValue - RMQEmptyFrameSize)
                                                      dispatcher:dispatcher
                                                    commandQueue:commandQueue
-                                                  nameGenerator:self.nameGenerator];
+                                                  nameGenerator:self.nameGenerator
+                                                      allocator:self];
     self.channels[@(self.channelNumber)] = ch;
     self.channelNumber++;
     return ch;
@@ -96,7 +105,8 @@
                                                         contentBodySize:@(self.sender.frameMax.integerValue - RMQEmptyFrameSize)
                                                              dispatcher:dispatcher
                                                            commandQueue:[self suspendedDispatchQueue:i]
-                                                          nameGenerator:self.nameGenerator];
+                                                          nameGenerator:self.nameGenerator
+                                                              allocator:self];
             self.channels[@(i)] = ch;
             return ch;
         }

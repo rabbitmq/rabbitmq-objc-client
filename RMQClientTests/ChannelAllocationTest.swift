@@ -23,6 +23,16 @@ class ChannelAllocationTest: XCTestCase {
         XCTAssertEqual(-1, allocator.allocate().channelNumber)
     }
 
+    func testAllocatedChannelsCanBeRead() {
+        let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
+        allocator.allocate()
+        allocator.allocate()
+        allocator.allocate()
+        allocator.allocate()
+        allocator.releaseChannelNumber(1)
+        XCTAssertEqual([2, 3], allocator.allocatedUserChannels().map { $0.channelNumber })
+    }
+
     func testNumbersAreNotDoubleAllocated() {
         let allocator   = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
         var channelSet1 = Set<NSNumber>()

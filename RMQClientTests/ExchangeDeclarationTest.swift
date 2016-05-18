@@ -4,7 +4,7 @@ class ExchangeDeclarationTest: XCTestCase {
 
     func testExchangeDeclareSendsAnExchangeDeclare() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator())
+        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
         ch.activateWithDelegate(nil)
 
         ch.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
@@ -16,7 +16,7 @@ class ExchangeDeclarationTest: XCTestCase {
 
     func testFanoutDeclaresAFanout() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator())
+        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
 
         ch.activateWithDelegate(nil)
 
@@ -29,7 +29,7 @@ class ExchangeDeclarationTest: XCTestCase {
 
     func testDirectDeclaresADirectExchange() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator())
+        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
 
         ch.activateWithDelegate(nil)
 
@@ -42,7 +42,7 @@ class ExchangeDeclarationTest: XCTestCase {
 
     func testTopicDeclaresATopicExchange() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator())
+        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
 
         ch.activateWithDelegate(nil)
 
@@ -55,7 +55,7 @@ class ExchangeDeclarationTest: XCTestCase {
 
     func testHeadersDeclaresAHeadersExchange() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator())
+        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
 
         ch.activateWithDelegate(nil)
 
@@ -68,7 +68,7 @@ class ExchangeDeclarationTest: XCTestCase {
 
     func testExchangeTypeMethodsReturnFirstWithSameNameEvenIfDifferentOptionsOrTypes() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator())
+        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
 
         ch.activateWithDelegate(nil)
 
@@ -84,7 +84,7 @@ class ExchangeDeclarationTest: XCTestCase {
 
     func testExchangeDeleteSendsAnExchangeDelete() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(123, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator())
+        let ch = RMQAllocatedChannel(123, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
         ch.exchangeDelete("my exchange", options: [.IfUnused])
         XCTAssertEqual(MethodFixtures.exchangeDelete("my exchange", options: [.IfUnused]),
                        dispatcher.lastSyncMethod as? RMQExchangeDelete)
@@ -92,7 +92,7 @@ class ExchangeDeclarationTest: XCTestCase {
 
     func testExchangeDeclareAfterDeleteSendsAFreshDeclare() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(123, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator())
+        let ch = RMQAllocatedChannel(123, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
         ch.fanout("my exchange")
         ch.exchangeDelete("my exchange", options: [])
         dispatcher.lastSyncMethod = nil

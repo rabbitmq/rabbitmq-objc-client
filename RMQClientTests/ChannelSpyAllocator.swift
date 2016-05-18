@@ -11,5 +11,12 @@
     }
 
     func releaseChannelNumber(channelNumber: NSNumber!) {
+        channels = channels.filter { ch -> Bool in
+            ch.channelNumber != channelNumber
+        }
+    }
+
+    func allocatedUserChannels() -> [RMQChannel]! {
+        return Array(channels.dropFirst(1).sort { $0.channelNumber.integerValue < $1.channelNumber.integerValue })
     }
 }

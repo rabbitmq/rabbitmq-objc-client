@@ -17,6 +17,7 @@
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) id<RMQNameGenerator> nameGenerator;
+@property (nonatomic, readwrite) id<RMQChannelAllocator> allocator;
 @end
 
 @implementation RMQAllocatedChannel
@@ -25,7 +26,8 @@
      contentBodySize:(NSNumber *)contentBodySize
           dispatcher:(id<RMQDispatcher>)dispatcher
         commandQueue:(id<RMQLocalSerialQueue>)commandQueue
-       nameGenerator:(id<RMQNameGenerator>)nameGenerator {
+       nameGenerator:(id<RMQNameGenerator>)nameGenerator
+           allocator:(nonnull id<RMQChannelAllocator>)allocator {
     self = [super init];
     if (self) {
         self.channelNumber = channelNumber;
@@ -39,6 +41,7 @@
         self.prefetchGlobal = NO;
         self.delegate = nil;
         self.nameGenerator = nameGenerator;
+        self.allocator = allocator;
     }
     return self;
 }
@@ -67,7 +70,10 @@
     [self.dispatcher sendSyncMethod:[[RMQChannelClose alloc] initWithReplyCode:[[RMQShort alloc] init:200]
                                                                      replyText:[[RMQShortstr alloc] init:@"Goodbye"]
                                                                        classId:[[RMQShort alloc] init:0]
-                                                                      methodId:[[RMQShort alloc] init:0]]];
+                                                                      methodId:[[RMQShort alloc] init:0]]
+                  completionHandler:^(RMQFrameset *frameset) {
+                      [self.allocator releaseChannelNumber:self.channelNumber];
+                  }];
 }
 
 - (void)blockingClose {
@@ -76,6 +82,7 @@
                                                                 classId:[[RMQShort alloc] init:0]
                                                                methodId:[[RMQShort alloc] init:0]];
     [self.dispatcher sendSyncMethodBlocking:close];
+    [self.allocator releaseChannelNumber:self.channelNumber];
 }
 
 - (void)blockingWaitOn:(Class)method {

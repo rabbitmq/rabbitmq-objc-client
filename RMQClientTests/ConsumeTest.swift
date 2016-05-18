@@ -7,7 +7,7 @@ class ConsumeTest: XCTestCase {
         let delegate = ConnectionDelegateSpy()
         let dispatcher = DispatcherSpy()
         let nameGenerator = StubNameGenerator()
-        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: nameGenerator)
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: nameGenerator, allocator: ChannelSpyAllocator())
 
         ch.activateWithDelegate(delegate)
 
@@ -22,7 +22,7 @@ class ConsumeTest: XCTestCase {
         let q = FakeSerialQueue()
         let dispatcher = DispatcherSpy()
         let nameGenerator = StubNameGenerator()
-        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: nameGenerator)
+        let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: nameGenerator, allocator: ChannelSpyAllocator())
         nameGenerator.nextName = "stubbed tag"
 
         let consumer = ch.basicConsume("foo", options: [.Exclusive]) { (_, _) in }
@@ -34,7 +34,7 @@ class ConsumeTest: XCTestCase {
         let q = FakeSerialQueue()
         let dispatcher = DispatcherSpy()
         let nameGenerator = StubNameGenerator()
-        let ch = RMQAllocatedChannel(432, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: nameGenerator)
+        let ch = RMQAllocatedChannel(432, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: nameGenerator, allocator: ChannelSpyAllocator())
         let consumeOkMethod = RMQBasicConsumeOk(consumerTag: RMQShortstr("tag"))
         let consumeOkFrameset = RMQFrameset(channelNumber: 432, method: consumeOkMethod)
         let incomingDeliver = deliverFrameset("tag", routingKey: "foo", content: "Consumed!", channelNumber: 432)
@@ -64,7 +64,7 @@ class ConsumeTest: XCTestCase {
     func testBasicCancelSendsBasicCancelMethod() {
         let q = FakeSerialQueue()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(432, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
+        let ch = RMQAllocatedChannel(432, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
 
         ch.basicCancel("my tag")
 
@@ -74,7 +74,7 @@ class ConsumeTest: XCTestCase {
     func testBasicCancelRemovesConsumer() {
         let q = FakeSerialQueue()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(432, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
+        let ch = RMQAllocatedChannel(432, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
 
         var consumerCalled = false
         let consumer = ch.basicConsume("my q", options: []) { _ in
@@ -93,7 +93,7 @@ class ConsumeTest: XCTestCase {
     func testServerCancelRemovesExtantConsumer() {
         let q = FakeSerialQueue()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(432, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator())
+        let ch = RMQAllocatedChannel(432, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
 
         var consumerCalled = false
         let consumer = ch.basicConsume("my q", options: []) { _ in
