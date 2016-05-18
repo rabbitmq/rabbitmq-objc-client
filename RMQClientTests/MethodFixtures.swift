@@ -123,6 +123,10 @@ class MethodFixtures {
         return RMQQueueDelete(reserved1: RMQShort(0), queue: RMQShortstr(name), options: options)
     }
 
+    static func queueDeleteOk(messageCount: UInt) -> RMQQueueDeleteOk {
+        return RMQQueueDeleteOk(messageCount: RMQLong(messageCount))
+    }
+
     static func queueBind(name: String, exchangeName: String, routingKey: String) -> RMQQueueBind {
         return RMQQueueBind(reserved1: RMQShort(0), queue: RMQShortstr(name), exchange: RMQShortstr(exchangeName), routingKey: RMQShortstr(routingKey), options: [], arguments: RMQTable([:]))
     }

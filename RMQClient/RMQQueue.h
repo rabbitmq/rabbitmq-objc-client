@@ -9,6 +9,7 @@
 
 @interface RMQQueue : NSObject
 @property (copy, nonatomic, readonly) NSString *name;
+@property (nonatomic, readonly) RMQQueueDeclareOptions options;
 
 - (instancetype)initWithName:(NSString *)name
                      options:(RMQQueueDeclareOptions)options

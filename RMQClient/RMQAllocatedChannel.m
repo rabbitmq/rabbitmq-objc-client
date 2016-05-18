@@ -93,6 +93,9 @@
     if (self.prefetchCountPerChannel) {
         [self basicQos:self.prefetchCountPerChannel global:YES];
     }
+    for (RMQQueue *queue in self.queues.allValues) {
+        [self.dispatcher sendSyncMethod:[self queueDeclareMethod:queue.name options:queue.options]];
+    }
 }
 
 - (void)blockingWaitOn:(Class)method {

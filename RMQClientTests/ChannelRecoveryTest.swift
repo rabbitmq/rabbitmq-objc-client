@@ -48,4 +48,51 @@ class ChannelRecoveryTest: XCTestCase {
         XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0.isKindOfClass(RMQBasicQos.self) })
     }
 
+    func testRedeclaresQueuesThatHadNotBeenDeleted() {
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(1,
+                                     contentBodySize: 100,
+                                     dispatcher: dispatcher,
+                                     commandQueue: FakeSerialQueue(),
+                                     nameGenerator: StubNameGenerator(),
+                                     allocator: ChannelSpyAllocator())
+        ch.queue("a", options: [.AutoDelete])
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("a")))
+
+        ch.queue("b")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("b")))
+
+        ch.queue("c")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("c")))
+
+        ch.queueDelete("b", options: [.IfUnused])
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeleteOk(123)))
+
+        dispatcher.syncMethodsSent = []
+
+        ch.recover()
+
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueDeclare == MethodFixtures.queueDeclare("a", options: [.AutoDelete]) })
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueDeclare == MethodFixtures.queueDeclare("c", options: []) })
+        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueDeclare == MethodFixtures.queueDeclare("b", options: []) })
+    }
+
+    func testRedeclaredQueuesAreStillMemoized() {
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(1,
+                                     contentBodySize: 100,
+                                     dispatcher: dispatcher,
+                                     commandQueue: FakeSerialQueue(),
+                                     nameGenerator: StubNameGenerator(),
+                                     allocator: ChannelSpyAllocator())
+        ch.queue("a", options: [.AutoDelete])
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("a")))
+
+        ch.recover()
+
+        dispatcher.syncMethodsSent = []
+        ch.queue("a", options: [.AutoDelete])
+        XCTAssertEqual(0, dispatcher.syncMethodsSent.count)
+    }
+
 }
