@@ -11,7 +11,7 @@ before_install:
   - /usr/local/sbin/rabbitmq-plugins enable --offline rabbitmq_auth_mechanism_ssl
   - brew services start rabbitmq
 before_script:
-  - carthage bootstrap --platform iOS
+  - bin/bootstrap-if-needed
   - /usr/local/sbin/rabbitmqctl add_user "O=client,CN=guest" bunnies
   - /usr/local/sbin/rabbitmqctl set_permissions "O=client,CN=guest" ".*" ".*" ".*"
 after_failure:
