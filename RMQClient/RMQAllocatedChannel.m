@@ -12,7 +12,8 @@
 @property (nonatomic, readwrite) NSMutableDictionary *consumerHandlers;
 @property (nonatomic, readwrite) NSMutableDictionary *exchanges;
 @property (nonatomic, readwrite) NSMutableDictionary *queues;
-@property (nonatomic, readwrite) NSNumber *prefetchCount;
+@property (nonatomic, readwrite) NSNumber *prefetchCountPerConsumer;
+@property (nonatomic, readwrite) NSNumber *prefetchCountPerChannel;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) id<RMQNameGenerator> nameGenerator;
@@ -36,7 +37,8 @@
         self.consumerHandlers = [NSMutableDictionary new];
         self.exchanges = [NSMutableDictionary new];
         self.queues = [NSMutableDictionary new];
-        self.prefetchCount = @1;
+        self.prefetchCountPerConsumer = nil;
+        self.prefetchCountPerChannel = nil;
         self.delegate = nil;
         self.nameGenerator = nameGenerator;
         self.allocator = allocator;
@@ -85,7 +87,12 @@
 
 - (void)recover {
     [self open];
-    [self basicQos:self.prefetchCount global:YES];
+    if (self.prefetchCountPerConsumer) {
+        [self basicQos:self.prefetchCountPerConsumer global:NO];
+    }
+    if (self.prefetchCountPerChannel) {
+        [self basicQos:self.prefetchCountPerChannel global:YES];
+    }
 }
 
 - (void)blockingWaitOn:(Class)method {
@@ -218,7 +225,11 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
                                                                 prefetchCount:[[RMQShort alloc] init:count.integerValue]
                                                                       options:options]
                   completionHandler:^(RMQFrameset *frameset) {
-                      self.prefetchCount = count;
+                      if (isGlobal) {
+                          self.prefetchCountPerChannel = count;
+                      } else {
+                          self.prefetchCountPerConsumer = count;
+                      }
                   }];
 }
 
