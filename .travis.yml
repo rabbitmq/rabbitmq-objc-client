@@ -20,4 +20,3 @@ after_failure:
 cache:
   directories:
   - Carthage
-  - /usr/local/Cellar
