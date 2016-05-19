@@ -2,6 +2,7 @@
 
 @interface RMQConnectionShutdown ()
 @property (nonatomic, readwrite) id<RMQHeartbeatSender> heartbeatSender;
+@property (nonatomic, readwrite) NSNumber *interval;
 @end
 
 @implementation RMQConnectionShutdown
@@ -10,6 +11,7 @@
     self = [super init];
     if (self) {
         self.heartbeatSender = heartbeatSender;
+        self.interval = @0;
     }
     return self;
 }

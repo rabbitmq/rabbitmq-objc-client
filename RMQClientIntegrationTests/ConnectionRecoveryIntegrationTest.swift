@@ -26,38 +26,40 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         }
     }
 
-//    func testReenablesConsumers() {
-//        let uri = "amqp://guest:guest@localhost"
-//        let conn = RMQConnection(uri: uri,
-//                                 tlsOptions: RMQTLSOptions.fromURI(uri),
-//                                 channelMax: 1000,
-//                                 frameMax: 131072,
-//                                 heartbeat: 10,
-//                                 syncTimeout: 10,
-//                                 delegate: RMQConnectionDelegateLogger(),
-//                                 delegateQueue: dispatch_get_main_queue(),
-//                                 recover: true)
-//        conn.start()
-//        let ch = conn.createChannel()
-//        let q = ch.queue("")
-//        let semaphore = dispatch_semaphore_create(0)
-//        var messages: [RMQMessage] = []
-//
-//        q.subscribe { (_, m) in
-//            messages.append(m)
-//            dispatch_semaphore_signal(semaphore)
-//        }
-//
-//        q.publish("before close")
-//        XCTAssertEqual(0, dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5)),
-//                       "Timed out waiting for message")
-//
-//        try! closeAllConnections()
-//
-//        q.publish("after close")
-//        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5))
-//
-//        XCTAssertEqual(["before close", "after close"], messages.map { $0.content })
-//    }
+    func testReenablesConsumers() {
+        let uri = "amqp://guest:guest@localhost"
+        let conn = RMQConnection(uri: uri,
+                                 tlsOptions: RMQTLSOptions.fromURI(uri),
+                                 channelMax: 1000,
+                                 frameMax: 131072,
+                                 heartbeat: 10,
+                                 syncTimeout: 10,
+                                 delegate: RMQConnectionDelegateLogger(),
+                                 delegateQueue: dispatch_get_main_queue(),
+                                 recoverAfter: 1)
+        conn.start()
+        let ch = conn.createChannel()
+        let q = ch.queue("")
+        let semaphore = dispatch_semaphore_create(0)
+        var messages: [RMQMessage] = []
+
+        q.subscribe { (_, m) in
+            messages.append(m)
+            dispatch_semaphore_signal(semaphore)
+        }
+
+        q.publish("before close")
+        XCTAssertEqual(0, dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5)),
+                       "Timed out waiting for message")
+
+        try! closeAllConnections()
+
+        q.publish("after close 1")
+        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5))
+        q.publish("after close 2")
+        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5))
+
+        XCTAssertEqual(["before close", "after close 1", "after close 2"], messages.map { $0.content })
+    }
 
 }

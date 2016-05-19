@@ -95,4 +95,51 @@ class ChannelRecoveryTest: XCTestCase {
         XCTAssertEqual(0, dispatcher.syncMethodsSent.count)
     }
 
+    func testRedeclaresConsumersNotPreviouslyCancelledByClientOrServer() {
+        let dispatcher = DispatcherSpy()
+        let nameGenerator = StubNameGenerator()
+        let q = FakeSerialQueue()
+        let ch = RMQAllocatedChannel(1,
+                                     contentBodySize: 100,
+                                     dispatcher: dispatcher,
+                                     commandQueue: q,
+                                     nameGenerator: nameGenerator,
+                                     allocator: ChannelSpyAllocator())
+
+        let createContext = (ch, dispatcher, nameGenerator)
+        createConsumer("consumer1", createContext)
+        createConsumer("consumer2", createContext, [.Exclusive])
+        createConsumer("consumer3", createContext)
+        createConsumer("consumer4", createContext, [.Exclusive])
+
+        ch.basicCancel("consumer2")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicCancelOk("consumer2")))
+
+        ch.handleFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicCancel("consumer3")))
+        try! q.step()
+
+        dispatcher.syncMethodsSent = []
+
+        ch.recover()
+
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQBasicConsume == MethodFixtures.basicConsume("q", consumerTag: "consumer1", options: []) })
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQBasicConsume == MethodFixtures.basicConsume("q", consumerTag: "consumer4", options: [.Exclusive]) })
+
+        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQBasicConsume == MethodFixtures.basicConsume("q", consumerTag: "consumer2", options: [.Exclusive]) })
+        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQBasicConsume == MethodFixtures.basicConsume("q", consumerTag: "consumer3", options: []) })
+    }
+
+    func createConsumer(consumerTag: String,
+                        _ context: (channel: RMQAllocatedChannel, dispatcher: DispatcherSpy, nameGenerator: StubNameGenerator),
+                          _ options: RMQBasicConsumeOptions = []) {
+        context.nameGenerator.nextName = consumerTag
+        context.channel.basicConsume("q", options: options) { _ in }
+        context.dispatcher.lastSyncMethodHandler!(
+            RMQFrameset(
+                channelNumber: context.channel.channelNumber,
+                method: MethodFixtures.basicConsumeOk(consumerTag)
+            )
+        )
+    }
+
 }

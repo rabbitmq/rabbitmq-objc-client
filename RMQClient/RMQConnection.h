@@ -38,7 +38,7 @@ extern NSInteger const RMQChannelLimit;
                         syncTimeout:(nonnull NSNumber *)syncTimeout
                            delegate:(nullable id<RMQConnectionDelegate>)delegate
                       delegateQueue:(nonnull dispatch_queue_t)delegateQueue
-                            recover:(BOOL)shouldRecover;
+                       recoverAfter:(nonnull NSNumber *)recoveryInterval;
 
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
                          tlsOptions:(nonnull RMQTLSOptions *)tlsOptions

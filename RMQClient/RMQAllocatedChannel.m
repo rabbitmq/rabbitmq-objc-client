@@ -96,6 +96,13 @@
     for (RMQQueue *queue in self.queues.allValues) {
         [self.dispatcher sendSyncMethod:[self queueDeclareMethod:queue.name options:queue.options]];
     }
+    for (RMQConsumer *consumer in self.consumers.allValues) {
+        [self.dispatcher sendSyncMethod:[[RMQBasicConsume alloc] initWithReserved1:[[RMQShort alloc] init:0]
+                                                                             queue:[[RMQShortstr alloc] init:consumer.queueName]
+                                                                       consumerTag:[[RMQShortstr alloc] init:consumer.tag]
+                                                                           options:consumer.options
+                                                                         arguments:[[RMQTable alloc] init:@{}]]];
+    }
 }
 
 - (void)blockingWaitOn:(Class)method {
@@ -149,9 +156,11 @@
                       options:(RMQBasicConsumeOptions)options
                       handler:(RMQConsumerDeliveryHandler)handler {
     NSString *consumerTag = [self.nameGenerator generateWithPrefix:@"rmq-objc-client.gen-"];
-    RMQConsumer *consumer = [[RMQConsumer alloc] initWithConsumerTag:consumerTag
-                                                             handler:handler
-                                                             channel:self];
+    RMQConsumer *consumer = [[RMQConsumer alloc] initWithQueueName:queueName
+                                                           options:options
+                                                       consumerTag:consumerTag
+                                                           handler:handler
+                                                           channel:self];
     [self.dispatcher sendSyncMethod:[[RMQBasicConsume alloc] initWithReserved1:[[RMQShort alloc] init:0]
                                                                          queue:[[RMQShortstr alloc] init:queueName]
                                                                    consumerTag:[[RMQShortstr alloc] init:consumerTag]

@@ -90,7 +90,8 @@ class RMQConnectionTest: XCTestCase {
 
     func testSignalsActivityToHeartbeatSenderOnOutgoingFrameset() {
         let heartbeatSender = HeartbeatSenderSpy()
-        let conn = RMQConnection(transport: ControlledInteractionTransport(),
+        let transport = ControlledInteractionTransport()
+        let conn = RMQConnection(transport: transport,
                                  config: ConnectionHelper.connectionConfig(),
                                  handshakeTimeout: 10,
                                  channelAllocator: ChannelSpyAllocator(),
@@ -99,9 +100,42 @@ class RMQConnectionTest: XCTestCase {
                                  commandQueue: FakeSerialQueue(),
                                  waiterFactory: FakeWaiterFactory(),
                                  heartbeatSender: heartbeatSender)
+        conn.start()
 
         XCTAssertFalse(heartbeatSender.signalActivityReceived)
+
         conn.sendFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpen()))
+
+        XCTAssertEqual(MethodFixtures.channelOpen(), transport.lastSentPayload() as? RMQChannelOpen)
+        XCTAssert(heartbeatSender.signalActivityReceived)
+    }
+
+    func testDelaysTransportSendAndHeartbeatSignalWhenInRecovery() {
+        let heartbeatSender = HeartbeatSenderSpy()
+        let recovery = RecoverySpy()
+        let q = FakeSerialQueue()
+        let transport = ControlledInteractionTransport()
+        let conn = RMQConnection(transport: transport,
+                                 config: recovery.connectionConfig(),
+                                 handshakeTimeout: 10,
+                                 channelAllocator: ChannelSpyAllocator(),
+                                 frameHandler: FrameHandlerSpy(),
+                                 delegate: ConnectionDelegateSpy(),
+                                 commandQueue: q,
+                                 waiterFactory: FakeWaiterFactory(),
+                                 heartbeatSender: heartbeatSender)
+        recovery.interval = 1
+        // no start(), to simulate being disconnected
+
+        conn.sendFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpen()))
+
+        XCTAssertFalse(heartbeatSender.signalActivityReceived)
+        XCTAssertEqual(0, transport.outboundData.count)
+        XCTAssertEqual(1, q.delayedItems.count)
+
+        try! q.step()
+
+        XCTAssertEqual(MethodFixtures.channelOpen(), transport.lastSentPayload() as? RMQChannelOpen)
         XCTAssert(heartbeatSender.signalActivityReceived)
     }
 

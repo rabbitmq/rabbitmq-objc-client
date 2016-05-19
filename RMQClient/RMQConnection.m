@@ -97,7 +97,7 @@ NSInteger const RMQChannelLimit = 65535;
                         syncTimeout:(NSNumber *)syncTimeout
                            delegate:(id<RMQConnectionDelegate>)delegate
                       delegateQueue:(dispatch_queue_t)delegateQueue
-                            recover:(BOOL)shouldRecover {
+                       recoverAfter:(nonnull NSNumber *)recoveryInterval {
     NSError *error = NULL;
     RMQURI *rmqURI = [RMQURI parse:uri error:&error];
 
@@ -115,8 +115,8 @@ NSInteger const RMQChannelLimit = 65535;
 
     RMQGCDSerialQueue *commandQueue = [[RMQGCDSerialQueue alloc] initWithName:@"connection commands"];
     id<RMQConnectionRecovery> recovery;
-    if (shouldRecover) {
-        recovery = [[RMQConnectionRecover alloc] initWithInterval:@3
+    if (recoveryInterval.integerValue > 0) {
+        recovery = [[RMQConnectionRecover alloc] initWithInterval:recoveryInterval
                                                        connection:self
                                                  channelAllocator:allocator
                                                   heartbeatSender:heartbeatSender
@@ -159,7 +159,7 @@ NSInteger const RMQChannelLimit = 65535;
                  syncTimeout:syncTimeout
                     delegate:delegate
                delegateQueue:delegateQueue
-                     recover:NO];
+                recoverAfter:@0];
 }
 
 - (instancetype)initWithUri:(NSString *)uri
@@ -279,8 +279,15 @@ NSInteger const RMQChannelLimit = 65535;
 # pragma mark - RMQSender
 
 - (void)sendFrameset:(RMQFrameset *)frameset {
-    [self.transport write:frameset.amqEncoded];
-    [self.heartbeatSender signalActivity];
+    if (self.transport.isConnected) {
+        [self.transport write:frameset.amqEncoded];
+        [self.heartbeatSender signalActivity];
+    } else {
+        [self.commandQueue delayedBy:self.config.recovery.interval enqueue:^{
+            [self.transport write:frameset.amqEncoded];
+            [self.heartbeatSender signalActivity];
+        }];
+    }
 }
 
 # pragma mark - RMQFrameHandler

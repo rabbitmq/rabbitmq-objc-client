@@ -3,6 +3,8 @@
 
 @protocol RMQConnectionRecovery <NSObject>
 
+@property (nonatomic, readonly) NSNumber *interval;
+
 - (void)recover;
 
 @end
