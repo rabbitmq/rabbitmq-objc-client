@@ -1,15 +1,15 @@
 import XCTest
 
-class RMQReaderLoopTest: XCTestCase {
+class RMQReaderTest: XCTestCase {
 
     func testSkipsServerHeartbeats() {
         let transport = ControlledInteractionTransport()
         let frameHandler = FrameHandlerSpy()
-        let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
+        let reader = RMQReader(transport: transport, frameHandler: frameHandler)
         let method = MethodFixtures.channelOpenOk()
         let expectedFrameset = RMQFrameset(channelNumber: 42, method: method)
 
-        readerLoop.runOnce()
+        reader.run()
 
         transport.serverSendsPayload(RMQHeartbeat(), channelNumber: 0)
         transport.serverSendsPayload(method, channelNumber: 42)
@@ -24,11 +24,11 @@ class RMQReaderLoopTest: XCTestCase {
     func testSendsDecodedContentlessFramesetToFrameHandler() {
         let transport = ControlledInteractionTransport()
         let frameHandler = FrameHandlerSpy()
-        let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
+        let reader = RMQReader(transport: transport, frameHandler: frameHandler)
         let method = MethodFixtures.connectionStart()
         let expectedFrameset = RMQFrameset(channelNumber: 42, method: method)
 
-        readerLoop.runOnce()
+        reader.run()
 
         transport.serverSendsPayload(method, channelNumber: 42)
 
@@ -42,7 +42,7 @@ class RMQReaderLoopTest: XCTestCase {
     func testHandlesContentTerminatedByNonContentFrame() {
         let transport = ControlledInteractionTransport()
         let frameHandler = FrameHandlerSpy()
-        let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
+        let reader = RMQReader(transport: transport, frameHandler: frameHandler)
         let method = MethodFixtures.basicGetOk("my.great.queue")
         let content1 = RMQContentBody(data: "aa".dataUsingEncoding(NSUTF8StringEncoding)!)
         let content2 = RMQContentBody(data: "bb".dataUsingEncoding(NSUTF8StringEncoding)!)
@@ -62,7 +62,7 @@ class RMQReaderLoopTest: XCTestCase {
         let nonContent = nonContentPayload()
         let expectedNonContentFrameset = RMQFrameset(channelNumber: 42, method: nonContent)
 
-        readerLoop.runOnce()
+        reader.run()
 
         transport
             .serverSendsPayload(method, channelNumber: 42)
@@ -79,7 +79,7 @@ class RMQReaderLoopTest: XCTestCase {
     func testHandlesContentTerminatedByEndOfDataSize() {
         let transport = ControlledInteractionTransport()
         let frameHandler = FrameHandlerSpy()
-        let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
+        let reader = RMQReader(transport: transport, frameHandler: frameHandler)
         let method = MethodFixtures.basicGetOk("my.great.queue")
         let content1 = RMQContentBody(data: "aa".dataUsingEncoding(NSUTF8StringEncoding)!)
         let content2 = RMQContentBody(data: "bb".dataUsingEncoding(NSUTF8StringEncoding)!)
@@ -97,7 +97,7 @@ class RMQReaderLoopTest: XCTestCase {
             contentBodies: [content1, content2]
         )
 
-        readerLoop.runOnce()
+        reader.run()
 
         transport
             .serverSendsPayload(method, channelNumber: 42)
@@ -111,12 +111,12 @@ class RMQReaderLoopTest: XCTestCase {
     func testDeliveryWithZeroBodySizeDoesNotCauseBodyFrameRead() {
         let transport = ControlledInteractionTransport()
         let frameHandler = FrameHandlerSpy()
-        let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
+        let reader = RMQReader(transport: transport, frameHandler: frameHandler)
 
         let deliver = RMQFrame(channelNumber: 42, payload: MethodFixtures.basicDeliver())
         let header = RMQFrame(channelNumber: 42, payload: RMQContentHeader(classID: 60, bodySize: 0, properties: []))
 
-        readerLoop.runOnce()
+        reader.run()
 
         transport.serverSendsData(deliver.amqEncoded())
 
@@ -130,14 +130,14 @@ class RMQReaderLoopTest: XCTestCase {
     func testDeliveryWithZeroBodySizeGetsSentToFrameHandler() {
         let transport = ControlledInteractionTransport()
         let frameHandler = FrameHandlerSpy()
-        let readerLoop = RMQReaderLoop(transport: transport, frameHandler: frameHandler)
+        let reader = RMQReader(transport: transport, frameHandler: frameHandler)
 
         let method = MethodFixtures.basicDeliver()
         let deliver = RMQFrame(channelNumber: 42, payload: method)
         let header = RMQContentHeader(classID: 60, bodySize: 0, properties: [])
         let headerFrame = RMQFrame(channelNumber: 42, payload: header)
 
-        readerLoop.runOnce()
+        reader.run()
 
         transport.serverSendsData(deliver.amqEncoded())
         transport.serverSendsData(headerFrame.amqEncoded())

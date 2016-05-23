@@ -16,7 +16,7 @@
 #import <RMQClient/RMQFramesetValidator.h>
 #import <RMQClient/RMQHandshaker.h>
 #import <RMQClient/RMQMultipleChannelAllocator.h>
-#import <RMQClient/RMQReaderLoop.h>
+#import <RMQClient/RMQReader.h>
 #import <RMQClient/RMQSynchronizedMutableDictionary.h>
 #import <RMQClient/RMQTCPSocketTransport.h>
 #import <RMQClient/RMQUnallocatedChannel.h>

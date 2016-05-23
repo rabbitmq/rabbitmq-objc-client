@@ -2,8 +2,8 @@
 #import "RMQTransport.h"
 #import "RMQFrameHandler.h"
 
-@interface RMQReaderLoop : NSObject
+@interface RMQReader : NSObject
 - (nonnull instancetype)initWithTransport:(nonnull id<RMQTransport>)transport
                              frameHandler:(nonnull id<RMQFrameHandler>)frameHandler;
-- (void)runOnce;
+- (void)run;
 @end

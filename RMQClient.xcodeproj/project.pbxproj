@@ -146,10 +146,10 @@
 		AEDBFF301CD8FAF70004DB67 /* RMQTLSOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = AEDBFF2E1CD8FAF70004DB67 /* RMQTLSOptions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEDBFF311CD8FAF70004DB67 /* RMQTLSOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF2F1CD8FAF70004DB67 /* RMQTLSOptions.m */; };
 		AEDBFF331CD907D80004DB67 /* RMQTLSOptionsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF321CD907D80004DB67 /* RMQTLSOptionsTest.swift */; };
-		AEE445E11C7338FE0082132C /* RMQReaderLoop.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE445DF1C7338FE0082132C /* RMQReaderLoop.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		AEE445E21C7338FE0082132C /* RMQReaderLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE445E01C7338FE0082132C /* RMQReaderLoop.m */; };
+		AEE445E11C7338FE0082132C /* RMQReader.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE445DF1C7338FE0082132C /* RMQReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AEE445E21C7338FE0082132C /* RMQReader.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE445E01C7338FE0082132C /* RMQReader.m */; };
 		AEE445E51C7341CB0082132C /* RMQFrameHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE445E31C7341CB0082132C /* RMQFrameHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		AEE445E81C7342EE0082132C /* RMQReaderLoopTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE445E71C7342EE0082132C /* RMQReaderLoopTest.swift */; };
+		AEE445E81C7342EE0082132C /* RMQReaderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE445E71C7342EE0082132C /* RMQReaderTest.swift */; };
 		AEE445EB1C7373BF0082132C /* RMQBasicProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE445E91C7373BF0082132C /* RMQBasicProperties.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEE445EC1C7373BF0082132C /* RMQBasicProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE445EA1C7373BF0082132C /* RMQBasicProperties.m */; };
 		AEE7FE951C3BCA6000DF8C4F /* RMQClient.h in Headers */ = {isa = PBXBuildFile; fileRef = AEE7FE941C3BCA6000DF8C4F /* RMQClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -368,10 +368,10 @@
 		AEDBFF2E1CD8FAF70004DB67 /* RMQTLSOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQTLSOptions.h; sourceTree = "<group>"; };
 		AEDBFF2F1CD8FAF70004DB67 /* RMQTLSOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQTLSOptions.m; sourceTree = "<group>"; };
 		AEDBFF321CD907D80004DB67 /* RMQTLSOptionsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQTLSOptionsTest.swift; sourceTree = "<group>"; };
-		AEE445DF1C7338FE0082132C /* RMQReaderLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQReaderLoop.h; sourceTree = "<group>"; };
-		AEE445E01C7338FE0082132C /* RMQReaderLoop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQReaderLoop.m; sourceTree = "<group>"; };
+		AEE445DF1C7338FE0082132C /* RMQReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQReader.h; sourceTree = "<group>"; };
+		AEE445E01C7338FE0082132C /* RMQReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQReader.m; sourceTree = "<group>"; };
 		AEE445E31C7341CB0082132C /* RMQFrameHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQFrameHandler.h; sourceTree = "<group>"; };
-		AEE445E71C7342EE0082132C /* RMQReaderLoopTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RMQReaderLoopTest.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		AEE445E71C7342EE0082132C /* RMQReaderTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RMQReaderTest.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		AEE445E91C7373BF0082132C /* RMQBasicProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RMQBasicProperties.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		AEE445EA1C7373BF0082132C /* RMQBasicProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RMQBasicProperties.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AEE7FE911C3BCA6000DF8C4F /* RMQClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RMQClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -541,8 +541,8 @@
 				AEF1E8F41CBE5810000C7AB8 /* RMQTransportDelegate.h */,
 				AEA45ECF1C43F4DC00FE1F62 /* RMQTCPSocketTransport.h */,
 				AEA45ED01C43F4DC00FE1F62 /* RMQTCPSocketTransport.m */,
-				AEE445DF1C7338FE0082132C /* RMQReaderLoop.h */,
-				AEE445E01C7338FE0082132C /* RMQReaderLoop.m */,
+				AEE445DF1C7338FE0082132C /* RMQReader.h */,
+				AEE445E01C7338FE0082132C /* RMQReader.m */,
 				AEF1E8F91CBEA057000C7AB8 /* RMQHandshaker.h */,
 				AEF1E8FA1CBEA057000C7AB8 /* RMQHandshaker.m */,
 				AECDEC9E1CBC0E3600EA6E93 /* RMQConnectionDelegate.h */,
@@ -680,7 +680,7 @@
 				AE09C83B1CCE680F00FA6915 /* RMQProcessInfoNameGeneratorTest.swift */,
 				AE41C5521C4FC88F00129207 /* MethodFixtures.swift */,
 				AEA8A7611CC97C7900371E38 /* RMQGCDSerialQueueTest.swift */,
-				AEE445E71C7342EE0082132C /* RMQReaderLoopTest.swift */,
+				AEE445E71C7342EE0082132C /* RMQReaderTest.swift */,
 				AEA7A3D81C72255900BDEA05 /* RMQQueueTest.swift */,
 				AE41C5621C51A2D500129207 /* RMQTransportContract.swift */,
 				AE26FA271C90309F00CDBBAA /* RMQFrameTest.swift */,
@@ -778,7 +778,7 @@
 				AEE7FEB91C3BD2B400DF8C4F /* RMQExchange.h in Headers */,
 				AEEB514D1CAC7780009F37D2 /* RMQSynchronizedMutableDictionary.h in Headers */,
 				AE744E331C85A1B000A4C2FA /* RMQFrame.h in Headers */,
-				AEE445E11C7338FE0082132C /* RMQReaderLoop.h in Headers */,
+				AEE445E11C7338FE0082132C /* RMQReader.h in Headers */,
 				AE39BD9E1C68B019000E7A77 /* RMQValues.h in Headers */,
 				AE8AD2621CC53AEB00229444 /* RMQFramesetValidator.h in Headers */,
 				AE8AD2661CC53B0D00229444 /* RMQFramesetValidationResult.h in Headers */,
@@ -1011,7 +1011,7 @@
 				AE39BDA31C68B105000E7A77 /* RMQProtocolHeader.m in Sources */,
 				AEE7FEBA1C3BD2B400DF8C4F /* RMQExchange.m in Sources */,
 				AE3415571CEBC4DC0071177A /* RMQConnectionRecover.m in Sources */,
-				AEE445E21C7338FE0082132C /* RMQReaderLoop.m in Sources */,
+				AEE445E21C7338FE0082132C /* RMQReader.m in Sources */,
 				AEF0F7C71CCEC944007DAF85 /* RMQDeliveryInfo.m in Sources */,
 				AEE7FEAE1C3BCD0F00DF8C4F /* RMQConnection.m in Sources */,
 				AEA45ED21C43F4DC00FE1F62 /* RMQTCPSocketTransport.m in Sources */,
@@ -1063,7 +1063,7 @@
 				AE09C8031CCE112C00FA6915 /* RMQSemaphoreWaiterTest.swift in Sources */,
 				AE26FA311C97157700CDBBAA /* ChannelSpyTest.swift in Sources */,
 				AE43841B1CEC9DAD000A4A7A /* ChannelRecoveryTest.swift in Sources */,
-				AEE445E81C7342EE0082132C /* RMQReaderLoopTest.swift in Sources */,
+				AEE445E81C7342EE0082132C /* RMQReaderTest.swift in Sources */,
 				AEBF7D671CBD197D006EA2E4 /* ChannelCreationTest.swift in Sources */,
 				AE8AD2691CC545ED00229444 /* RMQFramesetValidatorTest.swift in Sources */,
 				AEEB51501CADC42E009F37D2 /* RMQSynchronizedMutableDictionaryTest.swift in Sources */,

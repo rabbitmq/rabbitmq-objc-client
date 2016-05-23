@@ -26,14 +26,14 @@
     id method = frameset.method;
     if ([method isKindOfClass:[RMQConnectionStart class]]) {
         [self sendMethod:self.startOk channelNumber:frameset.channelNumber];
-        [self.readerLoop runOnce];
+        [self.reader run];
     } else if ([method isKindOfClass:[RMQConnectionTune class]]) {
         RMQConnectionTuneOk *tuneOk = [self tuneOkForTune:method];
         self.heartbeatInterval = @(tuneOk.heartbeat.integerValue);
 
         [self sendMethod:tuneOk channelNumber:frameset.channelNumber];
         [self sendMethod:self.connectionOpen channelNumber:frameset.channelNumber];
-        [self.readerLoop runOnce];
+        [self.reader run];
     } else {
         self.completionHandler(self.heartbeatInterval);
     }

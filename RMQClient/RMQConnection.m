@@ -9,7 +9,7 @@
 #import "RMQMultipleChannelAllocator.h"
 #import "RMQProtocolHeader.h"
 #import "RMQQueuingConnectionDelegateProxy.h"
-#import "RMQReaderLoop.h"
+#import "RMQReader.h"
 #import "RMQSemaphoreWaiterFactory.h"
 #import "RMQTCPSocketTransport.h"
 #import "RMQURI.h"
@@ -25,7 +25,7 @@ NSInteger const RMQChannelLimit = 65535;
 @property (nonatomic, readwrite) NSString *mechanism;
 @property (nonatomic, readwrite) NSString *locale;
 @property (nonatomic, readwrite) RMQConnectionConfig *config;
-@property (nonatomic, readwrite) RMQReaderLoop *readerLoop;
+@property (nonatomic, readwrite) RMQReader *reader;
 @property (nonatomic, readwrite) id <RMQChannelAllocator> channelAllocator;
 @property (nonatomic, readwrite) id <RMQChannel> channelZero;
 @property (nonatomic, readwrite) id <RMQFrameHandler> frameHandler;
@@ -76,7 +76,7 @@ NSInteger const RMQChannelLimit = 65535;
                                    @"information" : [[RMQLongstr alloc] init:@"https://github.com/rabbitmq/rabbitmq-objc-client"]}];
         self.mechanism = @"PLAIN";
         self.locale = @"en_GB";
-        self.readerLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport frameHandler:self];
+        self.reader = [[RMQReader alloc] initWithTransport:self.transport frameHandler:self];
 
         self.userChannels = [NSMutableDictionary new];
         self.delegate = delegate;
@@ -235,13 +235,13 @@ NSInteger const RMQChannelLimit = 65535;
                                                             completionHandler:^(NSNumber *heartbeatInterval) {
                                                                 [self.heartbeatSender startWithInterval:heartbeatInterval];
                                                                 [handshakeCompletion done];
-                                                                [self.readerLoop runOnce];
+                                                                [self.reader run];
                                                                 self.handshakeComplete = YES;
                                                             }];
-            RMQReaderLoop *handshakeLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport
-                                                                       frameHandler:handshaker];
-            handshaker.readerLoop = handshakeLoop;
-            [handshakeLoop runOnce];
+            RMQReader *handshakeReader = [[RMQReader alloc] initWithTransport:self.transport
+                                                                 frameHandler:handshaker];
+            handshaker.reader = handshakeReader;
+            [handshakeReader run];
 
             if (handshakeCompletion.timesOut) {
                 NSError *error = [NSError errorWithDomain:RMQErrorDomain
@@ -313,7 +313,7 @@ NSInteger const RMQChannelLimit = 65535;
         [self.recovery recover];
     } else {
         [self.frameHandler handleFrameset:frameset];
-        [self.readerLoop runOnce];
+        [self.reader run];
     }
 }
 

@@ -1,13 +1,13 @@
-#import "RMQReaderLoop.h"
+#import "RMQReader.h"
 #import "RMQFrame.h"
 #import "RMQMethodDecoder.h"
 
-@interface RMQReaderLoop ()
+@interface RMQReader ()
 @property (nonatomic, readwrite) id<RMQTransport>transport;
 @property (nonatomic, readwrite) id<RMQFrameHandler>frameHandler;
 @end
 
-@implementation RMQReaderLoop
+@implementation RMQReader
 
 - (instancetype)initWithTransport:(id<RMQTransport>)transport frameHandler:(id<RMQFrameHandler>)frameHandler {
     self = [super init];
@@ -18,14 +18,14 @@
     return self;
 }
 
-- (void)runOnce {
+- (void)run {
     [self.transport readFrame:^(NSData * _Nonnull methodData) {
         // executing on a concurrent queue
         
         RMQFrame *frame = [self frameWithData:methodData];
 
         if (frame.isHeartbeat) {
-            [self runOnce];
+            [self run];
         } else {
             [self handleMethodFrame:frame];
         }
