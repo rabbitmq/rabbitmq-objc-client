@@ -6,8 +6,12 @@
 @interface RMQExchange : NSObject
 
 @property (nonatomic, readonly) NSString *name;
+@property (nonatomic, readonly) NSString *type;
+@property (nonatomic, readonly) RMQExchangeDeclareOptions options;
 
 - (instancetype)initWithName:(NSString *)name
+                        type:(NSString *)type
+                     options:(RMQExchangeDeclareOptions)options
                      channel:(id<RMQChannel>)channel;
 
 - (void)bind:(RMQExchange *)source routingKey:(NSString *)routingKey;

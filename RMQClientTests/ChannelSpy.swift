@@ -59,7 +59,7 @@
     }
 
     func defaultExchange() -> RMQExchange {
-        return RMQExchange(name: "", channel: self)
+        return RMQExchange(name: "", type: "direct", options: [], channel: self)
     }
 
     func activateWithDelegate(delegate: RMQConnectionDelegate?) {
@@ -203,7 +203,7 @@
     }
 
     func fanout(name: String, options: RMQExchangeDeclareOptions) -> RMQExchange {
-        return RMQExchange(name: name, channel: self)
+        return RMQExchange(name: name, type: "fanout", options: [], channel: self)
     }
 
     func fanout(name: String) -> RMQExchange {
@@ -211,7 +211,7 @@
     }
 
     func direct(name: String, options: RMQExchangeDeclareOptions) -> RMQExchange {
-        return RMQExchange(name: name, channel: self)
+        return RMQExchange(name: name, type: "direct", options: [], channel: self)
     }
 
     func direct(name: String) -> RMQExchange {
@@ -219,7 +219,7 @@
     }
 
     func topic(name: String, options: RMQExchangeDeclareOptions) -> RMQExchange {
-        return RMQExchange(name: name, channel: self)
+        return RMQExchange(name: name, type: "topic", options: [], channel: self)
     }
 
     func topic(name: String) -> RMQExchange {
@@ -227,7 +227,7 @@
     }
 
     func headers(name: String, options: RMQExchangeDeclareOptions) -> RMQExchange {
-        return RMQExchange(name: name, channel: self)
+        return RMQExchange(name: name, type: "headers", options: [], channel: self)
     }
 
     func headers(name: String) -> RMQExchange {

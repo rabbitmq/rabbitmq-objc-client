@@ -53,7 +53,10 @@
 }
 
 - (RMQExchange *)defaultExchange {
-    return [[RMQExchange alloc] initWithName:@"" channel:self];
+    return [[RMQExchange alloc] initWithName:@""
+                                        type:@"direct"
+                                     options:RMQExchangeDeclareNoOptions
+                                     channel:self];
 }
 
 - (void)activateWithDelegate:(id<RMQConnectionDelegate>)delegate {
@@ -94,7 +97,7 @@
         [self basicQos:self.prefetchCountPerChannel global:YES];
     }
     for (RMQQueue *queue in self.queues.allValues) {
-        [self.dispatcher sendSyncMethod:[self queueDeclareMethod:queue.name options:queue.options]];
+        [self queueDeclare:queue.name options:queue.options];
     }
     for (RMQConsumer *consumer in self.consumers.allValues) {
         [self.dispatcher sendSyncMethod:[[RMQBasicConsume alloc] initWithReserved1:[[RMQShort alloc] init:0]
@@ -102,6 +105,9 @@
                                                                        consumerTag:[[RMQShortstr alloc] init:consumer.tag]
                                                                            options:consumer.options
                                                                          arguments:[[RMQTable alloc] init:@{}]]];
+    }
+    for (RMQExchange *exchange in self.exchanges.allValues) {
+        [self exchangeDeclare:exchange.name type:exchange.type options:exchange.options];
     }
 }
 
@@ -394,7 +400,10 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
     exchange = self.exchanges[name];
     if (!exchange) {
         [self exchangeDeclare:name type:type options:options];
-        exchange = [[RMQExchange alloc] initWithName:name channel:self];
+        exchange = [[RMQExchange alloc] initWithName:name
+                                                type:type
+                                             options:options
+                                             channel:self];
         self.exchanges[name] = exchange;
     }
     return exchange;
@@ -415,20 +424,21 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
         RMQQueue *q = [[RMQQueue alloc] initWithName:declaredQueueName
                                              options:options
                                              channel:(id<RMQChannel>)self];
-        [self.dispatcher sendSyncMethod:[self queueDeclareMethod:declaredQueueName options:options]];
+        [self queueDeclare:declaredQueueName options:options];
         self.queues[q.name] = q;
         return q;
     }
 }
 
-- (RMQQueueDeclare *)queueDeclareMethod:(NSString *)declaredQueueName options:(RMQQueueDeclareOptions)options {
+- (void)queueDeclare:(NSString *)declaredQueueName options:(RMQQueueDeclareOptions)options {
     RMQShort *ticket          = [[RMQShort alloc] init:0];
     RMQShortstr *amqQueueName = [[RMQShortstr alloc] init:declaredQueueName];
     RMQTable *arguments       = [[RMQTable alloc] init:@{}];
-    return [[RMQQueueDeclare alloc] initWithReserved1:ticket
-                                                queue:amqQueueName
-                                              options:options
-                                            arguments:arguments];
+    RMQQueueDeclare *method   = [[RMQQueueDeclare alloc] initWithReserved1:ticket
+                                                                     queue:amqQueueName
+                                                                   options:options
+                                                                 arguments:arguments];
+    [self.dispatcher sendSyncMethod:method];
 }
 
 - (NSArray *)contentBodiesFromData:(NSData *)data inChunksOf:(NSUInteger)chunkSize {

@@ -88,7 +88,7 @@ class RMQQueueTest: XCTestCase {
 
     func testBindCallsBindOnChannel() {
         let channel = ChannelSpy(123)
-        let ex = RMQExchange(name: "my-exchange", channel: channel)
+        let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)
         let queue = RMQQueue(name: "bindy", channel: channel)
 
         queue.bind(ex, routingKey: "foo")
@@ -100,7 +100,7 @@ class RMQQueueTest: XCTestCase {
 
     func testBindWithoutRoutingKeySendsEmptyStringRoutingKey() {
         let channel = ChannelSpy(123)
-        let ex = RMQExchange(name: "my-exchange", channel: channel)
+        let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)
         let queue = RMQQueue(name: "bindy", channel: channel)
 
         queue.bind(ex)
@@ -112,7 +112,7 @@ class RMQQueueTest: XCTestCase {
 
     func testUnbindCallsUnbindOnChannel() {
         let channel = ChannelSpy(123)
-        let ex = RMQExchange(name: "my-exchange", channel: channel)
+        let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)
         let queue = RMQQueue(name: "unbindy", channel: channel)
 
         queue.unbind(ex, routingKey: "foo")
@@ -124,7 +124,7 @@ class RMQQueueTest: XCTestCase {
     
     func testUnbindWithoutRoutingKeySendsEmptyStringRoutingKey() {
         let channel = ChannelSpy(123)
-        let ex = RMQExchange(name: "my-exchange", channel: channel)
+        let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)
         let queue = RMQQueue(name: "unbindy", channel: channel)
 
         queue.unbind(ex)

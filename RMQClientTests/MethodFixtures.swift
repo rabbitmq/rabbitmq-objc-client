@@ -214,4 +214,8 @@ class MethodFixtures {
     static func exchangeDelete(name: String, options: RMQExchangeDeleteOptions) -> RMQExchangeDelete {
         return RMQExchangeDelete(reserved1: RMQShort(0), exchange: RMQShortstr(name), options: options)
     }
+
+    static func exchangeDeleteOk() -> RMQExchangeDeleteOk {
+        return RMQExchangeDeleteOk()
+    }
 }

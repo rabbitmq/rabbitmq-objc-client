@@ -4,7 +4,7 @@ class RMQExchangeTest: XCTestCase {
 
     func testPublishCallsPublishOnChannel() {
         let ch = ChannelSpy(1)
-        let ex = RMQExchange(name: "", channel: ch)
+        let ex = RMQExchange(name: "", type: "direct", options: [], channel: ch)
         ex.publish("foo", routingKey: "my.q")
 
         XCTAssertEqual("foo", ch.lastReceivedBasicPublishMessage)
@@ -14,7 +14,7 @@ class RMQExchangeTest: XCTestCase {
 
     func testPublishWithoutRoutingKeyUsesEmptyString() {
         let ch = ChannelSpy(1)
-        let ex = RMQExchange(name: "", channel: ch)
+        let ex = RMQExchange(name: "", type: "direct", options: [], channel: ch)
         ex.publish("foo")
 
         XCTAssertEqual("foo", ch.lastReceivedBasicPublishMessage)
@@ -24,7 +24,7 @@ class RMQExchangeTest: XCTestCase {
 
     func testPublishWithPersistence() {
         let ch = ChannelSpy(1)
-        let ex = RMQExchange(name: "some-ex", channel: ch)
+        let ex = RMQExchange(name: "some-ex", type: "direct", options: [], channel: ch)
         ex.publish("foo", routingKey: "my.q", persistent: true)
 
         XCTAssertEqual("foo", ch.lastReceivedBasicPublishMessage)
@@ -35,7 +35,7 @@ class RMQExchangeTest: XCTestCase {
 
     func testDeleteCallsDeleteOnChannel() {
         let ch = ChannelSpy(1)
-        let ex = RMQExchange(name: "deletable", channel: ch)
+        let ex = RMQExchange(name: "deletable", type: "direct", options: [], channel: ch)
         
         ex.delete()
         XCTAssertEqual("deletable", ch.lastReceivedExchangeDeleteExchangeName)
@@ -48,8 +48,8 @@ class RMQExchangeTest: XCTestCase {
 
     func testBindCallsBindOnChannel() {
         let ch = ChannelSpy(1)
-        let ex1 = RMQExchange(name: "ex1", channel: ch)
-        let ex2 = RMQExchange(name: "ex2", channel: ch)
+        let ex1 = RMQExchange(name: "ex1", type: "direct", options: [], channel: ch)
+        let ex2 = RMQExchange(name: "ex2", type: "direct", options: [], channel: ch)
 
         ex1.bind(ex2)
         XCTAssertEqual("ex1", ch.lastReceivedExchangeBindDestinationName)
@@ -64,8 +64,8 @@ class RMQExchangeTest: XCTestCase {
 
     func testUnbindCallsUnbindOnChannel() {
         let ch = ChannelSpy(1)
-        let ex1 = RMQExchange(name: "ex1", channel: ch)
-        let ex2 = RMQExchange(name: "ex2", channel: ch)
+        let ex1 = RMQExchange(name: "ex1", type: "direct", options: [], channel: ch)
+        let ex2 = RMQExchange(name: "ex2", type: "direct", options: [], channel: ch)
 
         ex1.unbind(ex2)
         XCTAssertEqual("ex1", ch.lastReceivedExchangeUnbindDestinationName)

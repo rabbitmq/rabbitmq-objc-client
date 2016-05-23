@@ -40,15 +40,18 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         conn.start()
         let ch = conn.createChannel()
         let q = ch.queue("")
+        let ex = ch.direct("foo")
         let semaphore = dispatch_semaphore_create(0)
         var messages: [RMQMessage] = []
+
+        q.bind(ex)
 
         q.subscribe { (_, m) in
             messages.append(m)
             dispatch_semaphore_signal(semaphore)
         }
 
-        q.publish("before close")
+        ex.publish("before close")
         XCTAssertEqual(0, dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5)),
                        "Timed out waiting for message")
 
@@ -56,7 +59,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
 
         q.publish("after close 1")
         dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5))
-        q.publish("after close 2")
+        ex.publish("after close 2")
         dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5))
 
         XCTAssertEqual(["before close", "after close 1", "after close 2"], messages.map { $0.content })

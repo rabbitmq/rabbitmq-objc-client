@@ -3,15 +3,22 @@
 
 @interface RMQExchange ()
 @property (nonatomic, readwrite) NSString *name;
+@property (nonatomic, readwrite) NSString *type;
+@property (nonatomic, readwrite) RMQExchangeDeclareOptions options;
 @property (nonatomic, readwrite) id<RMQChannel> channel;
 @end
 
 @implementation RMQExchange
 
-- (instancetype)initWithName:(NSString *)name channel:(id<RMQChannel>)channel {
+- (instancetype)initWithName:(NSString *)name
+                        type:(NSString *)type
+                     options:(RMQExchangeDeclareOptions)options
+                     channel:(id<RMQChannel>)channel {
     self = [super init];
     if (self) {
         self.name = name;
+        self.type = type;
+        self.options = options;
         self.channel = channel;
     }
     return self;

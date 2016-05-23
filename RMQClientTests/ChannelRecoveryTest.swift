@@ -95,6 +95,52 @@ class ChannelRecoveryTest: XCTestCase {
         XCTAssertEqual(0, dispatcher.syncMethodsSent.count)
     }
 
+    func testRedeclaresExchangesThatHadNotBeenDeleted() {
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(1,
+                                     contentBodySize: 100,
+                                     dispatcher: dispatcher,
+                                     commandQueue: FakeSerialQueue(),
+                                     nameGenerator: StubNameGenerator(),
+                                     allocator: ChannelSpyAllocator())
+        ch.fanout("ex1")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
+        ch.headers("ex2", options: [.AutoDelete])
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
+        ch.headers("ex3", options: [.AutoDelete])
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
+
+        ch.exchangeDelete("ex2", options: [])
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeleteOk()))
+
+        dispatcher.syncMethodsSent = []
+
+        ch.recover()
+
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQExchangeDeclare == MethodFixtures.exchangeDeclare("ex1", type: "fanout", options: []) })
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQExchangeDeclare == MethodFixtures.exchangeDeclare("ex3", type: "headers", options: [.AutoDelete]) })
+
+        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQExchangeDeclare == MethodFixtures.exchangeDeclare("ex2", type: "headers", options: [.AutoDelete]) })
+    }
+
+    func testRedeclaredExchangesAreStillMemoized() {
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(1,
+                                     contentBodySize: 100,
+                                     dispatcher: dispatcher,
+                                     commandQueue: FakeSerialQueue(),
+                                     nameGenerator: StubNameGenerator(),
+                                     allocator: ChannelSpyAllocator())
+        ch.fanout("a", options: [.AutoDelete])
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
+
+        ch.recover()
+
+        dispatcher.syncMethodsSent = []
+        ch.fanout("a", options: [.AutoDelete])
+        XCTAssertEqual(0, dispatcher.syncMethodsSent.count)
+    }
+
     func testRedeclaresConsumersNotPreviouslyCancelledByClientOrServer() {
         let dispatcher = DispatcherSpy()
         let nameGenerator = StubNameGenerator()
