@@ -177,13 +177,11 @@ class ChannelRecoveryTest: XCTestCase {
 
     func testRebindsQueuesNotPreviouslyUnbound() {
         let dispatcher = DispatcherSpy()
-        let nameGenerator = StubNameGenerator()
-        let q = FakeSerialQueue()
         let ch = RMQAllocatedChannel(1,
                                      contentBodySize: 100,
                                      dispatcher: dispatcher,
-                                     commandQueue: q,
-                                     nameGenerator: nameGenerator,
+                                     commandQueue: FakeSerialQueue(),
+                                     nameGenerator: StubNameGenerator(),
                                      allocator: ChannelSpyAllocator())
         let q1 = ch.queue("a")
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("a")))
@@ -191,21 +189,17 @@ class ChannelRecoveryTest: XCTestCase {
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("b")))
         let q3 = ch.queue("c")
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("c")))
-        let ex1 = ch.direct("foo")
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
-        let ex2 = ch.direct("bar")
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
-        let ex3 = ch.direct("baz")
+        let ex = ch.direct("foo")
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
 
-        q1.bind(ex1)
+        q1.bind(ex)
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueBindOk()))
-        q2.bind(ex2)
+        q2.bind(ex)
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueBindOk()))
-        q3.bind(ex3, routingKey: "hello")
+        q3.bind(ex, routingKey: "hello")
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueBindOk()))
 
-        q2.unbind(ex2)
+        q2.unbind(ex)
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueUnbindOk()))
 
         dispatcher.syncMethodsSent = []
@@ -213,9 +207,9 @@ class ChannelRecoveryTest: XCTestCase {
         ch.recover()
 
         XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueBind == MethodFixtures.queueBind("a", exchangeName: "foo", routingKey: "") })
-        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueBind == MethodFixtures.queueBind("c", exchangeName: "baz", routingKey: "hello") })
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueBind == MethodFixtures.queueBind("c", exchangeName: "foo", routingKey: "hello") })
 
-        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueBind == MethodFixtures.queueBind("b", exchangeName: "bar", routingKey: "") })
+        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueBind == MethodFixtures.queueBind("b", exchangeName: "foo", routingKey: "") })
     }
 
     private func createConsumer(consumerTag: String,
