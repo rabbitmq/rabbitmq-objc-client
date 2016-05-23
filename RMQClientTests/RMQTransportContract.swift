@@ -37,5 +37,10 @@ class RMQTransportContract {
 
         return self
     }
+
+    func check() {
+        connectAndDisconnect()
+            .sendingPreambleStimulatesAConnectionStart()
+    }
 }
 

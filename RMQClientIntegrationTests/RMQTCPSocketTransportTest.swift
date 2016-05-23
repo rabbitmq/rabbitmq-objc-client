@@ -9,9 +9,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
                                                                  tlsOptions: noTLS)
 
     func testObeysContract() {
-        RMQTransportContract(transport)
-            .connectAndDisconnect()
-            .sendingPreambleStimulatesAConnectionStart()
+        RMQTransportContract(transport).check()
     }
 
     func testIsNotConnectedWhenSocketDisconnectedOutsideOfCloseBlock() {
