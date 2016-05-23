@@ -34,7 +34,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
                                  frameMax: 131072,
                                  heartbeat: 10,
                                  syncTimeout: 10,
-                                 delegate: RMQConnectionDelegateLogger(),
+                                 delegate: ConnectionDelegateSpy(),
                                  delegateQueue: dispatch_get_main_queue(),
                                  recoverAfter: 1)
         conn.start()
