@@ -21,23 +21,20 @@ NSInteger const RMQChannelLimit = 65535;
 
 @interface RMQConnection ()
 @property (strong, nonatomic, readwrite) id <RMQTransport> transport;
-@property (nonatomic, readwrite) RMQTable *clientProperties;
-@property (nonatomic, readwrite) NSString *mechanism;
-@property (nonatomic, readwrite) NSString *locale;
-@property (nonatomic, readwrite) RMQConnectionConfig *config;
 @property (nonatomic, readwrite) RMQReader *reader;
 @property (nonatomic, readwrite) id <RMQChannelAllocator> channelAllocator;
-@property (nonatomic, readwrite) id <RMQChannel> channelZero;
 @property (nonatomic, readwrite) id <RMQFrameHandler> frameHandler;
-@property (nonatomic, readwrite) NSMutableDictionary *userChannels;
-@property (nonatomic, readwrite) NSNumber *frameMax;
-@property (nonatomic, weak, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) id<RMQWaiterFactory> waiterFactory;
+@property (nonatomic, readwrite) id<RMQHeartbeatSender> heartbeatSender;
+@property (nonatomic, weak, readwrite) id<RMQConnectionDelegate> delegate;
+@property (nonatomic, readwrite) id <RMQChannel> channelZero;
+@property (nonatomic, readwrite) RMQConnectionConfig *config;
+@property (nonatomic, readwrite) NSMutableDictionary *userChannels;
+@property (nonatomic, readwrite) NSNumber *frameMax;
 @property (nonatomic, readwrite) BOOL handshakeComplete;
 @property (nonatomic, readwrite) NSNumber *handshakeTimeout;
 @property (nonatomic, readwrite) BOOL closeRequested;
-@property (nonatomic, readwrite) id<RMQHeartbeatSender> heartbeatSender;
 @end
 
 @implementation RMQConnection
@@ -62,20 +59,6 @@ NSInteger const RMQChannelLimit = 65535;
         self.channelAllocator = channelAllocator;
         self.channelAllocator.sender = self;
         self.frameHandler = frameHandler;
-        RMQTable *capabilities = [[RMQTable alloc] init:@{@"publisher_confirms": [[RMQBoolean alloc] init:YES],
-                                                          @"consumer_cancel_notify": [[RMQBoolean alloc] init:YES],
-                                                          @"exchange_exchange_bindings": [[RMQBoolean alloc] init:YES],
-                                                          @"basic.nack": [[RMQBoolean alloc] init:YES],
-                                                          @"connection.blocked": [[RMQBoolean alloc] init:YES],
-                                                          @"authentication_failure_close": [[RMQBoolean alloc] init:YES]}];
-        self.clientProperties = [[RMQTable alloc] init:
-                                 @{@"capabilities" : capabilities,
-                                   @"product"     : [[RMQLongstr alloc] init:@"RMQClient"],
-                                   @"platform"    : [[RMQLongstr alloc] init:@"iOS"],
-                                   @"version"     : [[RMQLongstr alloc] init:@"0.0.1"],
-                                   @"information" : [[RMQLongstr alloc] init:@"https://github.com/rabbitmq/rabbitmq-objc-client"]}];
-        self.mechanism = @"PLAIN";
-        self.locale = @"en_GB";
         self.reader = [[RMQReader alloc] initWithTransport:self.transport frameHandler:self];
 
         self.userChannels = [NSMutableDictionary new];
