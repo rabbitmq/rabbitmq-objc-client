@@ -212,6 +212,49 @@ class ChannelRecoveryTest: XCTestCase {
         XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueBind == MethodFixtures.queueBind("b", exchangeName: "foo", routingKey: "") })
     }
 
+    func testRebindsExchangesNotPreviouslyUnbound() {
+        let dispatcher = DispatcherSpy()
+        let q = FakeSerialQueue()
+        let ch = RMQAllocatedChannel(1,
+                                     contentBodySize: 100,
+                                     dispatcher: dispatcher,
+                                     commandQueue: q,
+                                     nameGenerator: StubNameGenerator(),
+                                     allocator: ChannelSpyAllocator())
+        let a = ch.direct("a")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
+        let b = ch.direct("b")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
+        let c = ch.direct("c")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
+        let d = ch.direct("d")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
+
+        b.bind(a)
+        let bindBToA = MethodFixtures.exchangeBind("a", destination: "b", routingKey: "")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: bindBToA))
+
+        c.bind(a)
+        let bindCToA = MethodFixtures.exchangeBind("a", destination: "c", routingKey: "")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: bindCToA))
+
+        d.bind(a, routingKey: "123")
+        let bindDToA = MethodFixtures.exchangeBind("a", destination: "d", routingKey: "123")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: bindDToA))
+
+        c.unbind(a)
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeUnbind("a", destination: "c", routingKey: "")))
+
+        dispatcher.syncMethodsSent = []
+
+        ch.recover()
+
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQExchangeBind == bindBToA })
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQExchangeBind == bindDToA })
+
+        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQExchangeBind == bindCToA })
+    }
+
     private func createConsumer(consumerTag: String,
                                 _ context: (channel: RMQAllocatedChannel, dispatcher: DispatcherSpy, nameGenerator: StubNameGenerator),
                                   _ options: RMQBasicConsumeOptions = []) {

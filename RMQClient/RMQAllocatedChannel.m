@@ -11,6 +11,7 @@
 @property (nonatomic, readwrite) id <RMQDispatcher> dispatcher;
 @property (nonatomic, readwrite) NSMutableDictionary *consumers;
 @property (nonatomic, readwrite) NSMutableDictionary *exchanges;
+@property (nonatomic, readwrite) NSMutableDictionary *exchangeBindings;
 @property (nonatomic, readwrite) NSMutableDictionary *queues;
 @property (nonatomic, readwrite) NSMutableDictionary *queueBindings;
 @property (nonatomic, readwrite) NSNumber *prefetchCountPerConsumer;
@@ -37,6 +38,7 @@
         self.commandQueue = commandQueue;
         self.consumers = [NSMutableDictionary new];
         self.exchanges = [NSMutableDictionary new];
+        self.exchangeBindings = [NSMutableDictionary new];
         self.queues = [NSMutableDictionary new];
         self.queueBindings = [NSMutableDictionary new];
         self.prefetchCountPerConsumer = nil;
@@ -113,6 +115,9 @@
     }
     for (RMQExchange *exchange in self.exchanges.allValues) {
         [self exchangeDeclare:exchange.name type:exchange.type options:exchange.options];
+        for (NSDictionary *binding in [self.exchangeBindings[exchange.name] copy]) {
+            [self exchangeBind:exchange.name destination:binding[@"destination"] routingKey:binding[@"routing-key"]];
+        }
     }
 }
 
@@ -312,6 +317,8 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
                                                                     routingKey:[[RMQShortstr alloc] init:routingKey]
                                                                        options:RMQExchangeBindNoOptions
                                                                      arguments:[[RMQTable alloc] init:@{}]]];
+    [self.exchangeBindings[sourceName] addObject:@{@"destination": destinationName,
+                                                   @"routing-key": routingKey}];
 }
 
 - (void)exchangeUnbind:(NSString *)sourceName
@@ -323,6 +330,8 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
                                                                       routingKey:[[RMQShortstr alloc] init:routingKey]
                                                                          options:RMQExchangeUnbindNoOptions
                                                                        arguments:[[RMQTable alloc] init:@{}]]];
+    [self.exchangeBindings[sourceName] removeObject:@{@"destination": destinationName,
+                                                      @"routing-key": routingKey}];
 }
 
 - (RMQExchange *)fanout:(NSString *)name options:(RMQExchangeDeclareOptions)options {
@@ -414,6 +423,7 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
                                              options:options
                                              channel:self];
         self.exchanges[name] = exchange;
+        self.exchangeBindings[name] = [NSMutableSet new];
     }
     return exchange;
 }
