@@ -7,7 +7,7 @@ enum RecoveryTestError : ErrorType {
 class ConnectionRecoveryIntegrationTest: XCTestCase {
     let httpAPI = RMQHTTP("http://guest:guest@localhost:15672/api")
 
-    func testReenablesConsumers() {
+    func testReenablesConsumersOnEachRecovery() {
         let uri = "amqp://guest:guest@localhost"
         let conn = RMQConnection(uri: uri,
                                  tlsOptions: RMQTLSOptions.fromURI(uri),
@@ -19,6 +19,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
                                  delegateQueue: dispatch_get_main_queue(),
                                  recoverAfter: 1)
         conn.start()
+        defer { conn.blockingClose() }
         let ch = conn.createChannel()
         let q = ch.queue("")
         let ex = ch.direct("foo")
@@ -44,6 +45,15 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5))
 
         XCTAssertEqual(["before close", "after close 1", "after close 2"], messages.map { $0.content })
+
+        try! closeAllConnections()
+
+        q.publish("after close 3")
+        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5))
+        ex.publish("after close 4")
+        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5))
+
+        XCTAssertEqual(["before close", "after close 1", "after close 2", "after close 3", "after close 4"], messages.map { $0.content })
     }
 
     private func connections() -> [RMQHTTPConnection] {

@@ -34,6 +34,7 @@ NSInteger const RMQChannelLimit = 65535;
 @property (nonatomic, weak, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) id<RMQWaiterFactory> waiterFactory;
+@property (nonatomic, readwrite) BOOL handshakeComplete;
 @property (nonatomic, readwrite) NSNumber *handshakeTimeout;
 @property (nonatomic, readwrite) BOOL closeRequested;
 @property (nonatomic, readwrite) id<RMQHeartbeatSender> heartbeatSender;
@@ -53,6 +54,7 @@ NSInteger const RMQChannelLimit = 65535;
     self = [super init];
     if (self) {
         self.config = config;
+        self.handshakeComplete = NO;
         self.handshakeTimeout = handshakeTimeout;
         self.frameMax = config.frameMax;
         self.transport = transport;
@@ -233,6 +235,7 @@ NSInteger const RMQChannelLimit = 65535;
                                                                 [self.heartbeatSender startWithInterval:heartbeatInterval];
                                                                 [handshakeCompletion done];
                                                                 [self.readerLoop runOnce];
+                                                                self.handshakeComplete = YES;
                                                             }];
             RMQReaderLoop *handshakeLoop = [[RMQReaderLoop alloc] initWithTransport:self.transport
                                                                        frameHandler:handshaker];
@@ -278,8 +281,9 @@ NSInteger const RMQChannelLimit = 65535;
 
 # pragma mark - RMQSender
 
-- (void)sendFrameset:(RMQFrameset *)frameset {
-    if (self.transport.isConnected) {
+- (void)sendFrameset:(RMQFrameset *)frameset
+               force:(BOOL)isForced {
+    if (self.handshakeComplete || isForced) {
         [self.transport write:frameset.amqEncoded];
         [self.heartbeatSender signalActivity];
     } else {
@@ -290,6 +294,10 @@ NSInteger const RMQChannelLimit = 65535;
     }
 }
 
+- (void)sendFrameset:(RMQFrameset *)frameset {
+    [self sendFrameset:frameset force:NO];
+}
+
 # pragma mark - RMQFrameHandler
 
 - (void)handleFrameset:(RMQFrameset *)frameset {
@@ -297,6 +305,7 @@ NSInteger const RMQChannelLimit = 65535;
 
     if ([method isKindOfClass:[RMQConnectionClose class]]) {
         [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:[RMQConnectionCloseOk new]]];
+        self.handshakeComplete = NO;
         [self.transport close:^{}];
         [self.recovery recover];
     } else {

@@ -7,9 +7,13 @@
         frameMax = aFrameMax
     }
 
-    func sendFrameset(frameset: RMQFrameset) {
+    func sendFrameset(frameset: RMQFrameset, force isForced: Bool) {
         lastSentMethod = frameset.method
         sentFramesets.append(frameset)
+    }
+
+    func sendFrameset(frameset: RMQFrameset) {
+        sendFrameset(frameset, force: false)
     }
 
     override func isEqual(object: AnyObject?) -> Bool {

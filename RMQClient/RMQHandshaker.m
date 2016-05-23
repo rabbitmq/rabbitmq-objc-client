@@ -98,7 +98,7 @@
 
 - (void)sendMethod:(id<RMQMethod>)amqMethod channelNumber:(NSNumber *)channelNumber {
     RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:channelNumber method:amqMethod];
-    [self.sender sendFrameset:frameset];
+    [self.sender sendFrameset:frameset force:YES];
 }
 
 @end

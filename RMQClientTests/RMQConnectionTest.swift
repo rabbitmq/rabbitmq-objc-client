@@ -91,18 +91,21 @@ class RMQConnectionTest: XCTestCase {
     func testSignalsActivityToHeartbeatSenderOnOutgoingFrameset() {
         let heartbeatSender = HeartbeatSenderSpy()
         let transport = ControlledInteractionTransport()
+        let q = FakeSerialQueue()
         let conn = RMQConnection(transport: transport,
                                  config: ConnectionHelper.connectionConfig(),
                                  handshakeTimeout: 10,
                                  channelAllocator: ChannelSpyAllocator(),
                                  frameHandler: FrameHandlerSpy(),
                                  delegate: ConnectionDelegateSpy(),
-                                 commandQueue: FakeSerialQueue(),
+                                 commandQueue: q,
                                  waiterFactory: FakeWaiterFactory(),
                                  heartbeatSender: heartbeatSender)
         conn.start()
+        try! q.step()
+        transport.handshake()
 
-        XCTAssertFalse(heartbeatSender.signalActivityReceived)
+        heartbeatSender.signalActivityReceived = false
 
         conn.sendFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpen()))
 
@@ -125,7 +128,11 @@ class RMQConnectionTest: XCTestCase {
                                  waiterFactory: FakeWaiterFactory(),
                                  heartbeatSender: heartbeatSender)
         recovery.interval = 1
-        // no start(), to simulate being disconnected
+        conn.start()
+        try! q.step()
+        // handshake not yet complete, simulating recovery mode
+
+        transport.outboundData = []
 
         conn.sendFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.channelOpen()))
 
