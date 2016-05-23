@@ -291,7 +291,7 @@ NSInteger const RMQChannelLimit = 65535;
     if ([method isKindOfClass:[RMQConnectionClose class]]) {
         [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:[RMQConnectionCloseOk new]]];
         self.handshakeComplete = NO;
-        [self.transport close:^{}];
+        [self.transport close];
         [self.recovery recover];
     } else {
         [self.frameHandler handleFrameset:frameset];
@@ -318,7 +318,7 @@ NSInteger const RMQChannelLimit = 65535;
               ^{[self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:self.amqClose]];},
               ^{[self.channelZero blockingWaitOn:[RMQConnectionCloseOk class]];},
               ^{[self.heartbeatSender stop];},
-              ^{[self.transport close:^{}];}];
+              ^{[self.transport close];}];
 }
 
 - (void)closeAllUserChannels {

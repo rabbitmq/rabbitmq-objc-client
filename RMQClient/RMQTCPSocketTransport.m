@@ -2,8 +2,7 @@
 #import "RMQSynchronizedMutableDictionary.h"
 #import "RMQPKCS12CertificateConverter.h"
 
-long closeTag = UINT32_MAX + 1;
-long writeTag = UINT32_MAX + 2;
+long writeTag = UINT32_MAX + 1;
 
 @interface RMQTCPSocketTransport ()
 
@@ -64,8 +63,7 @@ long writeTag = UINT32_MAX + 2;
     }
 }
 
-- (void)close:(void (^)())onClose {
-    self.callbacks[@(closeTag)] = [onClose copy];
+- (void)close {
     [self.socket disconnectAfterReadingAndWriting];
 }
 
@@ -162,7 +160,6 @@ shouldTimeoutReadWithTag:(long)tag
 
 - (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err {
     self._isConnected = false;
-    [self invokeZeroArityCallback:closeTag];
     [self.delegate transport:self disconnectedWithError:err];
 }
 

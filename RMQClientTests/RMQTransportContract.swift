@@ -9,17 +9,14 @@ class RMQTransportContract {
     
     func connectAndDisconnect() -> RMQTransportContract {
         try! transport.connect()
-        var connected = true
-        transport.close() {
-            connected = false
-        }
-        XCTAssert(TestHelper.pollUntil { return !connected }, "didn't disconnect")
+        transport.close()
+        XCTAssert(TestHelper.pollUntil { return !self.transport.isConnected() }, "didn't disconnect")
 
         return self
     }
     
     func sendingPreambleStimulatesAConnectionStart() -> RMQTransportContract {
-        defer { self.transport.close() {} }
+        defer { self.transport.close() }
         
         var readData: NSData = NSData()
         var connectionStart = RMQConnectionStart()

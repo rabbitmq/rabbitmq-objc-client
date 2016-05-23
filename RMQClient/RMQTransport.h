@@ -4,7 +4,7 @@
 @protocol RMQTransport
 @property (nullable, nonatomic, readwrite) id<RMQTransportDelegate> delegate;
 - (BOOL)connectAndReturnError:(NSError * _Nullable * _Nullable)error;
-- (void)close:(void (^ _Nonnull)())onClose;
+- (void)close;
 - (void)write:(nonnull NSData *)data;
 - (void)readFrame:(void (^ _Nonnull)(NSData * _Nonnull))complete;
 - (BOOL)isConnected;

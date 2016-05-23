@@ -27,14 +27,15 @@ class RMQTCPSocketTransportTest: XCTestCase {
                                           tlsOptions: noTLS,
                                           callbackStorage: callbacks)
 
-        var finished = false
         try! transport.connect()
+        XCTAssert(TestHelper.pollUntil { return self.transport.isConnected() }, "couldn't connect")
+
         transport.write(RMQProtocolHeader().amqEncoded())
         transport.readFrame { _ in
-            self.transport.close { finished = true }
+            self.transport.close()
         }
 
-        XCTAssert(TestHelper.pollUntil { return finished }, "couldn't exercise all callbacks")
+        XCTAssert(TestHelper.pollUntil { return !self.transport.isConnected() }, "couldn't exercise all callbacks")
         XCTAssertEqual(0, callbacks.count)
     }
 

@@ -22,9 +22,8 @@ enum TestDoubleTransportError: ErrorType {
         }
     }
     
-    func close(onClose: () -> Void) {
+    func close() {
         connected = false
-        onClose()
     }
 
     func write(data: NSData) {
