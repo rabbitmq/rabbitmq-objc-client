@@ -1,7 +1,6 @@
 #import "RMQConnection.h"
 #import "RMQConnectionShutdown.h"
 #import "RMQConnectionRecover.h"
-#import "RMQFrame.h"
 #import "RMQGCDHeartbeatSender.h"
 #import "RMQGCDSerialQueue.h"
 #import "RMQHandshaker.h"
