@@ -9,6 +9,9 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
 
     func testReenablesConsumersOnEachRecovery() {
         let uri = "amqp://guest:guest@localhost"
+        let env = NSProcessInfo.processInfo().environment
+        let recoveryInterval = 1
+        let semaphoreTimeout: Double = 10
         let conn = RMQConnection(uri: uri,
                                  tlsOptions: RMQTLSOptions.fromURI(uri),
                                  channelMax: 1000,
@@ -17,7 +20,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
                                  syncTimeout: 10,
                                  delegate: ConnectionDelegateSpy(),
                                  delegateQueue: dispatch_get_main_queue(),
-                                 recoverAfter: 1)
+                                 recoverAfter: recoveryInterval)
         conn.start()
         defer { conn.blockingClose() }
         let ch = conn.createChannel()
@@ -34,24 +37,24 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         }
 
         ex.publish("before close")
-        XCTAssertEqual(0, dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5)),
+        XCTAssertEqual(0, dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout)),
                        "Timed out waiting for message")
 
         try! closeAllConnections()
 
         q.publish("after close 1")
-        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5))
+        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout))
         ex.publish("after close 2")
-        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5))
+        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout))
 
         XCTAssertEqual(["before close", "after close 1", "after close 2"], messages.map { $0.content })
 
         try! closeAllConnections()
 
         q.publish("after close 3")
-        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5))
+        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout))
         ex.publish("after close 4")
-        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5))
+        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout))
 
         XCTAssertEqual(["before close", "after close 1", "after close 2", "after close 3", "after close 4"], messages.map { $0.content })
     }

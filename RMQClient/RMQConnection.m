@@ -287,10 +287,12 @@ NSInteger const RMQChannelLimit = 65535;
         [self.transport write:frameset.amqEncoded];
         [self.heartbeatSender signalActivity];
     } else {
-        [self.commandQueue delayedBy:self.config.recovery.interval enqueue:^{
-            [self.transport write:frameset.amqEncoded];
-            [self.heartbeatSender signalActivity];
-        }];
+        double handshakeVersusChannelRaceLeeway = 0.25;
+        [self.commandQueue delayedBy:@(self.config.recovery.interval.integerValue + handshakeVersusChannelRaceLeeway)
+                             enqueue:^{
+                                 [self.transport write:frameset.amqEncoded];
+                                 [self.heartbeatSender signalActivity];
+                             }];
     }
 }
 
