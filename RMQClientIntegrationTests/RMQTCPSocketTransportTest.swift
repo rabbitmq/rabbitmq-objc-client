@@ -47,9 +47,9 @@ class RMQTCPSocketTransportTest: XCTestCase {
         transport.delegate = delegate
         try! transport.connect()
 
-        TestHelper.pollUntil { delegate.lastDisconnectError.localizedDescription != "no error yet" }
+        TestHelper.pollUntil { delegate.lastDisconnectError != nil }
 
-        XCTAssertEqual("Connection refused", delegate.lastDisconnectError.localizedDescription)
+        XCTAssertEqual("Connection refused", delegate.lastDisconnectError?.localizedDescription)
     }
 
     func testExtendsReadWhenReadTimesOut() {
@@ -113,6 +113,24 @@ class RMQTCPSocketTransportTest: XCTestCase {
         )
         transport = RMQTCPSocketTransport(host: "localhost", port: 5671, tlsOptions: tlsOptions)
         XCTAssertThrowsError(try transport.connect())
+    }
+
+    func testSimulatedDisconnectCausesTransportToReportAsDisconnected() {
+        transport = RMQTCPSocketTransport(host: "localhost", port: 5672, tlsOptions: noTLS)
+        try! transport.connect()
+        XCTAssert(TestHelper.pollUntil { self.transport.isConnected() })
+        transport.simulateDisconnect()
+        XCTAssert(TestHelper.pollUntil { !self.transport.isConnected() })
+    }
+
+    func testSimulatedDisconnectSendsErrorToDelegate() {
+        transport = RMQTCPSocketTransport(host: "localhost", port: 5672, tlsOptions: noTLS)
+        let delegate = TransportDelegateSpy()
+        transport.delegate = delegate
+        try! transport.connect()
+        XCTAssert(TestHelper.pollUntil { self.transport.isConnected() })
+        transport.simulateDisconnect()
+        XCTAssertEqual(RMQError.SimulatedDisconnect.rawValue, delegate.lastDisconnectError?.code)
     }
 
 }

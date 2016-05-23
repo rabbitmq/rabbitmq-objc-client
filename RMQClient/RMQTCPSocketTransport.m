@@ -1,4 +1,5 @@
 #import "RMQTCPSocketTransport.h"
+#import "RMQErrors.h"
 #import "RMQSynchronizedMutableDictionary.h"
 #import "RMQPKCS12CertificateConverter.h"
 
@@ -97,6 +98,12 @@ struct __attribute__((__packed__)) AMQPHeader {
             }];
         }];
     }];
+}
+
+- (void)simulateDisconnect {
+    [self.socket disconnect];
+    NSError *error = [NSError errorWithDomain:RMQErrorDomain code:RMQErrorSimulatedDisconnect userInfo:@{NSLocalizedDescriptionKey: @"Simulated disconnect, probably for testing."}];
+    [self socketDidDisconnect:self.socket withError:error];
 }
 
 - (BOOL)isConnected {

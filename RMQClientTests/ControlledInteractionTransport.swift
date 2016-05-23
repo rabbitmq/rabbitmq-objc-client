@@ -44,6 +44,9 @@ enum TestDoubleTransportError: ErrorType {
         readCallbacks.append(complete)
     }
 
+    func simulateDisconnect() {
+    }
+
     func handshake() -> Self {
         self.serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
         self.serverSendsPayload(MethodFixtures.connectionTune(), channelNumber: 0)

@@ -7,5 +7,6 @@
 - (void)close;
 - (void)write:(nonnull NSData *)data;
 - (void)readFrame:(void (^ _Nonnull)(NSData * _Nonnull))complete;
+- (void)simulateDisconnect;
 - (BOOL)isConnected;
 @end
