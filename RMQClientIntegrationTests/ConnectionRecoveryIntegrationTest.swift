@@ -73,7 +73,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
             httpAPI.delete(path)
         }
 
-        if (!TestHelper.pollUntil(10) { self.connections().count == 0 }) {
+        if (!TestHelper.pollUntil(30) { self.connections().count == 0 }) {
             throw RecoveryTestError.TimeOutWaitingForConnectionCountToDrop
         }
     }
