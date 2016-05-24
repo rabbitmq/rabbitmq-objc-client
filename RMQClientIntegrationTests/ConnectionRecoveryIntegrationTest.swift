@@ -18,7 +18,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
                                  frameMax: 131072,
                                  heartbeat: 10,
                                  syncTimeout: 10,
-                                 delegate: ConnectionDelegateSpy(),
+                                 delegate: RMQConnectionDelegateLogger(),
                                  delegateQueue: dispatch_get_main_queue(),
                                  recoverAfter: recoveryInterval)
         conn.start()
@@ -32,6 +32,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         q.bind(ex)
 
         q.subscribe { (_, m) in
+            print("Received \(m.content)")
             messages.append(m)
             dispatch_semaphore_signal(semaphore)
         }
@@ -40,6 +41,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         XCTAssertEqual(0, dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout)),
                        "Timed out waiting for message")
 
+        print("Closing take 1")
         try! closeAllConnections()
 
         q.publish("after close 1")
@@ -49,6 +51,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
 
         XCTAssertEqual(["before close", "after close 1", "after close 2"], messages.map { $0.content })
 
+        print("Closing take 2")
         try! closeAllConnections()
 
         q.publish("after close 3")
