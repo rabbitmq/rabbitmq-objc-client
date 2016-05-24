@@ -15,50 +15,53 @@
 - (nonnull NSData *)amqFieldValueType;
 @end
 
-@interface RMQOctet : MTLModel<RMQEncodable,RMQParseable>
+@interface RMQValue : MTLModel
+@end
+
+@interface RMQOctet : RMQValue<RMQEncodable,RMQParseable>
 @property (nonatomic, readonly) NSUInteger integerValue;
 - (nonnull instancetype)init:(char)octet;
 @end
 
-@interface RMQBoolean : MTLModel<RMQEncodable,RMQFieldValue,RMQParseable>
+@interface RMQBoolean : RMQValue<RMQEncodable,RMQFieldValue,RMQParseable>
 @property (nonatomic, readonly) BOOL boolValue;
 - (nonnull instancetype)init:(BOOL)boolean;
 @end
 
-@interface RMQShort : MTLModel<RMQFieldValue>
+@interface RMQShort : RMQValue<RMQFieldValue>
 @property (nonatomic, readonly) NSUInteger integerValue;
 - (nonnull instancetype)init:(NSUInteger)val;
 @end
 
-@interface RMQLong : MTLModel<RMQFieldValue>
+@interface RMQLong : RMQValue<RMQFieldValue>
 @property (nonatomic, readonly) NSUInteger integerValue;
 - (nonnull instancetype)init:(NSUInteger)val;
 @end
 
-@interface RMQLonglong : MTLModel<RMQFieldValue>
+@interface RMQLonglong : RMQValue<RMQFieldValue>
 @property (nonatomic, readonly) uint64_t integerValue;
 - (nonnull instancetype)init:(uint64_t)val;
 @end
 
-@interface RMQShortstr : MTLModel<RMQFieldValue>
+@interface RMQShortstr : RMQValue<RMQFieldValue>
 @property (nonnull, nonatomic, copy, readonly) NSString *stringValue;
 - (nonnull instancetype)init:(nonnull NSString *)string;
 @end
 
-@interface RMQLongstr : MTLModel<RMQFieldValue>
+@interface RMQLongstr : RMQValue<RMQFieldValue>
 @property (nonnull, nonatomic, copy, readonly) NSString *stringValue;
 - (nonnull instancetype)init:(nonnull NSString *)string;
 @end
 
-@interface RMQTable : MTLModel<RMQFieldValue>
+@interface RMQTable : RMQValue<RMQFieldValue>
 - (nonnull instancetype)init:(nonnull NSDictionary *)dictionary;
 @end
 
-@interface RMQTimestamp : MTLModel<RMQFieldValue>
+@interface RMQTimestamp : RMQValue<RMQFieldValue>
 - (nonnull instancetype)init:(nonnull NSDate *)date;
 @end
 
-@interface RMQFieldValuePair : MTLModel<RMQEncodable>
+@interface RMQFieldValuePair : RMQValue<RMQEncodable>
 - (nonnull instancetype)initWithFieldName:(nonnull NSString *)fieldName
                                fieldValue:(nonnull id <RMQEncodable,RMQFieldValue>)fieldValue;
 @end
@@ -81,7 +84,7 @@
 - (BOOL)hasContent;
 @end
 
-@interface RMQContentHeader : MTLModel<RMQPayload>
+@interface RMQContentHeader : RMQValue<RMQPayload>
 @property (nonnull, nonatomic, copy, readonly) NSNumber *bodySize;
 - (nonnull instancetype)initWithClassID:(nonnull NSNumber *)classID
                                bodySize:(nonnull NSNumber *)bodySize
@@ -92,7 +95,7 @@
 @interface RMQContentHeaderNone : RMQContentHeader
 @end
 
-@interface RMQContentBody : MTLModel<RMQPayload>
+@interface RMQContentBody : RMQValue<RMQPayload>
 @property (nonnull, nonatomic, readonly) NSData *data;
 @property (nonatomic, readonly) NSUInteger length;
 - (nonnull instancetype)initWithData:(nonnull NSData *)data;

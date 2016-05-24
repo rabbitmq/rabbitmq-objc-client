@@ -1,6 +1,9 @@
 #import "RMQValues.h"
 #import "RMQBasicProperties.h"
 
+@implementation RMQValue
+@end
+
 @interface RMQOctet ()
 @property (nonatomic, readwrite) char octet;
 @property (nonatomic, readwrite) NSUInteger integerValue;
