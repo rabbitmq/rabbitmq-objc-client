@@ -30,3 +30,9 @@ this list.
 **Copy Files** phase.
 1. Under **Destination**, choose **Frameworks**.
 1. Click the '+' and add RMQClient.framework. Ensure **Code Sign On Copy** is checked.
+
+## License
+
+This package, the RabbitMQ Objective-C client library, is triple-licensed
+under the Mozilla Public License 1.1 ("MPL"), the GNU General Public License
+version 2 ("GPL") and the Apache License version 2 ("ASL").
