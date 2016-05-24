@@ -122,7 +122,8 @@ NSInteger const RMQChannelLimit = 65535;
                                                        connection:self
                                                  channelAllocator:allocator
                                                   heartbeatSender:heartbeatSender
-                                                     commandQueue:commandQueue];
+                                                     commandQueue:commandQueue
+                                                         delegate:delegateProxy];
     } else {
         recovery = [[RMQConnectionShutdown alloc] initWithHeartbeatSender:heartbeatSender];
     }

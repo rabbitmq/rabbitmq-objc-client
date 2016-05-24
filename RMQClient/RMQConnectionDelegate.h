@@ -9,6 +9,9 @@ failedToConnectWithError:(NSError *)error;
 failedToWriteWithError:(NSError *)error;
 - (void)   connection:(RMQConnection *)connection
 disconnectedWithError:(NSError *)error;
+- (void)willStartRecoveryWithConnection:(RMQConnection *)connection;
+- (void)startingRecoveryWithConnection:(RMQConnection *)connection;
+- (void)recoveredConnection:(RMQConnection *)connection;
 - (void)channel:(id<RMQChannel>)channel
           error:(NSError *)error;
 @end

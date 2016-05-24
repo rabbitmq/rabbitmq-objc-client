@@ -3,6 +3,7 @@
 #import "RMQChannelAllocator.h"
 #import "RMQHeartbeatSender.h"
 #import "RMQLocalSerialQueue.h"
+#import "RMQConnectionDelegate.h"
 
 @interface RMQConnectionRecover : NSObject <RMQConnectionRecovery>
 
@@ -10,6 +11,7 @@
                       connection:(id<RMQStarter>)connection
                 channelAllocator:(id<RMQChannelAllocator>)allocator
                  heartbeatSender:(id<RMQHeartbeatSender>)heartbeatSender
-                    commandQueue:(id<RMQLocalSerialQueue>)commandQueue;
+                    commandQueue:(id<RMQLocalSerialQueue>)commandQueue
+                        delegate:(id<RMQConnectionDelegate>)delegate;
 
 @end

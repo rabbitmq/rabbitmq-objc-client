@@ -41,4 +41,22 @@
     });
 }
 
+- (void)willStartRecoveryWithConnection:(RMQConnection *)connection {
+    dispatch_async(self.queue, ^{
+        [self.delegate willStartRecoveryWithConnection:connection];
+    });
+}
+
+- (void)startingRecoveryWithConnection:(RMQConnection *)connection {
+    dispatch_async(self.queue, ^{
+        [self.delegate startingRecoveryWithConnection:connection];
+    });
+}
+
+- (void)recoveredConnection:(RMQConnection *)connection {
+    dispatch_async(self.queue, ^{
+        [self.delegate recoveredConnection:connection];
+    });
+}
+
 @end

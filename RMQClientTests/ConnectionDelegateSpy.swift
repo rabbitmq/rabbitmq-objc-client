@@ -6,6 +6,10 @@
     var disconnectCalled = false
     var lastDisconnectError: NSError?
 
+    var willStartRecoveryConnection: RMQConnection?
+    var startingRecoveryConnection: RMQConnection?
+    var recoveredConnection: RMQConnection?
+
     func channel(channel: RMQChannel!, error: NSError!) {
         lastChannelError = error
     }
@@ -25,5 +29,17 @@
     func connection(connection: RMQConnection!, disconnectedWithError error: NSError!) {
         disconnectCalled = true
         lastDisconnectError = error
+    }
+
+    func willStartRecoveryWithConnection(connection: RMQConnection!) {
+        willStartRecoveryConnection = connection
+    }
+
+    func startingRecoveryWithConnection(connection: RMQConnection!) {
+        startingRecoveryConnection = connection
+    }
+
+    func recoveredConnection(connection: RMQConnection!) {
+        recoveredConnection = connection
     }
 }

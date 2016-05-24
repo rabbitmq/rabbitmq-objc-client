@@ -10,7 +10,8 @@ class RMQConnectionRecoverTest: XCTestCase {
                                            connection: conn,
                                            channelAllocator: ChannelSpyAllocator(),
                                            heartbeatSender: heartbeatSender,
-                                           commandQueue: q)
+                                           commandQueue: q,
+                                           delegate: ConnectionDelegateSpy())
         recover.recover()
 
         try! q.step()
@@ -24,7 +25,8 @@ class RMQConnectionRecoverTest: XCTestCase {
                                            connection: conn,
                                            channelAllocator: ChannelSpyAllocator(),
                                            heartbeatSender: HeartbeatSenderSpy(),
-                                           commandQueue: q)
+                                           commandQueue: q,
+                                           delegate: ConnectionDelegateSpy())
         recover.recover()
         XCTAssertEqual(1, q.delayedItems.count)
         XCTAssertEqual(3, q.enqueueDelay)
@@ -44,7 +46,8 @@ class RMQConnectionRecoverTest: XCTestCase {
                                            connection: StarterSpy(),
                                            channelAllocator: allocator,
                                            heartbeatSender: HeartbeatSenderSpy(),
-                                           commandQueue: q)
+                                           commandQueue: q,
+                                           delegate: ConnectionDelegateSpy())
         let ch0 = allocator.allocate() as! ChannelSpy
         let ch1 = allocator.allocate() as! ChannelSpy
         let ch2 = allocator.allocate() as! ChannelSpy
@@ -67,6 +70,33 @@ class RMQConnectionRecoverTest: XCTestCase {
 
         XCTAssertTrue(ch1.recoverCalled)
         XCTAssertTrue(ch3.recoverCalled)
+    }
+
+    func testSendsMessagesToDelegateThroughoutCycle() {
+        let conn = StarterSpy()
+        let q = FakeSerialQueue()
+        let delegate = ConnectionDelegateSpy()
+        let recover = RMQConnectionRecover(interval: 10,
+                                           connection: conn,
+                                           channelAllocator: ChannelSpyAllocator(),
+                                           heartbeatSender: HeartbeatSenderSpy(),
+                                           commandQueue: q,
+                                           delegate: delegate)
+        recover.recover()
+        XCTAssertEqual(conn, delegate.willStartRecoveryConnection!)
+
+        try! q.step()
+
+        XCTAssertNil(delegate.startingRecoveryConnection)
+
+        try! q.step()
+
+        XCTAssertEqual(conn, delegate.startingRecoveryConnection!)
+        XCTAssertNil(delegate.recoveredConnection)
+
+        try! q.step()
+
+        XCTAssertEqual(conn, delegate.recoveredConnection!)
     }
 
 }

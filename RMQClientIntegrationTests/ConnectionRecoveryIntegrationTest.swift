@@ -12,13 +12,14 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         let env = NSProcessInfo.processInfo().environment
         let recoveryInterval = 2
         let semaphoreTimeout: Double = 30
+        let delegate = ConnectionDelegateSpy()
         let conn = RMQConnection(uri: uri,
                                  tlsOptions: RMQTLSOptions.fromURI(uri),
                                  channelMax: 1000,
                                  frameMax: 131072,
                                  heartbeat: 10,
                                  syncTimeout: 10,
-                                 delegate: RMQConnectionDelegateLogger(),
+                                 delegate: delegate,
                                  delegateQueue: dispatch_get_main_queue(),
                                  recoverAfter: recoveryInterval)
         conn.start()
@@ -44,6 +45,10 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         print("Closing take 1")
         try! closeAllConnections()
 
+        XCTAssert(TestHelper.pollUntil { delegate.recoveredConnection != nil },
+                  "Didn't finish recovery the first time")
+        delegate.recoveredConnection = nil
+
         q.publish("after close 1")
         dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout))
         ex.publish("after close 2")
@@ -53,6 +58,9 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
 
         print("Closing take 2")
         try! closeAllConnections()
+
+        XCTAssert(TestHelper.pollUntil { delegate.recoveredConnection != nil },
+                  "Didn't finish recovery the second time")
 
         q.publish("after close 3")
         dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout))
