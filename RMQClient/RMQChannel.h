@@ -44,6 +44,13 @@
             exchange:(nonnull NSString *)exchange
           persistent:(BOOL)isPersistent;
 
+- (void)basicPublish:(nonnull NSString *)message
+          routingKey:(nonnull NSString *)routingKey
+            exchange:(nonnull NSString *)exchange
+          properties:(nonnull NSArray *)properties
+             options:(RMQBasicPublishOptions)options;
+
+
 -  (void)basicGet:(nonnull NSString *)queue
           options:(RMQBasicGetOptions)options
 completionHandler:(RMQConsumerDeliveryHandler _Nonnull)completionHandler;

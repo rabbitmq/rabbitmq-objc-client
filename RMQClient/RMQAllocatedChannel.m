@@ -202,12 +202,6 @@
           routingKey:(NSString *)routingKey
             exchange:(NSString *)exchange
           persistent:(BOOL)isPersistent {
-    RMQBasicPublish *publish = [[RMQBasicPublish alloc] initWithReserved1:[[RMQShort alloc] init:0]
-                                                                 exchange:[[RMQShortstr alloc] init:exchange]
-                                                               routingKey:[[RMQShortstr alloc] init:routingKey]
-                                                                  options:RMQBasicPublishNoOptions];
-    NSData *contentBodyData = [message dataUsingEncoding:NSUTF8StringEncoding];
-    RMQContentBody *contentBody = [[RMQContentBody alloc] initWithData:contentBodyData];
 
     RMQBasicDeliveryMode *mode;
     if (isPersistent) {
@@ -217,20 +211,39 @@
     }
     RMQBasicContentType *octetStream = [[RMQBasicContentType alloc] init:@"application/octet-stream"];
     RMQBasicPriority *lowPriority = [[RMQBasicPriority alloc] init:0];
+    
+    [self basicPublish:message routingKey:routingKey exchange:exchange properties:@[mode, octetStream, lowPriority] options:RMQBasicPublishNoOptions];
+        
+}
 
+- (void)basicPublish:(NSString *)message
+          routingKey:(NSString *)routingKey
+            exchange:(NSString *)exchange
+          properties:(NSArray *)properties
+             options:(RMQBasicPublishOptions)options {
+    
+    RMQBasicPublish *publish = [[RMQBasicPublish alloc] initWithReserved1:[[RMQShort alloc] init:0]
+                                                                 exchange:[[RMQShortstr alloc] init:exchange]
+                                                               routingKey:[[RMQShortstr alloc] init:routingKey]
+                                                                  options:options];
+    
+    NSData *contentBodyData = [message dataUsingEncoding:NSUTF8StringEncoding];
+    RMQContentBody *contentBody = [[RMQContentBody alloc] initWithData:contentBodyData];
+    
     NSData *bodyData = contentBody.amqEncoded;
     RMQContentHeader *contentHeader = [[RMQContentHeader alloc] initWithClassID:publish.classID
                                                                        bodySize:@(bodyData.length)
-                                                                     properties:@[mode, octetStream, lowPriority]];
-
+                                                                     properties:properties];
+    
     NSArray *contentBodies = [self contentBodiesFromData:bodyData
                                               inChunksOf:self.contentBodySize.integerValue];
     RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber
                                                                 method:publish
                                                          contentHeader:contentHeader
                                                          contentBodies:contentBodies];
-
+    
     [self.dispatcher sendAsyncFrameset:frameset];
+    
 }
 
 -  (void)basicGet:(NSString *)queue

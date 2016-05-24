@@ -50,6 +50,15 @@
     [self err];
 }
 
+- (void)basicPublish:(NSString *)message
+          routingKey:(NSString *)routingKey
+            exchange:(NSString *)exchange
+          properties:(NSArray *)properties
+             options:(RMQBasicPublishOptions)options {
+    
+    [self err];
+}
+
 -  (void)basicGet:(NSString *)queue
           options:(RMQBasicGetOptions)options
 completionHandler:(RMQConsumerDeliveryHandler)completionHandler {
