@@ -10,8 +10,8 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
     func testReenablesConsumersOnEachRecovery() {
         let uri = "amqp://guest:guest@localhost"
         let env = NSProcessInfo.processInfo().environment
-        let recoveryInterval = 1
-        let semaphoreTimeout: Double = 10
+        let recoveryInterval = 2
+        let semaphoreTimeout: Double = 30
         let conn = RMQConnection(uri: uri,
                                  tlsOptions: RMQTLSOptions.fromURI(uri),
                                  channelMax: 1000,
