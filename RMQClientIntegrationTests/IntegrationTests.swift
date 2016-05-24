@@ -116,7 +116,7 @@ class IntegrationTests: XCTestCase {
         var set2 = Set<NSNumber>()
         var set3 = Set<NSNumber>()
 
-        let messageCount = 2000
+        let messageCount = 4000
         let consumingChannel = conn.createChannel()
         let consumingQueue = consumingChannel.queue("", options: [.AutoDelete, .Exclusive])
         let semaphore = dispatch_semaphore_create(0);
@@ -145,7 +145,7 @@ class IntegrationTests: XCTestCase {
             }
         }
 
-        sleep(1)
+        usleep(1500000) // 1.5 seconds
 
         let producingChannel = conn.createChannel()
         let producingQueue = producingChannel.queue(consumingQueue.name, options: [.AutoDelete, .Exclusive])
@@ -163,6 +163,7 @@ class IntegrationTests: XCTestCase {
         }
 
         XCTAssertLessThan(emptyCount, 2)
+        print("Empty count: \(emptyCount)")
 
         let expected: Set<NSNumber> = Set<NSNumber>().union((1...messageCount).map { NSNumber(integer: $0) })
         XCTAssertEqual(expected, set1.union(set2).union(set3))
