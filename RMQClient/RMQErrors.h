@@ -6,7 +6,6 @@ typedef NS_ENUM(NSInteger, RMQError) {
     RMQErrorConnectionHandshakeTimedOut = 1,
     RMQErrorTLSCertificateAuthFailure,
     RMQErrorTLSCertificateDecodeError,
-    RMQErrorSimulatedDisconnect,
 
     RMQErrorChannelClosed,
     RMQErrorChannelUnallocated,
