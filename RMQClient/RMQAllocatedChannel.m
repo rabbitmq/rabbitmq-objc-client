@@ -201,11 +201,12 @@
 - (void)basicPublish:(NSString *)message
           routingKey:(NSString *)routingKey
             exchange:(NSString *)exchange
-          persistent:(BOOL)isPersistent {
+          persistent:(BOOL)isPersistent
+             options:(RMQBasicPublishOptions)options {
     RMQBasicPublish *publish = [[RMQBasicPublish alloc] initWithReserved1:[[RMQShort alloc] init:0]
                                                                  exchange:[[RMQShortstr alloc] init:exchange]
                                                                routingKey:[[RMQShortstr alloc] init:routingKey]
-                                                                  options:RMQBasicPublishNoOptions];
+                                                                  options:options];
     NSData *contentBodyData = [message dataUsingEncoding:NSUTF8StringEncoding];
     RMQContentBody *contentBody = [[RMQContentBody alloc] initWithData:contentBodyData];
 

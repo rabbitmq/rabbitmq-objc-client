@@ -55,8 +55,19 @@
     [self delete:RMQQueueDeleteNoOptions];
 }
 
-- (void)publish:(NSString *)message persistent:(BOOL)isPersistent {
-    [self.channel basicPublish:message routingKey:self.name exchange:@"" persistent:isPersistent];
+- (void)publish:(NSString *)message
+     persistent:(BOOL)isPersistent
+        options:(RMQBasicPublishOptions)options {
+    [self.channel basicPublish:message
+                    routingKey:self.name
+                      exchange:@""
+                    persistent:isPersistent
+                       options:options];
+}
+
+- (void)publish:(NSString *)message
+     persistent:(BOOL)isPersistent {
+    [self publish:message persistent:isPersistent options:RMQBasicPublishNoOptions];
 }
 
 - (void)publish:(NSString *)message {

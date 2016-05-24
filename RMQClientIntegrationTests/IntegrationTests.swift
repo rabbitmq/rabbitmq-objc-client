@@ -243,6 +243,6 @@ class IntegrationTests: XCTestCase {
     }
 
     private func causeServerChannelClose(ch: RMQChannel) {
-        ch.basicPublish("", routingKey: "a route that can't be found", exchange: "a non-existent exchange", persistent: false)
+        ch.basicPublish("", routingKey: "a route that can't be found", exchange: "a non-existent exchange", persistent: false, options: [])
     }
 }

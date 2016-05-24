@@ -24,6 +24,7 @@
 - (void)unbind:(RMQExchange *)exchange;
 - (void)delete:(RMQQueueDeleteOptions)options;
 - (void)delete;
+- (void)publish:(NSString *)message persistent:(BOOL)isPersistent options:(RMQBasicPublishOptions)options;
 - (void)publish:(NSString *)message persistent:(BOOL)isPersistent;
 - (void)publish:(NSString *)message;
 - (void)pop:(RMQConsumerDeliveryHandler)handler;

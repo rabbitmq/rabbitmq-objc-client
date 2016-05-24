@@ -211,7 +211,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let message = "my great message yo"
         let notPersistent = RMQBasicDeliveryMode(1)
 
-        let expectedMethod = MethodFixtures.basicPublish("my.q", exchange: "", options: [])
+        let expectedMethod = MethodFixtures.basicPublish("my.q", exchange: "", options: [.Immediate, .Mandatory])
         let expectedHeader = RMQContentHeader(
             classID: 60,
             bodySize: message.dataUsingEncoding(NSUTF8StringEncoding)!.length,
@@ -231,7 +231,9 @@ class RMQAllocatedChannelTest: XCTestCase {
             contentBodies: expectedBodies
         )
 
-        ch.basicPublish(message, routingKey: "my.q", exchange: "", persistent: false)
+        ch.basicPublish(message, routingKey: "my.q", exchange: "",
+                        persistent: false,
+                        options: [.Immediate, .Mandatory])
 
         XCTAssertEqual(5, dispatcher.lastAsyncFrameset!.contentBodies.count)
         XCTAssertEqual(expectedBodies, dispatcher.lastAsyncFrameset!.contentBodies)
@@ -266,7 +268,7 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         ch.activateWithDelegate(nil)
 
-        ch.basicPublish(messageContent, routingKey: "my.q", exchange: "", persistent: true)
+        ch.basicPublish(messageContent, routingKey: "my.q", exchange: "", persistent: true, options: [])
 
         XCTAssertEqual(2, dispatcher.lastAsyncFrameset!.contentBodies.count)
         XCTAssertEqual(expectedBodies, dispatcher.lastAsyncFrameset!.contentBodies)

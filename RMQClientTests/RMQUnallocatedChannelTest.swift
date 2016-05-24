@@ -17,7 +17,7 @@ class RMQUnallocatedChannelTest: XCTestCase {
             { ch.ack(1) },
             { ch.basicConsume("foo", options: []) { (_) in } },
             { ch.basicGet("foo", options: []) { (_, _) in } },
-            { ch.basicPublish("hi", routingKey: "yo", exchange: "hmm", persistent: false) },
+            { ch.basicPublish("hi", routingKey: "yo", exchange: "hmm", persistent: false, options: []) },
             { ch.basicQos(2, global: false) },
             { ch.blockingWaitOn(RMQConnectionStart.self) },
             { ch.defaultExchange() },

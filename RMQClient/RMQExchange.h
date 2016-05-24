@@ -20,8 +20,15 @@
 - (void)unbind:(RMQExchange *)source;
 - (void)delete:(RMQExchangeDeleteOptions)options;
 - (void)delete;
-- (void)publish:(NSString *)message routingKey:(NSString *)key persistent:(BOOL)isPersistent;
-- (void)publish:(NSString *)message routingKey:(NSString *)key;
+- (void)publish:(NSString *)message
+     routingKey:(NSString *)key
+     persistent:(BOOL)isPersistent
+        options:(RMQBasicPublishOptions)options;
+- (void)publish:(NSString *)message
+     routingKey:(NSString *)key
+     persistent:(BOOL)isPersistent;
+- (void)publish:(NSString *)message
+     routingKey:(NSString *)key;
 - (void)publish:(NSString *)message;
 
 @end

@@ -54,19 +54,36 @@
     [self delete:RMQExchangeDeleteNoOptions];
 }
 
-- (void)publish:(NSString *)message routingKey:(NSString *)key persistent:(BOOL)isPersistent {
+- (void)publish:(NSString *)message
+     routingKey:(NSString *)key
+     persistent:(BOOL)isPersistent
+        options:(RMQBasicPublishOptions)options {
     [self.channel basicPublish:message
                     routingKey:key
                       exchange:self.name
-                    persistent:isPersistent];
+                    persistent:isPersistent
+                       options:options];
 }
 
-- (void)publish:(NSString *)message routingKey:(NSString *)key {
-    [self publish:message routingKey:key persistent:NO];
+- (void)publish:(NSString *)message
+     routingKey:(NSString *)key
+     persistent:(BOOL)isPersistent {
+    [self publish:message
+       routingKey:key
+       persistent:isPersistent
+          options:RMQBasicPublishNoOptions];
+}
+
+- (void)publish:(NSString *)message
+     routingKey:(NSString *)key {
+    [self publish:message
+       routingKey:key
+       persistent:NO];
 }
 
 - (void)publish:(NSString *)message {
-    [self publish:message routingKey:@""];
+    [self publish:message
+       routingKey:@""];
 }
 
 @end

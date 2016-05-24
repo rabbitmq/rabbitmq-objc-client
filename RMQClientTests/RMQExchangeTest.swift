@@ -10,6 +10,8 @@ class RMQExchangeTest: XCTestCase {
         XCTAssertEqual("foo", ch.lastReceivedBasicPublishMessage)
         XCTAssertEqual("my.q", ch.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", ch.lastReceivedBasicPublishExchange)
+        XCTAssertEqual(false, ch.lastReceivedBasicPublishPersistent)
+        XCTAssertEqual([], ch.lastReceivedBasicPublishOptions)
     }
 
     func testPublishWithoutRoutingKeyUsesEmptyString() {
@@ -20,6 +22,8 @@ class RMQExchangeTest: XCTestCase {
         XCTAssertEqual("foo", ch.lastReceivedBasicPublishMessage)
         XCTAssertEqual("", ch.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", ch.lastReceivedBasicPublishExchange)
+        XCTAssertEqual(false, ch.lastReceivedBasicPublishPersistent)
+        XCTAssertEqual([], ch.lastReceivedBasicPublishOptions)
     }
 
     func testPublishWithPersistence() {
@@ -31,6 +35,19 @@ class RMQExchangeTest: XCTestCase {
         XCTAssertEqual("my.q", ch.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("some-ex", ch.lastReceivedBasicPublishExchange)
         XCTAssertEqual(true, ch.lastReceivedBasicPublishPersistent)
+        XCTAssertEqual([], ch.lastReceivedBasicPublishOptions)
+    }
+
+    func testPublishWithOptions() {
+        let ch = ChannelSpy(1)
+        let ex = RMQExchange(name: "some-ex", type: "direct", options: [], channel: ch)
+        ex.publish("foo", routingKey: "my.q", persistent: true, options: [.Mandatory, .Immediate])
+
+        XCTAssertEqual("foo", ch.lastReceivedBasicPublishMessage)
+        XCTAssertEqual("my.q", ch.lastReceivedBasicPublishRoutingKey)
+        XCTAssertEqual("some-ex", ch.lastReceivedBasicPublishExchange)
+        XCTAssertEqual(true, ch.lastReceivedBasicPublishPersistent)
+        XCTAssertEqual([.Mandatory, .Immediate], ch.lastReceivedBasicPublishOptions)
     }
 
     func testDeleteCallsDeleteOnChannel() {
