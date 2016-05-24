@@ -210,12 +210,14 @@ class RMQAllocatedChannelTest: XCTestCase {
         let ch = RMQAllocatedChannel(999, contentBodySize: 4, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
         let message = "my great message yo"
         let notPersistent = RMQBasicDeliveryMode(1)
+        let customContentType = RMQBasicContentType("my/content-type")
+        let priorityZero = RMQBasicPriority(0)
 
         let expectedMethod = MethodFixtures.basicPublish("my.q", exchange: "", options: [.Immediate, .Mandatory])
         let expectedHeader = RMQContentHeader(
             classID: 60,
             bodySize: message.dataUsingEncoding(NSUTF8StringEncoding)!.length,
-            properties: [notPersistent, RMQBasicContentType("application/octet-stream"), RMQBasicPriority(0)]
+            properties: [notPersistent, customContentType, priorityZero]
         )
         let expectedBodies = [
             RMQContentBody(data: "my g".dataUsingEncoding(NSUTF8StringEncoding)!),
@@ -232,7 +234,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         )
 
         ch.basicPublish(message, routingKey: "my.q", exchange: "",
-                        persistent: false,
+                        properties: [notPersistent, customContentType, priorityZero],
                         options: [.Immediate, .Mandatory])
 
         XCTAssertEqual(5, dispatcher.lastAsyncFrameset!.contentBodies.count)
@@ -247,13 +249,10 @@ class RMQAllocatedChannelTest: XCTestCase {
         let messageContent = "12345678"
         let expectedMethod = MethodFixtures.basicPublish("my.q", exchange: "", options: [])
         let expectedBodyData = messageContent.dataUsingEncoding(NSUTF8StringEncoding)!
-        let persistent = RMQBasicDeliveryMode(2)
-        let contentTypeOctetStream = RMQBasicContentType("application/octet-stream")
-        let lowPriority = RMQBasicPriority(0)
         let expectedHeader = RMQContentHeader(
             classID: 60,
             bodySize: expectedBodyData.length,
-            properties: [persistent, contentTypeOctetStream, lowPriority]
+            properties: RMQBasicProperties.defaultProperties()
         )
         let expectedBodies = [
             RMQContentBody(data: "1234".dataUsingEncoding(NSUTF8StringEncoding)!),
@@ -268,7 +267,7 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         ch.activateWithDelegate(nil)
 
-        ch.basicPublish(messageContent, routingKey: "my.q", exchange: "", persistent: true, options: [])
+        ch.basicPublish(messageContent, routingKey: "my.q", exchange: "", properties: RMQBasicProperties.defaultProperties(), options: [])
 
         XCTAssertEqual(2, dispatcher.lastAsyncFrameset!.contentBodies.count)
         XCTAssertEqual(expectedBodies, dispatcher.lastAsyncFrameset!.contentBodies)

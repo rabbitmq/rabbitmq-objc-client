@@ -13,7 +13,7 @@
     var lastReceivedBasicPublishMessage: String?
     var lastReceivedBasicPublishRoutingKey: String?
     var lastReceivedBasicPublishExchange: String?
-    var lastReceivedBasicPublishPersistent: Bool?
+    var lastReceivedBasicPublishProperties: Array<RMQValue>?
     var lastReceivedBasicPublishOptions: RMQBasicPublishOptions?
 
     var lastReceivedQueueBindQueueName: String?
@@ -150,11 +150,11 @@
         lastReceivedBasicCancelConsumerTag = consumerTag
     }
 
-    func basicPublish(message: String, routingKey: String, exchange: String, persistent isPersistent: Bool, options: RMQBasicPublishOptions) {
+    func basicPublish(message: String, routingKey: String, exchange: String, properties: [RMQValue], options: RMQBasicPublishOptions) {
         lastReceivedBasicPublishMessage = message
         lastReceivedBasicPublishRoutingKey = routingKey
         lastReceivedBasicPublishExchange = exchange
-        lastReceivedBasicPublishPersistent = isPersistent
+        lastReceivedBasicPublishProperties = properties
         lastReceivedBasicPublishOptions = options
     }
 

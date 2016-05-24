@@ -18,6 +18,11 @@
              [RMQBasicAppId class],
              [RMQBasicReserved class]];
 }
++ (NSArray<RMQValue *> *)defaultProperties {
+    return @[[[RMQBasicContentType alloc] init:@"application/octet-stream"],
+             [[RMQBasicDeliveryMode alloc] init:1],
+             [[RMQBasicPriority alloc] init:0]];
+}
 @end
 
 @implementation RMQBasicContentType

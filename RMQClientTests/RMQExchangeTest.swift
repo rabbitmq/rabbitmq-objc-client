@@ -1,6 +1,9 @@
 import XCTest
 
 class RMQExchangeTest: XCTestCase {
+    let defaultPropertiesWithPersistence = [RMQBasicContentType("application/octet-stream"),
+                                            RMQBasicDeliveryMode(2),
+                                            RMQBasicPriority(0)]
 
     func testPublishCallsPublishOnChannel() {
         let ch = ChannelSpy(1)
@@ -10,7 +13,7 @@ class RMQExchangeTest: XCTestCase {
         XCTAssertEqual("foo", ch.lastReceivedBasicPublishMessage)
         XCTAssertEqual("my.q", ch.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", ch.lastReceivedBasicPublishExchange)
-        XCTAssertEqual(false, ch.lastReceivedBasicPublishPersistent)
+        XCTAssertEqual(RMQBasicProperties.defaultProperties(), ch.lastReceivedBasicPublishProperties!)
         XCTAssertEqual([], ch.lastReceivedBasicPublishOptions)
     }
 
@@ -19,11 +22,7 @@ class RMQExchangeTest: XCTestCase {
         let ex = RMQExchange(name: "", type: "direct", options: [], channel: ch)
         ex.publish("foo")
 
-        XCTAssertEqual("foo", ch.lastReceivedBasicPublishMessage)
         XCTAssertEqual("", ch.lastReceivedBasicPublishRoutingKey)
-        XCTAssertEqual("", ch.lastReceivedBasicPublishExchange)
-        XCTAssertEqual(false, ch.lastReceivedBasicPublishPersistent)
-        XCTAssertEqual([], ch.lastReceivedBasicPublishOptions)
     }
 
     func testPublishWithPersistence() {
@@ -34,19 +33,19 @@ class RMQExchangeTest: XCTestCase {
         XCTAssertEqual("foo", ch.lastReceivedBasicPublishMessage)
         XCTAssertEqual("my.q", ch.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("some-ex", ch.lastReceivedBasicPublishExchange)
-        XCTAssertEqual(true, ch.lastReceivedBasicPublishPersistent)
+        XCTAssertEqual(defaultPropertiesWithPersistence, ch.lastReceivedBasicPublishProperties!)
         XCTAssertEqual([], ch.lastReceivedBasicPublishOptions)
     }
 
     func testPublishWithOptions() {
         let ch = ChannelSpy(1)
         let ex = RMQExchange(name: "some-ex", type: "direct", options: [], channel: ch)
-        ex.publish("foo", routingKey: "my.q", persistent: true, options: [.Mandatory, .Immediate])
+        ex.publish("foo", routingKey: "my.q", persistent: false, options: [.Mandatory, .Immediate])
 
         XCTAssertEqual("foo", ch.lastReceivedBasicPublishMessage)
         XCTAssertEqual("my.q", ch.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("some-ex", ch.lastReceivedBasicPublishExchange)
-        XCTAssertEqual(true, ch.lastReceivedBasicPublishPersistent)
+        XCTAssertEqual(RMQBasicProperties.defaultProperties(), ch.lastReceivedBasicPublishProperties!)
         XCTAssertEqual([.Mandatory, .Immediate], ch.lastReceivedBasicPublishOptions)
     }
 

@@ -201,7 +201,7 @@
 - (void)basicPublish:(NSString *)message
           routingKey:(NSString *)routingKey
             exchange:(NSString *)exchange
-          persistent:(BOOL)isPersistent
+          properties:(NSArray<RMQValue *> *)properties
              options:(RMQBasicPublishOptions)options {
     RMQBasicPublish *publish = [[RMQBasicPublish alloc] initWithReserved1:[[RMQShort alloc] init:0]
                                                                  exchange:[[RMQShortstr alloc] init:exchange]
@@ -210,19 +210,10 @@
     NSData *contentBodyData = [message dataUsingEncoding:NSUTF8StringEncoding];
     RMQContentBody *contentBody = [[RMQContentBody alloc] initWithData:contentBodyData];
 
-    RMQBasicDeliveryMode *mode;
-    if (isPersistent) {
-        mode = [[RMQBasicDeliveryMode alloc] init:2];
-    } else {
-        mode = [[RMQBasicDeliveryMode alloc] init:1];
-    }
-    RMQBasicContentType *octetStream = [[RMQBasicContentType alloc] init:@"application/octet-stream"];
-    RMQBasicPriority *lowPriority = [[RMQBasicPriority alloc] init:0];
-
     NSData *bodyData = contentBody.amqEncoded;
     RMQContentHeader *contentHeader = [[RMQContentHeader alloc] initWithClassID:publish.classID
                                                                        bodySize:@(bodyData.length)
-                                                                     properties:@[mode, octetStream, lowPriority]];
+                                                                     properties:properties];
 
     NSArray *contentBodies = [self contentBodiesFromData:bodyData
                                               inChunksOf:self.contentBodySize.integerValue];

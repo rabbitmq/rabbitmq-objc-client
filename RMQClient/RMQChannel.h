@@ -42,7 +42,7 @@
 - (void)basicPublish:(nonnull NSString *)message
           routingKey:(nonnull NSString *)routingKey
             exchange:(nonnull NSString *)exchange
-          persistent:(BOOL)isPersistent
+          properties:(nonnull NSArray<RMQValue *> *)properties
              options:(RMQBasicPublishOptions)options;
 
 -  (void)basicGet:(nonnull NSString *)queue

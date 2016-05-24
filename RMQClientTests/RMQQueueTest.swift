@@ -1,6 +1,9 @@
 import XCTest
 
 class RMQQueueTest: XCTestCase {
+    let defaultPropertiesWithPersistence = [RMQBasicContentType("application/octet-stream"),
+                                            RMQBasicDeliveryMode(2),
+                                            RMQBasicPriority(0)]
 
     func testPublishSendsBasicPublishToChannel() {
         let channel = ChannelSpy(42)
@@ -11,7 +14,7 @@ class RMQQueueTest: XCTestCase {
         XCTAssertEqual("a message", channel.lastReceivedBasicPublishMessage)
         XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", channel.lastReceivedBasicPublishExchange)
-        XCTAssertEqual(false, channel.lastReceivedBasicPublishPersistent)
+        XCTAssertEqual(RMQBasicProperties.defaultProperties(), channel.lastReceivedBasicPublishProperties!)
         XCTAssertEqual([], channel.lastReceivedBasicPublishOptions)
     }
 
@@ -24,7 +27,7 @@ class RMQQueueTest: XCTestCase {
         XCTAssertEqual("a message", channel.lastReceivedBasicPublishMessage)
         XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", channel.lastReceivedBasicPublishExchange)
-        XCTAssertEqual(true, channel.lastReceivedBasicPublishPersistent)
+        XCTAssertEqual(defaultPropertiesWithPersistence, channel.lastReceivedBasicPublishProperties!)
         XCTAssertEqual([], channel.lastReceivedBasicPublishOptions)
     }
 
@@ -32,12 +35,12 @@ class RMQQueueTest: XCTestCase {
         let channel = ChannelSpy(42)
         let queue = RMQQueue(name: "some.queue", channel: channel)
 
-        queue.publish("a message", persistent: true, options: [.Immediate, .Mandatory])
+        queue.publish("a message", persistent: false, options: [.Immediate, .Mandatory])
 
         XCTAssertEqual("a message", channel.lastReceivedBasicPublishMessage)
         XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", channel.lastReceivedBasicPublishExchange)
-        XCTAssertEqual(true, channel.lastReceivedBasicPublishPersistent)
+        XCTAssertEqual(RMQBasicProperties.defaultProperties(), channel.lastReceivedBasicPublishProperties!)
         XCTAssertEqual([.Immediate, .Mandatory], channel.lastReceivedBasicPublishOptions)
     }
 

@@ -23,6 +23,7 @@ class GenerateBasicProperties
 
 @interface RMQBasicProperties : NSObject
 + (NSArray *)properties;
++ (NSArray<RMQValue *> *)defaultProperties;
 @end
 
     OBJC
@@ -36,6 +37,11 @@ class GenerateBasicProperties
 @implementation RMQBasicProperties
 + (NSArray *)properties {
     return @[#{fields.map {|f| "[#{basic_field_class(f)} class]"}.join(",\n             ")}];
+}
++ (NSArray<RMQValue *> *)defaultProperties {
+    return @[[[RMQBasicContentType alloc] init:@"application/octet-stream"],
+             [[RMQBasicDeliveryMode alloc] init:1],
+             [[RMQBasicPriority alloc] init:0]];
 }
 @end
 

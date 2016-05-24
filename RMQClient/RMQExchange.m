@@ -1,5 +1,6 @@
 #import "RMQExchange.h"
 #import "RMQChannel.h"
+#import "RMQBasicProperties.h"
 
 @interface RMQExchange ()
 @property (nonatomic, readwrite) NSString *name;
@@ -58,10 +59,14 @@
      routingKey:(NSString *)key
      persistent:(BOOL)isPersistent
         options:(RMQBasicPublishOptions)options {
+    NSMutableArray *properties = [RMQBasicProperties.defaultProperties mutableCopy];
+    if (isPersistent) {
+        properties[1] = [[RMQBasicDeliveryMode alloc] init:2];
+    }
     [self.channel basicPublish:message
                     routingKey:key
                       exchange:self.name
-                    persistent:isPersistent
+                    properties:properties
                        options:options];
 }
 

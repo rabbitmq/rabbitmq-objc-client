@@ -58,10 +58,14 @@
 - (void)publish:(NSString *)message
      persistent:(BOOL)isPersistent
         options:(RMQBasicPublishOptions)options {
+    NSMutableArray *properties = [RMQBasicProperties.defaultProperties mutableCopy];
+    if (isPersistent) {
+        properties[1] = [[RMQBasicDeliveryMode alloc] init:2];
+    }
     [self.channel basicPublish:message
                     routingKey:self.name
                       exchange:@""
-                    persistent:isPersistent
+                    properties:properties
                        options:options];
 }
 

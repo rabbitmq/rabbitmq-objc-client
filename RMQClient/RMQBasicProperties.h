@@ -8,6 +8,7 @@
 
 @interface RMQBasicProperties : NSObject
 + (NSArray *)properties;
++ (NSArray<RMQValue *> *)defaultProperties;
 @end
 
 @interface RMQBasicContentType : RMQShortstr <RMQBasicValue>

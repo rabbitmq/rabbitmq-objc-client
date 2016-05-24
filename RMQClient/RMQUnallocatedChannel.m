@@ -46,7 +46,7 @@
 - (void)basicPublish:(NSString *)message
           routingKey:(NSString *)routingKey
             exchange:(NSString *)exchange
-          persistent:(BOOL)isPersistent
+          properties:(NSArray *)properties
              options:(RMQBasicPublishOptions)options {
     [self err];
 }
