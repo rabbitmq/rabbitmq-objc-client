@@ -37,6 +37,39 @@ class RMQExchangeTest: XCTestCase {
         XCTAssertEqual([], ch.lastReceivedBasicPublishOptions)
     }
 
+    func testPublishWithProperties() {
+        let channel = ChannelSpy(42)
+        let ex = RMQExchange(name: "some-ex", type: "direct", options: [], channel: channel)
+        let timestamp = NSDate()
+
+        let properties: [RMQValue] = [
+            RMQBasicAppId("some.app"),
+            RMQBasicContentEncoding("utf-999"),
+            RMQBasicContentType("application.json"),
+            RMQBasicCorrelationId("reply2meplz"),
+            RMQBasicExpiration("123"),
+            RMQBasicMessageId("havdizreplym8"),
+            RMQBasicDeliveryMode(2),
+            RMQBasicPriority(8),
+            RMQBasicReplyTo("some.person"),
+            RMQBasicTimestamp(timestamp),
+            RMQBasicType("some.type"),
+            RMQBasicUserId("my.login"),
+            BasicPropertyFixtures.exhaustiveHeaders()
+        ]
+
+        ex.publish("a message",
+                   routingKey: "some.queue",
+                   properties: properties,
+                   options: [.Mandatory])
+
+        XCTAssertEqual("a message", channel.lastReceivedBasicPublishMessage)
+        XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
+        XCTAssertEqual("some-ex", channel.lastReceivedBasicPublishExchange)
+        XCTAssertEqual([.Mandatory], channel.lastReceivedBasicPublishOptions)
+        XCTAssertEqual(properties, channel.lastReceivedBasicPublishProperties!)
+    }
+
     func testPublishWithOptions() {
         let ch = ChannelSpy(1)
         let ex = RMQExchange(name: "some-ex", type: "direct", options: [], channel: ch)

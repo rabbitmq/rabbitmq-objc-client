@@ -56,6 +56,16 @@
 }
 
 - (void)publish:(NSString *)message
+     properties:(NSArray<RMQValue<RMQBasicValue> *> *)properties
+        options:(RMQBasicPublishOptions)options {
+    [self.channel basicPublish:message
+                    routingKey:self.name
+                      exchange:@""
+                    properties:properties
+                       options:options];
+}
+
+- (void)publish:(NSString *)message
      persistent:(BOOL)isPersistent
         options:(RMQBasicPublishOptions)options {
     NSMutableArray *properties = [RMQBasicProperties.defaultProperties mutableCopy];

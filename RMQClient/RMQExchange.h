@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "RMQMethods.h"
+#import "RMQBasicProperties.h"
 
 @protocol RMQChannel;
 
@@ -20,6 +21,10 @@
 - (void)unbind:(RMQExchange *)source;
 - (void)delete:(RMQExchangeDeleteOptions)options;
 - (void)delete;
+- (void)publish:(NSString *)message
+     routingKey:(NSString *)routingKey
+     properties:(NSArray <RMQValue<RMQBasicValue> *> *)properties
+        options:(RMQBasicPublishOptions)options;
 - (void)publish:(NSString *)message
      routingKey:(NSString *)key
      persistent:(BOOL)isPersistent

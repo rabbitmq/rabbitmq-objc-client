@@ -4,6 +4,7 @@
 #import "RMQExchange.h"
 #import "RMQConsumer.h"
 #import "RMQConsumerDeliveryHandler.h"
+#import "RMQBasicProperties.h"
 
 @protocol RMQChannel;
 
@@ -24,8 +25,14 @@
 - (void)unbind:(RMQExchange *)exchange;
 - (void)delete:(RMQQueueDeleteOptions)options;
 - (void)delete;
-- (void)publish:(NSString *)message persistent:(BOOL)isPersistent options:(RMQBasicPublishOptions)options;
-- (void)publish:(NSString *)message persistent:(BOOL)isPersistent;
+- (void)publish:(NSString *)message
+     properties:(NSArray <RMQValue<RMQBasicValue> *> *)properties
+        options:(RMQBasicPublishOptions)options;
+- (void)publish:(NSString *)message
+     persistent:(BOOL)isPersistent
+        options:(RMQBasicPublishOptions)options;
+- (void)publish:(NSString *)message
+     persistent:(BOOL)isPersistent;
 - (void)publish:(NSString *)message;
 - (void)pop:(RMQConsumerDeliveryHandler)handler;
 - (RMQConsumer *)subscribe:(RMQConsumerDeliveryHandler)handler;

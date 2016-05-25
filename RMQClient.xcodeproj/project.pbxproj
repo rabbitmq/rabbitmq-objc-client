@@ -35,6 +35,7 @@
 		AE26FA331C999BBF00CDBBAA /* RMQParserTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE26FA321C999BBF00CDBBAA /* RMQParserTest.swift */; };
 		AE338D7E1CF5F0CF005D8D6C /* RMQTable.h in Headers */ = {isa = PBXBuildFile; fileRef = AE338D7C1CF5F0CF005D8D6C /* RMQTable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE338D7F1CF5F0CF005D8D6C /* RMQTable.m in Sources */ = {isa = PBXBuildFile; fileRef = AE338D7D1CF5F0CF005D8D6C /* RMQTable.m */; };
+		AE338D8E1CF60D3D005D8D6C /* BasicPropertyFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE338D8D1CF60D3D005D8D6C /* BasicPropertyFixtures.swift */; };
 		AE3415381CEB23490071177A /* RMQConsumer.h in Headers */ = {isa = PBXBuildFile; fileRef = AE3415361CEB23490071177A /* RMQConsumer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE3415391CEB23490071177A /* RMQConsumer.m in Sources */ = {isa = PBXBuildFile; fileRef = AE3415371CEB23490071177A /* RMQConsumer.m */; };
 		AE34153B1CEB56ED0071177A /* ConsumeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE34153A1CEB56ED0071177A /* ConsumeTest.swift */; };
@@ -261,6 +262,7 @@
 		AE26FA321C999BBF00CDBBAA /* RMQParserTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQParserTest.swift; sourceTree = "<group>"; };
 		AE338D7C1CF5F0CF005D8D6C /* RMQTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQTable.h; sourceTree = "<group>"; };
 		AE338D7D1CF5F0CF005D8D6C /* RMQTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQTable.m; sourceTree = "<group>"; };
+		AE338D8D1CF60D3D005D8D6C /* BasicPropertyFixtures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicPropertyFixtures.swift; sourceTree = "<group>"; };
 		AE3415361CEB23490071177A /* RMQConsumer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQConsumer.h; sourceTree = "<group>"; };
 		AE3415371CEB23490071177A /* RMQConsumer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQConsumer.m; sourceTree = "<group>"; };
 		AE34153A1CEB56ED0071177A /* ConsumeTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsumeTest.swift; sourceTree = "<group>"; };
@@ -619,6 +621,7 @@
 			children = (
 				AE111BD61C57B33300F88277 /* TestHelper.swift */,
 				AE34154E1CEBB6650071177A /* ConnectionHelper.swift */,
+				AE338D8D1CF60D3D005D8D6C /* BasicPropertyFixtures.swift */,
 				AE41C5521C4FC88F00129207 /* MethodFixtures.swift */,
 			);
 			name = Helpers;
@@ -1169,6 +1172,7 @@
 				AEDBFF331CD907D80004DB67 /* RMQTLSOptionsTest.swift in Sources */,
 				AE09C83C1CCE680F00FA6915 /* RMQProcessInfoNameGeneratorTest.swift in Sources */,
 				AE8279851C8D86110013ADD1 /* ChannelAllocationTest.swift in Sources */,
+				AE338D8E1CF60D3D005D8D6C /* BasicPropertyFixtures.swift in Sources */,
 				AE09C8321CCE589800FA6915 /* QueueDeclarationTest.swift in Sources */,
 				AE929C7C1CD00EB7001A6524 /* ConnectionClosureTest.swift in Sources */,
 				AE8B18E71CEA62DF006E36B1 /* ExchangeBindTest.swift in Sources */,

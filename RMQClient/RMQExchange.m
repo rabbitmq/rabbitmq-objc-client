@@ -56,6 +56,17 @@
 }
 
 - (void)publish:(NSString *)message
+     routingKey:(NSString *)routingKey
+     properties:(NSArray<RMQValue<RMQBasicValue> *> *)properties
+        options:(RMQBasicPublishOptions)options {
+    [self.channel basicPublish:message
+                    routingKey:routingKey
+                      exchange:self.name
+                    properties:properties
+                       options:options];
+}
+
+- (void)publish:(NSString *)message
      routingKey:(NSString *)key
      persistent:(BOOL)isPersistent
         options:(RMQBasicPublishOptions)options {
