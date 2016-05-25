@@ -460,8 +460,136 @@
 				AE09C8311CCE589800FA6915 /* QueueDeclarationTest.swift */,
 				AE09C82F1CCE495300FA6915 /* QueueBindTest.swift */,
 				AE48F9331CE22CA200296A23 /* RMQSuspendResumeDispatcherTest.swift */,
+				AE09C83B1CCE680F00FA6915 /* RMQProcessInfoNameGeneratorTest.swift */,
 			);
 			name = Channels;
+			sourceTree = "<group>";
+		};
+		AE338D801CF5F37A005D8D6C /* Queues */ = {
+			isa = PBXGroup;
+			children = (
+				AEE7FEB31C3BD16200DF8C4F /* RMQQueue.h */,
+				AEE7FEB41C3BD16200DF8C4F /* RMQQueue.m */,
+				AE3415361CEB23490071177A /* RMQConsumer.h */,
+				AE3415371CEB23490071177A /* RMQConsumer.m */,
+				AEF0F7CC1CCECF87007DAF85 /* RMQConsumerDeliveryHandler.h */,
+			);
+			name = Queues;
+			sourceTree = "<group>";
+		};
+		AE338D811CF5F3A7005D8D6C /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				AEF0F7C41CCEC944007DAF85 /* RMQDeliveryInfo.h */,
+				AEF0F7C51CCEC944007DAF85 /* RMQDeliveryInfo.m */,
+				AE05DA6A1C6A0848009E68C7 /* RMQMessage.h */,
+				AE05DA6B1C6A0848009E68C7 /* RMQMessage.m */,
+			);
+			name = Messages;
+			sourceTree = "<group>";
+		};
+		AE338D821CF5F3E6005D8D6C /* Framing */ = {
+			isa = PBXGroup;
+			children = (
+				AE80BAB11C4D47C100E6DFFD /* RMQParser.h */,
+				AE80BAB21C4D47C100E6DFFD /* RMQParser.m */,
+				AE744E351C85A20700A4C2FA /* RMQFrameset.h */,
+				AE744E361C85A20700A4C2FA /* RMQFrameset.m */,
+				AE744E311C85A1B000A4C2FA /* RMQFrame.h */,
+				AE744E321C85A1B000A4C2FA /* RMQFrame.m */,
+				AEEEF0801C4F9BFA0056A5EB /* RMQMethodDecoder.h */,
+				AEEEF0811C4F9BFA0056A5EB /* RMQMethodDecoder.m */,
+			);
+			name = Framing;
+			sourceTree = "<group>";
+		};
+		AE338D831CF5F42B005D8D6C /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				AEA8A75B1CC979AE00371E38 /* RMQLocalSerialQueue.h */,
+				AEA8A75D1CC97C1700371E38 /* RMQGCDSerialQueue.h */,
+				AEA8A75E1CC97C1700371E38 /* RMQGCDSerialQueue.m */,
+				AEEB514B1CAC7780009F37D2 /* RMQSynchronizedMutableDictionary.h */,
+				AEEB514C1CAC7780009F37D2 /* RMQSynchronizedMutableDictionary.m */,
+				AE95953E1CD0E7E00039418C /* RMQClock.h */,
+				AE9595421CD0EF4A0039418C /* RMQTickingClock.h */,
+				AE9595431CD0EF4A0039418C /* RMQTickingClock.m */,
+			);
+			name = Utility;
+			sourceTree = "<group>";
+		};
+		AE338D841CF5F49B005D8D6C /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				AEB5F15B1CDA42A5001C82FF /* RMQErrors.h */,
+				AEB5F15F1CDA73D6001C82FF /* RMQErrors.m */,
+				AE39BD9C1C68B019000E7A77 /* RMQValues.h */,
+				AE39BD9D1C68B019000E7A77 /* RMQValues.m */,
+				AE338D7C1CF5F0CF005D8D6C /* RMQTable.h */,
+				AE338D7D1CF5F0CF005D8D6C /* RMQTable.m */,
+				AE4E7F491C6A293D00A441EC /* RMQMethods.h */,
+				AEA45EC41C43C20F00FE1F62 /* RMQMethods.m */,
+				AEADA37F1C71F59A00012D61 /* RMQMethodMap.h */,
+				AEADA3801C71F59A00012D61 /* RMQMethodMap.m */,
+				AEE445E91C7373BF0082132C /* RMQBasicProperties.h */,
+				AEE445EA1C7373BF0082132C /* RMQBasicProperties.m */,
+				AE39BDA01C68B105000E7A77 /* RMQProtocolHeader.h */,
+				AE39BDA11C68B105000E7A77 /* RMQProtocolHeader.m */,
+				AE26FA291C9032E400CDBBAA /* RMQHeartbeat.h */,
+				AE26FA2A1C9032E400CDBBAA /* RMQHeartbeat.m */,
+			);
+			name = Data;
+			sourceTree = "<group>";
+		};
+		AE338D851CF5F576005D8D6C /* Exchanges */ = {
+			isa = PBXGroup;
+			children = (
+				AEE7FEB71C3BD2B400DF8C4F /* RMQExchange.h */,
+				AEE7FEB81C3BD2B400DF8C4F /* RMQExchange.m */,
+			);
+			name = Exchanges;
+			sourceTree = "<group>";
+		};
+		AE338D861CF5F7BD005D8D6C /* Data */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Data;
+			sourceTree = "<group>";
+		};
+		AE338D871CF5F7CB005D8D6C /* Exchanges */ = {
+			isa = PBXGroup;
+			children = (
+				AE09C8041CCE258A00FA6915 /* RMQExchangeTest.swift */,
+			);
+			name = Exchanges;
+			sourceTree = "<group>";
+		};
+		AE338D881CF5F7E6005D8D6C /* Framing */ = {
+			isa = PBXGroup;
+			children = (
+				AE26FA321C999BBF00CDBBAA /* RMQParserTest.swift */,
+				AE26FA271C90309F00CDBBAA /* RMQFrameTest.swift */,
+				AE3E0E371C56416F00186BA7 /* EncodingTest.swift */,
+			);
+			name = Framing;
+			sourceTree = "<group>";
+		};
+		AE338D891CF5F845005D8D6C /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				AEA8A7611CC97C7900371E38 /* RMQGCDSerialQueueTest.swift */,
+				AEEB514F1CADC42E009F37D2 /* RMQSynchronizedMutableDictionaryTest.swift */,
+			);
+			name = Utility;
+			sourceTree = "<group>";
+		};
+		AE338D8A1CF5F850005D8D6C /* Queues */ = {
+			isa = PBXGroup;
+			children = (
+				AEA7A3D81C72255900BDEA05 /* RMQQueueTest.swift */,
+			);
+			name = Queues;
 			sourceTree = "<group>";
 		};
 		AE34153E1CEB73C90071177A /* Recovery */ = {
@@ -491,6 +619,7 @@
 			children = (
 				AE111BD61C57B33300F88277 /* TestHelper.swift */,
 				AE34154E1CEBB6650071177A /* ConnectionHelper.swift */,
+				AE41C5521C4FC88F00129207 /* MethodFixtures.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -537,6 +666,7 @@
 		AEA8A7751CCA103700371E38 /* Connection */ = {
 			isa = PBXGroup;
 			children = (
+				AEE445E31C7341CB0082132C /* RMQFrameHandler.h */,
 				AEC4D1D61C74C1AC00D7D585 /* RMQSender.h */,
 				AE3415451CEB7FF20071177A /* RMQStarter.h */,
 				AEE7FEAB1C3BCD0F00DF8C4F /* RMQConnection.h */,
@@ -545,6 +675,8 @@
 				AEF1E8F41CBE5810000C7AB8 /* RMQTransportDelegate.h */,
 				AEA45ECF1C43F4DC00FE1F62 /* RMQTCPSocketTransport.h */,
 				AEA45ED01C43F4DC00FE1F62 /* RMQTCPSocketTransport.m */,
+				AE898D591C3C30D100AA3BF1 /* RMQURI.h */,
+				AE898D5A1C3C30D100AA3BF1 /* RMQURI.m */,
 				AEE445DF1C7338FE0082132C /* RMQReader.h */,
 				AEE445E01C7338FE0082132C /* RMQReader.m */,
 				AEF1E8F91CBEA057000C7AB8 /* RMQHandshaker.h */,
@@ -618,56 +750,16 @@
 			children = (
 				AEE7FE961C3BCA6000DF8C4F /* Info.plist */,
 				AEE7FE941C3BCA6000DF8C4F /* RMQClient.h */,
-				AEA8A75B1CC979AE00371E38 /* RMQLocalSerialQueue.h */,
-				AEA8A75D1CC97C1700371E38 /* RMQGCDSerialQueue.h */,
-				AEA8A75E1CC97C1700371E38 /* RMQGCDSerialQueue.m */,
-				AEB5F15B1CDA42A5001C82FF /* RMQErrors.h */,
-				AEB5F15F1CDA73D6001C82FF /* RMQErrors.m */,
 				AEA8A7751CCA103700371E38 /* Connection */,
 				AE34153E1CEB73C90071177A /* Recovery */,
 				AEDBFF271CD8E36F0004DB67 /* TLS */,
 				AE82798F1C8DBDF80013ADD1 /* Channels */,
-				AEE445E31C7341CB0082132C /* RMQFrameHandler.h */,
-				AEE7FEB31C3BD16200DF8C4F /* RMQQueue.h */,
-				AEE7FEB41C3BD16200DF8C4F /* RMQQueue.m */,
-				AE3415361CEB23490071177A /* RMQConsumer.h */,
-				AE3415371CEB23490071177A /* RMQConsumer.m */,
-				AEF0F7CC1CCECF87007DAF85 /* RMQConsumerDeliveryHandler.h */,
-				AEF0F7C41CCEC944007DAF85 /* RMQDeliveryInfo.h */,
-				AEF0F7C51CCEC944007DAF85 /* RMQDeliveryInfo.m */,
-				AE05DA6A1C6A0848009E68C7 /* RMQMessage.h */,
-				AE05DA6B1C6A0848009E68C7 /* RMQMessage.m */,
-				AEE7FEB71C3BD2B400DF8C4F /* RMQExchange.h */,
-				AEE7FEB81C3BD2B400DF8C4F /* RMQExchange.m */,
-				AEEB514B1CAC7780009F37D2 /* RMQSynchronizedMutableDictionary.h */,
-				AEEB514C1CAC7780009F37D2 /* RMQSynchronizedMutableDictionary.m */,
-				AE39BD9C1C68B019000E7A77 /* RMQValues.h */,
-				AE39BD9D1C68B019000E7A77 /* RMQValues.m */,
-				AE338D7C1CF5F0CF005D8D6C /* RMQTable.h */,
-				AE338D7D1CF5F0CF005D8D6C /* RMQTable.m */,
-				AE26FA291C9032E400CDBBAA /* RMQHeartbeat.h */,
-				AE26FA2A1C9032E400CDBBAA /* RMQHeartbeat.m */,
-				AE744E311C85A1B000A4C2FA /* RMQFrame.h */,
-				AE744E321C85A1B000A4C2FA /* RMQFrame.m */,
-				AEEEF0801C4F9BFA0056A5EB /* RMQMethodDecoder.h */,
-				AEEEF0811C4F9BFA0056A5EB /* RMQMethodDecoder.m */,
-				AE744E351C85A20700A4C2FA /* RMQFrameset.h */,
-				AE744E361C85A20700A4C2FA /* RMQFrameset.m */,
-				AEE445E91C7373BF0082132C /* RMQBasicProperties.h */,
-				AEE445EA1C7373BF0082132C /* RMQBasicProperties.m */,
-				AE4E7F491C6A293D00A441EC /* RMQMethods.h */,
-				AEA45EC41C43C20F00FE1F62 /* RMQMethods.m */,
-				AEADA37F1C71F59A00012D61 /* RMQMethodMap.h */,
-				AEADA3801C71F59A00012D61 /* RMQMethodMap.m */,
-				AE39BDA01C68B105000E7A77 /* RMQProtocolHeader.h */,
-				AE39BDA11C68B105000E7A77 /* RMQProtocolHeader.m */,
-				AE80BAB11C4D47C100E6DFFD /* RMQParser.h */,
-				AE80BAB21C4D47C100E6DFFD /* RMQParser.m */,
-				AE898D591C3C30D100AA3BF1 /* RMQURI.h */,
-				AE898D5A1C3C30D100AA3BF1 /* RMQURI.m */,
-				AE95953E1CD0E7E00039418C /* RMQClock.h */,
-				AE9595421CD0EF4A0039418C /* RMQTickingClock.h */,
-				AE9595431CD0EF4A0039418C /* RMQTickingClock.m */,
+				AE338D851CF5F576005D8D6C /* Exchanges */,
+				AE338D801CF5F37A005D8D6C /* Queues */,
+				AE338D811CF5F3A7005D8D6C /* Messages */,
+				AE338D821CF5F3E6005D8D6C /* Framing */,
+				AE338D841CF5F49B005D8D6C /* Data */,
+				AE338D831CF5F42B005D8D6C /* Utility */,
 			);
 			path = RMQClient;
 			sourceTree = "<group>";
@@ -683,18 +775,11 @@
 				AE3415471CEB81B00071177A /* Recovery */,
 				AEDBFF281CD8E3960004DB67 /* TLS */,
 				AE26FA2F1C970E9A00CDBBAA /* Channels */,
-				AE09C83B1CCE680F00FA6915 /* RMQProcessInfoNameGeneratorTest.swift */,
-				AE41C5521C4FC88F00129207 /* MethodFixtures.swift */,
-				AEA8A7611CC97C7900371E38 /* RMQGCDSerialQueueTest.swift */,
-				AEE445E71C7342EE0082132C /* RMQReaderTest.swift */,
-				AEA7A3D81C72255900BDEA05 /* RMQQueueTest.swift */,
-				AE41C5621C51A2D500129207 /* RMQTransportContract.swift */,
-				AE26FA271C90309F00CDBBAA /* RMQFrameTest.swift */,
-				AE3E0E371C56416F00186BA7 /* EncodingTest.swift */,
-				AE898D571C3C2D2E00AA3BF1 /* RMQURIParseTest.swift */,
-				AE26FA321C999BBF00CDBBAA /* RMQParserTest.swift */,
-				AEEB514F1CADC42E009F37D2 /* RMQSynchronizedMutableDictionaryTest.swift */,
-				AE09C8041CCE258A00FA6915 /* RMQExchangeTest.swift */,
+				AE338D871CF5F7CB005D8D6C /* Exchanges */,
+				AE338D8A1CF5F850005D8D6C /* Queues */,
+				AE338D881CF5F7E6005D8D6C /* Framing */,
+				AE338D861CF5F7BD005D8D6C /* Data */,
+				AE338D891CF5F845005D8D6C /* Utility */,
 			);
 			path = RMQClientTests;
 			sourceTree = "<group>";
@@ -741,11 +826,14 @@
 			isa = PBXGroup;
 			children = (
 				AEA45EC71C43CBBE00FE1F62 /* RMQConnectionTest.swift */,
+				AEE445E71C7342EE0082132C /* RMQReaderTest.swift */,
 				AE541F421C7E132700C17932 /* ConnectionTuningTest.swift */,
 				AE5934581C87353400560A73 /* FramesetRoutingTest.swift */,
 				AEBF7D661CBD197D006EA2E4 /* ChannelCreationTest.swift */,
 				AE09C8021CCE112C00FA6915 /* RMQSemaphoreWaiterTest.swift */,
 				AE929C7B1CD00EB7001A6524 /* ConnectionClosureTest.swift */,
+				AE898D571C3C2D2E00AA3BF1 /* RMQURIParseTest.swift */,
+				AE41C5621C51A2D500129207 /* RMQTransportContract.swift */,
 			);
 			name = Connection;
 			sourceTree = "<group>";
