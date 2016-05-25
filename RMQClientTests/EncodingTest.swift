@@ -42,7 +42,7 @@ class EncodingTest: XCTestCase {
     let rmqFalse = RMQBoolean(false)
 
     func testRoundTripMethod() {
-        let subDict: [String: RMQShortstr] = ["bar": RMQShortstr("baz")]
+        let subDict: [String: RMQLongstr] = ["bar": RMQLongstr("baz")]
         let dict: [String: RMQTable] = [
             "foo": RMQTable(subDict)
         ]
@@ -61,10 +61,10 @@ class EncodingTest: XCTestCase {
     }
 
     func testRoundTripContentHeader() {
-        let properties: [AnyObject] = [
+        let properties: [RMQValue] = [
             RMQBasicContentType("somecontentype"),
             RMQBasicContentEncoding("somecontentencoding"),
-            RMQBasicHeaders(["foo": RMQShortstr("bar")]),
+            RMQBasicHeaders(["foo": RMQLongstr("bar")]),
             RMQBasicDeliveryMode(3),
             RMQBasicPriority(4),
             RMQBasicCorrelationId("asdf"),
@@ -289,7 +289,7 @@ class EncodingTest: XCTestCase {
         let subDict: [String: RMQBoolean] = [
             "ghost": RMQBoolean(false),
             ]
-        let dict: [String: RMQFieldValue] = [
+        let dict: [String: RMQValue] = [
             "has_cats": rmqTrue,
             "has_dogs": rmqFalse,
             "mass_hysteria": RMQTable(subDict),

@@ -71,4 +71,30 @@ class RMQParserTest: XCTestCase {
         XCTAssertEqual("", parser.parseLongString())
     }
 
+    func testFieldTableWithAllTypes() {
+        let signedByte: Int8 = -128
+        let date = NSDate.distantFuture()
+        var dict: [String: RMQValue] = [:]
+        dict["boolean"] = RMQBoolean(true)
+        dict["signed-8-bit"] = RMQSignedByte(signedByte)
+        dict["signed-16-bit"] = RMQSignedShort(-129)
+        dict["unsigned-16-bit"] = RMQShort(65535)
+        dict["signed-32-bit"] = RMQSignedLong(-2147483648)
+        dict["unsigned-32-bit"] = RMQLong(4294967295)
+        dict["signed-64-bit"] = RMQSignedLonglong(-9223372036854775808)
+        dict["32-bit-float"] = RMQFloat(123.5123)
+        dict["64-bit-float"] = RMQDouble(9000000.5)
+        dict["decimal"] = RMQDecimal()
+        dict["long-string"] = RMQLongstr("foo")
+        dict["array"] = RMQArray([RMQLongstr("hi"), RMQBoolean(false)])
+        dict["timestamp"] = RMQTimestamp(date)
+        dict["nested-table"] = RMQTable(["foo": RMQLong(23)])
+        dict["void"] = RMQVoid()
+        dict["byte-array"] = RMQByteArray("hi".dataUsingEncoding(NSUTF8StringEncoding)!)
+
+        let table = RMQTable(dict)
+        let parser = RMQParser(data: table.amqEncoded())
+        XCTAssertEqual(dict, parser.parseFieldTable())
+    }
+
 }

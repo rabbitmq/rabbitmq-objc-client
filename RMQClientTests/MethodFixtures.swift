@@ -14,7 +14,7 @@ class MethodFixtures {
             "per_consumer_qos"             : rmqTrue,
             "publisher_confirms"           : rmqTrue
         ]
-        let serverPropertiesDict: [String: RMQFieldValue] = [
+        let serverPropertiesDict: [String: RMQValue] = [
             "capabilities" : RMQTable(dict),
             "cluster_name" : RMQLongstr("rabbit@myapp.cfapps.pez.pivotal.io"),
             "copyright"    : RMQLongstr("Copyright (C) 2007-2015 Pivotal Software, Inc."),
@@ -41,7 +41,7 @@ class MethodFixtures {
             "connection.blocked"           : rmqTrue,
             "authentication_failure_close" : rmqTrue
         ]
-        let clientPropertiesDict: [String: RMQFieldValue] = [
+        let clientPropertiesDict: [String: RMQValue] = [
             "capabilities" : RMQTable(capabilitiesDict),
             "product"      : RMQLongstr("RMQClient"),
             "platform"     : RMQLongstr("iOS"),

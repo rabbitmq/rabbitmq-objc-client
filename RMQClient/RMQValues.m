@@ -31,6 +31,33 @@
 
 @end
 
+@interface RMQSignedByte ()
+@property (nonatomic, readwrite) signed char byte;
+@property (nonatomic, readwrite) NSInteger integerValue;
+@end
+
+@implementation RMQSignedByte
+
+- (instancetype)init:(signed char)byte {
+    self = [super init];
+    if (self) {
+        self.byte = byte;
+        self.integerValue = (NSInteger)byte;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    signed char buffer = self.byte;
+    return [NSData dataWithBytes:&buffer length:1];
+}
+
+- (NSData *)amqFieldValueType {
+    return [@"b" dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+@end
+
 @interface RMQBoolean ()
 @property (nonatomic, readwrite) BOOL boolValue;
 @end
@@ -56,6 +83,31 @@
 
 - (NSData *)amqFieldValueType {
     return [@"t" dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+@end
+
+@interface RMQSignedShort ()
+@property (nonatomic, readwrite) NSInteger integerValue;
+@end
+
+@implementation RMQSignedShort
+
+- (instancetype)init:(NSInteger)val {
+    self = [super init];
+    if (self) {
+        self.integerValue = val;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    int16_t shortVal = CFSwapInt16HostToBig((int16_t)self.integerValue);
+    return [NSData dataWithBytes:&shortVal length:sizeof(int16_t)];
+}
+
+- (NSData *)amqFieldValueType {
+    return [@"s" dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 @end
@@ -89,6 +141,37 @@
 
 @end
 
+@implementation RMQShortShort
+- (NSData *)amqFieldValueType {
+    return [@"b" dataUsingEncoding:NSUTF8StringEncoding];
+}
+@end
+
+@interface RMQSignedLong ()
+@property (nonatomic, readwrite) NSInteger integerValue;
+@end
+
+@implementation RMQSignedLong
+
+- (instancetype)init:(NSInteger)val {
+    self = [super init];
+    if (self) {
+        self.integerValue = val;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    int32_t longVal = CFSwapInt32HostToBig((int32_t)self.integerValue);
+    return [NSData dataWithBytes:&longVal length:sizeof(int32_t)];
+}
+
+- (NSData *)amqFieldValueType {
+    return [@"I" dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+@end
+
 @interface RMQLong ()
 @property (nonatomic, readwrite) NSUInteger integerValue;
 @end
@@ -114,6 +197,31 @@
 
 - (NSData *)amqFieldValueType {
     return [@"i" dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+@end
+
+@interface RMQSignedLonglong ()
+@property (nonatomic, readwrite) int64_t integerValue;
+@end
+
+@implementation RMQSignedLonglong
+
+- (instancetype)init:(int64_t)val {
+    self = [super init];
+    if (self) {
+        self.integerValue = val;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    int64_t longVal = CFSwapInt64HostToBig(self.integerValue);
+    return [NSData dataWithBytes:&longVal length:sizeof(int64_t)];
+}
+
+- (NSData *)amqFieldValueType {
+    return [@"l" dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 @end
@@ -147,6 +255,71 @@
 
 @end
 
+@interface RMQFloat ()
+@property (nonatomic, readwrite) float floatValue;
+@end
+
+@implementation RMQFloat
+
+- (instancetype)init:(float)val {
+    self = [super init];
+    if (self) {
+        self.floatValue = val;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    CFSwappedFloat32 floatVal = CFConvertFloatHostToSwapped(self.floatValue);
+    return [NSData dataWithBytes:&floatVal length:sizeof(CFSwappedFloat32)];
+}
+
+- (NSData *)amqFieldValueType {
+    return [@"f" dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+@end
+
+@interface RMQDouble ()
+@property (nonatomic, readwrite) double doubleValue;
+@end
+
+@implementation RMQDouble
+
+- (instancetype)init:(double)val {
+    self = [super init];
+    if (self) {
+        self.doubleValue = val;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    CFSwappedFloat64 doubleVal = CFConvertDoubleHostToSwapped(self.doubleValue);
+    return [NSData dataWithBytes:&doubleVal length:sizeof(CFSwappedFloat64)];
+}
+
+- (NSData *)amqFieldValueType {
+    return [@"d" dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+@end
+
+@implementation RMQDecimal
+
+- (NSData *)amqEncoded {
+    NSMutableData *encoded = [NSMutableData new];
+    [encoded appendData:[[RMQOctet alloc] init:0].amqEncoded];
+    [encoded appendData:[[RMQLong alloc] init:0].amqEncoded];
+    return encoded;
+}
+
+- (NSData *)amqFieldValueType {
+    return [@"D" dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+@end
+
 @interface RMQShortstr ()
 @property (nonnull, nonatomic, copy, readwrite) NSString *stringValue;
 @end
@@ -174,9 +347,6 @@
     return encoded;
 }
 
-- (NSData *)amqFieldValueType {
-    return [@"s" dataUsingEncoding:NSUTF8StringEncoding];
-}
 @end
 
 @interface RMQLongstr ()
@@ -207,6 +377,38 @@
 
 - (NSData *)amqFieldValueType {
     return [@"S" dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+@end
+
+@interface RMQArray ()
+@property (nonatomic, readwrite) NSArray *vals;
+@end
+
+@implementation RMQArray
+
+- (instancetype)init:(NSArray<RMQValue<RMQFieldValue> *> *)vals {
+    self = [super init];
+    if (self) {
+        self.vals = vals;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    NSMutableData *fieldValues = [NSMutableData new];
+    for (RMQValue<RMQFieldValue> *val in self.vals) {
+        [fieldValues appendData:val.amqFieldValueType];
+        [fieldValues appendData:val.amqEncoded];
+    }
+    NSMutableData *encoded = [NSMutableData new];
+    [encoded appendData:[[RMQLong alloc] init:4 + fieldValues.length].amqEncoded];
+    [encoded appendData:fieldValues];
+    return encoded;
+}
+
+- (NSData *)amqFieldValueType {
+    return [@"A" dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 @end
@@ -271,8 +473,7 @@
 }
 
 - (instancetype)initWithParser:(RMQParser *)parser {
-    NSTimeInterval interval = [parser parseLongLongUInt];
-    return [self init:[NSDate dateWithTimeIntervalSince1970:interval]];
+    return [self init:[parser parseTimestamp]];
 }
 
 - (NSData *)amqEncoded {
@@ -283,6 +484,45 @@
 
 - (NSData *)amqFieldValueType {
     return [@"T" dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+@end
+
+@implementation RMQVoid
+
+- (NSData *)amqEncoded {
+    return [NSData data];
+}
+
+- (NSData *)amqFieldValueType {
+    return [@"V" dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+@end
+
+@interface RMQByteArray ()
+@property (nonatomic, readwrite) NSData *data;
+@end
+
+@implementation RMQByteArray
+
+- (instancetype)init:(NSData *)data {
+    self = [super init];
+    if (self) {
+        self.data = data;
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    NSMutableData *encoded = [NSMutableData new];
+    [encoded appendData:[[RMQLong alloc] init:self.data.length].amqEncoded];
+    [encoded appendData:self.data];
+    return encoded;
+}
+
+- (NSData *)amqFieldValueType {
+    return [@"x" dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 @end
