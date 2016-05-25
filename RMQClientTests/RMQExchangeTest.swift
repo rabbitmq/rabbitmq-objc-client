@@ -73,13 +73,13 @@ class RMQExchangeTest: XCTestCase {
     func testPublishWithOptions() {
         let ch = ChannelSpy(1)
         let ex = RMQExchange(name: "some-ex", type: "direct", options: [], channel: ch)
-        ex.publish("foo", routingKey: "my.q", persistent: false, options: [.Mandatory, .Immediate])
+        ex.publish("foo", routingKey: "my.q", persistent: false, options: [.Mandatory])
 
         XCTAssertEqual("foo", ch.lastReceivedBasicPublishMessage)
         XCTAssertEqual("my.q", ch.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("some-ex", ch.lastReceivedBasicPublishExchange)
         XCTAssertEqual(RMQBasicProperties.defaultProperties(), ch.lastReceivedBasicPublishProperties!)
-        XCTAssertEqual([.Mandatory, .Immediate], ch.lastReceivedBasicPublishOptions)
+        XCTAssertEqual([.Mandatory], ch.lastReceivedBasicPublishOptions)
     }
 
     func testDeleteCallsDeleteOnChannel() {

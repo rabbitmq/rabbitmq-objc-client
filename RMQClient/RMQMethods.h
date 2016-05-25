@@ -410,7 +410,6 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicCancelOptions) {
 typedef NS_OPTIONS(NSUInteger, RMQBasicPublishOptions) {
     RMQBasicPublishNoOptions = 0,
     RMQBasicPublishMandatory = 1 << 0,
-    RMQBasicPublishImmediate = 1 << 1,
 };
 
 @interface RMQBasicPublish : MTLModel <RMQMethod>

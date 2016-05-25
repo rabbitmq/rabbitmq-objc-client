@@ -68,7 +68,9 @@ class GenerateMethods
   end
 
   def bits_and_fields(method)
-    original_fields = camelized_fields(method.xpath('field'))
+    original_fields =
+      camelized_fields(method.xpath('field')).
+      reject {|f| blacklisted_bitfields.include?([method.parent[:name], method[:name], f[:name]])}
     bits = original_fields.select {|f| f[:type] == "RMQBit"}
     type = objc_class_name(method) + "Options"
     bit_name_lengths = ["nooptions".length] + bits.map {|b| b[:name].length}
@@ -101,5 +103,9 @@ class GenerateMethods
 
   def bit_transitioning(before, after)
     before[:type] != after[:type] && [before[:type], after[:type]].include?('RMQBit')
+  end
+
+  def blacklisted_bitfields
+    [%w(basic publish immediate)]
   end
 end

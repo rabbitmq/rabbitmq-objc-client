@@ -225,7 +225,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let customContentType = RMQBasicContentType("my/content-type")
         let priorityZero = RMQBasicPriority(0)
 
-        let expectedMethod = MethodFixtures.basicPublish("my.q", exchange: "", options: [.Immediate, .Mandatory])
+        let expectedMethod = MethodFixtures.basicPublish("my.q", exchange: "", options: [.Mandatory])
         let expectedHeader = RMQContentHeader(
             classID: 60,
             bodySize: message.dataUsingEncoding(NSUTF8StringEncoding)!.length,
@@ -247,7 +247,7 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         ch.basicPublish(message, routingKey: "my.q", exchange: "",
                         properties: [notPersistent, customContentType, priorityZero],
-                        options: [.Immediate, .Mandatory])
+                        options: [.Mandatory])
 
         XCTAssertEqual(5, dispatcher.lastAsyncFrameset!.contentBodies.count)
         XCTAssertEqual(expectedBodies, dispatcher.lastAsyncFrameset!.contentBodies)

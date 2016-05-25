@@ -67,13 +67,13 @@ class RMQQueueTest: XCTestCase {
         let channel = ChannelSpy(42)
         let queue = RMQQueue(name: "some.queue", channel: channel)
 
-        queue.publish("a message", persistent: false, options: [.Immediate, .Mandatory])
+        queue.publish("a message", persistent: false, options: [.Mandatory])
 
         XCTAssertEqual("a message", channel.lastReceivedBasicPublishMessage)
         XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", channel.lastReceivedBasicPublishExchange)
         XCTAssertEqual(RMQBasicProperties.defaultProperties(), channel.lastReceivedBasicPublishProperties!)
-        XCTAssertEqual([.Immediate, .Mandatory], channel.lastReceivedBasicPublishOptions)
+        XCTAssertEqual([.Mandatory], channel.lastReceivedBasicPublishOptions)
     }
 
     func testPopDelegatesToChannelBasicGet() {
