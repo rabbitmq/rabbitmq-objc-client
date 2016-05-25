@@ -1,7 +1,7 @@
 // This file is generated. Do not edit.
 #import <Foundation/Foundation.h>
 @import Mantle;
-#import "RMQValues.h"
+#import "RMQTable.h"
 
 @interface RMQConnectionStart : MTLModel <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQOctet *versionMajor;

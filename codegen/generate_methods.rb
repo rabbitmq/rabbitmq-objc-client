@@ -54,7 +54,7 @@ class GenerateMethods
     <<-OBJC
 #{header_start}
 @import Mantle;
-#import "RMQValues.h"
+#import "RMQTable.h"
 
       OBJC
   end

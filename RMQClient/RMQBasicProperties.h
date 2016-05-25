@@ -1,5 +1,5 @@
 // This file is generated. Do not edit.
-#import "RMQValues.h"
+#import "RMQTable.h"
 
 @protocol RMQBasicValue <NSObject, RMQEncodable>
 + (NSUInteger)flagBit;

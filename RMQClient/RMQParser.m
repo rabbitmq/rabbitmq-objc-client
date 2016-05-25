@@ -1,5 +1,5 @@
 #import "RMQParser.h"
-#import "RMQValues.h"
+#import "RMQTable.h"
 
 // from https://www.rabbitmq.com/amqp-0-9-1-errata.html
 // but without anything the Java client doesn't implement

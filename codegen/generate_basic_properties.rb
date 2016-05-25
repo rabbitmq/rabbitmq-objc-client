@@ -14,7 +14,7 @@ class GenerateBasicProperties
   def header
     <<-OBJC
 #{do_not_edit}
-#import "RMQValues.h"
+#import "RMQTable.h"
 
 @protocol RMQBasicValue <NSObject, RMQEncodable>
 + (NSUInteger)flagBit;

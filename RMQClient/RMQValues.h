@@ -93,10 +93,6 @@
 - (nonnull instancetype)init:(nonnull NSArray<RMQValue<RMQFieldValue> *> *)vals;
 @end
 
-@interface RMQTable : RMQValue<RMQFieldValue,RMQParseable>
-- (nonnull instancetype)init:(nonnull NSDictionary<NSString *, RMQValue<RMQFieldValue> *> *)dictionary;
-@end
-
 @interface RMQTimestamp : RMQValue<RMQFieldValue,RMQParseable>
 - (nonnull instancetype)init:(nonnull NSDate *)date;
 @end
