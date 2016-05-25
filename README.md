@@ -31,6 +31,32 @@ this list.
 1. Under **Destination**, choose **Frameworks**.
 1. Click the '+' and add RMQClient.framework. Ensure **Code Sign On Copy** is checked.
 
+
+## Running Tests
+
+First make sure you have `xctool` installed:
+
+    brew install xctool
+
+Then start a RabbitMQ node (any way you please, doesn't have to be from Homebrew or source),
+configure it using files under `.travis/etc/`, for example:
+
+    brew install rabbitmq
+    cp .travis/etc/* /usr/local/etc/rabbitmq/
+    /usr/local/sbin/rabbitmq-plugins enable --offline rabbitmq_auth_mechanism_ssl
+    brew services start rabbitmq
+
+Then run a few setup steps:
+
+    bin/bootstrap-if-needed
+    /usr/local/sbin/rabbitmqctl add_user "O=client,CN=guest" bunnies
+    /usr/local/sbin/rabbitmqctl -p / set_permissions "O=client,CN=guest" ".*" ".*" ".*"
+
+Finally, run the test suite:
+
+    xctool -project RMQClient.xcodeproj -sdk iphonesimulator -scheme RMQClient test
+
+
 ## License
 
 This package, the RabbitMQ Objective-C client library, is triple-licensed
