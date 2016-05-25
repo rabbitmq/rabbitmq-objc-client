@@ -38,7 +38,7 @@ First make sure you have `xctool` installed:
 
     brew install xctool
 
-Then start a RabbitMQ node (any way you please, doesn't have to be from Homebrew or source),
+Then start a local RabbitMQ node (any way you please, doesn't have to be from Homebrew or source),
 configure it using files under `.travis/etc/`, for example:
 
     brew install rabbitmq
