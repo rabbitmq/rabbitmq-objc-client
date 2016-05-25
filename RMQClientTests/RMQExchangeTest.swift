@@ -45,7 +45,7 @@ class RMQExchangeTest: XCTestCase {
         let properties: [RMQValue] = [
             RMQBasicAppId("some.app"),
             RMQBasicContentEncoding("utf-999"),
-            RMQBasicContentType("application.json"),
+            RMQBasicContentType("application/json"),
             RMQBasicCorrelationId("reply2meplz"),
             RMQBasicExpiration("123"),
             RMQBasicMessageId("havdizreplym8"),
@@ -58,12 +58,12 @@ class RMQExchangeTest: XCTestCase {
             BasicPropertyFixtures.exhaustiveHeaders()
         ]
 
-        ex.publish("a message",
+        ex.publish("{\"a\": \"message\"}",
                    routingKey: "some.queue",
                    properties: properties,
                    options: [.Mandatory])
 
-        XCTAssertEqual("a message", channel.lastReceivedBasicPublishMessage)
+        XCTAssertEqual("{\"a\": \"message\"}", channel.lastReceivedBasicPublishMessage)
         XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("some-ex", channel.lastReceivedBasicPublishExchange)
         XCTAssertEqual([.Mandatory], channel.lastReceivedBasicPublishOptions)
