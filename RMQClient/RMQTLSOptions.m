@@ -4,11 +4,13 @@
 #import "RMQURI.h"
 
 @interface RMQTLSOptions ()
+
 @property (nonatomic, readwrite) BOOL useTLS;
-@property (nonatomic, readwrite) NSString *peerName;
 @property (nonatomic, readwrite) BOOL verifyPeer;
-@property (nonatomic, readwrite) NSData *pkcs12data;
-@property (nonatomic, readwrite) NSString *pkcs12password;
+@property (nonnull, nonatomic, readwrite) NSString *peerName;
+@property (nullable, nonatomic, readwrite) NSData *pkcs12data;
+@property (nullable, nonatomic, readwrite) NSString *pkcs12password;
+
 @end
 
 @implementation RMQTLSOptions
