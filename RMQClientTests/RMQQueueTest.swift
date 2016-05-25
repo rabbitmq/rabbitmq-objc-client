@@ -77,7 +77,7 @@ class RMQQueueTest: XCTestCase {
     }
 
     func testPopDelegatesToChannelBasicGet() {
-        let stubbedMessage = RMQMessage(content: "hi there", consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "")
+        let stubbedMessage = RMQMessage(content: "hi there", consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "", properties: [])
         let channel = ChannelSpy(42)
         let queue = RMQQueue(name: "great.queue", channel: channel)
 
@@ -102,7 +102,7 @@ class RMQQueueTest: XCTestCase {
             handlerCalled = true
         }
 
-        let message = RMQMessage(content: "I have default options!", consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "")
+        let message = RMQMessage(content: "I have default options!", consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "", properties: [])
         channel.lastReceivedBasicConsumeBlock!(message)
 
         XCTAssert(handlerCalled)
@@ -118,7 +118,7 @@ class RMQQueueTest: XCTestCase {
             handlerCalled = true
         }
 
-        let message = RMQMessage(content: "I have custom options!", consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "")
+        let message = RMQMessage(content: "I have custom options!", consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "", properties: [])
         channel.lastReceivedBasicConsumeBlock!(message)
 
         XCTAssert(handlerCalled)

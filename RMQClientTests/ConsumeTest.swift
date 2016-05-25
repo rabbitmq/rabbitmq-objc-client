@@ -51,7 +51,8 @@ class ConsumeTest: XCTestCase {
                                          deliveryTag: 456,
                                          redelivered: true,
                                          exchangeName: "my-exchange",
-                                         routingKey: "foo")
+                                         routingKey: "foo",
+                                         properties: [])
 
         ch.activateWithDelegate(nil)
 

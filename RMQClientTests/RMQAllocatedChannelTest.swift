@@ -134,15 +134,31 @@ class RMQAllocatedChannelTest: XCTestCase {
                        dispatcher.lastSyncMethod as? RMQBasicGet)
     }
     
-    func testBasicGetCallsCompletionHandlerWithMessageAndDeliveryInfo() {
+    func testBasicGetCallsCompletionHandlerWithMessageAndMetadata() {
         let q = FakeSerialQueue()
+        let properties = [
+            RMQBasicPriority(2),
+            RMQBasicHeaders(["some": RMQLongstr("headers")])
+        ]
         let getOkFrameset = RMQFrameset(
             channelNumber: 1,
             method: MethodFixtures.basicGetOk(routingKey: "my-q", deliveryTag: 1, exchange: "someex", options: [.Redelivered]),
-            contentHeader: RMQContentHeader(classID: 60, bodySize: 123, properties: []),
+            contentHeader: RMQContentHeader(
+                classID: 60,
+                bodySize: 123,
+                properties: properties
+            ),
             contentBodies: [RMQContentBody(data: "hello".dataUsingEncoding(NSUTF8StringEncoding)!)]
         )
-        let expectedMessage = RMQMessage(content: "hello", consumerTag: "", deliveryTag: 1, redelivered: true, exchangeName: "someex", routingKey: "my-q")
+        let expectedMessage = RMQMessage(
+            content: "hello",
+            consumerTag: "",
+            deliveryTag: 1,
+            redelivered: true,
+            exchangeName: "someex",
+            routingKey: "my-q",
+            properties: properties
+        )
         let dispatcher = DispatcherSpy()
         let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
 
@@ -171,8 +187,8 @@ class RMQAllocatedChannelTest: XCTestCase {
         let deliverHeader2 = RMQContentHeader(classID: deliverMethod2.classID(), bodySize: 123, properties: [])
         let deliverBody2 = RMQContentBody(data: "A message for consumer 2".dataUsingEncoding(NSUTF8StringEncoding)!)
         let deliverFrameset2 = RMQFrameset(channelNumber: 999, method: deliverMethod2, contentHeader: deliverHeader2, contentBodies: [deliverBody2])
-        let expectedMessage1 = RMQMessage(content: "A message for consumer 1", consumerTag: "tag1", deliveryTag: 1, redelivered: false, exchangeName: "", routingKey: "")
-        let expectedMessage2 = RMQMessage(content: "A message for consumer 2", consumerTag: "tag2", deliveryTag: 1, redelivered: false, exchangeName: "", routingKey: "")
+        let expectedMessage1 = RMQMessage(content: "A message for consumer 1", consumerTag: "tag1", deliveryTag: 1, redelivered: false, exchangeName: "", routingKey: "", properties: [])
+        let expectedMessage2 = RMQMessage(content: "A message for consumer 2", consumerTag: "tag2", deliveryTag: 1, redelivered: false, exchangeName: "", routingKey: "", properties: [])
 
         ch.activateWithDelegate(nil)
 

@@ -7,6 +7,7 @@
 @property (nonatomic, readwrite) BOOL isRedelivered;
 @property (nonatomic, readwrite) NSString *exchangeName;
 @property (nonatomic, readwrite) NSString *routingKey;
+@property (nonatomic, readwrite) NSArray *properties;
 @end
 
 @implementation RMQMessage
@@ -15,7 +16,8 @@
                     deliveryTag:(NSNumber *)deliveryTag
                     redelivered:(BOOL)isRedelivered
                    exchangeName:(NSString *)exchangeName
-                     routingKey:(NSString *)routingKey {
+                     routingKey:(NSString *)routingKey
+                     properties:(NSArray<RMQValue<RMQBasicValue> *> *)properties {
     self = [super init];
     if (self) {
         self.content = content;
@@ -24,6 +26,7 @@
         self.isRedelivered = isRedelivered;
         self.exchangeName = exchangeName;
         self.routingKey = routingKey;
+        self.properties = properties;
     }
     return self;
 }

@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 @import Mantle;
+#import "RMQBasicProperties.h"
 
 @interface RMQMessage : MTLModel
 @property (nonatomic, readonly) NSString *content;
@@ -14,5 +15,6 @@
                     deliveryTag:(NSNumber *)deliveryTag
                     redelivered:(BOOL)isRedelivered
                    exchangeName:(NSString *)exchangeName
-                     routingKey:(NSString *)routingKey;
+                     routingKey:(NSString *)routingKey
+                     properties:(NSArray<RMQValue<RMQBasicValue> *> *)properties;
 @end

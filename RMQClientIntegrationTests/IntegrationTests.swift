@@ -40,7 +40,8 @@ class IntegrationTests: XCTestCase {
             deliveryTag: 1,
             redelivered: false,
             exchangeName: src.name,
-            routingKey: ""
+            routingKey: "",
+            properties: RMQBasicProperties.defaultProperties()
         )
         var actual: RMQMessage?
         q.pop { m in

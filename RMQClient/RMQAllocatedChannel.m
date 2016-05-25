@@ -239,7 +239,8 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
                                                                     deliveryTag:@(getOk.deliveryTag.integerValue)
                                                                     redelivered:getOk.options & RMQBasicGetOkRedelivered
                                                                    exchangeName:getOk.exchange.stringValue
-                                                                     routingKey:getOk.routingKey.stringValue];
+                                                                     routingKey:getOk.routingKey.stringValue
+                                                                     properties:frameset.contentHeader.properties];
                       userCompletionHandler(message);
                   }];
 }
@@ -395,7 +396,8 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
                                                       deliveryTag:@(deliver.deliveryTag.integerValue)
                                                       redelivered:deliver.options & RMQBasicDeliverRedelivered
                                                      exchangeName:deliver.exchange.stringValue
-                                                       routingKey:deliver.routingKey.stringValue];
+                                                       routingKey:deliver.routingKey.stringValue
+                                                       properties:frameset.contentHeader.properties];
         consumer.handler(message);
     }
 }
