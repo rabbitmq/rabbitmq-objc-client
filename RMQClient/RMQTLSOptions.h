@@ -3,17 +3,17 @@
 @interface RMQTLSOptions : MTLModel
 
 @property (nonatomic, readonly) BOOL useTLS;
-@property (nonatomic, readonly) NSString *peerName;
 @property (nonatomic, readonly) BOOL verifyPeer;
+@property (nonnull, nonatomic, readonly) NSString *peerName;
 
-+ (instancetype)fromURI:(NSString *)uri verifyPeer:(BOOL)verifyPeer;
-+ (instancetype)fromURI:(NSString *)uri;
-- (instancetype)initWithPeerName:(NSString *)peerName
-                      verifyPeer:(BOOL)verifyPeer
-                          pkcs12:(NSData *)pkcs12data
-                  pkcs12Password:(NSString *)password;
++ (nonnull instancetype)fromURI:(nonnull NSString *)uri verifyPeer:(BOOL)verifyPeer;
++ (nonnull instancetype)fromURI:(nonnull NSString *)uri;
+- (nonnull instancetype)initWithPeerName:(nonnull NSString *)peerName
+                              verifyPeer:(BOOL)verifyPeer
+                                  pkcs12:(nullable NSData *)pkcs12data
+                          pkcs12Password:(nullable NSString *)password;
 
-- (NSString *)authMechanism;
-- (NSArray *)certificatesWithError:(NSError **)error;
+- (nonnull NSString *)authMechanism;
+- (nullable NSArray *)certificatesWithError:(NSError *_Nullable *_Nullable)error;
 
 @end
