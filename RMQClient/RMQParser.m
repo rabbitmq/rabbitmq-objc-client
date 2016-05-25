@@ -44,9 +44,9 @@ typedef NS_ENUM(char, RMQParserFieldValue) {
     NSMutableDictionary *dict = [NSMutableDictionary new];
     const char *start = self.cursor;
 
-    NSNumber *length = @([self parseLongUInt]);
+    UInt32 length = [self parseLongUInt];
 
-    while (self.cursor < start + length.integerValue && self.cursor < self.end) {
+    while (self.cursor < start + length && self.cursor < self.end) {
         NSString *key = [self parseShortString];
 
         RMQParserFieldValue type = *(self.cursor++);
@@ -141,9 +141,9 @@ typedef NS_ENUM(char, RMQParserFieldValue) {
     NSMutableArray *array = [NSMutableArray new];
     const char *start = self.cursor;
 
-    NSNumber *length = @([self parseLongInt]);
+    UInt32 length = [self parseLongInt];
 
-    while (self.cursor < start + length.integerValue && self.cursor < self.end) {
+    while (self.cursor < start + length && self.cursor < self.end) {
         RMQParserFieldValue type = *(self.cursor++);
         [array addObject:[self parseValueForType:type]];
     }
