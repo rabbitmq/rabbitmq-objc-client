@@ -2,11 +2,17 @@
 @import Mantle;
 
 @interface RMQMessage : MTLModel
-@property (nonnull, nonatomic, readonly) NSString *consumerTag;
-@property (nonnull, nonatomic, readonly) NSNumber *deliveryTag;
-@property (nonnull, nonatomic, readonly) NSString *content;
+@property (nonatomic, readonly) NSString *content;
+@property (nonatomic, readonly) NSString *consumerTag;
+@property (nonatomic, readonly) NSNumber *deliveryTag;
+@property (nonatomic, readonly) BOOL isRedelivered;
+@property (nonatomic, readonly) NSString *exchangeName;
+@property (nonatomic, readonly) NSString *routingKey;
 
-- (nonnull instancetype)initWithConsumerTag:(nonnull NSString *)consumerTag
-                                deliveryTag:(nonnull NSNumber *)deliveryTag
-                                    content:(nonnull NSString *)content;
+- (instancetype)initWithContent:(NSString *)content
+                    consumerTag:(NSString *)consumerTag
+                    deliveryTag:(NSNumber *)deliveryTag
+                    redelivered:(BOOL)isRedelivered
+                   exchangeName:(NSString *)exchangeName
+                     routingKey:(NSString *)routingKey;
 @end

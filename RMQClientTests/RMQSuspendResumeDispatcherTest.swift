@@ -43,7 +43,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         let expectedFrameset = RMQFrameset(channelNumber: 123, method: MethodFixtures.basicGet())
         XCTAssertEqual(expectedFrameset, sender.sentFramesets.last!)
 
-        ch.handleFrameset(RMQFrameset(channelNumber: 123, method: MethodFixtures.basicGetOk("foo")))
+        ch.handleFrameset(RMQFrameset(channelNumber: 123, method: MethodFixtures.basicGetOk(routingKey: "foo")))
         try! q.step()
 
         XCTAssertNil(delegate.lastChannelError)

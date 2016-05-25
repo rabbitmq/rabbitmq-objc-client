@@ -77,19 +77,19 @@ class RMQQueueTest: XCTestCase {
     }
 
     func testPopDelegatesToChannelBasicGet() {
-        let stubbedMessage = RMQMessage(consumerTag: "", deliveryTag: 123, content: "hi there")
+        let stubbedMessage = RMQMessage(content: "hi there", consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "")
         let channel = ChannelSpy(42)
         let queue = RMQQueue(name: "great.queue", channel: channel)
 
         var receivedMessage: RMQMessage?
-        queue.pop() { (_, m) in
+        queue.pop() { m in
             receivedMessage = m
         }
 
         XCTAssertEqual("great.queue", channel.lastReceivedBasicGetQueue)
         XCTAssertEqual([], channel.lastReceivedBasicGetOptions)
         
-        channel.lastReceivedBasicGetCompletionHandler!(RMQDeliveryInfo(routingKey: ""), stubbedMessage)
+        channel.lastReceivedBasicGetCompletionHandler!(stubbedMessage)
         XCTAssertEqual(stubbedMessage, receivedMessage)
     }
 
@@ -98,12 +98,12 @@ class RMQQueueTest: XCTestCase {
         let queue = RMQQueue(name: "default options", channel: channel)
 
         var handlerCalled = false
-        queue.subscribe { (_, _) in
+        queue.subscribe { _ in
             handlerCalled = true
         }
 
-        let message = RMQMessage(consumerTag: "", deliveryTag: 123, content: "I have default options!")
-        channel.lastReceivedBasicConsumeBlock!(RMQDeliveryInfo(routingKey: ""), message)
+        let message = RMQMessage(content: "I have default options!", consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "")
+        channel.lastReceivedBasicConsumeBlock!(message)
 
         XCTAssert(handlerCalled)
         XCTAssertEqual([.NoAck], channel.lastReceivedBasicConsumeOptions)
@@ -118,8 +118,8 @@ class RMQQueueTest: XCTestCase {
             handlerCalled = true
         }
 
-        let message = RMQMessage(consumerTag: "", deliveryTag: 123, content: "I have custom options!")
-        channel.lastReceivedBasicConsumeBlock!(RMQDeliveryInfo(routingKey: ""), message)
+        let message = RMQMessage(content: "I have custom options!", consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "")
+        channel.lastReceivedBasicConsumeBlock!(message)
 
         XCTAssert(handlerCalled)
         XCTAssertEqual([.Exclusive], channel.lastReceivedBasicConsumeOptions)

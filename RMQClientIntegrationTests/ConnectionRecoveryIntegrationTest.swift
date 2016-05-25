@@ -31,7 +31,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
 
         q.bind(ex)
 
-        q.subscribe { (_, m) in
+        q.subscribe { m in
             messages.append(m)
             dispatch_semaphore_signal(semaphore)
         }

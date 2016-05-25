@@ -11,7 +11,7 @@ class FramesetRoutingTest: XCTestCase {
         ch.activateWithDelegate(nil)
 
         let semaphore = dispatch_semaphore_create(0)
-        let consumer = ch.basicConsume("foo", options: []) { (_, _) in
+        let consumer = ch.basicConsume("foo", options: []) { _ in
             dispatch_semaphore_signal(semaphore)
         }
 

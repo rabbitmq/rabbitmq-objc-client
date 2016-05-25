@@ -43,7 +43,7 @@ class RMQReaderTest: XCTestCase {
         let transport = ControlledInteractionTransport()
         let frameHandler = FrameHandlerSpy()
         let reader = RMQReader(transport: transport, frameHandler: frameHandler)
-        let method = MethodFixtures.basicGetOk("my.great.queue")
+        let method = MethodFixtures.basicGetOk(routingKey: "my.great.queue")
         let content1 = RMQContentBody(data: "aa".dataUsingEncoding(NSUTF8StringEncoding)!)
         let content2 = RMQContentBody(data: "bb".dataUsingEncoding(NSUTF8StringEncoding)!)
         let contentHeader = RMQContentHeader(
@@ -80,7 +80,7 @@ class RMQReaderTest: XCTestCase {
         let transport = ControlledInteractionTransport()
         let frameHandler = FrameHandlerSpy()
         let reader = RMQReader(transport: transport, frameHandler: frameHandler)
-        let method = MethodFixtures.basicGetOk("my.great.queue")
+        let method = MethodFixtures.basicGetOk(routingKey: "my.great.queue")
         let content1 = RMQContentBody(data: "aa".dataUsingEncoding(NSUTF8StringEncoding)!)
         let content2 = RMQContentBody(data: "bb".dataUsingEncoding(NSUTF8StringEncoding)!)
         let contentHeader = RMQContentHeader(

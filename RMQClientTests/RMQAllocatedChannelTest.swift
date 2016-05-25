@@ -31,7 +31,7 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
 
-        let frameset = RMQFrameset(channelNumber: 1, method: MethodFixtures.basicGetOk("route-me"))
+        let frameset = RMQFrameset(channelNumber: 1, method: MethodFixtures.basicGetOk(routingKey: "route-me"))
         ch.handleFrameset(frameset)
 
         XCTAssertEqual(frameset, dispatcher.lastFramesetHandled)
@@ -128,7 +128,7 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         ch.activateWithDelegate(delegate)
 
-        ch.basicGet("queuey", options: [.NoAck]) { (_, _) in }
+        ch.basicGet("queuey", options: [.NoAck]) { _ in }
 
         XCTAssertEqual(MethodFixtures.basicGet("queuey", options: [.NoAck]),
                        dispatcher.lastSyncMethod as? RMQBasicGet)
@@ -138,25 +138,21 @@ class RMQAllocatedChannelTest: XCTestCase {
         let q = FakeSerialQueue()
         let getOkFrameset = RMQFrameset(
             channelNumber: 1,
-            method: MethodFixtures.basicGetOk("my-q", deliveryTag: 1),
+            method: MethodFixtures.basicGetOk(routingKey: "my-q", deliveryTag: 1, exchange: "someex", options: [.Redelivered]),
             contentHeader: RMQContentHeader(classID: 60, bodySize: 123, properties: []),
             contentBodies: [RMQContentBody(data: "hello".dataUsingEncoding(NSUTF8StringEncoding)!)]
         )
-        let expectedDeliveryInfo = RMQDeliveryInfo(routingKey: "my-q")
-        let expectedMessage = RMQMessage(consumerTag: "", deliveryTag: 1, content: "hello")
+        let expectedMessage = RMQMessage(content: "hello", consumerTag: "", deliveryTag: 1, redelivered: true, exchangeName: "someex", routingKey: "my-q")
         let dispatcher = DispatcherSpy()
         let ch = RMQAllocatedChannel(1, contentBodySize: 100, dispatcher: dispatcher, commandQueue: q, nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
 
         var receivedMessage: RMQMessage?
-        var receivedDeliveryInfo: RMQDeliveryInfo?
-        ch.basicGet("my-q", options: [.NoAck]) { (di, m) in
-            receivedDeliveryInfo = di
+        ch.basicGet("my-q", options: [.NoAck]) { m in
             receivedMessage = m
         }
 
         dispatcher.lastSyncMethodHandler!(getOkFrameset)
 
-        XCTAssertEqual(expectedDeliveryInfo, receivedDeliveryInfo)
         XCTAssertEqual(expectedMessage, receivedMessage)
     }
 
@@ -175,21 +171,21 @@ class RMQAllocatedChannelTest: XCTestCase {
         let deliverHeader2 = RMQContentHeader(classID: deliverMethod2.classID(), bodySize: 123, properties: [])
         let deliverBody2 = RMQContentBody(data: "A message for consumer 2".dataUsingEncoding(NSUTF8StringEncoding)!)
         let deliverFrameset2 = RMQFrameset(channelNumber: 999, method: deliverMethod2, contentHeader: deliverHeader2, contentBodies: [deliverBody2])
-        let expectedMessage1 = RMQMessage(consumerTag: "tag1", deliveryTag: 1, content: "A message for consumer 1")
-        let expectedMessage2 = RMQMessage(consumerTag: "tag2", deliveryTag: 1, content: "A message for consumer 2")
+        let expectedMessage1 = RMQMessage(content: "A message for consumer 1", consumerTag: "tag1", deliveryTag: 1, redelivered: false, exchangeName: "", routingKey: "")
+        let expectedMessage2 = RMQMessage(content: "A message for consumer 2", consumerTag: "tag2", deliveryTag: 1, redelivered: false, exchangeName: "", routingKey: "")
 
         ch.activateWithDelegate(nil)
 
         nameGenerator.nextName = "tag1"
         var consumedMessage1: RMQMessage?
-        ch.basicConsume("sameq", options: []) { (_, message) in
+        ch.basicConsume("sameq", options: []) { message in
             consumedMessage1 = message
         }
         dispatcher.lastSyncMethodHandler!(consumeOkFrameset1)
 
         nameGenerator.nextName = "tag2"
         var consumedMessage2: RMQMessage?
-        ch.basicConsume("sameq", options: []) { (_, message) in
+        ch.basicConsume("sameq", options: []) { message in
             consumedMessage2 = message
         }
         dispatcher.lastSyncMethodHandler!(consumeOkFrameset2)

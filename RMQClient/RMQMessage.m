@@ -1,20 +1,29 @@
 #import "RMQMessage.h"
 
 @interface RMQMessage ()
-@property (nonnull, nonatomic, readwrite) NSString *consumerTag;
-@property (nonnull, nonatomic, readwrite) NSNumber *deliveryTag;
-@property (nonnull, nonatomic, readwrite) NSString *content;
+@property (nonatomic, readwrite) NSString *content;
+@property (nonatomic, readwrite) NSString *consumerTag;
+@property (nonatomic, readwrite) NSNumber *deliveryTag;
+@property (nonatomic, readwrite) BOOL isRedelivered;
+@property (nonatomic, readwrite) NSString *exchangeName;
+@property (nonatomic, readwrite) NSString *routingKey;
 @end
 
 @implementation RMQMessage
-- (instancetype)initWithConsumerTag:(NSString *)consumerTag
-                        deliveryTag:(NSNumber *)deliveryTag
-                            content:(NSString *)content {
+- (instancetype)initWithContent:(NSString *)content
+                    consumerTag:(NSString *)consumerTag
+                    deliveryTag:(NSNumber *)deliveryTag
+                    redelivered:(BOOL)isRedelivered
+                   exchangeName:(NSString *)exchangeName
+                     routingKey:(NSString *)routingKey {
     self = [super init];
     if (self) {
+        self.content = content;
         self.consumerTag = consumerTag;
         self.deliveryTag = deliveryTag;
-        self.content = content;
+        self.isRedelivered = isRedelivered;
+        self.exchangeName = exchangeName;
+        self.routingKey = routingKey;
     }
     return self;
 }

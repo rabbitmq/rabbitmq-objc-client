@@ -163,16 +163,26 @@ class MethodFixtures {
         return RMQBasicCancelOk(consumerTag: RMQShortstr(consumerTag))
     }
 
-    static func basicDeliver(consumerTag consumerTag: String = "", deliveryTag: UInt64 = 0, routingKey: String = "") -> RMQBasicDeliver {
-        return RMQBasicDeliver(consumerTag: RMQShortstr(consumerTag), deliveryTag: RMQLonglong(deliveryTag), options: RMQBasicDeliverOptions.NoOptions, exchange: RMQShortstr(""), routingKey: RMQShortstr(routingKey))
+    static func basicDeliver(consumerTag consumerTag: String = "", deliveryTag: UInt64 = 0, routingKey: String = "", exchange: String = "", options: RMQBasicDeliverOptions = []) -> RMQBasicDeliver {
+        return RMQBasicDeliver(
+            consumerTag: RMQShortstr(consumerTag),
+            deliveryTag: RMQLonglong(deliveryTag),
+            options: options,
+            exchange: RMQShortstr(exchange),
+            routingKey: RMQShortstr(routingKey)
+        )
     }
 
     static func basicGet(queue: String = "my.queue", options: RMQBasicGetOptions = []) -> RMQBasicGet {
         return RMQBasicGet(reserved1: RMQShort(0), queue: RMQShortstr(queue), options: options)
     }
 
-    static func basicGetOk(routingKey: String, deliveryTag: UInt64 = 0) -> RMQBasicGetOk {
-        return RMQBasicGetOk(deliveryTag: RMQLonglong(deliveryTag), options: RMQBasicGetOkOptions.NoOptions, exchange: RMQShortstr(""), routingKey: RMQShortstr(routingKey), messageCount: RMQLong(0))
+    static func basicGetOk(routingKey routingKey: String, deliveryTag: UInt64 = 0, exchange: String = "", options: RMQBasicGetOkOptions = []) -> RMQBasicGetOk {
+        return RMQBasicGetOk(deliveryTag: RMQLonglong(deliveryTag),
+                             options: options,
+                             exchange: RMQShortstr(exchange),
+                             routingKey: RMQShortstr(routingKey),
+                             messageCount: RMQLong(0))
     }
 
     static func basicNack(deliveryTag: UInt64, options: RMQBasicNackOptions) -> RMQBasicNack {
