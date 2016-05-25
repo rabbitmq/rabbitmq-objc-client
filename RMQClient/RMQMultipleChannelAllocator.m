@@ -53,7 +53,7 @@
     NSMutableArray *userChannels = [self.channels.allValues mutableCopy];
     [userChannels removeObjectAtIndex:0];
     return [userChannels sortedArrayUsingComparator:^NSComparisonResult(id<RMQChannel> ch1, id<RMQChannel> ch2) {
-        return ch1.channelNumber > ch2.channelNumber;
+        return ch1.channelNumber.integerValue > ch2.channelNumber.integerValue;
     }];
 }
 
