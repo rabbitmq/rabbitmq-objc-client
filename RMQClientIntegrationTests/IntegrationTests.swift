@@ -163,7 +163,6 @@ class IntegrationTests: XCTestCase {
         }
 
         XCTAssertLessThan(emptyCount, 2)
-        print("Empty count: \(emptyCount)")
 
         let expected: Set<NSNumber> = Set<NSNumber>().union((1...messageCount).map { NSNumber(integer: $0) })
         XCTAssertEqual(expected, set1.union(set2).union(set3))
