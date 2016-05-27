@@ -2,7 +2,7 @@
     var recoverCalled = false
     var interval: NSNumber! = 0.1
     
-    func recover() {
+    func recover(connection: RMQStarter!, channelAllocator allocator: RMQChannelAllocator!) {
         recoverCalled = true
     }
 

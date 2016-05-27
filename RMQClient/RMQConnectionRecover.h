@@ -8,8 +8,6 @@
 @interface RMQConnectionRecover : NSObject <RMQConnectionRecovery>
 
 - (instancetype)initWithInterval:(NSNumber *)interval
-                      connection:(id<RMQStarter>)connection
-                channelAllocator:(id<RMQChannelAllocator>)allocator
                  heartbeatSender:(id<RMQHeartbeatSender>)heartbeatSender
                     commandQueue:(id<RMQLocalSerialQueue>)commandQueue
                         delegate:(id<RMQConnectionDelegate>)delegate;

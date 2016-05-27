@@ -21,7 +21,8 @@
     return nil;
 }
 
-- (void)recover {
+-  (void)recover:(id<RMQStarter>)connection
+channelAllocator:(id<RMQChannelAllocator>)allocator {
     [self.heartbeatSender stop];
 }
 

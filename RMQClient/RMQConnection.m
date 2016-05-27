@@ -101,8 +101,6 @@ NSInteger const RMQChannelLimit = 65535;
     id<RMQConnectionRecovery> recovery;
     if (recoveryInterval.integerValue > 0) {
         recovery = [[RMQConnectionRecover alloc] initWithInterval:recoveryInterval
-                                                       connection:self
-                                                 channelAllocator:allocator
                                                   heartbeatSender:heartbeatSender
                                                      commandQueue:commandQueue
                                                          delegate:delegateProxy];
@@ -292,7 +290,7 @@ NSInteger const RMQChannelLimit = 65535;
         [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:[RMQConnectionCloseOk new]]];
         self.handshakeComplete = NO;
         [self.transport close];
-        [self.recovery recover];
+        [self.recovery recover:self channelAllocator:self.channelAllocator];
     } else {
         [self.frameHandler handleFrameset:frameset];
         [self.reader run];
