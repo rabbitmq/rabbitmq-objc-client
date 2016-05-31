@@ -78,16 +78,6 @@ class RMQConnectionTest: XCTestCase {
         XCTAssertFalse(delegate.disconnectCalled)
     }
 
-    func testTransportDisconnectNotificationsTransformedWhenCloseNotRequested() {
-        let transport = ControlledInteractionTransport()
-        let delegate = ConnectionDelegateSpy()
-        let conn = ConnectionHelper.startedConnection(transport, delegate: delegate)
-        conn.transport(transport, disconnectedWithError: nil)
-
-        XCTAssertNil(delegate.lastDisconnectError)
-        XCTAssertTrue(delegate.disconnectCalled)
-    }
-
     func testSignalsActivityToHeartbeatSenderOnOutgoingFrameset() {
         let heartbeatSender = HeartbeatSenderSpy()
         let transport = ControlledInteractionTransport()
