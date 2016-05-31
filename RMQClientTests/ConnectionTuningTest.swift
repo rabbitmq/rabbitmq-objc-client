@@ -58,14 +58,14 @@ class ConnectionTuningTest: XCTestCase {
         )
     }
 
-    func testSendsNegotiatedHeartbeatToHeartbeatSender() {
+    func testSetsHalfOfNegotiatedHeartbeatTimeoutAsHeartbeatInterval() {
         let transport = ControlledInteractionTransport()
         let heartbeatSender = HeartbeatSenderSpy()
-        let q = connectWithOptions(transport, 1, 1, 99, heartbeatSender: heartbeatSender)
+        let q = connectWithOptions(transport, 1, 1, 100, heartbeatSender: heartbeatSender)
         XCTAssertNil(heartbeatSender.heartbeatIntervalReceived)
         negotiatedParamsGivenServerParams(transport, q,
                                           RMQShort(11), RMQLong(10), RMQShort(0))
-        XCTAssertEqual(99, heartbeatSender.heartbeatIntervalReceived)
+        XCTAssertEqual(50, heartbeatSender.heartbeatIntervalReceived)
     }
 
     // MARK: Helpers

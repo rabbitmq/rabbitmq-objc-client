@@ -216,8 +216,8 @@ NSInteger const RMQChannelLimit = 65535;
 
             RMQHandshaker *handshaker = [[RMQHandshaker alloc] initWithSender:self
                                                                        config:self.config
-                                                            completionHandler:^(NSNumber *heartbeatInterval) {
-                                                                [self.heartbeatSender startWithInterval:heartbeatInterval];
+                                                            completionHandler:^(NSNumber *heartbeatTimeout) {
+                                                                [self.heartbeatSender startWithInterval:@(heartbeatTimeout.integerValue / 2)];
                                                                 [handshakeCompletion done];
                                                                 [self.reader run];
                                                                 self.handshakeComplete = YES;
