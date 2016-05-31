@@ -39,7 +39,8 @@ extern NSInteger const RMQChannelLimit;
                            delegate:(nullable id<RMQConnectionDelegate>)delegate
                       delegateQueue:(nonnull dispatch_queue_t)delegateQueue
                        recoverAfter:(nonnull NSNumber *)recoveryInterval
-                   recoveryAttempts:(nonnull NSNumber *)recoveryAttempts;
+                   recoveryAttempts:(nonnull NSNumber *)recoveryAttempts
+         recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose;
 
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
                          tlsOptions:(nonnull RMQTLSOptions *)tlsOptions

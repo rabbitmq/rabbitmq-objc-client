@@ -80,7 +80,8 @@ NSInteger const RMQChannelLimit = 65535;
                            delegate:(id<RMQConnectionDelegate>)delegate
                       delegateQueue:(dispatch_queue_t)delegateQueue
                        recoverAfter:(nonnull NSNumber *)recoveryInterval
-                   recoveryAttempts:(nonnull NSNumber *)recoveryAttempts {
+                   recoveryAttempts:(nonnull NSNumber *)recoveryAttempts
+         recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose {
     NSError *error = NULL;
     RMQURI *rmqURI = [RMQURI parse:uri error:&error];
 
@@ -101,7 +102,7 @@ NSInteger const RMQChannelLimit = 65535;
     if (recoveryInterval.integerValue > 0) {
         recovery = [[RMQConnectionRecover alloc] initWithInterval:recoveryInterval
                                                      attemptLimit:recoveryAttempts
-                                                       onlyErrors:NO
+                                                       onlyErrors:!shouldRecoverFromConnectionClose
                                                   heartbeatSender:heartbeatSender
                                                      commandQueue:commandQueue
                                                          delegate:delegateProxy];
@@ -144,7 +145,8 @@ NSInteger const RMQChannelLimit = 65535;
                     delegate:delegate
                delegateQueue:delegateQueue
                 recoverAfter:@0
-            recoveryAttempts:@0];
+            recoveryAttempts:@0
+  recoverFromConnectionClose:NO];
 }
 
 - (instancetype)initWithUri:(NSString *)uri

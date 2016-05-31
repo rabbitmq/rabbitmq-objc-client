@@ -90,7 +90,8 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
                                  delegate: delegate,
                                  delegateQueue: dispatch_get_main_queue(),
                                  recoverAfter: recoveryInterval,
-                                 recoveryAttempts: 2)
+                                 recoveryAttempts: 2,
+                                 recoverFromConnectionClose: true)
         conn.start()
         defer { conn.blockingClose() }
         let ch = conn.createChannel()
