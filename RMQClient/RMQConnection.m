@@ -220,6 +220,7 @@ NSInteger const RMQChannelLimit = 65535;
                                                                 [handshakeCompletion done];
                                                                 [self.reader run];
                                                                 self.handshakeComplete = YES;
+                                                                completionHandler();
                                                             }];
             RMQReader *handshakeReader = [[RMQReader alloc] initWithTransport:self.transport
                                                                  frameHandler:handshaker];

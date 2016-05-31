@@ -1,6 +1,28 @@
 import XCTest
 
 class RMQConnectionTest: XCTestCase {
+    func testCallsCompletionHandlerWhenHandshakeComplete() {
+        let transport = ControlledInteractionTransport()
+        let q = FakeSerialQueue()
+        let conn = RMQConnection(
+            transport: transport,
+            config: ConnectionHelper.connectionConfig(),
+            handshakeTimeout: 10,
+            channelAllocator: ChannelSpyAllocator(),
+            frameHandler: FrameHandlerSpy(),
+            delegate: ConnectionDelegateSpy(),
+            commandQueue: q,
+            waiterFactory: FakeWaiterFactory(),
+            heartbeatSender: HeartbeatSenderSpy()
+        )
+        var called = false
+        conn.start { called = true }
+        try! q.step()
+        XCTAssertFalse(called)
+        transport.handshake()
+        XCTAssert(called)
+    }
+
     func testImmediateConnectionErrorIsSentToDelegate() {
         let transport = ControlledInteractionTransport()
         transport.stubbedToThrowErrorOnConnect = "bad connection"

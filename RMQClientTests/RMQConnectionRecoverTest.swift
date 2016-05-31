@@ -32,14 +32,15 @@ class RMQConnectionRecoverTest: XCTestCase {
         try! q.step()
 
         XCTAssertEqual(1, q.pendingItemsCount(), "Everything after interval must be enqueued in interval enqueue block")
-        XCTAssertFalse(conn.startCalled)
+        XCTAssertNil(conn.startCompletionHandler)
         try! q.step()
-        XCTAssert(conn.startCalled)
+        XCTAssertNotNil(conn.startCompletionHandler)
     }
 
     func testRecoversChannelsKeptByAllocator() {
         let allocator = ChannelSpyAllocator()
         let q = FakeSerialQueue()
+        let conn = StarterSpy()
         let recover = RMQConnectionRecover(interval: 3,
                                            attemptLimit: 1,
                                            heartbeatSender: HeartbeatSenderSpy(),
@@ -51,7 +52,7 @@ class RMQConnectionRecoverTest: XCTestCase {
         let ch3 = allocator.allocate() as! ChannelSpy
         allocator.releaseChannelNumber(2)
 
-        recover.recover(StarterSpy(), channelAllocator: allocator)
+        recover.recover(conn, channelAllocator: allocator)
         try! q.step()
         try! q.step()
 
@@ -59,6 +60,9 @@ class RMQConnectionRecoverTest: XCTestCase {
         XCTAssertFalse(ch1.recoverCalled)
         XCTAssertFalse(ch2.recoverCalled)
         XCTAssertFalse(ch3.recoverCalled)
+
+        XCTAssertEqual(0, q.pendingItemsCount())
+        conn.startCompletionHandler!()
 
         try! q.step()
 
@@ -89,6 +93,8 @@ class RMQConnectionRecoverTest: XCTestCase {
 
         XCTAssertEqual(conn, delegate.startingRecoveryConnection!)
         XCTAssertNil(delegate.recoveredConnection)
+
+        conn.startCompletionHandler!()
 
         try! q.step()
 

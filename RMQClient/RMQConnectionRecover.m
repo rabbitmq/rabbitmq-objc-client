@@ -38,12 +38,13 @@ channelAllocator:(id<RMQChannelAllocator>)allocator {
     }];
     [self.commandQueue delayedBy:self.interval enqueue:^{
         [self.delegate startingRecoveryWithConnection:(RMQConnection *)connection];
-        [connection start];
-        [self.commandQueue enqueue:^{
-            for (id<RMQChannel> ch in allocator.allocatedUserChannels) {
-                [ch recover];
-            }
-            [self.delegate recoveredConnection:(RMQConnection *)connection];
+        [connection start:^{
+            [self.commandQueue enqueue:^{
+                for (id<RMQChannel> ch in allocator.allocatedUserChannels) {
+                    [ch recover];
+                }
+                [self.delegate recoveredConnection:(RMQConnection *)connection];
+            }];
         }];
     }];
 }
