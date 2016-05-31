@@ -68,6 +68,10 @@ extern NSInteger const RMQChannelLimit;
                            delegate:(nullable id<RMQConnectionDelegate>)delegate;
 
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate
+                       recoverAfter:(nonnull NSNumber *)recoveryInterval;
+
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
                            delegate:(nullable id<RMQConnectionDelegate>)delegate;
 
 - (nonnull instancetype)initWithDelegate:(nullable id<RMQConnectionDelegate>)delegate;

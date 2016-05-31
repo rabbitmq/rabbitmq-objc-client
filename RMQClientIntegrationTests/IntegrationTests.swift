@@ -1,6 +1,7 @@
 import XCTest
 
-// see steps in .travis.yml to set up your system for running these tests
+// see https://github.com/rabbitmq/rabbitmq-objc-client#running-tests
+// to set up your system for running these tests
 class IntegrationTests: XCTestCase {
     
     func testPop() {
@@ -215,7 +216,8 @@ class IntegrationTests: XCTestCase {
 
     func testClientChannelCloseCausesFutureOperationsToFail() {
         let delegate = ConnectionDelegateSpy()
-        let conn = RMQConnection(delegate: delegate)
+        let uri = "amqp://guest:guest@localhost"
+        let conn = RMQConnection(uri: uri, delegate: delegate, recoverAfter: 0)
         conn.start()
         defer { conn.blockingClose() }
 
@@ -224,7 +226,7 @@ class IntegrationTests: XCTestCase {
         ch.close()
 
         XCTAssert(
-            TestHelper.pollUntil {
+            TestHelper.pollUntil(30) {
                 ch.basicQos(1, global: false)
                 return delegate.lastChannelError?.code == RMQError.ChannelClosed.rawValue
             }
@@ -234,7 +236,7 @@ class IntegrationTests: XCTestCase {
     func testServerChannelCloseCausesFutureOperationsToFail() {
         let delegate = ConnectionDelegateSpy()
         let uri = "amqp://guest:guest@localhost"
-        let conn = RMQConnection(uri: uri, tlsOptions: RMQTLSOptions.fromURI(uri), channelMax: 100, frameMax: 4096, heartbeat: 60, syncTimeout: 10, delegate: delegate, delegateQueue: dispatch_get_main_queue(), recoverAfter: 0, recoveryAttempts: 0, recoverFromConnectionClose: false)
+        let conn = RMQConnection(uri: uri, delegate: delegate, recoverAfter: 0)
         conn.start()
         defer { conn.blockingClose() }
 

@@ -187,6 +187,22 @@ NSInteger const RMQChannelLimit = 65535;
 }
 
 - (instancetype)initWithUri:(NSString *)uri
+                   delegate:(id<RMQConnectionDelegate>)delegate
+               recoverAfter:(NSNumber *)recoveryInterval {
+    return [self initWithUri:uri
+                  tlsOptions:[RMQTLSOptions fromURI:uri]
+                  channelMax:@(RMQChannelLimit)
+                    frameMax:@131072
+                   heartbeat:@0
+                 syncTimeout:@10
+                    delegate:delegate
+               delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+                recoverAfter:recoveryInterval
+            recoveryAttempts:@(NSUIntegerMax)
+  recoverFromConnectionClose:YES];
+}
+
+- (instancetype)initWithUri:(NSString *)uri
                    delegate:(id<RMQConnectionDelegate>)delegate {
     return [self initWithUri:uri
                   tlsOptions:[RMQTLSOptions fromURI:uri]
