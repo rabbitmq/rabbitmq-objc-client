@@ -104,6 +104,30 @@ class RMQConnectionTest: XCTestCase {
         let transport = ControlledInteractionTransport()
         let recovery = RecoverySpy()
         let allocator = ChannelSpyAllocator()
+        let error = NSError(domain: RMQErrorDomain, code: RMQError.ConnectionHandshakeTimedOut.rawValue,
+                            userInfo: [:])
+        let conn = RMQConnection(
+            transport: transport,
+            config: recovery.connectionConfig(),
+            handshakeTimeout: 10,
+            channelAllocator: allocator,
+            frameHandler: FrameHandlerSpy(),
+            delegate: ConnectionDelegateSpy(),
+            commandQueue: FakeSerialQueue(),
+            waiterFactory: FakeWaiterFactory(),
+            heartbeatSender: HeartbeatSenderSpy()
+        )
+        conn.transport(transport, disconnectedWithError: error)
+
+        XCTAssertEqual(conn, recovery.connectionPassedToRecover as? RMQConnection)
+        XCTAssertEqual(allocator, recovery.allocatorPassedToRecover as? ChannelSpyAllocator)
+        XCTAssertEqual(error, recovery.errorPassedToRecover)
+    }
+
+    func testTransportDisconnectMessageWithoutErrorTriggersRecovery() {
+        let transport = ControlledInteractionTransport()
+        let recovery = RecoverySpy()
+        let allocator = ChannelSpyAllocator()
         let conn = RMQConnection(
             transport: transport,
             config: recovery.connectionConfig(),
@@ -119,6 +143,7 @@ class RMQConnectionTest: XCTestCase {
 
         XCTAssertEqual(conn, recovery.connectionPassedToRecover as? RMQConnection)
         XCTAssertEqual(allocator, recovery.allocatorPassedToRecover as? ChannelSpyAllocator)
+        XCTAssertNil(recovery.errorPassedToRecover)
     }
 
     func testSignalsActivityToHeartbeatSenderOnOutgoingFrameset() {

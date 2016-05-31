@@ -4,6 +4,7 @@
 @property (nonatomic, readwrite) NSNumber *interval;
 @property (nonatomic, readwrite) NSUInteger attempts;
 @property (nonatomic, readwrite) NSUInteger attemptLimit;
+@property (nonatomic, readwrite) BOOL onlyErrors;
 @property (nonatomic, readwrite) id<RMQHeartbeatSender> heartbeatSender;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
@@ -13,6 +14,7 @@
 
 - (instancetype)initWithInterval:(NSNumber *)interval
                     attemptLimit:(NSNumber *)attemptLimit
+                      onlyErrors:(BOOL)onlyErrors
                  heartbeatSender:(id<RMQHeartbeatSender>)heartbeatSender
                     commandQueue:(id<RMQLocalSerialQueue>)commandQueue
                         delegate:(id<RMQConnectionDelegate>)delegate {
@@ -20,6 +22,7 @@
     if (self) {
         self.interval = interval;
         self.attempts = 0;
+        self.onlyErrors = onlyErrors;
         self.attemptLimit = attemptLimit.integerValue;
         self.heartbeatSender = heartbeatSender;
         self.commandQueue = commandQueue;
@@ -29,13 +32,17 @@
 }
 
 -  (void)recover:(id<RMQStarter>)connection
-channelAllocator:(id<RMQChannelAllocator>)allocator {
+channelAllocator:(id<RMQChannelAllocator>)allocator
+           error:(NSError *)error {
     if (++self.attempts > self.attemptLimit) return;
 
     [self.delegate willStartRecoveryWithConnection:(RMQConnection *)connection];
     [self.commandQueue enqueue:^{
         [self.heartbeatSender stop];
     }];
+
+    if (!error && self.onlyErrors) return;
+
     [self.commandQueue delayedBy:self.interval enqueue:^{
         [self.delegate startingRecoveryWithConnection:(RMQConnection *)connection];
         [connection start:^{

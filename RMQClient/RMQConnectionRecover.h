@@ -9,6 +9,7 @@
 
 - (instancetype)initWithInterval:(NSNumber *)interval
                     attemptLimit:(NSNumber *)attemptLimit
+                      onlyErrors:(BOOL)onlyErrors
                  heartbeatSender:(id<RMQHeartbeatSender>)heartbeatSender
                     commandQueue:(id<RMQLocalSerialQueue>)commandQueue
                         delegate:(id<RMQConnectionDelegate>)delegate;

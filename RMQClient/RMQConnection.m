@@ -33,7 +33,6 @@ NSInteger const RMQChannelLimit = 65535;
 @property (nonatomic, readwrite) NSNumber *frameMax;
 @property (nonatomic, readwrite) BOOL handshakeComplete;
 @property (nonatomic, readwrite) NSNumber *handshakeTimeout;
-@property (nonatomic, readwrite) BOOL closeRequested;
 @end
 
 @implementation RMQConnection
@@ -65,7 +64,6 @@ NSInteger const RMQChannelLimit = 65535;
         self.commandQueue = commandQueue;
         self.waiterFactory = waiterFactory;
         self.heartbeatSender = heartbeatSender;
-        self.closeRequested = NO;
 
         self.channelZero = [self.channelAllocator allocate];
         [self.channelZero activateWithDelegate:self.delegate];
@@ -103,6 +101,7 @@ NSInteger const RMQChannelLimit = 65535;
     if (recoveryInterval.integerValue > 0) {
         recovery = [[RMQConnectionRecover alloc] initWithInterval:recoveryInterval
                                                      attemptLimit:recoveryAttempts
+                                                       onlyErrors:NO
                                                   heartbeatSender:heartbeatSender
                                                      commandQueue:commandQueue
                                                          delegate:delegateProxy];
@@ -255,14 +254,12 @@ NSInteger const RMQChannelLimit = 65535;
 }
 
 - (void)close {
-    self.closeRequested = YES;
     for (RMQOperation operation in self.closeOperations) {
         [self.commandQueue enqueue:operation];
     }
 }
 
 - (void)blockingClose {
-    self.closeRequested = YES;
     for (RMQOperation operation in self.closeOperations) {
         [self.commandQueue blockingEnqueue:operation];
     }
@@ -311,10 +308,10 @@ NSInteger const RMQChannelLimit = 65535;
 }
 
 - (void)transport:(id<RMQTransport>)transport disconnectedWithError:(NSError *)error {
-    if (!self.closeRequested) {
-        [self.delegate connection:self disconnectedWithError:error];
-        [self.recovery recover:self channelAllocator:self.channelAllocator];
-    }
+    if (error) [self.delegate connection:self disconnectedWithError:error];
+    [self.recovery recover:self
+          channelAllocator:self.channelAllocator
+                     error:error];
 }
 
 # pragma mark - Private

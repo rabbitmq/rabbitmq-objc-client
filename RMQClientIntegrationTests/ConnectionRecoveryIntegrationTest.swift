@@ -21,6 +21,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         let commandQueue = RMQGCDSerialQueue(name: "socket-recovery-test-queue")
         let recovery = RMQConnectionRecover(interval: 2,
                                             attemptLimit: 1,
+                                            onlyErrors: true,
                                             heartbeatSender: heartbeatSender,
                                             commandQueue: commandQueue,
                                             delegate: delegate)

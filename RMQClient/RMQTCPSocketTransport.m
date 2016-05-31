@@ -101,7 +101,14 @@ struct __attribute__((__packed__)) AMQPHeader {
 }
 
 - (void)simulateDisconnect {
+    id<GCDAsyncSocketDelegate> oldDelegate = self.socket.delegate;
+    self.socket.delegate = nil;
     [self.socket disconnect];
+    NSError *error = [NSError errorWithDomain:RMQErrorDomain
+                                         code:RMQErrorSimulatedDisconnect
+                                     userInfo:@{NSLocalizedDescriptionKey: @"Simulated disconnect"}];
+    [self socketDidDisconnect:self.socket withError:error];
+    self.socket.delegate = oldDelegate;
 }
 
 - (BOOL)isConnected {

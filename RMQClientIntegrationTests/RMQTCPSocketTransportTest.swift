@@ -130,8 +130,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
         transport.write(RMQProtocolHeader().amqEncoded())
         transport.simulateDisconnect()
 
-        // CocoaAsyncSocket doesn't send an error object at time of writing
-        XCTAssert(TestHelper.pollUntil { delegate.disconnectCalled })
+        XCTAssert(TestHelper.pollUntil { delegate.lastDisconnectError?.code == RMQError.SimulatedDisconnect.rawValue })
     }
 
     func createTransport() -> RMQTCPSocketTransport {

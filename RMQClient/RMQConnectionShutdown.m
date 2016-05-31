@@ -22,7 +22,8 @@
 }
 
 -  (void)recover:(id<RMQStarter>)connection
-channelAllocator:(id<RMQChannelAllocator>)allocator {
+channelAllocator:(id<RMQChannelAllocator>)allocator
+           error:(NSError *)error {
     [self.heartbeatSender stop];
 }
 
