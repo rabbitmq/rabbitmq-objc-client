@@ -43,6 +43,7 @@ channelAllocator:(id<RMQChannelAllocator>)allocator {
                 for (id<RMQChannel> ch in allocator.allocatedUserChannels) {
                     [ch recover];
                 }
+                self.attempts = 0;
                 [self.delegate recoveredConnection:(RMQConnection *)connection];
             }];
         }];

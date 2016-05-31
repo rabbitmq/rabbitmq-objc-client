@@ -120,4 +120,32 @@ class RMQConnectionRecoverTest: XCTestCase {
         XCTAssertEqual(queueLengthBefore, q.items.count)
     }
 
+    func testAttemptLimitIsResetAfterSuccessfulRecovery() {
+        let q = FakeSerialQueue()
+        let delegate = ConnectionDelegateSpy()
+        let recover = RMQConnectionRecover(interval: 10,
+                                           attemptLimit: 2,
+                                           heartbeatSender: HeartbeatSenderSpy(),
+                                           commandQueue: q,
+                                           delegate: delegate)
+        let conn = StarterSpy()
+        recover.recover(conn, channelAllocator: nil)
+
+        try! q.step()                  // stop heartbeats
+        try! q.step()                  // attempt connection start, never completes
+
+        recover.recover(conn, channelAllocator: nil)
+
+        try! q.step()                  // stop heartbeats
+        try! q.step()                  // attempt connection start
+
+        conn.startCompletionHandler!() // this time handshake completes
+        try! q.step()                  // run queued after-handshake work
+
+        let queueLengthBefore = q.items.count
+        recover.recover(conn, channelAllocator: nil)
+
+        XCTAssertGreaterThan(q.items.count, queueLengthBefore)
+    }
+
 }
