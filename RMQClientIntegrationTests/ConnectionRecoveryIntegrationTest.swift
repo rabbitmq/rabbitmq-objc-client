@@ -19,7 +19,11 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 10)
         let heartbeatSender = RMQGCDHeartbeatSender(transport: transport, clock: RMQTickingClock())
         let commandQueue = RMQGCDSerialQueue(name: "socket-recovery-test-queue")
-        let recovery = RMQConnectionRecover(interval: 2, heartbeatSender: heartbeatSender, commandQueue: commandQueue, delegate: delegate)
+        let recovery = RMQConnectionRecover(interval: 2,
+                                            attemptLimit: 1,
+                                            heartbeatSender: heartbeatSender,
+                                            commandQueue: commandQueue,
+                                            delegate: delegate)
         let config = RMQConnectionConfig(credentials: credentials,
                                          channelMax: RMQChannelLimit,
                                          frameMax: 131072,
@@ -84,7 +88,8 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
                                  syncTimeout: 10,
                                  delegate: delegate,
                                  delegateQueue: dispatch_get_main_queue(),
-                                 recoverAfter: recoveryInterval)
+                                 recoverAfter: recoveryInterval,
+                                 recoveryAttempts: 2)
         conn.start()
         defer { conn.blockingClose() }
         let ch = conn.createChannel()
