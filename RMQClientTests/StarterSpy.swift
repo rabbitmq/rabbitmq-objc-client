@@ -1,7 +1,11 @@
 @objc class StarterSpy : NSObject, RMQStarter {
     var startCalled = false
 
-    func start() {
+    func start(completionHandler: (() -> Void)!) {
         startCalled = true
+    }
+
+    func start() {
+        start {}
     }
 }

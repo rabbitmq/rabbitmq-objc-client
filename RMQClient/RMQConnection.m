@@ -201,7 +201,7 @@ NSInteger const RMQChannelLimit = 65535;
     return [self initWithDelegate:nil];
 }
 
-- (void)start {
+- (void)start:(void (^)())completionHandler {
     NSError *connectError = NULL;
 
     [self.transport connectAndReturnError:&connectError];
@@ -234,6 +234,10 @@ NSInteger const RMQChannelLimit = 65535;
             }
         }];
     }
+}
+
+- (void)start {
+    [self start:^{}];
 }
 
 - (id<RMQChannel>)createChannel {
