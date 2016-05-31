@@ -197,34 +197,4 @@ class ConnectionClosureTest: XCTestCase {
         transport.assertClientSentMethod(MethodFixtures.connectionCloseOk(), channelNumber: 0)
     }
 
-    func testServerInitiatedClosureTriggersConnectionRecovery() {
-        let transport = ControlledInteractionTransport()
-        let recovery = RecoverySpy()
-        let q = FakeSerialQueue()
-        let credentials = RMQCredentials(username: "foo", password: "bar")
-        let config = RMQConnectionConfig(credentials: credentials,
-                                         channelMax: 10,
-                                         frameMax: 100,
-                                         heartbeat: 10,
-                                         vhost: "",
-                                         authMechanism: "PLAIN",
-                                         recovery: recovery)
-        let conn = RMQConnection(transport: transport,
-                                 config: config,
-                                 handshakeTimeout: 10,
-                                 channelAllocator: ChannelSpyAllocator(),
-                                 frameHandler: FrameHandlerSpy(),
-                                 delegate: ConnectionDelegateSpy(),
-                                 commandQueue: q,
-                                 waiterFactory: FakeWaiterFactory(),
-                                 heartbeatSender: HeartbeatSenderSpy())
-        conn.start()
-        try! q.step()
-        transport.handshake()
-
-        transport.serverSendsPayload(MethodFixtures.connectionClose(), channelNumber: 0)
-
-        XCTAssert(recovery.recoverCalled)
-    }
-
 }

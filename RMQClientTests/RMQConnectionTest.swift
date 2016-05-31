@@ -78,6 +78,27 @@ class RMQConnectionTest: XCTestCase {
         XCTAssertFalse(delegate.disconnectCalled)
     }
 
+    func testTransportDisconnectErrorTriggersRecovery() {
+        let transport = ControlledInteractionTransport()
+        let recovery = RecoverySpy()
+        let allocator = ChannelSpyAllocator()
+        let conn = RMQConnection(
+            transport: transport,
+            config: recovery.connectionConfig(),
+            handshakeTimeout: 10,
+            channelAllocator: allocator,
+            frameHandler: FrameHandlerSpy(),
+            delegate: ConnectionDelegateSpy(),
+            commandQueue: FakeSerialQueue(),
+            waiterFactory: FakeWaiterFactory(),
+            heartbeatSender: HeartbeatSenderSpy()
+        )
+        conn.transport(transport, disconnectedWithError: nil)
+
+        XCTAssertEqual(conn, recovery.connectionPassedToRecover as? RMQConnection)
+        XCTAssertEqual(allocator, recovery.allocatorPassedToRecover as? ChannelSpyAllocator)
+    }
+
     func testSignalsActivityToHeartbeatSenderOnOutgoingFrameset() {
         let heartbeatSender = HeartbeatSenderSpy()
         let transport = ControlledInteractionTransport()

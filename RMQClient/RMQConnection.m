@@ -290,7 +290,6 @@ NSInteger const RMQChannelLimit = 65535;
         [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:[RMQConnectionCloseOk new]]];
         self.handshakeComplete = NO;
         [self.transport close];
-        [self.recovery recover:self channelAllocator:self.channelAllocator];
     } else {
         [self.frameHandler handleFrameset:frameset];
         [self.reader run];
@@ -306,6 +305,7 @@ NSInteger const RMQChannelLimit = 65535;
 - (void)transport:(id<RMQTransport>)transport disconnectedWithError:(NSError *)error {
     if (!self.closeRequested) {
         [self.delegate connection:self disconnectedWithError:error];
+        [self.recovery recover:self channelAllocator:self.channelAllocator];
     }
 }
 
