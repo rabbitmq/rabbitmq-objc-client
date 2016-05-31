@@ -19,7 +19,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 10)
         let heartbeatSender = RMQGCDHeartbeatSender(transport: transport, clock: RMQTickingClock())
         let commandQueue = RMQGCDSerialQueue(name: "socket-recovery-test-queue")
-        let recovery = RMQConnectionRecover(interval: 2,
+        let recovery = RMQConnectionRecover(interval: recoveryInterval,
                                             attemptLimit: 1,
                                             onlyErrors: true,
                                             heartbeatSender: heartbeatSender,
