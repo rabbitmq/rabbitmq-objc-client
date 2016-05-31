@@ -34,14 +34,14 @@
 -  (void)recover:(id<RMQStarter>)connection
 channelAllocator:(id<RMQChannelAllocator>)allocator
            error:(NSError *)error {
-    if (++self.attempts > self.attemptLimit) return;
-
     [self.delegate willStartRecoveryWithConnection:(RMQConnection *)connection];
     [self.commandQueue enqueue:^{
         [self.heartbeatSender stop];
     }];
 
-    if (!error && self.onlyErrors) return;
+    if ((self.onlyErrors && !error) || [self currentAttemptBeyondLimit]) {
+        return;
+    }
 
     [self.commandQueue delayedBy:self.interval enqueue:^{
         [self.delegate startingRecoveryWithConnection:(RMQConnection *)connection];
@@ -55,6 +55,12 @@ channelAllocator:(id<RMQChannelAllocator>)allocator
             }];
         }];
     }];
+}
+
+# pragma mark - Private
+
+- (BOOL)currentAttemptBeyondLimit {
+    return ++self.attempts > self.attemptLimit;
 }
 
 @end
