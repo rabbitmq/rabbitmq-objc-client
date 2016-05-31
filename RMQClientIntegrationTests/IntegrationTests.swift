@@ -233,7 +233,8 @@ class IntegrationTests: XCTestCase {
 
     func testServerChannelCloseCausesFutureOperationsToFail() {
         let delegate = ConnectionDelegateSpy()
-        let conn = RMQConnection(delegate: delegate)
+        let uri = "amqp://guest:guest@localhost"
+        let conn = RMQConnection(uri: uri, tlsOptions: RMQTLSOptions.fromURI(uri), channelMax: 100, frameMax: 4096, heartbeat: 60, syncTimeout: 10, delegate: delegate, delegateQueue: dispatch_get_main_queue(), recoverAfter: 0, recoveryAttempts: 0, recoverFromConnectionClose: false)
         conn.start()
         defer { conn.blockingClose() }
 
@@ -242,7 +243,7 @@ class IntegrationTests: XCTestCase {
         causeServerChannelClose(ch)
 
         XCTAssert(
-            TestHelper.pollUntil {
+            TestHelper.pollUntil(30) {
                 ch.basicQos(1, global: false)
                 return delegate.lastChannelError?.code == RMQError.ChannelClosed.rawValue
             }
