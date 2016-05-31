@@ -15,12 +15,16 @@ class IntegrationTests: XCTestCase {
 
         let conn = RMQConnection(
             uri: amqpLocalhost,
-            channelMax: 65535,
+            tlsOptions: RMQTLSOptions.fromURI(amqpLocalhost),
+            channelMax: RMQChannelLimit,
             frameMax: frameMaxRequiringTwoFrames,
             heartbeat: 0,
             syncTimeout: 10,
             delegate: nil,
-            delegateQueue: dispatch_get_main_queue()
+            delegateQueue: dispatch_get_main_queue(),
+            recoverAfter: 0,
+            recoveryAttempts: 0,
+            recoverFromConnectionClose: false
         )
         conn.start()
         defer { conn.blockingClose() }
@@ -64,7 +68,17 @@ class IntegrationTests: XCTestCase {
             pkcs12: CertificateFixtures.guestBunniesP12(),
             pkcs12Password: "bunnies"
         )
-        let conn = RMQConnection(uri: "amqps://localhost", tlsOptions: tlsOptions, delegate: delegate)
+        let conn = RMQConnection(uri: "amqps://localhost",
+                                 tlsOptions: tlsOptions,
+                                 channelMax: RMQChannelLimit,
+                                 frameMax: RMQFrameMax,
+                                 heartbeat: 0,
+                                 syncTimeout: 10,
+                                 delegate: delegate,
+                                 delegateQueue: dispatch_get_main_queue(),
+                                 recoverAfter: 0,
+                                 recoveryAttempts: 0,
+                                 recoverFromConnectionClose: false)
         conn.start()
         defer { conn.blockingClose() }
 
