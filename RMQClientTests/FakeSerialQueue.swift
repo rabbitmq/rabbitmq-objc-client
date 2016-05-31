@@ -33,6 +33,8 @@ enum FakeSerialQueueError: ErrorType {
         suspended = false
     }
 
+    // MARK: Helpers
+
     func step() throws {
         if index >= items.count {
             throw FakeSerialQueueError.Overstep
