@@ -46,7 +46,7 @@
 }
 
 - (void)stop {
-    dispatch_source_cancel(self.timer);
+    if (self.timer) dispatch_source_cancel(self.timer);
     self.timer = nil;
 }
 

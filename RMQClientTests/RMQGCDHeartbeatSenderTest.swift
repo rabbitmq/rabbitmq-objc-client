@@ -57,4 +57,10 @@ class RMQGCDHeartbeatSenderTest: XCTestCase {
         sender.stop()
         sender.startWithInterval(0.01)
     }
+
+    func testCanBeStoppedBeforeBeingStartedWithoutBadAccess() {
+        let (sender, _, _) = makeSender()
+
+        sender.stop()
+    }
 }
