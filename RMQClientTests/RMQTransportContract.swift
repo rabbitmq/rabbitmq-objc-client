@@ -8,9 +8,15 @@ class RMQTransportContract {
     }
     
     func connectAndDisconnect() -> RMQTransportContract {
+        let delegate = TransportDelegateSpy()
+        transport.delegate = delegate
+        let errorToProveNil = NSError(domain: RMQErrorDomain, code: 999, userInfo: [:])
+        delegate.lastDisconnectError = errorToProveNil
+
         try! transport.connect()
         transport.close()
-        XCTAssert(TestHelper.pollUntil { return !self.transport.isConnected() }, "didn't disconnect")
+        XCTAssert(TestHelper.pollUntil { !self.transport.isConnected() }, "didn't disconnect")
+        XCTAssert(TestHelper.pollUntil { delegate.lastDisconnectError == nil })
 
         return self
     }
