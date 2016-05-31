@@ -19,7 +19,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
 
     func testCallbacksAreRemovedAfterUse() {
         let callbacks = [:] as NSMutableDictionary
-        let transport = RMQTCPSocketTransport(host: "localhost", port: 5672,
+        let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5672,
                                               tlsOptions: noTLS,
                                               callbackStorage: callbacks)
 
@@ -38,7 +38,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
     func testSendsErrorToDelegateWhenConnectionTimesOut() {
         let callbacks = RMQSynchronizedMutableDictionary()
         let delegate = TransportDelegateSpy()
-        let transport = RMQTCPSocketTransport(host: "localhost", port: 123456,
+        let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 123456,
                                               tlsOptions: noTLS,
                                               callbackStorage: callbacks)
 
@@ -52,7 +52,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
 
     func testExtendsReadWhenReadTimesOut() {
         let callbacks = RMQSynchronizedMutableDictionary()
-        let transport = RMQTCPSocketTransport(host: "localhost", port: 123456,
+        let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 123456,
                                               tlsOptions: noTLS,
                                               callbackStorage: callbacks)
         let timeoutExtension = transport.socket(GCDAsyncSocket(), shouldTimeoutReadWithTag: 123, elapsed: 123, bytesDone: 999)
@@ -61,7 +61,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
 
     func testConnectsViaTLS() {
         let semaphore = dispatch_semaphore_create(0)
-        let transport = RMQTCPSocketTransport(host: "localhost", port: 5671,
+        let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5671,
                                               tlsOptions: RMQTLSOptions(peerName: "localhost", verifyPeer: false, pkcs12: nil, pkcs12Password: ""))
         try! transport.connect()
         transport.write(RMQProtocolHeader().amqEncoded())
@@ -86,7 +86,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
             pkcs12: CertificateFixtures.guestBunniesP12(),
             pkcs12Password: "bunnies"
         )
-        let transport = RMQTCPSocketTransport(host: "localhost", port: 5671, tlsOptions: tlsOptions)
+        let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5671, tlsOptions: tlsOptions)
         try! transport.connect()
         transport.write(RMQProtocolHeader().amqEncoded())
 
@@ -109,12 +109,12 @@ class RMQTCPSocketTransportTest: XCTestCase {
             pkcs12: CertificateFixtures.guestBunniesP12(),
             pkcs12Password: "incorrect-password"
         )
-        let transport = RMQTCPSocketTransport(host: "localhost", port: 5671, tlsOptions: tlsOptions)
+        let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5671, tlsOptions: tlsOptions)
         XCTAssertThrowsError(try transport.connect())
     }
 
     func testSimulatedDisconnectCausesTransportToReportAsDisconnected() {
-        let transport = RMQTCPSocketTransport(host: "localhost", port: 5672, tlsOptions: noTLS)
+        let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5672, tlsOptions: noTLS)
         try! transport.connect()
         XCTAssert(TestHelper.pollUntil { transport.isConnected() })
         transport.simulateDisconnect()
@@ -122,7 +122,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
     }
 
     func testSimulatedDisconnectSendsErrorToDelegate() {
-        let transport = RMQTCPSocketTransport(host: "localhost", port: 5672, tlsOptions: noTLS)
+        let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5672, tlsOptions: noTLS)
         let delegate = TransportDelegateSpy()
         transport.delegate = delegate
         try! transport.connect()
@@ -134,7 +134,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
     }
 
     func createTransport() -> RMQTCPSocketTransport {
-        return RMQTCPSocketTransport(host: "localhost",
+        return RMQTCPSocketTransport(host: "127.0.0.1",
                                      port: 5672,
                                      tlsOptions: noTLS)
     }

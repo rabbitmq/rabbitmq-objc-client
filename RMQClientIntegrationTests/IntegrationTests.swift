@@ -3,7 +3,7 @@ import XCTest
 // see https://github.com/rabbitmq/rabbitmq-objc-client#running-tests
 // to set up your system for running these tests
 class IntegrationTests: XCTestCase {
-    let amqpLocalhost = "amqp://guest:guest@localhost"
+    let amqpLocalhost = "amqp://guest:guest@127.0.0.1"
 
     func testPop() {
         let frameMaxRequiringTwoFrames = 4096

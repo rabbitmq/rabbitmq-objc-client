@@ -5,16 +5,16 @@ enum RecoveryTestError : ErrorType {
 }
 
 class ConnectionRecoveryIntegrationTest: XCTestCase {
-    let httpAPI = RMQHTTP("http://guest:guest@localhost:15672/api")
+    let amqpLocalhost = "amqp://guest:guest@127.0.0.1"
+    let httpAPI = RMQHTTP("http://guest:guest@127.0.0.1:15672/api")
 
     func testRecoversFromSocketDisconnect() {
-        let uri = "amqp://guest:guest@localhost"
         let recoveryInterval = 2
         let semaphoreTimeout: Double = 30
         let delegate = ConnectionDelegateSpy()
 
-        let tlsOptions = RMQTLSOptions.fromURI(uri)
-        let transport = RMQTCPSocketTransport(host: "localhost", port: 5672, tlsOptions: tlsOptions)
+        let tlsOptions = RMQTLSOptions.fromURI(amqpLocalhost)
+        let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5672, tlsOptions: tlsOptions)
         let credentials = RMQCredentials(username: "guest", password: "guest")
         let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 10)
         let heartbeatSender = RMQGCDHeartbeatSender(transport: transport, clock: RMQTickingClock())
@@ -76,13 +76,12 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
     }
 
     func testReenablesConsumersOnEachRecoveryFromConnectionClose() {
-        let uri = "amqp://guest:guest@localhost"
         let recoveryInterval = 2
         let semaphoreTimeout: Double = 30
         let delegate = ConnectionDelegateSpy()
 
-        let conn = RMQConnection(uri: uri,
-                                 tlsOptions: RMQTLSOptions.fromURI(uri),
+        let conn = RMQConnection(uri: amqpLocalhost,
+                                 tlsOptions: RMQTLSOptions.fromURI(amqpLocalhost),
                                  channelMax: RMQChannelLimit,
                                  frameMax: RMQFrameMax,
                                  heartbeat: 10,
