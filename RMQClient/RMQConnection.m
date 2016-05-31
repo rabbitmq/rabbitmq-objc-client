@@ -15,6 +15,7 @@
 #import "RMQTickingClock.h"
 #import "RMQTLSOptions.h"
 #import "RMQErrors.h"
+#import "RMQFrame.h"
 
 NSInteger const RMQChannelLimit = 65535;
 
@@ -172,7 +173,7 @@ NSInteger const RMQChannelLimit = 65535;
     return [self initWithUri:uri
                   tlsOptions:tlsOptions
                   channelMax:@(RMQChannelLimit)
-                    frameMax:@131072
+                    frameMax:@(RMQFrameMax)
                    heartbeat:@0
                  syncTimeout:@10
                     delegate:delegate
@@ -192,7 +193,7 @@ NSInteger const RMQChannelLimit = 65535;
     return [self initWithUri:uri
                   tlsOptions:[RMQTLSOptions fromURI:uri]
                   channelMax:@(RMQChannelLimit)
-                    frameMax:@131072
+                    frameMax:@(RMQFrameMax)
                    heartbeat:@0
                  syncTimeout:@10
                     delegate:delegate

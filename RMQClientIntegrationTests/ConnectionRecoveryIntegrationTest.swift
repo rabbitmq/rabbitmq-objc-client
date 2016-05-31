@@ -27,7 +27,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
                                             delegate: delegate)
         let config = RMQConnectionConfig(credentials: credentials,
                                          channelMax: RMQChannelLimit,
-                                         frameMax: 131072,
+                                         frameMax: RMQFrameMax,
                                          heartbeat: 60,
                                          vhost: "/",
                                          authMechanism: "PLAIN",
@@ -83,8 +83,8 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
 
         let conn = RMQConnection(uri: uri,
                                  tlsOptions: RMQTLSOptions.fromURI(uri),
-                                 channelMax: 1000,
-                                 frameMax: 131072,
+                                 channelMax: RMQChannelLimit,
+                                 frameMax: RMQFrameMax,
                                  heartbeat: 10,
                                  syncTimeout: 10,
                                  delegate: delegate,

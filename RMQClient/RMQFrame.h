@@ -7,6 +7,7 @@ typedef NS_ENUM(char, RMQFrameType) {
     RMQFrameTypeHeartbeat = 8
 };
 
+extern NSUInteger const RMQFrameMax;
 extern NSInteger const RMQEmptyFrameSize;
 
 @interface RMQFrame : MTLModel<RMQEncodable,RMQParseable>

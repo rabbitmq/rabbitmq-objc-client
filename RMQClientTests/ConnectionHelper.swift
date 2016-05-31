@@ -1,7 +1,7 @@
 class ConnectionHelper {
     static func connectionConfig(vhost vhost: String = "",
                                        channelMax: Int = 123,
-                                       frameMax: Int = 321,
+                                       frameMax: UInt = 321,
                                        heartbeat: Int = 10) -> RMQConnectionConfig {
         let nullRecovery = RMQConnectionShutdown(heartbeatSender: HeartbeatSenderSpy())
         return RMQConnectionConfig(credentials: RMQCredentials(username: "foo", password: "bar"),
@@ -23,7 +23,7 @@ class ConnectionHelper {
         vhost: String = "baz"
         ) -> RMQConnection {
         let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
-        let config = connectionConfig(vhost: vhost, channelMax: 65536, frameMax: 131072, heartbeat: 0)
+        let config = connectionConfig(vhost: vhost, channelMax: RMQChannelLimit, frameMax: RMQFrameMax, heartbeat: 0)
         let conn = RMQConnection(
             transport: transport,
             config: config,

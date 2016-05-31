@@ -3,7 +3,7 @@
     var lastSentMethod: RMQMethod?
     var frameMax: NSNumber
 
-    init(frameMax aFrameMax: Int = 131072) {
+    init(frameMax aFrameMax: UInt = RMQFrameMax) {
         frameMax = aFrameMax
     }
 

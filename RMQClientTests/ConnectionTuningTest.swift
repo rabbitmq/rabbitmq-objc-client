@@ -71,7 +71,7 @@ class ConnectionTuningTest: XCTestCase {
     // MARK: Helpers
 
     func connectWithOptions(transport: ControlledInteractionTransport,
-                            _ channelMax: Int, _ frameMax: Int, _ heartbeat: Int,
+                            _ channelMax: Int, _ frameMax: UInt, _ heartbeat: Int,
                               heartbeatSender: RMQHeartbeatSender = HeartbeatSenderSpy()) -> FakeSerialQueue {
         let q = FakeSerialQueue()
         let connection = RMQConnection(

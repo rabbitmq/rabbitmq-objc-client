@@ -184,7 +184,7 @@ class IntegrationTests: XCTestCase {
         let channelCount = 600
         let messageCount: Int32 = 600
         let conn = RMQConnection(uri: "amqp://guest:guest@localhost",
-                                 channelMax: channelCount + 1, frameMax: 131072, heartbeat: 100, syncTimeout: 60,
+                                 channelMax: channelCount + 1, frameMax: RMQFrameMax, heartbeat: 100, syncTimeout: 60,
                                  delegate: delegate, delegateQueue: dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0))
         conn.start()
         defer { conn.blockingClose() }

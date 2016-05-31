@@ -57,11 +57,11 @@ class MethodFixtures {
     }
 
     static func connectionTune() -> RMQConnectionTune {
-        return RMQConnectionTune(channelMax: RMQShort(0), frameMax: RMQLong(131072), heartbeat: RMQShort(60))
+        return RMQConnectionTune(channelMax: RMQShort(0), frameMax: RMQLong(RMQFrameMax), heartbeat: RMQShort(60))
     }
 
     static func connectionTuneOk() -> RMQConnectionTuneOk {
-        return RMQConnectionTuneOk(channelMax: RMQShort(65535), frameMax: RMQLong(131072), heartbeat: RMQShort(60))
+        return RMQConnectionTuneOk(channelMax: RMQShort(65535), frameMax: RMQLong(RMQFrameMax), heartbeat: RMQShort(60))
     }
 
     static func connectionOpen() -> RMQConnectionOpen {

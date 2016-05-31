@@ -2,6 +2,7 @@
 #import "RMQMethodDecoder.h"
 #import "RMQHeartbeat.h"
 
+NSUInteger const RMQFrameMax = 131072;
 NSInteger const RMQEmptyFrameSize = 8;
 
 @interface RMQFrame ()
