@@ -174,7 +174,7 @@
 		AEEB8B531C7DED0E002D3FCE /* RMQTransportContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE41C5621C51A2D500129207 /* RMQTransportContract.swift */; };
 		AEEB8B551C7DEDE5002D3FCE /* ControlledInteractionTransportTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB8B541C7DEDE5002D3FCE /* ControlledInteractionTransportTest.swift */; };
 		AEEB8B561C7DF043002D3FCE /* RMQTransportContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE41C5621C51A2D500129207 /* RMQTransportContract.swift */; };
-		AEEDB0B51CE3284200005A92 /* ConnectionRecoveryIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEDB0B41CE3284200005A92 /* ConnectionRecoveryIntegrationTest.swift */; };
+		AEEDB0B51CE3284200005A92 /* ZConnectionRecoveryIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEDB0B41CE3284200005A92 /* ZConnectionRecoveryIntegrationTest.swift */; };
 		AEEDB0B91CE32E4C00005A92 /* RMQHTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEDB0B71CE32E1F00005A92 /* RMQHTTP.swift */; };
 		AEEDB0BB1CE32F5300005A92 /* RMQHTTPTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEDB0BA1CE32F5300005A92 /* RMQHTTPTest.swift */; };
 		AEEDB0BD1CE3325B00005A92 /* RMQHTTPParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEDB0BC1CE3325B00005A92 /* RMQHTTPParser.swift */; };
@@ -397,7 +397,7 @@
 		AEEB8B491C7DC0A5002D3FCE /* SenderSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SenderSpy.swift; sourceTree = "<group>"; };
 		AEEB8B4C1C7DD4FA002D3FCE /* FrameHandlerSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrameHandlerSpy.swift; sourceTree = "<group>"; };
 		AEEB8B541C7DEDE5002D3FCE /* ControlledInteractionTransportTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlledInteractionTransportTest.swift; sourceTree = "<group>"; };
-		AEEDB0B41CE3284200005A92 /* ConnectionRecoveryIntegrationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionRecoveryIntegrationTest.swift; sourceTree = "<group>"; };
+		AEEDB0B41CE3284200005A92 /* ZConnectionRecoveryIntegrationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZConnectionRecoveryIntegrationTest.swift; sourceTree = "<group>"; };
 		AEEDB0B71CE32E1F00005A92 /* RMQHTTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQHTTP.swift; sourceTree = "<group>"; };
 		AEEDB0BA1CE32F5300005A92 /* RMQHTTPTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQHTTPTest.swift; sourceTree = "<group>"; };
 		AEEDB0BC1CE3325B00005A92 /* RMQHTTPParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQHTTPParser.swift; sourceTree = "<group>"; };
@@ -655,7 +655,7 @@
 				AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */,
 				AE95953C1CD0CC4D0039418C /* RMQGCDHeartbeatSenderTest.swift */,
 				AEA45ECD1C43F44400FE1F62 /* RMQTCPSocketTransportTest.swift */,
-				AEEDB0B41CE3284200005A92 /* ConnectionRecoveryIntegrationTest.swift */,
+				AEEDB0B41CE3284200005A92 /* ZConnectionRecoveryIntegrationTest.swift */,
 			);
 			path = RMQClientIntegrationTests;
 			sourceTree = "<group>";
@@ -1073,7 +1073,7 @@
 				AEA45EE21C440FFD00FE1F62 /* IntegrationTests.swift in Sources */,
 				AEEB8B501C7DE8D1002D3FCE /* ControlledInteractionTransport.swift in Sources */,
 				AE063BE11CD7565B00F90EB5 /* FakeClock.swift in Sources */,
-				AEEDB0B51CE3284200005A92 /* ConnectionRecoveryIntegrationTest.swift in Sources */,
+				AEEDB0B51CE3284200005A92 /* ZConnectionRecoveryIntegrationTest.swift in Sources */,
 				AEA8A77D1CCA734400371E38 /* FakeWaiterFactory.swift in Sources */,
 				AE063BE01CD7564C00F90EB5 /* RMQGCDHeartbeatSenderTest.swift in Sources */,
 				AEEDB0BB1CE32F5300005A92 /* RMQHTTPTest.swift in Sources */,
