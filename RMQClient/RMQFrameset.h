@@ -1,6 +1,6 @@
 #import "RMQValues.h"
 
-@interface RMQFrameset : MTLModel<RMQEncodable>
+@interface RMQFrameset : JKVValue<RMQEncodable>
 @property (nonnull, nonatomic, copy, readonly) NSNumber *channelNumber;
 @property (nonnull, nonatomic, copy, readonly) id<RMQMethod>method;
 @property (nonnull, nonatomic, readonly) RMQContentHeader *contentHeader;

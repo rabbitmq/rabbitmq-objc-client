@@ -224,7 +224,7 @@ class RMQConnectionTest: XCTestCase {
         let parser = RMQParser(data: transport.outboundData.last!)
         let outgoingStartOk: RMQConnectionStartOk = RMQFrame(parser: parser).payload as! RMQConnectionStartOk
 
-        XCTAssert(outgoingStartOk.description().rangeOfString(TestHelper.frameworkVersion()) != nil)
+        XCTAssert(outgoingStartOk.description.rangeOfString(TestHelper.frameworkVersion()) != nil)
     }
 
     func testSendsConfiguredVHostWithConnectionOpen() {

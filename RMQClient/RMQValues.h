@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-@import Mantle;
+@import JKVValue;
 #import "RMQParser.h"
 #import "RMQConnectionConfig.h"
 
@@ -15,7 +15,7 @@
 - (nonnull NSData *)amqFieldValueType;
 @end
 
-@interface RMQValue : MTLModel
+@interface RMQValue : JKVValue
 @end
 
 @interface RMQOctet : RMQValue<RMQEncodable,RMQParseable>

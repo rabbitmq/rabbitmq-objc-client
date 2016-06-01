@@ -5,7 +5,7 @@
 #import "RMQDispatcher.h"
 #import "RMQChannelAllocator.h"
 
-@interface RMQAllocatedChannel : MTLModel <RMQChannel>
+@interface RMQAllocatedChannel : RMQValue <RMQChannel>
 - (nonnull instancetype)init:(nonnull NSNumber *)channelNumber
              contentBodySize:(nonnull NSNumber *)contentBodySize
                   dispatcher:(nonnull id<RMQDispatcher>)dispatcher

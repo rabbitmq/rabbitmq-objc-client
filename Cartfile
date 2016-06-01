@@ -1,2 +1,2 @@
 github "robbiehanson/CocoaAsyncSocket" ~> 7.4
-github "Mantle/Mantle"
+github "jeffh/JKVValue" ~> 1.3

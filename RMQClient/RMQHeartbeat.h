@@ -1,6 +1,5 @@
 #import <Foundation/Foundation.h>
-@import Mantle;
 #import "RMQValues.h"
 
-@interface RMQHeartbeat : MTLModel<RMQPayload>
+@interface RMQHeartbeat : RMQValue<RMQPayload>
 @end

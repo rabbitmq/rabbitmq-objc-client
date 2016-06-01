@@ -53,7 +53,6 @@ class GenerateMethods
   def header
     <<-OBJC
 #{header_start}
-@import Mantle;
 #import "RMQTable.h"
 
       OBJC

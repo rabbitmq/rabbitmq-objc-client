@@ -1,8 +1,7 @@
 #import <Foundation/Foundation.h>
-@import Mantle;
 #import "RMQBasicProperties.h"
 
-@interface RMQMessage : MTLModel
+@interface RMQMessage : RMQValue
 @property (nonatomic, readonly) NSString *content;
 @property (nonatomic, readonly) NSString *consumerTag;
 @property (nonatomic, readonly) NSNumber *deliveryTag;

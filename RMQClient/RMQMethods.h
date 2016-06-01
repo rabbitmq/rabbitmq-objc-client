@@ -1,9 +1,8 @@
 // This file is generated. Do not edit.
 #import <Foundation/Foundation.h>
-@import Mantle;
 #import "RMQTable.h"
 
-@interface RMQConnectionStart : MTLModel <RMQMethod>
+@interface RMQConnectionStart : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQOctet *versionMajor;
 @property (nonnull, copy, nonatomic, readonly) RMQOctet *versionMinor;
 @property (nonnull, copy, nonatomic, readonly) RMQTable *serverProperties;
@@ -16,7 +15,7 @@
                                      locales:(nonnull RMQLongstr *)locales;
 @end
 
-@interface RMQConnectionStartOk : MTLModel <RMQMethod>
+@interface RMQConnectionStartOk : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQTable *clientProperties;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *mechanism;
 @property (nonnull, copy, nonatomic, readonly) RMQLongstr *response;
@@ -27,17 +26,17 @@
                                           locale:(nonnull RMQShortstr *)locale;
 @end
 
-@interface RMQConnectionSecure : MTLModel <RMQMethod>
+@interface RMQConnectionSecure : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQLongstr *challenge;
 - (nonnull instancetype)initWithChallenge:(nonnull RMQLongstr *)challenge;
 @end
 
-@interface RMQConnectionSecureOk : MTLModel <RMQMethod>
+@interface RMQConnectionSecureOk : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQLongstr *response;
 - (nonnull instancetype)initWithResponse:(nonnull RMQLongstr *)response;
 @end
 
-@interface RMQConnectionTune : MTLModel <RMQMethod>
+@interface RMQConnectionTune : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShort *channelMax;
 @property (nonnull, copy, nonatomic, readonly) RMQLong *frameMax;
 @property (nonnull, copy, nonatomic, readonly) RMQShort *heartbeat;
@@ -46,7 +45,7 @@
                                  heartbeat:(nonnull RMQShort *)heartbeat;
 @end
 
-@interface RMQConnectionTuneOk : MTLModel <RMQMethod>
+@interface RMQConnectionTuneOk : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShort *channelMax;
 @property (nonnull, copy, nonatomic, readonly) RMQLong *frameMax;
 @property (nonnull, copy, nonatomic, readonly) RMQShort *heartbeat;
@@ -60,7 +59,7 @@ typedef NS_OPTIONS(NSUInteger, RMQConnectionOpenOptions) {
     RMQConnectionOpenReserved2 = 1 << 0,
 };
 
-@interface RMQConnectionOpen : MTLModel <RMQMethod>
+@interface RMQConnectionOpen : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *virtualHost;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *reserved1;
 @property (nonatomic, readonly) RMQConnectionOpenOptions options;
@@ -69,12 +68,12 @@ typedef NS_OPTIONS(NSUInteger, RMQConnectionOpenOptions) {
                                     options:(RMQConnectionOpenOptions)options;
 @end
 
-@interface RMQConnectionOpenOk : MTLModel <RMQMethod>
+@interface RMQConnectionOpenOk : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *reserved1;
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShortstr *)reserved1;
 @end
 
-@interface RMQConnectionClose : MTLModel <RMQMethod>
+@interface RMQConnectionClose : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShort *replyCode;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *replyText;
 @property (nonnull, copy, nonatomic, readonly) RMQShort *classId;
@@ -85,25 +84,25 @@ typedef NS_OPTIONS(NSUInteger, RMQConnectionOpenOptions) {
                                  methodId:(nonnull RMQShort *)methodId;
 @end
 
-@interface RMQConnectionCloseOk : MTLModel <RMQMethod>
+@interface RMQConnectionCloseOk : RMQValue <RMQMethod>
 
 @end
 
-@interface RMQConnectionBlocked : MTLModel <RMQMethod>
+@interface RMQConnectionBlocked : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *reason;
 - (nonnull instancetype)initWithReason:(nonnull RMQShortstr *)reason;
 @end
 
-@interface RMQConnectionUnblocked : MTLModel <RMQMethod>
+@interface RMQConnectionUnblocked : RMQValue <RMQMethod>
 
 @end
 
-@interface RMQChannelOpen : MTLModel <RMQMethod>
+@interface RMQChannelOpen : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *reserved1;
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShortstr *)reserved1;
 @end
 
-@interface RMQChannelOpenOk : MTLModel <RMQMethod>
+@interface RMQChannelOpenOk : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQLongstr *reserved1;
 - (nonnull instancetype)initWithReserved1:(nonnull RMQLongstr *)reserved1;
 @end
@@ -113,7 +112,7 @@ typedef NS_OPTIONS(NSUInteger, RMQChannelFlowOptions) {
     RMQChannelFlowActive    = 1 << 0,
 };
 
-@interface RMQChannelFlow : MTLModel <RMQMethod>
+@interface RMQChannelFlow : RMQValue <RMQMethod>
 @property (nonatomic, readonly) RMQChannelFlowOptions options;
 - (nonnull instancetype)initWithOptions:(RMQChannelFlowOptions)options;
 @end
@@ -123,12 +122,12 @@ typedef NS_OPTIONS(NSUInteger, RMQChannelFlowOkOptions) {
     RMQChannelFlowOkActive    = 1 << 0,
 };
 
-@interface RMQChannelFlowOk : MTLModel <RMQMethod>
+@interface RMQChannelFlowOk : RMQValue <RMQMethod>
 @property (nonatomic, readonly) RMQChannelFlowOkOptions options;
 - (nonnull instancetype)initWithOptions:(RMQChannelFlowOkOptions)options;
 @end
 
-@interface RMQChannelClose : MTLModel <RMQMethod>
+@interface RMQChannelClose : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShort *replyCode;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *replyText;
 @property (nonnull, copy, nonatomic, readonly) RMQShort *classId;
@@ -139,7 +138,7 @@ typedef NS_OPTIONS(NSUInteger, RMQChannelFlowOkOptions) {
                                  methodId:(nonnull RMQShort *)methodId;
 @end
 
-@interface RMQChannelCloseOk : MTLModel <RMQMethod>
+@interface RMQChannelCloseOk : RMQValue <RMQMethod>
 
 @end
 
@@ -152,7 +151,7 @@ typedef NS_OPTIONS(NSUInteger, RMQExchangeDeclareOptions) {
     RMQExchangeDeclareNoWait     = 1 << 4,
 };
 
-@interface RMQExchangeDeclare : MTLModel <RMQMethod>
+@interface RMQExchangeDeclare : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *exchange;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *type;
@@ -165,7 +164,7 @@ typedef NS_OPTIONS(NSUInteger, RMQExchangeDeclareOptions) {
                                 arguments:(nonnull RMQTable *)arguments;
 @end
 
-@interface RMQExchangeDeclareOk : MTLModel <RMQMethod>
+@interface RMQExchangeDeclareOk : RMQValue <RMQMethod>
 
 @end
 
@@ -175,7 +174,7 @@ typedef NS_OPTIONS(NSUInteger, RMQExchangeDeleteOptions) {
     RMQExchangeDeleteNoWait    = 1 << 1,
 };
 
-@interface RMQExchangeDelete : MTLModel <RMQMethod>
+@interface RMQExchangeDelete : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *exchange;
 @property (nonatomic, readonly) RMQExchangeDeleteOptions options;
@@ -184,7 +183,7 @@ typedef NS_OPTIONS(NSUInteger, RMQExchangeDeleteOptions) {
                                   options:(RMQExchangeDeleteOptions)options;
 @end
 
-@interface RMQExchangeDeleteOk : MTLModel <RMQMethod>
+@interface RMQExchangeDeleteOk : RMQValue <RMQMethod>
 
 @end
 
@@ -193,7 +192,7 @@ typedef NS_OPTIONS(NSUInteger, RMQExchangeBindOptions) {
     RMQExchangeBindNoWait    = 1 << 0,
 };
 
-@interface RMQExchangeBind : MTLModel <RMQMethod>
+@interface RMQExchangeBind : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *destination;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *source;
@@ -208,7 +207,7 @@ typedef NS_OPTIONS(NSUInteger, RMQExchangeBindOptions) {
                                 arguments:(nonnull RMQTable *)arguments;
 @end
 
-@interface RMQExchangeBindOk : MTLModel <RMQMethod>
+@interface RMQExchangeBindOk : RMQValue <RMQMethod>
 
 @end
 
@@ -217,7 +216,7 @@ typedef NS_OPTIONS(NSUInteger, RMQExchangeUnbindOptions) {
     RMQExchangeUnbindNoWait    = 1 << 0,
 };
 
-@interface RMQExchangeUnbind : MTLModel <RMQMethod>
+@interface RMQExchangeUnbind : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *destination;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *source;
@@ -232,7 +231,7 @@ typedef NS_OPTIONS(NSUInteger, RMQExchangeUnbindOptions) {
                                 arguments:(nonnull RMQTable *)arguments;
 @end
 
-@interface RMQExchangeUnbindOk : MTLModel <RMQMethod>
+@interface RMQExchangeUnbindOk : RMQValue <RMQMethod>
 
 @end
 
@@ -245,7 +244,7 @@ typedef NS_OPTIONS(NSUInteger, RMQQueueDeclareOptions) {
     RMQQueueDeclareNoWait     = 1 << 4,
 };
 
-@interface RMQQueueDeclare : MTLModel <RMQMethod>
+@interface RMQQueueDeclare : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *queue;
 @property (nonatomic, readonly) RMQQueueDeclareOptions options;
@@ -256,7 +255,7 @@ typedef NS_OPTIONS(NSUInteger, RMQQueueDeclareOptions) {
                                 arguments:(nonnull RMQTable *)arguments;
 @end
 
-@interface RMQQueueDeclareOk : MTLModel <RMQMethod>
+@interface RMQQueueDeclareOk : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *queue;
 @property (nonnull, copy, nonatomic, readonly) RMQLong *messageCount;
 @property (nonnull, copy, nonatomic, readonly) RMQLong *consumerCount;
@@ -270,7 +269,7 @@ typedef NS_OPTIONS(NSUInteger, RMQQueueBindOptions) {
     RMQQueueBindNoWait    = 1 << 0,
 };
 
-@interface RMQQueueBind : MTLModel <RMQMethod>
+@interface RMQQueueBind : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *queue;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *exchange;
@@ -285,11 +284,11 @@ typedef NS_OPTIONS(NSUInteger, RMQQueueBindOptions) {
                                 arguments:(nonnull RMQTable *)arguments;
 @end
 
-@interface RMQQueueBindOk : MTLModel <RMQMethod>
+@interface RMQQueueBindOk : RMQValue <RMQMethod>
 
 @end
 
-@interface RMQQueueUnbind : MTLModel <RMQMethod>
+@interface RMQQueueUnbind : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *queue;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *exchange;
@@ -302,7 +301,7 @@ typedef NS_OPTIONS(NSUInteger, RMQQueueBindOptions) {
                                 arguments:(nonnull RMQTable *)arguments;
 @end
 
-@interface RMQQueueUnbindOk : MTLModel <RMQMethod>
+@interface RMQQueueUnbindOk : RMQValue <RMQMethod>
 
 @end
 
@@ -311,7 +310,7 @@ typedef NS_OPTIONS(NSUInteger, RMQQueuePurgeOptions) {
     RMQQueuePurgeNoWait    = 1 << 0,
 };
 
-@interface RMQQueuePurge : MTLModel <RMQMethod>
+@interface RMQQueuePurge : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *queue;
 @property (nonatomic, readonly) RMQQueuePurgeOptions options;
@@ -320,7 +319,7 @@ typedef NS_OPTIONS(NSUInteger, RMQQueuePurgeOptions) {
                                   options:(RMQQueuePurgeOptions)options;
 @end
 
-@interface RMQQueuePurgeOk : MTLModel <RMQMethod>
+@interface RMQQueuePurgeOk : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQLong *messageCount;
 - (nonnull instancetype)initWithMessageCount:(nonnull RMQLong *)messageCount;
 @end
@@ -332,7 +331,7 @@ typedef NS_OPTIONS(NSUInteger, RMQQueueDeleteOptions) {
     RMQQueueDeleteNoWait    = 1 << 2,
 };
 
-@interface RMQQueueDelete : MTLModel <RMQMethod>
+@interface RMQQueueDelete : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *queue;
 @property (nonatomic, readonly) RMQQueueDeleteOptions options;
@@ -341,7 +340,7 @@ typedef NS_OPTIONS(NSUInteger, RMQQueueDeleteOptions) {
                                   options:(RMQQueueDeleteOptions)options;
 @end
 
-@interface RMQQueueDeleteOk : MTLModel <RMQMethod>
+@interface RMQQueueDeleteOk : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQLong *messageCount;
 - (nonnull instancetype)initWithMessageCount:(nonnull RMQLong *)messageCount;
 @end
@@ -351,7 +350,7 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicQosOptions) {
     RMQBasicQosGlobal    = 1 << 0,
 };
 
-@interface RMQBasicQos : MTLModel <RMQMethod>
+@interface RMQBasicQos : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQLong *prefetchSize;
 @property (nonnull, copy, nonatomic, readonly) RMQShort *prefetchCount;
 @property (nonatomic, readonly) RMQBasicQosOptions options;
@@ -360,7 +359,7 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicQosOptions) {
                                      options:(RMQBasicQosOptions)options;
 @end
 
-@interface RMQBasicQosOk : MTLModel <RMQMethod>
+@interface RMQBasicQosOk : RMQValue <RMQMethod>
 
 @end
 
@@ -372,7 +371,7 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicConsumeOptions) {
     RMQBasicConsumeNoWait    = 1 << 3,
 };
 
-@interface RMQBasicConsume : MTLModel <RMQMethod>
+@interface RMQBasicConsume : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *queue;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *consumerTag;
@@ -385,7 +384,7 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicConsumeOptions) {
                                 arguments:(nonnull RMQTable *)arguments;
 @end
 
-@interface RMQBasicConsumeOk : MTLModel <RMQMethod>
+@interface RMQBasicConsumeOk : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *consumerTag;
 - (nonnull instancetype)initWithConsumerTag:(nonnull RMQShortstr *)consumerTag;
 @end
@@ -395,14 +394,14 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicCancelOptions) {
     RMQBasicCancelNoWait    = 1 << 0,
 };
 
-@interface RMQBasicCancel : MTLModel <RMQMethod>
+@interface RMQBasicCancel : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *consumerTag;
 @property (nonatomic, readonly) RMQBasicCancelOptions options;
 - (nonnull instancetype)initWithConsumerTag:(nonnull RMQShortstr *)consumerTag
                                     options:(RMQBasicCancelOptions)options;
 @end
 
-@interface RMQBasicCancelOk : MTLModel <RMQMethod>
+@interface RMQBasicCancelOk : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *consumerTag;
 - (nonnull instancetype)initWithConsumerTag:(nonnull RMQShortstr *)consumerTag;
 @end
@@ -412,7 +411,7 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicPublishOptions) {
     RMQBasicPublishMandatory = 1 << 0,
 };
 
-@interface RMQBasicPublish : MTLModel <RMQMethod>
+@interface RMQBasicPublish : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *exchange;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *routingKey;
@@ -423,7 +422,7 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicPublishOptions) {
                                   options:(RMQBasicPublishOptions)options;
 @end
 
-@interface RMQBasicReturn : MTLModel <RMQMethod>
+@interface RMQBasicReturn : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShort *replyCode;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *replyText;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *exchange;
@@ -439,7 +438,7 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicDeliverOptions) {
     RMQBasicDeliverRedelivered = 1 << 0,
 };
 
-@interface RMQBasicDeliver : MTLModel <RMQMethod>
+@interface RMQBasicDeliver : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *consumerTag;
 @property (nonnull, copy, nonatomic, readonly) RMQLonglong *deliveryTag;
 @property (nonatomic, readonly) RMQBasicDeliverOptions options;
@@ -457,7 +456,7 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicGetOptions) {
     RMQBasicGetNoAck     = 1 << 0,
 };
 
-@interface RMQBasicGet : MTLModel <RMQMethod>
+@interface RMQBasicGet : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShort *reserved1;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *queue;
 @property (nonatomic, readonly) RMQBasicGetOptions options;
@@ -471,7 +470,7 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicGetOkOptions) {
     RMQBasicGetOkRedelivered = 1 << 0,
 };
 
-@interface RMQBasicGetOk : MTLModel <RMQMethod>
+@interface RMQBasicGetOk : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQLonglong *deliveryTag;
 @property (nonatomic, readonly) RMQBasicGetOkOptions options;
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *exchange;
@@ -484,7 +483,7 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicGetOkOptions) {
                                messageCount:(nonnull RMQLong *)messageCount;
 @end
 
-@interface RMQBasicGetEmpty : MTLModel <RMQMethod>
+@interface RMQBasicGetEmpty : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *reserved1;
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShortstr *)reserved1;
 @end
@@ -494,7 +493,7 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicAckOptions) {
     RMQBasicAckMultiple  = 1 << 0,
 };
 
-@interface RMQBasicAck : MTLModel <RMQMethod>
+@interface RMQBasicAck : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQLonglong *deliveryTag;
 @property (nonatomic, readonly) RMQBasicAckOptions options;
 - (nonnull instancetype)initWithDeliveryTag:(nonnull RMQLonglong *)deliveryTag
@@ -506,7 +505,7 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicRejectOptions) {
     RMQBasicRejectRequeue   = 1 << 0,
 };
 
-@interface RMQBasicReject : MTLModel <RMQMethod>
+@interface RMQBasicReject : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQLonglong *deliveryTag;
 @property (nonatomic, readonly) RMQBasicRejectOptions options;
 - (nonnull instancetype)initWithDeliveryTag:(nonnull RMQLonglong *)deliveryTag
@@ -518,7 +517,7 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicRecoverAsyncOptions) {
     RMQBasicRecoverAsyncRequeue   = 1 << 0,
 };
 
-@interface RMQBasicRecoverAsync : MTLModel <RMQMethod>
+@interface RMQBasicRecoverAsync : RMQValue <RMQMethod>
 @property (nonatomic, readonly) RMQBasicRecoverAsyncOptions options;
 - (nonnull instancetype)initWithOptions:(RMQBasicRecoverAsyncOptions)options;
 @end
@@ -528,12 +527,12 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicRecoverOptions) {
     RMQBasicRecoverRequeue   = 1 << 0,
 };
 
-@interface RMQBasicRecover : MTLModel <RMQMethod>
+@interface RMQBasicRecover : RMQValue <RMQMethod>
 @property (nonatomic, readonly) RMQBasicRecoverOptions options;
 - (nonnull instancetype)initWithOptions:(RMQBasicRecoverOptions)options;
 @end
 
-@interface RMQBasicRecoverOk : MTLModel <RMQMethod>
+@interface RMQBasicRecoverOk : RMQValue <RMQMethod>
 
 @end
 
@@ -543,34 +542,34 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicNackOptions) {
     RMQBasicNackRequeue   = 1 << 1,
 };
 
-@interface RMQBasicNack : MTLModel <RMQMethod>
+@interface RMQBasicNack : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQLonglong *deliveryTag;
 @property (nonatomic, readonly) RMQBasicNackOptions options;
 - (nonnull instancetype)initWithDeliveryTag:(nonnull RMQLonglong *)deliveryTag
                                     options:(RMQBasicNackOptions)options;
 @end
 
-@interface RMQTxSelect : MTLModel <RMQMethod>
+@interface RMQTxSelect : RMQValue <RMQMethod>
 
 @end
 
-@interface RMQTxSelectOk : MTLModel <RMQMethod>
+@interface RMQTxSelectOk : RMQValue <RMQMethod>
 
 @end
 
-@interface RMQTxCommit : MTLModel <RMQMethod>
+@interface RMQTxCommit : RMQValue <RMQMethod>
 
 @end
 
-@interface RMQTxCommitOk : MTLModel <RMQMethod>
+@interface RMQTxCommitOk : RMQValue <RMQMethod>
 
 @end
 
-@interface RMQTxRollback : MTLModel <RMQMethod>
+@interface RMQTxRollback : RMQValue <RMQMethod>
 
 @end
 
-@interface RMQTxRollbackOk : MTLModel <RMQMethod>
+@interface RMQTxRollbackOk : RMQValue <RMQMethod>
 
 @end
 
@@ -579,12 +578,12 @@ typedef NS_OPTIONS(NSUInteger, RMQConfirmSelectOptions) {
     RMQConfirmSelectNowait    = 1 << 0,
 };
 
-@interface RMQConfirmSelect : MTLModel <RMQMethod>
+@interface RMQConfirmSelect : RMQValue <RMQMethod>
 @property (nonatomic, readonly) RMQConfirmSelectOptions options;
 - (nonnull instancetype)initWithOptions:(RMQConfirmSelectOptions)options;
 @end
 
-@interface RMQConfirmSelectOk : MTLModel <RMQMethod>
+@interface RMQConfirmSelectOk : RMQValue <RMQMethod>
 
 @end
 

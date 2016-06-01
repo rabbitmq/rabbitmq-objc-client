@@ -10,7 +10,7 @@ typedef NS_ENUM(char, RMQFrameType) {
 extern NSUInteger const RMQFrameMax;
 extern NSInteger const RMQEmptyFrameSize;
 
-@interface RMQFrame : MTLModel<RMQEncodable,RMQParseable>
+@interface RMQFrame : RMQValue<RMQEncodable,RMQParseable>
 @property (nonnull, nonatomic, copy, readonly) NSNumber *channelNumber;
 @property (nonnull, nonatomic, readonly) id<RMQPayload> payload;
 - (nonnull instancetype)initWithChannelNumber:(nonnull NSNumber *)channelNumber

@@ -1,6 +1,6 @@
-#import <Mantle/Mantle.h>
+#import "RMQValues.h"
 
-@interface RMQTLSOptions : MTLModel
+@interface RMQTLSOptions : RMQValue
 
 @property (nonatomic, readonly) BOOL useTLS;
 @property (nonatomic, readonly) BOOL verifyPeer;

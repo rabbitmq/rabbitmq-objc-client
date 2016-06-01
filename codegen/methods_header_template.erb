@@ -7,7 +7,7 @@ typedef NS_OPTIONS(NSUInteger, <%= class_name %>Options) {
 };
 
 <%- end -%>
-@interface <%= class_name %> : MTLModel <<%= protocols.join(", ") %>>
+@interface <%= class_name %> : RMQValue <<%= protocols.join(", ") %>>
 <%- fields.each do |f| -%>
 @property (<%= f[:base_property_options].join(", ") %>, readonly) <%= f[:pointer_type] %><%= f[:name] %>;
 <%- end -%>
