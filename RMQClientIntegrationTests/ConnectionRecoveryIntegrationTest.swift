@@ -4,7 +4,7 @@ enum RecoveryTestError : ErrorType {
     case TimeOutWaitingForConnectionCountToDrop
 }
 
-class ZConnectionRecoveryIntegrationTest: XCTestCase {
+class ConnectionRecoveryIntegrationTest: XCTestCase {
     let amqpLocalhost = "amqp://guest:guest@127.0.0.1"
     let httpAPI = RMQHTTP("http://guest:guest@127.0.0.1:15672/api")
 
