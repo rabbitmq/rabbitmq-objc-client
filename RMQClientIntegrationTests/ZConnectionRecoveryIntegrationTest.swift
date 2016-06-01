@@ -41,13 +41,8 @@ class ZConnectionRecoveryIntegrationTest: XCTestCase {
                                  commandQueue: commandQueue,
                                  waiterFactory: RMQSemaphoreWaiterFactory(),
                                  heartbeatSender: heartbeatSender)
-        print("conn.start")
         conn.start()
-        defer {
-            print("enter defer")
-            conn.blockingClose()
-            print("exit defer")
-        }
+        defer { conn.blockingClose() }
 
         let ch = conn.createChannel()
         let q = ch.queue("")
@@ -66,22 +61,17 @@ class ZConnectionRecoveryIntegrationTest: XCTestCase {
         XCTAssertEqual(0, dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout)),
                        "Timed out waiting for message")
 
-        print("simulateDisconnect")
         transport.simulateDisconnect()
 
-        print("poll until recovered")
         XCTAssert(TestHelper.pollUntil { delegate.recoveredConnection != nil },
                   "Didn't finish recovery")
         delegate.recoveredConnection = nil
 
         q.publish("after close 1")
-        print("wait 1")
         dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout))
         ex.publish("after close 2")
-        print("wait 2")
         dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout))
 
-        print("assert")
         XCTAssertEqual(["before close", "after close 1", "after close 2"], messages.map { $0.content })
     }
 
