@@ -31,6 +31,14 @@ this list.
 1. Under **Destination**, choose **Frameworks**.
 1. Click the '+' and add RMQClient.framework. Ensure **Code Sign On Copy** is checked.
 
+## Installation with [CocoaPods](https://cocoapods.org/)
+
+1. Add the following to your Podfile:
+
+   ```
+   pod 'RMQClient', '~> 0.8'
+   ```
+1. Run `pod install`
 
 ## Running Tests
 
