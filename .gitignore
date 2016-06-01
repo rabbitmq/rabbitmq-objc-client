@@ -2,3 +2,4 @@ Carthage
 *.xcscmblueprint
 xcuserdata
 notes.txt
+.bundle
