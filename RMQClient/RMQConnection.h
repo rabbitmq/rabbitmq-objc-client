@@ -43,6 +43,10 @@ extern NSInteger const RMQChannelLimit;
          recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose;
 
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate
+                       recoverAfter:(nonnull NSNumber *)recoveryInterval;
+
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
                          tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
                          channelMax:(nonnull NSNumber *)channelMax
                            frameMax:(nonnull NSNumber *)frameMax
@@ -66,10 +70,6 @@ extern NSInteger const RMQChannelLimit;
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
                          verifyPeer:(BOOL)verifyPeer
                            delegate:(nullable id<RMQConnectionDelegate>)delegate;
-
-- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
-                           delegate:(nullable id<RMQConnectionDelegate>)delegate
-                       recoverAfter:(nonnull NSNumber *)recoveryInterval;
 
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
                            delegate:(nullable id<RMQConnectionDelegate>)delegate;
