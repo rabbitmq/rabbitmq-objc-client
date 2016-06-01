@@ -34,7 +34,6 @@
 -  (void)recover:(id<RMQStarter>)connection
 channelAllocator:(id<RMQChannelAllocator>)allocator
            error:(NSError *)error {
-    [self.delegate willStartRecoveryWithConnection:(RMQConnection *)connection];
     [self.commandQueue enqueue:^{
         [self.heartbeatSender stop];
     }];
@@ -43,6 +42,7 @@ channelAllocator:(id<RMQChannelAllocator>)allocator
         return;
     }
 
+    [self.delegate willStartRecoveryWithConnection:(RMQConnection *)connection];
     [self.commandQueue delayedBy:self.interval enqueue:^{
         [self.delegate startingRecoveryWithConnection:(RMQConnection *)connection];
         [connection start:^{

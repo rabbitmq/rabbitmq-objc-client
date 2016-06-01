@@ -122,7 +122,7 @@ class RMQConnectionRecoverTest: XCTestCase {
         delegate.willStartRecoveryConnection = nil
         heartbeatSender.stopReceived = false
 
-        recover.recover(nil, channelAllocator: nil, error: nil)
+        recover.recover(StarterSpy(), channelAllocator: nil, error: nil)
 
         try! q.step()
 
