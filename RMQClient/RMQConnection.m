@@ -164,9 +164,9 @@ NSInteger const RMQChannelLimit = 65535;
                  syncTimeout:syncTimeout
                     delegate:delegate
                delegateQueue:delegateQueue
-                recoverAfter:@0
-            recoveryAttempts:@0
-  recoverFromConnectionClose:NO];
+                recoverAfter:@4
+            recoveryAttempts:@(NSUIntegerMax)
+  recoverFromConnectionClose:YES];
 }
 
 - (instancetype)initWithUri:(NSString *)uri
