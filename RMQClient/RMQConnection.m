@@ -16,6 +16,7 @@
 #import "RMQTLSOptions.h"
 #import "RMQErrors.h"
 #import "RMQFrame.h"
+#import "RMQProcessInfoNameGenerator.h"
 
 NSInteger const RMQChannelLimit = 65535;
 
@@ -98,7 +99,9 @@ NSInteger const RMQChannelLimit = 65535;
     RMQCredentials *credentials = [[RMQCredentials alloc] initWithUsername:rmqURI.username
                                                                   password:rmqURI.password];
 
-    RMQGCDSerialQueue *commandQueue = [[RMQGCDSerialQueue alloc] initWithName:@"connection commands"];
+
+    RMQProcessInfoNameGenerator *nameGenerator = [RMQProcessInfoNameGenerator new];
+    RMQGCDSerialQueue *commandQueue = [[RMQGCDSerialQueue alloc] initWithName:[nameGenerator generateWithPrefix:@"connection-commands"]];
     id<RMQConnectionRecovery> recovery;
     if (recoveryInterval.integerValue > 0) {
         recovery = [[RMQConnectionRecover alloc] initWithInterval:recoveryInterval
