@@ -93,31 +93,11 @@
 
 - (void)recover {
     [self open];
-    if (self.prefetchCountPerConsumer) {
-        [self basicQos:self.prefetchCountPerConsumer global:NO];
-    }
-    if (self.prefetchCountPerChannel) {
-        [self basicQos:self.prefetchCountPerChannel global:YES];
-    }
-    for (RMQQueue *queue in self.queues.allValues) {
-        [self queueDeclare:queue.name options:queue.options];
-        for (NSDictionary *binding in self.queueBindings[queue.name]) {
-            [self queueBind:queue.name exchange:binding[@"exchange"] routingKey:binding[@"routing-key"]];
-        }
-    }
-    for (RMQConsumer *consumer in self.consumers.allValues) {
-        [self.dispatcher sendSyncMethod:[[RMQBasicConsume alloc] initWithReserved1:[[RMQShort alloc] init:0]
-                                                                             queue:[[RMQShortstr alloc] init:consumer.queueName]
-                                                                       consumerTag:[[RMQShortstr alloc] init:consumer.tag]
-                                                                           options:consumer.options
-                                                                         arguments:[[RMQTable alloc] init:@{}]]];
-    }
-    for (RMQExchange *exchange in self.exchanges.allValues) {
-        [self exchangeDeclare:exchange.name type:exchange.type options:exchange.options];
-        for (NSDictionary *binding in [self.exchangeBindings[exchange.name] copy]) {
-            [self exchangeBind:exchange.name destination:binding[@"destination"] routingKey:binding[@"routing-key"]];
-        }
-    }
+    [self recoverPrefetch];
+    [self recoverExchanges];
+    [self recoverExchangeBindings]; 
+    [self recoverQueuesAndTheirBindings];
+    [self recoverConsumers];
 }
 
 - (void)blockingWaitOn:(Class)method {
@@ -473,6 +453,48 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
         [bodies addObject:[[RMQContentBody alloc] initWithData:lastData]];
     }
     return bodies;
+}
+
+- (void)recoverPrefetch {
+    if (self.prefetchCountPerConsumer) {
+        [self basicQos:self.prefetchCountPerConsumer global:NO];
+    }
+    if (self.prefetchCountPerChannel) {
+        [self basicQos:self.prefetchCountPerChannel global:YES];
+    }
+}
+
+- (void)recoverExchanges {
+    for (RMQExchange *exchange in self.exchanges.allValues) {
+        [self exchangeDeclare:exchange.name type:exchange.type options:exchange.options];
+    }
+}
+
+- (void)recoverExchangeBindings {
+    for (RMQExchange *exchange in self.exchanges.allValues) {
+        for (NSDictionary *binding in [self.exchangeBindings[exchange.name] copy]) {
+            [self exchangeBind:exchange.name destination:binding[@"destination"] routingKey:binding[@"routing-key"]];
+        }
+    }
+}
+
+- (void)recoverQueuesAndTheirBindings {
+    for (RMQQueue *queue in self.queues.allValues) {
+        [self queueDeclare:queue.name options:queue.options];
+        for (NSDictionary *binding in self.queueBindings[queue.name]) {
+            [self queueBind:queue.name exchange:binding[@"exchange"] routingKey:binding[@"routing-key"]];
+        }
+    }
+}
+
+- (void)recoverConsumers {
+    for (RMQConsumer *consumer in self.consumers.allValues) {
+        [self.dispatcher sendSyncMethod:[[RMQBasicConsume alloc] initWithReserved1:[[RMQShort alloc] init:0]
+                                                                             queue:[[RMQShortstr alloc] init:consumer.queueName]
+                                                                       consumerTag:[[RMQShortstr alloc] init:consumer.tag]
+                                                                           options:consumer.options
+                                                                         arguments:[[RMQTable alloc] init:@{}]]];
+    }
 }
 
 @end

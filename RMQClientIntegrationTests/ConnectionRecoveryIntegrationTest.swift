@@ -45,12 +45,14 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         defer { conn.blockingClose() }
 
         let ch = conn.createChannel()
-        let q = ch.queue("")
-        let ex = ch.direct("foo")
+        let q = ch.queue("", options: [.AutoDelete, .Exclusive])
+        let ex = ch.direct("foo", options: [.AutoDelete])
+        let ex2 = ch.direct("bar", options: [.AutoDelete])
         let semaphore = dispatch_semaphore_create(0)
         var messages: [RMQMessage] = []
 
-        q.bind(ex)
+        ex2.bind(ex)
+        q.bind(ex2)
 
         q.subscribe { m in
             messages.append(m)
@@ -94,8 +96,8 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         conn.start()
         defer { conn.blockingClose() }
         let ch = conn.createChannel()
-        let q = ch.queue("")
-        let ex = ch.direct("foo")
+        let q = ch.queue("", options: [.AutoDelete, .Exclusive])
+        let ex = ch.direct("foo", options: [.AutoDelete])
         let semaphore = dispatch_semaphore_create(0)
         var messages: [RMQMessage] = []
 

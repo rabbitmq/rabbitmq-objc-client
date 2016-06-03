@@ -15,7 +15,7 @@ class ChannelRecoveryTest: XCTestCase {
         XCTAssertEqual(MethodFixtures.channelOpen(), dispatcher.syncMethodsSent[0] as? RMQChannelOpen)
     }
 
-    func testReinstatesLastSentPrefetchSettings() {
+    func testRecoversEntitiesInCreationOrder() {
         let dispatcher = DispatcherSpy()
         let ch = RMQAllocatedChannel(1,
                                      contentBodySize: 100,
@@ -25,14 +25,48 @@ class ChannelRecoveryTest: XCTestCase {
                                      allocator: ChannelSpyAllocator())
         ch.basicQos(2, global: false) // 2 per consumer
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicQosOk()))
+
         ch.basicQos(3, global: true)  // 3 per channel
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicQosOk()))
+
+        let e1 = ch.direct("ex1")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
+
+        let e2 = ch.direct("ex2")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
+
+        e2.bind(e1)
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeBindOk()))
+
+        let q = ch.queue("q")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("q")))
+
+        q.bind(e2)
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueBindOk()))
+
         dispatcher.syncMethodsSent = []
 
         ch.recover()
 
-        XCTAssertEqual(MethodFixtures.basicQos(2, options: []), dispatcher.syncMethodsSent[1] as? RMQBasicQos)
-        XCTAssertEqual(MethodFixtures.basicQos(3, options: [.Global]), dispatcher.syncMethodsSent[2] as? RMQBasicQos)
+        XCTAssertEqual(MethodFixtures.basicQos(2, options: []),
+                       dispatcher.syncMethodsSent[1] as? RMQBasicQos)
+        XCTAssertEqual(MethodFixtures.basicQos(3, options: [.Global]),
+                       dispatcher.syncMethodsSent[2] as? RMQBasicQos)
+
+        let expectedExchangeDeclares: Set<RMQExchangeDeclare> = [MethodFixtures.exchangeDeclare("ex1", type: "direct", options: []),
+                                                                 MethodFixtures.exchangeDeclare("ex2", type: "direct", options: [])]
+        let actualExchangeDeclares: Set<RMQExchangeDeclare>   = [dispatcher.syncMethodsSent[3] as! RMQExchangeDeclare,
+                                                                 dispatcher.syncMethodsSent[4] as! RMQExchangeDeclare]
+        XCTAssertEqual(expectedExchangeDeclares, actualExchangeDeclares)
+
+        XCTAssertEqual(MethodFixtures.exchangeBind("ex1", destination: "ex2", routingKey: ""),
+                       dispatcher.syncMethodsSent[5] as? RMQExchangeBind)
+
+        XCTAssertEqual(MethodFixtures.queueDeclare("q", options: []),
+                       dispatcher.syncMethodsSent[6] as? RMQQueueDeclare)
+
+        XCTAssertEqual(MethodFixtures.queueBind("q", exchangeName: "ex2", routingKey: ""),
+                       dispatcher.syncMethodsSent[7] as? RMQQueueBind)
     }
 
     func testDoesNotReinstatePrefetchSettingsIfNoneSet() {

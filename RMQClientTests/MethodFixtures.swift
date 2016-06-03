@@ -217,6 +217,10 @@ class MethodFixtures {
         return RMQExchangeBind(reserved1: RMQShort(0), destination: RMQShortstr(destination), source: RMQShortstr(source), routingKey: RMQShortstr(routingKey), options: [], arguments: RMQTable([:]))
     }
 
+    static func exchangeBindOk() -> RMQExchangeBindOk {
+        return RMQExchangeBindOk()
+    }
+
     static func exchangeUnbind(source: String, destination: String, routingKey: String) -> RMQExchangeUnbind {
         return RMQExchangeUnbind(reserved1: RMQShort(0), destination: RMQShortstr(destination), source: RMQShortstr(source), routingKey: RMQShortstr(routingKey), options: [], arguments: RMQTable([:]))
     }
