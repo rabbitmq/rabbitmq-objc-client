@@ -132,7 +132,7 @@ class MethodFixtures {
     }
 
     static func queueBindOk() -> RMQQueueBindOk {
-        return RMQQueueBindOk(decodedFrame: [])
+        return RMQQueueBindOk()
     }
 
     static func queueUnbind(name: String, exchangeName: String, routingKey: String) -> RMQQueueUnbind {
@@ -140,7 +140,7 @@ class MethodFixtures {
     }
 
     static func queueUnbindOk() -> RMQQueueUnbindOk {
-        return RMQQueueUnbindOk(decodedFrame: [])
+        return RMQQueueUnbindOk()
     }
 
     static func basicAck(deliveryTag: UInt64, options: RMQBasicAckOptions) -> RMQBasicAck {
@@ -198,7 +198,7 @@ class MethodFixtures {
     }
 
     static func basicQosOk() -> RMQBasicQosOk {
-        return RMQBasicQosOk(decodedFrame: [])
+        return RMQBasicQosOk()
     }
 
     static func basicReject(deliveryTag: UInt64, options: RMQBasicRejectOptions) -> RMQBasicReject {
@@ -210,7 +210,7 @@ class MethodFixtures {
     }
 
     static func exchangeDeclareOk() -> RMQExchangeDeclareOk {
-        return RMQExchangeDeclareOk(decodedFrame: [])
+        return RMQExchangeDeclareOk()
     }
 
     static func exchangeBind(source: String, destination: String, routingKey: String) -> RMQExchangeBind {
