@@ -188,13 +188,15 @@ class ConnectionClosureTest: XCTestCase {
         XCTAssertFalse(transport.connected)
     }
 
-    func testServerInitiatedClosureDisconnectsTransport() {
-        let (transport, _, _, _) = ConnectionHelper.connectionAfterHandshake()
+    func testServerInitiatedClosureDisconnectsTransportButKeepsConnectionAsDelegateToAllowRecovery() {
+        let (transport, _, conn, _) = ConnectionHelper.connectionAfterHandshake()
 
+        transport.delegate = nil // this actually happens in the transport, which is fake here
         transport.serverSendsPayload(MethodFixtures.connectionClose(), channelNumber: 0)
         
         XCTAssertFalse(transport.isConnected())
         transport.assertClientSentMethod(MethodFixtures.connectionCloseOk(), channelNumber: 0)
+        XCTAssertEqual(conn, transport.delegate as? RMQConnection)
     }
 
 }

@@ -24,9 +24,7 @@ enum TestDoubleTransportError: ErrorType {
     
     func close() {
         connected = false
-        if delegate != nil {
-            delegate?.transport(self, disconnectedWithError: nil)
-        }
+        delegate?.transport(self, disconnectedWithError: nil)
     }
 
     func write(data: NSData) {

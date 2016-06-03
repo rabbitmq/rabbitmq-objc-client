@@ -317,6 +317,7 @@ NSInteger const RMQChannelLimit = 65535;
         [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:[RMQConnectionCloseOk new]]];
         self.handshakeComplete = NO;
         [self.transport close];
+        self.transport.delegate = self;
     } else {
         [self.frameHandler handleFrameset:frameset];
         [self.reader run];
