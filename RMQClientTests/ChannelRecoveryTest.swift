@@ -48,53 +48,6 @@ class ChannelRecoveryTest: XCTestCase {
         XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0.isKindOfClass(RMQBasicQos.self) })
     }
 
-    func testRedeclaresQueuesThatHadNotBeenDeleted() {
-        let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1,
-                                     contentBodySize: 100,
-                                     dispatcher: dispatcher,
-                                     commandQueue: FakeSerialQueue(),
-                                     nameGenerator: StubNameGenerator(),
-                                     allocator: ChannelSpyAllocator())
-        ch.queue("a", options: [.AutoDelete])
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("a")))
-
-        ch.queue("b")
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("b")))
-
-        ch.queue("c")
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("c")))
-
-        ch.queueDelete("b", options: [.IfUnused])
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeleteOk(123)))
-
-        dispatcher.syncMethodsSent = []
-
-        ch.recover()
-
-        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueDeclare == MethodFixtures.queueDeclare("a", options: [.AutoDelete]) })
-        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueDeclare == MethodFixtures.queueDeclare("c", options: []) })
-        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueDeclare == MethodFixtures.queueDeclare("b", options: []) })
-    }
-
-    func testRedeclaredQueuesAreStillMemoized() {
-        let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1,
-                                     contentBodySize: 100,
-                                     dispatcher: dispatcher,
-                                     commandQueue: FakeSerialQueue(),
-                                     nameGenerator: StubNameGenerator(),
-                                     allocator: ChannelSpyAllocator())
-        ch.queue("a", options: [.AutoDelete])
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("a")))
-
-        ch.recover()
-
-        dispatcher.syncMethodsSent = []
-        ch.queue("a", options: [.AutoDelete])
-        XCTAssertEqual(0, dispatcher.syncMethodsSent.count)
-    }
-
     func testRedeclaresExchangesThatHadNotBeenDeleted() {
         let dispatcher = DispatcherSpy()
         let ch = RMQAllocatedChannel(1,
@@ -141,77 +94,6 @@ class ChannelRecoveryTest: XCTestCase {
         XCTAssertEqual(0, dispatcher.syncMethodsSent.count)
     }
 
-    func testRedeclaresConsumersNotPreviouslyCancelledByClientOrServer() {
-        let dispatcher = DispatcherSpy()
-        let nameGenerator = StubNameGenerator()
-        let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(1,
-                                     contentBodySize: 100,
-                                     dispatcher: dispatcher,
-                                     commandQueue: q,
-                                     nameGenerator: nameGenerator,
-                                     allocator: ChannelSpyAllocator())
-
-        let createContext = (ch, dispatcher, nameGenerator)
-        createConsumer("consumer1", createContext)
-        createConsumer("consumer2", createContext, [.Exclusive])
-        createConsumer("consumer3", createContext)
-        createConsumer("consumer4", createContext, [.Exclusive])
-
-        ch.basicCancel("consumer2")
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicCancelOk("consumer2")))
-
-        ch.handleFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicCancel("consumer3")))
-        try! q.step()
-
-        dispatcher.syncMethodsSent = []
-
-        ch.recover()
-
-        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQBasicConsume == MethodFixtures.basicConsume("q", consumerTag: "consumer1", options: []) })
-        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQBasicConsume == MethodFixtures.basicConsume("q", consumerTag: "consumer4", options: [.Exclusive]) })
-
-        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQBasicConsume == MethodFixtures.basicConsume("q", consumerTag: "consumer2", options: [.Exclusive]) })
-        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQBasicConsume == MethodFixtures.basicConsume("q", consumerTag: "consumer3", options: []) })
-    }
-
-    func testRebindsQueuesNotPreviouslyUnbound() {
-        let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1,
-                                     contentBodySize: 100,
-                                     dispatcher: dispatcher,
-                                     commandQueue: FakeSerialQueue(),
-                                     nameGenerator: StubNameGenerator(),
-                                     allocator: ChannelSpyAllocator())
-        let q1 = ch.queue("a")
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("a")))
-        let q2 = ch.queue("b")
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("b")))
-        let q3 = ch.queue("c")
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("c")))
-        let ex = ch.direct("foo")
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
-
-        q1.bind(ex)
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueBindOk()))
-        q2.bind(ex)
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueBindOk()))
-        q3.bind(ex, routingKey: "hello")
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueBindOk()))
-
-        q2.unbind(ex)
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueUnbindOk()))
-
-        dispatcher.syncMethodsSent = []
-
-        ch.recover()
-
-        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueBind == MethodFixtures.queueBind("a", exchangeName: "foo", routingKey: "") })
-        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueBind == MethodFixtures.queueBind("c", exchangeName: "foo", routingKey: "hello") })
-
-        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueBind == MethodFixtures.queueBind("b", exchangeName: "foo", routingKey: "") })
-    }
-
     func testRebindsExchangesNotPreviouslyUnbound() {
         let dispatcher = DispatcherSpy()
         let q = FakeSerialQueue()
@@ -253,6 +135,124 @@ class ChannelRecoveryTest: XCTestCase {
         XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQExchangeBind == bindDToA })
 
         XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQExchangeBind == bindCToA })
+    }
+    
+    func testRedeclaresQueuesThatHadNotBeenDeleted() {
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(1,
+                                     contentBodySize: 100,
+                                     dispatcher: dispatcher,
+                                     commandQueue: FakeSerialQueue(),
+                                     nameGenerator: StubNameGenerator(),
+                                     allocator: ChannelSpyAllocator())
+        ch.queue("a", options: [.AutoDelete])
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("a")))
+
+        ch.queue("b")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("b")))
+
+        ch.queue("c")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("c")))
+
+        ch.queueDelete("b", options: [.IfUnused])
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeleteOk(123)))
+
+        dispatcher.syncMethodsSent = []
+
+        ch.recover()
+
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueDeclare == MethodFixtures.queueDeclare("a", options: [.AutoDelete]) })
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueDeclare == MethodFixtures.queueDeclare("c", options: []) })
+        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueDeclare == MethodFixtures.queueDeclare("b", options: []) })
+    }
+
+    func testRedeclaredQueuesAreStillMemoized() {
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(1,
+                                     contentBodySize: 100,
+                                     dispatcher: dispatcher,
+                                     commandQueue: FakeSerialQueue(),
+                                     nameGenerator: StubNameGenerator(),
+                                     allocator: ChannelSpyAllocator())
+        ch.queue("a", options: [.AutoDelete])
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("a")))
+
+        ch.recover()
+
+        dispatcher.syncMethodsSent = []
+        ch.queue("a", options: [.AutoDelete])
+        XCTAssertEqual(0, dispatcher.syncMethodsSent.count)
+    }
+    
+    func testRebindsQueuesNotPreviouslyUnbound() {
+        let dispatcher = DispatcherSpy()
+        let ch = RMQAllocatedChannel(1,
+                                     contentBodySize: 100,
+                                     dispatcher: dispatcher,
+                                     commandQueue: FakeSerialQueue(),
+                                     nameGenerator: StubNameGenerator(),
+                                     allocator: ChannelSpyAllocator())
+        let q1 = ch.queue("a")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("a")))
+        let q2 = ch.queue("b")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("b")))
+        let q3 = ch.queue("c")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("c")))
+        let ex = ch.direct("foo")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
+
+        q1.bind(ex)
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueBindOk()))
+        q2.bind(ex)
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueBindOk()))
+        q3.bind(ex, routingKey: "hello")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueBindOk()))
+
+        q2.unbind(ex)
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueUnbindOk()))
+
+        dispatcher.syncMethodsSent = []
+
+        ch.recover()
+
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueBind == MethodFixtures.queueBind("a", exchangeName: "foo", routingKey: "") })
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueBind == MethodFixtures.queueBind("c", exchangeName: "foo", routingKey: "hello") })
+
+        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueBind == MethodFixtures.queueBind("b", exchangeName: "foo", routingKey: "") })
+    }
+
+    func testRedeclaresConsumersNotPreviouslyCancelledByClientOrServer() {
+        let dispatcher = DispatcherSpy()
+        let nameGenerator = StubNameGenerator()
+        let q = FakeSerialQueue()
+        let ch = RMQAllocatedChannel(1,
+                                     contentBodySize: 100,
+                                     dispatcher: dispatcher,
+                                     commandQueue: q,
+                                     nameGenerator: nameGenerator,
+                                     allocator: ChannelSpyAllocator())
+
+        let createContext = (ch, dispatcher, nameGenerator)
+        createConsumer("consumer1", createContext)
+        createConsumer("consumer2", createContext, [.Exclusive])
+        createConsumer("consumer3", createContext)
+        createConsumer("consumer4", createContext, [.Exclusive])
+
+        ch.basicCancel("consumer2")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicCancelOk("consumer2")))
+
+        ch.handleFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicCancel("consumer3")))
+        try! q.step()
+
+        dispatcher.syncMethodsSent = []
+
+        ch.recover()
+
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQBasicConsume == MethodFixtures.basicConsume("q", consumerTag: "consumer1", options: []) })
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQBasicConsume == MethodFixtures.basicConsume("q", consumerTag: "consumer4", options: [.Exclusive]) })
+
+        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQBasicConsume == MethodFixtures.basicConsume("q", consumerTag: "consumer2", options: [.Exclusive]) })
+        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQBasicConsume == MethodFixtures.basicConsume("q", consumerTag: "consumer3", options: []) })
     }
 
     private func createConsumer(consumerTag: String,
