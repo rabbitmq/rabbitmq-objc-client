@@ -9,6 +9,25 @@ class RMQTCPSocketTransportTest: XCTestCase {
         RMQTransportContract(createTransport()).check()
     }
 
+    func testReadsFrameEndsInZeroSizedFrames() {
+        let callbacks = [:] as NSMutableDictionary
+        let transport = RMQTCPSocketTransport(host: "127.0.0.1",
+                                              port: 5672,
+                                              tlsOptions: noTLS,
+                                              callbackStorage: callbacks)
+        var receivedData: NSData?
+        transport.readFrame { data in
+            receivedData = data
+        }
+        let heartbeat = RMQHeartbeat().amqEncoded()
+        let header = heartbeat.subdataWithRange(NSMakeRange(0, 6))
+        let endByte = heartbeat.subdataWithRange(NSMakeRange(7, 1))
+        transport.socket(nil, didReadData: header, withTag: callbacks.allKeys.first as! Int)
+        transport.socket(nil, didReadData: endByte, withTag: callbacks.allKeys.first as! Int)
+
+        XCTAssertEqual(header, receivedData)
+    }
+
     func testIsNotConnectedWhenSocketDisconnectedOutsideOfCloseBlock() {
         let transport = createTransport()
         let error = NSError(domain: "", code: 0, userInfo: [:])

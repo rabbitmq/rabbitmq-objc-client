@@ -62,6 +62,7 @@ class IntegrationTests: XCTestCase {
 
     func testSubscribe() {
         let delegate = RMQConnectionDelegateLogger()
+        let noisyHeartbeats = 1
         let tlsOptions = RMQTLSOptions(
             peerName: "localhost",
             verifyPeer: false,
@@ -72,7 +73,7 @@ class IntegrationTests: XCTestCase {
                                  tlsOptions: tlsOptions,
                                  channelMax: RMQChannelLimit,
                                  frameMax: RMQFrameMax,
-                                 heartbeat: 0,
+                                 heartbeat: noisyHeartbeats,
                                  syncTimeout: 10,
                                  delegate: delegate,
                                  delegateQueue: dispatch_get_main_queue(),

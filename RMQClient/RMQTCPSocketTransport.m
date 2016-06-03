@@ -118,9 +118,13 @@ struct __attribute__((__packed__)) AMQPHeader {
 # pragma mark - Private
 
 - (void)read:(NSUInteger)len complete:(void (^)(NSData * _Nonnull))complete {
-    [self.socket readDataToLength:len
-                      withTimeout:10
-                              tag:[self storeCallback:complete]];
+    if (len == 0) {
+        complete([NSData data]);
+    } else {
+        [self.socket readDataToLength:len
+                          withTimeout:10
+                                  tag:[self storeCallback:complete]];
+    }
 }
 
 - (long)storeCallback:(id)callback {
