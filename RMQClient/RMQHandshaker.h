@@ -6,7 +6,7 @@
 #import "RMQReader.h"
 
 @interface RMQHandshaker : NSObject <RMQFrameHandler>
-@property (nonatomic, readwrite) RMQReader *reader;
+@property (weak, nonatomic, readwrite) RMQReader *reader;
 - (instancetype)initWithSender:(id<RMQSender>)sender
                         config:(RMQConnectionConfig *)config
              completionHandler:(void (^)(NSNumber *heartbeatTimeout))completionHandler;
