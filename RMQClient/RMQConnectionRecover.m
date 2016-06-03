@@ -60,7 +60,7 @@ channelAllocator:(id<RMQChannelAllocator>)allocator
 # pragma mark - Private
 
 - (BOOL)currentAttemptBeyondLimit {
-    return ++self.attempts > self.attemptLimit;
+    return self.interval.integerValue == 0 || ++self.attempts > self.attemptLimit;
 }
 
 @end

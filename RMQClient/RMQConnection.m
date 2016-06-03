@@ -1,5 +1,4 @@
 #import "RMQConnection.h"
-#import "RMQConnectionShutdown.h"
 #import "RMQConnectionRecover.h"
 #import "RMQGCDHeartbeatSender.h"
 #import "RMQGCDSerialQueue.h"
@@ -102,17 +101,12 @@ NSInteger const RMQChannelLimit = 65535;
 
     RMQProcessInfoNameGenerator *nameGenerator = [RMQProcessInfoNameGenerator new];
     RMQGCDSerialQueue *commandQueue = [[RMQGCDSerialQueue alloc] initWithName:[nameGenerator generateWithPrefix:@"connection-commands"]];
-    id<RMQConnectionRecovery> recovery;
-    if (recoveryInterval.integerValue > 0) {
-        recovery = [[RMQConnectionRecover alloc] initWithInterval:recoveryInterval
-                                                     attemptLimit:recoveryAttempts
-                                                       onlyErrors:!shouldRecoverFromConnectionClose
-                                                  heartbeatSender:heartbeatSender
-                                                     commandQueue:commandQueue
-                                                         delegate:delegateProxy];
-    } else {
-        recovery = [[RMQConnectionShutdown alloc] initWithHeartbeatSender:heartbeatSender];
-    }
+    RMQConnectionRecover *recovery = [[RMQConnectionRecover alloc] initWithInterval:recoveryInterval
+                                                                       attemptLimit:recoveryAttempts
+                                                                         onlyErrors:!shouldRecoverFromConnectionClose
+                                                                    heartbeatSender:heartbeatSender
+                                                                       commandQueue:commandQueue
+                                                                           delegate:delegateProxy];
 
     RMQConnectionConfig *config = [[RMQConnectionConfig alloc] initWithCredentials:credentials
                                                                         channelMax:channelMax
