@@ -102,7 +102,7 @@ class ConnectionClosureTest: XCTestCase {
         XCTAssertTrue(heartbeatSender.stopReceived)
     }
 
-    func testCloseClosesTransport() {
+    func testCloseClosesTransportAndSetsItsDelegateToNil() {
         let numCloseOpsBeforeTransportClose = 4
         let transport = ControlledInteractionTransport()
         let allocator = ChannelSpyAllocator()
@@ -128,8 +128,10 @@ class ConnectionClosureTest: XCTestCase {
         }
 
         XCTAssertTrue(transport.connected)
+        XCTAssertEqual(conn, transport.delegate as? RMQConnection)
         try! q.step()
         XCTAssertFalse(transport.connected)
+        XCTAssertNil(transport.delegate)
     }
 
     func testBlockingCloseIsANormalCloseButBlocking() {

@@ -28,15 +28,6 @@ class RMQTCPSocketTransportTest: XCTestCase {
         XCTAssertEqual(header, receivedData)
     }
 
-    func testDelegateIsDisposedAfterCloseToPreventTriggeringRecovery() {
-        let delegate = TransportDelegateSpy()
-        let transport = createTransport()
-        transport.delegate = delegate
-        transport.close()
-        transport.socketDidDisconnect(nil, withError: NSError(domain: RMQErrorDomain, code: 666, userInfo: [:]))
-        XCTAssertNil(delegate.lastDisconnectError)
-    }
-
     func testIsNotConnectedWhenSocketDisconnectedOutsideOfCloseBlock() {
         let transport = createTransport()
         let error = NSError(domain: "", code: 0, userInfo: [:])

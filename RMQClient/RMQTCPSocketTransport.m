@@ -65,7 +65,6 @@ long writeTag = UINT32_MAX + 1;
 }
 
 - (void)close {
-    self.delegate = nil;
     [self.socket disconnect];
 }
 

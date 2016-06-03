@@ -344,7 +344,10 @@ NSInteger const RMQChannelLimit = 65535;
               ^{[self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:self.amqClose]];},
               ^{[self.channelZero blockingWaitOn:[RMQConnectionCloseOk class]];},
               ^{[self.heartbeatSender stop];},
-              ^{[self.transport close];}];
+              ^{
+                  self.transport.delegate = nil;
+                  [self.transport close];
+              }];
 }
 
 - (void)closeAllUserChannels {
