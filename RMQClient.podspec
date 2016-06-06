@@ -13,6 +13,6 @@ Pod::Spec.new do |s|
   s.platform         = :ios
   s.source           = { :git => "https://github.com/rabbitmq/rabbitmq-objc-client.git", :tag => "v#{s.version}" }
   s.source_files     = "RMQClient", "RMQClient/**/*.{h,m}"
-  s.dependency       "Mantle"
+  s.dependency       "JKVValue"
   s.dependency       "CocoaAsyncSocket", "~> 7.4"
 end
