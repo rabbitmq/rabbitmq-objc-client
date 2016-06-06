@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "RMQClient"
-  s.version          = "0.7"
+  s.version          = "0.7.1"
   s.summary          = "RabbitMQ client"
   s.description      = <<-DESC
   RabbitMQ client for iOS Objective-C and Swift. Developed and supported by the

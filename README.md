@@ -32,10 +32,8 @@ Test-driven from Swift and implemented in Objective-C, to avoid burdening Object
 1. Create a Cartfile with the following line:
 
    ```
-   github "rabbitmq/rabbitmq-objc-client" "v0.7"
+   github "rabbitmq/rabbitmq-objc-client" ~> 0.7
    ```
-
-   Replace `"v0.7"` with the release, commit or branch of your choice.
 
    Run carthage, for example in a new project:
 
