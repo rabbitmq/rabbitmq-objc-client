@@ -36,7 +36,7 @@ this list.
 1. Add the following to your Podfile:
 
    ```
-   pod 'RMQClient', '~> 0.8'
+   pod 'RMQClient', '~> 0.7'
    ```
 1. Run `pod install`
 
