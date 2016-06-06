@@ -55,7 +55,7 @@ this list.
    ```
    pod 'RMQClient', '~> 0.7'
    ```
-   We recommend adding `use_frameworks!` to enable modular imports.
+   We recommend adding `use_frameworks!` to enable modular imports (Objective-C only).
 1. Run `pod install`.
 1. Open your project with `open MyProject.xcworkspace`.
 
