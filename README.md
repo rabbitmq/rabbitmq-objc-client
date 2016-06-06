@@ -18,6 +18,8 @@ Test-driven from Swift and implemented in Objective-C, to avoid burdening Object
 - [x] CocoaPods support
 - [x] iOS support
 - [ ] [OSX support](https://github.com/rabbitmq/rabbitmq-objc-client/issues/55)
+- [x] PKCS12 client certificates using the [TLS auth mechanism plugin](https://github.com/rabbitmq/rabbitmq-auth-mechanism-ssl)
+- [ ] [PKCS12 client certificates using chained CAs](https://github.com/rabbitmq/rabbitmq-objc-client/issues/74)
 - [ ] [Publisher confirmations](https://github.com/rabbitmq/rabbitmq-objc-client/issues/68)
 - [ ] [Publish and consume messages as data](https://github.com/rabbitmq/rabbitmq-objc-client/issues/46)
 - [ ] [Connection closure when broker doesn't send heartbeats fast enough](https://github.com/rabbitmq/rabbitmq-objc-client/issues/41)
