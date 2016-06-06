@@ -2,11 +2,26 @@
 
 [![Build Status](https://travis-ci.org/rabbitmq/rabbitmq-objc-client.svg?branch=master)](https://travis-ci.org/rabbitmq/rabbitmq-objc-client)
 
-A work-in-progress from-scratch implementation of a RabbitMQ client, largely
-influenced by [Bunny](https://github.com/ruby-amqp/bunny).
+A RabbitMQ client, largely influenced by [Bunny](https://github.com/ruby-amqp/bunny).
 
-Currently testing from Swift and implementing in Objective-C, to avoid
-burdening Objective-C developers with Swift baggage.
+Test-driven from Swift and implemented in Objective-C, to avoid burdening Objective-C developers with Swift baggage.
+
+## Currently implemented
+
+- [x] Publish and consume messages as strings
+- [x] Manipulate queues, exchanges, bindings and consumers.
+- [x] Asynchronous API using GCD queues under the hood (a delegate receives errors on a configurable GCD queue).
+- [x] Configurable recovery from network interruption and connection-level exceptions
+- [x] TLS support
+- [x] Client heartbeats
+- [x] Carthage support
+- [x] CocoaPods support
+- [ ] [Publisher confirmations](https://github.com/rabbitmq/rabbitmq-objc-client/issues/68)
+- [ ] [Publish and consume messages as data](https://github.com/rabbitmq/rabbitmq-objc-client/issues/46)
+- [ ] [Connection closure when broker doesn't send heartbeats fast enough](https://github.com/rabbitmq/rabbitmq-objc-client/issues/41)
+- [ ] [Customisable consumer hooks](https://github.com/rabbitmq/rabbitmq-objc-client/issues/71)
+- [ ] [basic.return support](https://github.com/rabbitmq/rabbitmq-objc-client/issues/72)
+- [ ] [Transaction support](https://github.com/rabbitmq/rabbitmq-objc-client/issues/73)
 
 ## Installation with [Carthage](https://github.com/Carthage/Carthage)
 
