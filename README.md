@@ -17,7 +17,7 @@ Test-driven from Swift and implemented in Objective-C, to avoid burdening Object
 - [x] Carthage support
 - [x] CocoaPods support
 - [x] iOS support
-- [ ] OSX support
+- [ ] [OSX support](https://github.com/rabbitmq/rabbitmq-objc-client/issues/55)
 - [ ] [Publisher confirmations](https://github.com/rabbitmq/rabbitmq-objc-client/issues/68)
 - [ ] [Publish and consume messages as data](https://github.com/rabbitmq/rabbitmq-objc-client/issues/46)
 - [ ] [Connection closure when broker doesn't send heartbeats fast enough](https://github.com/rabbitmq/rabbitmq-objc-client/issues/41)
