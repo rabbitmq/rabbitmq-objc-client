@@ -55,7 +55,11 @@ this list.
    ```
    pod 'RMQClient', '~> 0.7'
    ```
-1. Run `pod install`
+   We recommend adding `use_frameworks!` to enable modular imports.
+1. Run `pod install`.
+1. Open your project with `open MyProject.xcworkspace`.
+
+**Objective-C users:** importing with `@import RMQClient;` currently produces an error in Xcode (Could not build module 'RMQClient'), but this should not prevent code from compiling and running. Using crocodile imports avoids this Xcode bug: `#import <RMQClient/RMQClient.h>`.
 
 ## Running Tests
 
