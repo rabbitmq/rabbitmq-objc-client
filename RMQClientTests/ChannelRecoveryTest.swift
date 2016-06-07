@@ -44,6 +44,9 @@ class ChannelRecoveryTest: XCTestCase {
         q.bind(e2)
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueBindOk()))
 
+        q.bind(e2, routingKey: "foobar")
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueBindOk()))
+
         dispatcher.syncMethodsSent = []
 
         ch.recover()
@@ -65,8 +68,11 @@ class ChannelRecoveryTest: XCTestCase {
         XCTAssertEqual(MethodFixtures.queueDeclare("q", options: []),
                        dispatcher.syncMethodsSent[6] as? RMQQueueDeclare)
 
-        XCTAssertEqual(MethodFixtures.queueBind("q", exchangeName: "ex2", routingKey: ""),
-                       dispatcher.syncMethodsSent[7] as? RMQQueueBind)
+        let expectedQueueBinds: Set<RMQQueueBind> = [MethodFixtures.queueBind("q", exchangeName: "ex2", routingKey: ""),
+                                                     MethodFixtures.queueBind("q", exchangeName: "ex2", routingKey: "foobar")]
+        let actualQueueBinds: Set<RMQQueueBind>   = [dispatcher.syncMethodsSent[7] as! RMQQueueBind,
+                                                     dispatcher.syncMethodsSent[8] as! RMQQueueBind]
+        XCTAssertEqual(expectedQueueBinds, actualQueueBinds)
     }
 
     func testDoesNotReinstatePrefetchSettingsIfNoneSet() {

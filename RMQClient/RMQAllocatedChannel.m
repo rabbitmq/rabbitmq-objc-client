@@ -481,7 +481,7 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
 - (void)recoverQueuesAndTheirBindings {
     for (RMQQueue *queue in self.queues.allValues) {
         [self queueDeclare:queue.name options:queue.options];
-        for (NSDictionary *binding in self.queueBindings[queue.name]) {
+        for (NSDictionary *binding in [self.queueBindings[queue.name] copy]) {
             [self queueBind:queue.name exchange:binding[@"exchange"] routingKey:binding[@"routing-key"]];
         }
     }
