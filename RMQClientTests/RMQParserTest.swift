@@ -71,6 +71,60 @@ class RMQParserTest: XCTestCase {
         XCTAssertEqual("", parser.parseLongString())
     }
 
+    func testLongUInt() {
+        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{10}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        XCTAssertEqual(16, parser.parseLongUInt())
+    }
+
+    func testLongUIntWhenAlreadyRead() {
+        let parser = RMQParser(data: "\u{0}\u{0}\u{1}\u{0}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        XCTAssertEqual(256, parser.parseLongUInt())
+        for _ in 1...1000 {
+            XCTAssertEqual(0, parser.parseLongUInt())
+        }
+    }
+
+    func testLongUIntWhenNotEnoughDataToRead() {
+        let parser = RMQParser(data: "\u{0}\u{0}\u{1}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        XCTAssertEqual(0, parser.parseLongUInt())
+    }
+
+    func testLongLongUInt() {
+        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{0}\u{0}\u{0}\u{0}\u{10}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        XCTAssertEqual(16, parser.parseLongLongUInt())
+    }
+
+    func testLongLongUIntWhenAlreadyRead() {
+        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{0}\u{0}\u{0}\u{1}\u{0}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        XCTAssertEqual(256, parser.parseLongLongUInt())
+        for _ in 1...1000 {
+            XCTAssertEqual(0, parser.parseLongLongUInt())
+        }
+    }
+
+    func testLongLongUIntWhenNotEnoughDataToRead() {
+        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{0}\u{0}\u{0}\u{1}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        XCTAssertEqual(0, parser.parseLongLongUInt())
+    }
+
+    func testShortUInt() {
+        let parser = RMQParser(data: "\u{0}\u{10}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        XCTAssertEqual(16, parser.parseShortUInt())
+    }
+
+    func testShortUIntWhenAlreadyRead() {
+        let parser = RMQParser(data: "\u{1}\u{0}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        XCTAssertEqual(256, parser.parseShortUInt())
+        for _ in 1...1000 {
+            XCTAssertEqual(0, parser.parseShortUInt())
+        }
+    }
+
+    func testShortUIntWhenNotEnoughDataToRead() {
+        let parser = RMQParser(data: "\u{1}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        XCTAssertEqual(0, parser.parseShortUInt())
+    }
+    
     func testFieldTableWithAllTypes() {
         let signedByte: Int8 = -128
         let date = NSDate.distantFuture()

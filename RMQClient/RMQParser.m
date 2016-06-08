@@ -67,17 +67,23 @@ typedef NS_ENUM(char, RMQParserFieldValue) {
 - (UInt32)parseLongUInt {
     UInt32 value;
     value = CFSwapInt32BigToHost(*(UInt32 *)self.cursor);
-    self.cursor += sizeof(value);
-
-    return value;
+    if (self.cursor + sizeof(value) > self.end) {
+        return 0;
+    } else {
+        self.cursor += sizeof(value);
+        return value;
+    }
 }
 
 - (UInt64)parseLongLongUInt {
     UInt64 value;
     value = CFSwapInt64BigToHost(*(UInt64 *)self.cursor);
-    self.cursor += sizeof(value);
-
-    return value;
+    if (self.cursor + sizeof(value) > self.end) {
+        return 0;
+    } else {
+        self.cursor += sizeof(value);
+        return value;
+    }
 }
 
 - (NSDate *)parseTimestamp {
@@ -88,9 +94,12 @@ typedef NS_ENUM(char, RMQParserFieldValue) {
 - (UInt16)parseShortUInt {
     UInt16 value;
     value = CFSwapInt16BigToHost(*(UInt16 *)self.cursor);
-    self.cursor += sizeof(value);
-
-    return value;
+    if (self.cursor + sizeof(value) > self.end) {
+        return 0;
+    } else {
+        self.cursor += sizeof(value);
+        return value;
+    }
 }
 
 - (BOOL)parseBoolean {
