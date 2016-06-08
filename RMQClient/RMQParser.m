@@ -22,6 +22,18 @@ typedef NS_ENUM(char, RMQParserFieldValue) {
     RMQParserByteArray     = 'x',
 };
 
+@interface RMQValueForUnsupportedField : RMQValue <RMQFieldValue>
+@end
+
+@implementation RMQValueForUnsupportedField
+- (NSData *)amqFieldValueType {
+    return nil;
+}
+- (NSData *)amqEncoded {
+    return [NSData data];
+}
+@end
+
 @interface RMQParser ()
 @property (nonatomic, readwrite) const char *cursor;
 @property (nonatomic, readwrite) const char *end;
@@ -50,7 +62,12 @@ typedef NS_ENUM(char, RMQParserFieldValue) {
         NSString *key = [self parseShortString];
 
         RMQParserFieldValue type = *(self.cursor++);
-        dict[key] = [self parseValueForType:type];
+        RMQValue<RMQFieldValue> *value = [self parseValueForType:type];
+
+        if ([value isKindOfClass:[RMQValueForUnsupportedField class]]) {
+            return @{};
+        }
+        dict[key] = value;
     }
 
     return dict;
@@ -195,6 +212,8 @@ typedef NS_ENUM(char, RMQParserFieldValue) {
             return [RMQVoid new];
         case RMQParserByteArray:
             return [[RMQByteArray alloc] init:[self parseByteArray]];
+        default:
+            return [RMQValueForUnsupportedField new];
     }
 }
 

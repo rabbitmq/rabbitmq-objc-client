@@ -151,4 +151,21 @@ class RMQParserTest: XCTestCase {
         XCTAssertEqual(dict, parser.parseFieldTable())
     }
 
+    func testGetEmptyDictWhenFieldTableIncludesValueWithBadSize() {
+        var dict: [String: RMQValue] = [:]
+        dict["unsigned-16-bit"]      = RMQShort(65535)
+        dict["bad-size"]             = ValueWithBadSize(123)
+
+        let table = RMQTable(dict)
+        let data = table.amqEncoded()
+        let parser = RMQParser(data: data)
+        XCTAssertEqual([:], parser.parseFieldTable())
+    }
+
+    @objc class ValueWithBadSize : RMQSignedLong {
+        override func amqEncoded() -> NSData {
+            var longVal = CFSwapInt32HostToBig(UInt32(self.integerValue))
+            return NSData(bytes: &longVal, length: 1)
+        }
+    }
 }
