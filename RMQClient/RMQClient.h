@@ -28,6 +28,7 @@
 #import <RMQClient/RMQTickingClock.h>
 #import <RMQClient/RMQPKCS12CertificateConverter.h>
 #import <RMQClient/RMQTLSOptions.h>
+#import <RMQClient/RMQTransactionalConfirmations.h>
 
 //! Project version number for RMQClient.
 FOUNDATION_EXPORT double RMQClientVersionNumber;

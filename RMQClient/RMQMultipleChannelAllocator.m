@@ -7,6 +7,7 @@
 #import "RMQProcessInfoNameGenerator.h"
 #import "RMQFrame.h"
 #import "RMQSuspendResumeDispatcher.h"
+#import "RMQTransactionalConfirmations.h"
 
 @interface RMQMultipleChannelAllocator ()
 @property (atomic, readwrite) UInt16 channelNumber;
@@ -89,7 +90,8 @@
                                                      dispatcher:dispatcher
                                                    commandQueue:commandQueue
                                                   nameGenerator:self.nameGenerator
-                                                      allocator:self];
+                                                      allocator:self
+                                                  confirmations:[RMQTransactionalConfirmations new]];
     self.channels[@(self.channelNumber)] = ch;
     self.channelNumber++;
     return ch;
@@ -106,7 +108,8 @@
                                                              dispatcher:dispatcher
                                                            commandQueue:[self suspendedDispatchQueue:i]
                                                           nameGenerator:self.nameGenerator
-                                                              allocator:self];
+                                                              allocator:self
+                                                          confirmations:[RMQTransactionalConfirmations new]];
             self.channels[@(i)] = ch;
             return ch;
         }

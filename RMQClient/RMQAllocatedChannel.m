@@ -13,6 +13,7 @@
 @property (nonatomic, readwrite) NSMutableDictionary *exchangeBindings;
 @property (nonatomic, readwrite) NSMutableDictionary *queues;
 @property (nonatomic, readwrite) NSMutableDictionary *queueBindings;
+@property (nonatomic, readwrite) id<RMQConfirmations> confirmations;
 @property (nonatomic, readwrite) NSNumber *prefetchCountPerConsumer;
 @property (nonatomic, readwrite) NSNumber *prefetchCountPerChannel;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
@@ -28,7 +29,8 @@
           dispatcher:(id<RMQDispatcher>)dispatcher
         commandQueue:(id<RMQLocalSerialQueue>)commandQueue
        nameGenerator:(id<RMQNameGenerator>)nameGenerator
-           allocator:(nonnull id<RMQChannelAllocator>)allocator {
+           allocator:(nonnull id<RMQChannelAllocator>)allocator
+       confirmations:(id<RMQConfirmations>)confirmations {
     self = [super init];
     if (self) {
         self.channelNumber = channelNumber;
@@ -40,6 +42,7 @@
         self.exchangeBindings = [NSMutableDictionary new];
         self.queues = [NSMutableDictionary new];
         self.queueBindings = [NSMutableDictionary new];
+        self.confirmations = confirmations;
         self.prefetchCountPerConsumer = nil;
         self.prefetchCountPerChannel = nil;
         self.delegate = nil;
@@ -94,6 +97,7 @@
 - (void)recover {
     [self open];
     [self recoverPrefetch];
+    [self recoverConfirmations];
     [self recoverExchanges];
     [self recoverExchangeBindings]; 
     [self recoverQueuesAndTheirBindings];
@@ -102,6 +106,15 @@
 
 - (void)blockingWaitOn:(Class)method {
     [self.dispatcher blockingWaitOn:method];
+}
+
+- (void)confirmSelect {
+    [self.confirmations enable];
+    [self.dispatcher sendSyncMethod:[[RMQConfirmSelect alloc] initWithOptions:RMQConfirmSelectNoOptions]];
+}
+
+- (void)afterConfirmed:(RMQConfirmationCallback)handler {
+    [self.confirmations addCallback:handler];
 }
 
 - (RMQQueue *)queue:(NSString *)originalQueueName
@@ -200,6 +213,8 @@
                                                                 method:publish
                                                          contentHeader:contentHeader
                                                          contentBodies:contentBodies];
+
+    [self.confirmations addPublication];
 
     [self.dispatcher sendAsyncFrameset:frameset];
 }
@@ -359,12 +374,25 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
         [self.commandQueue enqueue:^{
             [self handleBasicCancel:frameset];
         }];
+    } else if ([frameset.method isKindOfClass:[RMQBasicAck class]] ||
+               [frameset.method isKindOfClass:[RMQBasicNack class]]) {
+        [self.commandQueue enqueue:^{
+            [self handleConfirmation:frameset];
+        }];
     } else {
         [self.dispatcher handleFrameset:frameset];
     }
 }
 
 # pragma mark - Private
+
+- (void)handleConfirmation:(RMQFrameset *)frameset {
+    if ([frameset.method isKindOfClass:[RMQBasicAck class]]) {
+        [self.confirmations ack:(RMQBasicAck *)frameset.method];
+    } else {
+        [self.confirmations nack:(RMQBasicNack *)frameset.method];
+    }
+}
 
 - (void)handleBasicDeliver:(RMQFrameset *)frameset {
     RMQBasicDeliver *deliver = (RMQBasicDeliver *)frameset.method;
@@ -461,6 +489,13 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
     }
     if (self.prefetchCountPerChannel) {
         [self basicQos:self.prefetchCountPerChannel global:YES];
+    }
+}
+
+- (void)recoverConfirmations {
+    if (self.confirmations.isEnabled) {
+        [self.confirmations recover];
+        [self.dispatcher sendSyncMethod:[[RMQConfirmSelect alloc] initWithOptions:RMQConfirmSelectNoOptions]];
     }
 }
 

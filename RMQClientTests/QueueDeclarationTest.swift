@@ -4,7 +4,7 @@ class QueueDeclarationTest: XCTestCase {
 
     func testQueueSendsAQueueDeclare() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
         ch.activateWithDelegate(nil)
 
         ch.queue("bagpuss")
@@ -17,8 +17,8 @@ class QueueDeclarationTest: XCTestCase {
     func testQueueWithEmptyNameGetsClientGeneratedName() {
         let generator = StubNameGenerator()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(),
-                                     nameGenerator: generator, allocator: ChannelSpyAllocator())
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, nameGenerator: generator)
+
         ch.activateWithDelegate(nil)
 
         generator.nextName = "mouse-organ"
@@ -33,8 +33,8 @@ class QueueDeclarationTest: XCTestCase {
         let generator = StubNameGenerator()
         let delegate = ConnectionDelegateSpy()
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(321, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(),
-                                     nameGenerator: generator, allocator: ChannelSpyAllocator())
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, nameGenerator: generator)
+
         ch.activateWithDelegate(delegate)
 
         generator.nextName = "I-will-dupe"
@@ -48,7 +48,7 @@ class QueueDeclarationTest: XCTestCase {
 
     func testQueueDeleteSendsAQueueDelete() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(123, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
         ch.queueDelete("my queue", options: [.IfUnused])
         XCTAssertEqual(MethodFixtures.queueDelete("my queue", options: [.IfUnused]),
                        dispatcher.lastSyncMethod as? RMQQueueDelete)
@@ -56,7 +56,7 @@ class QueueDeclarationTest: XCTestCase {
 
     func testQueueDeclareAfterDeleteSendsAFreshDeclare() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(123, contentBodySize: 100, dispatcher: dispatcher, commandQueue: FakeSerialQueue(), nameGenerator: StubNameGenerator(), allocator: ChannelSpyAllocator())
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
         ch.queue("my queue")
         ch.queueDelete("my queue", options: [])
         dispatcher.lastSyncMethod = nil

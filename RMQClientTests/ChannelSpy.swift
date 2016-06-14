@@ -50,6 +50,7 @@
     var recoverCalled = false
     var blockingWaitOnMethod: AnyClass?
     var delegateSentToActivate: RMQConnectionDelegate?
+    var confirmSelectCallback: ((NSNumber, Bool) -> Void)?
 
     override var description: String {
         return "Channel Spy \(channelNumber)"
@@ -85,6 +86,12 @@
 
     func blockingWaitOn(method: AnyClass) {
         blockingWaitOnMethod = method
+    }
+
+    func confirmSelect() {
+    }
+
+    func afterConfirmed(handler: (Set<NSNumber>, Set<NSNumber>) -> Void) {
     }
 
     func sendMethod(sendingMethod: RMQMethod,

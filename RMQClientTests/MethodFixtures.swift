@@ -86,6 +86,10 @@ class MethodFixtures {
         return RMQChannelOpenOk(reserved1: RMQLongstr(""))
     }
 
+    static func confirmSelect() -> RMQConfirmSelect {
+        return RMQConfirmSelect(options: [])
+    }
+
     static func connectionClose() -> RMQConnectionClose {
         return RMQConnectionClose(
             replyCode: RMQShort(200),

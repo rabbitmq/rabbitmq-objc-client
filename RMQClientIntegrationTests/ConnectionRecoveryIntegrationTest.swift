@@ -48,7 +48,8 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         let q = ch.queue("", options: [.AutoDelete, .Exclusive])
         let ex = ch.direct("foo", options: [.AutoDelete])
         let ex2 = ch.direct("bar", options: [.AutoDelete])
-        let semaphore = dispatch_semaphore_create(0)
+        let consumerSemaphore = dispatch_semaphore_create(0)
+        let confirmSemaphore = dispatch_semaphore_create(0)
         var messages: [RMQMessage] = []
 
         ex2.bind(ex)
@@ -56,25 +57,35 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
 
         q.subscribe { m in
             messages.append(m)
-            dispatch_semaphore_signal(semaphore)
+            dispatch_semaphore_signal(consumerSemaphore)
         }
 
+        ch.confirmSelect()
+
         ex.publish("before close")
-        XCTAssertEqual(0, dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout)),
+        XCTAssertEqual(0, dispatch_semaphore_wait(consumerSemaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout)),
                        "Timed out waiting for message")
 
         transport.simulateDisconnect()
 
         XCTAssert(TestHelper.pollUntil { delegate.recoveredConnection != nil },
                   "Didn't finish recovery")
-        delegate.recoveredConnection = nil
 
         q.publish("after close 1")
-        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout))
+        dispatch_semaphore_wait(consumerSemaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout))
         ex.publish("after close 2")
-        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout))
+        dispatch_semaphore_wait(consumerSemaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout))
+
+        var acks: Set<NSNumber>?
+        ch.afterConfirmed { (a, _) in
+            acks = a
+            dispatch_semaphore_signal(confirmSemaphore)
+        }
 
         XCTAssertEqual(["before close", "after close 1", "after close 2"], messages.map { $0.content })
+
+        XCTAssertEqual(0, dispatch_semaphore_wait(confirmSemaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout)))
+        XCTAssertEqual([1, 2, 3], acks)
     }
 
     func testReenablesConsumersOnEachRecoveryFromConnectionClose() {

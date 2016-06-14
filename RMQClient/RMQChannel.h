@@ -16,6 +16,8 @@
 - (void)blockingClose;
 - (void)recover;
 - (void)blockingWaitOn:(nonnull Class)method;
+- (void)confirmSelect;
+- (void)afterConfirmed:(void (^ _Nonnull)(NSSet<NSNumber *> * _Nonnull acked, NSSet<NSNumber *> * _Nonnull nacked))handler;
 
 - (nonnull RMQQueue *)queue:(nonnull NSString *)queueName
                     options:(RMQQueueDeclareOptions)options;

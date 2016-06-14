@@ -33,6 +33,14 @@
     [self err];
 }
 
+- (void)confirmSelect {
+    [self err];
+}
+
+- (void)afterConfirmed:(void (^)(NSSet<NSNumber *> * _Nonnull, NSSet<NSNumber *> * _Nonnull))handler {
+    [self err];
+}
+
 - (RMQConsumer *)basicConsume:(NSString *)queueName
                       options:(RMQBasicConsumeOptions)options
                       handler:(RMQConsumerDeliveryHandler)handler {

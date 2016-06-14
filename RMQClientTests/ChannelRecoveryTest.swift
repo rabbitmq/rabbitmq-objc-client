@@ -4,12 +4,7 @@ class ChannelRecoveryTest: XCTestCase {
 
     func testReopensChannel() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1,
-                                     contentBodySize: 100,
-                                     dispatcher: dispatcher,
-                                     commandQueue: FakeSerialQueue(),
-                                     nameGenerator: StubNameGenerator(),
-                                     allocator: ChannelSpyAllocator())
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
         ch.recover()
 
         XCTAssertEqual(MethodFixtures.channelOpen(), dispatcher.syncMethodsSent[0] as? RMQChannelOpen)
@@ -17,35 +12,25 @@ class ChannelRecoveryTest: XCTestCase {
 
     func testRecoversEntitiesInCreationOrder() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1,
-                                     contentBodySize: 100,
-                                     dispatcher: dispatcher,
-                                     commandQueue: FakeSerialQueue(),
-                                     nameGenerator: StubNameGenerator(),
-                                     allocator: ChannelSpyAllocator())
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
+
         ch.basicQos(2, global: false) // 2 per consumer
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicQosOk()))
 
         ch.basicQos(3, global: true)  // 3 per channel
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicQosOk()))
 
-        let e1 = ch.direct("ex1")
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
+        ch.confirmSelect()
 
+        let e1 = ch.direct("ex1")
         let e2 = ch.direct("ex2")
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
 
         e2.bind(e1)
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeBindOk()))
 
         let q = ch.queue("q")
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("q")))
 
         q.bind(e2)
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueBindOk()))
-
         q.bind(e2, routingKey: "foobar")
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueBindOk()))
 
         dispatcher.syncMethodsSent = []
 
@@ -56,46 +41,56 @@ class ChannelRecoveryTest: XCTestCase {
         XCTAssertEqual(MethodFixtures.basicQos(3, options: [.Global]),
                        dispatcher.syncMethodsSent[2] as? RMQBasicQos)
 
+        XCTAssertEqual(MethodFixtures.confirmSelect(),
+                       dispatcher.syncMethodsSent[3] as? RMQConfirmSelect)
+
         let expectedExchangeDeclares: Set<RMQExchangeDeclare> = [MethodFixtures.exchangeDeclare("ex1", type: "direct", options: []),
                                                                  MethodFixtures.exchangeDeclare("ex2", type: "direct", options: [])]
-        let actualExchangeDeclares: Set<RMQExchangeDeclare>   = [dispatcher.syncMethodsSent[3] as! RMQExchangeDeclare,
-                                                                 dispatcher.syncMethodsSent[4] as! RMQExchangeDeclare]
+        let actualExchangeDeclares: Set<RMQExchangeDeclare>   = [dispatcher.syncMethodsSent[4] as! RMQExchangeDeclare,
+                                                                 dispatcher.syncMethodsSent[5] as! RMQExchangeDeclare]
         XCTAssertEqual(expectedExchangeDeclares, actualExchangeDeclares)
 
         XCTAssertEqual(MethodFixtures.exchangeBind("ex1", destination: "ex2", routingKey: ""),
-                       dispatcher.syncMethodsSent[5] as? RMQExchangeBind)
+                       dispatcher.syncMethodsSent[6] as? RMQExchangeBind)
 
         XCTAssertEqual(MethodFixtures.queueDeclare("q", options: []),
-                       dispatcher.syncMethodsSent[6] as? RMQQueueDeclare)
+                       dispatcher.syncMethodsSent[7] as? RMQQueueDeclare)
 
         let expectedQueueBinds: Set<RMQQueueBind> = [MethodFixtures.queueBind("q", exchangeName: "ex2", routingKey: ""),
                                                      MethodFixtures.queueBind("q", exchangeName: "ex2", routingKey: "foobar")]
-        let actualQueueBinds: Set<RMQQueueBind>   = [dispatcher.syncMethodsSent[7] as! RMQQueueBind,
-                                                     dispatcher.syncMethodsSent[8] as! RMQQueueBind]
+        let actualQueueBinds: Set<RMQQueueBind>   = [dispatcher.syncMethodsSent[8] as! RMQQueueBind,
+                                                     dispatcher.syncMethodsSent[9] as! RMQQueueBind]
         XCTAssertEqual(expectedQueueBinds, actualQueueBinds)
     }
 
     func testDoesNotReinstatePrefetchSettingsIfNoneSet() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1,
-                                     contentBodySize: 100,
-                                     dispatcher: dispatcher,
-                                     commandQueue: FakeSerialQueue(),
-                                     nameGenerator: StubNameGenerator(),
-                                     allocator: ChannelSpyAllocator())
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
         ch.recover()
 
         XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0.isKindOfClass(RMQBasicQos.self) })
     }
 
+    func testDoesNotReinstateConfirmationsIfNotSet() {
+        let dispatcher = DispatcherSpy()
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
+        ch.recover()
+
+        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0.isKindOfClass(RMQConfirmSelect.self) })
+    }
+
+    func testInformsConfirmationsHandlerOfConnectivityLoss() {
+        let confirmations = ConfirmationsSpy()
+        let ch = ChannelHelper.makeChannel(1, confirmations: confirmations)
+        ch.confirmSelect()
+        ch.recover()
+
+        XCTAssert(confirmations.recoverCalled)
+    }
+
     func testRedeclaresExchangesThatHadNotBeenDeleted() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1,
-                                     contentBodySize: 100,
-                                     dispatcher: dispatcher,
-                                     commandQueue: FakeSerialQueue(),
-                                     nameGenerator: StubNameGenerator(),
-                                     allocator: ChannelSpyAllocator())
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
         ch.fanout("ex1")
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
         ch.headers("ex2", options: [.AutoDelete])
@@ -118,12 +113,7 @@ class ChannelRecoveryTest: XCTestCase {
 
     func testRedeclaredExchangesAreStillMemoized() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1,
-                                     contentBodySize: 100,
-                                     dispatcher: dispatcher,
-                                     commandQueue: FakeSerialQueue(),
-                                     nameGenerator: StubNameGenerator(),
-                                     allocator: ChannelSpyAllocator())
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
         ch.fanout("a", options: [.AutoDelete])
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
 
@@ -137,12 +127,8 @@ class ChannelRecoveryTest: XCTestCase {
     func testRebindsExchangesNotPreviouslyUnbound() {
         let dispatcher = DispatcherSpy()
         let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(1,
-                                     contentBodySize: 100,
-                                     dispatcher: dispatcher,
-                                     commandQueue: q,
-                                     nameGenerator: StubNameGenerator(),
-                                     allocator: ChannelSpyAllocator())
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, commandQueue: q)
+
         let a = ch.direct("a")
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
         let b = ch.direct("b")
@@ -179,12 +165,7 @@ class ChannelRecoveryTest: XCTestCase {
     
     func testRedeclaresQueuesThatHadNotBeenDeleted() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1,
-                                     contentBodySize: 100,
-                                     dispatcher: dispatcher,
-                                     commandQueue: FakeSerialQueue(),
-                                     nameGenerator: StubNameGenerator(),
-                                     allocator: ChannelSpyAllocator())
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
         ch.queue("a", options: [.AutoDelete])
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("a")))
 
@@ -208,12 +189,7 @@ class ChannelRecoveryTest: XCTestCase {
 
     func testRedeclaredQueuesAreStillMemoized() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1,
-                                     contentBodySize: 100,
-                                     dispatcher: dispatcher,
-                                     commandQueue: FakeSerialQueue(),
-                                     nameGenerator: StubNameGenerator(),
-                                     allocator: ChannelSpyAllocator())
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
         ch.queue("a", options: [.AutoDelete])
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("a")))
 
@@ -226,12 +202,7 @@ class ChannelRecoveryTest: XCTestCase {
     
     func testRebindsQueuesNotPreviouslyUnbound() {
         let dispatcher = DispatcherSpy()
-        let ch = RMQAllocatedChannel(1,
-                                     contentBodySize: 100,
-                                     dispatcher: dispatcher,
-                                     commandQueue: FakeSerialQueue(),
-                                     nameGenerator: StubNameGenerator(),
-                                     allocator: ChannelSpyAllocator())
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
         let q1 = ch.queue("a")
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("a")))
         let q2 = ch.queue("b")
@@ -265,12 +236,7 @@ class ChannelRecoveryTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let nameGenerator = StubNameGenerator()
         let q = FakeSerialQueue()
-        let ch = RMQAllocatedChannel(1,
-                                     contentBodySize: 100,
-                                     dispatcher: dispatcher,
-                                     commandQueue: q,
-                                     nameGenerator: nameGenerator,
-                                     allocator: ChannelSpyAllocator())
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, commandQueue: q, nameGenerator: nameGenerator)
 
         let createContext = (ch, dispatcher, nameGenerator)
         createConsumer("consumer1", createContext)

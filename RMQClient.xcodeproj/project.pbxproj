@@ -101,6 +101,15 @@
 		AE96A76A1CE1F16600C772AA /* RMQSuspendResumeDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = AE96A7681CE1F16600C772AA /* RMQSuspendResumeDispatcher.m */; };
 		AE96A76C1CE1F2F000C772AA /* RMQDispatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = AE96A76B1CE1F2F000C772AA /* RMQDispatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE96A76E1CE2126100C772AA /* DispatcherSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE96A76D1CE2126100C772AA /* DispatcherSpy.swift */; };
+		AE9DB0031D116F770005F44B /* PublisherConfirmationIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9DB0021D116F770005F44B /* PublisherConfirmationIntegrationTest.swift */; };
+		AE9DB0061D11F0820005F44B /* RMQTransactionalConfirmations.h in Headers */ = {isa = PBXBuildFile; fileRef = AE9DB0041D11F0820005F44B /* RMQTransactionalConfirmations.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AE9DB0071D11F0820005F44B /* RMQTransactionalConfirmations.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9DB0051D11F0820005F44B /* RMQTransactionalConfirmations.m */; };
+		AE9DB0091D11FDED0005F44B /* ConfirmationsSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9DB0081D11FDED0005F44B /* ConfirmationsSpy.swift */; };
+		AE9DB00B1D12A4C40005F44B /* RMQConfirmations.h in Headers */ = {isa = PBXBuildFile; fileRef = AE9DB00A1D12A4C40005F44B /* RMQConfirmations.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AE9DB00D1D12AA120005F44B /* RMQTransactionalConfirmationsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9DB00C1D12AA120005F44B /* RMQTransactionalConfirmationsTest.swift */; };
+		AE9DB0101D12C5C30005F44B /* RMQConfirmationTransaction.h in Headers */ = {isa = PBXBuildFile; fileRef = AE9DB00E1D12C5C30005F44B /* RMQConfirmationTransaction.h */; };
+		AE9DB0111D12C5C30005F44B /* RMQConfirmationTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9DB00F1D12C5C30005F44B /* RMQConfirmationTransaction.m */; };
+		AE9DB0131D12D1DB0005F44B /* ChannelHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9DB0121D12D1DB0005F44B /* ChannelHelper.swift */; };
 		AEA45EC81C43CBBE00FE1F62 /* RMQConnectionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA45EC71C43CBBE00FE1F62 /* RMQConnectionTest.swift */; };
 		AEA45ECA1C43D2B900FE1F62 /* RMQTransport.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA45EC91C43D2B900FE1F62 /* RMQTransport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEA45ED11C43F4DC00FE1F62 /* RMQTCPSocketTransport.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA45ECF1C43F4DC00FE1F62 /* RMQTCPSocketTransport.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -133,6 +142,7 @@
 		AEADA3821C71F59A00012D61 /* RMQMethodMap.m in Sources */ = {isa = PBXBuildFile; fileRef = AEADA3801C71F59A00012D61 /* RMQMethodMap.m */; };
 		AEB5F15C1CDA4360001C82FF /* RMQErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = AEB5F15B1CDA42A5001C82FF /* RMQErrors.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEB5F1601CDA73D6001C82FF /* RMQErrors.m in Sources */ = {isa = PBXBuildFile; fileRef = AEB5F15F1CDA73D6001C82FF /* RMQErrors.m */; };
+		AEBE6D1D1D105B7900951CC3 /* PublisherConfirmationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBE6D1C1D105B7900951CC3 /* PublisherConfirmationTest.swift */; };
 		AEBF7D671CBD197D006EA2E4 /* ChannelCreationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEBF7D661CBD197D006EA2E4 /* ChannelCreationTest.swift */; };
 		AEC4D1D71C74C1AC00D7D585 /* RMQSender.h in Headers */ = {isa = PBXBuildFile; fileRef = AEC4D1D61C74C1AC00D7D585 /* RMQSender.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AECDEC9F1CBC0E3600EA6E93 /* RMQConnectionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = AECDEC9E1CBC0E3600EA6E93 /* RMQConnectionDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -323,6 +333,15 @@
 		AE96A7681CE1F16600C772AA /* RMQSuspendResumeDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQSuspendResumeDispatcher.m; sourceTree = "<group>"; };
 		AE96A76B1CE1F2F000C772AA /* RMQDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQDispatcher.h; sourceTree = "<group>"; };
 		AE96A76D1CE2126100C772AA /* DispatcherSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatcherSpy.swift; sourceTree = "<group>"; };
+		AE9DB0021D116F770005F44B /* PublisherConfirmationIntegrationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublisherConfirmationIntegrationTest.swift; sourceTree = "<group>"; };
+		AE9DB0041D11F0820005F44B /* RMQTransactionalConfirmations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQTransactionalConfirmations.h; sourceTree = "<group>"; };
+		AE9DB0051D11F0820005F44B /* RMQTransactionalConfirmations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQTransactionalConfirmations.m; sourceTree = "<group>"; };
+		AE9DB0081D11FDED0005F44B /* ConfirmationsSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmationsSpy.swift; sourceTree = "<group>"; };
+		AE9DB00A1D12A4C40005F44B /* RMQConfirmations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQConfirmations.h; sourceTree = "<group>"; };
+		AE9DB00C1D12AA120005F44B /* RMQTransactionalConfirmationsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQTransactionalConfirmationsTest.swift; sourceTree = "<group>"; };
+		AE9DB00E1D12C5C30005F44B /* RMQConfirmationTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQConfirmationTransaction.h; sourceTree = "<group>"; };
+		AE9DB00F1D12C5C30005F44B /* RMQConfirmationTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQConfirmationTransaction.m; sourceTree = "<group>"; };
+		AE9DB0121D12D1DB0005F44B /* ChannelHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelHelper.swift; sourceTree = "<group>"; };
 		AEA45EC41C43C20F00FE1F62 /* RMQMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RMQMethods.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AEA45EC71C43CBBE00FE1F62 /* RMQConnectionTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RMQConnectionTest.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		AEA45EC91C43D2B900FE1F62 /* RMQTransport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RMQTransport.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -354,6 +373,7 @@
 		AEADA3801C71F59A00012D61 /* RMQMethodMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RMQMethodMap.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AEB5F15B1CDA42A5001C82FF /* RMQErrors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMQErrors.h; sourceTree = "<group>"; };
 		AEB5F15F1CDA73D6001C82FF /* RMQErrors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQErrors.m; sourceTree = "<group>"; };
+		AEBE6D1C1D105B7900951CC3 /* PublisherConfirmationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublisherConfirmationTest.swift; sourceTree = "<group>"; };
 		AEBF7D661CBD197D006EA2E4 /* ChannelCreationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelCreationTest.swift; sourceTree = "<group>"; };
 		AEC4D1D61C74C1AC00D7D585 /* RMQSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQSender.h; sourceTree = "<group>"; };
 		AECDEC9E1CBC0E3600EA6E93 /* RMQConnectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQConnectionDelegate.h; sourceTree = "<group>"; };
@@ -451,6 +471,8 @@
 				AE09C82F1CCE495300FA6915 /* QueueBindTest.swift */,
 				AE48F9331CE22CA200296A23 /* RMQSuspendResumeDispatcherTest.swift */,
 				AE09C83B1CCE680F00FA6915 /* RMQProcessInfoNameGeneratorTest.swift */,
+				AEBE6D1C1D105B7900951CC3 /* PublisherConfirmationTest.swift */,
+				AE9DB00C1D12AA120005F44B /* RMQTransactionalConfirmationsTest.swift */,
 			);
 			name = Channels;
 			sourceTree = "<group>";
@@ -603,6 +625,7 @@
 			isa = PBXGroup;
 			children = (
 				AE111BD61C57B33300F88277 /* TestHelper.swift */,
+				AE9DB0121D12D1DB0005F44B /* ChannelHelper.swift */,
 				AE34154E1CEBB6650071177A /* ConnectionHelper.swift */,
 				AE338D8D1CF60D3D005D8D6C /* BasicPropertyFixtures.swift */,
 				AE41C5521C4FC88F00129207 /* MethodFixtures.swift */,
@@ -631,6 +654,11 @@
 				AE09C8331CCE648300FA6915 /* RMQNameGenerator.h */,
 				AE09C8351CCE64F400FA6915 /* RMQProcessInfoNameGenerator.h */,
 				AE09C8361CCE64F400FA6915 /* RMQProcessInfoNameGenerator.m */,
+				AE9DB00A1D12A4C40005F44B /* RMQConfirmations.h */,
+				AE9DB0041D11F0820005F44B /* RMQTransactionalConfirmations.h */,
+				AE9DB0051D11F0820005F44B /* RMQTransactionalConfirmations.m */,
+				AE9DB00E1D12C5C30005F44B /* RMQConfirmationTransaction.h */,
+				AE9DB00F1D12C5C30005F44B /* RMQConfirmationTransaction.m */,
 			);
 			name = Channels;
 			sourceTree = "<group>";
@@ -642,9 +670,10 @@
 				AEA45EE41C44111200FE1F62 /* RMQClientIntegrationTests-Bridging-Header.h */,
 				AEA45EDB1C440FE400FE1F62 /* Info.plist */,
 				AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */,
+				AEEDB0B41CE3284200005A92 /* ConnectionRecoveryIntegrationTest.swift */,
+				AE9DB0021D116F770005F44B /* PublisherConfirmationIntegrationTest.swift */,
 				AE95953C1CD0CC4D0039418C /* RMQGCDHeartbeatSenderTest.swift */,
 				AEA45ECD1C43F44400FE1F62 /* RMQTCPSocketTransportTest.swift */,
-				AEEDB0B41CE3284200005A92 /* ConnectionRecoveryIntegrationTest.swift */,
 			);
 			path = RMQClientIntegrationTests;
 			sourceTree = "<group>";
@@ -792,6 +821,7 @@
 				AE9595351CD0BA240039418C /* HeartbeatSenderSpy.swift */,
 				AE9595401CD0E80E0039418C /* FakeClock.swift */,
 				AE3415501CEBBD730071177A /* RecoverySpy.swift */,
+				AE9DB0081D11FDED0005F44B /* ConfirmationsSpy.swift */,
 			);
 			name = "Test Doubles";
 			sourceTree = "<group>";
@@ -858,6 +888,7 @@
 				AEE7FEB91C3BD2B400DF8C4F /* RMQExchange.h in Headers */,
 				AEEB514D1CAC7780009F37D2 /* RMQSynchronizedMutableDictionary.h in Headers */,
 				AE744E331C85A1B000A4C2FA /* RMQFrame.h in Headers */,
+				AE9DB0101D12C5C30005F44B /* RMQConfirmationTransaction.h in Headers */,
 				AEE445E11C7338FE0082132C /* RMQReader.h in Headers */,
 				AE39BD9E1C68B019000E7A77 /* RMQValues.h in Headers */,
 				AE8AD2621CC53AEB00229444 /* RMQFramesetValidator.h in Headers */,
@@ -886,7 +917,9 @@
 				AEB5F15C1CDA4360001C82FF /* RMQErrors.h in Headers */,
 				AE3415461CEB7FF20071177A /* RMQStarter.h in Headers */,
 				AE3415441CEB74190071177A /* RMQConnectionRecovery.h in Headers */,
+				AE9DB0061D11F0820005F44B /* RMQTransactionalConfirmations.h in Headers */,
 				AE3415561CEBC4DC0071177A /* RMQConnectionRecover.h in Headers */,
+				AE9DB00B1D12A4C40005F44B /* RMQConfirmations.h in Headers */,
 				AE338D7E1CF5F0CF005D8D6C /* RMQTable.h in Headers */,
 				AEE7FE951C3BCA6000DF8C4F /* RMQClient.h in Headers */,
 			);
@@ -1074,6 +1107,7 @@
 				AE254F601C51B4D800DEA468 /* MethodFixtures.swift in Sources */,
 				AEA45EE31C44100C00FE1F62 /* RMQTCPSocketTransportTest.swift in Sources */,
 				AE34154A1CEB87CF0071177A /* StarterSpy.swift in Sources */,
+				AE9DB0031D116F770005F44B /* PublisherConfirmationIntegrationTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1101,6 +1135,7 @@
 				AE82798D1C8DBD6B0013ADD1 /* RMQUnallocatedChannel.m in Sources */,
 				AE80BAB41C4D47C100E6DFFD /* RMQParser.m in Sources */,
 				AE95953A1CD0BC1E0039418C /* RMQGCDHeartbeatSender.m in Sources */,
+				AE9DB0111D12C5C30005F44B /* RMQConfirmationTransaction.m in Sources */,
 				AEFFE6391C8EE7B30039D652 /* RMQConnectionConfig.m in Sources */,
 				AE3415391CEB23490071177A /* RMQConsumer.m in Sources */,
 				AE744E381C85A20700A4C2FA /* RMQFrameset.m in Sources */,
@@ -1111,6 +1146,7 @@
 				AEA8A76E1CCA0F8300371E38 /* RMQSemaphoreWaiterFactory.m in Sources */,
 				AEE7FEB61C3BD16200DF8C4F /* RMQQueue.m in Sources */,
 				AE744E341C85A1B000A4C2FA /* RMQFrame.m in Sources */,
+				AE9DB0071D11F0820005F44B /* RMQTransactionalConfirmations.m in Sources */,
 				AE8AD2631CC53AEB00229444 /* RMQFramesetValidator.m in Sources */,
 				AEEEF0831C4F9BFA0056A5EB /* RMQMethodDecoder.m in Sources */,
 				AEDBFF241CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.m in Sources */,
@@ -1129,6 +1165,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				AE898D581C3C2D2E00AA3BF1 /* RMQURIParseTest.swift in Sources */,
+				AE9DB00D1D12AA120005F44B /* RMQTransactionalConfirmationsTest.swift in Sources */,
+				AE9DB0091D11FDED0005F44B /* ConfirmationsSpy.swift in Sources */,
 				AEA8A7621CC97C7900371E38 /* RMQGCDSerialQueueTest.swift in Sources */,
 				AE59345B1C8735FA00560A73 /* ChannelSpy.swift in Sources */,
 				AE8AD25C1CC4E67F00229444 /* RMQUnallocatedChannelTest.swift in Sources */,
@@ -1165,9 +1203,11 @@
 				AE5934551C870C0E00560A73 /* RMQAllocatedChannelTest.swift in Sources */,
 				AE34153B1CEB56ED0071177A /* ConsumeTest.swift in Sources */,
 				AEDBFF2A1CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift in Sources */,
+				AEBE6D1D1D105B7900951CC3 /* PublisherConfirmationTest.swift in Sources */,
 				AECDECA11CBC4A4F00EA6E93 /* ConnectionDelegateSpy.swift in Sources */,
 				AE59345D1C87375F00560A73 /* ChannelSpyAllocator.swift in Sources */,
 				AEF1E8F71CBE5E6A000C7AB8 /* TransportDelegateSpy.swift in Sources */,
+				AE9DB0131D12D1DB0005F44B /* ChannelHelper.swift in Sources */,
 				AE3415511CEBBD730071177A /* RecoverySpy.swift in Sources */,
 				AE111BD71C57B33300F88277 /* TestHelper.swift in Sources */,
 				AEA8A77A1CCA6FF100371E38 /* FakeWaiter.swift in Sources */,
