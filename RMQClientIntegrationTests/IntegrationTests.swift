@@ -118,9 +118,8 @@ class IntegrationTests: XCTestCase {
 
         var delivered: RMQMessage?
 
-        q.subscribe([.NoOptions]) { message in
+        q.subscribe([.NoAck]) { message in
             delivered = message
-            ch.ack(message.deliveryTag)
             dispatch_semaphore_signal(semaphore)
         }
 
@@ -131,6 +130,7 @@ class IntegrationTests: XCTestCase {
                        "Timed out waiting for message")
 
         XCTAssertTrue(delivered!.properties != nil)
+        q.delete()
     }
 
     func testRejectAndRequeueCausesSecondDelivery() {
