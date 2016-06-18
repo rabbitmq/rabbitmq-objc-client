@@ -8,6 +8,7 @@
 @property (nonatomic, readonly) BOOL isRedelivered;
 @property (nonatomic, readonly) NSString *exchangeName;
 @property (nonatomic, readonly) NSString *routingKey;
+@property (nonatomic, readonly) NSArray *properties;
 
 - (instancetype)initWithContent:(NSString *)content
                     consumerTag:(NSString *)consumerTag
