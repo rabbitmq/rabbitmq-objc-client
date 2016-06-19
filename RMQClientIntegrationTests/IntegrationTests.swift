@@ -105,6 +105,34 @@ class IntegrationTests: XCTestCase {
         XCTAssertEqual("my message", delivered!.content)
     }
 
+    // TODO: this test is really really simplistic.
+    //       we need to port https://github.com/ruby-amqp/bunny/blob/master/spec/higher_level_api/integration/message_properties_access_spec.rb
+    func testMessageProperties() {
+        let conn = RMQConnection(uri: amqpLocalhost, delegate: nil, recoverAfter: 0)
+        conn.start()
+        defer { conn.blockingClose() }
+
+        let semaphore = dispatch_semaphore_create(0)
+        let ch = conn.createChannel()
+        let q = ch.queue("", options: [.AutoDelete, .Exclusive])
+
+        var delivered: RMQMessage?
+
+        q.subscribe([.NoAck]) { message in
+            delivered = message
+            dispatch_semaphore_signal(semaphore)
+        }
+
+        q.publish("a message")
+
+        XCTAssertEqual(0,
+                       dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(10)),
+                       "Timed out waiting for message")
+
+        XCTAssertTrue(delivered!.properties != nil)
+        q.delete()
+    }
+
     func testRejectAndRequeueCausesSecondDelivery() {
         let conn = RMQConnection(uri: amqpLocalhost, delegate: nil, recoverAfter: 0)
         conn.start()
