@@ -77,15 +77,17 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         dispatch_semaphore_wait(consumerSemaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout))
 
         var acks: Set<NSNumber>?
-        ch.afterConfirmed { (a, _) in
+        var nacks: Set<NSNumber>?
+        ch.afterConfirmed { (a, n) in
             acks = a
+            nacks = n
             dispatch_semaphore_signal(confirmSemaphore)
         }
 
         XCTAssertEqual(["before close", "after close 1", "after close 2"], messages.map { $0.content })
 
         XCTAssertEqual(0, dispatch_semaphore_wait(confirmSemaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout)))
-        XCTAssertEqual([1, 2, 3], acks)
+        XCTAssertEqual([1, 2, 3], acks!.union(nacks!))
     }
 
     func testReenablesConsumersOnEachRecoveryFromConnectionClose() {
