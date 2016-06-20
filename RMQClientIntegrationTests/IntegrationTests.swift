@@ -60,7 +60,7 @@ class IntegrationTests: XCTestCase {
         XCTAssertEqual(expected, actual)
     }
 
-    func testSubscribe() {
+    func testSubscribeWithClientCertificateAuthentication() {
         let delegate = RMQConnectionDelegateLogger()
         let noisyHeartbeats = 1
         let tlsOptions = RMQTLSOptions(
