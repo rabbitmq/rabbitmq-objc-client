@@ -1,10 +1,6 @@
 import XCTest
 
 class RMQQueueTest: XCTestCase {
-    let defaultPropertiesWithPersistence = [RMQBasicContentType("application/octet-stream"),
-                                            RMQBasicDeliveryMode(2),
-                                            RMQBasicPriority(0)]
-
     func testPublishSendsBasicPublishToChannel() {
         let channel = ChannelSpy(42)
         let queue = RMQQueue(name: "some.queue", channel: channel)
@@ -14,7 +10,7 @@ class RMQQueueTest: XCTestCase {
         XCTAssertEqual("a message", channel.lastReceivedBasicPublishMessage)
         XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", channel.lastReceivedBasicPublishExchange)
-        XCTAssertEqual(RMQBasicProperties.defaultProperties(), channel.lastReceivedBasicPublishProperties!)
+        XCTAssertEqual([], channel.lastReceivedBasicPublishProperties!)
         XCTAssertEqual([], channel.lastReceivedBasicPublishOptions)
     }
 
@@ -27,7 +23,7 @@ class RMQQueueTest: XCTestCase {
         XCTAssertEqual("a message", channel.lastReceivedBasicPublishMessage)
         XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", channel.lastReceivedBasicPublishExchange)
-        XCTAssertEqual(defaultPropertiesWithPersistence, channel.lastReceivedBasicPublishProperties!)
+        XCTAssertEqual([RMQBasicDeliveryMode(2)], channel.lastReceivedBasicPublishProperties!)
         XCTAssertEqual([], channel.lastReceivedBasicPublishOptions)
     }
 

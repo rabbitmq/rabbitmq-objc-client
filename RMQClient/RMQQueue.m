@@ -70,7 +70,7 @@
         options:(RMQBasicPublishOptions)options {
     NSMutableArray *properties = [NSMutableArray new];
     if (isPersistent) {
-        properties[1] = [[RMQBasicDeliveryMode alloc] init:2];
+        [properties addObject:[[RMQBasicDeliveryMode alloc] init:2]];
     }
     [self.channel basicPublish:message
                     routingKey:self.name
