@@ -204,9 +204,8 @@ class RMQAllocatedChannelTest: XCTestCase {
     }
 
     func testBasicPublishSendsAsyncFrameset() {
-        let q = FakeSerialQueue()
         let dispatcher = DispatcherSpy()
-        let ch = ChannelHelper.makeChannel(999, contentBodySize: 4, dispatcher: dispatcher, commandQueue: q)
+        let ch = ChannelHelper.makeChannel(999, contentBodySize: 4, dispatcher: dispatcher)
         let message = "my great message yo"
         let notPersistent = RMQBasicDeliveryMode(1)
         let customContentType = RMQBasicContentType("my/content-type")
@@ -239,6 +238,20 @@ class RMQAllocatedChannelTest: XCTestCase {
         XCTAssertEqual(5, dispatcher.lastAsyncFrameset!.contentBodies.count)
         XCTAssertEqual(expectedBodies, dispatcher.lastAsyncFrameset!.contentBodies)
         XCTAssertEqual(expectedFrameset, dispatcher.lastAsyncFrameset!)
+    }
+
+    func testPublishHasDefaultProperties() {
+        let q = FakeSerialQueue()
+        let dispatcher = DispatcherSpy()
+        let ch = ChannelHelper.makeChannel(999, contentBodySize: 4, dispatcher: dispatcher, commandQueue: q)
+
+        let props: [RMQValue] = [RMQBasicCorrelationId("my-correlation-id")]
+        ch.basicPublish("", routingKey: "", exchange: "", properties: props, options: [])
+
+        let expectedProperties: Set<RMQValue> = Set(RMQBasicProperties.defaultProperties()).union(props)
+        let header = dispatcher.lastAsyncFrameset!.contentHeader
+        let headerProperties: Set<RMQValue> = Set(header.properties)
+        XCTAssertEqual(expectedProperties, headerProperties)
     }
 
     func testPublishWhenContentLengthIsMultipleOfFrameMax() {

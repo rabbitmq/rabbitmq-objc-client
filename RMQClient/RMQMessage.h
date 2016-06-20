@@ -17,4 +17,15 @@
                    exchangeName:(NSString *)exchangeName
                      routingKey:(NSString *)routingKey
                      properties:(NSArray<RMQValue<RMQBasicValue> *> *)properties;
+
+- (NSString *)appID;
+- (NSString *)contentType;
+- (NSNumber *)priority;
+- (NSString *)messageType;
+- (NSDictionary<NSString *, NSObject *> *)headers;
+- (NSDate *)timestamp;
+- (NSString *)replyTo;
+- (NSString *)correlationID;
+- (NSString *)messageID;
+
 @end

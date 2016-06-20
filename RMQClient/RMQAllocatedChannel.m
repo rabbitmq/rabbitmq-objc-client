@@ -1,4 +1,4 @@
-#import "RMQBasicProperties.h"
+#import "RMQBasicProperties+MergeDefaults.h"
 #import "RMQErrors.h"
 #import "RMQMethods.h"
 #import "RMQAllocatedChannel.h"
@@ -203,9 +203,12 @@
     RMQContentBody *contentBody = [[RMQContentBody alloc] initWithData:contentBodyData];
 
     NSData *bodyData = contentBody.amqEncoded;
+
+    NSArray *mergedProperties = [RMQBasicProperties mergeProperties:properties
+                                                       withDefaults:RMQBasicProperties.defaultProperties];
     RMQContentHeader *contentHeader = [[RMQContentHeader alloc] initWithClassID:publish.classID
                                                                        bodySize:@(bodyData.length)
-                                                                     properties:properties];
+                                                                     properties:mergedProperties];
 
     NSArray *contentBodies = [self contentBodiesFromData:bodyData
                                               inChunksOf:self.contentBodySize.integerValue];

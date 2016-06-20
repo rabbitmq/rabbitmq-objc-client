@@ -105,10 +105,8 @@ class IntegrationTests: XCTestCase {
         XCTAssertEqual("my message", delivered!.content)
     }
 
-    // TODO: this test is really really simplistic.
-    //       we need to port https://github.com/ruby-amqp/bunny/blob/master/spec/higher_level_api/integration/message_properties_access_spec.rb
     func testMessageProperties() {
-        let conn = RMQConnection(uri: amqpLocalhost, delegate: nil, recoverAfter: 0)
+        let conn = RMQConnection()
         conn.start()
         defer { conn.blockingClose() }
 
@@ -123,14 +121,61 @@ class IntegrationTests: XCTestCase {
             dispatch_semaphore_signal(semaphore)
         }
 
-        q.publish("a message")
+        let date = NSDate.distantFuture()
+        let coordinates = RMQTable(["latitude": RMQFloat(59.35), "longitude": RMQFloat(18.066667)])
+
+        let headerDict: [String : RMQValue] = [
+            "coordinates": coordinates,
+            "time": RMQBasicTimestamp(date),
+            "participants": RMQShort(11),
+            "venue": RMQLongstr("Stockholm"),
+            "true_field": RMQBoolean(true),
+            "false_field": RMQBoolean(false),
+            "nil_field": RMQVoid(),
+            "ary_field": RMQArray([
+                RMQLongstr("one"),
+                RMQFloat(2.0),
+                RMQShort(3),
+                RMQArray([RMQTable(["abc": RMQShort(123)])])
+                ]),
+            ]
+        let headers = RMQBasicHeaders(headerDict)
+
+        let props: [RMQValue] = [
+            RMQBasicAppId("rmqclient.example"),
+            RMQBasicPriority(8),
+            RMQBasicType("kinda.checkin"),
+            headers,
+            RMQBasicTimestamp(date),
+            RMQBasicReplyTo("a.sender"),
+            RMQBasicCorrelationId("r-1"),
+            RMQBasicMessageId("m-1"),
+            ]
+        q.publish("a message", properties: props, options: [])
 
         XCTAssertEqual(0,
                        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(10)),
                        "Timed out waiting for message")
 
-        XCTAssertTrue(delivered!.properties != nil)
-        q.delete()
+        XCTAssertEqual("application/octet-stream",          delivered!.contentType())
+        XCTAssertEqual(8,                                   delivered!.priority())
+        XCTAssertEqual(headerDict,                          delivered!.headers())
+        XCTAssertEqualWithAccuracy(date.timeIntervalSinceReferenceDate,
+                                                            delivered!.timestamp().timeIntervalSinceReferenceDate, accuracy: 1)
+        XCTAssertEqual("kinda.checkin",                     delivered!.messageType())
+        XCTAssertEqual("a.sender",                          delivered!.replyTo())
+        XCTAssertEqual("r-1",                               delivered!.correlationID())
+        XCTAssertEqual("m-1",                               delivered!.messageID())
+        XCTAssertEqual("rmqclient.example",                 delivered!.appID())
+
+        let consumerTag = delivered!.consumerTag
+        XCTAssertEqual("rmq-objc-client.gen-",              consumerTag.substringToIndex(consumerTag.startIndex.advancedBy(20)))
+        XCTAssertEqual(1,                                   delivered!.deliveryTag)
+        XCTAssertEqual(q.name,                              delivered!.routingKey)
+        XCTAssertEqual("",                                  delivered!.exchangeName)
+
+        let missingDefaultsCount = 2
+        XCTAssertEqual(props.count + missingDefaultsCount,  delivered!.properties.count)
     }
 
     func testRejectAndRequeueCausesSecondDelivery() {

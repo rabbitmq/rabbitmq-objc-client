@@ -1,7 +1,7 @@
 #import "RMQTable.h"
 
 @interface RMQTable ()
-@property (nonnull, nonatomic, copy, readwrite) NSDictionary *dictionary;
+@property (nonnull, nonatomic, copy, readwrite) NSDictionary *dictionaryValue;
 @end
 
 @implementation RMQTable
@@ -9,7 +9,7 @@
 - (instancetype)init:(NSDictionary *)dictionary {
     self = [super init];
     if (self) {
-        self.dictionary = dictionary;
+        self.dictionaryValue = dictionary;
     }
     return self;
 }
@@ -24,10 +24,10 @@
 
 - (NSData *)amqEncoded {
     NSMutableData *tableContents = [NSMutableData new];
-    NSArray *keys = [[self.dictionary allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    NSArray *keys = [[self.dictionaryValue allKeys] sortedArrayUsingSelector:@selector(compare:)];
 
     for (NSString *key in keys) {
-        id value = self.dictionary[key];
+        id value = self.dictionaryValue[key];
         RMQFieldValuePair *pair = [[RMQFieldValuePair alloc] initWithFieldName:key
                                                                     fieldValue:value];
         [tableContents appendData:pair.amqEncoded];

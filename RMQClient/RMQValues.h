@@ -94,6 +94,7 @@
 @end
 
 @interface RMQTimestamp : RMQValue<RMQFieldValue,RMQParseable>
+@property (nonnull, nonatomic, readonly) NSDate *dateValue;
 - (nonnull instancetype)init:(nonnull NSDate *)date;
 @end
 
@@ -127,9 +128,10 @@
 - (BOOL)hasContent;
 @end
 
+@protocol RMQBasicValue;
 @interface RMQContentHeader : RMQValue<RMQPayload>
 @property (nonnull, nonatomic, copy, readonly) NSNumber *bodySize;
-@property (nonnull, nonatomic, readonly) NSArray *properties;
+@property (nonnull, nonatomic, readonly) NSArray<RMQValue<RMQBasicValue> *> *properties;
 - (nonnull instancetype)initWithClassID:(nonnull NSNumber *)classID
                                bodySize:(nonnull NSNumber *)bodySize
                              properties:(nonnull NSArray *)properties;

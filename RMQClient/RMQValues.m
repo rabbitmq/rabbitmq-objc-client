@@ -414,7 +414,7 @@
 @end
 
 @interface RMQTimestamp ()
-@property (nonatomic, copy, readwrite) NSDate *date;
+@property (nonatomic, copy, readwrite) NSDate *dateValue;
 @end
 
 @implementation RMQTimestamp
@@ -422,7 +422,7 @@
 - (instancetype)init:(NSDate *)date {
     self = [super init];
     if (self) {
-        self.date = date;
+        self.dateValue = date;
     }
     return self;
 }
@@ -432,7 +432,7 @@
 }
 
 - (NSData *)amqEncoded {
-    NSTimeInterval interval = self.date.timeIntervalSince1970;
+    NSTimeInterval interval = self.dateValue.timeIntervalSince1970;
     RMQLonglong *numeric = [[RMQLonglong alloc] init:interval];
     return numeric.amqEncoded;
 }
