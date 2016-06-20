@@ -165,11 +165,11 @@ typedef NS_ENUM(char, RMQParserFieldValue) {
 
 - (NSArray *)parseFieldArray {
     NSMutableArray *array = [NSMutableArray new];
-    const char *start = self.cursor;
+    const char *start      = self.cursor;
+    int32_t length         = [self parseLongInt];
+    const char *endOfArray = start + sizeof(length) + length;
 
-    UInt32 length = [self parseLongInt];
-
-    while (self.cursor < start + length && self.cursor < self.end) {
+    while (self.cursor < endOfArray && self.cursor < self.end) {
         RMQParserFieldValue type = *(self.cursor++);
         [array addObject:[self parseValueForType:type]];
     }
