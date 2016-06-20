@@ -72,7 +72,7 @@ class RMQQueueTest: XCTestCase {
         XCTAssertEqual("a message", channel.lastReceivedBasicPublishMessage)
         XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", channel.lastReceivedBasicPublishExchange)
-        XCTAssertEqual(RMQBasicProperties.defaultProperties(), channel.lastReceivedBasicPublishProperties!)
+        XCTAssertEqual([], channel.lastReceivedBasicPublishProperties!)
         XCTAssertEqual([.Mandatory], channel.lastReceivedBasicPublishOptions)
     }
 

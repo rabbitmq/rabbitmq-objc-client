@@ -78,7 +78,7 @@ class RMQExchangeTest: XCTestCase {
         XCTAssertEqual("foo", ch.lastReceivedBasicPublishMessage)
         XCTAssertEqual("my.q", ch.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("some-ex", ch.lastReceivedBasicPublishExchange)
-        XCTAssertEqual(RMQBasicProperties.defaultProperties(), ch.lastReceivedBasicPublishProperties!)
+        XCTAssertEqual([], ch.lastReceivedBasicPublishProperties!)
         XCTAssertEqual([.Mandatory], ch.lastReceivedBasicPublishOptions)
     }
 

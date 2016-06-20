@@ -68,7 +68,7 @@
 - (void)publish:(NSString *)message
      persistent:(BOOL)isPersistent
         options:(RMQBasicPublishOptions)options {
-    NSMutableArray *properties = [RMQBasicProperties.defaultProperties mutableCopy];
+    NSMutableArray *properties = [NSMutableArray new];
     if (isPersistent) {
         properties[1] = [[RMQBasicDeliveryMode alloc] init:2];
     }
