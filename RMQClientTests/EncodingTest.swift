@@ -306,6 +306,18 @@ class EncodingTest: XCTestCase {
         TestHelper.assertEqualBytes(expectedData, fieldTable.amqEncoded())
     }
 
+    func testArrayBecomesLengthPlusFieldValues() {
+        let expectedData = "\u{00}\u{00}\u{00}\u{08}S\u{00}\u{00}\u{00}\u{03}foo".dataUsingEncoding(NSUTF8StringEncoding)!
+        let array = RMQArray([RMQLongstr("foo")])
+        TestHelper.assertEqualBytes(expectedData, array.amqEncoded())
+    }
+
+    func testEmptyArrayBecomesFourZeroBytes() {
+        let expectedData = "\u{00}\u{00}\u{00}\u{00}".dataUsingEncoding(NSUTF8StringEncoding)!
+        let fieldTable = RMQArray([])
+        TestHelper.assertEqualBytes(expectedData, fieldTable.amqEncoded())
+    }
+
     func testTimestampBecomes64BitPOSIX() {
         let date = NSDate.distantFuture()
         let timestamp = RMQTimestamp(date)

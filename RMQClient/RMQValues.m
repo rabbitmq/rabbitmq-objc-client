@@ -402,7 +402,7 @@
         [fieldValues appendData:val.amqEncoded];
     }
     NSMutableData *encoded = [NSMutableData new];
-    [encoded appendData:[[RMQLong alloc] init:4 + fieldValues.length].amqEncoded];
+    [encoded appendData:[[RMQLong alloc] init:fieldValues.length].amqEncoded];
     [encoded appendData:fieldValues];
     return encoded;
 }
