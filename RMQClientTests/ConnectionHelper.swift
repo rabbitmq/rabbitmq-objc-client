@@ -1,59 +1,32 @@
 class ConnectionHelper {
-    static func connectionConfig(vhost vhost: String = "",
-                                       channelMax: Int = 123,
-                                       frameMax: UInt = 321,
-                                       heartbeat: Int = 10) -> RMQConnectionConfig {
-        let nullRecovery = RMQConnectionRecover(interval: 0,
-                                                attemptLimit: 0,
-                                                onlyErrors: true,
-                                                heartbeatSender: nil,
-                                                commandQueue: nil,
-                                                delegate: nil)
-        return RMQConnectionConfig(credentials: RMQCredentials(username: "foo", password: "bar"),
-                                   channelMax: channelMax,
-                                   frameMax: frameMax,
-                                   heartbeat: heartbeat,
-                                   vhost: vhost,
-                                   authMechanism: "PLAIN",
-                                   recovery: nullRecovery)
-    }
-
-    static func startedConnection(
-        transport: RMQTransport,
-        commandQueue: RMQLocalSerialQueue = RMQGCDSerialQueue(name: "started connection command queue"),
-        delegate: RMQConnectionDelegate? = nil,
-        syncTimeout: Double = 0,
-        user: String = "foo",
-        password: String = "bar",
-        vhost: String = "baz"
-        ) -> RMQConnection {
-        let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
-        let config = connectionConfig(vhost: vhost, channelMax: RMQChannelLimit, frameMax: RMQFrameMax, heartbeat: 0)
-        let conn = RMQConnection(
-            transport: transport,
-            config: config,
-            handshakeTimeout: 10,
-            channelAllocator: allocator,
-            frameHandler: allocator,
-            delegate: delegate,
-            commandQueue: commandQueue,
-            waiterFactory: FakeWaiterFactory(),
-            heartbeatSender: HeartbeatSenderSpy()
-        )
-        conn.start()
-        return conn
-    }
-
-    static func connectionAfterHandshake() -> (transport: ControlledInteractionTransport, q: FakeSerialQueue, conn: RMQConnection, delegate: ConnectionDelegateSpy) {
-        let transport = ControlledInteractionTransport()
-        let q = FakeSerialQueue()
-        let delegate = ConnectionDelegateSpy()
-        let conn = ConnectionHelper.startedConnection(transport,
-                                                      commandQueue: q,
-                                                      delegate: delegate)
-        try! q.step()
-        transport.handshake()
-
-        return (transport, q, conn, delegate)
+    static func makeConnection(recoveryInterval interval: Int = 2,
+                                                transport: RMQTCPSocketTransport,
+                                                delegate: RMQConnectionDelegate) -> RMQConnection {
+        let credentials = RMQCredentials(username: "guest", password: "guest")
+        let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 10)
+        let heartbeatSender = RMQGCDHeartbeatSender(transport: transport, clock: RMQTickingClock())
+        let commandQueue = RMQGCDSerialQueue(name: "socket-recovery-test-queue")
+        let recovery = RMQConnectionRecover(interval: interval,
+                                            attemptLimit: 1,
+                                            onlyErrors: true,
+                                            heartbeatSender: heartbeatSender,
+                                            commandQueue: commandQueue,
+                                            delegate: delegate)
+        let config = RMQConnectionConfig(credentials: credentials,
+                                         channelMax: RMQChannelLimit,
+                                         frameMax: RMQFrameMax,
+                                         heartbeat: 60,
+                                         vhost: "/",
+                                         authMechanism: "PLAIN",
+                                         recovery: recovery)
+        return RMQConnection(transport: transport,
+                             config: config,
+                             handshakeTimeout: 10,
+                             channelAllocator: allocator,
+                             frameHandler: allocator,
+                             delegate: delegate,
+                             commandQueue: commandQueue,
+                             waiterFactory: RMQSemaphoreWaiterFactory(),
+                             heartbeatSender: heartbeatSender)
     }
 }

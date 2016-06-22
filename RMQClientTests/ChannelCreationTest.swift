@@ -16,7 +16,7 @@ class ChannelCreationTest: XCTestCase {
         allocator = ChannelSpyAllocator()
         let frameHandler = FrameHandlerSpy()
         conn = RMQConnection(transport: transport!,
-                             config: ConnectionHelper.connectionConfig(),
+                             config: ConnectionWithFakesHelper.connectionConfig(),
                              handshakeTimeout: 10,
                              channelAllocator: allocator!,
                              frameHandler: frameHandler,

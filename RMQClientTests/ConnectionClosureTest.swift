@@ -9,7 +9,7 @@ class ConnectionClosureTest: XCTestCase {
         let expectedCloseProcedureCount = 5
         let channelsToCreateCount = 2
         let conn = RMQConnection(transport: transport,
-                                 config: ConnectionHelper.connectionConfig(),
+                                 config: ConnectionWithFakesHelper.connectionConfig(),
                                  handshakeTimeout: 2,
                                  channelAllocator: allocator,
                                  frameHandler: FrameHandlerSpy(),
@@ -42,7 +42,7 @@ class ConnectionClosureTest: XCTestCase {
     }
 
     func testCloseSendsCloseMethod() {
-        let (transport, q, conn, _) = ConnectionHelper.connectionAfterHandshake()
+        let (transport, q, conn, _) = ConnectionWithFakesHelper.connectionAfterHandshake()
 
         conn.close()
 
@@ -57,7 +57,7 @@ class ConnectionClosureTest: XCTestCase {
         let allocator = ChannelSpyAllocator()
         let q = FakeSerialQueue()
         let conn = RMQConnection(transport: transport,
-                                 config: ConnectionHelper.connectionConfig(),
+                                 config: ConnectionWithFakesHelper.connectionConfig(),
                                  handshakeTimeout: 2,
                                  channelAllocator: allocator,
                                  frameHandler: FrameHandlerSpy(),
@@ -82,7 +82,7 @@ class ConnectionClosureTest: XCTestCase {
         let q = FakeSerialQueue()
         let heartbeatSender = HeartbeatSenderSpy()
         let conn = RMQConnection(transport: transport,
-                                 config: ConnectionHelper.connectionConfig(),
+                                 config: ConnectionWithFakesHelper.connectionConfig(),
                                  handshakeTimeout: 2,
                                  channelAllocator: allocator,
                                  frameHandler: FrameHandlerSpy(),
@@ -109,7 +109,7 @@ class ConnectionClosureTest: XCTestCase {
         let q = FakeSerialQueue()
         let heartbeatSender = HeartbeatSenderSpy()
         let conn = RMQConnection(transport: transport,
-                                 config: ConnectionHelper.connectionConfig(),
+                                 config: ConnectionWithFakesHelper.connectionConfig(),
                                  handshakeTimeout: 2,
                                  channelAllocator: allocator,
                                  frameHandler: FrameHandlerSpy(),
@@ -142,7 +142,7 @@ class ConnectionClosureTest: XCTestCase {
         let channelsToCreateCount = 2
         let heartbeatSender = HeartbeatSenderSpy()
         let conn = RMQConnection(transport: transport,
-                                 config: ConnectionHelper.connectionConfig(),
+                                 config: ConnectionWithFakesHelper.connectionConfig(),
                                  handshakeTimeout: 2,
                                  channelAllocator: allocator,
                                  frameHandler: FrameHandlerSpy(),
@@ -191,7 +191,7 @@ class ConnectionClosureTest: XCTestCase {
     }
 
     func testServerInitiatedClosureDisconnectsTransportButKeepsConnectionAsDelegateToAllowRecovery() {
-        let (transport, _, conn, _) = ConnectionHelper.connectionAfterHandshake()
+        let (transport, _, conn, _) = ConnectionWithFakesHelper.connectionAfterHandshake()
 
         transport.delegate = nil // this actually happens in the transport, which is fake here
         transport.serverSendsPayload(MethodFixtures.connectionClose(), channelNumber: 0)

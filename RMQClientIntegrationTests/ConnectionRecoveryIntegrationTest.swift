@@ -16,7 +16,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         let tlsOptions = RMQTLSOptions.fromURI(amqpLocalhost)
         let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5672, tlsOptions: tlsOptions)
 
-        let conn = makeConnection(recoveryInterval, transport: transport, delegate: delegate)
+        let conn = ConnectionHelper.makeConnection(recoveryInterval: recoveryInterval, transport: transport, delegate: delegate)
         conn.start()
         defer { conn.blockingClose() }
 
@@ -143,35 +143,6 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout))
 
         XCTAssertEqual(["before close", "after close 1", "after close 2", "after close 3", "after close 4"], messages.map { $0.content })
-    }
-
-    private func makeConnection(interval: Int, transport: RMQTCPSocketTransport, delegate: RMQConnectionDelegate) -> RMQConnection {
-        let credentials = RMQCredentials(username: "guest", password: "guest")
-        let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 10)
-        let heartbeatSender = RMQGCDHeartbeatSender(transport: transport, clock: RMQTickingClock())
-        let commandQueue = RMQGCDSerialQueue(name: "socket-recovery-test-queue")
-        let recovery = RMQConnectionRecover(interval: interval,
-                                            attemptLimit: 1,
-                                            onlyErrors: true,
-                                            heartbeatSender: heartbeatSender,
-                                            commandQueue: commandQueue,
-                                            delegate: delegate)
-        let config = RMQConnectionConfig(credentials: credentials,
-                                         channelMax: RMQChannelLimit,
-                                         frameMax: RMQFrameMax,
-                                         heartbeat: 60,
-                                         vhost: "/",
-                                         authMechanism: "PLAIN",
-                                         recovery: recovery)
-        return RMQConnection(transport: transport,
-                             config: config,
-                             handshakeTimeout: 10,
-                             channelAllocator: allocator,
-                             frameHandler: allocator,
-                             delegate: delegate,
-                             commandQueue: commandQueue,
-                             waiterFactory: RMQSemaphoreWaiterFactory(),
-                             heartbeatSender: heartbeatSender)
     }
 
     private func connections() -> [RMQHTTPConnection] {

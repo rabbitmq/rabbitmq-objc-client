@@ -325,6 +325,7 @@ NSInteger const RMQChannelLimit = 65535;
 }
 
 - (void)transport:(id<RMQTransport>)transport disconnectedWithError:(NSError *)error {
+    self.handshakeComplete = NO;
     if (error) [self.delegate connection:self disconnectedWithError:error];
     [self.recovery recover:self
           channelAllocator:self.channelAllocator

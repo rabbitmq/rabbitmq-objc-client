@@ -6,7 +6,7 @@ class RMQConnectionTest: XCTestCase {
         let q = FakeSerialQueue()
         let conn = RMQConnection(
             transport: transport,
-            config: ConnectionHelper.connectionConfig(),
+            config: ConnectionWithFakesHelper.connectionConfig(),
             handshakeTimeout: 10,
             channelAllocator: ChannelSpyAllocator(),
             frameHandler: FrameHandlerSpy(),
@@ -30,7 +30,7 @@ class RMQConnectionTest: XCTestCase {
         let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
         let conn = RMQConnection(
             transport: transport,
-            config: ConnectionHelper.connectionConfig(),
+            config: ConnectionWithFakesHelper.connectionConfig(),
             handshakeTimeout: 10,
             channelAllocator: allocator,
             frameHandler: allocator,
@@ -51,7 +51,7 @@ class RMQConnectionTest: XCTestCase {
         let q = FakeSerialQueue()
         let conn = RMQConnection(
             transport: transport,
-            config: ConnectionHelper.connectionConfig(),
+            config: ConnectionWithFakesHelper.connectionConfig(),
             handshakeTimeout: 0,
             channelAllocator: allocator,
             frameHandler: allocator,
@@ -70,9 +70,9 @@ class RMQConnectionTest: XCTestCase {
         let transport = ControlledInteractionTransport()
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()
-        ConnectionHelper.startedConnection(transport,
-                                           commandQueue: q,
-                                           delegate: delegate)
+        ConnectionWithFakesHelper.startedConnection(transport,
+                                                    commandQueue: q,
+                                                    delegate: delegate)
         transport.stubbedToProduceErrorOnWrite = "fail please"
         try! q.step()
         transport.handshake()
@@ -83,7 +83,7 @@ class RMQConnectionTest: XCTestCase {
     func testTransportDelegateDisconnectErrorsAreTransformedIntoConnectionDelegateErrors() {
         let transport = ControlledInteractionTransport()
         let delegate = ConnectionDelegateSpy()
-        let conn = ConnectionHelper.startedConnection(transport, delegate: delegate)
+        let conn = ConnectionWithFakesHelper.startedConnection(transport, delegate: delegate)
         let e = NSError(domain: RMQErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: "foo"])
 
         conn.transport(nil, disconnectedWithError: e)
@@ -146,12 +146,30 @@ class RMQConnectionTest: XCTestCase {
         XCTAssertNil(recovery.errorPassedToRecover)
     }
 
+    func testTransportDisconnectCausesOutgoingRequestsToBeDelayedToAllowHandshakingToComplete() {
+        let transport = ControlledInteractionTransport()
+        let q = FakeSerialQueue()
+        let recovery = RecoverySpy()
+        let conn = ConnectionWithFakesHelper.makeConnection(config: recovery.connectionConfig(),
+                                                            transport: transport,
+                                                            commandQueue: q)
+        conn.start()
+        try! q.step()
+        transport.handshake()
+
+        conn.transport(transport, disconnectedWithError: nil)
+
+        conn.sendFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclare("foo", options: [])))
+
+        XCTAssertGreaterThan(q.enqueueDelay!.integerValue, recovery.interval.integerValue)
+    }
+
     func testSignalsActivityToHeartbeatSenderOnOutgoingFrameset() {
         let heartbeatSender = HeartbeatSenderSpy()
         let transport = ControlledInteractionTransport()
         let q = FakeSerialQueue()
         let conn = RMQConnection(transport: transport,
-                                 config: ConnectionHelper.connectionConfig(),
+                                 config: ConnectionWithFakesHelper.connectionConfig(),
                                  handshakeTimeout: 10,
                                  channelAllocator: ChannelSpyAllocator(),
                                  frameHandler: FrameHandlerSpy(),
@@ -208,7 +226,7 @@ class RMQConnectionTest: XCTestCase {
         let transport = ControlledInteractionTransport()
         let q = FakeSerialQueue()
         let conn = RMQConnection(transport: transport,
-                                 config: ConnectionHelper.connectionConfig(vhost: ""),
+                                 config: ConnectionWithFakesHelper.connectionConfig(vhost: ""),
                                  handshakeTimeout: 10,
                                  channelAllocator: ChannelSpyAllocator(),
                                  frameHandler: FrameHandlerSpy(),
@@ -231,7 +249,7 @@ class RMQConnectionTest: XCTestCase {
         let transport = ControlledInteractionTransport()
         let q = FakeSerialQueue()
         let conn = RMQConnection(transport: transport,
-                                 config: ConnectionHelper.connectionConfig(vhost: "/myvhost"),
+                                 config: ConnectionWithFakesHelper.connectionConfig(vhost: "/myvhost"),
                                  handshakeTimeout: 10,
                                  channelAllocator: ChannelSpyAllocator(),
                                  frameHandler: FrameHandlerSpy(),
