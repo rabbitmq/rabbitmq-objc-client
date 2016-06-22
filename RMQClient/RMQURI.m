@@ -34,13 +34,14 @@
     u.vhost = vhost;
     u.username = components.user;
     u.password = components.password;
-    
+    u.portNumber = components.port;
+
     if ([components.scheme isEqualToString:@"amqp"]) {
-        u.portNumber = @5672;
+        u.portNumber = u.portNumber ?: @5672;
         u.scheme = @"amqp";
         u.isTLS = NO;
     } else if ([components.scheme isEqualToString:@"amqps"]) {
-        u.portNumber = @5671;
+        u.portNumber = u.portNumber ?: @5671;
         u.scheme = @"amqps";
         u.isTLS = YES;
     }

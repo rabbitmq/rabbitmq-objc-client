@@ -68,4 +68,11 @@ class RMQURIParseTest: XCTestCase {
         XCTAssertEqual("t0ps3kr3t", val.password)
     }
 
+    func testParsesPort() {
+        let amqp = try! RMQURI.parse("amqp://foo:bar@bob.cob:443")
+        XCTAssertEqual(443, amqp.portNumber)
+        let amqps = try! RMQURI.parse("amqps://foo:bar@bob.cob:123")
+        XCTAssertEqual(123, amqps.portNumber)
+    }
+
 }

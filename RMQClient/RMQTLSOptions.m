@@ -29,6 +29,22 @@
     return [RMQTLSOptions fromURI:uri verifyPeer:YES];
 }
 
+- (instancetype)initWithUseTLS:(BOOL)useTLS
+                      peerName:(NSString *)peerName
+                    verifyPeer:(BOOL)verifyPeer
+                        pkcs12:(NSData *)pkcs12data
+                pkcs12Password:(NSString *)password {
+    self = [super init];
+    if (self) {
+        self.useTLS = useTLS;
+        self.peerName = peerName;
+        self.verifyPeer = verifyPeer;
+        self.pkcs12data = pkcs12data;
+        self.pkcs12password = password;
+    }
+    return self;
+}
+
 - (instancetype)initWithPeerName:(NSString *)peerName
                       verifyPeer:(BOOL)verifyPeer
                           pkcs12:(NSData *)pkcs12data
@@ -48,24 +64,6 @@
     RMQPKCS12CertificateConverter *converter = [[RMQPKCS12CertificateConverter alloc] initWithData:self.pkcs12data
                                                                                           password:self.pkcs12password];
     return [converter certificatesWithError:error];
-}
-
-# pragma mark - Private
-
-- (instancetype)initWithUseTLS:(BOOL)useTLS
-                      peerName:(NSString *)peerName
-                    verifyPeer:(BOOL)verifyPeer
-                        pkcs12:(NSData *)pkcs12data
-                pkcs12Password:(NSString *)password {
-    self = [super init];
-    if (self) {
-        self.useTLS = useTLS;
-        self.peerName = peerName;
-        self.verifyPeer = verifyPeer;
-        self.pkcs12data = pkcs12data;
-        self.pkcs12password = password;
-    }
-    return self;
 }
 
 @end
