@@ -63,7 +63,8 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         XCTAssertEqual(["before close", "after close 1", "after close 2"], messages.map { $0.content })
 
         XCTAssertEqual(0, dispatch_semaphore_wait(confirmSemaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout)))
-        XCTAssertEqual([1, 2, 3], acks!.union(nacks!))
+        XCTAssert(acks!.union(nacks!).isSupersetOf([2, 3]),
+                  "Didn't receive acks for publications post-recovery (pre-recovery acks can be lost)")
 
         // test recovery of queue arguments - in this case, x-max-length
         consumer.cancel()
