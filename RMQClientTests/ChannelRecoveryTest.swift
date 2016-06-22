@@ -172,7 +172,7 @@ class ChannelRecoveryTest: XCTestCase {
         ch.queue("b")
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("b")))
 
-        ch.queue("c")
+        ch.queue("c", options: [], arguments: ["x-message-ttl": RMQShort(1000)])
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("c")))
 
         ch.queueDelete("b", options: [.IfUnused])
@@ -183,7 +183,7 @@ class ChannelRecoveryTest: XCTestCase {
         ch.recover()
 
         XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueDeclare == MethodFixtures.queueDeclare("a", options: [.AutoDelete]) })
-        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueDeclare == MethodFixtures.queueDeclare("c", options: []) })
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueDeclare == MethodFixtures.queueDeclare("c", options: [], arguments: ["x-message-ttl": RMQShort(1000)]) })
         XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueDeclare == MethodFixtures.queueDeclare("b", options: []) })
     }
 

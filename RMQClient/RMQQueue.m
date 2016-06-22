@@ -7,6 +7,7 @@
 @interface RMQQueue ()
 @property (nonatomic, copy, readwrite) NSString *name;
 @property (nonatomic, readwrite) RMQQueueDeclareOptions options;
+@property (nonatomic, readwrite) RMQTable *arguments;
 @property (nonatomic, readwrite) id <RMQChannel> channel;
 @end
 
@@ -14,19 +15,16 @@
 
 - (instancetype)initWithName:(NSString *)name
                      options:(RMQQueueDeclareOptions)options
+                   arguments:(RMQTable *)arguments
                      channel:(id<RMQChannel>)channel {
    self = [super init];
     if (self) {
         self.name = name;
         self.options = options;
+        self.arguments = arguments;
         self.channel = channel;
     }
     return self;
-}
-
-- (instancetype)initWithName:(NSString *)name
-                     channel:(id<RMQChannel>)channel {
-    return [self initWithName:name options:RMQQueueDeclareNoOptions channel:channel];
 }
 
 - (void)bind:(RMQExchange *)exchange

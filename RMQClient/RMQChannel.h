@@ -20,6 +20,10 @@
 - (void)afterConfirmed:(void (^ _Nonnull)(NSSet<NSNumber *> * _Nonnull acked, NSSet<NSNumber *> * _Nonnull nacked))handler;
 
 - (nonnull RMQQueue *)queue:(nonnull NSString *)queueName
+                    options:(RMQQueueDeclareOptions)options
+                  arguments:(nonnull NSDictionary<NSString *, RMQValue<RMQFieldValue> *> *)arguments;
+
+- (nonnull RMQQueue *)queue:(nonnull NSString *)queueName
                     options:(RMQQueueDeclareOptions)options;
 
 - (nonnull RMQQueue *)queue:(nonnull NSString *)queueName;

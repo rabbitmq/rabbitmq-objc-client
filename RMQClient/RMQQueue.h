@@ -11,12 +11,11 @@
 @interface RMQQueue : NSObject
 @property (copy, nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) RMQQueueDeclareOptions options;
+@property (nonatomic, readonly) RMQTable *arguments;
 
 - (instancetype)initWithName:(NSString *)name
                      options:(RMQQueueDeclareOptions)options
-                     channel:(id <RMQChannel>)channel;
-
-- (instancetype)initWithName:(NSString *)name
+                   arguments:(RMQTable *)arguments
                      channel:(id <RMQChannel>)channel;
 
 - (void)bind:(RMQExchange *)exchange routingKey:(NSString *)routingKey;

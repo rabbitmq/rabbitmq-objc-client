@@ -118,13 +118,19 @@
 }
 
 - (RMQQueue *)queue:(NSString *)originalQueueName
-            options:(RMQQueueDeclareOptions)options {
+            options:(RMQQueueDeclareOptions)options
+          arguments:(nonnull NSDictionary<NSString *,RMQValue<RMQFieldValue> *> *)arguments {
     RMQQueue *found = self.queues[originalQueueName];
     if (found) {
         return found;
     } else {
-        return [self memoizedQueueDeclare:originalQueueName options:options];
+        return [self memoizedQueueDeclare:originalQueueName options:options arguments:[[RMQTable alloc] init:arguments]];
     }
+}
+
+- (RMQQueue *)queue:(NSString *)originalQueueName
+            options:(RMQQueueDeclareOptions)options {
+    return [self queue:originalQueueName options:options arguments:@{}];
 }
 
 - (RMQQueue *)queue:(NSString *)queueName {
@@ -436,7 +442,9 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
     return exchange;
 }
 
-- (RMQQueue *)memoizedQueueDeclare:(NSString *)originalQueueName options:(RMQQueueDeclareOptions)options {
+- (RMQQueue *)memoizedQueueDeclare:(NSString *)originalQueueName
+                           options:(RMQQueueDeclareOptions)options
+                         arguments:(RMQTable *)arguments {
     NSString *declaredQueueName = [originalQueueName isEqualToString:@""]
     ? [self.nameGenerator generateWithPrefix:@"rmq-objc-client.gen-"]
     : originalQueueName;
@@ -450,18 +458,22 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
     } else {
         RMQQueue *q = [[RMQQueue alloc] initWithName:declaredQueueName
                                              options:options
+                                           arguments:arguments
                                              channel:(id<RMQChannel>)self];
-        [self queueDeclare:declaredQueueName options:options];
+        [self queueDeclare:declaredQueueName
+                   options:options
+                 arguments:arguments];
         self.queues[q.name] = q;
         self.queueBindings[q.name] = [NSMutableSet new];
         return q;
     }
 }
 
-- (void)queueDeclare:(NSString *)declaredQueueName options:(RMQQueueDeclareOptions)options {
+- (void)queueDeclare:(NSString *)declaredQueueName
+             options:(RMQQueueDeclareOptions)options
+           arguments:(RMQTable *)arguments {
     RMQShort *ticket          = [[RMQShort alloc] init:0];
     RMQShortstr *amqQueueName = [[RMQShortstr alloc] init:declaredQueueName];
-    RMQTable *arguments       = [[RMQTable alloc] init:@{}];
     RMQQueueDeclare *method   = [[RMQQueueDeclare alloc] initWithReserved1:ticket
                                                                      queue:amqQueueName
                                                                    options:options
@@ -518,7 +530,9 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
 
 - (void)recoverQueuesAndTheirBindings {
     for (RMQQueue *queue in self.queues.allValues) {
-        [self queueDeclare:queue.name options:queue.options];
+        [self queueDeclare:queue.name
+                   options:queue.options
+                 arguments:queue.arguments];
         for (NSDictionary *binding in [self.queueBindings[queue.name] copy]) {
             [self queueBind:queue.name exchange:binding[@"exchange"] routingKey:binding[@"routing-key"]];
         }

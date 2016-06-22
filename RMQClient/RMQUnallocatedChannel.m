@@ -70,9 +70,13 @@ completionHandler:(RMQConsumerDeliveryHandler)completionHandler {
     return nil;
 }
 
-- (RMQQueue *)queue:(NSString *)queueName options:(RMQQueueDeclareOptions)options {
+- (RMQQueue *)queue:(NSString *)queueName options:(RMQQueueDeclareOptions)options arguments:(nonnull NSDictionary *)arguments {
     [self err];
     return nil;
+}
+
+- (RMQQueue *)queue:(NSString *)queueName options:(RMQQueueDeclareOptions)options {
+    return [self queue:queueName options:options arguments:@{}];
 }
 
 - (RMQQueue *)queue:(NSString *)queueName {

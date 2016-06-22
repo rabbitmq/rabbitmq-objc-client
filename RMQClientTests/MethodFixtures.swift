@@ -208,12 +208,12 @@ class MethodFixtures {
         return RMQQueueBindOk()
     }
 
-    static func queueDeclare(name: String, options: RMQQueueDeclareOptions) -> RMQQueueDeclare {
+    static func queueDeclare(name: String, options: RMQQueueDeclareOptions, arguments: [String: RMQValue] = [:]) -> RMQQueueDeclare {
         return RMQQueueDeclare(
             reserved1: RMQShort(0),
             queue: RMQShortstr(name),
             options: options,
-            arguments: RMQTable([:])
+            arguments: RMQTable(arguments)
         )
     }
 

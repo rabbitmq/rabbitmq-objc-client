@@ -46,6 +46,16 @@ class QueueDeclarationTest: XCTestCase {
         XCTAssertEqual(RMQError.ChannelQueueNameCollision.rawValue, delegate.lastChannelError?.code)
     }
 
+    func testQueueWithArguments() {
+        let dispatcher = DispatcherSpy()
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
+
+        ch.queue("priority-queue", options: [], arguments: ["x-max-priority": RMQShort(10)])
+
+        XCTAssertEqual(MethodFixtures.queueDeclare("priority-queue", options: [], arguments: ["x-max-priority": RMQShort(10)]),
+                       dispatcher.lastSyncMethod as? RMQQueueDeclare)
+    }
+
     func testQueueDeleteSendsAQueueDelete() {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)

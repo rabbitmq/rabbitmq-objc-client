@@ -3,7 +3,7 @@ import XCTest
 class RMQQueueTest: XCTestCase {
     func testPublishSendsBasicPublishToChannel() {
         let channel = ChannelSpy(42)
-        let queue = RMQQueue(name: "some.queue", channel: channel)
+        let queue = QueueHelper.makeQueue(channel, name: "some.queue")
 
         queue.publish("a message")
 
@@ -16,7 +16,7 @@ class RMQQueueTest: XCTestCase {
 
     func testPublishWithPersistence() {
         let channel = ChannelSpy(42)
-        let queue = RMQQueue(name: "some.queue", channel: channel)
+        let queue = QueueHelper.makeQueue(channel, name: "some.queue")
 
         queue.publish("a message", persistent: true)
 
@@ -29,7 +29,7 @@ class RMQQueueTest: XCTestCase {
 
     func testPublishWithProperties() {
         let channel = ChannelSpy(42)
-        let queue = RMQQueue(name: "some.queue", channel: channel)
+        let queue = QueueHelper.makeQueue(channel, name: "some.queue")
         let timestamp = NSDate()
 
         let properties: [RMQValue] = [
@@ -61,7 +61,7 @@ class RMQQueueTest: XCTestCase {
 
     func testPublishWithOptions() {
         let channel = ChannelSpy(42)
-        let queue = RMQQueue(name: "some.queue", channel: channel)
+        let queue = QueueHelper.makeQueue(channel, name: "some.queue")
 
         queue.publish("a message", persistent: false, options: [.Mandatory])
 
@@ -75,7 +75,7 @@ class RMQQueueTest: XCTestCase {
     func testPopDelegatesToChannelBasicGet() {
         let stubbedMessage = RMQMessage(content: "hi there", consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "", properties: [])
         let channel = ChannelSpy(42)
-        let queue = RMQQueue(name: "great.queue", channel: channel)
+        let queue = QueueHelper.makeQueue(channel, name: "great.queue")
 
         var receivedMessage: RMQMessage?
         queue.pop() { m in
@@ -91,7 +91,7 @@ class RMQQueueTest: XCTestCase {
 
     func testSubscribeSendsABasicConsumeToChannelWithAutoAck() {
         let channel = ChannelSpy(123)
-        let queue = RMQQueue(name: "default options", channel: channel)
+        let queue = QueueHelper.makeQueue(channel, name: "default options")
 
         var handlerCalled = false
         queue.subscribe { _ in
@@ -107,7 +107,7 @@ class RMQQueueTest: XCTestCase {
 
     func testSubscribeWithOptionsSendsOptionsToChannel() {
         let channel = ChannelSpy(123)
-        let queue = RMQQueue(name: "custom options", channel: channel)
+        let queue = QueueHelper.makeQueue(channel, name: "custom options")
 
         var handlerCalled = false
         queue.subscribe([.Exclusive]) { _ in
@@ -123,7 +123,7 @@ class RMQQueueTest: XCTestCase {
 
     func testCancellingASubscriptionSendsBasicCancelToChannel() {
         let channel = ChannelSpy(123)
-        let queue = RMQQueue(name: "cancelling", channel: channel)
+        let queue = QueueHelper.makeQueue(channel, name: "cancelling")
 
         let consumer = queue.subscribe() { _ in }
         XCTAssertNotNil(consumer.tag)
@@ -136,7 +136,7 @@ class RMQQueueTest: XCTestCase {
     func testBindCallsBindOnChannel() {
         let channel = ChannelSpy(123)
         let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)
-        let queue = RMQQueue(name: "bindy", channel: channel)
+        let queue = QueueHelper.makeQueue(channel, name: "bindy")
 
         queue.bind(ex, routingKey: "foo")
 
@@ -148,7 +148,7 @@ class RMQQueueTest: XCTestCase {
     func testBindWithoutRoutingKeySendsEmptyStringRoutingKey() {
         let channel = ChannelSpy(123)
         let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)
-        let queue = RMQQueue(name: "bindy", channel: channel)
+        let queue = QueueHelper.makeQueue(channel, name: "bindy")
 
         queue.bind(ex)
 
@@ -160,7 +160,7 @@ class RMQQueueTest: XCTestCase {
     func testUnbindCallsUnbindOnChannel() {
         let channel = ChannelSpy(123)
         let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)
-        let queue = RMQQueue(name: "unbindy", channel: channel)
+        let queue = QueueHelper.makeQueue(channel, name: "unbindy")
 
         queue.unbind(ex, routingKey: "foo")
 
@@ -172,7 +172,7 @@ class RMQQueueTest: XCTestCase {
     func testUnbindWithoutRoutingKeySendsEmptyStringRoutingKey() {
         let channel = ChannelSpy(123)
         let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)
-        let queue = RMQQueue(name: "unbindy", channel: channel)
+        let queue = QueueHelper.makeQueue(channel, name: "unbindy")
 
         queue.unbind(ex)
 
@@ -183,7 +183,7 @@ class RMQQueueTest: XCTestCase {
     
     func testDeleteCallsDeleteOnChannel() {
         let channel = ChannelSpy(123)
-        let queue = RMQQueue(name: "deletable", channel: channel)
+        let queue = QueueHelper.makeQueue(channel, name: "deletable")
 
         queue.delete()
         XCTAssertEqual("deletable", channel.lastReceivedQueueDeleteQueueName)

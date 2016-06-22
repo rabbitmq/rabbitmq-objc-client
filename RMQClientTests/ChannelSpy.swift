@@ -99,14 +99,18 @@
                     completionHandler: (RMQFrameset?, NSError?) -> Void) {
     }
 
-    func queue(queueName: String, options: RMQQueueDeclareOptions) -> RMQQueue {
+    func queue(queueName: String, options: RMQQueueDeclareOptions, arguments: [String : RMQValue]) -> RMQQueue {
         if let foundQueue = queues[queueName] {
             return foundQueue;
         } else {
-            let q = RMQQueue(name: queueName, channel: self)
+            let q = QueueHelper.makeQueue(self, name: queueName, options: options, arguments: arguments)
             queues[queueName] = q
             return q
         }
+    }
+
+    func queue(queueName: String, options: RMQQueueDeclareOptions) -> RMQQueue {
+        return queue(queueName, options: options, arguments: [:])
     }
 
     func queue(queueName: String) -> RMQQueue {
