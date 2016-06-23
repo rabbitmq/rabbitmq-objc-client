@@ -8,11 +8,6 @@
 
 + (nonnull instancetype)fromURI:(nonnull NSString *)uri verifyPeer:(BOOL)verifyPeer;
 + (nonnull instancetype)fromURI:(nonnull NSString *)uri;
-- (nonnull instancetype)initWithUseTLS:(BOOL)useTLS
-                              peerName:(nonnull NSString *)peerName
-                            verifyPeer:(BOOL)verifyPeer
-                                pkcs12:(nullable NSData *)pkcs12data
-                        pkcs12Password:(nullable NSString *)password;
 - (nonnull instancetype)initWithPeerName:(nonnull NSString *)peerName
                               verifyPeer:(BOOL)verifyPeer
                                   pkcs12:(nullable NSData *)pkcs12data
