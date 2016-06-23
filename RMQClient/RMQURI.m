@@ -2,7 +2,6 @@
 #import "RMQErrors.h"
 
 @interface RMQURI ()
-@property (nonatomic,nonnull,readwrite) NSString *scheme;
 @property (nonatomic,nonnull,readwrite) NSString *host;
 @property (nonatomic,nonnull,readwrite) NSString *vhost;
 @property (nonatomic,nonnull,readwrite) NSNumber *portNumber;
@@ -38,11 +37,9 @@
 
     if ([components.scheme isEqualToString:@"amqp"]) {
         u.portNumber = u.portNumber ?: @5672;
-        u.scheme = @"amqp";
         u.isTLS = NO;
     } else if ([components.scheme isEqualToString:@"amqps"]) {
         u.portNumber = u.portNumber ?: @5671;
-        u.scheme = @"amqps";
         u.isTLS = YES;
     }
     

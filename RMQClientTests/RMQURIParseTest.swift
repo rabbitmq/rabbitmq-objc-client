@@ -18,7 +18,6 @@ class RMQURIParseTest: XCTestCase {
         XCTAssertEqual("/", val.vhost)
         XCTAssertEqual("dev.rabbitmq.com", val.host)
         XCTAssertEqual(5672, val.portNumber)
-        XCTAssertEqual("amqp", val.scheme)
         XCTAssertFalse(val.isTLS)
     }
     
@@ -27,7 +26,6 @@ class RMQURIParseTest: XCTestCase {
         XCTAssertEqual("/", val.vhost)
         XCTAssertEqual("dev.rabbitmq.com", val.host)
         XCTAssertEqual(5671, val.portNumber)
-        XCTAssertEqual("amqps", val.scheme)
         XCTAssertTrue(val.isTLS)
     }
     
@@ -62,7 +60,6 @@ class RMQURIParseTest: XCTestCase {
         XCTAssertEqual("/", val.vhost)
         XCTAssertEqual("hub.megacorp.internal", val.host)
         XCTAssertEqual(5672, val.portNumber)
-        XCTAssertEqual("amqp", val.scheme)
         XCTAssertFalse(val.isTLS)
         XCTAssertEqual("hedgehog", val.username)
         XCTAssertEqual("t0ps3kr3t", val.password)
