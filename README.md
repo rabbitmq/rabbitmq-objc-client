@@ -61,6 +61,40 @@ this list.
 
 **Objective-C users:** importing with `@import RMQClient;` currently produces an error in Xcode (Could not build module 'RMQClient'), but this should not prevent code from compiling and running. Using crocodile imports avoids this Xcode bug: `#import <RMQClient/RMQClient.h>`.
 
+## Usage
+
+1. Instantiate an `RMQConnection`:
+
+   ```swift
+   let delegate = RMQConnectionDelegateLogger() // implement RMQConnectionDelegate yourself to react to errors
+   let conn = RMQConnection(uri: "amqp://myusername:mypassword@my.host:1234", delegate: delegate)
+   ```
+1. Connect:
+
+   ```swift
+   conn.start()
+   ```
+1. Create a channel:
+
+   ```swift
+   let ch = conn.createChannel()
+   ```
+1. Use the channel:
+
+   ```swift
+   let q = ch.queue("myqueue")
+   q.subscribe { m in
+      print("Received: \(m.content)")
+   }
+   q.publish("foo")
+   ```
+
+1. Close the connection when done:
+
+   ```
+   conn.close()
+   ```
+
 ## Running Tests
 
 First make sure you have `xctool` installed:
