@@ -61,7 +61,13 @@ this list.
 
 **Objective-C users:** importing with `@import RMQClient;` currently produces an error in Xcode (Could not build module 'RMQClient'), but this should not prevent code from compiling and running. Using crocodile imports avoids this Xcode bug: `#import <RMQClient/RMQClient.h>`.
 
-## Usage
+
+## Documentation
+
+ * [Several RabbitMQ tutorials](http://www.rabbitmq.com/getstarted.html) are provided for
+   this client library.
+
+## (Basic) Usage Example
 
 1. Instantiate an `RMQConnection`:
 
