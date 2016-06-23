@@ -73,7 +73,7 @@ this list.
 
    ```swift
    let delegate = RMQConnectionDelegateLogger() // implement RMQConnectionDelegate yourself to react to errors
-   let conn = RMQConnection(uri: "amqp://myusername:mypassword@my.host:1234", delegate: delegate)
+   let conn = RMQConnection(uri: "amqp://guest:guest@localhost:5672", delegate: delegate)
    ```
 1. Connect:
 
