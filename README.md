@@ -95,6 +95,8 @@ this list.
    conn.close()
    ```
 
+See [the tutorials](http://www.rabbitmq.com/tutorials/tutorial-one-objectivec.html) for more detailed instructions.
+
 ## Running Tests
 
 First make sure you have `xctool` installed:
