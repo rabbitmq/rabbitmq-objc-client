@@ -82,17 +82,7 @@
 }
 
 - (id<RMQChannel>)newAllocation {
-    RMQGCDSerialQueue *commandQueue = [self suspendedDispatchQueue:self.channelNumber];
-    RMQSuspendResumeDispatcher *dispatcher = [[RMQSuspendResumeDispatcher alloc] initWithSender:self.sender
-                                                                                   commandQueue:commandQueue];
-    RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(self.channelNumber)
-                                                contentBodySize:@(self.sender.frameMax.integerValue - RMQEmptyFrameSize)
-                                                     dispatcher:dispatcher
-                                                   commandQueue:commandQueue
-                                                  nameGenerator:self.nameGenerator
-                                                      allocator:self
-                                                  confirmations:[RMQTransactionalConfirmations new]];
-    self.channels[@(self.channelNumber)] = ch;
+    RMQAllocatedChannel *ch = [self allocatedChannel:self.channelNumber];
     self.channelNumber++;
     return ch;
 }
@@ -100,21 +90,25 @@
 - (id<RMQChannel>)previouslyReleasedChannel {
     for (UInt16 i = 1; i < RMQChannelLimit; i++) {
         if (!self.channels[@(i)]) {
-            RMQGCDSerialQueue *commandQueue = [self suspendedDispatchQueue:i];
-            RMQSuspendResumeDispatcher *dispatcher = [[RMQSuspendResumeDispatcher alloc] initWithSender:self.sender
-                                                                                           commandQueue:commandQueue];
-            RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(i)
-                                                        contentBodySize:@(self.sender.frameMax.integerValue - RMQEmptyFrameSize)
-                                                             dispatcher:dispatcher
-                                                           commandQueue:[self suspendedDispatchQueue:i]
-                                                          nameGenerator:self.nameGenerator
-                                                              allocator:self
-                                                          confirmations:[RMQTransactionalConfirmations new]];
-            self.channels[@(i)] = ch;
-            return ch;
+            return [self allocatedChannel:i];
         }
     }
     return [RMQUnallocatedChannel new];
+}
+
+- (RMQAllocatedChannel *)allocatedChannel:(NSUInteger)channelNumber {
+    RMQGCDSerialQueue *commandQueue = [self suspendedDispatchQueue:channelNumber];
+    RMQSuspendResumeDispatcher *dispatcher = [[RMQSuspendResumeDispatcher alloc] initWithSender:self.sender
+                                                                                   commandQueue:commandQueue];
+    RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(channelNumber)
+                                                contentBodySize:@(self.sender.frameMax.integerValue - RMQEmptyFrameSize)
+                                                     dispatcher:dispatcher
+                                                   commandQueue:commandQueue
+                                                  nameGenerator:self.nameGenerator
+                                                      allocator:self
+                                                  confirmations:[RMQTransactionalConfirmations new]];
+    self.channels[@(channelNumber)] = ch;
+    return ch;
 }
 
 - (BOOL)atCapacity {
