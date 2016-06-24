@@ -9,7 +9,7 @@ class ChannelRecoveryTest: XCTestCase {
 
         ch.prepareForRecovery()
         XCTAssert(dispatcher.disabled)
-        
+
         ch.recover()
 
         XCTAssert(dispatcher.disabled)
@@ -24,7 +24,7 @@ class ChannelRecoveryTest: XCTestCase {
 
         ch.recover()
         try! recoveryDispatcher.step()
-        
+
         commandDispatcher.syncMethodsSent = []
         recoveryDispatcher.syncMethodsSent = []
         ch.basicQos(1, global: true)

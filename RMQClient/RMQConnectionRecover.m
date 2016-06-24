@@ -37,7 +37,7 @@ channelAllocator:(id<RMQChannelAllocator>)allocator
     [self.commandQueue enqueue:^{
         for (id<RMQChannel> ch in allocator.allocatedUserChannels) {
             [ch prepareForRecovery];
-        }        
+        }
         [self.heartbeatSender stop];
     }];
 
