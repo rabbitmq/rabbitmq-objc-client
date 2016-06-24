@@ -14,6 +14,7 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) DispatcherState state;
+@property (nonatomic, readwrite) BOOL disabled;
 @end
 
 @implementation RMQSuspendResumeDispatcher
@@ -27,6 +28,7 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
         self.validator = [RMQFramesetValidator new];
         self.commandQueue = commandQueue;
         self.state = DispatcherStateOpen;
+        self.disabled = NO;
     }
     return self;
 }
@@ -112,13 +114,29 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
     [self sendAsyncFrameset:[[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method]];
 }
 
+- (void)enqueue:(RMQOperation)operation {
+    [self.commandQueue enqueue:operation];
+}
+
+- (void)disable {
+    self.disabled = YES;
+    [self.commandQueue suspend];
+}
+
+- (void)enable {
+    self.disabled = NO;
+    [self.commandQueue resume];
+}
+
 - (void)handleFrameset:(RMQFrameset *)frameset {
     if (!self.channelAlreadyClosedByServer && [self isClose:frameset.method]) {
         [self processServerClose:(RMQChannelClose *)frameset.method];
     } else if (self.channelIsOpen) {
         [self.validator fulfill:frameset];
     }
-    [self.commandQueue resume];
+    if (!self.disabled) {
+        [self.commandQueue resume];
+    }
 }
 
 # pragma mark - Private

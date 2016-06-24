@@ -97,13 +97,18 @@
 }
 
 - (RMQAllocatedChannel *)allocatedChannel:(NSUInteger)channelNumber {
-    RMQGCDSerialQueue *commandQueue = [self suspendedDispatchQueue:channelNumber];
+    RMQGCDSerialQueue *commandQueue = [self suspendedDispatchQueue:channelNumber
+                                                              type:@"commands"];
+    RMQGCDSerialQueue *recoveryQueue = [self suspendedDispatchQueue:channelNumber
+                                                               type:@"recovery"];
     RMQSuspendResumeDispatcher *dispatcher = [[RMQSuspendResumeDispatcher alloc] initWithSender:self.sender
                                                                                    commandQueue:commandQueue];
+    RMQSuspendResumeDispatcher *recoveryDispatcher = [[RMQSuspendResumeDispatcher alloc] initWithSender:self.sender
+                                                                                           commandQueue:recoveryQueue];
     RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(channelNumber)
                                                 contentBodySize:@(self.sender.frameMax.integerValue - RMQEmptyFrameSize)
                                                      dispatcher:dispatcher
-                                                   commandQueue:commandQueue
+                                             recoveryDispatcher:recoveryDispatcher
                                                   nameGenerator:self.nameGenerator
                                                       allocator:self
                                                   confirmations:[RMQTransactionalConfirmations new]];
@@ -119,8 +124,9 @@
     return self.channelNumber == RMQChannelLimit;
 }
 
-- (RMQGCDSerialQueue *)suspendedDispatchQueue:(UInt16)channelNumber {
-    RMQGCDSerialQueue *serialQueue = [[RMQGCDSerialQueue alloc] initWithName:[NSString stringWithFormat:@"channel %d", channelNumber]];
+- (RMQGCDSerialQueue *)suspendedDispatchQueue:(UInt16)channelNumber
+                                         type:(NSString *)type {
+    RMQGCDSerialQueue *serialQueue = [[RMQGCDSerialQueue alloc] initWithName:[NSString stringWithFormat:@"channel %d (%@)", channelNumber, type]];
     [serialQueue suspend];
     return serialQueue;
 }

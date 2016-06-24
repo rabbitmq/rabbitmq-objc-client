@@ -161,7 +161,7 @@ class RMQConnectionTest: XCTestCase {
 
         conn.sendFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclare("foo", options: [])))
 
-        XCTAssertGreaterThan(q.enqueueDelay!.integerValue, recovery.interval.integerValue)
+        XCTAssertEqual(q.enqueueDelay!.integerValue, recovery.interval.integerValue)
     }
 
     func testSignalsActivityToHeartbeatSenderOnOutgoingFrameset() {

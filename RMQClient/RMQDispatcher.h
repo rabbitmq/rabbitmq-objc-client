@@ -20,4 +20,8 @@
 
 - (void)sendAsyncFrameset:(RMQFrameset *)frameset;
 
+- (void)enqueue:(RMQOperation)operation;
+- (void)disable;
+- (void)enable;
+
 @end

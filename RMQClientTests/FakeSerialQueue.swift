@@ -9,6 +9,7 @@ enum FakeSerialQueueError: ErrorType {
     var index = 0
     var suspended = false
     var enqueueDelay: NSNumber?
+    var name = "Fakey"
 
     func enqueue(operation: RMQOperation!) {
         items.append(operation)

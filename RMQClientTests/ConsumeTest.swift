@@ -28,10 +28,9 @@ class ConsumeTest: XCTestCase {
     }
 
     func testBasicConsumeCallsCallbackWhenMessageIsDelivered() {
-        let q = FakeSerialQueue()
         let dispatcher = DispatcherSpy()
         let nameGenerator = StubNameGenerator()
-        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, commandQueue: q, nameGenerator: nameGenerator)
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, nameGenerator: nameGenerator)
         let consumeOkMethod = RMQBasicConsumeOk(consumerTag: RMQShortstr("tag"))
         let consumeOkFrameset = RMQFrameset(channelNumber: 432, method: consumeOkMethod)
         let incomingDeliver = deliverFrameset(
@@ -62,7 +61,7 @@ class ConsumeTest: XCTestCase {
 
         ch.handleFrameset(incomingDeliver)
         XCTAssertNil(consumedMessage)
-        try! q.step()
+        try! dispatcher.step()
 
         XCTAssertEqual(expectedMessage, consumedMessage)
     }
@@ -77,9 +76,8 @@ class ConsumeTest: XCTestCase {
     }
 
     func testBasicCancelRemovesConsumer() {
-        let q = FakeSerialQueue()
         let dispatcher = DispatcherSpy()
-        let ch = ChannelHelper.makeChannel(432, dispatcher: dispatcher, commandQueue: q)
+        let ch = ChannelHelper.makeChannel(432, dispatcher: dispatcher)
 
         var consumerCalled = false
         let consumer = ch.basicConsume("my q", options: []) { _ in
@@ -90,15 +88,14 @@ class ConsumeTest: XCTestCase {
         ch.basicCancel(consumer.tag)
 
         ch.handleFrameset(deliverFrameset(consumerTag: consumer.tag, routingKey: "foo", content: "message", channelNumber: 432))
-        try! q.step()
+        try! dispatcher.step()
 
         XCTAssertFalse(consumerCalled)
     }
 
     func testServerCancelRemovesExtantConsumer() {
-        let q = FakeSerialQueue()
         let dispatcher = DispatcherSpy()
-        let ch = ChannelHelper.makeChannel(432, dispatcher: dispatcher, commandQueue: q)
+        let ch = ChannelHelper.makeChannel(432, dispatcher: dispatcher)
 
         var consumerCalled = false
         let consumer = ch.basicConsume("my q", options: []) { _ in
@@ -107,10 +104,10 @@ class ConsumeTest: XCTestCase {
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 432, method: MethodFixtures.basicConsumeOk(consumer.tag)))
 
         ch.handleFrameset(RMQFrameset(channelNumber: 123, method: MethodFixtures.basicCancel(consumer.tag)))
-        try! q.step()
+        try! dispatcher.step()
 
         ch.handleFrameset(deliverFrameset(consumerTag: consumer.tag, routingKey: "foo", content: "message", channelNumber: 432))
-        try! q.step()
+        try! dispatcher.step()
 
         XCTAssertFalse(consumerCalled)
     }

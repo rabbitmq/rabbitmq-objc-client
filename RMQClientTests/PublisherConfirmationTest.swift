@@ -47,27 +47,27 @@ class PublisherConfirmationTest: XCTestCase {
 
     func testServerAcksAreRecordedOnceDequeued() {
         let confirmations = ConfirmationsSpy()
-        let q = FakeSerialQueue()
-        let ch = ChannelHelper.makeChannel(1, commandQueue: q, confirmations: confirmations)
+        let dispatcher = DispatcherSpy()
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, confirmations: confirmations)
 
         let ack = MethodFixtures.basicAck(123, options: [.Multiple])
         ch.handleFrameset(RMQFrameset(channelNumber: 1, method: ack))
 
         XCTAssertNil(confirmations.lastReceivedAck)
-        try! q.step()
+        try! dispatcher.step()
         XCTAssertEqual(ack, confirmations.lastReceivedAck)
     }
 
     func testServerNacksAreRecordedOnceDequeued() {
         let confirmations = ConfirmationsSpy()
-        let q = FakeSerialQueue()
-        let ch = ChannelHelper.makeChannel(1, commandQueue: q, confirmations: confirmations)
+        let dispatcher = DispatcherSpy()
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, confirmations: confirmations)
 
         let nack = MethodFixtures.basicNack(123, options: [.Multiple])
         ch.handleFrameset(RMQFrameset(channelNumber: 1, method: nack))
 
         XCTAssertNil(confirmations.lastReceivedNack)
-        try! q.step()
+        try! dispatcher.step()
         XCTAssertEqual(nack, confirmations.lastReceivedNack)
     }
     

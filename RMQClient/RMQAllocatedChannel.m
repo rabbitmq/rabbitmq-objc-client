@@ -8,6 +8,7 @@
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
 @property (nonatomic, readwrite) NSNumber *contentBodySize;
 @property (nonatomic, readwrite) id <RMQDispatcher> dispatcher;
+@property (nonatomic, readwrite) id <RMQDispatcher> recoveryDispatcher;
 @property (nonatomic, readwrite) NSMutableDictionary *consumers;
 @property (nonatomic, readwrite) NSMutableDictionary *exchanges;
 @property (nonatomic, readwrite) NSMutableDictionary *exchangeBindings;
@@ -16,7 +17,6 @@
 @property (nonatomic, readwrite) id<RMQConfirmations> confirmations;
 @property (nonatomic, readwrite) NSNumber *prefetchCountPerConsumer;
 @property (nonatomic, readwrite) NSNumber *prefetchCountPerChannel;
-@property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) id<RMQNameGenerator> nameGenerator;
 @property (nonatomic, readwrite) id<RMQChannelAllocator> allocator;
@@ -27,7 +27,7 @@
 - (instancetype)init:(NSNumber *)channelNumber
      contentBodySize:(NSNumber *)contentBodySize
           dispatcher:(id<RMQDispatcher>)dispatcher
-        commandQueue:(id<RMQLocalSerialQueue>)commandQueue
+  recoveryDispatcher:(id<RMQDispatcher>)recoveryDispatcher
        nameGenerator:(id<RMQNameGenerator>)nameGenerator
            allocator:(nonnull id<RMQChannelAllocator>)allocator
        confirmations:(id<RMQConfirmations>)confirmations {
@@ -36,7 +36,7 @@
         self.channelNumber = channelNumber;
         self.contentBodySize = contentBodySize;
         self.dispatcher = dispatcher;
-        self.commandQueue = commandQueue;
+        self.recoveryDispatcher = recoveryDispatcher;
         self.consumers = [NSMutableDictionary new];
         self.exchanges = [NSMutableDictionary new];
         self.exchangeBindings = [NSMutableDictionary new];
@@ -67,6 +67,7 @@
 
 - (void)activateWithDelegate:(id<RMQConnectionDelegate>)delegate {
     [self.dispatcher activateWithChannel:self delegate:delegate];
+    [self.recoveryDispatcher activateWithChannel:self delegate:delegate];
     self.delegate = delegate;
 }
 
@@ -94,7 +95,13 @@
     [self.allocator releaseChannelNumber:self.channelNumber];
 }
 
+- (void)prepareForRecovery {
+    [self.dispatcher disable];
+}
+
 - (void)recover {
+    id<RMQDispatcher> oldCommandDispatcher = self.dispatcher;
+    self.dispatcher = self.recoveryDispatcher;
     [self open];
     [self recoverPrefetch];
     [self recoverConfirmations];
@@ -102,6 +109,10 @@
     [self recoverExchangeBindings]; 
     [self recoverQueuesAndTheirBindings];
     [self recoverConsumers];
+    [self.recoveryDispatcher enqueue:^{
+        self.dispatcher = oldCommandDispatcher;
+        [self.dispatcher enable];
+    }];
 }
 
 - (void)blockingWaitOn:(Class)method {
@@ -376,16 +387,16 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
 
 - (void)handleFrameset:(RMQFrameset *)frameset {
     if ([frameset.method isKindOfClass:[RMQBasicDeliver class]]) {
-        [self.commandQueue enqueue:^{
+        [self.dispatcher enqueue:^{
             [self handleBasicDeliver:frameset];
         }];
     } else if ([frameset.method isKindOfClass:[RMQBasicCancel class]]) {
-        [self.commandQueue enqueue:^{
+        [self.dispatcher enqueue:^{
             [self handleBasicCancel:frameset];
         }];
     } else if ([frameset.method isKindOfClass:[RMQBasicAck class]] ||
                [frameset.method isKindOfClass:[RMQBasicNack class]]) {
-        [self.commandQueue enqueue:^{
+        [self.dispatcher enqueue:^{
             [self handleConfirmation:frameset];
         }];
     } else {

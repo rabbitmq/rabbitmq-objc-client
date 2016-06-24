@@ -10,7 +10,7 @@
 - (nonnull instancetype)init:(nonnull NSNumber *)channelNumber
              contentBodySize:(nonnull NSNumber *)contentBodySize
                   dispatcher:(nonnull id<RMQDispatcher>)dispatcher
-                commandQueue:(nonnull id<RMQLocalSerialQueue>)commandQueue
+          recoveryDispatcher:(nonnull id<RMQDispatcher>)recoveryDispatcher
                nameGenerator:(nullable id<RMQNameGenerator>)nameGenerator
                    allocator:(nonnull id<RMQChannelAllocator>)allocator
                confirmations:(nonnull id<RMQConfirmations>)confirmations;

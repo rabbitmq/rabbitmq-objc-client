@@ -47,6 +47,7 @@
     var openCalled = false
     var closeCalled = false
     var blockingCloseCalled = false
+    var prepareForRecoveryCalled = false
     var recoverCalled = false
     var blockingWaitOnMethod: AnyClass?
     var delegateSentToActivate: RMQConnectionDelegate?
@@ -78,6 +79,10 @@
 
     func blockingClose() {
         blockingCloseCalled = true
+    }
+
+    func prepareForRecovery() {
+        prepareForRecoveryCalled = true
     }
 
     func recover() {

@@ -58,7 +58,7 @@
 		AE43841B1CEC9DAD000A4A7A /* ChannelRecoveryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE43841A1CEC9DAD000A4A7A /* ChannelRecoveryTest.swift */; };
 		AE46F91E1CFF47F8009DE49F /* JKVValue.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE46F91D1CFF47F8009DE49F /* JKVValue.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE48F9341CE22CA200296A23 /* RMQSuspendResumeDispatcherTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE48F9331CE22CA200296A23 /* RMQSuspendResumeDispatcherTest.swift */; };
-		AE4B72FB1D17F9E000907667 /* RMQBasicProperties+MergeDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = AE4B72F91D17F9E000907667 /* RMQBasicProperties+MergeDefaults.h */; };
+		AE4B72FB1D17F9E000907667 /* RMQBasicProperties+MergeDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = AE4B72F91D17F9E000907667 /* RMQBasicProperties+MergeDefaults.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE4B72FC1D17F9E000907667 /* RMQBasicProperties+MergeDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4B72FA1D17F9E000907667 /* RMQBasicProperties+MergeDefaults.m */; };
 		AE4E7F4A1C6A293D00A441EC /* RMQMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = AE4E7F491C6A293D00A441EC /* RMQMethods.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE4E7F4B1C6A297900A441EC /* RMQMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA45EC41C43C20F00FE1F62 /* RMQMethods.m */; };
@@ -110,7 +110,7 @@
 		AE9DB0091D11FDED0005F44B /* ConfirmationsSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9DB0081D11FDED0005F44B /* ConfirmationsSpy.swift */; };
 		AE9DB00B1D12A4C40005F44B /* RMQConfirmations.h in Headers */ = {isa = PBXBuildFile; fileRef = AE9DB00A1D12A4C40005F44B /* RMQConfirmations.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE9DB00D1D12AA120005F44B /* RMQTransactionalConfirmationsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9DB00C1D12AA120005F44B /* RMQTransactionalConfirmationsTest.swift */; };
-		AE9DB0101D12C5C30005F44B /* RMQConfirmationTransaction.h in Headers */ = {isa = PBXBuildFile; fileRef = AE9DB00E1D12C5C30005F44B /* RMQConfirmationTransaction.h */; };
+		AE9DB0101D12C5C30005F44B /* RMQConfirmationTransaction.h in Headers */ = {isa = PBXBuildFile; fileRef = AE9DB00E1D12C5C30005F44B /* RMQConfirmationTransaction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE9DB0111D12C5C30005F44B /* RMQConfirmationTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9DB00F1D12C5C30005F44B /* RMQConfirmationTransaction.m */; };
 		AE9DB0131D12D1DB0005F44B /* ChannelHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9DB0121D12D1DB0005F44B /* ChannelHelper.swift */; };
 		AEA45EC81C43CBBE00FE1F62 /* RMQConnectionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA45EC71C43CBBE00FE1F62 /* RMQConnectionTest.swift */; };
@@ -904,7 +904,6 @@
 				AEE7FEB91C3BD2B400DF8C4F /* RMQExchange.h in Headers */,
 				AEEB514D1CAC7780009F37D2 /* RMQSynchronizedMutableDictionary.h in Headers */,
 				AE744E331C85A1B000A4C2FA /* RMQFrame.h in Headers */,
-				AE9DB0101D12C5C30005F44B /* RMQConfirmationTransaction.h in Headers */,
 				AEE445E11C7338FE0082132C /* RMQReader.h in Headers */,
 				AE39BD9E1C68B019000E7A77 /* RMQValues.h in Headers */,
 				AE8AD2621CC53AEB00229444 /* RMQFramesetValidator.h in Headers */,
@@ -933,10 +932,11 @@
 				AEB5F15C1CDA4360001C82FF /* RMQErrors.h in Headers */,
 				AE3415461CEB7FF20071177A /* RMQStarter.h in Headers */,
 				AE3415441CEB74190071177A /* RMQConnectionRecovery.h in Headers */,
-				AE4B72FB1D17F9E000907667 /* RMQBasicProperties+MergeDefaults.h in Headers */,
 				AE9DB0061D11F0820005F44B /* RMQTransactionalConfirmations.h in Headers */,
 				AE3415561CEBC4DC0071177A /* RMQConnectionRecover.h in Headers */,
 				AE9DB00B1D12A4C40005F44B /* RMQConfirmations.h in Headers */,
+				AE9DB0101D12C5C30005F44B /* RMQConfirmationTransaction.h in Headers */,
+				AE4B72FB1D17F9E000907667 /* RMQBasicProperties+MergeDefaults.h in Headers */,
 				AE338D7E1CF5F0CF005D8D6C /* RMQTable.h in Headers */,
 				AEE7FE951C3BCA6000DF8C4F /* RMQClient.h in Headers */,
 			);

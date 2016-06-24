@@ -2,6 +2,7 @@
 #import <RMQClient/RMQConnection.h>
 #import <RMQClient/RMQErrors.h>
 #import <RMQClient/RMQBasicProperties.h>
+#import <RMQClient/RMQBasicProperties+MergeDefaults.h>
 #import <RMQClient/RMQFrame.h>
 #import <RMQClient/RMQHeartbeat.h>
 #import <RMQClient/RMQMethodDecoder.h>
@@ -29,6 +30,7 @@
 #import <RMQClient/RMQPKCS12CertificateConverter.h>
 #import <RMQClient/RMQTLSOptions.h>
 #import <RMQClient/RMQTransactionalConfirmations.h>
+#import <RMQClient/RMQConfirmationTransaction.h>
 
 //! Project version number for RMQClient.
 FOUNDATION_EXPORT double RMQClientVersionNumber;

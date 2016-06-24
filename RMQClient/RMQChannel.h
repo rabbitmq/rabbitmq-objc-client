@@ -14,6 +14,7 @@
 - (void)open;
 - (void)close;
 - (void)blockingClose;
+- (void)prepareForRecovery;
 - (void)recover;
 - (void)blockingWaitOn:(nonnull Class)method;
 - (void)confirmSelect;

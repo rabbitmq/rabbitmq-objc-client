@@ -2,6 +2,33 @@ import XCTest
 
 class RMQSuspendResumeDispatcherTest: XCTestCase {
 
+    func testDelegatesEnqueueToCommandQueue() {
+        let q = FakeSerialQueue()
+        let dispatcher = RMQSuspendResumeDispatcher(sender: SenderSpy(), commandQueue: q)
+
+        var enqueueCalled = false
+        dispatcher.enqueue {
+            enqueueCalled = true
+        }
+        XCTAssertEqual(1, q.items.count)
+        try! q.step()
+        XCTAssert(enqueueCalled)
+    }
+
+    func testDisableSuspendsCommandQueueAndPreventsFramesetHandlingFromResuming() {
+        let q = FakeSerialQueue()
+        let dispatcher = RMQSuspendResumeDispatcher(sender: SenderSpy(), commandQueue: q)
+
+        dispatcher.disable()
+        XCTAssertTrue(q.suspended)
+
+        dispatcher.handleFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicQosOk()))
+        XCTAssertTrue(q.suspended)
+
+        dispatcher.enable()
+        XCTAssertFalse(q.suspended)
+    }
+
     func testActivatingResumesQueue() {
         let q = FakeSerialQueue()
         q.suspend()
@@ -272,7 +299,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         let sender = SenderSpy()
         let delegate = ConnectionDelegateSpy()
         let dispatcher = RMQSuspendResumeDispatcher(sender: sender, commandQueue: q)
-        let ch = ChannelHelper.makeChannel(123, contentBodySize: 1, dispatcher: dispatcher, commandQueue: q)
+        let ch = ChannelHelper.makeChannel(123, contentBodySize: 1, dispatcher: dispatcher)
         dispatcher.activateWithChannel(ch, delegate: delegate)
         return (dispatcher, q, sender, delegate, ch)
     }

@@ -27,6 +27,8 @@
 
 - (void)blockingClose {}
 
+- (void)prepareForRecovery {}
+
 - (void)recover {}
 
 - (void)blockingWaitOn:(Class)method {

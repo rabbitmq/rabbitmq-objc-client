@@ -3,25 +3,25 @@ import XCTest
 class RMQAllocatedChannelTest: XCTestCase {
 
     func testObeysContract() {
-        let sender = SenderSpy()
-        let q = RMQGCDSerialQueue(name: "channel command queue")
-        let dispatcher = RMQSuspendResumeDispatcher(sender: sender, commandQueue: q)
-        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, commandQueue: q)
+        let ch = ChannelHelper.makeChannel(1)
         let contract = RMQChannelContract(ch)
 
         contract.check()
     }
 
-    func testActivatingActivatesDispatcher() {
+    func testActivatingActivatesDispatchers() {
         let delegate = ConnectionDelegateSpy()
         let dispatcher = DispatcherSpy()
+        let recoveryDispatcher = DispatcherSpy()
 
-        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, recoveryDispatcher: recoveryDispatcher)
 
         ch.activateWithDelegate(delegate)
 
         XCTAssertEqual(ch, dispatcher.activatedWithChannel as? RMQAllocatedChannel)
         XCTAssertEqual(delegate, dispatcher.activatedWithDelegate as? ConnectionDelegateSpy)
+        XCTAssertEqual(ch, recoveryDispatcher.activatedWithChannel as? RMQAllocatedChannel)
+        XCTAssertEqual(delegate, recoveryDispatcher.activatedWithDelegate as? ConnectionDelegateSpy)
     }
 
     func testIncomingSyncFramesetsAreSentToDispatcher() {
@@ -160,10 +160,9 @@ class RMQAllocatedChannelTest: XCTestCase {
     }
 
     func testMultipleConsumersOnSameQueueReceiveMessages() {
-        let q = FakeSerialQueue()
         let dispatcher = DispatcherSpy()
         let nameGenerator = StubNameGenerator()
-        let ch = ChannelHelper.makeChannel(999, dispatcher: dispatcher, commandQueue: q, nameGenerator: nameGenerator)
+        let ch = ChannelHelper.makeChannel(999, dispatcher: dispatcher, nameGenerator: nameGenerator)
         let consumeOkFrameset1 = RMQFrameset(channelNumber: 999, method: RMQBasicConsumeOk(consumerTag: RMQShortstr("servertag1")))
         let consumeOkFrameset2 = RMQFrameset(channelNumber: 999, method: RMQBasicConsumeOk(consumerTag: RMQShortstr("servertag2")))
         let deliverMethod1 = MethodFixtures.basicDeliver(consumerTag: "tag1", deliveryTag: 1)
@@ -195,11 +194,11 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         ch.handleFrameset(deliverFrameset1)
         ch.handleFrameset(deliverFrameset2)
-        try! q.step()
+        try! dispatcher.step()
 
         XCTAssertEqual(expectedMessage1, consumedMessage1)
 
-        try! q.step()
+        try! dispatcher.step()
         XCTAssertEqual(expectedMessage2, consumedMessage2)
     }
 
@@ -241,9 +240,8 @@ class RMQAllocatedChannelTest: XCTestCase {
     }
 
     func testPublishHasDefaultProperties() {
-        let q = FakeSerialQueue()
         let dispatcher = DispatcherSpy()
-        let ch = ChannelHelper.makeChannel(999, contentBodySize: 4, dispatcher: dispatcher, commandQueue: q)
+        let ch = ChannelHelper.makeChannel(999, contentBodySize: 4, dispatcher: dispatcher)
 
         let props: [RMQValue] = [RMQBasicCorrelationId("my-correlation-id")]
         ch.basicPublish("", routingKey: "", exchange: "", properties: props, options: [])
@@ -255,9 +253,8 @@ class RMQAllocatedChannelTest: XCTestCase {
     }
 
     func testPublishWhenContentLengthIsMultipleOfFrameMax() {
-        let q = FakeSerialQueue()
         let dispatcher = DispatcherSpy()
-        let ch = ChannelHelper.makeChannel(999, contentBodySize: 4, dispatcher: dispatcher, commandQueue: q)
+        let ch = ChannelHelper.makeChannel(999, contentBodySize: 4, dispatcher: dispatcher)
         let messageContent = "12345678"
         let expectedMethod = MethodFixtures.basicPublish("my.q", exchange: "", options: [])
         let expectedBodyData = messageContent.dataUsingEncoding(NSUTF8StringEncoding)!
