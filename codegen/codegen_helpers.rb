@@ -19,6 +19,8 @@ module CodegenHelpers
 
   def do_not_edit
     <<-OBJC.chomp
+// License goes here
+
 // This file is generated. Do not edit.
     OBJC
   end

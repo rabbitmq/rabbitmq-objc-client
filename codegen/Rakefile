@@ -4,32 +4,42 @@ require_relative 'generate_methods'
 require_relative 'generate_method_map'
 require_relative 'generate_basic_properties'
 
-dest_dir = Pathname(File.absolute_path('../RMQClient', __dir__))
+code_dir = Pathname(File.absolute_path('../RMQClient', __dir__))
+tests_dir = Pathname(File.absolute_path('../RMQClientTests', __dir__))
 this_dir = Pathname(__dir__)
 xml = Nokogiri::XML(File.open(this_dir.join("amqp0-9-1.extended.xml")))
 
 desc "Generate AMQP method code"
 task :generate_methods do
   generator = GenerateMethods.new(xml)
-  dest_dir.join('RMQMethods.h').write(generator.generate_header)
-  dest_dir.join('RMQMethods.m').write(generator.generate_implementation)
+  code_dir.join('RMQMethods.h').write(generator.generate_header)
+  code_dir.join('RMQMethods.m').write(generator.generate_implementation)
 end
 
 desc "Generate mapping between [classID, methodID] to method classes"
 task :generate_method_map do
   generator = GenerateMethodMap.new(xml)
-  dest_dir.join('RMQMethodMap.h').write(generator.generate_header)
-  dest_dir.join('RMQMethodMap.m').write(generator.generate_implementation)
+  code_dir.join('RMQMethodMap.h').write(generator.generate_header)
+  code_dir.join('RMQMethodMap.m').write(generator.generate_implementation)
 end
 
 desc "Generate basic properties"
 task :generate_basic_properties do
   generator = GenerateBasicProperties.new(xml)
-  dest_dir.join('RMQBasicProperties.h').write(generator.generate_header)
-  dest_dir.join('RMQBasicProperties.m').write(generator.generate_implementation)
+  code_dir.join('RMQBasicProperties.h').write(generator.generate_header)
+  code_dir.join('RMQBasicProperties.m').write(generator.generate_implementation)
 end
 
-desc "Generate everything (default)"
+desc "Generate everything"
 multitask generate: [:generate_methods, :generate_method_map, :generate_basic_properties]
 
-task default: :generate
+desc "License and generate everything"
+task license_and_generate: :generate do
+  command = [this_dir.join("../bin/add-license"),
+             this_dir.join("../license-header.txt"),
+             code_dir,
+             tests_dir].join(" ")
+  system(command)
+end
+
+task default: :license_and_generate
