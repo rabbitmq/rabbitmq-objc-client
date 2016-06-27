@@ -6,6 +6,7 @@ require_relative 'generate_basic_properties'
 
 code_dir = Pathname(File.absolute_path('../RMQClient', __dir__))
 tests_dir = Pathname(File.absolute_path('../RMQClientTests', __dir__))
+integration_tests_dir = Pathname(File.absolute_path('../RMQClientIntegrationTests', __dir__))
 this_dir = Pathname(__dir__)
 xml = Nokogiri::XML(File.open(this_dir.join("amqp0-9-1.extended.xml")))
 
@@ -38,7 +39,8 @@ task license_and_generate: :generate do
   command = [this_dir.join("../bin/add-license"),
              this_dir.join("../license-header.txt"),
              code_dir,
-             tests_dir].join(" ")
+             tests_dir,
+             integration_tests_dir].join(" ")
   system(command)
 end
 
