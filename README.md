@@ -131,5 +131,5 @@ Finally, run the test suite:
 ## License
 
 This package, the RabbitMQ Objective-C client library, is
-double-licensed under the Mozilla Public License 1.1 ("MPL") and the
+dual-licensed under the Mozilla Public License 1.1 ("MPL") and the
 Apache License version 2 ("ASL").
