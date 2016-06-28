@@ -68,15 +68,18 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
 
     func testDisableSuspendsCommandQueueAndPreventsFramesetHandlingFromResuming() {
         let q = FakeSerialQueue()
-        let dispatcher = RMQSuspendResumeDispatcher(sender: SenderSpy(), commandQueue: q)
+        let eq = FakeSerialQueue()
+        let dispatcher = RMQSuspendResumeDispatcher(sender: SenderSpy(), commandQueue: q, enablementQueue: eq, enableDelay: 3)
 
         dispatcher.disable()
         XCTAssertTrue(q.suspended)
 
         dispatcher.handleFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicQosOk()))
-        XCTAssertTrue(q.suspended)
-
         dispatcher.enable()
+
+        XCTAssertTrue(q.suspended)
+        XCTAssertEqual(3, eq.enqueueDelay)
+        try! eq.step()
         XCTAssertFalse(q.suspended)
     }
 

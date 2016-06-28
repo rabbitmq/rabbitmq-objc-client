@@ -58,6 +58,11 @@
 @interface RMQSuspendResumeDispatcher : NSObject <RMQDispatcher>
 
 - (instancetype)initWithSender:(id<RMQSender>)sender
+                  commandQueue:(id<RMQLocalSerialQueue>)commandQueue
+               enablementQueue:(id<RMQLocalSerialQueue>)enablementQueue
+                   enableDelay:(NSNumber *)enableDelay;
+
+- (instancetype)initWithSender:(id<RMQSender>)sender
                   commandQueue:(id<RMQLocalSerialQueue>)commandQueue;
 
 @end

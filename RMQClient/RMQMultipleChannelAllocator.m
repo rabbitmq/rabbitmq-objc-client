@@ -65,6 +65,7 @@
 @property (nonatomic, readwrite) NSMutableDictionary *channels;
 @property (nonatomic, readwrite) NSNumber *syncTimeout;
 @property (nonatomic, readwrite) RMQProcessInfoNameGenerator *nameGenerator;
+@property (nonatomic, readwrite) NSNumber *dispatcherReenableDelay;
 @end
 
 @implementation RMQMultipleChannelAllocator
@@ -78,6 +79,7 @@
         self.sender = nil;
         self.syncTimeout = syncTimeout;
         self.nameGenerator = [RMQProcessInfoNameGenerator new];
+        self.dispatcherReenableDelay = @1;
     }
     return self;
 }
@@ -148,14 +150,19 @@
 }
 
 - (RMQAllocatedChannel *)allocatedChannel:(NSUInteger)channelNumber {
-    RMQGCDSerialQueue *commandQueue = [self suspendedDispatchQueue:channelNumber
-                                                              type:@"commands"];
-    RMQGCDSerialQueue *recoveryQueue = [self suspendedDispatchQueue:channelNumber
-                                                               type:@"recovery"];
+    RMQGCDSerialQueue *commandQueue = [self serialQueue:channelNumber type:@"commands"];
+    [commandQueue suspend];
+    RMQGCDSerialQueue *recoveryQueue = [self serialQueue:channelNumber type:@"recovery"];
+    [recoveryQueue suspend];
+    RMQGCDSerialQueue *enablementQueue = [self serialQueue:channelNumber type:@"enablement"];
+
     RMQSuspendResumeDispatcher *dispatcher = [[RMQSuspendResumeDispatcher alloc] initWithSender:self.sender
-                                                                                   commandQueue:commandQueue];
+                                                                                   commandQueue:commandQueue
+                                                                                enablementQueue:enablementQueue
+                                                                                    enableDelay:self.dispatcherReenableDelay];
     RMQSuspendResumeDispatcher *recoveryDispatcher = [[RMQSuspendResumeDispatcher alloc] initWithSender:self.sender
                                                                                            commandQueue:recoveryQueue];
+
     RMQAllocatedChannel *ch = [[RMQAllocatedChannel alloc] init:@(channelNumber)
                                                 contentBodySize:@(self.sender.frameMax.integerValue - RMQEmptyFrameSize)
                                                      dispatcher:dispatcher
@@ -175,11 +182,9 @@
     return self.channelNumber == RMQChannelLimit;
 }
 
-- (RMQGCDSerialQueue *)suspendedDispatchQueue:(UInt16)channelNumber
-                                         type:(NSString *)type {
-    RMQGCDSerialQueue *serialQueue = [[RMQGCDSerialQueue alloc] initWithName:[NSString stringWithFormat:@"channel %d (%@)", channelNumber, type]];
-    [serialQueue suspend];
-    return serialQueue;
+- (RMQGCDSerialQueue *)serialQueue:(UInt16)channelNumber
+                              type:(NSString *)type {
+    return [[RMQGCDSerialQueue alloc] initWithName:[NSString stringWithFormat:@"channel %d (%@)", channelNumber, type]];
 }
 
 @end

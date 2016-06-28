@@ -63,6 +63,8 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 @property (nonatomic, readwrite) id<RMQSender> sender;
 @property (nonatomic, readwrite) RMQFramesetValidator *validator;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
+@property (nonatomic, readwrite) id<RMQLocalSerialQueue> enablementQueue;
+@property (nonatomic, readwrite) NSNumber *enableDelay;
 @property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) DispatcherState state;
 @property (nonatomic, readwrite) BOOL disabled;
@@ -71,17 +73,26 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 @implementation RMQSuspendResumeDispatcher
 
 - (instancetype)initWithSender:(id<RMQSender>)sender
-                  commandQueue:(id<RMQLocalSerialQueue>)commandQueue {
+                  commandQueue:(id<RMQLocalSerialQueue>)commandQueue
+               enablementQueue:(id<RMQLocalSerialQueue>)enablementQueue
+                   enableDelay:(NSNumber *)enableDelay {
     self = [super init];
     if (self) {
         self.channel = nil;
         self.sender = sender;
         self.validator = [RMQFramesetValidator new];
         self.commandQueue = commandQueue;
+        self.enablementQueue = enablementQueue;
+        self.enableDelay = enableDelay;
         self.state = DispatcherStateOpen;
         self.disabled = NO;
     }
     return self;
+}
+
+- (instancetype)initWithSender:(id<RMQSender>)sender
+                  commandQueue:(id<RMQLocalSerialQueue>)commandQueue {
+    return [self initWithSender:sender commandQueue:commandQueue enablementQueue:nil enableDelay:@0];
 }
 
 - (void)activateWithChannel:(id<RMQChannel>)channel
@@ -175,8 +186,10 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 }
 
 - (void)enable {
-    self.disabled = NO;
-    [self.commandQueue resume];
+    [self.enablementQueue delayedBy:self.enableDelay enqueue:^{
+        self.disabled = NO;
+        [self.commandQueue resume];
+    }];
 }
 
 - (void)handleFrameset:(RMQFrameset *)frameset {
