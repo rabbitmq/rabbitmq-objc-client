@@ -51,6 +51,8 @@
 
 class ConnectionHelper {
     static func makeConnection(recoveryInterval interval: Int = 2,
+                                                onlyErrors: Bool = true,
+                                                attemptLimit: Int = 1,
                                                 transport: RMQTCPSocketTransport,
                                                 delegate: RMQConnectionDelegate) -> RMQConnection {
         let credentials = RMQCredentials(username: "guest", password: "guest")
@@ -58,8 +60,8 @@ class ConnectionHelper {
         let heartbeatSender = RMQGCDHeartbeatSender(transport: transport, clock: RMQTickingClock())
         let commandQueue = RMQGCDSerialQueue(name: "socket-recovery-test-queue")
         let recovery = RMQConnectionRecover(interval: interval,
-                                            attemptLimit: 1,
-                                            onlyErrors: true,
+                                            attemptLimit: attemptLimit,
+                                            onlyErrors: onlyErrors,
                                             heartbeatSender: heartbeatSender,
                                             commandQueue: commandQueue,
                                             delegate: delegate)
