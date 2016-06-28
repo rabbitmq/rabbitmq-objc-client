@@ -51,7 +51,7 @@
 
 #import "RMQBasicProperties+MergeDefaults.h"
 #import "RMQErrors.h"
-#import "RMQMethods.h"
+#import "RMQMethods+Convenience.h"
 #import "RMQAllocatedChannel.h"
 #import "RMQConnectionDelegate.h"
 
@@ -123,26 +123,18 @@
 }
 
 - (void)open {
-    RMQChannelOpen *outgoingMethod = [[RMQChannelOpen alloc] initWithReserved1:[[RMQShortstr alloc] init:@""]];
-    [self.dispatcher sendSyncMethod:outgoingMethod];
+    [self.dispatcher sendSyncMethod:[RMQChannelOpen new]];
 }
 
 - (void)close {
-    [self.dispatcher sendSyncMethod:[[RMQChannelClose alloc] initWithReplyCode:[[RMQShort alloc] init:200]
-                                                                     replyText:[[RMQShortstr alloc] init:@"Goodbye"]
-                                                                       classId:[[RMQShort alloc] init:0]
-                                                                      methodId:[[RMQShort alloc] init:0]]
+    [self.dispatcher sendSyncMethod:[RMQChannelClose new]
                   completionHandler:^(RMQFrameset *frameset) {
                       [self.allocator releaseChannelNumber:self.channelNumber];
                   }];
 }
 
 - (void)blockingClose {
-    RMQChannelClose *close = [[RMQChannelClose alloc] initWithReplyCode:[[RMQShort alloc] init:200]
-                                                              replyText:[[RMQShortstr alloc] init:@"Goodbye"]
-                                                                classId:[[RMQShort alloc] init:0]
-                                                               methodId:[[RMQShort alloc] init:0]];
-    [self.dispatcher sendSyncMethodBlocking:close];
+    [self.dispatcher sendSyncMethodBlocking:[RMQChannelClose new]];
     [self.allocator releaseChannelNumber:self.channelNumber];
 }
 
@@ -172,7 +164,7 @@
 
 - (void)confirmSelect {
     [self.confirmations enable];
-    [self.dispatcher sendSyncMethod:[[RMQConfirmSelect alloc] initWithOptions:RMQConfirmSelectNoOptions]];
+    [self.dispatcher sendSyncMethod:[RMQConfirmSelect new]];
 }
 
 - (void)afterConfirmed:(RMQConfirmationCallback)handler {
@@ -202,20 +194,16 @@
 - (void)queueDelete:(NSString *)queueName
             options:(RMQQueueDeleteOptions)options {
     [self.queues removeObjectForKey:queueName];
-    [self.dispatcher sendSyncMethod:[[RMQQueueDelete alloc] initWithReserved1:[[RMQShort alloc] init:0]
-                                                                        queue:[[RMQShortstr alloc] init:queueName]
-                                                                      options:options]];
+    [self.dispatcher sendSyncMethod:[[RMQQueueDelete alloc] initWithQueue:queueName
+                                                                  options:options]];
 }
 
 - (void)queueBind:(NSString *)queueName
          exchange:(NSString *)exchangeName
        routingKey:(nonnull NSString *)routingKey {
-    [self.dispatcher sendSyncMethod:[[RMQQueueBind alloc] initWithReserved1:[[RMQShort alloc] init:0]
-                                                                      queue:[[RMQShortstr alloc] init:queueName]
-                                                                   exchange:[[RMQShortstr alloc] init:exchangeName]
-                                                                 routingKey:[[RMQShortstr alloc] init:routingKey]
-                                                                    options:RMQQueueBindNoOptions
-                                                                  arguments:[[RMQTable alloc] init:@{}]]];
+    [self.dispatcher sendSyncMethod:[[RMQQueueBind alloc] initWithQueue:queueName
+                                                               exchange:exchangeName
+                                                             routingKey:routingKey]];
     [self.queueBindings[queueName] addObject:@{@"exchange": exchangeName,
                                                @"routing-key": routingKey}];
 }
@@ -223,11 +211,9 @@
 - (void)queueUnbind:(NSString *)queueName
            exchange:(NSString *)exchangeName
          routingKey:(NSString *)routingKey {
-    [self.dispatcher sendSyncMethod:[[RMQQueueUnbind alloc] initWithReserved1:[[RMQShort alloc] init:0]
-                                                                        queue:[[RMQShortstr alloc] init:queueName]
-                                                                     exchange:[[RMQShortstr alloc] init:exchangeName]
-                                                                   routingKey:[[RMQShortstr alloc] init:routingKey]
-                                                                    arguments:[[RMQTable alloc] init:@{}]]];
+    [self.dispatcher sendSyncMethod:[[RMQQueueUnbind alloc] initWithQueue:queueName
+                                                                 exchange:exchangeName
+                                                               routingKey:routingKey]];
     [self.queueBindings[queueName] removeObject:@{@"exchange": exchangeName,
                                                   @"routing-key": routingKey}];
 }
@@ -241,11 +227,9 @@
                                                        consumerTag:consumerTag
                                                            handler:handler
                                                            channel:self];
-    [self.dispatcher sendSyncMethod:[[RMQBasicConsume alloc] initWithReserved1:[[RMQShort alloc] init:0]
-                                                                         queue:[[RMQShortstr alloc] init:queueName]
-                                                                   consumerTag:[[RMQShortstr alloc] init:consumerTag]
-                                                                       options:options
-                                                                     arguments:[[RMQTable alloc] init:@{}]]
+    [self.dispatcher sendSyncMethod:[[RMQBasicConsume alloc] initWithQueue:queueName
+                                                               consumerTag:consumerTag
+                                                                   options:options]
                   completionHandler:^(RMQFrameset *frameset) {
                       self.consumers[consumerTag] = consumer;
                   }];
@@ -313,12 +297,8 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
 
 - (void)basicQos:(NSNumber *)count
           global:(BOOL)isGlobal {
-    RMQBasicQosOptions options = RMQBasicQosNoOptions;
-    if (isGlobal) options     |= RMQBasicQosGlobal;
-
-    [self.dispatcher sendSyncMethod:[[RMQBasicQos alloc] initWithPrefetchSize:[[RMQLong alloc] init:0]
-                                                                prefetchCount:[[RMQShort alloc] init:count.integerValue]
-                                                                      options:options]
+    [self.dispatcher sendSyncMethod:[[RMQBasicQos alloc] initWithPrefetchCount:count
+                                                                        global:isGlobal]
                   completionHandler:^(RMQFrameset *frameset) {
                       if (isGlobal) {
                           self.prefetchCountPerChannel = count;
@@ -361,22 +341,17 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
 - (void)exchangeDeclare:(NSString *)name
                    type:(NSString *)type
                 options:(RMQExchangeDeclareOptions)options {
-    [self.dispatcher sendSyncMethod:[[RMQExchangeDeclare alloc] initWithReserved1:[[RMQShort alloc] init:0]
-                                                                         exchange:[[RMQShortstr alloc] init:name]
-                                                                             type:[[RMQShortstr alloc] init:type]
-                                                                          options:options
-                                                                        arguments:[[RMQTable alloc] init:@{}]]];
+    [self.dispatcher sendSyncMethod:[[RMQExchangeDeclare alloc] initWithExchange:name
+                                                                            type:type
+                                                                         options:options]];
 }
 
 - (void)exchangeBind:(NSString *)sourceName
          destination:(NSString *)destinationName
           routingKey:(NSString *)routingKey {
-    [self.dispatcher sendSyncMethod:[[RMQExchangeBind alloc] initWithReserved1:[[RMQShort alloc] init:0]
-                                                                   destination:[[RMQShortstr alloc] init:destinationName]
-                                                                        source:[[RMQShortstr alloc] init:sourceName]
-                                                                    routingKey:[[RMQShortstr alloc] init:routingKey]
-                                                                       options:RMQExchangeBindNoOptions
-                                                                     arguments:[[RMQTable alloc] init:@{}]]];
+    [self.dispatcher sendSyncMethod:[[RMQExchangeBind alloc] initWithDestination:destinationName
+                                                                          source:sourceName
+                                                                      routingKey:routingKey]];
     [self.exchangeBindings[sourceName] addObject:@{@"destination": destinationName,
                                                    @"routing-key": routingKey}];
 }
@@ -384,12 +359,9 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
 - (void)exchangeUnbind:(NSString *)sourceName
            destination:(NSString *)destinationName
             routingKey:(NSString *)routingKey {
-    [self.dispatcher sendSyncMethod:[[RMQExchangeUnbind alloc] initWithReserved1:[[RMQShort alloc] init:0]
-                                                                     destination:[[RMQShortstr alloc] init:destinationName]
-                                                                          source:[[RMQShortstr alloc] init:sourceName]
-                                                                      routingKey:[[RMQShortstr alloc] init:routingKey]
-                                                                         options:RMQExchangeUnbindNoOptions
-                                                                       arguments:[[RMQTable alloc] init:@{}]]];
+    [self.dispatcher sendSyncMethod:[[RMQExchangeUnbind alloc] initWithDestination:destinationName
+                                                                            source:sourceName
+                                                                        routingKey:routingKey]];
     [self.exchangeBindings[sourceName] removeObject:@{@"destination": destinationName,
                                                       @"routing-key": routingKey}];
 }
@@ -522,25 +494,16 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
                                              options:options
                                            arguments:arguments
                                              channel:(id<RMQChannel>)self];
-        [self queueDeclare:declaredQueueName
-                   options:options
-                 arguments:arguments];
+
+        RMQQueueDeclare *method = [[RMQQueueDeclare alloc] initWithQueue:declaredQueueName
+                                                                 options:options
+                                                               arguments:arguments];
+        [self.dispatcher sendSyncMethod:method];
+
         self.queues[q.name] = q;
         self.queueBindings[q.name] = [NSMutableSet new];
         return q;
     }
-}
-
-- (void)queueDeclare:(NSString *)declaredQueueName
-             options:(RMQQueueDeclareOptions)options
-           arguments:(RMQTable *)arguments {
-    RMQShort *ticket          = [[RMQShort alloc] init:0];
-    RMQShortstr *amqQueueName = [[RMQShortstr alloc] init:declaredQueueName];
-    RMQQueueDeclare *method   = [[RMQQueueDeclare alloc] initWithReserved1:ticket
-                                                                     queue:amqQueueName
-                                                                   options:options
-                                                                 arguments:arguments];
-    [self.dispatcher sendSyncMethod:method];
 }
 
 - (NSArray *)contentBodiesFromData:(NSData *)data inChunksOf:(NSUInteger)chunkSize {
@@ -572,7 +535,7 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
 - (void)recoverConfirmations {
     if (self.confirmations.isEnabled) {
         [self.confirmations recover];
-        [self.dispatcher sendSyncMethod:[[RMQConfirmSelect alloc] initWithOptions:RMQConfirmSelectNoOptions]];
+        [self.dispatcher sendSyncMethod:[RMQConfirmSelect new]];
     }
 }
 
@@ -592,9 +555,9 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
 
 - (void)recoverQueuesAndTheirBindings {
     for (RMQQueue *queue in self.queues.allValues) {
-        [self queueDeclare:queue.name
-                   options:queue.options
-                 arguments:queue.arguments];
+        [self.dispatcher sendSyncMethod:[[RMQQueueDeclare alloc] initWithQueue:queue.name
+                                                                       options:queue.options
+                                                                     arguments:queue.arguments]];
         for (NSDictionary *binding in [self.queueBindings[queue.name] copy]) {
             [self queueBind:queue.name exchange:binding[@"exchange"] routingKey:binding[@"routing-key"]];
         }
@@ -603,11 +566,9 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
 
 - (void)recoverConsumers {
     for (RMQConsumer *consumer in self.consumers.allValues) {
-        [self.dispatcher sendSyncMethod:[[RMQBasicConsume alloc] initWithReserved1:[[RMQShort alloc] init:0]
-                                                                             queue:[[RMQShortstr alloc] init:consumer.queueName]
-                                                                       consumerTag:[[RMQShortstr alloc] init:consumer.tag]
-                                                                           options:consumer.options
-                                                                         arguments:[[RMQTable alloc] init:@{}]]];
+        [self.dispatcher sendSyncMethod:[[RMQBasicConsume alloc] initWithQueue:consumer.queueName
+                                                                   consumerTag:consumer.tag
+                                                                       options:consumer.options]];
     }
 }
 

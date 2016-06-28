@@ -153,6 +153,8 @@
 		AECA103A1D1A9E6000ED9EA2 /* ConnectionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECA10381D1A9E2C00ED9EA2 /* ConnectionHelper.swift */; };
 		AECDEC9F1CBC0E3600EA6E93 /* RMQConnectionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = AECDEC9E1CBC0E3600EA6E93 /* RMQConnectionDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AECDECA11CBC4A4F00EA6E93 /* ConnectionDelegateSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECDECA01CBC4A4F00EA6E93 /* ConnectionDelegateSpy.swift */; };
+		AED74B4C1D22AF2400EE9550 /* RMQMethods+Convenience.h in Headers */ = {isa = PBXBuildFile; fileRef = AED74B4B1D22AF2400EE9550 /* RMQMethods+Convenience.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AED74B4E1D22AF5F00EE9550 /* RMQMethods+Convenience.m in Sources */ = {isa = PBXBuildFile; fileRef = AED74B4D1D22AF5F00EE9550 /* RMQMethods+Convenience.m */; };
 		AEDBFF231CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = AEDBFF211CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEDBFF241CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF221CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.m */; };
 		AEDBFF2A1CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBFF291CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift */; };
@@ -389,6 +391,8 @@
 		AECA10381D1A9E2C00ED9EA2 /* ConnectionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionHelper.swift; sourceTree = "<group>"; };
 		AECDEC9E1CBC0E3600EA6E93 /* RMQConnectionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQConnectionDelegate.h; sourceTree = "<group>"; };
 		AECDECA01CBC4A4F00EA6E93 /* ConnectionDelegateSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionDelegateSpy.swift; sourceTree = "<group>"; };
+		AED74B4B1D22AF2400EE9550 /* RMQMethods+Convenience.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RMQMethods+Convenience.h"; sourceTree = "<group>"; };
+		AED74B4D1D22AF5F00EE9550 /* RMQMethods+Convenience.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RMQMethods+Convenience.m"; sourceTree = "<group>"; };
 		AEDBFF211CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQPKCS12CertificateConverter.h; sourceTree = "<group>"; };
 		AEDBFF221CD8E2E20004DB67 /* RMQPKCS12CertificateConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQPKCS12CertificateConverter.m; sourceTree = "<group>"; };
 		AEDBFF291CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQPKCS12CertificateConverterTest.swift; sourceTree = "<group>"; };
@@ -550,6 +554,8 @@
 				AE338D7D1CF5F0CF005D8D6C /* RMQTable.m */,
 				AE4E7F491C6A293D00A441EC /* RMQMethods.h */,
 				AEA45EC41C43C20F00FE1F62 /* RMQMethods.m */,
+				AED74B4B1D22AF2400EE9550 /* RMQMethods+Convenience.h */,
+				AED74B4D1D22AF5F00EE9550 /* RMQMethods+Convenience.m */,
 				AEADA37F1C71F59A00012D61 /* RMQMethodMap.h */,
 				AEADA3801C71F59A00012D61 /* RMQMethodMap.m */,
 				AEE445E91C7373BF0082132C /* RMQBasicProperties.h */,
@@ -937,6 +943,7 @@
 				AE9DB00B1D12A4C40005F44B /* RMQConfirmations.h in Headers */,
 				AE9DB0101D12C5C30005F44B /* RMQConfirmationTransaction.h in Headers */,
 				AE4B72FB1D17F9E000907667 /* RMQBasicProperties+MergeDefaults.h in Headers */,
+				AED74B4C1D22AF2400EE9550 /* RMQMethods+Convenience.h in Headers */,
 				AE338D7E1CF5F0CF005D8D6C /* RMQTable.h in Headers */,
 				AEE7FE951C3BCA6000DF8C4F /* RMQClient.h in Headers */,
 			);
@@ -1164,6 +1171,7 @@
 				AEB5F1601CDA73D6001C82FF /* RMQErrors.m in Sources */,
 				AEA8A76E1CCA0F8300371E38 /* RMQSemaphoreWaiterFactory.m in Sources */,
 				AEE7FEB61C3BD16200DF8C4F /* RMQQueue.m in Sources */,
+				AED74B4E1D22AF5F00EE9550 /* RMQMethods+Convenience.m in Sources */,
 				AE744E341C85A1B000A4C2FA /* RMQFrame.m in Sources */,
 				AE9DB0071D11F0820005F44B /* RMQTransactionalConfirmations.m in Sources */,
 				AE8AD2631CC53AEB00229444 /* RMQFramesetValidator.m in Sources */,

@@ -58,6 +58,7 @@
 #import <RMQClient/RMQHeartbeat.h>
 #import <RMQClient/RMQMethodDecoder.h>
 #import <RMQClient/RMQMethodMap.h>
+#import <RMQClient/RMQMethods+Convenience.h>
 #import <RMQClient/RMQProtocolHeader.h>
 #import <RMQClient/RMQURI.h>
 #import <RMQClient/RMQAllocatedChannel.h>

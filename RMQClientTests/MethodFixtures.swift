@@ -67,7 +67,7 @@ class MethodFixtures {
     }
 
     static func basicConsume(queueName: String, consumerTag: String, options: RMQBasicConsumeOptions) -> RMQBasicConsume {
-        return RMQBasicConsume(reserved1: RMQShort(0), queue: RMQShortstr(queueName), consumerTag: RMQShortstr(consumerTag), options: options, arguments: RMQTable([:]))
+        return RMQBasicConsume(queue: queueName, consumerTag: consumerTag, options: options)
     }
 
     static func basicConsumeOk(consumerTag: String) -> RMQBasicConsumeOk {
@@ -117,12 +117,7 @@ class MethodFixtures {
     }
 
     static func channelClose() -> RMQChannelClose {
-        return RMQChannelClose(
-            replyCode: RMQShort(200),
-            replyText: RMQShortstr("Goodbye"),
-            classId: RMQShort(0),
-            methodId: RMQShort(0)
-        )
+        return RMQChannelClose()
     }
 
     static func channelCloseOk() -> RMQChannelCloseOk {
@@ -130,7 +125,7 @@ class MethodFixtures {
     }
 
     static func channelOpen() -> RMQChannelOpen {
-        return RMQChannelOpen(reserved1: RMQShortstr(""))
+        return RMQChannelOpen()
     }
 
     static func channelOpenOk() -> RMQChannelOpenOk {
@@ -224,7 +219,7 @@ class MethodFixtures {
     }
 
     static func exchangeBind(source: String, destination: String, routingKey: String) -> RMQExchangeBind {
-        return RMQExchangeBind(reserved1: RMQShort(0), destination: RMQShortstr(destination), source: RMQShortstr(source), routingKey: RMQShortstr(routingKey), options: [], arguments: RMQTable([:]))
+        return RMQExchangeBind(destination: destination, source: source, routingKey: routingKey)
     }
 
     static func exchangeBindOk() -> RMQExchangeBindOk {
@@ -232,7 +227,7 @@ class MethodFixtures {
     }
 
     static func exchangeDeclare(name: String, type: String, options: RMQExchangeDeclareOptions) -> RMQExchangeDeclare {
-        return RMQExchangeDeclare(reserved1: RMQShort(0), exchange: RMQShortstr(name), type: RMQShortstr(type), options: options, arguments: RMQTable([:]))
+        return RMQExchangeDeclare(exchange: name, type: type, options: options)
     }
 
     static func exchangeDeclareOk() -> RMQExchangeDeclareOk {
@@ -248,11 +243,11 @@ class MethodFixtures {
     }
 
     static func exchangeUnbind(source: String, destination: String, routingKey: String) -> RMQExchangeUnbind {
-        return RMQExchangeUnbind(reserved1: RMQShort(0), destination: RMQShortstr(destination), source: RMQShortstr(source), routingKey: RMQShortstr(routingKey), options: [], arguments: RMQTable([:]))
+        return RMQExchangeUnbind(destination: destination, source: source, routingKey: routingKey)
     }
 
     static func queueBind(name: String, exchangeName: String, routingKey: String) -> RMQQueueBind {
-        return RMQQueueBind(reserved1: RMQShort(0), queue: RMQShortstr(name), exchange: RMQShortstr(exchangeName), routingKey: RMQShortstr(routingKey), options: [], arguments: RMQTable([:]))
+        return RMQQueueBind(queue: name, exchange: exchangeName, routingKey: routingKey)
     }
 
     static func queueBindOk() -> RMQQueueBindOk {
@@ -261,8 +256,7 @@ class MethodFixtures {
 
     static func queueDeclare(name: String, options: RMQQueueDeclareOptions, arguments: [String: RMQValue] = [:]) -> RMQQueueDeclare {
         return RMQQueueDeclare(
-            reserved1: RMQShort(0),
-            queue: RMQShortstr(name),
+            queue: name,
             options: options,
             arguments: RMQTable(arguments)
         )
@@ -273,7 +267,7 @@ class MethodFixtures {
     }
 
     static func queueDelete(name: String, options: RMQQueueDeleteOptions) -> RMQQueueDelete {
-        return RMQQueueDelete(reserved1: RMQShort(0), queue: RMQShortstr(name), options: options)
+        return RMQQueueDelete(queue: name, options: options)
     }
 
     static func queueDeleteOk(messageCount: UInt) -> RMQQueueDeleteOk {
@@ -281,7 +275,7 @@ class MethodFixtures {
     }
 
     static func queueUnbind(name: String, exchangeName: String, routingKey: String) -> RMQQueueUnbind {
-        return RMQQueueUnbind(reserved1: RMQShort(0), queue: RMQShortstr(name), exchange: RMQShortstr(exchangeName), routingKey: RMQShortstr(routingKey), arguments: RMQTable([:]))
+        return RMQQueueUnbind(queue: name, exchange: exchangeName, routingKey: routingKey)
     }
 
     static func queueUnbindOk() -> RMQQueueUnbindOk {
