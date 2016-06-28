@@ -34,9 +34,11 @@ end
 desc "Generate everything"
 multitask generate: [:generate_methods, :generate_method_map, :generate_basic_properties]
 
-desc "License and generate everything"
-task license_and_generate: :generate do
+desc "License and generate code"
+task license_code: :generate do
   command = [this_dir.join("../bin/add-license"),
+             "swift,h,m",
+             "'//'",
              this_dir.join("../license-header.txt"),
              code_dir,
              tests_dir,
@@ -44,4 +46,14 @@ task license_and_generate: :generate do
   system(command)
 end
 
-task default: :license_and_generate
+desc "License and generate codegen"
+task license_codegen: :generate do
+  command = [this_dir.join("../bin/add-license"),
+             "rb",
+             "'#'",
+             this_dir.join("../license-header-ruby.txt"),
+             this_dir].join(" ")
+  system(command)
+end
+
+task default: [:license_code, :license_codegen]
