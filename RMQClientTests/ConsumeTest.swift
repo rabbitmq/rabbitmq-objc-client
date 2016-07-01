@@ -54,12 +54,9 @@ import XCTest
 class ConsumeTest: XCTestCase {
 
     func testBasicConsumeSendsBasicConsumeMethod() {
-        let delegate = ConnectionDelegateSpy()
         let dispatcher = DispatcherSpy()
         let nameGenerator = StubNameGenerator()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, nameGenerator: nameGenerator)
-
-        ch.activateWithDelegate(delegate)
 
         nameGenerator.nextName = "a tag"
         ch.basicConsume("foo", options: [.Exclusive]) { _ in }
