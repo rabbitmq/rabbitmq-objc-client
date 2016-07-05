@@ -66,7 +66,7 @@ class RMQMessageTest: XCTestCase {
         props.append(RMQBasicReplyTo("my.sender"))
         props.append(RMQBasicTimestamp(date))
 
-        let m = RMQMessage(content: "my message",
+        let m = RMQMessage(body: "my message".dataUsingEncoding(NSUTF8StringEncoding),
                            consumerTag: "ctag",
                            deliveryTag: 1,
                            redelivered: false,

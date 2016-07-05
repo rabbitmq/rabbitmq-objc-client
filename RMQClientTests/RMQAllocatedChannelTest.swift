@@ -189,7 +189,7 @@ class RMQAllocatedChannelTest: XCTestCase {
             contentBodies: [RMQContentBody(data: "hello".dataUsingEncoding(NSUTF8StringEncoding)!)]
         )
         let expectedMessage = RMQMessage(
-            content: "hello",
+            body: "hello".dataUsingEncoding(NSUTF8StringEncoding),
             consumerTag: "",
             deliveryTag: 1,
             redelivered: true,
@@ -224,8 +224,8 @@ class RMQAllocatedChannelTest: XCTestCase {
         let deliverHeader2 = RMQContentHeader(classID: deliverMethod2.classID(), bodySize: 123, properties: [])
         let deliverBody2 = RMQContentBody(data: "A message for consumer 2".dataUsingEncoding(NSUTF8StringEncoding)!)
         let deliverFrameset2 = RMQFrameset(channelNumber: 999, method: deliverMethod2, contentHeader: deliverHeader2, contentBodies: [deliverBody2])
-        let expectedMessage1 = RMQMessage(content: "A message for consumer 1", consumerTag: "tag1", deliveryTag: 1, redelivered: false, exchangeName: "", routingKey: "", properties: [])
-        let expectedMessage2 = RMQMessage(content: "A message for consumer 2", consumerTag: "tag2", deliveryTag: 1, redelivered: false, exchangeName: "", routingKey: "", properties: [])
+        let expectedMessage1 = RMQMessage(body: "A message for consumer 1".dataUsingEncoding(NSUTF8StringEncoding), consumerTag: "tag1", deliveryTag: 1, redelivered: false, exchangeName: "", routingKey: "", properties: [])
+        let expectedMessage2 = RMQMessage(body: "A message for consumer 2".dataUsingEncoding(NSUTF8StringEncoding), consumerTag: "tag2", deliveryTag: 1, redelivered: false, exchangeName: "", routingKey: "", properties: [])
 
         ch.activateWithDelegate(nil)
 
@@ -256,7 +256,7 @@ class RMQAllocatedChannelTest: XCTestCase {
     func testBasicPublishSendsAsyncFrameset() {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(999, contentBodySize: 4, dispatcher: dispatcher)
-        let message = "my great message yo"
+        let message = "my great message yo".dataUsingEncoding(NSUTF8StringEncoding)!
         let notPersistent = RMQBasicDeliveryMode(1)
         let customContentType = RMQBasicContentType("my/content-type")
         let priorityZero = RMQBasicPriority(0)
@@ -264,7 +264,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let expectedMethod = MethodFixtures.basicPublish("my.q", exchange: "", options: [.Mandatory])
         let expectedHeader = RMQContentHeader(
             classID: 60,
-            bodySize: message.dataUsingEncoding(NSUTF8StringEncoding)!.length,
+            bodySize: message.length,
             properties: [notPersistent, customContentType, priorityZero]
         )
         let expectedBodies = [
@@ -295,7 +295,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let ch = ChannelHelper.makeChannel(999, contentBodySize: 4, dispatcher: dispatcher)
 
         let props: [RMQValue] = [RMQBasicCorrelationId("my-correlation-id")]
-        ch.basicPublish("", routingKey: "", exchange: "", properties: props, options: [])
+        ch.basicPublish(NSData(), routingKey: "", exchange: "", properties: props, options: [])
 
         let expectedProperties: Set<RMQValue> = Set(RMQBasicProperties.defaultProperties()).union(props)
         let header = dispatcher.lastAsyncFrameset!.contentHeader
@@ -306,9 +306,9 @@ class RMQAllocatedChannelTest: XCTestCase {
     func testPublishWhenContentLengthIsMultipleOfFrameMax() {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(999, contentBodySize: 4, dispatcher: dispatcher)
-        let messageContent = "12345678"
+        let messageContent = "12345678".dataUsingEncoding(NSUTF8StringEncoding)!
         let expectedMethod = MethodFixtures.basicPublish("my.q", exchange: "", options: [])
-        let expectedBodyData = messageContent.dataUsingEncoding(NSUTF8StringEncoding)!
+        let expectedBodyData = messageContent
         let expectedHeader = RMQContentHeader(
             classID: 60,
             bodySize: expectedBodyData.length,

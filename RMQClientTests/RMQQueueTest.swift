@@ -52,13 +52,14 @@
 import XCTest
 
 class RMQQueueTest: XCTestCase {
+    let body = "a message".dataUsingEncoding(NSUTF8StringEncoding)!
     func testPublishSendsBasicPublishToChannel() {
         let channel = ChannelSpy(42)
         let queue = QueueHelper.makeQueue(channel, name: "some.queue")
 
-        queue.publish("a message")
+        queue.publish(body)
 
-        XCTAssertEqual("a message", channel.lastReceivedBasicPublishMessage)
+        XCTAssertEqual(body, channel.lastReceivedBasicPublishMessage)
         XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", channel.lastReceivedBasicPublishExchange)
         XCTAssertEqual([], channel.lastReceivedBasicPublishProperties!)
@@ -69,9 +70,9 @@ class RMQQueueTest: XCTestCase {
         let channel = ChannelSpy(42)
         let queue = QueueHelper.makeQueue(channel, name: "some.queue")
 
-        queue.publish("a message", persistent: true)
+        queue.publish(body, persistent: true)
 
-        XCTAssertEqual("a message", channel.lastReceivedBasicPublishMessage)
+        XCTAssertEqual(body, channel.lastReceivedBasicPublishMessage)
         XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", channel.lastReceivedBasicPublishExchange)
         XCTAssertEqual([RMQBasicDeliveryMode(2)], channel.lastReceivedBasicPublishProperties!)
@@ -99,11 +100,11 @@ class RMQQueueTest: XCTestCase {
             BasicPropertyFixtures.exhaustiveHeaders()
         ]
 
-        queue.publish("{\"a\": \"message\"}",
+        queue.publish("{\"a\": \"message\"}".dataUsingEncoding(NSUTF8StringEncoding),
                       properties: properties,
                       options: [.Mandatory])
 
-        XCTAssertEqual("{\"a\": \"message\"}", channel.lastReceivedBasicPublishMessage)
+        XCTAssertEqual("{\"a\": \"message\"}".dataUsingEncoding(NSUTF8StringEncoding), channel.lastReceivedBasicPublishMessage)
         XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", channel.lastReceivedBasicPublishExchange)
         XCTAssertEqual([.Mandatory], channel.lastReceivedBasicPublishOptions)
@@ -114,9 +115,9 @@ class RMQQueueTest: XCTestCase {
         let channel = ChannelSpy(42)
         let queue = QueueHelper.makeQueue(channel, name: "some.queue")
 
-        queue.publish("a message", persistent: false, options: [.Mandatory])
+        queue.publish(body, persistent: false, options: [.Mandatory])
 
-        XCTAssertEqual("a message", channel.lastReceivedBasicPublishMessage)
+        XCTAssertEqual(body, channel.lastReceivedBasicPublishMessage)
         XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", channel.lastReceivedBasicPublishExchange)
         XCTAssertEqual([], channel.lastReceivedBasicPublishProperties!)
@@ -124,7 +125,7 @@ class RMQQueueTest: XCTestCase {
     }
 
     func testPopDelegatesToChannelBasicGet() {
-        let stubbedMessage = RMQMessage(content: "hi there", consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "", properties: [])
+        let stubbedMessage = RMQMessage(body: body, consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "", properties: [])
         let channel = ChannelSpy(42)
         let queue = QueueHelper.makeQueue(channel, name: "great.queue")
 
@@ -149,7 +150,7 @@ class RMQQueueTest: XCTestCase {
             handlerCalled = true
         }
 
-        let message = RMQMessage(content: "I have default options!", consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "", properties: [])
+        let message = RMQMessage(body: "I have default options!".dataUsingEncoding(NSUTF8StringEncoding), consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "", properties: [])
         channel.lastReceivedBasicConsumeBlock!(message)
 
         XCTAssert(handlerCalled)
@@ -165,7 +166,7 @@ class RMQQueueTest: XCTestCase {
             handlerCalled = true
         }
 
-        let message = RMQMessage(content: "I have custom options!", consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "", properties: [])
+        let message = RMQMessage(body: "I have custom options!".dataUsingEncoding(NSUTF8StringEncoding), consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "", properties: [])
         channel.lastReceivedBasicConsumeBlock!(message)
 
         XCTAssert(handlerCalled)

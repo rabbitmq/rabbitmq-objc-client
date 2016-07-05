@@ -53,12 +53,14 @@ import XCTest
 
 class RMQExchangeTest: XCTestCase {
 
+    let body = "foo".dataUsingEncoding(NSUTF8StringEncoding)!
+
     func testPublishCallsPublishOnChannel() {
         let ch = ChannelSpy(1)
         let ex = RMQExchange(name: "", type: "direct", options: [], channel: ch)
-        ex.publish("foo", routingKey: "my.q")
+        ex.publish(body, routingKey: "my.q")
 
-        XCTAssertEqual("foo", ch.lastReceivedBasicPublishMessage)
+        XCTAssertEqual(body, ch.lastReceivedBasicPublishMessage)
         XCTAssertEqual("my.q", ch.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", ch.lastReceivedBasicPublishExchange)
         XCTAssertEqual([], ch.lastReceivedBasicPublishProperties!)
@@ -68,7 +70,7 @@ class RMQExchangeTest: XCTestCase {
     func testPublishWithoutRoutingKeyUsesEmptyString() {
         let ch = ChannelSpy(1)
         let ex = RMQExchange(name: "", type: "direct", options: [], channel: ch)
-        ex.publish("foo")
+        ex.publish(body)
 
         XCTAssertEqual("", ch.lastReceivedBasicPublishRoutingKey)
     }
@@ -76,9 +78,9 @@ class RMQExchangeTest: XCTestCase {
     func testPublishWithPersistence() {
         let ch = ChannelSpy(1)
         let ex = RMQExchange(name: "some-ex", type: "direct", options: [], channel: ch)
-        ex.publish("foo", routingKey: "my.q", persistent: true)
+        ex.publish(body, routingKey: "my.q", persistent: true)
 
-        XCTAssertEqual("foo", ch.lastReceivedBasicPublishMessage)
+        XCTAssertEqual(body, ch.lastReceivedBasicPublishMessage)
         XCTAssertEqual("my.q", ch.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("some-ex", ch.lastReceivedBasicPublishExchange)
         XCTAssertEqual([RMQBasicDeliveryMode(2)], ch.lastReceivedBasicPublishProperties!)
@@ -106,12 +108,12 @@ class RMQExchangeTest: XCTestCase {
             BasicPropertyFixtures.exhaustiveHeaders()
         ]
 
-        ex.publish("{\"a\": \"message\"}",
+        ex.publish("{\"a\": \"message\"}".dataUsingEncoding(NSUTF8StringEncoding),
                    routingKey: "some.queue",
                    properties: properties,
                    options: [.Mandatory])
 
-        XCTAssertEqual("{\"a\": \"message\"}", channel.lastReceivedBasicPublishMessage)
+        XCTAssertEqual("{\"a\": \"message\"}".dataUsingEncoding(NSUTF8StringEncoding), channel.lastReceivedBasicPublishMessage)
         XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("some-ex", channel.lastReceivedBasicPublishExchange)
         XCTAssertEqual([.Mandatory], channel.lastReceivedBasicPublishOptions)
@@ -121,9 +123,9 @@ class RMQExchangeTest: XCTestCase {
     func testPublishWithOptions() {
         let ch = ChannelSpy(1)
         let ex = RMQExchange(name: "some-ex", type: "direct", options: [], channel: ch)
-        ex.publish("foo", routingKey: "my.q", persistent: false, options: [.Mandatory])
+        ex.publish(body, routingKey: "my.q", persistent: false, options: [.Mandatory])
 
-        XCTAssertEqual("foo", ch.lastReceivedBasicPublishMessage)
+        XCTAssertEqual(body, ch.lastReceivedBasicPublishMessage)
         XCTAssertEqual("my.q", ch.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("some-ex", ch.lastReceivedBasicPublishExchange)
         XCTAssertEqual([], ch.lastReceivedBasicPublishProperties!)

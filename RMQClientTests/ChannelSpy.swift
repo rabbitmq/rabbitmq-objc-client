@@ -61,7 +61,7 @@
     var lastReceivedBasicGetOptions: RMQBasicGetOptions?
     var lastReceivedBasicGetCompletionHandler: RMQConsumerDeliveryHandler?
 
-    var lastReceivedBasicPublishMessage: String?
+    var lastReceivedBasicPublishMessage: NSData?
     var lastReceivedBasicPublishRoutingKey: String?
     var lastReceivedBasicPublishExchange: String?
     var lastReceivedBasicPublishProperties: Array<RMQValue>?
@@ -217,8 +217,8 @@
         lastReceivedBasicCancelConsumerTag = consumerTag
     }
 
-    func basicPublish(message: String, routingKey: String, exchange: String, properties: [RMQValue], options: RMQBasicPublishOptions) {
-        lastReceivedBasicPublishMessage = message
+    func basicPublish(body: NSData, routingKey: String, exchange: String, properties: [RMQValue], options: RMQBasicPublishOptions) {
+        lastReceivedBasicPublishMessage = body
         lastReceivedBasicPublishRoutingKey = routingKey
         lastReceivedBasicPublishExchange = exchange
         lastReceivedBasicPublishProperties = properties

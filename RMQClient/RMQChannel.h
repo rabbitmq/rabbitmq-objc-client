@@ -97,7 +97,7 @@
 
 - (void)basicCancel:(nonnull NSString *)consumerTag;
 
-- (void)basicPublish:(nonnull NSString *)message
+- (void)basicPublish:(nonnull NSData *)body
           routingKey:(nonnull NSString *)routingKey
             exchange:(nonnull NSString *)exchange
           properties:(nonnull NSArray<RMQValue *> *)properties

@@ -21,7 +21,7 @@ Test-driven from Swift and implemented in Objective-C, to avoid burdening Object
 - [x] PKCS12 client certificates using the [TLS auth mechanism plugin](https://github.com/rabbitmq/rabbitmq-auth-mechanism-ssl)
 - [ ] [PKCS12 client certificates using chained CAs](https://github.com/rabbitmq/rabbitmq-objc-client/issues/74)
 - [ ] [Publisher confirmations](https://github.com/rabbitmq/rabbitmq-objc-client/issues/68)
-- [ ] [Publish and consume messages as data](https://github.com/rabbitmq/rabbitmq-objc-client/issues/46)
+- [x] [Publish and consume messages as data](https://github.com/rabbitmq/rabbitmq-objc-client/issues/46)
 - [ ] [Connection closure when broker doesn't send heartbeats fast enough](https://github.com/rabbitmq/rabbitmq-objc-client/issues/41)
 - [ ] [Customisable consumer hooks](https://github.com/rabbitmq/rabbitmq-objc-client/issues/71)
 - [ ] [basic.return support](https://github.com/rabbitmq/rabbitmq-objc-client/issues/72)
@@ -90,9 +90,9 @@ this list.
    ```swift
    let q = ch.queue("myqueue")
    q.subscribe { m in
-      print("Received: \(m.content)")
+      print("Received: \(m.body)")
    }
-   q.publish("foo")
+   q.publish("foo".dataUsingEncoding(NSUTF8StringEncoding)!)
    ```
 
 1. Close the connection when done:

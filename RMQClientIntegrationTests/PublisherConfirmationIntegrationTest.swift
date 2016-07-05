@@ -64,8 +64,8 @@ class PublisherConfirmationIntegrationTest: XCTestCase {
 
         let q = ch.queue("", options: [.AutoDelete, .Exclusive])
 
-        q.publish("message a")
-        q.publish("message b")
+        q.publish("message a".dataUsingEncoding(NSUTF8StringEncoding))
+        q.publish("message b".dataUsingEncoding(NSUTF8StringEncoding))
 
         var acked: Set<NSNumber> = []
         var nacked: Set<NSNumber> = []

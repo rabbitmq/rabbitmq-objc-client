@@ -90,7 +90,7 @@ class ConsumeTest: XCTestCase {
             exchange: "my-exchange",
             options: [.Redelivered]
         )
-        let expectedMessage = RMQMessage(content: "Consumed!",
+        let expectedMessage = RMQMessage(body: "Consumed!".dataUsingEncoding(NSUTF8StringEncoding),
                                          consumerTag: "tag",
                                          deliveryTag: 456,
                                          redelivered: true,

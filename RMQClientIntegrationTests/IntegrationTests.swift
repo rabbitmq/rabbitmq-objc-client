@@ -88,11 +88,13 @@ class IntegrationTests: XCTestCase {
         dst.bind(src)
         q.bind(dst)
 
-        src.publish(messageContent)
+        let body = messageContent.dataUsingEncoding(NSUTF8StringEncoding)!
+
+        src.publish(body)
 
         let semaphore = dispatch_semaphore_create(0)
         let expected = RMQMessage(
-            content: messageContent,
+            body: body,
             consumerTag: "",
             deliveryTag: 1,
             redelivered: false,
@@ -146,14 +148,16 @@ class IntegrationTests: XCTestCase {
             dispatch_semaphore_signal(semaphore)
         }
 
-        q.publish("my message")
+        let body = "my message".dataUsingEncoding(NSUTF8StringEncoding)!
+
+        q.publish(body)
 
         XCTAssertEqual(0,
                        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(10)),
                        "Timed out waiting for message")
 
         XCTAssertEqual(1, delivered!.deliveryTag)
-        XCTAssertEqual("my message", delivered!.content)
+        XCTAssertEqual(body, delivered!.body)
     }
 
     func testMessageProperties() {
@@ -202,7 +206,7 @@ class IntegrationTests: XCTestCase {
             RMQBasicCorrelationId("r-1"),
             RMQBasicMessageId("m-1"),
             ]
-        q.publish("a message", properties: props, options: [])
+        q.publish("a message".dataUsingEncoding(NSUTF8StringEncoding), properties: props, options: [])
 
         XCTAssertEqual(0,
                        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(10)),
@@ -249,7 +253,7 @@ class IntegrationTests: XCTestCase {
             }
         }
 
-        ch.defaultExchange().publish("my message", routingKey: q.name)
+        ch.defaultExchange().publish("my message".dataUsingEncoding(NSUTF8StringEncoding), routingKey: q.name)
 
         XCTAssertEqual(0,
                        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(10)),
@@ -300,7 +304,7 @@ class IntegrationTests: XCTestCase {
         let producingQueue = producingChannel.queue(consumingQueue.name, options: [.AutoDelete, .Exclusive])
 
         for _ in 1...messageCount {
-            producingQueue.publish("hello")
+            producingQueue.publish("hello".dataUsingEncoding(NSUTF8StringEncoding))
         }
 
         XCTAssertEqual(0,
@@ -346,7 +350,7 @@ class IntegrationTests: XCTestCase {
         }
 
         for _ in 1...messageCount {
-            producingQueue.publish("hello")
+            producingQueue.publish("hello".dataUsingEncoding(NSUTF8StringEncoding))
         }
 
         XCTAssertEqual(
@@ -393,6 +397,6 @@ class IntegrationTests: XCTestCase {
     }
 
     private func causeServerChannelClose(ch: RMQChannel) {
-        ch.basicPublish("", routingKey: "a route that can't be found", exchange: "a non-existent exchange", properties: [], options: [])
+        ch.basicPublish("".dataUsingEncoding(NSUTF8StringEncoding)!, routingKey: "a route that can't be found", exchange: "a non-existent exchange", properties: [], options: [])
     }
 }

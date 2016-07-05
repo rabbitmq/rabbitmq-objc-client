@@ -106,18 +106,18 @@
     [self delete:RMQExchangeDeleteNoOptions];
 }
 
-- (void)publish:(NSString *)message
+- (void)publish:(NSData *)body
      routingKey:(NSString *)routingKey
      properties:(NSArray<RMQValue<RMQBasicValue> *> *)properties
         options:(RMQBasicPublishOptions)options {
-    [self.channel basicPublish:message
+    [self.channel basicPublish:body
                     routingKey:routingKey
                       exchange:self.name
                     properties:properties
                        options:options];
 }
 
-- (void)publish:(NSString *)message
+- (void)publish:(NSData *)body
      routingKey:(NSString *)key
      persistent:(BOOL)isPersistent
         options:(RMQBasicPublishOptions)options {
@@ -125,31 +125,31 @@
     if (isPersistent) {
         [properties addObject:[[RMQBasicDeliveryMode alloc] init:2]];
     }
-    [self.channel basicPublish:message
+    [self.channel basicPublish:body
                     routingKey:key
                       exchange:self.name
                     properties:properties
                        options:options];
 }
 
-- (void)publish:(NSString *)message
+- (void)publish:(NSData *)body
      routingKey:(NSString *)key
      persistent:(BOOL)isPersistent {
-    [self publish:message
+    [self publish:body
        routingKey:key
        persistent:isPersistent
           options:RMQBasicPublishNoOptions];
 }
 
-- (void)publish:(NSString *)message
+- (void)publish:(NSData *)body
      routingKey:(NSString *)key {
-    [self publish:message
+    [self publish:body
        routingKey:key
        persistent:NO];
 }
 
-- (void)publish:(NSString *)message {
-    [self publish:message
+- (void)publish:(NSData *)body {
+    [self publish:body
        routingKey:@""];
 }
 

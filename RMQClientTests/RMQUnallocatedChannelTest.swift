@@ -69,7 +69,7 @@ class RMQUnallocatedChannelTest: XCTestCase {
             { ch.afterConfirmed { _ in } },
             { ch.basicConsume("foo", options: []) { _ in } },
             { ch.basicGet("foo", options: []) { _ in } },
-            { ch.basicPublish("hi", routingKey: "yo", exchange: "hmm", properties: [], options: []) },
+            { ch.basicPublish("hi".dataUsingEncoding(NSUTF8StringEncoding)!, routingKey: "yo", exchange: "hmm", properties: [], options: []) },
             { ch.basicQos(2, global: false) },
             { ch.blockingWaitOn(RMQConnectionStart.self) },
             { ch.confirmSelect() },

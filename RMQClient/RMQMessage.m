@@ -52,7 +52,7 @@
 #import "RMQMessage.h"
 
 @interface RMQMessage ()
-@property (nonatomic, readwrite) NSString *content;
+@property (nonatomic, readwrite) NSData *body;
 @property (nonatomic, readwrite) NSString *consumerTag;
 @property (nonatomic, readwrite) NSNumber *deliveryTag;
 @property (nonatomic, readwrite) BOOL isRedelivered;
@@ -63,16 +63,16 @@
 
 @implementation RMQMessage
 
-- (instancetype)initWithContent:(NSString *)content
-                    consumerTag:(NSString *)consumerTag
-                    deliveryTag:(NSNumber *)deliveryTag
-                    redelivered:(BOOL)isRedelivered
-                   exchangeName:(NSString *)exchangeName
-                     routingKey:(NSString *)routingKey
-                     properties:(NSArray<RMQValue<RMQBasicValue> *> *)properties {
+- (instancetype)initWithBody:(NSData *)body
+                 consumerTag:(NSString *)consumerTag
+                 deliveryTag:(NSNumber *)deliveryTag
+                 redelivered:(BOOL)isRedelivered
+                exchangeName:(NSString *)exchangeName
+                  routingKey:(NSString *)routingKey
+                  properties:(NSArray<RMQValue<RMQBasicValue> *> *)properties {
     self = [super init];
     if (self) {
-        self.content = content;
+        self.body = body;
         self.consumerTag = consumerTag;
         self.deliveryTag = deliveryTag;
         self.isRedelivered = isRedelivered;

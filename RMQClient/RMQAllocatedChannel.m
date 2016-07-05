@@ -242,7 +242,7 @@
                                                                         options:RMQBasicCancelNoOptions]];
 }
 
-- (void)basicPublish:(NSString *)message
+- (void)basicPublish:(NSData *)body
           routingKey:(NSString *)routingKey
             exchange:(NSString *)exchange
           properties:(NSArray<RMQValue *> *)properties
@@ -251,8 +251,7 @@
                                                                  exchange:[[RMQShortstr alloc] init:exchange]
                                                                routingKey:[[RMQShortstr alloc] init:routingKey]
                                                                   options:options];
-    NSData *contentBodyData = [message dataUsingEncoding:NSUTF8StringEncoding];
-    RMQContentBody *contentBody = [[RMQContentBody alloc] initWithData:contentBodyData];
+    RMQContentBody *contentBody = [[RMQContentBody alloc] initWithData:body];
 
     NSData *bodyData = contentBody.amqEncoded;
 
@@ -282,15 +281,13 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
                                                                    options:options]
                   completionHandler:^(RMQFrameset *frameset) {
                       RMQBasicGetOk *getOk = (RMQBasicGetOk *)frameset.method;
-                      NSString *messageContent = [[NSString alloc] initWithData:frameset.contentData
-                                                                       encoding:NSUTF8StringEncoding];
-                      RMQMessage *message = [[RMQMessage alloc] initWithContent:messageContent
-                                                                    consumerTag:@""
-                                                                    deliveryTag:@(getOk.deliveryTag.integerValue)
-                                                                    redelivered:getOk.options & RMQBasicGetOkRedelivered
-                                                                   exchangeName:getOk.exchange.stringValue
-                                                                     routingKey:getOk.routingKey.stringValue
-                                                                     properties:frameset.contentHeader.properties];
+                      RMQMessage *message = [[RMQMessage alloc] initWithBody:frameset.contentData
+                                                                 consumerTag:@""
+                                                                 deliveryTag:@(getOk.deliveryTag.integerValue)
+                                                                 redelivered:getOk.options & RMQBasicGetOkRedelivered
+                                                                exchangeName:getOk.exchange.stringValue
+                                                                  routingKey:getOk.routingKey.stringValue
+                                                                  properties:frameset.contentHeader.properties];
                       userCompletionHandler(message);
                   }];
 }
@@ -439,16 +436,15 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
 
 - (void)handleBasicDeliver:(RMQFrameset *)frameset {
     RMQBasicDeliver *deliver = (RMQBasicDeliver *)frameset.method;
-    NSString *content = [[NSString alloc] initWithData:frameset.contentData encoding:NSUTF8StringEncoding];
     RMQConsumer *consumer = self.consumers[deliver.consumerTag.stringValue];
     if (consumer) {
-        RMQMessage *message = [[RMQMessage alloc] initWithContent:content
-                                                      consumerTag:deliver.consumerTag.stringValue
-                                                      deliveryTag:@(deliver.deliveryTag.integerValue)
-                                                      redelivered:deliver.options & RMQBasicDeliverRedelivered
-                                                     exchangeName:deliver.exchange.stringValue
-                                                       routingKey:deliver.routingKey.stringValue
-                                                       properties:frameset.contentHeader.properties];
+        RMQMessage *message = [[RMQMessage alloc] initWithBody:frameset.contentData
+                                                   consumerTag:deliver.consumerTag.stringValue
+                                                   deliveryTag:@(deliver.deliveryTag.integerValue)
+                                                   redelivered:deliver.options & RMQBasicDeliverRedelivered
+                                                  exchangeName:deliver.exchange.stringValue
+                                                    routingKey:deliver.routingKey.stringValue
+                                                    properties:frameset.contentHeader.properties];
         consumer.handler(message);
     }
 }

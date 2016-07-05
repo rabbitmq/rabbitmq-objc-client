@@ -92,7 +92,7 @@ class PublisherConfirmationTest: XCTestCase {
         let ch = ChannelHelper.makeChannel(1, confirmations: confirmations)
 
         XCTAssertEqual(0, confirmations.publicationCount)
-        ch.basicPublish("hi there", routingKey: "", exchange: "", properties: [], options: [])
+        ch.basicPublish("hi there".dataUsingEncoding(NSUTF8StringEncoding)!, routingKey: "", exchange: "", properties: [], options: [])
         XCTAssertEqual(1, confirmations.publicationCount)
     }
 
