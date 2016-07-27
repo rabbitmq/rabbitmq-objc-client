@@ -55,10 +55,12 @@ class RMQQueueTest: XCTestCase {
     let body = "a message".dataUsingEncoding(NSUTF8StringEncoding)!
     func testPublishSendsBasicPublishToChannel() {
         let channel = ChannelSpy(42)
+        channel.publishReturn = 123
         let queue = QueueHelper.makeQueue(channel, name: "some.queue")
 
-        queue.publish(body)
+        let retval = queue.publish(body)
 
+        XCTAssertEqual(123, retval)
         XCTAssertEqual(body, channel.lastReceivedBasicPublishMessage)
         XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", channel.lastReceivedBasicPublishExchange)

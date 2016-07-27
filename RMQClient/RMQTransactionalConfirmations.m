@@ -86,10 +86,13 @@
     [self.currentTransaction clearUnconfirmed];
 }
 
-- (void)addPublication {
+- (NSNumber *)addPublication {
+    NSNumber *publicationSequenceNumber = @(self.nextPublishSequenceNumber);
     if (self.isEnabled) {
-        [self.currentTransaction addUnconfirmed:@(self.nextPublishSequenceNumber++)];
+        [self.currentTransaction addUnconfirmed:publicationSequenceNumber];
+        self.nextPublishSequenceNumber++;
     }
+    return publicationSequenceNumber;
 }
 
 - (void)addCallback:(RMQConfirmationCallback)callback {

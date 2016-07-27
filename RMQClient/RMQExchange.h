@@ -72,19 +72,19 @@
 - (void)unbind:(RMQExchange *)source;
 - (void)delete:(RMQExchangeDeleteOptions)options;
 - (void)delete;
-- (void)publish:(NSData *)body
-     routingKey:(NSString *)routingKey
-     properties:(NSArray <RMQValue<RMQBasicValue> *> *)properties
-        options:(RMQBasicPublishOptions)options;
-- (void)publish:(NSData *)body
-     routingKey:(NSString *)key
-     persistent:(BOOL)isPersistent
-        options:(RMQBasicPublishOptions)options;
-- (void)publish:(NSData *)body
-     routingKey:(NSString *)key
-     persistent:(BOOL)isPersistent;
-- (void)publish:(NSData *)body
-     routingKey:(NSString *)key;
-- (void)publish:(NSData *)body;
+- (NSNumber *)publish:(NSData *)body
+           routingKey:(NSString *)routingKey
+           properties:(NSArray <RMQValue<RMQBasicValue> *> *)properties
+              options:(RMQBasicPublishOptions)options;
+- (NSNumber *)publish:(NSData *)body
+           routingKey:(NSString *)key
+           persistent:(BOOL)isPersistent
+              options:(RMQBasicPublishOptions)options;
+- (NSNumber *)publish:(NSData *)body
+           routingKey:(NSString *)key
+           persistent:(BOOL)isPersistent;
+- (NSNumber *)publish:(NSData *)body
+           routingKey:(NSString *)key;
+- (NSNumber *)publish:(NSData *)body;
 
 @end

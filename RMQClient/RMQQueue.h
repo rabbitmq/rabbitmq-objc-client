@@ -75,15 +75,15 @@
 - (void)unbind:(RMQExchange *)exchange;
 - (void)delete:(RMQQueueDeleteOptions)options;
 - (void)delete;
-- (void)publish:(NSData *)body
-     properties:(NSArray <RMQValue<RMQBasicValue> *> *)properties
-        options:(RMQBasicPublishOptions)options;
-- (void)publish:(NSData *)body
-     persistent:(BOOL)isPersistent
-        options:(RMQBasicPublishOptions)options;
-- (void)publish:(NSData *)body
-     persistent:(BOOL)isPersistent;
-- (void)publish:(NSData *)body;
+- (NSNumber *)publish:(NSData *)body
+           properties:(NSArray <RMQValue<RMQBasicValue> *> *)properties
+              options:(RMQBasicPublishOptions)options;
+- (NSNumber *)publish:(NSData *)body
+           persistent:(BOOL)isPersistent
+              options:(RMQBasicPublishOptions)options;
+- (NSNumber *)publish:(NSData *)body
+           persistent:(BOOL)isPersistent;
+- (NSNumber *)publish:(NSData *)body;
 - (void)pop:(RMQConsumerDeliveryHandler)handler;
 - (RMQConsumer *)subscribe:(RMQConsumerDeliveryHandler)handler;
 - (RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options

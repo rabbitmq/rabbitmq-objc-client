@@ -69,8 +69,10 @@
         recoverCalled = true
     }
 
-    func addPublication() {
+    func addPublication() -> NSNumber! {
+        let beforeIncrease = publicationCount
         publicationCount += 1
+        return beforeIncrease
     }
 
     func addCallback(callback: RMQConfirmationCallback!) {

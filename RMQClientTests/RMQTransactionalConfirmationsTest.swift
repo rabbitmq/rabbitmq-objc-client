@@ -77,7 +77,7 @@ class RMQTransactionalConfirmationsTest: XCTestCase {
         XCTAssertEqual([2], nacks)
     }
 
-    func testAddingAPublicationHasNoEffectBeforeConfirmationsEnabled() {
+    func testAddingAPublicationHasNoEffectOnConfirmationCallbackBeforeConfirmationsEnabled() {
         let confirms = RMQTransactionalConfirmations()
 
         confirms.addPublication()
@@ -92,6 +92,19 @@ class RMQTransactionalConfirmationsTest: XCTestCase {
         confirms.ack(MethodFixtures.basicAck(1, options: []))
 
         XCTAssertEqual(1, acks.count)
+    }
+
+    func testAddingPublicationBeforeConfirmationsEnabledReturns0() {
+        let confirms = RMQTransactionalConfirmations()
+        XCTAssertEqual(0, confirms.addPublication())
+    }
+
+    func testAddingPublicationAfterConfirmationsEnabledReturnsSequenceNumber() {
+        let confirms = RMQTransactionalConfirmations()
+        confirms.addPublication()
+        confirms.enable()
+        XCTAssertEqual(1, confirms.addPublication())
+        XCTAssertEqual(2, confirms.addPublication())
     }
 
     func testEachCallbackReceivesAcksForPublicationsSinceLastCallbackSet() {

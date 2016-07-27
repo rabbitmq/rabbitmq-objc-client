@@ -104,12 +104,13 @@
 - (void)basicCancel:(NSString *)consumerTag {
 }
 
-- (void)basicPublish:(NSString *)message
-          routingKey:(NSString *)routingKey
-            exchange:(NSString *)exchange
-          properties:(NSArray *)properties
-             options:(RMQBasicPublishOptions)options {
+- (NSNumber *)basicPublish:(NSString *)message
+                routingKey:(NSString *)routingKey
+                  exchange:(NSString *)exchange
+                properties:(NSArray *)properties
+                   options:(RMQBasicPublishOptions)options {
     [self err];
+    return @-1;
 }
 
 -  (void)basicGet:(NSString *)queue

@@ -290,6 +290,12 @@ class RMQAllocatedChannelTest: XCTestCase {
         XCTAssertEqual(expectedFrameset, dispatcher.lastAsyncFrameset!)
     }
 
+    func testPublishReturnsSequenceNumberFromConfirmations() {
+        let ch = ChannelHelper.makeChannel(1)
+        XCTAssertEqual(0, ch.basicPublish(NSData(), routingKey: "", exchange: "", properties: [], options: []))
+        XCTAssertEqual(1, ch.basicPublish(NSData(), routingKey: "", exchange: "", properties: [], options: []))
+    }
+
     func testPublishHasDefaultProperties() {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(999, contentBodySize: 4, dispatcher: dispatcher)

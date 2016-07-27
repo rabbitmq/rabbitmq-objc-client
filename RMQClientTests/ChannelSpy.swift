@@ -90,6 +90,8 @@
     var lastReceivedExchangeDeleteOptions: RMQExchangeDeleteOptions?
 
     var lastReceivedFrameset: RMQFrameset?
+
+    var publishReturn = 0
     var queues: [String: RMQQueue] = [:]
     var stubbedMessageCount: RMQLong = RMQLong(0)
     var stubbedConsumerCount: RMQLong = RMQLong(0)
@@ -217,12 +219,13 @@
         lastReceivedBasicCancelConsumerTag = consumerTag
     }
 
-    func basicPublish(body: NSData, routingKey: String, exchange: String, properties: [RMQValue], options: RMQBasicPublishOptions) {
+    func basicPublish(body: NSData, routingKey: String, exchange: String, properties: [RMQValue], options: RMQBasicPublishOptions) -> NSNumber {
         lastReceivedBasicPublishMessage = body
         lastReceivedBasicPublishRoutingKey = routingKey
         lastReceivedBasicPublishExchange = exchange
         lastReceivedBasicPublishProperties = properties
         lastReceivedBasicPublishOptions = options
+        return publishReturn;
     }
 
     func basicGet(queue: String, options: RMQBasicGetOptions, completionHandler: RMQConsumerDeliveryHandler) {

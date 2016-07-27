@@ -97,11 +97,11 @@
 
 - (void)basicCancel:(nonnull NSString *)consumerTag;
 
-- (void)basicPublish:(nonnull NSData *)body
-          routingKey:(nonnull NSString *)routingKey
-            exchange:(nonnull NSString *)exchange
-          properties:(nonnull NSArray<RMQValue *> *)properties
-             options:(RMQBasicPublishOptions)options;
+- (nonnull NSNumber *)basicPublish:(nonnull NSData *)body
+                        routingKey:(nonnull NSString *)routingKey
+                          exchange:(nonnull NSString *)exchange
+                        properties:(nonnull NSArray<RMQValue *> *)properties
+                           options:(RMQBasicPublishOptions)options;
 
 -  (void)basicGet:(nonnull NSString *)queue
           options:(RMQBasicGetOptions)options

@@ -242,11 +242,11 @@
                                                                         options:RMQBasicCancelNoOptions]];
 }
 
-- (void)basicPublish:(NSData *)body
-          routingKey:(NSString *)routingKey
-            exchange:(NSString *)exchange
-          properties:(NSArray<RMQValue *> *)properties
-             options:(RMQBasicPublishOptions)options {
+- (NSNumber *)basicPublish:(NSData *)body
+                routingKey:(NSString *)routingKey
+                  exchange:(NSString *)exchange
+                properties:(NSArray<RMQValue *> *)properties
+                   options:(RMQBasicPublishOptions)options {
     RMQBasicPublish *publish = [[RMQBasicPublish alloc] initWithReserved1:[[RMQShort alloc] init:0]
                                                                  exchange:[[RMQShortstr alloc] init:exchange]
                                                                routingKey:[[RMQShortstr alloc] init:routingKey]
@@ -267,10 +267,8 @@
                                                                 method:publish
                                                          contentHeader:contentHeader
                                                          contentBodies:contentBodies];
-
-    [self.confirmations addPublication];
-
     [self.dispatcher sendAsyncFrameset:frameset];
+    return [self.confirmations addPublication];
 }
 
 -  (void)basicGet:(NSString *)queue

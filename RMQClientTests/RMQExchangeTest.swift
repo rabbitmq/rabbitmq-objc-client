@@ -57,9 +57,11 @@ class RMQExchangeTest: XCTestCase {
 
     func testPublishCallsPublishOnChannel() {
         let ch = ChannelSpy(1)
+        ch.publishReturn = 123
         let ex = RMQExchange(name: "", type: "direct", options: [], channel: ch)
-        ex.publish(body, routingKey: "my.q")
+        let retval = ex.publish(body, routingKey: "my.q")
 
+        XCTAssertEqual(123, retval)
         XCTAssertEqual(body, ch.lastReceivedBasicPublishMessage)
         XCTAssertEqual("my.q", ch.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", ch.lastReceivedBasicPublishExchange)
