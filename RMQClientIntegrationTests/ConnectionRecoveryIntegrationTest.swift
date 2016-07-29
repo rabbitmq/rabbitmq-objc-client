@@ -60,8 +60,10 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
     let httpAPI = RMQHTTP("http://guest:guest@127.0.0.1:15672/api")
 
     func testRecoversFromSocketDisconnect() {
-        let recoveryInterval = 2
+        let recoveryInterval = 5
+        let recoveryTimeout: NSTimeInterval = 30
         let semaphoreTimeout: Double = 30
+        let confirmationTimeout = 5
         let delegate = ConnectionDelegateSpy()
 
         let tlsOptions = RMQTLSOptions.fromURI(amqpLocalhost)
@@ -95,7 +97,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
 
         transport.simulateDisconnect()
 
-        XCTAssert(TestHelper.pollUntil { delegate.recoveredConnection != nil },
+        XCTAssert(TestHelper.pollUntil(recoveryTimeout) { delegate.recoveredConnection != nil },
                   "Didn't finish recovery")
 
         q.publish("after close 1".dataUsingEncoding(NSUTF8StringEncoding))
@@ -105,7 +107,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
 
         var acks: Set<NSNumber>?
         var nacks: Set<NSNumber>?
-        ch.afterConfirmed { (a, n) in
+        ch.afterConfirmed(confirmationTimeout) { (a, n) in
             acks = a
             nacks = n
             dispatch_semaphore_signal(confirmSemaphore)
@@ -116,8 +118,8 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         XCTAssertEqual("after close 2".dataUsingEncoding(NSUTF8StringEncoding), messages[2].body)
 
         XCTAssertEqual(0, dispatch_semaphore_wait(confirmSemaphore, TestHelper.dispatchTimeFromNow(semaphoreTimeout)))
-        XCTAssert(acks!.union(nacks!).isSupersetOf([2, 3]),
-                  "Didn't receive acks for publications post-recovery (pre-recovery acks can be lost)")
+        XCTAssertEqual(acks!.union(nacks!), [1, 2, 3],
+                       "Didn't receive acks or nacks for publications")
 
         // test recovery of queue arguments - in this case, x-max-length
         consumer.cancel()
