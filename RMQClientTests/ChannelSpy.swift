@@ -149,7 +149,11 @@
     func confirmSelect() {
     }
 
+    func afterConfirmed(timeout: NSNumber, handler: (Set<NSNumber>, Set<NSNumber>) -> Void) {
+    }
+
     func afterConfirmed(handler: (Set<NSNumber>, Set<NSNumber>) -> Void) {
+        afterConfirmed(30, handler: handler);
     }
 
     func sendMethod(sendingMethod: RMQMethod,

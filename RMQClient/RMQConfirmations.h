@@ -59,7 +59,8 @@ typedef void (^RMQConfirmationCallback)(NSSet<NSNumber *> *, NSSet<NSNumber *> *
 - (BOOL)isEnabled;
 - (void)recover;
 - (NSNumber *)addPublication;
-- (void)addCallback:(RMQConfirmationCallback)callback;
+- (void)addCallbackWithTimeout:(NSNumber *)timeoutInSecs
+                      callback:(RMQConfirmationCallback)callback;
 - (void)ack:(RMQBasicAck *)ack;
 - (void)nack:(RMQBasicNack *)nack;
 @end

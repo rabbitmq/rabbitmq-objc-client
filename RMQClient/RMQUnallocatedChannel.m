@@ -90,8 +90,13 @@
     [self err];
 }
 
-- (void)afterConfirmed:(void (^)(NSSet<NSNumber *> * _Nonnull, NSSet<NSNumber *> * _Nonnull))handler {
+- (void)afterConfirmed:(NSNumber *)timeout
+               handler:(void (^)(NSSet<NSNumber *> * _Nonnull, NSSet<NSNumber *> * _Nonnull))handler {
     [self err];
+}
+
+- (void)afterConfirmed:(void (^)(NSSet<NSNumber *> * _Nonnull, NSSet<NSNumber *> * _Nonnull))handler {
+    [self afterConfirmed:@0 handler:handler];
 }
 
 - (RMQConsumer *)basicConsume:(NSString *)queueName

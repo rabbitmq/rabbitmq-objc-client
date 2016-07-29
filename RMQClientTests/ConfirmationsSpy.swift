@@ -53,6 +53,7 @@
     var lastReceivedCallback: RMQConfirmationCallback?
     var lastReceivedAck: RMQBasicAck?
     var lastReceivedNack: RMQBasicNack?
+    var lastReceivedTimeout: NSNumber?
     var publicationCount = 0
     var _isEnabled = false
     var recoverCalled = false
@@ -75,8 +76,9 @@
         return beforeIncrease
     }
 
-    func addCallback(callback: RMQConfirmationCallback!) {
+    func addCallbackWithTimeout(timeoutInSecs: NSNumber!, callback: RMQConfirmationCallback!) {
         lastReceivedCallback = callback
+        lastReceivedTimeout = timeoutInSecs
     }
 
     func ack(ack: RMQBasicAck!) {

@@ -51,16 +51,19 @@
 
 #import <Foundation/Foundation.h>
 #import "RMQConfirmations.h"
+#import "RMQLocalSerialQueue.h"
 
 @interface RMQConfirmationTransaction : NSObject
 
-@property (nonatomic, readwrite) RMQConfirmationCallback callback;
 @property (nonatomic, readwrite) NSMutableSet *unconfirmed;
 @property (nonatomic, readwrite) NSMutableSet *confirmedAcks;
 @property (nonatomic, readwrite) NSMutableSet *confirmedNacks;
 
+- (instancetype)initWithDelayQueue:(id<RMQLocalSerialQueue>)queue;
+
+- (void)setCallback:(RMQConfirmationCallback)callback
+            timeout:(NSNumber *)timeoutInSecs;
 - (void)addUnconfirmed:(NSNumber *)tag;
-- (void)clearUnconfirmed;
 - (void)ack:(NSNumber *)tag;
 - (void)nack:(NSNumber *)tag;
 - (BOOL)isUnconfirmed:(NSNumber *)tag;

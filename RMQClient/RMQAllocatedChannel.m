@@ -167,8 +167,15 @@
     [self.dispatcher sendSyncMethod:[RMQConfirmSelect new]];
 }
 
+- (void)afterConfirmed:(NSNumber *)timeout
+               handler:(void (^)(NSSet<NSNumber *> * _Nonnull, NSSet<NSNumber *> * _Nonnull))handler {
+    [self.confirmations addCallbackWithTimeout:timeout
+                                      callback:handler];
+}
+
 - (void)afterConfirmed:(RMQConfirmationCallback)handler {
-    [self.confirmations addCallback:handler];
+    [self afterConfirmed:@30
+                 handler:handler];
 }
 
 - (RMQQueue *)queue:(NSString *)originalQueueName

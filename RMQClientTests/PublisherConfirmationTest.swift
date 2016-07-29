@@ -121,5 +121,20 @@ class PublisherConfirmationTest: XCTestCase {
         try! dispatcher.step()
         XCTAssertEqual(nack, confirmations.lastReceivedNack)
     }
+
+    func testConfirmationCallbackSetsTimeout() {
+        let confirmations = ConfirmationsSpy()
+        let ch = ChannelHelper.makeChannel(1, confirmations: confirmations)
+
+        ch.confirmSelect()
+
+        ch.basicPublish(NSData(), routingKey: "", exchange: "", properties: [], options: [])
+
+        ch.afterConfirmed { (acks, nacks) in }
+        XCTAssertEqual(30, confirmations.lastReceivedTimeout)
+
+        ch.afterConfirmed(123) { (acks, nacks) in }
+        XCTAssertEqual(123, confirmations.lastReceivedTimeout)
+    }
     
 }

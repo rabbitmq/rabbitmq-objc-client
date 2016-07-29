@@ -54,14 +54,14 @@ import XCTest
 class RMQTransactionalConfirmationsTest: XCTestCase {
 
     func testAcksAndNacksArePassedToCallback() {
-        let confirms = RMQTransactionalConfirmations()
+        let confirms = RMQTransactionalConfirmations(delayQueue: FakeSerialQueue())
 
         confirms.enable()
         for _ in 1...5 { confirms.addPublication() }
 
         var acks: Set<NSNumber> = []
         var nacks: Set<NSNumber> = []
-        confirms.addCallback { (a, n) in
+        confirms.addCallbackWithTimeout(10) { (a, n) in
             acks = a
             nacks = n
         }
@@ -78,14 +78,14 @@ class RMQTransactionalConfirmationsTest: XCTestCase {
     }
 
     func testAddingAPublicationHasNoEffectOnConfirmationCallbackBeforeConfirmationsEnabled() {
-        let confirms = RMQTransactionalConfirmations()
+        let confirms = RMQTransactionalConfirmations(delayQueue: FakeSerialQueue())
 
         confirms.addPublication()
         confirms.enable()
         confirms.addPublication()
 
         var acks: Set<NSNumber> = []
-        confirms.addCallback { (a, _) in
+        confirms.addCallbackWithTimeout(10) { (a, _) in
             acks = a
         }
 
@@ -95,12 +95,12 @@ class RMQTransactionalConfirmationsTest: XCTestCase {
     }
 
     func testAddingPublicationBeforeConfirmationsEnabledReturns0() {
-        let confirms = RMQTransactionalConfirmations()
+        let confirms = RMQTransactionalConfirmations(delayQueue: FakeSerialQueue())
         XCTAssertEqual(0, confirms.addPublication())
     }
 
     func testAddingPublicationAfterConfirmationsEnabledReturnsSequenceNumber() {
-        let confirms = RMQTransactionalConfirmations()
+        let confirms = RMQTransactionalConfirmations(delayQueue: FakeSerialQueue())
         confirms.addPublication()
         confirms.enable()
         XCTAssertEqual(1, confirms.addPublication())
@@ -108,7 +108,7 @@ class RMQTransactionalConfirmationsTest: XCTestCase {
     }
 
     func testEachCallbackReceivesAcksForPublicationsSinceLastCallbackSet() {
-        let confirms = RMQTransactionalConfirmations()
+        let confirms = RMQTransactionalConfirmations(delayQueue: FakeSerialQueue())
 
         confirms.enable()
         confirms.addPublication() // 1
@@ -116,7 +116,7 @@ class RMQTransactionalConfirmationsTest: XCTestCase {
 
         var firstAcks: Set<NSNumber> = []
         var firstNacks: Set<NSNumber> = []
-        confirms.addCallback { (a, n) in
+        confirms.addCallbackWithTimeout(10) { (a, n) in
             firstAcks = a
             firstNacks = n
         }
@@ -126,7 +126,7 @@ class RMQTransactionalConfirmationsTest: XCTestCase {
 
         var secondAcks: Set<NSNumber> = []
         var secondNacks: Set<NSNumber> = []
-        confirms.addCallback { (a, n) in
+        confirms.addCallbackWithTimeout(10) { (a, n) in
             secondAcks = a
             secondNacks = n
         }
@@ -141,10 +141,30 @@ class RMQTransactionalConfirmationsTest: XCTestCase {
         XCTAssertEqual([3], secondNacks)
     }
 
+    func testCallbackThatTimedOutCannotBeRetriggeredViaAcksOrNacks() {
+        let q = FakeSerialQueue()
+        let confirms = RMQTransactionalConfirmations(delayQueue: q)
+
+        confirms.enable()
+        confirms.addPublication()
+
+        var callCount = 0
+        confirms.addCallbackWithTimeout(10) { (acks, nacks) in
+            callCount += 1
+        }
+
+        q.delayedItems[0]()
+        confirms.ack(MethodFixtures.basicAck(1, options: []))
+        confirms.nack(MethodFixtures.basicNack(1, options: []))
+
+        XCTAssertEqual(1, callCount)
+    }
+
     // See this Bunny commit for an explanation:
     // https://github.com/ruby-amqp/bunny/commit/5e6d2b069cc17f44085e1778a0f6cad133a00dc1
     func testRecoveryIgnoresUnconfirmedTagsAndKeepsAnOffset() {
-        let confirms = RMQTransactionalConfirmations()
+        let q = FakeSerialQueue()
+        let confirms = RMQTransactionalConfirmations(delayQueue: q)
 
         confirms.enable()
         for i in 1...4 {
@@ -152,8 +172,10 @@ class RMQTransactionalConfirmationsTest: XCTestCase {
             confirms.ack(MethodFixtures.basicAck(UInt64(i), options: []))
         }
 
+        // These become nacks because they don't get acked or nacked by server before the timeout occurs.
+        // This is different behaviour to e.g. Bunny
         for _ in 5...8 {
-            confirms.addPublication() // these are never confirmed
+            confirms.addPublication()
         }
 
         confirms.recover()
@@ -161,22 +183,31 @@ class RMQTransactionalConfirmationsTest: XCTestCase {
         let expectedOffset = 8
         for i in 9...10 {
             confirms.addPublication()
-            confirms.ack(MethodFixtures.basicAck(UInt64(i - expectedOffset), options: []))
+            let serverDeliveryTag = UInt64(i - expectedOffset)
+            confirms.ack(MethodFixtures.basicAck(serverDeliveryTag, options: []))
         }
 
         for _ in 11...15 {
             confirms.addPublication()
         }
+
+        // This is the server nacking 3-7, which is 11-15 in the client's terms.
         confirms.nack(MethodFixtures.basicNack(7, options: [.Multiple]))
 
         var acks: Set<NSNumber>?
         var nacks: Set<NSNumber>?
-        confirms.addCallback { (a, n) in
+
+        // We want to trigger a timeout, because we lost items during recovery that can't be counted.
+        confirms.addCallbackWithTimeout(60) { (a, n) in
             acks = a
             nacks = n
         }
 
+        q.delayedItems[0]()
+
         XCTAssertEqual([1, 2, 3, 4, 9, 10], acks)
-        XCTAssertEqual([11, 12, 13, 14, 15], nacks)
+
+        // We expect the lost items 5-8 to arrive as nacks.
+        XCTAssertEqual([5, 6, 7, 8, 11, 12, 13, 14, 15], nacks)
     }
 }
