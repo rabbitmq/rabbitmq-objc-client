@@ -113,6 +113,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
             dispatch_semaphore_signal(confirmSemaphore)
         }
 
+        XCTAssertEqual(3, messages.count)
         XCTAssertEqual("before close".dataUsingEncoding(NSUTF8StringEncoding), messages[0].body)
         XCTAssertEqual("after close 1".dataUsingEncoding(NSUTF8StringEncoding), messages[1].body)
         XCTAssertEqual("after close 2".dataUsingEncoding(NSUTF8StringEncoding), messages[2].body)
