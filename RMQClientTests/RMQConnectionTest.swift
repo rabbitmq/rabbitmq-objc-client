@@ -197,24 +197,6 @@ class RMQConnectionTest: XCTestCase {
         XCTAssertNil(recovery.errorPassedToRecover)
     }
 
-    func testTransportDisconnectCausesOutgoingRequestsToBeDelayedToAllowHandshakingToComplete() {
-        let transport = ControlledInteractionTransport()
-        let q = FakeSerialQueue()
-        let recovery = RecoverySpy()
-        let conn = ConnectionWithFakesHelper.makeConnection(config: recovery.connectionConfig(),
-                                                            transport: transport,
-                                                            commandQueue: q)
-        conn.start()
-        try! q.step()
-        transport.handshake()
-
-        conn.transport(transport, disconnectedWithError: nil)
-
-        conn.sendFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclare("foo", options: [])))
-
-        XCTAssertEqual(q.enqueueDelay!.integerValue, recovery.interval.integerValue)
-    }
-
     func testSignalsActivityToHeartbeatSenderOnOutgoingFrameset() {
         let heartbeatSender = HeartbeatSenderSpy()
         let transport = ControlledInteractionTransport()
@@ -240,7 +222,7 @@ class RMQConnectionTest: XCTestCase {
         XCTAssert(heartbeatSender.signalActivityReceived)
     }
 
-    func testDelaysTransportSendAndHeartbeatSignalWhenInRecovery() {
+    func testDoesNotSendFramesOrSignalToHeartbeatWhenInRecovery() {
         let heartbeatSender = HeartbeatSenderSpy()
         let recovery = RecoverySpy()
         let q = FakeSerialQueue()
@@ -265,12 +247,7 @@ class RMQConnectionTest: XCTestCase {
 
         XCTAssertFalse(heartbeatSender.signalActivityReceived)
         XCTAssertEqual(0, transport.outboundData.count)
-        XCTAssertEqual(1, q.delayedItems.count)
-
-        try! q.step()
-
-        XCTAssertEqual(MethodFixtures.channelOpen(), transport.lastSentPayload() as? RMQChannelOpen)
-        XCTAssert(heartbeatSender.signalActivityReceived)
+        XCTAssertEqual(0, q.pendingItemsCount())
     }
 
     func testSendsVersionNumberWithStartOk() {
