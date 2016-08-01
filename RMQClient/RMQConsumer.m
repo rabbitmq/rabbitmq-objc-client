@@ -80,6 +80,10 @@
     self.handler = handler;
 }
 
+- (void)consume:(RMQMessage *)message {
+    self.handler(message);
+}
+
 - (void)cancel {
     [self.channel basicCancel:self.tag];
 }

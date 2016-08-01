@@ -440,14 +440,13 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
     RMQBasicDeliver *deliver = (RMQBasicDeliver *)frameset.method;
     RMQConsumer *consumer = self.consumers[deliver.consumerTag.stringValue];
     if (consumer) {
-        RMQMessage *message = [[RMQMessage alloc] initWithBody:frameset.contentData
-                                                   consumerTag:deliver.consumerTag.stringValue
-                                                   deliveryTag:@(deliver.deliveryTag.integerValue)
-                                                   redelivered:deliver.options & RMQBasicDeliverRedelivered
-                                                  exchangeName:deliver.exchange.stringValue
-                                                    routingKey:deliver.routingKey.stringValue
-                                                    properties:frameset.contentHeader.properties];
-        consumer.handler(message);
+        [consumer consume: [[RMQMessage alloc] initWithBody:frameset.contentData
+                                                consumerTag:deliver.consumerTag.stringValue
+                                                deliveryTag:@(deliver.deliveryTag.integerValue)
+                                                redelivered:deliver.options & RMQBasicDeliverRedelivered
+                                               exchangeName:deliver.exchange.stringValue
+                                                 routingKey:deliver.routingKey.stringValue
+                                                 properties:frameset.contentHeader.properties]];
     }
 }
 
