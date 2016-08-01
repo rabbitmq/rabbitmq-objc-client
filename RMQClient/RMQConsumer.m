@@ -64,13 +64,12 @@
 
 - (instancetype)initWithChannel:(id<RMQChannel>)channel
                       queueName:(NSString *)queueName
-                        options:(RMQBasicConsumeOptions)options
-                    consumerTag:(NSString *)tag {
+                        options:(RMQBasicConsumeOptions)options {
     self = [super init];
     if (self) {
         self.queueName = queueName;
         self.options = options;
-        self.tag = tag;
+        self.tag = [channel generateConsumerTag];
         self.channel = channel;
     }
     return self;

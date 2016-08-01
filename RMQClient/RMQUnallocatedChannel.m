@@ -106,6 +106,11 @@
     return nil;
 }
 
+- (NSString *)generateConsumerTag {
+    [self err];
+    return nil;
+}
+
 - (void)basicCancel:(NSString *)consumerTag {
 }
 

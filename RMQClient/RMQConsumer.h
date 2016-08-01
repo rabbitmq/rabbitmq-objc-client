@@ -63,8 +63,7 @@
 
 - (instancetype)initWithChannel:(id<RMQChannel>)channel
                       queueName:(NSString *)queueName
-                        options:(RMQBasicConsumeOptions)options
-                    consumerTag:(NSString *)tag;
+                        options:(RMQBasicConsumeOptions)options;
 - (void)onDelivery:(RMQConsumerDeliveryHandler)handler;
 - (void)consume:(RMQMessage *)message;
 - (void)cancel;

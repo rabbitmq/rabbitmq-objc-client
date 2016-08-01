@@ -68,6 +68,7 @@ class RMQUnallocatedChannelTest: XCTestCase {
             { ch.ack(1) },
             { ch.afterConfirmed { _ in } },
             { ch.basicConsume("foo", options: []) { _ in } },
+            { ch.generateConsumerTag() },
             { ch.basicGet("foo", options: []) { _ in } },
             { ch.basicPublish("hi".dataUsingEncoding(NSUTF8StringEncoding)!, routingKey: "yo", exchange: "hmm", properties: [], options: []) },
             { ch.basicQos(2, global: false) },

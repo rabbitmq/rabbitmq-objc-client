@@ -212,12 +212,13 @@
             let e = NSError(domain: RMQErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: msg])
             delegateSentToActivate?.channel(self, error: e)
         }
-        let consumer = RMQConsumer(channel: self,
-                                   queueName: queueName,
-                                   options: options,
-                                   consumerTag: "channel spy consumer tag")
+        let consumer = RMQConsumer(channel: self, queueName: queueName, options: options)
         consumer.onDelivery(handler)
         return consumer
+    }
+
+    func generateConsumerTag() -> String {
+        return "channel spy consumer tag"
     }
 
     func basicCancel(consumerTag: String) {

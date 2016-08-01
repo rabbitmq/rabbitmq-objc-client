@@ -228,19 +228,21 @@
 - (RMQConsumer *)basicConsume:(NSString *)queueName
                       options:(RMQBasicConsumeOptions)options
                       handler:(RMQConsumerDeliveryHandler)handler {
-    NSString *consumerTag = [self.nameGenerator generateWithPrefix:@"rmq-objc-client.gen-"];
     RMQConsumer *consumer = [[RMQConsumer alloc] initWithChannel:self
                                                        queueName:queueName
-                                                         options:options
-                                                     consumerTag:consumerTag];
+                                                         options:options];
     [consumer onDelivery:handler];
     [self.dispatcher sendSyncMethod:[[RMQBasicConsume alloc] initWithQueue:queueName
-                                                               consumerTag:consumerTag
+                                                               consumerTag:consumer.tag
                                                                    options:options]
                   completionHandler:^(RMQFrameset *frameset) {
-                      self.consumers[consumerTag] = consumer;
+                      self.consumers[consumer.tag] = consumer;
                   }];
     return consumer;
+}
+
+- (NSString *)generateConsumerTag {
+    return [self.nameGenerator generateWithPrefix:@"rmq-objc-client.gen-"];
 }
 
 - (void)basicCancel:(NSString *)consumerTag {

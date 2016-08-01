@@ -96,6 +96,7 @@
 - (nonnull RMQConsumer *)basicConsume:(nonnull NSString *)queueName
                               options:(RMQBasicConsumeOptions)options
                               handler:(RMQConsumerDeliveryHandler _Nonnull)handler;
+- (nonnull NSString *)generateConsumerTag;
 
 - (void)basicCancel:(nonnull NSString *)consumerTag;
 
