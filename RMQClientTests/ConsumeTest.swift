@@ -163,6 +163,29 @@ class ConsumeTest: XCTestCase {
         XCTAssertEqual(expectedMessage, consumer.message)
     }
 
+    func testBasicConsumeHasNoEffectWhenObjectHasNoDeliveryCallback() {
+        let dispatcher = DispatcherSpy()
+        let nameGenerator = StubNameGenerator()
+        nameGenerator.nextName = "tag"
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, nameGenerator: nameGenerator)
+        let consumeOkFrameset = RMQFrameset(channelNumber: 432, method: RMQBasicConsumeOk(consumerTag: RMQShortstr("tag")))
+        let incomingDeliver = deliverFrameset(
+            consumerTag: "tag",
+            deliveryTag: 456,
+            routingKey: "foo",
+            content: "Consumed!",
+            channelNumber: 432,
+            exchange: "my-exchange",
+            options: [.Redelivered]
+        )
+        let consumer = RMQConsumer(channel: ch, queueName: "somequeue", options: [])
+        ch.basicConsume(consumer)
+        dispatcher.lastSyncMethodHandler!(consumeOkFrameset)
+
+        ch.handleFrameset(incomingDeliver)
+        try! dispatcher.step()
+    }
+
     func testBasicCancelSendsBasicCancelMethod() {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)

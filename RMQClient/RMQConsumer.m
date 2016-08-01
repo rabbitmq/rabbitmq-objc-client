@@ -73,6 +73,7 @@
         self.tag = [channel generateConsumerTag];
         self.channel = channel;
         self.cancellationHandler = ^(){};
+        self.deliveryHandler = ^(id _){};
     }
     return self;
 }
