@@ -244,9 +244,11 @@
 }
 
 - (void)basicCancel:(NSString *)consumerTag {
-    [self.consumers removeObjectForKey:consumerTag];
     [self.dispatcher sendSyncMethod:[[RMQBasicCancel alloc] initWithConsumerTag:[[RMQShortstr alloc] init:consumerTag]
-                                                                        options:RMQBasicCancelNoOptions]];
+                                                                        options:RMQBasicCancelNoOptions]
+                  completionHandler:^(RMQFrameset *frameset) {
+                      [self.consumers removeObjectForKey:consumerTag];
+                  }];
 }
 
 - (NSNumber *)basicPublish:(NSData *)body

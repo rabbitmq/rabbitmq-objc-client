@@ -123,22 +123,29 @@ class ConsumeTest: XCTestCase {
         XCTAssertEqual(MethodFixtures.basicCancel("my tag"), dispatcher.lastSyncMethod as? RMQBasicCancel)
     }
 
-    func testBasicCancelRemovesConsumer() {
+    func testBasicCancelRemovesConsumerWhenCancelOkReceived() {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(432, dispatcher: dispatcher)
 
-        var consumerCalled = false
+        var consumerCallCount = 0
         let consumer = ch.basicConsume("my q", options: []) { _ in
-            consumerCalled = true
+            consumerCallCount += 1
         }
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 432, method: MethodFixtures.basicConsumeOk(consumer.tag)))
 
         ch.basicCancel(consumer.tag)
 
         ch.handleFrameset(deliverFrameset(consumerTag: consumer.tag, routingKey: "foo", content: "message", channelNumber: 432))
-        try! dispatcher.step()
+        try! dispatcher.finish()
 
-        XCTAssertFalse(consumerCalled)
+        XCTAssertEqual(1, consumerCallCount)
+
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 432, method: MethodFixtures.basicCancelOk(consumer.tag)))
+
+        ch.handleFrameset(deliverFrameset(consumerTag: consumer.tag, routingKey: "foo", content: "message", channelNumber: 432))
+        try! dispatcher.finish()
+
+        XCTAssertEqual(1, consumerCallCount)
     }
 
     func testServerCancelRemovesExtantConsumer() {
