@@ -52,6 +52,13 @@
 import XCTest
 
 class ConsumeTest: XCTestCase {
+    class CustomConsumer : RMQConsumer {
+        var message: RMQMessage?
+
+        override func consume(message: RMQMessage!) {
+            self.message = message
+        }
+    }
 
     func testBasicConsumeSendsBasicConsumeMethod() {
         let dispatcher = DispatcherSpy()
@@ -60,6 +67,19 @@ class ConsumeTest: XCTestCase {
 
         nameGenerator.nextName = "a tag"
         ch.basicConsume("foo", options: [.Exclusive]) { _ in }
+
+        XCTAssertEqual(MethodFixtures.basicConsume("foo", consumerTag: "a tag", options: [.Exclusive]),
+                       dispatcher.lastSyncMethod as? RMQBasicConsume)
+    }
+
+    func testBasicConsumeWithCustomObjectSendsBasicConsumeMethod() {
+        let dispatcher = DispatcherSpy()
+        let nameGenerator = StubNameGenerator()
+        nameGenerator.nextName = "a tag"
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, nameGenerator: nameGenerator)
+        let consumer = CustomConsumer(channel: ch, queueName: "foo", options: [.Exclusive])
+
+        ch.basicConsume(consumer)
 
         XCTAssertEqual(MethodFixtures.basicConsume("foo", consumerTag: "a tag", options: [.Exclusive]),
                        dispatcher.lastSyncMethod as? RMQBasicConsume)
@@ -108,6 +128,39 @@ class ConsumeTest: XCTestCase {
         try! dispatcher.step()
 
         XCTAssertEqual(expectedMessage, consumedMessage)
+    }
+
+    func testBasicConsumeCallsCustomObjectMethodWhenMessageIsDelivered() {
+        let dispatcher = DispatcherSpy()
+        let nameGenerator = StubNameGenerator()
+        nameGenerator.nextName = "tag"
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, nameGenerator: nameGenerator)
+        let consumeOkFrameset = RMQFrameset(channelNumber: 432, method: RMQBasicConsumeOk(consumerTag: RMQShortstr("tag")))
+        let incomingDeliver = deliverFrameset(
+            consumerTag: "tag",
+            deliveryTag: 456,
+            routingKey: "foo",
+            content: "Consumed!",
+            channelNumber: 432,
+            exchange: "my-exchange",
+            options: [.Redelivered]
+        )
+        let expectedMessage = RMQMessage(body: "Consumed!".dataUsingEncoding(NSUTF8StringEncoding),
+                                         consumerTag: "tag",
+                                         deliveryTag: 456,
+                                         redelivered: true,
+                                         exchangeName: "my-exchange",
+                                         routingKey: "foo",
+                                         properties: [])
+        let consumer = CustomConsumer(channel: ch, queueName: "somequeue", options: [])
+        ch.basicConsume(consumer)
+        dispatcher.lastSyncMethodHandler!(consumeOkFrameset)
+
+        ch.handleFrameset(incomingDeliver)
+        XCTAssertNil(consumer.message)
+        try! dispatcher.step()
+
+        XCTAssertEqual(expectedMessage, consumer.message)
     }
 
     func testBasicCancelSendsBasicCancelMethod() {

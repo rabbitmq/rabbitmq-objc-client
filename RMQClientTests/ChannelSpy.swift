@@ -217,6 +217,9 @@
         return consumer
     }
 
+    func basicConsume(consumer: RMQConsumer) {
+    }
+
     func generateConsumerTag() -> String {
         return "channel spy consumer tag"
     }

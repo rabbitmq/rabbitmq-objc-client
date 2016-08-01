@@ -102,8 +102,12 @@
 - (RMQConsumer *)basicConsume:(NSString *)queueName
                       options:(RMQBasicConsumeOptions)options
                       handler:(RMQConsumerDeliveryHandler)handler {
-    [self err];
+    [self basicConsume:[[RMQConsumer alloc] initWithChannel:self queueName:queueName options:options]];
     return nil;
+}
+
+- (void)basicConsume:(RMQConsumer *)consumer {
+    [self err];
 }
 
 - (NSString *)generateConsumerTag {
