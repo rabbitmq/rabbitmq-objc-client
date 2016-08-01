@@ -229,11 +229,11 @@
                       options:(RMQBasicConsumeOptions)options
                       handler:(RMQConsumerDeliveryHandler)handler {
     NSString *consumerTag = [self.nameGenerator generateWithPrefix:@"rmq-objc-client.gen-"];
-    RMQConsumer *consumer = [[RMQConsumer alloc] initWithQueueName:queueName
-                                                           options:options
-                                                       consumerTag:consumerTag
-                                                           handler:handler
-                                                           channel:self];
+    RMQConsumer *consumer = [[RMQConsumer alloc] initWithChannel:self
+                                                       queueName:queueName
+                                                         options:options
+                                                     consumerTag:consumerTag];
+    [consumer onDelivery:handler];
     [self.dispatcher sendSyncMethod:[[RMQBasicConsume alloc] initWithQueue:queueName
                                                                consumerTag:consumerTag
                                                                    options:options]

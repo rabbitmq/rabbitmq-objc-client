@@ -62,20 +62,22 @@
 
 @implementation RMQConsumer
 
-- (instancetype)initWithQueueName:(NSString *)queueName
-                          options:(RMQBasicConsumeOptions)options
-                      consumerTag:(NSString *)tag
-                          handler:(RMQConsumerDeliveryHandler)handler
-                          channel:(id<RMQChannel>)channel {
+- (instancetype)initWithChannel:(id<RMQChannel>)channel
+                      queueName:(NSString *)queueName
+                        options:(RMQBasicConsumeOptions)options
+                    consumerTag:(NSString *)tag {
     self = [super init];
     if (self) {
         self.queueName = queueName;
         self.options = options;
         self.tag = tag;
-        self.handler = handler;
         self.channel = channel;
     }
     return self;
+}
+
+- (void)onDelivery:(RMQConsumerDeliveryHandler)handler {
+    self.handler = handler;
 }
 
 - (void)cancel {

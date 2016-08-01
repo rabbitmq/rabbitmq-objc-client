@@ -62,11 +62,11 @@
 @property (nonatomic, readonly) NSString *tag;
 @property (nonatomic, readonly) RMQConsumerDeliveryHandler handler;
 
-- (instancetype)initWithQueueName:(NSString *)queueName
-                          options:(RMQBasicConsumeOptions)options
-                      consumerTag:(NSString *)tag
-                          handler:(RMQConsumerDeliveryHandler)handler
-                          channel:(id<RMQChannel>)channel;
+- (instancetype)initWithChannel:(id<RMQChannel>)channel
+                      queueName:(NSString *)queueName
+                        options:(RMQBasicConsumeOptions)options
+                    consumerTag:(NSString *)tag;
+- (void)onDelivery:(RMQConsumerDeliveryHandler)handler;
 - (void)cancel;
 
 @end
