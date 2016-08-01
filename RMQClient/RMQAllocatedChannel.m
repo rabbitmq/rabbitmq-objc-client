@@ -232,13 +232,17 @@
                                                        queueName:queueName
                                                          options:options];
     [consumer onDelivery:handler];
-    [self.dispatcher sendSyncMethod:[[RMQBasicConsume alloc] initWithQueue:queueName
+    [self basicConsume:consumer];
+    return consumer;
+}
+
+- (void)basicConsume:(RMQConsumer *)consumer {
+    [self.dispatcher sendSyncMethod:[[RMQBasicConsume alloc] initWithQueue:consumer.queueName
                                                                consumerTag:consumer.tag
-                                                                   options:options]
+                                                                   options:consumer.options]
                   completionHandler:^(RMQFrameset *frameset) {
                       self.consumers[consumer.tag] = consumer;
                   }];
-    return consumer;
 }
 
 - (NSString *)generateConsumerTag {

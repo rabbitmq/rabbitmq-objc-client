@@ -78,9 +78,9 @@ class ConsumeTest: XCTestCase {
     func testBasicConsumeCallsCallbackWhenMessageIsDelivered() {
         let dispatcher = DispatcherSpy()
         let nameGenerator = StubNameGenerator()
+        nameGenerator.nextName = "tag"
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, nameGenerator: nameGenerator)
-        let consumeOkMethod = RMQBasicConsumeOk(consumerTag: RMQShortstr("tag"))
-        let consumeOkFrameset = RMQFrameset(channelNumber: 432, method: consumeOkMethod)
+        let consumeOkFrameset = RMQFrameset(channelNumber: 432, method: RMQBasicConsumeOk(consumerTag: RMQShortstr("tag")))
         let incomingDeliver = deliverFrameset(
             consumerTag: "tag",
             deliveryTag: 456,
@@ -97,10 +97,6 @@ class ConsumeTest: XCTestCase {
                                          exchangeName: "my-exchange",
                                          routingKey: "foo",
                                          properties: [])
-
-        ch.activateWithDelegate(nil)
-
-        nameGenerator.nextName = "tag"
         var consumedMessage: RMQMessage?
         ch.basicConsume("somequeue", options: []) { message in
             consumedMessage = message
