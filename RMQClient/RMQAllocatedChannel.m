@@ -459,6 +459,8 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
 - (void)handleBasicCancel:(RMQFrameset *)frameset {
     RMQBasicCancel *cancel = (RMQBasicCancel *)frameset.method;
     NSString *consumerTag = cancel.consumerTag.stringValue;
+    RMQConsumer *consumer = self.consumers[consumerTag];
+    [consumer handleCancellation];
     [self.consumers removeObjectForKey:consumerTag];
 }
 

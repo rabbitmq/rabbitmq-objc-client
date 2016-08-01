@@ -216,6 +216,26 @@ class ConsumeTest: XCTestCase {
         XCTAssertFalse(consumerCalled)
     }
 
+    func testCancellationCallbackTriggeredWhenServerSendsCancel() {
+        let dispatcher = DispatcherSpy()
+        let ch = ChannelHelper.makeChannel(123, dispatcher: dispatcher)
+
+        let consumer = CustomConsumer(channel: ch, queueName: "myq", options: [])
+        var callCount = 0
+        consumer.onCancellation {
+            callCount += 1
+        }
+
+        ch.basicConsume(consumer)
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 123, method: MethodFixtures.basicConsumeOk(consumer.tag)))
+
+        ch.handleFrameset(RMQFrameset(channelNumber: 123, method: MethodFixtures.basicCancel(consumer.tag)))
+
+        XCTAssertEqual(0, callCount)
+        try! dispatcher.step()
+        XCTAssertEqual(1, callCount)
+    }
+
     // MARK: Helpers
 
     func deliverFrameset(consumerTag consumerTag: String, deliveryTag: UInt64 = 123, routingKey: String, content: String, channelNumber: Int, exchange: String = "", options: RMQBasicDeliverOptions = []) -> RMQFrameset {

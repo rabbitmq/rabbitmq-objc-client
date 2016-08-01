@@ -54,7 +54,7 @@
 #import "RMQMessage.h"
 #import "RMQExchange.h"
 #import "RMQConsumer.h"
-#import "RMQConsumerDeliveryHandler.h"
+#import "RMQConsumerHandlers.h"
 #import "RMQBasicProperties.h"
 
 @protocol RMQChannel;

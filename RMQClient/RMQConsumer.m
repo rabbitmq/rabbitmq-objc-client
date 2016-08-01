@@ -57,7 +57,8 @@
 @property (nonatomic, readwrite) RMQBasicConsumeOptions options;
 @property (nonatomic, readwrite) NSString *tag;
 @property (nonatomic, readwrite) id<RMQChannel> channel;
-@property (nonatomic, readwrite) RMQConsumerDeliveryHandler handler;
+@property (nonatomic, readwrite) RMQConsumerDeliveryHandler deliveryHandler;
+@property (nonatomic, readwrite) RMQConsumerCancellationHandler cancellationHandler;
 @end
 
 @implementation RMQConsumer
@@ -71,20 +72,29 @@
         self.options = options;
         self.tag = [channel generateConsumerTag];
         self.channel = channel;
+        self.cancellationHandler = ^(){};
     }
     return self;
 }
 
 - (void)onDelivery:(RMQConsumerDeliveryHandler)handler {
-    self.handler = handler;
+    self.deliveryHandler = handler;
+}
+
+- (void)onCancellation:(RMQConsumerCancellationHandler)handler {
+    self.cancellationHandler = handler;
 }
 
 - (void)consume:(RMQMessage *)message {
-    self.handler(message);
+    self.deliveryHandler(message);
 }
 
 - (void)cancel {
     [self.channel basicCancel:self.tag];
+}
+
+- (void)handleCancellation {
+    self.cancellationHandler();
 }
 
 @end
