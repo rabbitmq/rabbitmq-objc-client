@@ -23,7 +23,7 @@ Test-driven from Swift and implemented in Objective-C, to avoid burdening Object
 - [x] [Publisher confirmations](https://github.com/rabbitmq/rabbitmq-objc-client/issues/68)
 - [x] [Publish and consume messages as data](https://github.com/rabbitmq/rabbitmq-objc-client/issues/46)
 - [ ] [Connection closure when broker doesn't send heartbeats fast enough](https://github.com/rabbitmq/rabbitmq-objc-client/issues/41)
-- [ ] [Customisable consumer hooks](https://github.com/rabbitmq/rabbitmq-objc-client/issues/71)
+- [x] [Customisable consumer hooks](https://github.com/rabbitmq/rabbitmq-objc-client/issues/71)
 - [ ] [basic.return support](https://github.com/rabbitmq/rabbitmq-objc-client/issues/72)
 - [ ] [Transaction support](https://github.com/rabbitmq/rabbitmq-objc-client/issues/73)
 
