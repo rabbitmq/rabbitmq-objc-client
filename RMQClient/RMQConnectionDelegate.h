@@ -54,13 +54,23 @@
 
 @class RMQConnection;
 @protocol RMQConnectionDelegate <NSObject>
+
+/// @brief Called when a socket cannot be opened, or when AMQP handshaking times out for some reason.
 - (void)      connection:(RMQConnection *)connection
 failedToConnectWithError:(NSError *)error;
+/// @brief Called when a connection disconnects for any reason
 - (void)   connection:(RMQConnection *)connection
 disconnectedWithError:(NSError *)error;
+/// @brief Called before the configured <a href="http://www.rabbitmq.com/api-guide.html#recovery">automatic connection recovery</a> sleep.
 - (void)willStartRecoveryWithConnection:(RMQConnection *)connection;
+/// @brief Called after the configured <a href="http://www.rabbitmq.com/api-guide.html#recovery">automatic connection recovery</a> sleep.
 - (void)startingRecoveryWithConnection:(RMQConnection *)connection;
+/*!
+ * @brief Called when <a href="http://www.rabbitmq.com/api-guide.html#recovery">automatic connection recovery</a> has succeeded.
+ * @param RMQConnection the connection instance that was recovered.
+ */
 - (void)recoveredConnection:(RMQConnection *)connection;
+/// @brief Called with any channel-level AMQP exception.
 - (void)channel:(id<RMQChannel>)channel
           error:(NSError *)error;
 @end

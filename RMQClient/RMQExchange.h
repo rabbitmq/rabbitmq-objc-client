@@ -61,30 +61,61 @@
 @property (nonatomic, readonly) NSString *type;
 @property (nonatomic, readonly) RMQExchangeDeclareOptions options;
 
+/// @brief Internal constructor used by RMQChannel exchange creation methods (direct, fanout, topic, headers)
 - (instancetype)initWithName:(NSString *)name
                         type:(NSString *)type
                      options:(RMQExchangeDeclareOptions)options
                      channel:(id<RMQChannel>)channel;
 
+/// @brief Bind this exchange to another exchange
 - (void)bind:(RMQExchange *)source routingKey:(NSString *)routingKey;
+/// @brief Bind this exchange to another exchange
 - (void)bind:(RMQExchange *)source;
+/// @brief Unbind this exchange from another exchange
 - (void)unbind:(RMQExchange *)source routingKey:(NSString *)routingKey;
+/// @brief Unbind this exchange from another exchange
 - (void)unbind:(RMQExchange *)source;
+/// @brief Delete the exchange
 - (void)delete:(RMQExchangeDeleteOptions)options;
+/// @brief Delete the exchange with no options
 - (void)delete;
+/*!
+ * @brief  Publish a message to this exchange
+ * @return Sequence number corresponding to the numbers passed to RMQChannel#afterConfirmed
+ */
 - (NSNumber *)publish:(NSData *)body
            routingKey:(NSString *)routingKey
            properties:(NSArray <RMQValue<RMQBasicValue> *> *)properties
               options:(RMQBasicPublishOptions)options;
+/*!
+ * @brief  Publish a message to this exchange
+ *         Convenience method for setting persistent property and no other properties.
+ * @return Sequence number corresponding to the numbers passed to RMQChannel#afterConfirmed
+ */
 - (NSNumber *)publish:(NSData *)body
            routingKey:(NSString *)key
            persistent:(BOOL)isPersistent
               options:(RMQBasicPublishOptions)options;
+/*!
+ * @brief  Publish a message to this exchange
+ *         Convenience method for setting persistent property and no other properties or options.
+ * @return Sequence number corresponding to the numbers passed to RMQChannel#afterConfirmed
+ */
 - (NSNumber *)publish:(NSData *)body
            routingKey:(NSString *)key
            persistent:(BOOL)isPersistent;
+/*!
+ * @brief  Publish a message to this exchange
+ *         Convenience method for publishing without persistence or any other properties / options.
+ * @return Sequence number corresponding to the numbers passed to RMQChannel#afterConfirmed
+ */
 - (NSNumber *)publish:(NSData *)body
            routingKey:(NSString *)key;
+/*!
+ * @brief  Publish a message to this exchange
+ *         Convenience method for publishing without properties, options or routing key.
+ * @return Sequence number corresponding to the numbers passed to RMQChannel#afterConfirmed
+ */
 - (NSNumber *)publish:(NSData *)body;
 
 @end
