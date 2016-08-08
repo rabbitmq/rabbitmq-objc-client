@@ -53,7 +53,6 @@
     var lastChannelError: NSError?
     var lastConnectionError: NSError?
     var lastChannelOpenError: NSError?
-    var lastWriteError: NSError?
     var disconnectCalled = false
     var lastDisconnectError: NSError?
 
@@ -71,10 +70,6 @@
 
     func connection(connection: RMQConnection!, failedToOpenChannel channel: RMQChannel!, error: NSError!) {
         lastChannelOpenError = error
-    }
-
-    func connection(connection: RMQConnection!, failedToWriteWithError error: NSError!) {
-        lastWriteError = error
     }
 
     func connection(connection: RMQConnection!, disconnectedWithError error: NSError!) {

@@ -117,20 +117,6 @@ class RMQConnectionTest: XCTestCase {
         XCTAssertEqual("Handshake timed out.", delegate.lastConnectionError?.localizedDescription)
     }
 
-    func testTransportDelegateWriteErrorsAreTransformedIntoConnectionDelegateErrors() {
-        let transport = ControlledInteractionTransport()
-        let q = FakeSerialQueue()
-        let delegate = ConnectionDelegateSpy()
-        ConnectionWithFakesHelper.startedConnection(transport,
-                                                    commandQueue: q,
-                                                    delegate: delegate)
-        transport.stubbedToProduceErrorOnWrite = "fail please"
-        try! q.step()
-        transport.handshake()
-
-        XCTAssertEqual("fail please", delegate.lastWriteError!.localizedDescription)
-    }
-
     func testTransportDelegateDisconnectErrorsAreTransformedIntoConnectionDelegateErrors() {
         let transport = ControlledInteractionTransport()
         let delegate = ConnectionDelegateSpy()

@@ -62,7 +62,6 @@ enum TestDoubleTransportError: ErrorType {
     var outboundData: [NSData] = []
     var readCallbacks: Array<(NSData) -> Void> = []
     var callbackIndexToRunNext = 0
-    var stubbedToProduceErrorOnWrite: String?
     var stubbedToThrowErrorOnConnect: String?
 
     func connect() throws {
@@ -79,13 +78,7 @@ enum TestDoubleTransportError: ErrorType {
     }
 
     func write(data: NSData) {
-        if let description = stubbedToProduceErrorOnWrite {
-            let error = NSError(domain: RMQErrorDomain, code: 0, userInfo: [ NSLocalizedDescriptionKey: description ])
-            delegate?.transport(self,
-                                failedToWriteWithError: error)
-        } else {
-            outboundData.append(data)
-        }
+        outboundData.append(data)
     }
 
     func isConnected() -> Bool {

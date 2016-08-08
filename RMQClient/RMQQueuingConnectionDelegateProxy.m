@@ -80,12 +80,6 @@
     });
 }
 
-- (void)connection:(RMQConnection *)connection failedToWriteWithError:(NSError *)error {
-    dispatch_async(self.queue, ^{
-        [self.delegate connection:connection failedToWriteWithError:error];
-    });
-}
-
 - (void)channel:(id<RMQChannel>)channel error:(NSError *)error {
     dispatch_async(self.queue, ^{
         [self.delegate channel:channel error:error];

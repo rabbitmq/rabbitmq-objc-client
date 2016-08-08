@@ -364,10 +364,6 @@ NSInteger const RMQChannelLimit = 65535;
 
 # pragma mark - RMQTransportDelegate
 
-- (void)transport:(id<RMQTransport>)transport failedToWriteWithError:(NSError *)error {
-    [self.delegate connection:self failedToWriteWithError:error];
-}
-
 - (void)transport:(id<RMQTransport>)transport disconnectedWithError:(NSError *)error {
     self.handshakeComplete = NO;
     if (error) [self.delegate connection:self disconnectedWithError:error];
