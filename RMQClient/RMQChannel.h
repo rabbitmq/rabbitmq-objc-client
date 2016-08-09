@@ -57,6 +57,13 @@
 
 @protocol RMQConnectionDelegate;
 
+/*!
+ * @brief Interface to a channel.
+ * All operations on channels, except methods with 'blocking' in the name,
+ * are asynchronous and execute on a GCD serial queue.
+ *
+ * @see <a href="http://www.rabbitmq.com/getstarted.html">RabbitMQ tutorials</a>
+ */
 @protocol RMQChannel <NSObject, RMQFrameHandler>
 
 @property (nonnull, copy, nonatomic, readonly) NSNumber *channelNumber;

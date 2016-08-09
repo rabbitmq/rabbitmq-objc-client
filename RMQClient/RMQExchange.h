@@ -55,6 +55,10 @@
 
 @protocol RMQChannel;
 
+/*!
+ * @brief Interface to an exchange.
+ * All operations delegate to the associated RMQChannel.
+ */
 @interface RMQExchange : NSObject
 
 @property (nonatomic, readonly) NSString *name;

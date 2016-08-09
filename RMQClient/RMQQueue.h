@@ -59,6 +59,10 @@
 
 @protocol RMQChannel;
 
+/*!
+ * @brief Interface to a queue.
+ * All operations delegate to the associated RMQChannel.
+ */
 @interface RMQQueue : NSObject
 @property (copy, nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) RMQQueueDeclareOptions options;
