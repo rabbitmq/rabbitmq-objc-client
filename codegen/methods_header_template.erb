@@ -2,9 +2,7 @@
 typedef NS_OPTIONS(NSUInteger, <%= class_name %>Options) {
     <%= class_name + "NoOptions".ljust(max_bit_length) %> = 0,
     <%- bits.each_with_index do |bit, index| -%>
-    <%- if bit[:doc] -%>
-    /// @brief <%= bit[:doc] %>
-    <%- end -%>
+    /// <%= "@brief #{bit[:doc]}".strip %>
     <%= class_name %><%= bit[:name] %> = 1 << <%= index %>,
     <%- end -%>
 };
