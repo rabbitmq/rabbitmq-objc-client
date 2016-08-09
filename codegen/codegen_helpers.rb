@@ -116,10 +116,14 @@ module CodegenHelpers
                f[:type].underscore.camelize
              end
       camelized_name = f[:name].underscore.camelize(:lower)
+      doc = if f.children.any?
+              f.xpath('doc').text.gsub(/[\n ]+/, " ").strip
+            end
       {
         base_property_options: %w(nonnull copy nonatomic),
         decode_object: "[RMQ#{type} class]",
         decode_type: "RMQ#{type} *",
+        doc: doc,
         name: camelized_name,
         payload_argument: "self.#{camelized_name}",
         pointer_type: "RMQ#{type} *",

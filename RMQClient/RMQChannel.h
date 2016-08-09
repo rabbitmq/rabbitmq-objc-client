@@ -240,39 +240,91 @@ completionHandler:(RMQConsumerDeliveryHandler _Nonnull)completionHandler;
  */
 - (void)nack:(nonnull NSNumber *)deliveryTag;
 
+/// @return RMQExchange The default exchange, which allows direct publishing to queues.
 - (nonnull RMQExchange *)defaultExchange;
 
+/*!
+ * @brief  Create a fanout exchange.
+ * @return RMQExchange the new fanout exchange.
+ */
 - (nonnull RMQExchange *)fanout:(nonnull NSString *)name
                         options:(RMQExchangeDeclareOptions)options;
 
+/*!
+ * @brief  Create a fanout exchange.
+ * @return RMQExchange the new fanout exchange.
+ */
 - (nonnull RMQExchange *)fanout:(nonnull NSString *)name;
 
+/*!
+ * @brief  Create a direct exchange.
+ * @return RMQExchange the new direct exchange.
+ */
 - (nonnull RMQExchange *)direct:(nonnull NSString *)name
                         options:(RMQExchangeDeclareOptions)options;
 
+/*!
+ * @brief  Create a direct exchange.
+ * @return RMQExchange the new direct exchange.
+ */
 - (nonnull RMQExchange *)direct:(nonnull NSString *)name;
 
+/*!
+ * @brief  Create a topic exchange.
+ * @return RMQExchange the new topic exchange.
+ */
 - (nonnull RMQExchange *)topic:(nonnull NSString *)name
                        options:(RMQExchangeDeclareOptions)options;
 
+/*!
+ * @brief  Create a topic exchange.
+ * @return RMQExchange the new topic exchange.
+ */
 - (nonnull RMQExchange *)topic:(nonnull NSString *)name;
 
+/*!
+ * @brief  Create a headers exchange.
+ * @return RMQExchange the new headers exchange.
+ */
 - (nonnull RMQExchange *)headers:(nonnull NSString *)name
                          options:(RMQExchangeDeclareOptions)options;
+
+/*!
+ * @brief  Create a headers exchange.
+ * @return RMQExchange the new headers exchange.
+ */
 - (nonnull RMQExchange *)headers:(nonnull NSString *)name;
 
+/*!
+ * @brief  Create an exchange of a configurable type.
+ * @param  type        The exchange type name.
+ * @return RMQExchange The new exchange.
+ */
 - (void)exchangeDeclare:(nonnull NSString *)name
                    type:(nonnull NSString *)type
                 options:(RMQExchangeDeclareOptions)options;
 
+/*!
+ * @brief  Bind an exchange to another exchange.
+ * @param  sourceName   the name of the exchange from which messages flow across the binding
+ * @param  destination: the name of the exchange to which messages flow across the binding
+ * @param  routingKey:  the routing key to use for the binding
+ */
 - (void)exchangeBind:(nonnull NSString *)sourceName
          destination:(nonnull NSString *)destinationName
           routingKey:(nonnull NSString *)routingKey;
 
+/*!
+ * @brief  Unbind an exchange from another exchange.
+ * @param  sourceName   the name of the exchange from which messages flow across the binding
+ * @param  destination: the name of the exchange to which messages flow across the binding
+ * @param  routingKey:  the routing key of the binding
+ */
 - (void)exchangeUnbind:(nonnull NSString *)sourceName
            destination:(nonnull NSString *)destinationName
             routingKey:(nonnull NSString *)routingKey;
 
+/// @brief  Delete an exchange
 - (void)exchangeDelete:(nonnull NSString *)name
                options:(RMQExchangeDeleteOptions)options;
 
