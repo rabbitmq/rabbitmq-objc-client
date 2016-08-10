@@ -247,7 +247,7 @@ completionHandler:(RMQConsumerDeliveryHandler _Nonnull)completionHandler;
  */
 - (void)nack:(nonnull NSNumber *)deliveryTag;
 
-/// @return RMQExchange The default exchange, which allows direct publishing to queues.
+/// @return RMQExchange The default exchange, which allows for convenient ("direct") publishing to queues by name.
 - (nonnull RMQExchange *)defaultExchange;
 
 /*!
