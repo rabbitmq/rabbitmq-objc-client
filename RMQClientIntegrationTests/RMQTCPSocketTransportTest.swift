@@ -73,8 +73,8 @@ class RMQTCPSocketTransportTest: XCTestCase {
         let heartbeat = RMQHeartbeat().amqEncoded()
         let header = heartbeat.subdataWithRange(NSMakeRange(0, 6))
         let endByte = heartbeat.subdataWithRange(NSMakeRange(7, 1))
-        transport.socket(nil, didReadData: header, withTag: callbacks.allKeys.first as! Int)
-        transport.socket(nil, didReadData: endByte, withTag: callbacks.allKeys.first as! Int)
+        transport.socket(GCDAsyncSocket(), didReadData: header, withTag: callbacks.allKeys.first as! Int)
+        transport.socket(GCDAsyncSocket(), didReadData: endByte, withTag: callbacks.allKeys.first as! Int)
 
         XCTAssertEqual(header, receivedData)
     }
@@ -117,7 +117,13 @@ class RMQTCPSocketTransportTest: XCTestCase {
 
         TestHelper.pollUntil { delegate.lastDisconnectError != nil }
 
-        XCTAssertEqual("Connection refused", delegate.lastDisconnectError?.localizedDescription)
+        let lastError = delegate.lastDisconnectError?.localizedDescription
+        XCTAssert(
+            lastError == "Connection refused" ||
+            lastError == "Operation not permitted" ||
+            lastError == "Resource temporarily unavailable",
+            lastError!
+        )
     }
 
     func testExtendsReadWhenReadTimesOut() {
