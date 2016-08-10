@@ -117,13 +117,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
 
         TestHelper.pollUntil { delegate.lastDisconnectError != nil }
 
-        let lastError = delegate.lastDisconnectError?.localizedDescription
-        XCTAssert(
-            lastError == "Connection refused" ||
-            lastError == "Operation not permitted" ||
-            lastError == "Resource temporarily unavailable",
-            lastError!
-        )
+        XCTAssertEqual(NSPOSIXErrorDomain, delegate.lastDisconnectError?.domain)
     }
 
     func testExtendsReadWhenReadTimesOut() {
