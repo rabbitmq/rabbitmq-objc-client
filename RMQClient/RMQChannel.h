@@ -125,7 +125,7 @@
                     options:(RMQQueueDeclareOptions)options;
 
 /*!
- * @brief Declare a queue
+ * @brief Declare a queue with default options
  * @param queueName The name of the queue to be created. An empty string will cause a name to be generated.
  * @return A queue instance
  */
