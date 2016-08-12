@@ -60,19 +60,16 @@ class RMQAllocatedChannelTest: XCTestCase {
         contract.check()
     }
 
-    func testActivatingActivatesDispatchers() {
+    func testActivatingActivatesDispatcher() {
         let delegate = ConnectionDelegateSpy()
         let dispatcher = DispatcherSpy()
-        let recoveryDispatcher = DispatcherSpy()
 
-        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, recoveryDispatcher: recoveryDispatcher)
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
 
         ch.activateWithDelegate(delegate)
 
         XCTAssertEqual(ch, dispatcher.activatedWithChannel as? RMQAllocatedChannel)
         XCTAssertEqual(delegate, dispatcher.activatedWithDelegate as? ConnectionDelegateSpy)
-        XCTAssertEqual(ch, recoveryDispatcher.activatedWithChannel as? RMQAllocatedChannel)
-        XCTAssertEqual(delegate, recoveryDispatcher.activatedWithDelegate as? ConnectionDelegateSpy)
     }
 
     func testIncomingSyncFramesetsAreSentToDispatcher() {

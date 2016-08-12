@@ -59,7 +59,6 @@
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
 @property (nonatomic, readwrite) NSNumber *contentBodySize;
 @property (nonatomic, readwrite) id <RMQDispatcher> dispatcher;
-@property (nonatomic, readwrite) id <RMQDispatcher> recoveryDispatcher;
 @property (nonatomic, readwrite) NSMutableDictionary *consumers;
 @property (nonatomic, readwrite) NSMutableDictionary *exchanges;
 @property (nonatomic, readwrite) NSMutableDictionary *exchangeBindings;
@@ -78,7 +77,6 @@
 - (instancetype)init:(NSNumber *)channelNumber
      contentBodySize:(NSNumber *)contentBodySize
           dispatcher:(id<RMQDispatcher>)dispatcher
-  recoveryDispatcher:(id<RMQDispatcher>)recoveryDispatcher
        nameGenerator:(id<RMQNameGenerator>)nameGenerator
            allocator:(nonnull id<RMQChannelAllocator>)allocator
        confirmations:(id<RMQConfirmations>)confirmations {
@@ -87,7 +85,6 @@
         self.channelNumber = channelNumber;
         self.contentBodySize = contentBodySize;
         self.dispatcher = dispatcher;
-        self.recoveryDispatcher = recoveryDispatcher;
         self.consumers = [NSMutableDictionary new];
         self.exchanges = [NSMutableDictionary new];
         self.exchangeBindings = [NSMutableDictionary new];
@@ -118,7 +115,6 @@
 
 - (void)activateWithDelegate:(id<RMQConnectionDelegate>)delegate {
     [self.dispatcher activateWithChannel:self delegate:delegate];
-    [self.recoveryDispatcher activateWithChannel:self delegate:delegate];
     self.delegate = delegate;
 }
 
@@ -143,8 +139,6 @@
 }
 
 - (void)recover {
-    id<RMQDispatcher> oldCommandDispatcher = self.dispatcher;
-    self.dispatcher = self.recoveryDispatcher;
     [self open];
     [self recoverPrefetch];
     [self recoverConfirmations];
@@ -152,10 +146,6 @@
     [self recoverExchangeBindings]; 
     [self recoverQueuesAndTheirBindings];
     [self recoverConsumers];
-    [self.recoveryDispatcher enqueue:^{
-        self.dispatcher = oldCommandDispatcher;
-        [self.dispatcher enable];
-    }];
 }
 
 - (void)blockingWaitOn:(Class)method {

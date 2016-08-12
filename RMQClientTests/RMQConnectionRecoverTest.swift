@@ -53,31 +53,6 @@ import XCTest
 
 class RMQConnectionRecoverTest: XCTestCase {
 
-    func testPreparesChannelsForRecovery() {
-        let allocator = ChannelSpyAllocator()
-        let conn = StarterSpy()
-        let q = FakeSerialQueue()
-        let heartbeatSender = HeartbeatSenderSpy()
-        let recover = RMQConnectionRecover(interval: 10,
-                                           attemptLimit: 1,
-                                           onlyErrors: false,
-                                           heartbeatSender: heartbeatSender,
-                                           commandQueue: q,
-                                           delegate: ConnectionDelegateSpy())
-
-        for _ in 0...2 { allocator.allocate() }
-        recover.recover(conn, channelAllocator: allocator, error: nil)
-
-        XCTAssertFalse(allocator.channels[1].prepareForRecoveryCalled)
-        XCTAssertFalse(allocator.channels[2].prepareForRecoveryCalled)
-
-        try! q.step()
-
-        XCTAssertFalse(allocator.channels[0].prepareForRecoveryCalled)
-        XCTAssertTrue(allocator.channels[1].prepareForRecoveryCalled)
-        XCTAssertTrue(allocator.channels[2].prepareForRecoveryCalled)
-    }
-
     func testShutsDownHeartbeatSender() {
         let conn = StarterSpy()
         let q = FakeSerialQueue()

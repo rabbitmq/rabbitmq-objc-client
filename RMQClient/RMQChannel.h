@@ -96,9 +96,6 @@
 - (void)open;
 
 /// @brief Internal. Used by automatic connection recovery.
-- (void)prepareForRecovery;
-
-/// @brief Internal. Used by automatic connection recovery.
 - (void)recover;
 
 /// @brief Internal. Block calling thread until channel receives an incoming AMQP method.
