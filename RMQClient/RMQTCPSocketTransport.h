@@ -52,7 +52,9 @@
 #import <Foundation/Foundation.h>
 #import "RMQTransport.h"
 #import "RMQTLSOptions.h"
+#if defined(__has_feature) && __has_feature(modules)
 @import CocoaAsyncSocket;
+#endif
 
 @interface RMQTCPSocketTransport : NSObject<RMQTransport,GCDAsyncSocketDelegate>
 
