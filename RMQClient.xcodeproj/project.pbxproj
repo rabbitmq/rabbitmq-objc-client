@@ -193,8 +193,6 @@
 		AEEDB0BB1CE32F5300005A92 /* RMQHTTPTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEDB0BA1CE32F5300005A92 /* RMQHTTPTest.swift */; };
 		AEEDB0BD1CE3325B00005A92 /* RMQHTTPParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEDB0BC1CE3325B00005A92 /* RMQHTTPParser.swift */; };
 		AEEDB0BF1CE3326C00005A92 /* RMQHTTPParserTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEDB0BE1CE3326C00005A92 /* RMQHTTPParserTest.swift */; };
-		AEEDB0C11CE3352900005A92 /* Gloss.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEEDB0C01CE3352900005A92 /* Gloss.framework */; };
-		AEEDB0C31CE3374C00005A92 /* Gloss.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AEEDB0C01CE3352900005A92 /* Gloss.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AEEEF0821C4F9BFA0056A5EB /* RMQMethodDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = AEEEF0801C4F9BFA0056A5EB /* RMQMethodDecoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEEEF0831C4F9BFA0056A5EB /* RMQMethodDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = AEEEF0811C4F9BFA0056A5EB /* RMQMethodDecoder.m */; };
 		AEF0F7CD1CCECFDC007DAF85 /* RMQConsumerHandlers.h in Headers */ = {isa = PBXBuildFile; fileRef = AEF0F7CC1CCECF87007DAF85 /* RMQConsumerHandlers.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -243,7 +241,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				AEEDB0C31CE3374C00005A92 /* Gloss.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,7 +427,6 @@
 		AEEDB0BA1CE32F5300005A92 /* RMQHTTPTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQHTTPTest.swift; sourceTree = "<group>"; };
 		AEEDB0BC1CE3325B00005A92 /* RMQHTTPParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQHTTPParser.swift; sourceTree = "<group>"; };
 		AEEDB0BE1CE3326C00005A92 /* RMQHTTPParserTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQHTTPParserTest.swift; sourceTree = "<group>"; };
-		AEEDB0C01CE3352900005A92 /* Gloss.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Gloss.framework; path = Carthage/Build/iOS/Gloss.framework; sourceTree = "<group>"; };
 		AEEEF0801C4F9BFA0056A5EB /* RMQMethodDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RMQMethodDecoder.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		AEEEF0811C4F9BFA0056A5EB /* RMQMethodDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RMQMethodDecoder.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		AEF0F7CC1CCECF87007DAF85 /* RMQConsumerHandlers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMQConsumerHandlers.h; sourceTree = "<group>"; };
@@ -448,7 +444,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AEA45EDC1C440FE400FE1F62 /* RMQClient.framework in Frameworks */,
-				AEEDB0C11CE3352900005A92 /* Gloss.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -763,7 +758,6 @@
 			isa = PBXGroup;
 			children = (
 				AE46F91D1CFF47F8009DE49F /* JKVValue.framework */,
-				AEEDB0C01CE3352900005A92 /* Gloss.framework */,
 				AE1E0EC81CB2613A008285DD /* CocoaAsyncSocket.framework */,
 				AEE7FE931C3BCA6000DF8C4F /* RMQClient */,
 				AEE7FE9F1C3BCA6000DF8C4F /* RMQClientTests */,
