@@ -61,7 +61,7 @@
     var lastReceivedBasicGetOptions: RMQBasicGetOptions?
     var lastReceivedBasicGetCompletionHandler: RMQConsumerDeliveryHandler?
 
-    var lastReceivedBasicPublishMessage: NSData?
+    var lastReceivedBasicPublishMessage: Data?
     var lastReceivedBasicPublishRoutingKey: String?
     var lastReceivedBasicPublishExchange: String?
     var lastReceivedBasicPublishProperties: Array<RMQValue>?
@@ -110,15 +110,15 @@
         return "Channel Spy \(channelNumber)"
     }
 
-    init(_ aChannelNumber: Int) {
-        channelNumber = aChannelNumber
+    init(channelNumber aChannelNumber: Int) {
+        channelNumber = aChannelNumber as NSNumber
     }
 
     func defaultExchange() -> RMQExchange {
         return RMQExchange(name: "", type: "direct", options: [], channel: self)
     }
 
-    func activateWithDelegate(delegate: RMQConnectionDelegate?) {
+    func activate(with delegate: RMQConnectionDelegate?) {
         delegateSentToActivate = delegate
     }
 
@@ -142,26 +142,26 @@
         recoverCalled = true
     }
 
-    func blockingWaitOn(method: AnyClass) {
+    func blockingWait(on method: AnyClass) {
         blockingWaitOnMethod = method
     }
 
     func confirmSelect() {
     }
 
-    func afterConfirmed(timeout: NSNumber, handler: (Set<NSNumber>, Set<NSNumber>) -> Void) {
+    func afterConfirmed(_ timeout: NSNumber, handler: @escaping (Set<NSNumber>, Set<NSNumber>) -> Swift.Void) {
     }
 
-    func afterConfirmed(handler: (Set<NSNumber>, Set<NSNumber>) -> Void) {
+    func afterConfirmed(_ handler: @escaping (Set<NSNumber>, Set<NSNumber>) -> Void) {
         afterConfirmed(30, handler: handler);
     }
 
-    func sendMethod(sendingMethod: RMQMethod,
+    func sendMethod(_ sendingMethod: RMQMethod,
                     waitOnMethod waitOnMethodClass: AnyClass,
                     completionHandler: (RMQFrameset?, NSError?) -> Void) {
     }
 
-    func queue(queueName: String, options: RMQQueueDeclareOptions, arguments: [String : RMQValue]) -> RMQQueue {
+    func queue(_ queueName: String, options: RMQQueueDeclareOptions, arguments: [String : RMQValue]) -> RMQQueue {
         if let foundQueue = queues[queueName] {
             return foundQueue;
         } else {
@@ -171,15 +171,15 @@
         }
     }
 
-    func queue(queueName: String, options: RMQQueueDeclareOptions) -> RMQQueue {
+    func queue(_ queueName: String, options: RMQQueueDeclareOptions) -> RMQQueue {
         return queue(queueName, options: options, arguments: [:])
     }
 
-    func queue(queueName: String) -> RMQQueue {
+    func queue(_ queueName: String) -> RMQQueue {
         return queue(queueName, options: [])
     }
 
-    func queueDeclare(queueName: String, options: RMQQueueDeclareOptions) -> RMQQueueDeclareOk {
+    func queueDeclare(_ queueName: String, options: RMQQueueDeclareOptions) -> RMQQueueDeclareOk {
         lastReceivedQueueDeclareOptions = options
         return RMQQueueDeclareOk(
             queue: RMQShortstr(queueName),
@@ -188,24 +188,24 @@
         )
     }
 
-    func queueDelete(queueName: String, options: RMQQueueDeleteOptions) {
+    func queueDelete(_ queueName: String, options: RMQQueueDeleteOptions) {
         lastReceivedQueueDeleteQueueName = queueName
         lastReceivedQueueDeleteOptions = options
     }
 
-    func queueBind(queueName: String, exchange exchangeName: String, routingKey: String) {
+    func queueBind(_ queueName: String, exchange exchangeName: String, routingKey: String) {
         lastReceivedQueueBindQueueName = queueName
         lastReceivedQueueBindExchange = exchangeName
         lastReceivedQueueBindRoutingKey = routingKey
     }
 
-    func queueUnbind(queueName: String, exchange exchangeName: String, routingKey: String) {
+    func queueUnbind(_ queueName: String, exchange exchangeName: String, routingKey: String) {
         lastReceivedQueueUnbindQueueName = queueName
         lastReceivedQueueUnbindExchange = exchangeName
         lastReceivedQueueUnbindRoutingKey = routingKey
     }
 
-    func basicConsume(queueName: String, options: RMQBasicConsumeOptions, handler: RMQConsumerDeliveryHandler) -> RMQConsumer {
+    func basicConsume(_ queueName: String, options: RMQBasicConsumeOptions, handler: @escaping RMQConsumerDeliveryHandler) -> RMQConsumer {
         lastReceivedBasicConsumeOptions = options
         lastReceivedBasicConsumeBlock = handler
         if let msg = stubbedBasicConsumeError {
@@ -213,109 +213,109 @@
             delegateSentToActivate?.channel(self, error: e)
         }
         let consumer = RMQConsumer(channel: self, queueName: queueName, options: options)
-        consumer.onDelivery(handler)
-        return consumer
+        consumer?.onDelivery(handler)
+        return consumer!
     }
 
-    func basicConsume(consumer: RMQConsumer) {
+    func basicConsume(_ consumer: RMQConsumer) {
     }
 
     func generateConsumerTag() -> String {
         return "channel spy consumer tag"
     }
 
-    func basicCancel(consumerTag: String) {
+    func basicCancel(_ consumerTag: String) {
         lastReceivedBasicCancelConsumerTag = consumerTag
     }
 
-    func basicPublish(body: NSData, routingKey: String, exchange: String, properties: [RMQValue], options: RMQBasicPublishOptions) -> NSNumber {
+    func basicPublish(_ body: Data, routingKey: String, exchange: String, properties: [RMQValue], options: RMQBasicPublishOptions) -> NSNumber {
         lastReceivedBasicPublishMessage = body
         lastReceivedBasicPublishRoutingKey = routingKey
         lastReceivedBasicPublishExchange = exchange
         lastReceivedBasicPublishProperties = properties
         lastReceivedBasicPublishOptions = options
-        return publishReturn;
+        return publishReturn as NSNumber
     }
 
-    func basicGet(queue: String, options: RMQBasicGetOptions, completionHandler: RMQConsumerDeliveryHandler) {
+    func basicGet(_ queue: String, options: RMQBasicGetOptions, completionHandler: @escaping RMQConsumerDeliveryHandler) {
         lastReceivedBasicGetQueue = queue
         lastReceivedBasicGetOptions = options
         lastReceivedBasicGetCompletionHandler = completionHandler
     }
 
-    func ack(deliveryTag: NSNumber, options: RMQBasicAckOptions) {
+    func ack(_ deliveryTag: NSNumber, options: RMQBasicAckOptions) {
     }
 
-    func ack(deliveryTag: NSNumber) {
+    func ack(_ deliveryTag: NSNumber) {
     }
 
-    func handleFrameset(frameset: RMQFrameset) {
+    func handle(_ frameset: RMQFrameset) {
         lastReceivedFrameset = frameset
     }
 
-    func basicQos(count: NSNumber, global isGlobal: Bool) {
+    func basicQos(_ count: NSNumber, global isGlobal: Bool) {
     }
 
-    func reject(deliveryTag: NSNumber, options: RMQBasicRejectOptions) {
+    func reject(_ deliveryTag: NSNumber, options: RMQBasicRejectOptions) {
     }
 
-    func reject(deliveryTag: NSNumber) {
+    func reject(_ deliveryTag: NSNumber) {
     }
 
-    func nack(deliveryTag: NSNumber, options: RMQBasicNackOptions) {
+    func nack(_ deliveryTag: NSNumber, options: RMQBasicNackOptions) {
     }
 
-    func nack(deliveryTag: NSNumber) {
+    func nack(_ deliveryTag: NSNumber) {
     }
 
-    func exchangeDeclare(name: String, type: String, options: RMQExchangeDeclareOptions) {
+    func exchangeDeclare(_ name: String, type: String, options: RMQExchangeDeclareOptions) {
     }
 
-    func exchangeBind(sourceName: String, destination destinationName: String, routingKey: String) {
+    func exchangeBind(_ sourceName: String, destination destinationName: String, routingKey: String) {
         lastReceivedExchangeBindSourceName = sourceName
         lastReceivedExchangeBindDestinationName = destinationName
         lastReceivedExchangeBindRoutingKey = routingKey
     }
 
-    func exchangeUnbind(sourceName: String, destination destinationName: String, routingKey: String) {
+    func exchangeUnbind(_ sourceName: String, destination destinationName: String, routingKey: String) {
         lastReceivedExchangeUnbindSourceName = sourceName
         lastReceivedExchangeUnbindDestinationName = destinationName
         lastReceivedExchangeUnbindRoutingKey = routingKey
     }
 
-    func fanout(name: String, options: RMQExchangeDeclareOptions) -> RMQExchange {
+    func fanout(_ name: String, options: RMQExchangeDeclareOptions) -> RMQExchange {
         return RMQExchange(name: name, type: "fanout", options: [], channel: self)
     }
 
-    func fanout(name: String) -> RMQExchange {
+    func fanout(_ name: String) -> RMQExchange {
         return fanout(name, options: [])
     }
 
-    func direct(name: String, options: RMQExchangeDeclareOptions) -> RMQExchange {
+    func direct(_ name: String, options: RMQExchangeDeclareOptions) -> RMQExchange {
         return RMQExchange(name: name, type: "direct", options: [], channel: self)
     }
 
-    func direct(name: String) -> RMQExchange {
+    func direct(_ name: String) -> RMQExchange {
         return direct(name, options: [])
     }
 
-    func topic(name: String, options: RMQExchangeDeclareOptions) -> RMQExchange {
+    func topic(_ name: String, options: RMQExchangeDeclareOptions) -> RMQExchange {
         return RMQExchange(name: name, type: "topic", options: [], channel: self)
     }
 
-    func topic(name: String) -> RMQExchange {
+    func topic(_ name: String) -> RMQExchange {
         return topic(name, options: [])
     }
 
-    func headers(name: String, options: RMQExchangeDeclareOptions) -> RMQExchange {
+    func headers(_ name: String, options: RMQExchangeDeclareOptions) -> RMQExchange {
         return RMQExchange(name: name, type: "headers", options: [], channel: self)
     }
 
-    func headers(name: String) -> RMQExchange {
+    func headers(_ name: String) -> RMQExchange {
         return headers(name, options: [])
     }
 
-    func exchangeDelete(name: String, options: RMQExchangeDeleteOptions) {
+    func exchangeDelete(_ name: String, options: RMQExchangeDeleteOptions) {
         lastReceivedExchangeDeleteExchangeName = name
         lastReceivedExchangeDeleteOptions = options
     }

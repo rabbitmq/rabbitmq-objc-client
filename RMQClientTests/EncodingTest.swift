@@ -52,13 +52,13 @@
 import XCTest
 
 @objc class EncodableMethod: NSObject, RMQMethod, NSCopying {
-    static func propertyClasses() -> [AnyObject] {
+    static func propertyClasses() -> [Any] {
         return []
     }
-    required convenience init(decodedFrame frame: [AnyObject]) {
+    required convenience init(decodedFrame frame: [Any]) {
         self.init()
     }
-    func copyWithZone(zone: NSZone) -> AnyObject {
+    func copy(with zone: NSZone?) -> Any {
         return self
     }
     func frameTypeID() -> NSNumber {
@@ -79,12 +79,12 @@ import XCTest
     func shouldHaltOnReceipt() -> Bool {
         return false
     }
-    func amqEncoded() -> NSData {
+    func amqEncoded() -> Data {
         let data = NSMutableData()
-        data.appendData(RMQShort(10).amqEncoded())
-        data.appendData(RMQShort(11).amqEncoded())
-        data.appendData(RMQShortstr("foo").amqEncoded())
-        return data
+        data.append(RMQShort(10).amqEncoded())
+        data.append(RMQShort(11).amqEncoded())
+        data.append(RMQShortstr("foo").amqEncoded())
+        return data as Data
     }
 }
 
@@ -122,7 +122,7 @@ class EncodingTest: XCTestCase {
             RMQBasicReplyTo("meplease"),
             RMQBasicExpiration("NEVER!"),
             RMQBasicMessageId("my-message"),
-            RMQBasicTimestamp(NSDate.distantFuture()),
+            RMQBasicTimestamp(Date.distantFuture),
             RMQBasicType("mytype"),
             RMQBasicUserId("fred"),
             RMQBasicAppId("appy"),
@@ -140,7 +140,7 @@ class EncodingTest: XCTestCase {
     }
 
     func testRoundTripContentBody() {
-        let payload = RMQContentBody(data: "cyclist's string 🚴🏿".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let payload = RMQContentBody(data: "cyclist's string 🚴🏿".data(using: String.Encoding.utf8)!)
         let data = RMQFrame(channelNumber: 321, payload: payload).amqEncoded()
         let parser = RMQParser(data: data)
         let hydrated = RMQFrame(parser: parser).payload as! RMQContentBody
@@ -152,7 +152,7 @@ class EncodingTest: XCTestCase {
         let data = RMQFrame(channelNumber: 0, payload: payload).amqEncoded()
         let parser = RMQParser(data: data)
         let hydrated = RMQFrame(parser: parser).payload as! RMQHeartbeat
-        XCTAssertEqual(1 + 2 + 4 + 1, payload.amqEncoded().length)
+        XCTAssertEqual(1 + 2 + 4 + 1, payload.amqEncoded().count)
         TestHelper.assertEqualBytes(payload.amqEncoded(), hydrated.amqEncoded())
     }
 
@@ -165,12 +165,12 @@ class EncodingTest: XCTestCase {
     }
 
     func testParserCanReturnLengthOfData() {
-        let data = "Ho ho ho 🏈".dataUsingEncoding(NSUTF8StringEncoding)!
+        let data = "Ho ho ho 🏈".data(using: String.Encoding.utf8)!
         let parser = RMQParser(data: data)
 
         parser.parseOctet()
-        let length = UInt32(data.length) - 1
-        let actual = NSString(data: parser.parseLength(length), encoding: NSUTF8StringEncoding)
+        let length = UInt32(data.count) - 1
+        let actual = NSString(data: parser.parseLength(length), encoding: String.Encoding.utf8.rawValue)
         XCTAssertEqual("o ho ho 🏈", actual)
     }
 
@@ -178,7 +178,7 @@ class EncodingTest: XCTestCase {
         let classID = RMQShort(60)
         let weight = RMQShort(0)
         let bodySize = RMQLonglong(2)
-        let timestamp = RMQBasicTimestamp(NSDate())
+        let timestamp = RMQBasicTimestamp(Date())
         let contentType = RMQBasicContentType("text/plain")
         let contentEncoding = RMQBasicContentEncoding("foo")
         let unsortedProperties: [RMQBasicValue] = [
@@ -187,25 +187,25 @@ class EncodingTest: XCTestCase {
             contentType,
         ]
         let payload = RMQContentHeader(
-            classID: classID.integerValue,
-            bodySize: Int(bodySize.integerValue),
+            classID: classID.integerValue as NSNumber,
+            bodySize: Int(bodySize.integerValue) as NSNumber,
             properties: unsortedProperties
         )
 
         let expectedData = NSMutableData()
-        expectedData.appendData(classID.amqEncoded())
-        expectedData.appendData(weight.amqEncoded())
-        expectedData.appendData(bodySize.amqEncoded())
-        expectedData.appendData(RMQShort(contentType.flagBit() | contentEncoding.flagBit() | timestamp.flagBit()).amqEncoded())
-        expectedData.appendData(contentType.amqEncoded())
-        expectedData.appendData(contentEncoding.amqEncoded())
-        expectedData.appendData(timestamp.amqEncoded())
+        expectedData.append(classID.amqEncoded())
+        expectedData.append(weight.amqEncoded())
+        expectedData.append(bodySize.amqEncoded())
+        expectedData.append(RMQShort(contentType.flagBit() | contentEncoding.flagBit() | timestamp.flagBit()).amqEncoded())
+        expectedData.append(contentType.amqEncoded())
+        expectedData.append(contentEncoding.amqEncoded())
+        expectedData.append(timestamp.amqEncoded())
 
-        TestHelper.assertEqualBytes(expectedData, payload.amqEncoded())
+        TestHelper.assertEqualBytes(expectedData as Data, payload.amqEncoded())
     }
 
     func testEncodeContentBodyPayloadIsNoOp() {
-        let data = "foo".dataUsingEncoding(NSUTF8StringEncoding)!
+        let data = "foo".data(using: String.Encoding.utf8)!
         let payload = RMQContentBody(data: data)
         TestHelper.assertEqualBytes(data, payload.amqEncoded())
     }
@@ -217,22 +217,22 @@ class EncodingTest: XCTestCase {
         let classID = "\u{0}\u{A}"
         let methodID = "\u{0}\u{B}"
         let payload = "\u{3}foo"
-        let unfinishedFrame = "\(type)\(channel)\(size)\(classID)\(methodID)\(payload)".dataUsingEncoding(NSUTF8StringEncoding)!
+        let unfinishedFrame = "\(type)\(channel)\(size)\(classID)\(methodID)\(payload)".data(using: String.Encoding.utf8)!
         var frameEnd = 0xce
-        let expectedFrame = unfinishedFrame.mutableCopy() as! NSMutableData
-        expectedFrame.appendBytes(&frameEnd, length: 1)
+        let expectedFrame = (unfinishedFrame as NSData).mutableCopy() as! NSMutableData
+        expectedFrame.append(&frameEnd, length: 1)
 
         let encodableMethod = EncodableMethod()
-        let frame: NSData = RMQFrame(channelNumber: 0, payload: encodableMethod).amqEncoded()
+        let frame: Data = RMQFrame(channelNumber: 0, payload: encodableMethod).amqEncoded()
 
-        TestHelper.assertEqualBytes(expectedFrame, frame)
+        TestHelper.assertEqualBytes(expectedFrame as Data, frame)
     }
 
     func testFramesetEncodingWithContent() {
         let method = MethodFixtures.basicGet()
         let header = RMQContentHeader(classID: 60, bodySize: 123, properties: [RMQBasicContentType("text/plain")])
-        let body1 = RMQContentBody(data: "some body".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let body2 = RMQContentBody(data: "another body".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let body1 = RMQContentBody(data: "some body".data(using: String.Encoding.utf8)!)
+        let body2 = RMQContentBody(data: "another body".data(using: String.Encoding.utf8)!)
         let frameset = RMQFrameset(
             channelNumber: 1,
             method: method,
@@ -240,18 +240,18 @@ class EncodingTest: XCTestCase {
             contentBodies: [body1, body2]
         )
         let expected = NSMutableData()
-        expected.appendData(RMQFrame(channelNumber: 1, payload: method).amqEncoded())
-        expected.appendData(RMQFrame(channelNumber: 1, payload: header).amqEncoded())
-        expected.appendData(RMQFrame(channelNumber: 1, payload: body1).amqEncoded())
-        expected.appendData(RMQFrame(channelNumber: 1, payload: body2).amqEncoded())
+        expected.append(RMQFrame(channelNumber: 1, payload: method).amqEncoded())
+        expected.append(RMQFrame(channelNumber: 1, payload: header).amqEncoded())
+        expected.append(RMQFrame(channelNumber: 1, payload: body1).amqEncoded())
+        expected.append(RMQFrame(channelNumber: 1, payload: body2).amqEncoded())
         let actual = frameset.amqEncoded();
-        TestHelper.assertEqualBytes(expected, actual)
+        TestHelper.assertEqualBytes(expected as Data, actual)
     }
 
     func testFramesetEncodingWithoutContent() {
         let method = MethodFixtures.basicGet()
         let header = RMQContentHeaderNone()
-        let ignoredBody = RMQContentBody(data: "some body".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let ignoredBody = RMQContentBody(data: "some body".data(using: String.Encoding.utf8)!)
         let frameset = RMQFrameset(
             channelNumber: 1,
             method: method,
@@ -267,46 +267,46 @@ class EncodingTest: XCTestCase {
         let expectedData = NSMutableData()
         let a = [0x00, 0x00, 0x00, 0x07]
         for var b in a {
-            expectedData.appendBytes(&b, length: 1)
+            expectedData.append(&b, length: 1)
         }
         
-        expectedData.appendData("abcdefg".dataUsingEncoding(NSASCIIStringEncoding)!)
+        expectedData.append("abcdefg".data(using: String.Encoding.ascii)!)
 
-        XCTAssertEqual(expectedData, RMQLongstr("abcdefg").amqEncoded())
+        XCTAssertEqual(expectedData as Data, RMQLongstr("abcdefg").amqEncoded())
     }
     
     func testShortStringBecomesLengthPlusChars() {
         let expectedData = NSMutableData()
         var a = 0x07
-        expectedData.appendBytes(&a, length: 1)
+        expectedData.append(&a, length: 1)
         
-        expectedData.appendData("abcdefg".dataUsingEncoding(NSASCIIStringEncoding)!)
+        expectedData.append("abcdefg".data(using: String.Encoding.ascii)!)
         
-        XCTAssertEqual(expectedData, RMQShortstr("abcdefg").amqEncoded())
+        XCTAssertEqual(expectedData as Data, RMQShortstr("abcdefg").amqEncoded())
     }
     
     func testTrueBecomesOne(){
         let expectedData = NSMutableData()
         
         var trueVal = 0x01
-        expectedData.appendBytes(&trueVal, length: 1)
+        expectedData.append(&trueVal, length: 1)
         
-        XCTAssertEqual(expectedData, RMQBoolean(true).amqEncoded())
+        XCTAssertEqual(expectedData as Data, RMQBoolean(true).amqEncoded())
     }
     
     func testFalseBecomesZero() {
         let expectedData = NSMutableData()
         
         var falseVal = 0x00
-        expectedData.appendBytes(&falseVal, length: 1)
+        expectedData.append(&falseVal, length: 1)
         
-        XCTAssertEqual(expectedData, RMQBoolean(false).amqEncoded())
+        XCTAssertEqual(expectedData as Data, RMQBoolean(false).amqEncoded())
     }
 
     func testOptionsBecomeBitfieldOctet() {
         var optionsSet: RMQQueueDeclareOptions = []
-        optionsSet.insert(.Passive)
-        optionsSet.insert(.Durable)
+        optionsSet.insert(.passive)
+        optionsSet.insert(.durable)
         let method = RMQQueueDeclare(
             reserved1: RMQShort(0),
             queue: RMQShortstr("queuename"),
@@ -314,13 +314,14 @@ class EncodingTest: XCTestCase {
             arguments: RMQTable([:])
         )
         let actual = method.amqEncoded()
-        let optionsByte = actual.subdataWithRange(NSMakeRange(actual.length - RMQTable([:]).amqEncoded().length - 1, 1))
-        TestHelper.assertEqualBytes("\u{03}".dataUsingEncoding(NSUTF8StringEncoding)!, optionsByte)
+        let optionsRangeStart = (actual.count - RMQTable([:]).amqEncoded().count - 1)
+        let optionsByte = actual.subdata(in: optionsRangeStart..<optionsRangeStart+1)
+        TestHelper.assertEqualBytes("\u{03}".data(using: String.Encoding.utf8)!, optionsByte)
     }
     
     func testCredentialsEncodedAsRFC2595() {
         let credentials = RMQCredentials(username: "fido🔫﷽", password: "2easy2break📵")
-        let expectedData = "\u{00}\u{00}\u{00}\u{1c}\u{00}fido🔫﷽\u{00}2easy2break📵".dataUsingEncoding(NSUTF8StringEncoding)
+        let expectedData = "\u{00}\u{00}\u{00}\u{1c}\u{00}fido🔫﷽\u{00}2easy2break📵".data(using: String.Encoding.utf8)
         TestHelper.assertEqualBytes(expectedData!, credentials.amqEncoded())
     }
     
@@ -335,7 +336,7 @@ class EncodingTest: XCTestCase {
         
         let massHysteria = "\(massHysteriaKeyLength)mass_hysteriaF\(massHysteriaTableLength)\(ghost)"
         let fieldPairs = "\(cats)\(dogs)\(massHysteria)\(sacrifice)"
-        let expectedData = "\(fieldTableLength)\(fieldPairs)".dataUsingEncoding(NSUTF8StringEncoding)
+        let expectedData = "\(fieldTableLength)\(fieldPairs)".data(using: String.Encoding.utf8)
 
         let subDict: [String: RMQBoolean] = [
             "ghost": RMQBoolean(false),
@@ -352,25 +353,25 @@ class EncodingTest: XCTestCase {
     }
 
     func testEmptyFieldTableBecomesFourZeroBytes() {
-        let expectedData = "\u{00}\u{00}\u{00}\u{00}".dataUsingEncoding(NSUTF8StringEncoding)!
+        let expectedData = "\u{00}\u{00}\u{00}\u{00}".data(using: String.Encoding.utf8)!
         let fieldTable = RMQTable([:])
         TestHelper.assertEqualBytes(expectedData, fieldTable.amqEncoded())
     }
 
     func testArrayBecomesLengthPlusFieldValues() {
-        let expectedData = "\u{00}\u{00}\u{00}\u{08}S\u{00}\u{00}\u{00}\u{03}foo".dataUsingEncoding(NSUTF8StringEncoding)!
+        let expectedData = "\u{00}\u{00}\u{00}\u{08}S\u{00}\u{00}\u{00}\u{03}foo".data(using: String.Encoding.utf8)!
         let array = RMQArray([RMQLongstr("foo")])
         TestHelper.assertEqualBytes(expectedData, array.amqEncoded())
     }
 
     func testEmptyArrayBecomesFourZeroBytes() {
-        let expectedData = "\u{00}\u{00}\u{00}\u{00}".dataUsingEncoding(NSUTF8StringEncoding)!
+        let expectedData = "\u{00}\u{00}\u{00}\u{00}".data(using: String.Encoding.utf8)!
         let fieldTable = RMQArray([])
         TestHelper.assertEqualBytes(expectedData, fieldTable.amqEncoded())
     }
 
     func testTimestampBecomes64BitPOSIX() {
-        let date = NSDate.distantFuture()
+        let date = Date.distantFuture
         let timestamp = RMQTimestamp(date)
         let expected = RMQLonglong(UInt64(date.timeIntervalSince1970))
 

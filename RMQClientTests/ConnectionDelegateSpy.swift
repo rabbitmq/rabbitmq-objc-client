@@ -50,42 +50,42 @@
 // ---------------------------------------------------------------------------
 
 @objc class ConnectionDelegateSpy : NSObject, RMQConnectionDelegate {
-    var lastChannelError: NSError?
-    var lastConnectionError: NSError?
-    var lastChannelOpenError: NSError?
+    var lastChannelError: Error?
+    var lastConnectionError: Error?
+    var lastChannelOpenError: Error?
     var disconnectCalled = false
-    var lastDisconnectError: NSError?
+    var lastDisconnectError: Error?
 
     var willStartRecoveryConnection: RMQConnection?
     var startingRecoveryConnection: RMQConnection?
     var recoveredConnection: RMQConnection?
 
-    func channel(channel: RMQChannel!, error: NSError!) {
+    func channel(_ channel: RMQChannel!, error: Error!) {
         lastChannelError = error
     }
 
-    func connection(connection: RMQConnection!, failedToConnectWithError error: NSError!) {
+    func connection(_ connection: RMQConnection!, failedToConnectWithError error: Error!) {
         lastConnectionError = error
     }
 
-    func connection(connection: RMQConnection!, failedToOpenChannel channel: RMQChannel!, error: NSError!) {
+    func connection(_ connection: RMQConnection!, failedToOpenChannel channel: RMQChannel!, error: Error!) {
         lastChannelOpenError = error
     }
 
-    func connection(connection: RMQConnection!, disconnectedWithError error: NSError!) {
+    func connection(_ connection: RMQConnection!, disconnectedWithError error: Error!) {
         disconnectCalled = true
         lastDisconnectError = error
     }
 
-    func willStartRecoveryWithConnection(connection: RMQConnection!) {
+    func willStartRecovery(with connection: RMQConnection!) {
         willStartRecoveryConnection = connection
     }
 
-    func startingRecoveryWithConnection(connection: RMQConnection!) {
+    func startingRecovery(with connection: RMQConnection!) {
         startingRecoveryConnection = connection
     }
 
-    func recoveredConnection(connection: RMQConnection!) {
+    func recoveredConnection(_ connection: RMQConnection!) {
         recoveredConnection = connection
     }
 }

@@ -92,7 +92,7 @@ class PublisherConfirmationTest: XCTestCase {
         let ch = ChannelHelper.makeChannel(1, confirmations: confirmations)
 
         XCTAssertEqual(0, confirmations.publicationCount)
-        ch.basicPublish("hi there".dataUsingEncoding(NSUTF8StringEncoding)!, routingKey: "", exchange: "", properties: [], options: [])
+        ch.basicPublish("hi there".data(using: String.Encoding.utf8)!, routingKey: "", exchange: "", properties: [], options: [])
         XCTAssertEqual(1, confirmations.publicationCount)
     }
 
@@ -101,8 +101,8 @@ class PublisherConfirmationTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, confirmations: confirmations)
 
-        let ack = MethodFixtures.basicAck(123, options: [.Multiple])
-        ch.handleFrameset(RMQFrameset(channelNumber: 1, method: ack))
+        let ack = MethodFixtures.basicAck(123, options: [.multiple])
+        ch.handle(RMQFrameset(channelNumber: 1, method: ack))
 
         XCTAssertNil(confirmations.lastReceivedAck)
         try! dispatcher.step()
@@ -114,8 +114,8 @@ class PublisherConfirmationTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, confirmations: confirmations)
 
-        let nack = MethodFixtures.basicNack(123, options: [.Multiple])
-        ch.handleFrameset(RMQFrameset(channelNumber: 1, method: nack))
+        let nack = MethodFixtures.basicNack(123, options: [.multiple])
+        ch.handle(RMQFrameset(channelNumber: 1, method: nack))
 
         XCTAssertNil(confirmations.lastReceivedNack)
         try! dispatcher.step()
@@ -128,7 +128,7 @@ class PublisherConfirmationTest: XCTestCase {
 
         ch.confirmSelect()
 
-        ch.basicPublish(NSData(), routingKey: "", exchange: "", properties: [], options: [])
+        ch.basicPublish(Data(), routingKey: "", exchange: "", properties: [], options: [])
 
         ch.afterConfirmed { (acks, nacks) in }
         XCTAssertEqual(30, confirmations.lastReceivedTimeout)

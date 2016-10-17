@@ -54,7 +54,7 @@
     var stopReceived = false
     var signalActivityReceived = false
 
-    func startWithInterval(intervalSeconds: NSNumber!) -> (() -> Void)! {
+    func start(withInterval intervalSeconds: NSNumber!) -> (() -> Void)! {
         heartbeatIntervalReceived = intervalSeconds
         return {}
     }

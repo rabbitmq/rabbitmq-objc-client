@@ -64,7 +64,7 @@ class RMQTLSOptionsTest: XCTestCase {
     func testAuthMechanismIsExternalWhenPKCS12Provided() {
         let opts = RMQTLSOptions(peerName: "soakalmost",
                                  verifyPeer: true,
-                                 pkcs12: CertificateFixtures.guestBunniesP12(),
+                                 pkcs12: CertificateFixtures.guestBunniesP12() as Data,
                                  pkcs12Password: "bar")
         XCTAssertEqual("EXTERNAL", opts.authMechanism())
     }
@@ -72,7 +72,7 @@ class RMQTLSOptionsTest: XCTestCase {
     func testDelegatesCertificates() {
         let opts = RMQTLSOptions(peerName: "localghost",
                                  verifyPeer: true,
-                                 pkcs12: CertificateFixtures.guestBunniesP12(),
+                                 pkcs12: CertificateFixtures.guestBunniesP12() as Data,
                                  pkcs12Password: "bunnies")
         XCTAssertEqual(1, try! opts.certificates().count)
     }

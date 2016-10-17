@@ -67,12 +67,12 @@ class IntegrationTests: XCTestCase {
         let conn = RMQConnection(
             uri: amqpLocalhost,
             tlsOptions: RMQTLSOptions.fromURI(amqpLocalhost),
-            channelMax: RMQChannelLimit,
-            frameMax: frameMaxRequiringTwoFrames,
+            channelMax: RMQChannelLimit as NSNumber,
+            frameMax: frameMaxRequiringTwoFrames as NSNumber,
             heartbeat: 0,
             syncTimeout: 10,
             delegate: nil,
-            delegateQueue: dispatch_get_main_queue(),
+            delegateQueue: DispatchQueue.main,
             recoverAfter: 0,
             recoveryAttempts: 0,
             recoverFromConnectionClose: false
@@ -81,18 +81,18 @@ class IntegrationTests: XCTestCase {
         defer { conn.blockingClose() }
 
         let ch = conn.createChannel()
-        let src = ch.fanout("src", options: [.AutoDelete])
-        let dst = ch.fanout("dest", options: [.AutoDelete])
-        let q = ch.queue("", options: [.AutoDelete, .Exclusive])
+        let src = ch.fanout("src", options: [.autoDelete])
+        let dst = ch.fanout("dest", options: [.autoDelete])
+        let q = ch.queue("", options: [.autoDelete, .exclusive])
 
         dst.bind(src)
         q.bind(dst)
 
-        let body = messageContent.dataUsingEncoding(NSUTF8StringEncoding)!
+        let body = messageContent.data(using: String.Encoding.utf8)!
 
         src.publish(body)
 
-        let semaphore = dispatch_semaphore_create(0)
+        let semaphore = DispatchSemaphore(value: 0)
         let expected = RMQMessage(
             body: body,
             consumerTag: "",
@@ -105,10 +105,10 @@ class IntegrationTests: XCTestCase {
         var actual: RMQMessage?
         q.pop { m in
             actual = m
-            dispatch_semaphore_signal(semaphore)
+            semaphore.signal()
         }
 
-        XCTAssertEqual(0, dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(2)),
+        XCTAssertEqual(.success, semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(2)),
                        "Timed out waiting for pop block to execute")
         XCTAssertEqual(expected, actual)
     }
@@ -119,41 +119,41 @@ class IntegrationTests: XCTestCase {
         let tlsOptions = RMQTLSOptions(
             peerName: "localhost",
             verifyPeer: false,
-            pkcs12: CertificateFixtures.guestBunniesP12(),
+            pkcs12: CertificateFixtures.guestBunniesP12() as Data,
             pkcs12Password: "bunnies"
         )
         let conn = RMQConnection(uri: "amqps://localhost",
                                  tlsOptions: tlsOptions,
-                                 channelMax: RMQChannelLimit,
-                                 frameMax: RMQFrameMax,
-                                 heartbeat: noisyHeartbeats,
+                                 channelMax: RMQChannelLimit as NSNumber,
+                                 frameMax: RMQFrameMax as NSNumber,
+                                 heartbeat: noisyHeartbeats as NSNumber,
                                  syncTimeout: 10,
                                  delegate: delegate,
-                                 delegateQueue: dispatch_get_main_queue(),
+                                 delegateQueue: DispatchQueue.main,
                                  recoverAfter: 0,
                                  recoveryAttempts: 0,
                                  recoverFromConnectionClose: false)
         conn.start()
         defer { conn.blockingClose() }
 
-        let semaphore = dispatch_semaphore_create(0)
+        let semaphore = DispatchSemaphore(value: 0)
         let ch = conn.createChannel()
-        let q = ch.queue("", options: [.AutoDelete, .Exclusive])
+        let q = ch.queue("", options: [.autoDelete, .exclusive])
 
         var delivered: RMQMessage?
 
-        q.subscribe([.NoOptions]) { message in
+        q.subscribe(RMQBasicConsumeOptions()) { message in
             delivered = message
             ch.ack(message.deliveryTag)
-            dispatch_semaphore_signal(semaphore)
+            semaphore.signal()
         }
 
-        let body = "my message".dataUsingEncoding(NSUTF8StringEncoding)!
+        let body = "my message".data(using: String.Encoding.utf8)!
 
         q.publish(body)
 
-        XCTAssertEqual(0,
-                       dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(10)),
+        XCTAssertEqual(.success,
+                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
                        "Timed out waiting for message")
 
         XCTAssertEqual(1, delivered!.deliveryTag)
@@ -165,18 +165,18 @@ class IntegrationTests: XCTestCase {
         conn.start()
         defer { conn.blockingClose() }
 
-        let semaphore = dispatch_semaphore_create(0)
+        let semaphore = DispatchSemaphore(value: 0)
         let ch = conn.createChannel()
-        let q = ch.queue("", options: [.AutoDelete, .Exclusive])
+        let q = ch.queue("", options: [.autoDelete, .exclusive])
 
         var delivered: RMQMessage?
 
-        q.subscribe([.NoAck]) { message in
+        q.subscribe([.noAck]) { message in
             delivered = message
-            dispatch_semaphore_signal(semaphore)
+            semaphore.signal()
         }
 
-        let date = NSDate.distantFuture()
+        let date = Date.distantFuture
         let coordinates = RMQTable(["latitude": RMQFloat(59.35), "longitude": RMQFloat(18.066667)])
 
         let headerDict: [String : RMQValue] = [
@@ -206,10 +206,10 @@ class IntegrationTests: XCTestCase {
             RMQBasicCorrelationId("r-1"),
             RMQBasicMessageId("m-1"),
             ]
-        q.publish("a message".dataUsingEncoding(NSUTF8StringEncoding), properties: props, options: [])
+        q.publish("a message".data(using: String.Encoding.utf8), properties: props, options: [])
 
-        XCTAssertEqual(0,
-                       dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(10)),
+        XCTAssertEqual(.success,
+                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
                        "Timed out waiting for message")
 
         XCTAssertEqual("application/octet-stream",          delivered!.contentType())
@@ -224,7 +224,7 @@ class IntegrationTests: XCTestCase {
         XCTAssertEqual("rmqclient.example",                 delivered!.appID())
 
         let consumerTag = delivered!.consumerTag
-        XCTAssertEqual("rmq-objc-client.gen-",              consumerTag.substringToIndex(consumerTag.startIndex.advancedBy(20)))
+        XCTAssertEqual("rmq-objc-client.gen-",              consumerTag?.substring(to: (consumerTag?.index((consumerTag?.startIndex)!, offsetBy: 20))!))
         XCTAssertEqual(1,                                   delivered!.deliveryTag)
         XCTAssertEqual(q.name,                              delivered!.routingKey)
         XCTAssertEqual("",                                  delivered!.exchangeName)
@@ -239,24 +239,24 @@ class IntegrationTests: XCTestCase {
         defer { conn.blockingClose() }
 
         let ch = conn.createChannel()
-        let q = ch.queue("", options: [.AutoDelete, .Exclusive])
-        let semaphore = dispatch_semaphore_create(0)
+        let q = ch.queue("", options: [.autoDelete, .exclusive])
+        let semaphore = DispatchSemaphore(value: 0)
 
         var isRejected = false
 
-        q.subscribe([.NoOptions]) { message in
+        q.subscribe(RMQBasicConsumeOptions()) { message in
             if isRejected {
-                dispatch_semaphore_signal(semaphore)
+                semaphore.signal()
             } else {
                 isRejected = true
-                ch.reject(message.deliveryTag, options: [.Requeue])
+                ch.reject(message.deliveryTag, options: [.requeue])
             }
         }
 
-        ch.defaultExchange().publish("my message".dataUsingEncoding(NSUTF8StringEncoding), routingKey: q.name)
+        ch.defaultExchange().publish("my message".data(using: String.Encoding.utf8), routingKey: q.name)
 
-        XCTAssertEqual(0,
-                       dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(10)),
+        XCTAssertEqual(.success,
+                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
                        "Timed out waiting for second delivery")
     }
 
@@ -271,44 +271,44 @@ class IntegrationTests: XCTestCase {
 
         let messageCount = 4000
         let consumingChannel = conn.createChannel()
-        let consumingQueue = consumingChannel.queue("", options: [.AutoDelete, .Exclusive])
-        let semaphore = dispatch_semaphore_create(0);
+        let consumingQueue = consumingChannel.queue("", options: [.autoDelete, .exclusive])
+        let semaphore = DispatchSemaphore(value: 0);
 
-        consumingQueue.subscribe { message in
+        consumingQueue.subscribe(handler: { message in
             set1.insert(message.deliveryTag)
             let currentCount: Int = set1.count + set2.count + set3.count
             if currentCount == messageCount {
-                dispatch_semaphore_signal(semaphore)
+                semaphore.signal()
             }
-        }
+        })
 
-        consumingQueue.subscribe { message in
+        consumingQueue.subscribe(handler: { message in
             set2.insert(message.deliveryTag)
             let currentCount: Int = set1.count + set2.count + set3.count
             if currentCount == messageCount {
-                dispatch_semaphore_signal(semaphore)
+                semaphore.signal()
             }
-        }
+        })
 
-        consumingQueue.subscribe { message in
+        consumingQueue.subscribe(handler: { message in
             set3.insert(message.deliveryTag)
             let currentCount: Int = set1.count + set2.count + set3.count
             if currentCount == messageCount {
-                dispatch_semaphore_signal(semaphore)
+                semaphore.signal()
             }
-        }
+        })
 
         usleep(1500000) // 1.5 seconds
 
         let producingChannel = conn.createChannel()
-        let producingQueue = producingChannel.queue(consumingQueue.name, options: [.AutoDelete, .Exclusive])
+        let producingQueue = producingChannel.queue(consumingQueue.name, options: [.autoDelete, .exclusive])
 
         for _ in 1...messageCount {
-            producingQueue.publish("hello".dataUsingEncoding(NSUTF8StringEncoding))
+            producingQueue.publish("hello".data(using: String.Encoding.utf8))
         }
 
-        XCTAssertEqual(0,
-                       dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(50)),
+        XCTAssertEqual(.success,
+                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(50)),
                        "Timed out waiting for messages to arrive on single channel")
 
         let emptyCount = [set1, set2, set3].reduce(0) { (acc, set) -> Int in
@@ -317,45 +317,45 @@ class IntegrationTests: XCTestCase {
 
         XCTAssertLessThan(emptyCount, 2)
 
-        let expected: Set<NSNumber> = Set<NSNumber>().union((1...messageCount).map { NSNumber(integer: $0) })
+        let expected: Set<NSNumber> = Set<NSNumber>().union((1...messageCount).map { NSNumber(value: $0 as Int) })
         XCTAssertEqual(expected, set1.union(set2).union(set3))
     }
 
     func testConcurrentDeliveryOnDifferentChannels() {
         var counter: Int32 = 0
-        let semaphore = dispatch_semaphore_create(0)
+        let semaphore = DispatchSemaphore(value: 0)
         let delegate = RMQConnectionDelegateLogger()
         let channelCount = 600
         let messageCount: Int32 = 600
         let conn = RMQConnection(uri: amqpLocalhost,
                                  tlsOptions: RMQTLSOptions.fromURI(amqpLocalhost),
-                                 channelMax: channelCount + 1, frameMax: RMQFrameMax, heartbeat: 100, syncTimeout: 60,
-                                 delegate: delegate, delegateQueue: dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
+                                 channelMax: channelCount + 1 as NSNumber, frameMax: RMQFrameMax as NSNumber, heartbeat: 100, syncTimeout: 60,
+                                 delegate: delegate, delegateQueue: DispatchQueue.global(qos: DispatchQoS.QoSClass.userInteractive),
                                  recoverAfter: 0, recoveryAttempts: 0, recoverFromConnectionClose: false)
         conn.start()
         defer { conn.blockingClose() }
 
         let producingChannel = conn.createChannel()
-        let producingQueue = producingChannel.queue("some-queue", options: [.AutoDelete, .Exclusive])
+        let producingQueue = producingChannel.queue("some-queue", options: [.autoDelete, .exclusive])
 
         for _ in 1...channelCount {
             let ch = conn.createChannel()
-            let q = ch.queue(producingQueue.name, options: [.AutoDelete, .Exclusive])
-            q.subscribe { message in
+            let q = ch.queue(producingQueue.name, options: [.autoDelete, .exclusive])
+            q.subscribe(handler: { message in
                 OSAtomicIncrement32(&counter)
                 if counter == messageCount {
-                    dispatch_semaphore_signal(semaphore)
+                    semaphore.signal()
                 }
-            }
+            })
         }
 
         for _ in 1...messageCount {
-            producingQueue.publish("hello".dataUsingEncoding(NSUTF8StringEncoding))
+            producingQueue.publish("hello".data(using: String.Encoding.utf8))
         }
 
         XCTAssertEqual(
-            0,
-            dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(30)),
+            .success,
+            semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(30)),
             "Timed out waiting for messages to arrive on different channels"
         )
     }
@@ -373,7 +373,7 @@ class IntegrationTests: XCTestCase {
         XCTAssert(
             TestHelper.pollUntil(30) {
                 ch.basicQos(1, global: false)
-                return delegate.lastChannelError?.code == RMQError.ChannelClosed.rawValue
+                return delegate.lastChannelError?._code == RMQError.channelClosed.rawValue
             }
         )
     }
@@ -391,12 +391,12 @@ class IntegrationTests: XCTestCase {
         XCTAssert(
             TestHelper.pollUntil(30) {
                 ch.basicQos(1, global: false)
-                return delegate.lastChannelError?.code == RMQError.ChannelClosed.rawValue
+                return delegate.lastChannelError?._code == RMQError.channelClosed.rawValue
             }
         )
     }
 
-    private func causeServerChannelClose(ch: RMQChannel) {
-        ch.basicPublish("".dataUsingEncoding(NSUTF8StringEncoding)!, routingKey: "a route that can't be found", exchange: "a non-existent exchange", properties: [], options: [])
+    fileprivate func causeServerChannelClose(_ ch: RMQChannel) {
+        ch.basicPublish("".data(using: String.Encoding.utf8)!, routingKey: "a route that can't be found", exchange: "a non-existent exchange", properties: [], options: [])
     }
 }

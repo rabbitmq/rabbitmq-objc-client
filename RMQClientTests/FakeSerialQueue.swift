@@ -49,8 +49,8 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-enum FakeSerialQueueError: ErrorType {
-    case Overstep
+enum FakeSerialQueueError: Error {
+    case overstep
 }
 
 @objc class FakeSerialQueue : NSObject, RMQLocalSerialQueue {
@@ -61,16 +61,16 @@ enum FakeSerialQueueError: ErrorType {
     var suspended = false
     var enqueueDelay: NSNumber?
 
-    func enqueue(operation: RMQOperation!) {
+    func enqueue(_ operation: RMQOperation!) {
         items.append(operation)
     }
 
-    func blockingEnqueue(operation: RMQOperation!) {
+    func blockingEnqueue(_ operation: RMQOperation!) {
         items.append(operation)
         blockingItems.append(operation)
     }
 
-    func delayedBy(delay: NSNumber!, enqueue operation: RMQOperation!) {
+    func delayed(by delay: NSNumber!, enqueue operation: RMQOperation!) {
         items.append(operation)
         delayedItems.append(operation)
         enqueueDelay = delay
@@ -88,7 +88,7 @@ enum FakeSerialQueueError: ErrorType {
 
     func step() throws {
         if index >= items.count {
-            throw FakeSerialQueueError.Overstep
+            throw FakeSerialQueueError.overstep
         }
         items[index]()
         index += 1

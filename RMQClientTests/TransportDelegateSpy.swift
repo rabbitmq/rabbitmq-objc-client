@@ -50,14 +50,14 @@
 // ---------------------------------------------------------------------------
 
 @objc class TransportDelegateSpy: NSObject, RMQTransportDelegate {
-    var lastDisconnectError: NSError?
+    var lastDisconnectError: Error?
     var disconnectCalled = false
 
-    func transport(transport: RMQTransport!, failedToWriteWithError error: NSError!) {
+    func transport(_ transport: RMQTransport!, failedToWriteWithError error: Error!) {
         print("failed to write")
     }
 
-    func transport(transport: RMQTransport!, disconnectedWithError error: NSError!) {
+    func transport(_ transport: RMQTransport!, disconnectedWithError error: Error!) {
         disconnectCalled = true
         lastDisconnectError = error
     }

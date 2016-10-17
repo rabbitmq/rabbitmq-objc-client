@@ -63,9 +63,9 @@ public struct RMQHTTPConnection : Decodable {
 }
 
 class RMQHTTPParser {
-    func connections(data: NSData) -> [RMQHTTPConnection] {
+    func connections(_ data: Data) -> [RMQHTTPConnection] {
         var json: [[String: AnyObject]]!
-        json = try! NSJSONSerialization.JSONObjectWithData(data, options: []) as? [[String: AnyObject]]
+        json = try! JSONSerialization.jsonObject(with: data, options: []) as? [[String: AnyObject]]
 
         return json.map { (item) -> RMQHTTPConnection in
             RMQHTTPConnection(json: item)!

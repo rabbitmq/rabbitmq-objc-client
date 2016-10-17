@@ -73,19 +73,19 @@
     func addPublication() -> NSNumber! {
         let beforeIncrease = publicationCount
         publicationCount += 1
-        return beforeIncrease
+        return beforeIncrease as NSNumber!
     }
 
-    func addCallbackWithTimeout(timeoutInSecs: NSNumber!, callback: RMQConfirmationCallback!) {
+    func addCallback(withTimeout timeoutInSecs: NSNumber!, callback: RMQConfirmationCallback!) {
         lastReceivedCallback = callback
         lastReceivedTimeout = timeoutInSecs
     }
 
-    func ack(ack: RMQBasicAck!) {
+    func ack(_ ack: RMQBasicAck!) {
         lastReceivedAck = ack
     }
 
-    func nack(nack: RMQBasicNack!) {
+    func nack(_ nack: RMQBasicNack!) {
         lastReceivedNack = nack
     }
 }

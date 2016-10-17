@@ -58,40 +58,41 @@ class RMQHTTP {
         self.uri = uri
     }
 
-    func get(path: String) -> NSData {
-        let url = NSURL(string: uri + path)
+    func get(_ path: String) -> Data {
+        let url = URL(string: uri + path)
 
-        let semaphore = dispatch_semaphore_create(0)
+        let semaphore = DispatchSemaphore(value: 0)
 
-        var data: NSData?
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url!) {(d, _, _) in
+        var data: Data?
+        let task = URLSession.shared.dataTask(with: url!, completionHandler: {(d, _, _) in
             data = d
-            dispatch_semaphore_signal(semaphore)
-        }
+            semaphore.signal()
+        }) 
         
         task.resume()
 
-        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5))
+        _ = semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5))
 
         return data!
     }
 
-    func delete(path: String) -> NSData {
-        let url = NSURL(string: "\(uri)\(path)")
+    @discardableResult
+    func delete(_ path: String) -> Data {
+        let url = URL(string: "\(uri)\(path)")
 
-        let semaphore = dispatch_semaphore_create(0)
-        let request = NSMutableURLRequest(URL: url!)
-        request.HTTPMethod = "DELETE"
+        let semaphore = DispatchSemaphore(value: 0)
+        var request = URLRequest(url: url!)
+        request.httpMethod = "DELETE"
 
-        var data: NSData?
-        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) { (d, _, _) in
+        var data: Data?
+        let task = URLSession.shared.dataTask(with: request, completionHandler: { (d, _, _) in
             data = d
-            dispatch_semaphore_signal(semaphore)
-        }
+            semaphore.signal()
+        }) 
 
         task.resume()
 
-        dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(5))
+        _ = semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5))
         
         return data!
     }

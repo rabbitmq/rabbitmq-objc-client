@@ -53,7 +53,8 @@ import XCTest
 
 class TestHelper {
 
-    static func pollUntil(checker: () -> Bool) -> Bool {
+    @discardableResult
+    static func pollUntil(_ checker: () -> Bool) -> Bool {
         for _ in 1...10 {
             if checker() {
                 return true
@@ -64,9 +65,9 @@ class TestHelper {
         return false
     }
 
-    static func pollUntil(timeout: NSTimeInterval, checker: () -> Bool) -> Bool {
-        let startTime = NSDate()
-        while NSDate().timeIntervalSinceDate(startTime) < timeout {
+    static func pollUntil(_ timeout: TimeInterval, checker: () -> Bool) -> Bool {
+        let startTime = Date()
+        while Date().timeIntervalSince(startTime) < timeout {
             if checker() {
                 return true
             } else {
@@ -76,15 +77,15 @@ class TestHelper {
         return false
     }
 
-    static func run(time: NSTimeInterval) {
-        NSRunLoop.currentRunLoop().runUntilDate(NSDate().dateByAddingTimeInterval(time))
+    static func run(_ time: TimeInterval) {
+        RunLoop.current.run(until: Date().addingTimeInterval(time))
     }
 
-    static func dispatchTimeFromNow(seconds: Double) -> dispatch_time_t {
-        return dispatch_time(DISPATCH_TIME_NOW, Int64(seconds * Double(NSEC_PER_SEC)))
+    static func dispatchTimeFromNow(_ seconds: Double) -> DispatchTime {
+        return DispatchTime.now() + Double(Int64(seconds * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
     }
 
-    static func assertEqualBytes(expected: NSData, _ actual: NSData, _ message: String = "") {
+    static func assertEqualBytes(_ expected: Data, _ actual: Data, _ message: String = "") {
         if message == "" {
             XCTAssertEqual(expected, actual, "\n\nBytes not equal:\n\(expected)\n\(actual)")
         } else {
@@ -93,7 +94,7 @@ class TestHelper {
     }
 
     static func frameworkVersion() -> String {
-        let bundle = NSBundle(identifier: "io.pivotal.RMQClient")!
+        let bundle = Bundle(identifier: "io.pivotal.RMQClient")!
         return bundle.infoDictionary!["CFBundleShortVersionString"] as! String
     }
 

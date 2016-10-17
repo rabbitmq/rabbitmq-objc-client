@@ -72,7 +72,7 @@ class ChannelCreationTest: XCTestCase {
                              channelAllocator: allocator!,
                              frameHandler: frameHandler,
                              delegate: delegate!,
-                             commandQueue: q!,
+                             command: q!,
                              waiterFactory: FakeWaiterFactory(),
                              heartbeatSender: HeartbeatSenderSpy())
     }

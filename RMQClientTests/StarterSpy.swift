@@ -52,7 +52,7 @@
 @objc class StarterSpy : NSObject, RMQStarter {
     var startCompletionHandler: (() -> Void)?
 
-    func start(completionHandler: (() -> Void)!) {
+    func start(_ completionHandler: (() -> Void)!) {
         startCompletionHandler = completionHandler
     }
 

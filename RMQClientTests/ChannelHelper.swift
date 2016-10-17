@@ -51,13 +51,13 @@
 
 class ChannelHelper {
 
-    static func makeChannel(number: Int,
+    static func makeChannel(_ number: Int,
                             contentBodySize: NSNumber = 100,
                             dispatcher: RMQDispatcher = DispatcherSpy(),
                             nameGenerator: RMQNameGenerator = StubNameGenerator(),
                             allocator: RMQChannelAllocator = ChannelSpyAllocator(),
                             confirmations: RMQConfirmations = ConfirmationsSpy()) -> RMQAllocatedChannel {
-        return RMQAllocatedChannel(number,
+        return RMQAllocatedChannel(number as NSNumber,
                                    contentBodySize: contentBodySize,
                                    dispatcher: dispatcher,
                                    nameGenerator: nameGenerator,

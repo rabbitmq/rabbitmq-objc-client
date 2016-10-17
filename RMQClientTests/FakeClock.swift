@@ -50,13 +50,13 @@
 // ---------------------------------------------------------------------------
 
 @objc class FakeClock: NSObject, RMQClock {
-    var date = NSDate()
+    var date = Date()
 
-    func read() -> NSDate! {
+    func read() -> Date! {
         return date
     }
 
-    func advance(interval: NSTimeInterval) {
-        date = date.dateByAddingTimeInterval(interval)
+    func advance(_ interval: TimeInterval) {
+        date = date.addingTimeInterval(interval)
     }
 }

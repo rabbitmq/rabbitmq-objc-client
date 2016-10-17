@@ -52,7 +52,7 @@
 @objc class FrameHandlerSpy : NSObject, RMQFrameHandler {
     var receivedFramesets: [RMQFrameset] = []
 
-    func handleFrameset(frameset: RMQFrameset!) {
+    func handle(_ frameset: RMQFrameset!) {
         receivedFramesets.append(frameset)
     }
 

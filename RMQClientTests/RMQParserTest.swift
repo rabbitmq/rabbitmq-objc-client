@@ -54,7 +54,7 @@ import XCTest
 class RMQParserTest: XCTestCase {
 
     func testOctet() {
-        let parser = RMQParser(data: "\u{2}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{2}".data(using: String.Encoding.utf8)!)
         XCTAssertEqual(2, parser.parseOctet())
 
         for _ in 1...1000 {
@@ -63,7 +63,7 @@ class RMQParserTest: XCTestCase {
     }
 
     func testBoolean() {
-        let parser = RMQParser(data: "\u{1}\u{0}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{1}\u{0}".data(using: String.Encoding.utf8)!)
         XCTAssertTrue(parser.parseBoolean())
         XCTAssertFalse(parser.parseBoolean())
 
@@ -76,16 +76,16 @@ class RMQParserTest: XCTestCase {
         let s = "PRECONDITION_FAILED - inequivalent arg 'durable' for queue 'rmqclient.integration-tests.E0B5A093-6B2E-402C-84F3-E93B59DF807B-71865-0003F85C24C90FC6' in vhost '/': received 'false' but current is 'true'"
         let data = NSMutableData()
         var stringLength = s.characters.count
-        data.appendBytes(&stringLength, length: 1)
-        data.appendData(s.dataUsingEncoding(NSUTF8StringEncoding)!)
-        data.appendData("stuffthatshouldn'tbeparsed".dataUsingEncoding(NSUTF8StringEncoding)!)
+        data.append(&stringLength, length: 1)
+        data.append(s.data(using: String.Encoding.utf8)!)
+        data.append("stuffthatshouldn'tbeparsed".data(using: String.Encoding.utf8)!)
 
-        let parser = RMQParser(data: data)
+        let parser = RMQParser(data: data as Data)
         XCTAssertEqual(s, parser.parseShortString())
     }
 
     func testShortStringWhenAlreadyRead() {
-        let parser = RMQParser(data: "\u{4}aaaa".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{4}aaaa".data(using: String.Encoding.utf8)!)
         XCTAssertEqual("aaaa", parser.parseShortString())
         for _ in 1...1000 {
             XCTAssertEqual("", parser.parseShortString())
@@ -93,18 +93,18 @@ class RMQParserTest: XCTestCase {
     }
 
     func testShortStringWhenNotEnoughDataToReadAfterLongString() {
-        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{4}AAAA\u{4}BBB".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{4}AAAA\u{4}BBB".data(using: String.Encoding.utf8)!)
         XCTAssertEqual("AAAA", parser.parseLongString())
         XCTAssertEqual("", parser.parseShortString())
     }
 
     func testLongString() {
-        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{4}AAAAbbbb".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{4}AAAAbbbb".data(using: String.Encoding.utf8)!)
         XCTAssertEqual("AAAA", parser.parseLongString())
     }
 
     func testLongStringWhenAlreadyRead() {
-        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{4}AAAA".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{4}AAAA".data(using: String.Encoding.utf8)!)
         XCTAssertEqual("AAAA", parser.parseLongString())
         for _ in 1...1000 {
             XCTAssertEqual("", parser.parseLongString())
@@ -112,23 +112,23 @@ class RMQParserTest: XCTestCase {
     }
 
     func testLongStringWhenNotEnoughDataToRead() {
-        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{4}AAA".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{4}AAA".data(using: String.Encoding.utf8)!)
         XCTAssertEqual("", parser.parseLongString())
     }
 
     func testLongStringWhenNotEnoughDataToReadAfterShortString() {
-        let parser = RMQParser(data: "\u{4}BBBB\u{0}\u{0}\u{0}\u{4}AAA".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{4}BBBB\u{0}\u{0}\u{0}\u{4}AAA".data(using: String.Encoding.utf8)!)
         XCTAssertEqual("BBBB", parser.parseShortString())
         XCTAssertEqual("", parser.parseLongString())
     }
 
     func testLongUInt() {
-        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{10}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{10}".data(using: String.Encoding.utf8)!)
         XCTAssertEqual(16, parser.parseLongUInt())
     }
 
     func testLongUIntWhenAlreadyRead() {
-        let parser = RMQParser(data: "\u{0}\u{0}\u{1}\u{0}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{0}\u{0}\u{1}\u{0}".data(using: String.Encoding.utf8)!)
         XCTAssertEqual(256, parser.parseLongUInt())
         for _ in 1...1000 {
             XCTAssertEqual(0, parser.parseLongUInt())
@@ -136,17 +136,17 @@ class RMQParserTest: XCTestCase {
     }
 
     func testLongUIntWhenNotEnoughDataToRead() {
-        let parser = RMQParser(data: "\u{0}\u{0}\u{1}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{0}\u{0}\u{1}".data(using: String.Encoding.utf8)!)
         XCTAssertEqual(0, parser.parseLongUInt())
     }
 
     func testLongLongUInt() {
-        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{0}\u{0}\u{0}\u{0}\u{10}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{0}\u{0}\u{0}\u{0}\u{10}".data(using: String.Encoding.utf8)!)
         XCTAssertEqual(16, parser.parseLongLongUInt())
     }
 
     func testLongLongUIntWhenAlreadyRead() {
-        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{0}\u{0}\u{0}\u{1}\u{0}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{0}\u{0}\u{0}\u{1}\u{0}".data(using: String.Encoding.utf8)!)
         XCTAssertEqual(256, parser.parseLongLongUInt())
         for _ in 1...1000 {
             XCTAssertEqual(0, parser.parseLongLongUInt())
@@ -154,17 +154,17 @@ class RMQParserTest: XCTestCase {
     }
 
     func testLongLongUIntWhenNotEnoughDataToRead() {
-        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{0}\u{0}\u{0}\u{1}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{0}\u{0}\u{0}\u{0}\u{0}\u{0}\u{1}".data(using: String.Encoding.utf8)!)
         XCTAssertEqual(0, parser.parseLongLongUInt())
     }
 
     func testShortUInt() {
-        let parser = RMQParser(data: "\u{0}\u{10}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{0}\u{10}".data(using: String.Encoding.utf8)!)
         XCTAssertEqual(16, parser.parseShortUInt())
     }
 
     func testShortUIntWhenAlreadyRead() {
-        let parser = RMQParser(data: "\u{1}\u{0}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{1}\u{0}".data(using: String.Encoding.utf8)!)
         XCTAssertEqual(256, parser.parseShortUInt())
         for _ in 1...1000 {
             XCTAssertEqual(0, parser.parseShortUInt())
@@ -172,13 +172,13 @@ class RMQParserTest: XCTestCase {
     }
 
     func testShortUIntWhenNotEnoughDataToRead() {
-        let parser = RMQParser(data: "\u{1}".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let parser = RMQParser(data: "\u{1}".data(using: String.Encoding.utf8)!)
         XCTAssertEqual(0, parser.parseShortUInt())
     }
     
     func testFieldTableWithAllTypes() {
         let signedByte: Int8 = -128
-        let date = NSDate.distantFuture()
+        let date = Date.distantFuture
         var dict: [String: RMQValue] = [:]
         dict["boolean"]         = RMQBoolean(true)
         dict["signed-8-bit"]    = RMQSignedByte(signedByte)
@@ -195,7 +195,7 @@ class RMQParserTest: XCTestCase {
         dict["timestamp"]       = RMQTimestamp(date)
         dict["nested-table"]    = RMQTable(["foo": RMQLong(23)])
         dict["void"]            = RMQVoid()
-        dict["byte-array"]      = RMQByteArray("hi".dataUsingEncoding(NSUTF8StringEncoding)!)
+        dict["byte-array"]      = RMQByteArray("hi".data(using: String.Encoding.utf8)!)
 
         let table = RMQTable(dict)
         let parser = RMQParser(data: table.amqEncoded())
@@ -214,9 +214,9 @@ class RMQParserTest: XCTestCase {
     }
 
     @objc class ValueWithBadSize : RMQSignedLong {
-        override func amqEncoded() -> NSData {
+        override func amqEncoded() -> Data {
             var longVal = CFSwapInt32HostToBig(UInt32(self.integerValue))
-            return NSData(bytes: &longVal, length: 1)
+            return Data(bytes: &longVal, count: 1)
         }
     }
 }

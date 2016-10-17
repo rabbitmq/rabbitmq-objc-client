@@ -58,7 +58,7 @@ class ControlledInteractionTransportTest: XCTestCase {
         
         contract.connectAndDisconnect()
 
-        dispatch_after(TestHelper.dispatchTimeFromNow(0.05), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.default).asyncAfter(deadline: TestHelper.dispatchTimeFromNow(0.05)) {
             transport
                 .assertClientSentProtocolHeader()
                 .serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 1)

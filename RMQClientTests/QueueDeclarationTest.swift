@@ -56,7 +56,7 @@ class QueueDeclarationTest: XCTestCase {
     func testQueueSendsAQueueDeclare() {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
-        ch.activateWithDelegate(nil)
+        ch.activate(with: nil)
 
         ch.queue("bagpuss")
 
@@ -70,7 +70,7 @@ class QueueDeclarationTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, nameGenerator: generator)
 
-        ch.activateWithDelegate(nil)
+        ch.activate(with: nil)
 
         generator.nextName = "mouse-organ"
         let rmqQueue = ch.queue("", options: [])
@@ -86,7 +86,7 @@ class QueueDeclarationTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, nameGenerator: generator)
 
-        ch.activateWithDelegate(delegate)
+        ch.activate(with: delegate)
 
         generator.nextName = "I-will-dupe"
 
@@ -94,7 +94,7 @@ class QueueDeclarationTest: XCTestCase {
         ch.queue("")
         XCTAssertEqual(1, dispatcher.syncMethodsSent.count)
 
-        XCTAssertEqual(RMQError.ChannelQueueNameCollision.rawValue, delegate.lastChannelError?.code)
+        XCTAssertEqual(RMQError.channelQueueNameCollision.rawValue, delegate.lastChannelError?._code)
     }
 
     func testQueueWithArguments() {
@@ -110,8 +110,8 @@ class QueueDeclarationTest: XCTestCase {
     func testQueueDeleteSendsAQueueDelete() {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
-        ch.queueDelete("my queue", options: [.IfUnused])
-        XCTAssertEqual(MethodFixtures.queueDelete("my queue", options: [.IfUnused]),
+        ch.queueDelete("my queue", options: [.ifUnused])
+        XCTAssertEqual(MethodFixtures.queueDelete("my queue", options: [.ifUnused]),
                        dispatcher.lastSyncMethod as? RMQQueueDelete)
     }
 

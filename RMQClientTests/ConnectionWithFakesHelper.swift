@@ -50,7 +50,7 @@
 // ---------------------------------------------------------------------------
 
 class ConnectionWithFakesHelper {
-    static func makeConnection(recoveryInterval: Int = 2,
+    static func makeConnection(_ recoveryInterval: Int = 2,
                                channelAllocator: RMQChannelAllocator = ChannelSpyAllocator(),
                                config: RMQConnectionConfig = RMQConnectionConfig(),
                                commandQueue: RMQLocalSerialQueue = FakeSerialQueue(),
@@ -66,13 +66,13 @@ class ConnectionWithFakesHelper {
             channelAllocator: channelAllocator,
             frameHandler: frameHandler,
             delegate: delegate,
-            commandQueue: commandQueue,
+            command: commandQueue,
             waiterFactory: waiterFactory,
             heartbeatSender: heartbeatSender
         )
     }
 
-    static func connectionConfig(vhost vhost: String = "",
+    static func connectionConfig(vhost: String = "",
                                        channelMax: Int = 123,
                                        frameMax: UInt = 321,
                                        heartbeat: Int = 10) -> RMQConnectionConfig {
@@ -80,19 +80,19 @@ class ConnectionWithFakesHelper {
                                                 attemptLimit: 0,
                                                 onlyErrors: true,
                                                 heartbeatSender: nil,
-                                                commandQueue: nil,
+                                                command: nil,
                                                 delegate: nil)
         return RMQConnectionConfig(credentials: RMQCredentials(username: "foo", password: "bar"),
-                                   channelMax: channelMax,
-                                   frameMax: frameMax,
-                                   heartbeat: heartbeat,
+                                   channelMax: channelMax as NSNumber,
+                                   frameMax: frameMax as NSNumber,
+                                   heartbeat: heartbeat as NSNumber,
                                    vhost: vhost,
                                    authMechanism: "PLAIN",
-                                   recovery: nullRecovery)
+                                   recovery: nullRecovery!)
     }
 
     static func startedConnection(
-        transport: RMQTransport,
+        _ transport: RMQTransport,
         commandQueue: RMQLocalSerialQueue = RMQGCDSerialQueue(name: "started connection command queue"),
         delegate: RMQConnectionDelegate? = nil,
         syncTimeout: Double = 0,
@@ -106,10 +106,10 @@ class ConnectionWithFakesHelper {
             transport: transport,
             config: config,
             handshakeTimeout: 10,
-            channelAllocator: allocator,
-            frameHandler: allocator,
+            channelAllocator: allocator!,
+            frameHandler: allocator!,
             delegate: delegate,
-            commandQueue: commandQueue,
+            command: commandQueue,
             waiterFactory: FakeWaiterFactory(),
             heartbeatSender: HeartbeatSenderSpy()
         )

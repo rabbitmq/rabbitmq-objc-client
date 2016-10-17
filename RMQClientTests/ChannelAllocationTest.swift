@@ -54,7 +54,7 @@ import XCTest
 class ChannelAllocationTest: XCTestCase {
     let allocationsPerQueue = 30000
 
-    func allocateAll(allocator: RMQChannelAllocator) {
+    func allocateAll(_ allocator: RMQChannelAllocator) {
         for _ in 1...RMQChannelLimit {
             allocator.allocate()
         }
@@ -62,26 +62,26 @@ class ChannelAllocationTest: XCTestCase {
 
     func testChannelGetsNegativeOneChannelNumberWhenOutOfChannelNumbers() {
         let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
-        allocateAll(allocator)
-        XCTAssertEqual(-1, allocator.allocate().channelNumber)
+        allocateAll(allocator!)
+        XCTAssertEqual(-1, allocator?.allocate().channelNumber)
     }
 
     func testChannelGetsAFreedChannelNumberIfOtherwiseOutOfChannelNumbers() {
         let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
-        allocateAll(allocator)
-        allocator.releaseChannelNumber(2)
-        XCTAssertEqual(2, allocator.allocate().channelNumber)
-        XCTAssertEqual(-1, allocator.allocate().channelNumber)
+        allocateAll(allocator!)
+        allocator?.releaseChannelNumber(2)
+        XCTAssertEqual(2, allocator?.allocate().channelNumber)
+        XCTAssertEqual(-1, allocator?.allocate().channelNumber)
     }
 
     func testAllocatedChannelsCanBeRead() {
         let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
-        allocator.allocate()
-        allocator.allocate()
-        allocator.allocate()
-        allocator.allocate()
-        allocator.releaseChannelNumber(1)
-        XCTAssertEqual([2, 3], allocator.allocatedUserChannels().map { $0.channelNumber })
+        _ = allocator?.allocate()
+        _ = allocator?.allocate()
+        _ = allocator?.allocate()
+        _ = allocator?.allocate()
+        allocator?.releaseChannelNumber(1)
+        XCTAssertEqual([2, 3], (allocator?.allocatedUserChannels().map { $0.channelNumber })!)
     }
 
     func testNumbersAreNotDoubleAllocated() {
@@ -89,73 +89,73 @@ class ChannelAllocationTest: XCTestCase {
         var channelSet1 = Set<NSNumber>()
         var channelSet2 = Set<NSNumber>()
         var channelSet3 = Set<NSNumber>()
-        let group       = dispatch_group_create()
+        let group       = DispatchGroup()
         let queues      = [
-            dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
-            dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-            dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.userInteractive),
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.default),
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.background)
         ]
 
-        dispatch_group_async(group, queues[0]) {
+        queues[0].async(group: group) {
             for _ in 1...self.allocationsPerQueue {
-                channelSet1.insert(allocator.allocate().channelNumber)
+                channelSet1.insert((allocator?.allocate().channelNumber)!)
             }
         }
 
-        dispatch_group_async(group, queues[1]) {
+        queues[1].async(group: group) {
             for _ in 1...self.allocationsPerQueue {
-                channelSet2.insert(allocator.allocate().channelNumber)
+                channelSet2.insert((allocator?.allocate().channelNumber)!)
             }
         }
 
-        dispatch_group_async(group, queues[2]) {
+        queues[2].async(group: group) {
             for _ in 1...self.allocationsPerQueue {
-                channelSet3.insert(allocator.allocate().channelNumber)
+                channelSet3.insert((allocator?.allocate().channelNumber)!)
             }
         }
 
-        XCTAssertEqual(0, dispatch_group_wait(group, TestHelper.dispatchTimeFromNow(10)), "Timed out waiting for allocations")
+        XCTAssertEqual(.success, group.wait(timeout: TestHelper.dispatchTimeFromNow(10)), "Timed out waiting for allocations")
 
         let channelSets                    = [channelSet1, channelSet2, channelSet3]
-        let expectedUniqueUnallocatedCount = channelSets.reduce(0, combine: sumUnallocated)
-        let total                          = channelSets.reduce(0, combine: {$0 + $1.count})
+        let expectedUniqueUnallocatedCount = channelSets.reduce(0, sumUnallocated)
+        let total                          = channelSets.reduce(0, {$0 + $1.count})
 
         XCTAssertEqual(RMQChannelLimit + expectedUniqueUnallocatedCount, total)
     }
 
     func testChannelsAreReleasedWithThreadSafety() {
         let allocator   = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
-        let group       = dispatch_group_create()
+        let group       = DispatchGroup()
         let queues      = [
-            dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
-            dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-            dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.userInteractive),
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.utility),
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.background)
         ]
-        allocateAll(allocator)
+        allocateAll(allocator!)
 
-        dispatch_group_async(group, queues[0]) {
+        queues[0].async(group: group) {
             for n in 1...RMQChannelLimit {
-                allocator.releaseChannelNumber(n)
+                allocator?.releaseChannelNumber(n as NSNumber!)
             }
         }
 
-        dispatch_group_async(group, queues[1]) {
+        queues[1].async(group: group) {
             for n in 1...RMQChannelLimit {
-                allocator.releaseChannelNumber(n)
+                allocator?.releaseChannelNumber(n as NSNumber!)
             }
         }
 
-        dispatch_group_async(group, queues[2]) {
+        queues[2].async(group: group) {
             for n in 1...RMQChannelLimit {
-                allocator.releaseChannelNumber(n)
+                allocator?.releaseChannelNumber(n as NSNumber!)
             }
         }
 
-        XCTAssertEqual(0, dispatch_group_wait(group, TestHelper.dispatchTimeFromNow(10)), "Timed out waiting for releases")
-        XCTAssertEqual(1, allocator.allocate().channelNumber)
+        XCTAssertEqual(.success, group.wait(timeout: TestHelper.dispatchTimeFromNow(10)), "Timed out waiting for releases")
+        XCTAssertEqual(1, allocator?.allocate().channelNumber)
     }
 
-    func sumUnallocated(accumulator: Int, current: Set<NSNumber>) -> Int {
+    func sumUnallocated(_ accumulator: Int, current: Set<NSNumber>) -> Int {
         return accumulator + (current.count == self.allocationsPerQueue ? 0 : 1)
     }
 

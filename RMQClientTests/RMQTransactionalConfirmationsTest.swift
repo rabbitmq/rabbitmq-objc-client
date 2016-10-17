@@ -54,86 +54,86 @@ import XCTest
 class RMQTransactionalConfirmationsTest: XCTestCase {
 
     func testAcksAndNacksArePassedToCallback() {
-        let confirms = RMQTransactionalConfirmations(delayQueue: FakeSerialQueue())
+        let confirms = RMQTransactionalConfirmations(delay: FakeSerialQueue())
 
-        confirms.enable()
-        for _ in 1...5 { confirms.addPublication() }
+        confirms?.enable()
+        for _ in 1...5 { _ = confirms?.addPublication() }
 
         var acks: Set<NSNumber> = []
         var nacks: Set<NSNumber> = []
-        confirms.addCallbackWithTimeout(10) { (a, n) in
-            acks = a
-            nacks = n
+        confirms?.addCallback(withTimeout: 10) { (a, n) in
+            acks = a!
+            nacks = n!
         }
 
-        confirms.ack(MethodFixtures.basicAck(1, options: []))
+        confirms?.ack(MethodFixtures.basicAck(1, options: []))
         XCTAssertEqual([], acks)
         XCTAssertEqual([], nacks)
 
-        confirms.nack(MethodFixtures.basicNack(2, options: []))
-        confirms.ack(MethodFixtures.basicAck(5, options: [.Multiple]))
+        confirms?.nack(MethodFixtures.basicNack(2, options: []))
+        confirms?.ack(MethodFixtures.basicAck(5, options: [.multiple]))
 
         XCTAssertEqual([1, 3, 4, 5], acks)
         XCTAssertEqual([2], nacks)
     }
 
     func testAddingAPublicationHasNoEffectOnConfirmationCallbackBeforeConfirmationsEnabled() {
-        let confirms = RMQTransactionalConfirmations(delayQueue: FakeSerialQueue())
+        let confirms = RMQTransactionalConfirmations(delay: FakeSerialQueue())
 
-        confirms.addPublication()
-        confirms.enable()
-        confirms.addPublication()
+        _ = confirms?.addPublication()
+        confirms?.enable()
+        _ = confirms?.addPublication()
 
         var acks: Set<NSNumber> = []
-        confirms.addCallbackWithTimeout(10) { (a, _) in
-            acks = a
+        confirms?.addCallback(withTimeout: 10) { (a, _) in
+            acks = a!
         }
 
-        confirms.ack(MethodFixtures.basicAck(1, options: []))
+        confirms?.ack(MethodFixtures.basicAck(1, options: []))
 
         XCTAssertEqual(1, acks.count)
     }
 
     func testAddingPublicationBeforeConfirmationsEnabledReturns0() {
-        let confirms = RMQTransactionalConfirmations(delayQueue: FakeSerialQueue())
-        XCTAssertEqual(0, confirms.addPublication())
+        let confirms = RMQTransactionalConfirmations(delay: FakeSerialQueue())
+        XCTAssertEqual(0, confirms?.addPublication())
     }
 
     func testAddingPublicationAfterConfirmationsEnabledReturnsSequenceNumber() {
-        let confirms = RMQTransactionalConfirmations(delayQueue: FakeSerialQueue())
-        confirms.addPublication()
-        confirms.enable()
-        XCTAssertEqual(1, confirms.addPublication())
-        XCTAssertEqual(2, confirms.addPublication())
+        let confirms = RMQTransactionalConfirmations(delay: FakeSerialQueue())
+        _ = confirms?.addPublication()
+        confirms?.enable()
+        XCTAssertEqual(1, confirms?.addPublication())
+        XCTAssertEqual(2, confirms?.addPublication())
     }
 
     func testEachCallbackReceivesAcksForPublicationsSinceLastCallbackSet() {
-        let confirms = RMQTransactionalConfirmations(delayQueue: FakeSerialQueue())
+        let confirms = RMQTransactionalConfirmations(delay: FakeSerialQueue())
 
-        confirms.enable()
-        confirms.addPublication() // 1
-        confirms.addPublication() // 2
+        confirms?.enable()
+        _ = confirms?.addPublication() // 1
+        _ = confirms?.addPublication() // 2
 
         var firstAcks: Set<NSNumber> = []
         var firstNacks: Set<NSNumber> = []
-        confirms.addCallbackWithTimeout(10) { (a, n) in
-            firstAcks = a
-            firstNacks = n
+        confirms?.addCallback(withTimeout: 10) { (a, n) in
+            firstAcks = a!
+            firstNacks = n!
         }
 
-        confirms.addPublication() // 3
-        confirms.addPublication() // 4
+        _ = confirms?.addPublication() // 3
+        _ = confirms?.addPublication() // 4
 
         var secondAcks: Set<NSNumber> = []
         var secondNacks: Set<NSNumber> = []
-        confirms.addCallbackWithTimeout(10) { (a, n) in
-            secondAcks = a
-            secondNacks = n
+        confirms?.addCallback(withTimeout: 10) { (a, n) in
+            secondAcks = a!
+            secondNacks = n!
         }
 
-        confirms.ack(MethodFixtures.basicAck(1, options: []))          // ack 1
-        confirms.nack(MethodFixtures.basicNack(3, options: []))        // nack 3
-        confirms.ack(MethodFixtures.basicAck(4, options: [.Multiple])) // ack 2 and 4
+        confirms?.ack(MethodFixtures.basicAck(1, options: []))          // ack 1
+        confirms?.nack(MethodFixtures.basicNack(3, options: []))        // nack 3
+        confirms?.ack(MethodFixtures.basicAck(4, options: [.multiple])) // ack 2 and 4
 
         XCTAssertEqual([1, 2], firstAcks)
         XCTAssertEqual([], firstNacks)
@@ -143,19 +143,19 @@ class RMQTransactionalConfirmationsTest: XCTestCase {
 
     func testCallbackThatTimedOutCannotBeRetriggeredViaAcksOrNacks() {
         let q = FakeSerialQueue()
-        let confirms = RMQTransactionalConfirmations(delayQueue: q)
+        let confirms = RMQTransactionalConfirmations(delay: q)
 
-        confirms.enable()
-        confirms.addPublication()
+        _ = confirms?.enable()
+        _ = confirms?.addPublication()
 
         var callCount = 0
-        confirms.addCallbackWithTimeout(10) { (acks, nacks) in
+        confirms?.addCallback(withTimeout: 10) { (acks, nacks) in
             callCount += 1
         }
 
         q.delayedItems[0]()
-        confirms.ack(MethodFixtures.basicAck(1, options: []))
-        confirms.nack(MethodFixtures.basicNack(1, options: []))
+        confirms?.ack(MethodFixtures.basicAck(1, options: []))
+        confirms?.nack(MethodFixtures.basicNack(1, options: []))
 
         XCTAssertEqual(1, callCount)
     }
@@ -164,41 +164,41 @@ class RMQTransactionalConfirmationsTest: XCTestCase {
     // https://github.com/ruby-amqp/bunny/commit/5e6d2b069cc17f44085e1778a0f6cad133a00dc1
     func testRecoveryIgnoresUnconfirmedTagsAndKeepsAnOffset() {
         let q = FakeSerialQueue()
-        let confirms = RMQTransactionalConfirmations(delayQueue: q)
+        let confirms = RMQTransactionalConfirmations(delay: q)
 
-        confirms.enable()
+        confirms?.enable()
         for i in 1...4 {
-            confirms.addPublication()
-            confirms.ack(MethodFixtures.basicAck(UInt64(i), options: []))
+            _ = confirms?.addPublication()
+            confirms?.ack(MethodFixtures.basicAck(UInt64(i), options: []))
         }
 
         // These become nacks because they don't get acked or nacked by server before the timeout occurs.
         // This is different behaviour to e.g. Bunny
         for _ in 5...8 {
-            confirms.addPublication()
+            _ = confirms?.addPublication()
         }
 
-        confirms.recover()
+        confirms?.recover()
 
         let expectedOffset = 8
         for i in 9...10 {
-            confirms.addPublication()
+            _ = confirms?.addPublication()
             let serverDeliveryTag = UInt64(i - expectedOffset)
-            confirms.ack(MethodFixtures.basicAck(serverDeliveryTag, options: []))
+            confirms?.ack(MethodFixtures.basicAck(serverDeliveryTag, options: []))
         }
 
         for _ in 11...15 {
-            confirms.addPublication()
+            _ = confirms?.addPublication()
         }
 
         // This is the server nacking 3-7, which is 11-15 in the client's terms.
-        confirms.nack(MethodFixtures.basicNack(7, options: [.Multiple]))
+        confirms?.nack(MethodFixtures.basicNack(7, options: [.multiple]))
 
         var acks: Set<NSNumber>?
         var nacks: Set<NSNumber>?
 
         // We want to trigger a timeout, because we lost items during recovery that can't be counted.
-        confirms.addCallbackWithTimeout(60) { (a, n) in
+        confirms?.addCallback(withTimeout: 60) { (a, n) in
             acks = a
             nacks = n
         }

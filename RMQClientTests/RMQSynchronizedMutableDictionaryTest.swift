@@ -67,7 +67,7 @@ class RMQSynchronizedMutableDictionaryTest: XCTestCase {
         let actual3: String = sharedDictionary[3] as! String
         XCTAssertEqual("pastrami", actual3)
 
-        sharedDictionary.removeObjectForKey("meat")
+        sharedDictionary.removeObject(forKey: "meat")
         let f = sharedDictionary["meat"] as! String?
         XCTAssertNil(f)
 
@@ -75,34 +75,34 @@ class RMQSynchronizedMutableDictionaryTest: XCTestCase {
     }
 
     func testMultiThreadedWriting() {
-        let dictGroup = dispatch_group_create()
+        let dictGroup = DispatchGroup()
 
         let sharedDictionary = RMQSynchronizedMutableDictionary()
         var values: [String] = []
 
         for _ in 1...3000 {
-            values.append(NSProcessInfo.processInfo().globallyUniqueString)
+            values.append(ProcessInfo.processInfo.globallyUniqueString)
         }
 
-        dispatch_group_async(dictGroup, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.utility).async(group: dictGroup) {
             for n in 0...999 {
                 sharedDictionary[n] = values[n]
             }
         }
 
-        dispatch_group_async(dictGroup, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.userInteractive).async(group: dictGroup) {
             for n in 1000...1999 {
                 sharedDictionary[n] = values[n]
             }
         }
 
-        dispatch_group_async(dictGroup, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(group: dictGroup) {
             for n in 2000...2999 {
                 sharedDictionary[n] = values[n]
             }
         }
 
-        dispatch_group_wait(dictGroup, DISPATCH_TIME_FOREVER)
+        _ = dictGroup.wait(timeout: DispatchTime.distantFuture)
 
         for n in 0...2999 {
             let actual: String = sharedDictionary[n] as! String
@@ -111,7 +111,7 @@ class RMQSynchronizedMutableDictionaryTest: XCTestCase {
     }
 
     func testMultiThreadedReading() {
-        let dictGroup = dispatch_group_create()
+        let dictGroup = DispatchGroup()
 
         let source = RMQSynchronizedMutableDictionary()
         var dest1: [Int: String] = [:]
@@ -119,31 +119,31 @@ class RMQSynchronizedMutableDictionaryTest: XCTestCase {
         var dest3: [Int: String] = [:]
 
         for n in 0...2999 {
-            source[n] = NSProcessInfo.processInfo().globallyUniqueString
+            source[n] = ProcessInfo.processInfo.globallyUniqueString
         }
 
-        dispatch_group_async(dictGroup, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.utility).async(group: dictGroup) {
             for n in 0...999 {
                 let obj: String = source[n] as! String
                 dest1[n] = obj
             }
         }
 
-        dispatch_group_async(dictGroup, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.userInteractive).async(group: dictGroup) {
             for n in 1000...1999 {
                 let obj: String = source[n] as! String
                 dest2[n] = obj
             }
         }
 
-        dispatch_group_async(dictGroup, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async(group: dictGroup) {
             for n in 2000...2999 {
                 let obj: String = source[n] as! String
                 dest3[n] = obj
             }
         }
 
-        dispatch_group_wait(dictGroup, DISPATCH_TIME_FOREVER)
+        _ = dictGroup.wait(timeout: DispatchTime.distantFuture)
 
         var final: [Int: String] = [:]
         for (k, v) in dest1 { final[k] = v }
