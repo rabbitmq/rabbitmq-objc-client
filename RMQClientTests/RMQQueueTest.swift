@@ -52,9 +52,9 @@
 import XCTest
 
 class RMQQueueTest: XCTestCase {
-    let body = "a message".dataUsingEncoding(NSUTF8StringEncoding)!
+    let body = "a message".data(using: String.Encoding.utf8)!
     func testPublishSendsBasicPublishToChannel() {
-        let channel = ChannelSpy(42)
+        let channel = ChannelSpy(channelNumber: 42)
         channel.publishReturn = 123
         let queue = QueueHelper.makeQueue(channel, name: "some.queue")
 
@@ -69,7 +69,7 @@ class RMQQueueTest: XCTestCase {
     }
 
     func testPublishWithPersistence() {
-        let channel = ChannelSpy(42)
+        let channel = ChannelSpy(channelNumber: 42)
         let queue = QueueHelper.makeQueue(channel, name: "some.queue")
 
         queue.publish(body, persistent: true)
@@ -82,9 +82,9 @@ class RMQQueueTest: XCTestCase {
     }
 
     func testPublishWithProperties() {
-        let channel = ChannelSpy(42)
+        let channel = ChannelSpy(channelNumber: 42)
         let queue = QueueHelper.makeQueue(channel, name: "some.queue")
-        let timestamp = NSDate()
+        let timestamp = Date()
 
         let properties: [RMQValue] = [
             RMQBasicAppId("some.app"),
@@ -102,33 +102,33 @@ class RMQQueueTest: XCTestCase {
             BasicPropertyFixtures.exhaustiveHeaders()
         ]
 
-        queue.publish("{\"a\": \"message\"}".dataUsingEncoding(NSUTF8StringEncoding),
+        queue.publish("{\"a\": \"message\"}".data(using: String.Encoding.utf8),
                       properties: properties,
-                      options: [.Mandatory])
+                      options: [.mandatory])
 
-        XCTAssertEqual("{\"a\": \"message\"}".dataUsingEncoding(NSUTF8StringEncoding), channel.lastReceivedBasicPublishMessage)
+        XCTAssertEqual("{\"a\": \"message\"}".data(using: String.Encoding.utf8), channel.lastReceivedBasicPublishMessage)
         XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", channel.lastReceivedBasicPublishExchange)
-        XCTAssertEqual([.Mandatory], channel.lastReceivedBasicPublishOptions)
+        XCTAssertEqual([.mandatory], channel.lastReceivedBasicPublishOptions)
         XCTAssertEqual(properties, channel.lastReceivedBasicPublishProperties!)
     }
 
     func testPublishWithOptions() {
-        let channel = ChannelSpy(42)
+        let channel = ChannelSpy(channelNumber: 42)
         let queue = QueueHelper.makeQueue(channel, name: "some.queue")
 
-        queue.publish(body, persistent: false, options: [.Mandatory])
+        queue.publish(body, persistent: false, options: [.mandatory])
 
         XCTAssertEqual(body, channel.lastReceivedBasicPublishMessage)
         XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("", channel.lastReceivedBasicPublishExchange)
         XCTAssertEqual([], channel.lastReceivedBasicPublishProperties!)
-        XCTAssertEqual([.Mandatory], channel.lastReceivedBasicPublishOptions)
+        XCTAssertEqual([.mandatory], channel.lastReceivedBasicPublishOptions)
     }
 
     func testPopDelegatesToChannelBasicGet() {
         let stubbedMessage = RMQMessage(body: body, consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "", properties: [])
-        let channel = ChannelSpy(42)
+        let channel = ChannelSpy(channelNumber: 42)
         let queue = QueueHelper.makeQueue(channel, name: "great.queue")
 
         var receivedMessage: RMQMessage?
@@ -139,56 +139,56 @@ class RMQQueueTest: XCTestCase {
         XCTAssertEqual("great.queue", channel.lastReceivedBasicGetQueue)
         XCTAssertEqual([], channel.lastReceivedBasicGetOptions)
         
-        channel.lastReceivedBasicGetCompletionHandler!(stubbedMessage)
+        channel.lastReceivedBasicGetCompletionHandler!(stubbedMessage!)
         XCTAssertEqual(stubbedMessage, receivedMessage)
     }
 
     func testSubscribeSendsABasicConsumeToChannelWithAutoAck() {
-        let channel = ChannelSpy(123)
+        let channel = ChannelSpy(channelNumber: 123)
         let queue = QueueHelper.makeQueue(channel, name: "default options")
 
         var handlerCalled = false
-        queue.subscribe { _ in
+        queue.subscribe({ _ in
             handlerCalled = true
-        }
+        })
 
-        let message = RMQMessage(body: "I have default options!".dataUsingEncoding(NSUTF8StringEncoding), consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "", properties: [])
-        channel.lastReceivedBasicConsumeBlock!(message)
+        let message = RMQMessage(body: "I have default options!".data(using: String.Encoding.utf8), consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "", properties: [])
+        channel.lastReceivedBasicConsumeBlock!(message!)
 
         XCTAssert(handlerCalled)
-        XCTAssertEqual([.NoAck], channel.lastReceivedBasicConsumeOptions)
+        XCTAssertEqual([.noAck], channel.lastReceivedBasicConsumeOptions)
     }
 
     func testSubscribeWithOptionsSendsOptionsToChannel() {
-        let channel = ChannelSpy(123)
+        let channel = ChannelSpy(channelNumber: 123)
         let queue = QueueHelper.makeQueue(channel, name: "custom options")
 
         var handlerCalled = false
-        queue.subscribe([.Exclusive]) { _ in
+        queue.subscribe([.exclusive], handler: { _ in
             handlerCalled = true
-        }
+        })
 
-        let message = RMQMessage(body: "I have custom options!".dataUsingEncoding(NSUTF8StringEncoding), consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "", properties: [])
-        channel.lastReceivedBasicConsumeBlock!(message)
+        let message = RMQMessage(body: "I have custom options!".data(using: String.Encoding.utf8), consumerTag: "", deliveryTag: 123, redelivered: false, exchangeName: "", routingKey: "", properties: [])
+        channel.lastReceivedBasicConsumeBlock!(message!)
 
         XCTAssert(handlerCalled)
-        XCTAssertEqual([.Exclusive], channel.lastReceivedBasicConsumeOptions)
+        XCTAssertEqual([.exclusive], channel.lastReceivedBasicConsumeOptions)
     }
 
     func testCancellingASubscriptionSendsBasicCancelToChannel() {
-        let channel = ChannelSpy(123)
+        let channel = ChannelSpy(channelNumber: 123)
         let queue = QueueHelper.makeQueue(channel, name: "cancelling")
 
-        let consumer = queue.subscribe() { _ in }
-        XCTAssertNotNil(consumer.tag)
+        let consumer = queue.subscribe({ _ in })
+        XCTAssertNotNil(consumer?.tag)
 
-        consumer.cancel()
+        consumer?.cancel()
 
-        XCTAssertEqual(consumer.tag, channel.lastReceivedBasicCancelConsumerTag)
+        XCTAssertEqual(consumer?.tag, channel.lastReceivedBasicCancelConsumerTag)
     }
 
     func testBindCallsBindOnChannel() {
-        let channel = ChannelSpy(123)
+        let channel = ChannelSpy(channelNumber: 123)
         let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)
         let queue = QueueHelper.makeQueue(channel, name: "bindy")
 
@@ -200,7 +200,7 @@ class RMQQueueTest: XCTestCase {
     }
 
     func testBindWithoutRoutingKeySendsEmptyStringRoutingKey() {
-        let channel = ChannelSpy(123)
+        let channel = ChannelSpy(channelNumber: 123)
         let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)
         let queue = QueueHelper.makeQueue(channel, name: "bindy")
 
@@ -212,7 +212,7 @@ class RMQQueueTest: XCTestCase {
     }
 
     func testUnbindCallsUnbindOnChannel() {
-        let channel = ChannelSpy(123)
+        let channel = ChannelSpy(channelNumber: 123)
         let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)
         let queue = QueueHelper.makeQueue(channel, name: "unbindy")
 
@@ -224,7 +224,7 @@ class RMQQueueTest: XCTestCase {
     }
     
     func testUnbindWithoutRoutingKeySendsEmptyStringRoutingKey() {
-        let channel = ChannelSpy(123)
+        let channel = ChannelSpy(channelNumber: 123)
         let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)
         let queue = QueueHelper.makeQueue(channel, name: "unbindy")
 
@@ -236,16 +236,16 @@ class RMQQueueTest: XCTestCase {
     }
     
     func testDeleteCallsDeleteOnChannel() {
-        let channel = ChannelSpy(123)
+        let channel = ChannelSpy(channelNumber: 123)
         let queue = QueueHelper.makeQueue(channel, name: "deletable")
 
         queue.delete()
         XCTAssertEqual("deletable", channel.lastReceivedQueueDeleteQueueName)
         XCTAssertEqual([], channel.lastReceivedQueueDeleteOptions)
 
-        queue.delete([.IfEmpty])
+        queue.delete([.ifEmpty])
         XCTAssertEqual("deletable", channel.lastReceivedQueueDeleteQueueName)
-        XCTAssertEqual([.IfEmpty], channel.lastReceivedQueueDeleteOptions)
+        XCTAssertEqual([.ifEmpty], channel.lastReceivedQueueDeleteOptions)
     }
 
 }

@@ -50,7 +50,7 @@
 // ---------------------------------------------------------------------------
 
 class CertificateFixtures {
-    static func guestBunniesP12() -> NSData {
+    static func guestBunniesP12() -> Data {
         let p12str = "MIIJMQIBAzCCCPcGCSqGSIb3DQEHAaCCCOgEggjkMIII4DCCA5cGCSqGSIb3" +
             "DQEHBqCCA4gwggOEAgEAMIIDfQYJKoZIhvcNAQcBMBwGCiqGSIb3DQEMAQYw" +
             "DgQIgf7ZYIumTakCAggAgIIDULaDpO3AHKfCspu7cx/52dE5DZ6HVHXuSFVL" +
@@ -105,6 +105,6 @@ class CertificateFixtures {
             "2RNJDTp4A9mhvwwwMTAhMAkGBSsOAwIaBQAEFGhCv6aq9bpEnp8d8d3eyE1O" +
         "A6JFBAjbmojQPVKS/wICCAA="
 
-        return NSData(base64EncodedString: p12str, options: [])!
+        return Data(base64Encoded: p12str, options: [])!
     }
 }

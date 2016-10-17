@@ -55,11 +55,11 @@ class RMQProcessInfoNameGeneratorTest: XCTestCase {
 
     func testGeneratesNamesWithProvidedPrefix() {
         let generator = RMQProcessInfoNameGenerator()
-        let name1 = generator.generateWithPrefix("foo")
-        let name2 = generator.generateWithPrefix("foo")
+        let name1 = generator.generate(withPrefix: "foo")
+        let name2 = generator.generate(withPrefix: "foo")
 
-        XCTAssertEqual("foo", name1.substringToIndex(name1.startIndex.advancedBy(3)))
-        XCTAssertEqual("foo", name2.substringToIndex(name2.startIndex.advancedBy(3)))
+        XCTAssertEqual("foo", name1?.substring(to: (name1?.index((name1?.startIndex)!, offsetBy: 3))!))
+        XCTAssertEqual("foo", name2?.substring(to: (name2?.index((name2?.startIndex)!, offsetBy: 3))!))
         XCTAssertNotEqual(name1, name2)
     }
 

@@ -54,7 +54,7 @@ import XCTest
 class PublisherConfirmationIntegrationTest: XCTestCase {
 
     func testWaitingForConfirmations() {
-        let semaphore = dispatch_semaphore_create(0)
+        let semaphore = DispatchSemaphore(value: 0)
         let conn = RMQConnection()
         conn.start()
 
@@ -62,10 +62,10 @@ class PublisherConfirmationIntegrationTest: XCTestCase {
 
         ch.confirmSelect()
 
-        let q = ch.queue("", options: [.AutoDelete, .Exclusive])
+        let q = ch.queue("", options: [.autoDelete, .exclusive])
 
-        q.publish("message a".dataUsingEncoding(NSUTF8StringEncoding))
-        q.publish("message b".dataUsingEncoding(NSUTF8StringEncoding))
+        q.publish("message a".data(using: String.Encoding.utf8))
+        q.publish("message b".data(using: String.Encoding.utf8))
 
         var acked: Set<NSNumber> = []
         var nacked: Set<NSNumber> = []
@@ -73,10 +73,10 @@ class PublisherConfirmationIntegrationTest: XCTestCase {
         ch.afterConfirmed { (acks, nacks) in
             acked = acks
             nacked = nacks
-            dispatch_semaphore_signal(semaphore)
+            semaphore.signal()
         }
 
-        XCTAssertEqual(0, dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(10)))
+        XCTAssertEqual(.success, semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)))
         XCTAssertEqual([1, 2], acked)
         XCTAssertEqual([], nacked)
     }

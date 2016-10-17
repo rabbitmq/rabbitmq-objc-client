@@ -57,7 +57,7 @@ class RMQURIParseTest: XCTestCase {
         XCTAssertThrowsError(try RMQURI.parse("amqpfoo://dev.rabbitmq.com")) { error in
             do {
                 XCTAssertEqual(
-                    RMQError.InvalidScheme.rawValue,
+                    RMQError.invalidScheme.rawValue,
                     (error as NSError).code
                 )
             }
@@ -99,7 +99,7 @@ class RMQURIParseTest: XCTestCase {
         XCTAssertThrowsError(try RMQURI.parse("amqp://dev.rabbitmq.com/a/path/with/slashes")) { (error) in
             do {
                 XCTAssertEqual(
-                    RMQError.InvalidPath.rawValue,
+                    RMQError.invalidPath.rawValue,
                     (error as NSError).code
                 )
             }

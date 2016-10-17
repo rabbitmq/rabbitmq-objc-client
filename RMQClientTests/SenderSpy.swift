@@ -55,19 +55,19 @@
     var frameMax: NSNumber
 
     init(frameMax aFrameMax: UInt = RMQFrameMax) {
-        frameMax = aFrameMax
+        frameMax = aFrameMax as NSNumber
     }
 
-    func sendFrameset(frameset: RMQFrameset, force isForced: Bool) {
+    func send(_ frameset: RMQFrameset, force isForced: Bool) {
         lastSentMethod = frameset.method
         sentFramesets.append(frameset)
     }
 
-    func sendFrameset(frameset: RMQFrameset) {
-        sendFrameset(frameset, force: false)
+    func send(_ frameset: RMQFrameset) {
+        send(frameset, force: false)
     }
 
-    override func isEqual(object: AnyObject?) -> Bool {
-        return object!.isKindOfClass(SenderSpy.self);
+    override func isEqual(_ object: Any?) -> Bool {
+        return (object! as AnyObject).isKind(of: SenderSpy.self);
     }
 }

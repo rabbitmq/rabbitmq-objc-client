@@ -89,7 +89,7 @@ class ChannelRecoveryTest: XCTestCase {
 
         XCTAssertEqual(MethodFixtures.basicQos(2, options: []),
                        dispatcher.syncMethodsSent[1] as? RMQBasicQos)
-        XCTAssertEqual(MethodFixtures.basicQos(3, options: [.Global]),
+        XCTAssertEqual(MethodFixtures.basicQos(3, options: [.global]),
                        dispatcher.syncMethodsSent[2] as? RMQBasicQos)
 
         XCTAssertEqual(MethodFixtures.confirmSelect(),
@@ -119,7 +119,7 @@ class ChannelRecoveryTest: XCTestCase {
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
         ch.recover()
 
-        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0.isKindOfClass(RMQBasicQos.self) })
+        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0.isKind(of: RMQBasicQos.self) })
     }
 
     func testDoesNotReinstateConfirmationsIfNotSet() {
@@ -127,7 +127,7 @@ class ChannelRecoveryTest: XCTestCase {
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
         ch.recover()
 
-        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0.isKindOfClass(RMQConfirmSelect.self) })
+        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0.isKind(of: RMQConfirmSelect.self) })
     }
 
     func testInformsConfirmationsHandlerOfConnectivityLoss() {
@@ -144,9 +144,9 @@ class ChannelRecoveryTest: XCTestCase {
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
         ch.fanout("ex1")
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
-        ch.headers("ex2", options: [.AutoDelete])
+        ch.headers("ex2", options: [.autoDelete])
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
-        ch.headers("ex3", options: [.AutoDelete])
+        ch.headers("ex3", options: [.autoDelete])
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
 
         ch.exchangeDelete("ex2", options: [])
@@ -157,21 +157,21 @@ class ChannelRecoveryTest: XCTestCase {
         ch.recover()
 
         XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQExchangeDeclare == MethodFixtures.exchangeDeclare("ex1", type: "fanout", options: []) })
-        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQExchangeDeclare == MethodFixtures.exchangeDeclare("ex3", type: "headers", options: [.AutoDelete]) })
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQExchangeDeclare == MethodFixtures.exchangeDeclare("ex3", type: "headers", options: [.autoDelete]) })
 
-        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQExchangeDeclare == MethodFixtures.exchangeDeclare("ex2", type: "headers", options: [.AutoDelete]) })
+        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQExchangeDeclare == MethodFixtures.exchangeDeclare("ex2", type: "headers", options: [.autoDelete]) })
     }
 
     func testRedeclaredExchangesAreStillMemoized() {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
-        ch.fanout("a", options: [.AutoDelete])
+        ch.fanout("a", options: [.autoDelete])
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.exchangeDeclareOk()))
 
         ch.recover()
 
         dispatcher.syncMethodsSent = []
-        ch.fanout("a", options: [.AutoDelete])
+        ch.fanout("a", options: [.autoDelete])
         XCTAssertEqual(0, dispatcher.syncMethodsSent.count)
     }
 
@@ -216,7 +216,7 @@ class ChannelRecoveryTest: XCTestCase {
     func testRedeclaresQueuesThatHadNotBeenDeleted() {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
-        ch.queue("a", options: [.AutoDelete])
+        ch.queue("a", options: [.autoDelete])
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("a")))
 
         ch.queue("b")
@@ -225,14 +225,14 @@ class ChannelRecoveryTest: XCTestCase {
         ch.queue("c", options: [], arguments: ["x-message-ttl": RMQShort(1000)])
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("c")))
 
-        ch.queueDelete("b", options: [.IfUnused])
+        ch.queueDelete("b", options: [.ifUnused])
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeleteOk(123)))
 
         dispatcher.syncMethodsSent = []
 
         ch.recover()
 
-        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueDeclare == MethodFixtures.queueDeclare("a", options: [.AutoDelete]) })
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueDeclare == MethodFixtures.queueDeclare("a", options: [.autoDelete]) })
         XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueDeclare == MethodFixtures.queueDeclare("c", options: [], arguments: ["x-message-ttl": RMQShort(1000)]) })
         XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQQueueDeclare == MethodFixtures.queueDeclare("b", options: []) })
     }
@@ -240,13 +240,13 @@ class ChannelRecoveryTest: XCTestCase {
     func testRedeclaredQueuesAreStillMemoized() {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
-        ch.queue("a", options: [.AutoDelete])
+        ch.queue("a", options: [.autoDelete])
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.queueDeclareOk("a")))
 
         ch.recover()
 
         dispatcher.syncMethodsSent = []
-        ch.queue("a", options: [.AutoDelete])
+        ch.queue("a", options: [.autoDelete])
         XCTAssertEqual(0, dispatcher.syncMethodsSent.count)
     }
     
@@ -289,14 +289,14 @@ class ChannelRecoveryTest: XCTestCase {
 
         let createContext = (ch, dispatcher, nameGenerator)
         createConsumer("consumer1", createContext)
-        createConsumer("consumer2", createContext, [.Exclusive])
+        createConsumer("consumer2", createContext, [.exclusive])
         createConsumer("consumer3", createContext)
-        createConsumer("consumer4", createContext, [.Exclusive])
+        createConsumer("consumer4", createContext, [.exclusive])
 
         ch.basicCancel("consumer2")
         dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicCancelOk("consumer2")))
 
-        ch.handleFrameset(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicCancel("consumer3")))
+        ch.handle(RMQFrameset(channelNumber: 1, method: MethodFixtures.basicCancel("consumer3")))
         try! dispatcher.step()
 
         dispatcher.syncMethodsSent = []
@@ -304,13 +304,13 @@ class ChannelRecoveryTest: XCTestCase {
         ch.recover()
 
         XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQBasicConsume == MethodFixtures.basicConsume("q", consumerTag: "consumer1", options: []) })
-        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQBasicConsume == MethodFixtures.basicConsume("q", consumerTag: "consumer4", options: [.Exclusive]) })
+        XCTAssert(dispatcher.syncMethodsSent.contains { $0 as? RMQBasicConsume == MethodFixtures.basicConsume("q", consumerTag: "consumer4", options: [.exclusive]) })
 
-        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQBasicConsume == MethodFixtures.basicConsume("q", consumerTag: "consumer2", options: [.Exclusive]) })
+        XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQBasicConsume == MethodFixtures.basicConsume("q", consumerTag: "consumer2", options: [.exclusive]) })
         XCTAssertFalse(dispatcher.syncMethodsSent.contains { $0 as? RMQBasicConsume == MethodFixtures.basicConsume("q", consumerTag: "consumer3", options: []) })
     }
 
-    private func createConsumer(consumerTag: String,
+    fileprivate func createConsumer(_ consumerTag: String,
                                 _ context: (channel: RMQAllocatedChannel, dispatcher: DispatcherSpy, nameGenerator: StubNameGenerator),
                                   _ options: RMQBasicConsumeOptions = []) {
         context.nameGenerator.nextName = consumerTag

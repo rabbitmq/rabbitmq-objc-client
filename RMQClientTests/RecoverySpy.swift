@@ -53,9 +53,9 @@
     var interval: NSNumber! = 0.1
     var connectionPassedToRecover: RMQStarter?
     var allocatorPassedToRecover: RMQChannelAllocator?
-    var errorPassedToRecover: NSError?
+    var errorPassedToRecover: Error?
     
-    func recover(connection: RMQStarter!, channelAllocator allocator: RMQChannelAllocator!, error: NSError!) {
+    func recover(_ connection: RMQStarter!, channelAllocator allocator: RMQChannelAllocator!, error: Error!) {
         connectionPassedToRecover = connection
         allocatorPassedToRecover = allocator
         errorPassedToRecover = error

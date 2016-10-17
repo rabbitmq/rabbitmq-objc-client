@@ -66,7 +66,7 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
 
-        ch.activateWithDelegate(delegate)
+        ch.activate(with: delegate)
 
         XCTAssertEqual(ch, dispatcher.activatedWithChannel as? RMQAllocatedChannel)
         XCTAssertEqual(delegate, dispatcher.activatedWithDelegate as? ConnectionDelegateSpy)
@@ -78,7 +78,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
 
         let frameset = RMQFrameset(channelNumber: 1, method: MethodFixtures.basicGetOk(routingKey: "route-me"))
-        ch.handleFrameset(frameset)
+        ch.handle(frameset)
 
         XCTAssertEqual(frameset, dispatcher.lastFramesetHandled)
     }
@@ -87,7 +87,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
 
-        ch.activateWithDelegate(nil)
+        ch.activate(with: nil)
 
         ch.open()
 
@@ -98,7 +98,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
 
-        ch.activateWithDelegate(nil)
+        ch.activate(with: nil)
 
         ch.close()
 
@@ -109,8 +109,8 @@ class RMQAllocatedChannelTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let allocator = ChannelSpyAllocator()
 
-        allocator.allocate() // 0
-        allocator.allocate() // 1
+        _ = allocator.allocate() // 0
+        _ = allocator.allocate() // 1
 
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, allocator: allocator)
 
@@ -124,7 +124,7 @@ class RMQAllocatedChannelTest: XCTestCase {
     func testBlockingCloseSendsCloseAndBlocksUntilCloseOkReceived() {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
-        ch.activateWithDelegate(nil)
+        ch.activate(with: nil)
 
         ch.open()
         ch.blockingClose()
@@ -136,8 +136,8 @@ class RMQAllocatedChannelTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let allocator = ChannelSpyAllocator()
 
-        allocator.allocate() // 0
-        allocator.allocate() // 1
+        _ = allocator.allocate() // 0
+        _ = allocator.allocate() // 1
 
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, allocator: allocator)
 
@@ -151,9 +151,9 @@ class RMQAllocatedChannelTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
 
-        ch.activateWithDelegate(delegate)
+        ch.activate(with: delegate)
 
-        ch.blockingWaitOn(RMQChannelCloseOk.self)
+        ch.blockingWait(on: RMQChannelCloseOk.self)
 
         XCTAssertEqual("RMQChannelCloseOk", dispatcher.lastBlockingWaitOn)
     }
@@ -162,11 +162,11 @@ class RMQAllocatedChannelTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
 
-        ch.activateWithDelegate(nil)
+        ch.activate(with: nil)
 
-        ch.basicGet("queuey", options: [.NoAck]) { _ in }
+        ch.basicGet("queuey", options: [.noAck]) { _ in }
 
-        XCTAssertEqual(MethodFixtures.basicGet("queuey", options: [.NoAck]),
+        XCTAssertEqual(MethodFixtures.basicGet("queuey", options: [.noAck]),
                        dispatcher.lastSyncMethod as? RMQBasicGet)
     }
     
@@ -177,16 +177,16 @@ class RMQAllocatedChannelTest: XCTestCase {
         ]
         let getOkFrameset = RMQFrameset(
             channelNumber: 1,
-            method: MethodFixtures.basicGetOk(routingKey: "my-q", deliveryTag: 1, exchange: "someex", options: [.Redelivered]),
+            method: MethodFixtures.basicGetOk(routingKey: "my-q", deliveryTag: 1, exchange: "someex", options: [.redelivered]),
             contentHeader: RMQContentHeader(
                 classID: 60,
                 bodySize: 123,
                 properties: properties
             ),
-            contentBodies: [RMQContentBody(data: "hello".dataUsingEncoding(NSUTF8StringEncoding)!)]
+            contentBodies: [RMQContentBody(data: "hello".data(using: String.Encoding.utf8)!)]
         )
         let expectedMessage = RMQMessage(
-            body: "hello".dataUsingEncoding(NSUTF8StringEncoding),
+            body: "hello".data(using: String.Encoding.utf8),
             consumerTag: "",
             deliveryTag: 1,
             redelivered: true,
@@ -198,7 +198,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
 
         var receivedMessage: RMQMessage?
-        ch.basicGet("my-q", options: [.NoAck]) { m in
+        ch.basicGet("my-q", options: [.noAck]) { m in
             receivedMessage = m
         }
 
@@ -215,16 +215,16 @@ class RMQAllocatedChannelTest: XCTestCase {
         let consumeOkFrameset2 = RMQFrameset(channelNumber: 999, method: RMQBasicConsumeOk(consumerTag: RMQShortstr("servertag2")))
         let deliverMethod1 = MethodFixtures.basicDeliver(consumerTag: "tag1", deliveryTag: 1)
         let deliverHeader1 = RMQContentHeader(classID: deliverMethod1.classID(), bodySize: 123, properties: [])
-        let deliverBody1 = RMQContentBody(data: "A message for consumer 1".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let deliverBody1 = RMQContentBody(data: "A message for consumer 1".data(using: String.Encoding.utf8)!)
         let deliverFrameset1 = RMQFrameset(channelNumber: 999, method: deliverMethod1, contentHeader: deliverHeader1, contentBodies: [deliverBody1])
         let deliverMethod2 = MethodFixtures.basicDeliver(consumerTag: "tag2", deliveryTag: 1)
         let deliverHeader2 = RMQContentHeader(classID: deliverMethod2.classID(), bodySize: 123, properties: [])
-        let deliverBody2 = RMQContentBody(data: "A message for consumer 2".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let deliverBody2 = RMQContentBody(data: "A message for consumer 2".data(using: String.Encoding.utf8)!)
         let deliverFrameset2 = RMQFrameset(channelNumber: 999, method: deliverMethod2, contentHeader: deliverHeader2, contentBodies: [deliverBody2])
-        let expectedMessage1 = RMQMessage(body: "A message for consumer 1".dataUsingEncoding(NSUTF8StringEncoding), consumerTag: "tag1", deliveryTag: 1, redelivered: false, exchangeName: "", routingKey: "", properties: [])
-        let expectedMessage2 = RMQMessage(body: "A message for consumer 2".dataUsingEncoding(NSUTF8StringEncoding), consumerTag: "tag2", deliveryTag: 1, redelivered: false, exchangeName: "", routingKey: "", properties: [])
+        let expectedMessage1 = RMQMessage(body: "A message for consumer 1".data(using: String.Encoding.utf8), consumerTag: "tag1", deliveryTag: 1, redelivered: false, exchangeName: "", routingKey: "", properties: [])
+        let expectedMessage2 = RMQMessage(body: "A message for consumer 2".data(using: String.Encoding.utf8), consumerTag: "tag2", deliveryTag: 1, redelivered: false, exchangeName: "", routingKey: "", properties: [])
 
-        ch.activateWithDelegate(nil)
+        ch.activate(with: nil)
 
         nameGenerator.nextName = "tag1"
         var consumedMessage1: RMQMessage?
@@ -240,8 +240,8 @@ class RMQAllocatedChannelTest: XCTestCase {
         }
         dispatcher.lastSyncMethodHandler!(consumeOkFrameset2)
 
-        ch.handleFrameset(deliverFrameset1)
-        ch.handleFrameset(deliverFrameset2)
+        ch.handle(deliverFrameset1)
+        ch.handle(deliverFrameset2)
         try! dispatcher.step()
 
         XCTAssertEqual(expectedMessage1, consumedMessage1)
@@ -253,23 +253,23 @@ class RMQAllocatedChannelTest: XCTestCase {
     func testBasicPublishSendsAsyncFrameset() {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(999, contentBodySize: 4, dispatcher: dispatcher)
-        let message = "my great message yo".dataUsingEncoding(NSUTF8StringEncoding)!
+        let message = "my great message yo".data(using: String.Encoding.utf8)!
         let notPersistent = RMQBasicDeliveryMode(1)
         let customContentType = RMQBasicContentType("my/content-type")
         let priorityZero = RMQBasicPriority(0)
 
-        let expectedMethod = MethodFixtures.basicPublish("my.q", exchange: "", options: [.Mandatory])
+        let expectedMethod = MethodFixtures.basicPublish("my.q", exchange: "", options: [.mandatory])
         let expectedHeader = RMQContentHeader(
             classID: 60,
-            bodySize: message.length,
+            bodySize: message.count as NSNumber,
             properties: [notPersistent, customContentType, priorityZero]
         )
         let expectedBodies = [
-            RMQContentBody(data: "my g".dataUsingEncoding(NSUTF8StringEncoding)!),
-            RMQContentBody(data: "reat".dataUsingEncoding(NSUTF8StringEncoding)!),
-            RMQContentBody(data: " mes".dataUsingEncoding(NSUTF8StringEncoding)!),
-            RMQContentBody(data: "sage".dataUsingEncoding(NSUTF8StringEncoding)!),
-            RMQContentBody(data: " yo".dataUsingEncoding(NSUTF8StringEncoding)!),
+            RMQContentBody(data: "my g".data(using: String.Encoding.utf8)!),
+            RMQContentBody(data: "reat".data(using: String.Encoding.utf8)!),
+            RMQContentBody(data: " mes".data(using: String.Encoding.utf8)!),
+            RMQContentBody(data: "sage".data(using: String.Encoding.utf8)!),
+            RMQContentBody(data: " yo".data(using: String.Encoding.utf8)!),
             ]
         let expectedFrameset = RMQFrameset(
             channelNumber: 999,
@@ -280,7 +280,7 @@ class RMQAllocatedChannelTest: XCTestCase {
 
         ch.basicPublish(message, routingKey: "my.q", exchange: "",
                         properties: [notPersistent, customContentType, priorityZero],
-                        options: [.Mandatory])
+                        options: [.mandatory])
 
         XCTAssertEqual(5, dispatcher.lastAsyncFrameset!.contentBodies.count)
         XCTAssertEqual(expectedBodies, dispatcher.lastAsyncFrameset!.contentBodies)
@@ -289,8 +289,8 @@ class RMQAllocatedChannelTest: XCTestCase {
 
     func testPublishReturnsSequenceNumberFromConfirmations() {
         let ch = ChannelHelper.makeChannel(1)
-        XCTAssertEqual(0, ch.basicPublish(NSData(), routingKey: "", exchange: "", properties: [], options: []))
-        XCTAssertEqual(1, ch.basicPublish(NSData(), routingKey: "", exchange: "", properties: [], options: []))
+        XCTAssertEqual(0, ch.basicPublish(Data(), routingKey: "", exchange: "", properties: [], options: []))
+        XCTAssertEqual(1, ch.basicPublish(Data(), routingKey: "", exchange: "", properties: [], options: []))
     }
 
     func testPublishHasDefaultProperties() {
@@ -298,7 +298,7 @@ class RMQAllocatedChannelTest: XCTestCase {
         let ch = ChannelHelper.makeChannel(999, contentBodySize: 4, dispatcher: dispatcher)
 
         let props: [RMQValue] = [RMQBasicCorrelationId("my-correlation-id")]
-        ch.basicPublish(NSData(), routingKey: "", exchange: "", properties: props, options: [])
+        ch.basicPublish(Data(), routingKey: "", exchange: "", properties: props, options: [])
 
         let expectedProperties: Set<RMQValue> = Set(RMQBasicProperties.defaultProperties()).union(props)
         let header = dispatcher.lastAsyncFrameset!.contentHeader
@@ -309,17 +309,17 @@ class RMQAllocatedChannelTest: XCTestCase {
     func testPublishWhenContentLengthIsMultipleOfFrameMax() {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(999, contentBodySize: 4, dispatcher: dispatcher)
-        let messageContent = "12345678".dataUsingEncoding(NSUTF8StringEncoding)!
+        let messageContent = "12345678".data(using: String.Encoding.utf8)!
         let expectedMethod = MethodFixtures.basicPublish("my.q", exchange: "", options: [])
         let expectedBodyData = messageContent
         let expectedHeader = RMQContentHeader(
             classID: 60,
-            bodySize: expectedBodyData.length,
+            bodySize: expectedBodyData.count as NSNumber,
             properties: RMQBasicProperties.defaultProperties()
         )
         let expectedBodies = [
-            RMQContentBody(data: "1234".dataUsingEncoding(NSUTF8StringEncoding)!),
-            RMQContentBody(data: "5678".dataUsingEncoding(NSUTF8StringEncoding)!),
+            RMQContentBody(data: "1234".data(using: String.Encoding.utf8)!),
+            RMQContentBody(data: "5678".data(using: String.Encoding.utf8)!),
             ]
         let expectedFrameset = RMQFrameset(
             channelNumber: 999,
@@ -328,7 +328,7 @@ class RMQAllocatedChannelTest: XCTestCase {
             contentBodies: expectedBodies
         )
 
-        ch.activateWithDelegate(nil)
+        ch.activate(with: nil)
 
         ch.basicPublish(messageContent, routingKey: "my.q", exchange: "", properties: RMQBasicProperties.defaultProperties(), options: [])
 
@@ -342,11 +342,11 @@ class RMQAllocatedChannelTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
 
-        ch.activateWithDelegate(delegate)
+        ch.activate(with: delegate)
 
         ch.basicQos(1, global: true)
 
-        XCTAssertEqual(MethodFixtures.basicQos(1, options: [.Global]),
+        XCTAssertEqual(MethodFixtures.basicQos(1, options: [.global]),
                        dispatcher.lastSyncMethod as? RMQBasicQos)
     }
 
@@ -355,11 +355,11 @@ class RMQAllocatedChannelTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
 
-        ch.activateWithDelegate(delegate)
+        ch.activate(with: delegate)
 
-        ch.ack(123, options: [.Multiple])
+        ch.ack(123, options: [.multiple])
 
-        XCTAssertEqual(MethodFixtures.basicAck(123, options: [.Multiple]),
+        XCTAssertEqual(MethodFixtures.basicAck(123, options: [.multiple]),
                        dispatcher.lastAsyncMethod as? RMQBasicAck)
     }
     
@@ -368,11 +368,11 @@ class RMQAllocatedChannelTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
 
-        ch.activateWithDelegate(delegate)
+        ch.activate(with: delegate)
 
-        ch.reject(123, options: [.Requeue])
+        ch.reject(123, options: [.requeue])
 
-        XCTAssertEqual(MethodFixtures.basicReject(123, options: [.Requeue]),
+        XCTAssertEqual(MethodFixtures.basicReject(123, options: [.requeue]),
                        dispatcher.lastAsyncMethod as? RMQBasicReject)
     }
     
@@ -381,11 +381,11 @@ class RMQAllocatedChannelTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
 
-        ch.activateWithDelegate(delegate)
+        ch.activate(with: delegate)
 
-        ch.nack(123, options: [.Requeue])
+        ch.nack(123, options: [.requeue])
 
-        XCTAssertEqual(MethodFixtures.basicNack(123, options: [.Requeue]),
+        XCTAssertEqual(MethodFixtures.basicNack(123, options: [.requeue]),
                        dispatcher.lastAsyncMethod as? RMQBasicNack)
     }
     

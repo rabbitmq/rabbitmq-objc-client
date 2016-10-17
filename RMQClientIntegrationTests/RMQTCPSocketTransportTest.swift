@@ -66,15 +66,15 @@ class RMQTCPSocketTransportTest: XCTestCase {
                                               port: 5672,
                                               tlsOptions: noTLS,
                                               callbackStorage: callbacks)
-        var receivedData: NSData?
+        var receivedData: Data?
         transport.readFrame { data in
             receivedData = data
         }
         let heartbeat = RMQHeartbeat().amqEncoded()
-        let header = heartbeat.subdataWithRange(NSMakeRange(0, 6))
-        let endByte = heartbeat.subdataWithRange(NSMakeRange(7, 1))
-        transport.socket(GCDAsyncSocket(), didReadData: header, withTag: callbacks.allKeys.first as! Int)
-        transport.socket(GCDAsyncSocket(), didReadData: endByte, withTag: callbacks.allKeys.first as! Int)
+        let header = heartbeat.subdata(in: 0..<7)
+        let endByte = heartbeat.subdata(in: 7..<8)
+        transport.socket(GCDAsyncSocket(), didRead: header, withTag: callbacks.allKeys.first as! Int)
+        transport.socket(GCDAsyncSocket(), didRead: endByte, withTag: callbacks.allKeys.first as! Int)
 
         XCTAssertEqual(header, receivedData)
     }
@@ -117,7 +117,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
 
         TestHelper.pollUntil { delegate.lastDisconnectError != nil }
 
-        XCTAssertEqual(NSPOSIXErrorDomain, delegate.lastDisconnectError?.domain)
+        XCTAssertEqual(NSPOSIXErrorDomain, (delegate.lastDisconnectError as! NSError).domain)
     }
 
     func testExtendsReadWhenReadTimesOut() {
@@ -130,53 +130,53 @@ class RMQTCPSocketTransportTest: XCTestCase {
     }
 
     func testConnectsViaTLS() {
-        let semaphore = dispatch_semaphore_create(0)
+        let semaphore = DispatchSemaphore(value: 0)
         let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5671,
                                               tlsOptions: RMQTLSOptions(peerName: "localhost", verifyPeer: false, pkcs12: nil, pkcs12Password: ""))
         try! transport.connect()
         transport.write(RMQProtocolHeader().amqEncoded())
 
-        var receivedData: NSData?
+        var receivedData: Data?
         transport.readFrame { data in
             receivedData = data
-            dispatch_semaphore_signal(semaphore)
+            semaphore.signal()
         }
 
-        XCTAssertEqual(0, dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(2)),
+        XCTAssertEqual(.success, semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(2)),
                        "Timed out waiting for read")
         let parser = RMQParser(data: receivedData!)
-        XCTAssert(RMQFrame(parser: parser).payload.isKindOfClass(RMQConnectionStart))
+        XCTAssert(RMQFrame(parser: parser).payload.isKind(of: RMQConnectionStart.self))
     }
 
     func testConnectsViaTLSWithClientCert() {
-        let semaphore = dispatch_semaphore_create(0)
+        let semaphore = DispatchSemaphore(value: 0)
         let tlsOptions = RMQTLSOptions(
             peerName: "localhost",
             verifyPeer: false,
-            pkcs12: CertificateFixtures.guestBunniesP12(),
+            pkcs12: CertificateFixtures.guestBunniesP12() as Data,
             pkcs12Password: "bunnies"
         )
         let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5671, tlsOptions: tlsOptions)
         try! transport.connect()
         transport.write(RMQProtocolHeader().amqEncoded())
 
-        var receivedData: NSData?
+        var receivedData: Data?
         transport.readFrame { data in
             receivedData = data
-            dispatch_semaphore_signal(semaphore)
+            semaphore.signal()
         }
 
-        XCTAssertEqual(0, dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(2)),
+        XCTAssertEqual(.success, semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(2)),
                        "Timed out waiting for read")
         let parser = RMQParser(data: receivedData!)
-        XCTAssert(RMQFrame(parser: parser).payload.isKindOfClass(RMQConnectionStart))
+        XCTAssert(RMQFrame(parser: parser).payload.isKind(of: RMQConnectionStart.self))
     }
 
     func testThrowsWhenTLSPasswordIncorrect() {
         let tlsOptions = RMQTLSOptions(
             peerName: "localhost",
             verifyPeer: false,
-            pkcs12: CertificateFixtures.guestBunniesP12(),
+            pkcs12: CertificateFixtures.guestBunniesP12() as Data,
             pkcs12Password: "incorrect-password"
         )
         let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5671, tlsOptions: tlsOptions)
@@ -200,7 +200,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
         transport.write(RMQProtocolHeader().amqEncoded())
         transport.simulateDisconnect()
 
-        XCTAssert(TestHelper.pollUntil { delegate.lastDisconnectError?.code == RMQError.SimulatedDisconnect.rawValue })
+        XCTAssert(TestHelper.pollUntil { delegate.lastDisconnectError?._code == RMQError.simulatedDisconnect.rawValue })
     }
 
     func createTransport() -> RMQTCPSocketTransport {

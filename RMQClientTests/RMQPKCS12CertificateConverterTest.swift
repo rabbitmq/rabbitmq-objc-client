@@ -55,23 +55,23 @@ class RMQPKCS12CertificateConverterTest: XCTestCase {
 
     func testConvertNSDataToArrayOfCertificates() {
         let p12 = CertificateFixtures.guestBunniesP12()
-        let converter = RMQPKCS12CertificateConverter(data: p12, password: "bunnies")
-        let result = try! converter.certificates()
+        let converter = RMQPKCS12CertificateConverter(data: p12 as Data!, password: "bunnies")
+        let result = try! converter?.certificates()
 
-        XCTAssertEqual(1, result.count)
-        let description = result.first!.description()
-        XCTAssert(description.rangeOfString("SecIdentityRef") != nil,
+        XCTAssertEqual(1, result?.count)
+        let description = (result?.first! as AnyObject).description()
+        XCTAssert(description?.range(of: "SecIdentityRef") != nil,
                   "Didn't get SecIdentityRef as first item in cert array")
     }
 
     func testIncorrectPasswordThrowsError() {
         let p12 = CertificateFixtures.guestBunniesP12()
-        let converter = RMQPKCS12CertificateConverter(data: p12, password: "hares")
+        let converter = RMQPKCS12CertificateConverter(data: p12 as Data!, password: "hares")
 
-        XCTAssertThrowsError(try converter.certificates()) { (error) in
+        XCTAssertThrowsError(try converter?.certificates()) { (error) in
             do {
                 XCTAssertEqual(
-                    RMQError.TLSCertificateAuthFailure.rawValue,
+                    RMQError.tlsCertificateAuthFailure.rawValue,
                     (error as NSError).code
                 )
             }
@@ -79,13 +79,13 @@ class RMQPKCS12CertificateConverterTest: XCTestCase {
     }
 
     func testGarbageDataThrowsError() {
-        let p12 = "somegarbage".dataUsingEncoding(NSUTF8StringEncoding)!
+        let p12 = "somegarbage".data(using: String.Encoding.utf8)!
         let converter = RMQPKCS12CertificateConverter(data: p12, password: "bunnies")
 
-        XCTAssertThrowsError(try converter.certificates()) { (error) in
+        XCTAssertThrowsError(try converter?.certificates()) { (error) in
             do {
                 XCTAssertEqual(
-                    RMQError.TLSCertificateDecodeError.rawValue,
+                    RMQError.tlsCertificateDecodeError.rawValue,
                     (error as NSError).code
                 )
             }
@@ -94,10 +94,10 @@ class RMQPKCS12CertificateConverterTest: XCTestCase {
 
     func testReturnsEmptyCertificatesWhenNoP12DataProvided() {
         let converter = RMQPKCS12CertificateConverter(
-            data: "".dataUsingEncoding(NSUTF8StringEncoding),
+            data: "".data(using: String.Encoding.utf8),
             password: "ez123"
         )
-        XCTAssertEqual(0, try! converter.certificates().count)
+        XCTAssertEqual(0, try! converter?.certificates().count)
     }
 
 }

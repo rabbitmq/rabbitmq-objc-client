@@ -51,7 +51,7 @@
 
 class QueueHelper {
 
-    static func makeQueue(channel: RMQChannel,
+    static func makeQueue(_ channel: RMQChannel,
                           name: String = "",
                           options: RMQQueueDeclareOptions = [],
                           arguments: [String: RMQValue] = [:]) -> RMQQueue {

@@ -51,7 +51,7 @@
 
 class BasicPropertyFixtures {
     static func exhaustiveHeadersDict() -> [String: RMQValue] {
-        let mytime = NSDate.distantFuture()
+        let mytime = Date.distantFuture
         let subTable: [String: RMQValue] = [
             "sub": RMQLongstr("headers"),
             "4": RMQSignedLonglong(2)

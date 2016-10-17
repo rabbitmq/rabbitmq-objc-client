@@ -53,13 +53,13 @@ import XCTest
 
 class RMQExchangeTest: XCTestCase {
 
-    let body = "foo".dataUsingEncoding(NSUTF8StringEncoding)!
+    let body = "foo".data(using: String.Encoding.utf8)!
 
     func testPublishCallsPublishOnChannel() {
-        let ch = ChannelSpy(1)
+        let ch = ChannelSpy(channelNumber: 1)
         ch.publishReturn = 123
         let ex = RMQExchange(name: "", type: "direct", options: [], channel: ch)
-        let retval = ex.publish(body, routingKey: "my.q")
+        let retval = ex?.publish(body, routingKey: "my.q")
 
         XCTAssertEqual(123, retval)
         XCTAssertEqual(body, ch.lastReceivedBasicPublishMessage)
@@ -70,17 +70,17 @@ class RMQExchangeTest: XCTestCase {
     }
 
     func testPublishWithoutRoutingKeyUsesEmptyString() {
-        let ch = ChannelSpy(1)
+        let ch = ChannelSpy(channelNumber: 1)
         let ex = RMQExchange(name: "", type: "direct", options: [], channel: ch)
-        ex.publish(body)
+        _ = ex?.publish(body)
 
         XCTAssertEqual("", ch.lastReceivedBasicPublishRoutingKey)
     }
 
     func testPublishWithPersistence() {
-        let ch = ChannelSpy(1)
+        let ch = ChannelSpy(channelNumber: 1)
         let ex = RMQExchange(name: "some-ex", type: "direct", options: [], channel: ch)
-        ex.publish(body, routingKey: "my.q", persistent: true)
+        _ = ex?.publish(body, routingKey: "my.q", persistent: true)
 
         XCTAssertEqual(body, ch.lastReceivedBasicPublishMessage)
         XCTAssertEqual("my.q", ch.lastReceivedBasicPublishRoutingKey)
@@ -90,9 +90,9 @@ class RMQExchangeTest: XCTestCase {
     }
 
     func testPublishWithProperties() {
-        let channel = ChannelSpy(42)
+        let channel = ChannelSpy(channelNumber: 42)
         let ex = RMQExchange(name: "some-ex", type: "direct", options: [], channel: channel)
-        let timestamp = NSDate()
+        let timestamp = Date()
 
         let properties: [RMQValue] = [
             RMQBasicAppId("some.app"),
@@ -110,70 +110,70 @@ class RMQExchangeTest: XCTestCase {
             BasicPropertyFixtures.exhaustiveHeaders()
         ]
 
-        ex.publish("{\"a\": \"message\"}".dataUsingEncoding(NSUTF8StringEncoding),
-                   routingKey: "some.queue",
-                   properties: properties,
-                   options: [.Mandatory])
+        _ = ex?.publish("{\"a\": \"message\"}".data(using: String.Encoding.utf8),
+                        routingKey: "some.queue",
+                        properties: properties,
+                        options: [.mandatory])
 
-        XCTAssertEqual("{\"a\": \"message\"}".dataUsingEncoding(NSUTF8StringEncoding), channel.lastReceivedBasicPublishMessage)
+        XCTAssertEqual("{\"a\": \"message\"}".data(using: String.Encoding.utf8), channel.lastReceivedBasicPublishMessage)
         XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("some-ex", channel.lastReceivedBasicPublishExchange)
-        XCTAssertEqual([.Mandatory], channel.lastReceivedBasicPublishOptions)
+        XCTAssertEqual([.mandatory], channel.lastReceivedBasicPublishOptions)
         XCTAssertEqual(properties, channel.lastReceivedBasicPublishProperties!)
     }
 
     func testPublishWithOptions() {
-        let ch = ChannelSpy(1)
+        let ch = ChannelSpy(channelNumber: 1)
         let ex = RMQExchange(name: "some-ex", type: "direct", options: [], channel: ch)
-        ex.publish(body, routingKey: "my.q", persistent: false, options: [.Mandatory])
+        _ = ex?.publish(body, routingKey: "my.q", persistent: false, options: [.mandatory])
 
         XCTAssertEqual(body, ch.lastReceivedBasicPublishMessage)
         XCTAssertEqual("my.q", ch.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("some-ex", ch.lastReceivedBasicPublishExchange)
         XCTAssertEqual([], ch.lastReceivedBasicPublishProperties!)
-        XCTAssertEqual([.Mandatory], ch.lastReceivedBasicPublishOptions)
+        XCTAssertEqual([.mandatory], ch.lastReceivedBasicPublishOptions)
     }
 
     func testDeleteCallsDeleteOnChannel() {
-        let ch = ChannelSpy(1)
+        let ch = ChannelSpy(channelNumber: 1)
         let ex = RMQExchange(name: "deletable", type: "direct", options: [], channel: ch)
         
-        ex.delete()
+        ex?.delete()
         XCTAssertEqual("deletable", ch.lastReceivedExchangeDeleteExchangeName)
         XCTAssertEqual([], ch.lastReceivedExchangeDeleteOptions)
 
-        ex.delete([.IfUnused])
+        ex?.delete([.ifUnused])
         XCTAssertEqual("deletable", ch.lastReceivedExchangeDeleteExchangeName)
-        XCTAssertEqual([.IfUnused], ch.lastReceivedExchangeDeleteOptions)
+        XCTAssertEqual([.ifUnused], ch.lastReceivedExchangeDeleteOptions)
     }
 
     func testBindCallsBindOnChannel() {
-        let ch = ChannelSpy(1)
+        let ch = ChannelSpy(channelNumber: 1)
         let ex1 = RMQExchange(name: "ex1", type: "direct", options: [], channel: ch)
         let ex2 = RMQExchange(name: "ex2", type: "direct", options: [], channel: ch)
 
-        ex1.bind(ex2)
+        ex1?.bind(ex2)
         XCTAssertEqual("ex1", ch.lastReceivedExchangeBindDestinationName)
         XCTAssertEqual("ex2", ch.lastReceivedExchangeBindSourceName)
         XCTAssertEqual("", ch.lastReceivedExchangeBindRoutingKey)
 
-        ex1.bind(ex2, routingKey: "foo")
+        ex1?.bind(ex2, routingKey: "foo")
         XCTAssertEqual("ex1", ch.lastReceivedExchangeBindDestinationName)
         XCTAssertEqual("ex2", ch.lastReceivedExchangeBindSourceName)
         XCTAssertEqual("foo", ch.lastReceivedExchangeBindRoutingKey)
     }
 
     func testUnbindCallsUnbindOnChannel() {
-        let ch = ChannelSpy(1)
+        let ch = ChannelSpy(channelNumber: 1)
         let ex1 = RMQExchange(name: "ex1", type: "direct", options: [], channel: ch)
         let ex2 = RMQExchange(name: "ex2", type: "direct", options: [], channel: ch)
 
-        ex1.unbind(ex2)
+        ex1?.unbind(ex2)
         XCTAssertEqual("ex1", ch.lastReceivedExchangeUnbindDestinationName)
         XCTAssertEqual("ex2", ch.lastReceivedExchangeUnbindSourceName)
         XCTAssertEqual("", ch.lastReceivedExchangeUnbindRoutingKey)
 
-        ex1.unbind(ex2, routingKey: "foo")
+        ex1?.unbind(ex2, routingKey: "foo")
         XCTAssertEqual("ex1", ch.lastReceivedExchangeUnbindDestinationName)
         XCTAssertEqual("ex2", ch.lastReceivedExchangeUnbindSourceName)
         XCTAssertEqual("foo", ch.lastReceivedExchangeUnbindRoutingKey)

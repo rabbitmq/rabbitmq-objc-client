@@ -60,9 +60,9 @@ class RMQFramesetValidatorTest: XCTestCase {
         validator.fulfill(deliveredFrameset)
         let result = validator.expect(RMQChannelOpenOk.self)
 
-        XCTAssertEqual(deliveredFrameset, result.frameset)
-        XCTAssertEqual(RMQError.ChannelIncorrectSyncMethod.rawValue, result.error.code)
-        XCTAssertEqual("Expected RMQChannelOpenOk, got RMQBasicConsumeOk.", result.error.localizedDescription)
+        XCTAssertEqual(deliveredFrameset, result?.frameset)
+        XCTAssertEqual(RMQError.channelIncorrectSyncMethod.rawValue, result?.error._code)
+        XCTAssertEqual("Expected RMQChannelOpenOk, got RMQBasicConsumeOk.", result?.error.localizedDescription)
     }
 
     func testCorrectFramesetProducesFramesetAndNoError() {
@@ -72,8 +72,8 @@ class RMQFramesetValidatorTest: XCTestCase {
         validator.fulfill(deliveredFrameset)
         let result = validator.expect(RMQChannelOpenOk.self)
 
-        XCTAssertEqual(deliveredFrameset, result.frameset)
-        XCTAssertNil(result.error)
+        XCTAssertEqual(deliveredFrameset, result?.frameset)
+        XCTAssertNil(result?.error)
     }
     
 }

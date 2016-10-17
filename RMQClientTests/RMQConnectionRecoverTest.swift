@@ -61,9 +61,9 @@ class RMQConnectionRecoverTest: XCTestCase {
                                            attemptLimit: 1,
                                            onlyErrors: false,
                                            heartbeatSender: heartbeatSender,
-                                           commandQueue: q,
+                                           command: q,
                                            delegate: ConnectionDelegateSpy())
-        recover.recover(conn, channelAllocator: ChannelSpyAllocator(), error: nil)
+        recover?.recover(conn, channelAllocator: ChannelSpyAllocator(), error: nil)
 
         try! q.step()
         XCTAssert(heartbeatSender.stopReceived)
@@ -76,9 +76,9 @@ class RMQConnectionRecoverTest: XCTestCase {
                                            attemptLimit: 1,
                                            onlyErrors: false,
                                            heartbeatSender: HeartbeatSenderSpy(),
-                                           commandQueue: q,
+                                           command: q,
                                            delegate: ConnectionDelegateSpy())
-        recover.recover(conn, channelAllocator: ChannelSpyAllocator(), error: nil)
+        recover?.recover(conn, channelAllocator: ChannelSpyAllocator(), error: nil)
         XCTAssertEqual(1, q.delayedItems.count)
         XCTAssertEqual(3, q.enqueueDelay)
 
@@ -99,7 +99,7 @@ class RMQConnectionRecoverTest: XCTestCase {
                                            attemptLimit: 1,
                                            onlyErrors: false,
                                            heartbeatSender: HeartbeatSenderSpy(),
-                                           commandQueue: q,
+                                           command: q,
                                            delegate: ConnectionDelegateSpy())
         let ch0 = allocator.allocate() as! ChannelSpy
         let ch1 = allocator.allocate() as! ChannelSpy
@@ -107,7 +107,7 @@ class RMQConnectionRecoverTest: XCTestCase {
         let ch3 = allocator.allocate() as! ChannelSpy
         allocator.releaseChannelNumber(2)
 
-        recover.recover(conn, channelAllocator: allocator, error: nil)
+        recover?.recover(conn, channelAllocator: allocator, error: nil)
         try! q.finish()
 
         XCTAssertFalse(ch0.recoverCalled)
@@ -135,9 +135,9 @@ class RMQConnectionRecoverTest: XCTestCase {
                                            attemptLimit: 1,
                                            onlyErrors: false,
                                            heartbeatSender: HeartbeatSenderSpy(),
-                                           commandQueue: q,
+                                           command: q,
                                            delegate: delegate)
-        recover.recover(conn, channelAllocator: ChannelSpyAllocator(), error: nil)
+        recover?.recover(conn, channelAllocator: ChannelSpyAllocator(), error: nil)
 
         try! q.step()
 
@@ -168,16 +168,16 @@ class RMQConnectionRecoverTest: XCTestCase {
                                            attemptLimit: 2,
                                            onlyErrors: false,
                                            heartbeatSender: heartbeatSender,
-                                           commandQueue: q,
+                                           command: q,
                                            delegate: delegate)
-        recover.recover(nil, channelAllocator: nil, error: nil)
+        recover?.recover(nil, channelAllocator: nil, error: nil)
         try! q.finish()
-        recover.recover(nil, channelAllocator: nil, error: nil)
+        recover?.recover(nil, channelAllocator: nil, error: nil)
         try! q.finish()
         delegate.willStartRecoveryConnection = nil
         heartbeatSender.stopReceived = false
 
-        recover.recover(StarterSpy(), channelAllocator: nil, error: nil)
+        recover?.recover(StarterSpy(), channelAllocator: nil, error: nil)
 
         try! q.step()
 
@@ -194,9 +194,9 @@ class RMQConnectionRecoverTest: XCTestCase {
                                            attemptLimit: 2,
                                            onlyErrors: false,
                                            heartbeatSender: heartbeatSender,
-                                           commandQueue: q,
+                                           command: q,
                                            delegate: delegate)
-        recover.recover(StarterSpy(), channelAllocator: nil, error: nil)
+        recover?.recover(StarterSpy(), channelAllocator: nil, error: nil)
 
         try! q.step()
 
@@ -212,15 +212,15 @@ class RMQConnectionRecoverTest: XCTestCase {
                                            attemptLimit: 2,
                                            onlyErrors: false,
                                            heartbeatSender: HeartbeatSenderSpy(),
-                                           commandQueue: q,
+                                           command: q,
                                            delegate: delegate)
         let conn = StarterSpy()
-        recover.recover(conn, channelAllocator: nil, error: nil)
+        recover?.recover(conn, channelAllocator: nil, error: nil)
 
         try! q.step()                  // stop heartbeats
         try! q.step()                  // attempt connection start, never completes
 
-        recover.recover(conn, channelAllocator: nil, error: nil)
+        recover?.recover(conn, channelAllocator: nil, error: nil)
 
         try! q.step()                  // stop heartbeats
         try! q.step()                  // attempt connection start
@@ -229,7 +229,7 @@ class RMQConnectionRecoverTest: XCTestCase {
         try! q.step()                  // run queued after-handshake work
 
         let queueLengthBefore = q.items.count
-        recover.recover(conn, channelAllocator: nil, error: nil)
+        recover?.recover(conn, channelAllocator: nil, error: nil)
 
         XCTAssertGreaterThan(q.items.count, queueLengthBefore)
     }
@@ -242,10 +242,10 @@ class RMQConnectionRecoverTest: XCTestCase {
                                            attemptLimit: 2,
                                            onlyErrors: true,
                                            heartbeatSender: heartbeatSender,
-                                           commandQueue: q,
+                                           command: q,
                                            delegate: delegate)
         let conn = StarterSpy()
-        recover.recover(conn, channelAllocator: nil, error: nil)
+        recover?.recover(conn, channelAllocator: nil, error: nil)
 
         try! q.step()
         XCTAssert(heartbeatSender.stopReceived)
@@ -261,10 +261,10 @@ class RMQConnectionRecoverTest: XCTestCase {
                                            attemptLimit: 2,
                                            onlyErrors: true,
                                            heartbeatSender: heartbeatSender,
-                                           commandQueue: q,
+                                           command: q,
                                            delegate: delegate)
         let conn = StarterSpy()
-        recover.recover(conn, channelAllocator: nil, error: NSError(domain: RMQErrorDomain, code: 999, userInfo: [:]))
+        recover?.recover(conn, channelAllocator: nil, error: NSError(domain: RMQErrorDomain, code: 999, userInfo: [:]))
 
         try! q.step()
         XCTAssert(heartbeatSender.stopReceived)

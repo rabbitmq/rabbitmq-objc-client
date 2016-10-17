@@ -55,12 +55,12 @@ class RMQGCDSerialQueueTest: XCTestCase {
 
     func testAsyncEnqueue() {
         let q = RMQGCDSerialQueue(name: "async enqueue test")
-        let semaphore = dispatch_semaphore_create(0)
-        q.enqueue() { dispatch_semaphore_signal(semaphore) }
+        let semaphore = DispatchSemaphore(value: 0)
+        q?.enqueue() { semaphore.signal() }
 
         XCTAssertEqual(
-            0,
-            dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(10)),
+            .success,
+            semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
             "Timed out waiting for queued work"
         )
     }
@@ -68,8 +68,8 @@ class RMQGCDSerialQueueTest: XCTestCase {
     func testSyncEnqueue() {
         let q = RMQGCDSerialQueue(name: "sync enqueue test")
         var foo = 1
-        q.enqueue() { foo += 1 }
-        q.blockingEnqueue { foo += 2 }
+        q?.enqueue() { foo += 1 }
+        q?.blockingEnqueue { foo += 2 }
 
         XCTAssertEqual(4, foo)
     }
@@ -77,25 +77,25 @@ class RMQGCDSerialQueueTest: XCTestCase {
     func testSuspendAndResume() {
         let q = RMQGCDSerialQueue(name: "suspend and resume test")
         var foo = 1
-        q.suspend()
-        q.enqueue { foo += 1 }
+        q?.suspend()
+        q?.enqueue { foo += 1 }
         TestHelper.run(0.2)
         XCTAssertEqual(1, foo)
-        q.resume()
-        q.blockingEnqueue {}
+        q?.resume()
+        q?.blockingEnqueue {}
         XCTAssertEqual(2, foo)
     }
 
     func testCannotOverResumeOrSuspend() {
         let q = RMQGCDSerialQueue(name: "over-resume test")
-        q.resume()
-        q.resume()
-        q.suspend()
-        q.suspend()
-        q.resume()
+        q?.resume()
+        q?.resume()
+        q?.suspend()
+        q?.suspend()
+        q?.resume()
 
         var foo: String?
-        q.blockingEnqueue {
+        q?.blockingEnqueue {
             foo = "bar"
         }
         XCTAssertEqual("bar", foo)
@@ -103,17 +103,17 @@ class RMQGCDSerialQueueTest: XCTestCase {
 
     func testDelayedEnqueue() {
         let q = RMQGCDSerialQueue(name: "delay test")
-        let semaphore = dispatch_semaphore_create(0)
+        let semaphore = DispatchSemaphore(value: 0)
         var items: [String] = []
-        q.delayedBy(0.01) {
+        q?.delayed(by: 0.01) {
             items.append("delayed")
-            dispatch_semaphore_signal(semaphore)
+            semaphore.signal()
         }
-        q.enqueue {
+        q?.enqueue {
             items.append("enqueued")
         }
 
-        XCTAssertEqual(0, dispatch_semaphore_wait(semaphore, TestHelper.dispatchTimeFromNow(2)),
+        XCTAssertEqual(.success, semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(2)),
                        "Timed out waiting for queue to finish")
         XCTAssertEqual(["enqueued", "delayed"], items)
     }

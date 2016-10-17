@@ -65,7 +65,7 @@ class ConnectionClosureTest: XCTestCase {
                                  channelAllocator: allocator,
                                  frameHandler: FrameHandlerSpy(),
                                  delegate: ConnectionDelegateSpy(),
-                                 commandQueue: q,
+                                 command: q,
                                  waiterFactory: FakeWaiterFactory(),
                                  heartbeatSender: HeartbeatSenderSpy())
 
@@ -113,7 +113,7 @@ class ConnectionClosureTest: XCTestCase {
                                  channelAllocator: allocator,
                                  frameHandler: FrameHandlerSpy(),
                                  delegate: ConnectionDelegateSpy(),
-                                 commandQueue: q,
+                                 command: q,
                                  waiterFactory: FakeWaiterFactory(),
                                  heartbeatSender: HeartbeatSenderSpy())
 
@@ -138,7 +138,7 @@ class ConnectionClosureTest: XCTestCase {
                                  channelAllocator: allocator,
                                  frameHandler: FrameHandlerSpy(),
                                  delegate: ConnectionDelegateSpy(),
-                                 commandQueue: q,
+                                 command: q,
                                  waiterFactory: FakeWaiterFactory(),
                                  heartbeatSender: heartbeatSender)
 
@@ -165,7 +165,7 @@ class ConnectionClosureTest: XCTestCase {
                                  channelAllocator: allocator,
                                  frameHandler: FrameHandlerSpy(),
                                  delegate: ConnectionDelegateSpy(),
-                                 commandQueue: q,
+                                 command: q,
                                  waiterFactory: FakeWaiterFactory(),
                                  heartbeatSender: heartbeatSender)
         conn.start()
@@ -198,7 +198,7 @@ class ConnectionClosureTest: XCTestCase {
                                  channelAllocator: allocator,
                                  frameHandler: FrameHandlerSpy(),
                                  delegate: ConnectionDelegateSpy(),
-                                 commandQueue: q,
+                                 command: q,
                                  waiterFactory: FakeWaiterFactory(),
                                  heartbeatSender: heartbeatSender)
 

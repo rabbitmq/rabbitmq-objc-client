@@ -56,11 +56,11 @@ class ExchangeDeclarationTest: XCTestCase {
     func testExchangeDeclareSendsAnExchangeDeclare() {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
-        ch.activateWithDelegate(nil)
+        ch.activate(with: nil)
 
-        ch.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
+        ch.exchangeDeclare("my-exchange", type: "fanout", options: [.durable, .autoDelete])
 
-        let expectedMethod = MethodFixtures.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
+        let expectedMethod = MethodFixtures.exchangeDeclare("my-exchange", type: "fanout", options: [.durable, .autoDelete])
 
         XCTAssertEqual(expectedMethod, dispatcher.lastSyncMethod as? RMQExchangeDeclare)
     }
@@ -69,11 +69,11 @@ class ExchangeDeclarationTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
 
-        ch.activateWithDelegate(nil)
+        ch.activate(with: nil)
 
-        ch.fanout("my-exchange", options: [.Durable, .AutoDelete])
+        ch.fanout("my-exchange", options: [.durable, .autoDelete])
 
-        let expectedMethod = MethodFixtures.exchangeDeclare("my-exchange", type: "fanout", options: [.Durable, .AutoDelete])
+        let expectedMethod = MethodFixtures.exchangeDeclare("my-exchange", type: "fanout", options: [.durable, .autoDelete])
 
         XCTAssertEqual(expectedMethod, dispatcher.lastSyncMethod as? RMQExchangeDeclare)
     }
@@ -82,11 +82,11 @@ class ExchangeDeclarationTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
 
-        ch.activateWithDelegate(nil)
+        ch.activate(with: nil)
 
-        ch.direct("my-exchange", options: [.Durable, .AutoDelete])
+        ch.direct("my-exchange", options: [.durable, .autoDelete])
 
-        let expectedMethod = MethodFixtures.exchangeDeclare("my-exchange", type: "direct", options: [.Durable, .AutoDelete])
+        let expectedMethod = MethodFixtures.exchangeDeclare("my-exchange", type: "direct", options: [.durable, .autoDelete])
 
         XCTAssertEqual(expectedMethod, dispatcher.lastSyncMethod as? RMQExchangeDeclare)
     }
@@ -95,11 +95,11 @@ class ExchangeDeclarationTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
 
-        ch.activateWithDelegate(nil)
+        ch.activate(with: nil)
 
-        ch.topic("my-exchange", options: [.Durable, .AutoDelete])
+        ch.topic("my-exchange", options: [.durable, .autoDelete])
 
-        let expectedMethod = MethodFixtures.exchangeDeclare("my-exchange", type: "topic", options: [.Durable, .AutoDelete])
+        let expectedMethod = MethodFixtures.exchangeDeclare("my-exchange", type: "topic", options: [.durable, .autoDelete])
 
         XCTAssertEqual(expectedMethod, dispatcher.lastSyncMethod as? RMQExchangeDeclare)
     }
@@ -108,11 +108,11 @@ class ExchangeDeclarationTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
 
-        ch.activateWithDelegate(nil)
+        ch.activate(with: nil)
 
-        ch.headers("my-exchange", options: [.Durable, .AutoDelete])
+        ch.headers("my-exchange", options: [.durable, .autoDelete])
 
-        let expectedMethod = MethodFixtures.exchangeDeclare("my-exchange", type: "headers", options: [.Durable, .AutoDelete])
+        let expectedMethod = MethodFixtures.exchangeDeclare("my-exchange", type: "headers", options: [.durable, .autoDelete])
 
         XCTAssertEqual(expectedMethod, dispatcher.lastSyncMethod as? RMQExchangeDeclare)
     }
@@ -121,12 +121,12 @@ class ExchangeDeclarationTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
 
-        ch.activateWithDelegate(nil)
+        ch.activate(with: nil)
 
-        let ex1 = ch.topic("my-exchange", options: [.Durable, .AutoDelete])
+        let ex1 = ch.topic("my-exchange", options: [.durable, .autoDelete])
         let ex2 = ch.fanout("my-exchange")
         let ex3 = ch.direct("my-exchange")
-        let ex4 = ch.headers("my-exchange", options: [.Durable])
+        let ex4 = ch.headers("my-exchange", options: [.durable])
 
         XCTAssertEqual(ex1, ex2)
         XCTAssertEqual(ex2, ex3)
@@ -136,8 +136,8 @@ class ExchangeDeclarationTest: XCTestCase {
     func testExchangeDeleteSendsAnExchangeDelete() {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
-        ch.exchangeDelete("my exchange", options: [.IfUnused])
-        XCTAssertEqual(MethodFixtures.exchangeDelete("my exchange", options: [.IfUnused]),
+        ch.exchangeDelete("my exchange", options: [.ifUnused])
+        XCTAssertEqual(MethodFixtures.exchangeDelete("my exchange", options: [.ifUnused]),
                        dispatcher.lastSyncMethod as? RMQExchangeDelete)
     }
 

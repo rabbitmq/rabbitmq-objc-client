@@ -51,7 +51,7 @@
 
 @objc class DispatcherSpy : NSObject, RMQDispatcher {
     var lastSyncMethod: RMQMethod?
-    var lastSyncMethodHandler: (RMQFrameset! -> Void)?
+    var lastSyncMethodHandler: ((RMQFrameset?) -> Void)?
     var lastBlockingSyncMethod: RMQMethod?
     var syncMethodsSent: [RMQMethod] = []
     var lastAsyncFrameset: RMQFrameset?
@@ -63,43 +63,43 @@
     var fakeSerialQueue = FakeSerialQueue()
     var disabled = false
 
-    func blockingWaitOn(method: AnyClass!) {
+    func blockingWait(on method: AnyClass!) {
         lastBlockingWaitOn = method.description()
     }
 
-    func activateWithChannel(channel: RMQChannel!, delegate: RMQConnectionDelegate!) {
+    func activate(with channel: RMQChannel!, delegate: RMQConnectionDelegate!) {
         activatedWithChannel = channel
         activatedWithDelegate = delegate
     }
 
-    func sendAsyncMethod(method: RMQMethod!) {
+    func sendAsyncMethod(_ method: RMQMethod!) {
         lastAsyncMethod = method
     }
 
-    func sendAsyncFrameset(frameset: RMQFrameset!) {
+    func sendAsyncFrameset(_ frameset: RMQFrameset!) {
         lastAsyncFrameset = frameset
     }
 
-    func sendSyncMethod(method: RMQMethod!, completionHandler: (RMQFrameset! -> Void)) {
+    func sendSyncMethod(_ method: RMQMethod!, completionHandler: ((RMQFrameset?) -> Swift.Void)!) {
         syncMethodsSent.append(method)
         lastSyncMethod = method
         lastSyncMethodHandler = completionHandler
     }
 
-    func sendSyncMethod(method: RMQMethod!) {
+    func sendSyncMethod(_ method: RMQMethod!) {
         sendSyncMethod(method) { _ in }
     }
 
-    func sendSyncMethodBlocking(method: RMQMethod!) {
+    func sendSyncMethodBlocking(_ method: RMQMethod!) {
         syncMethodsSent.append(method)
         lastBlockingSyncMethod = method
     }
 
-    func handleFrameset(frameset: RMQFrameset!) {
+    func handle(_ frameset: RMQFrameset!) {
         lastFramesetHandled = frameset
     }
 
-    func enqueue(operation: RMQOperation!) {
+    func enqueue(_ operation: RMQOperation!) {
         fakeSerialQueue.enqueue(operation)
     }
 

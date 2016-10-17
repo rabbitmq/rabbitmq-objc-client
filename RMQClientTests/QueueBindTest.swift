@@ -56,7 +56,7 @@ class QueueBindTest: XCTestCase {
     func testQueueBindSendsAQueueBind() {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
-        ch.activateWithDelegate(nil)
+        ch.activate(with: nil)
 
         ch.queueBind("my-q", exchange: "my-exchange", routingKey: "hi")
 
@@ -68,7 +68,7 @@ class QueueBindTest: XCTestCase {
     func testQueueUnbindSendsUnbind() {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
-        ch.activateWithDelegate(nil)
+        ch.activate(with: nil)
 
         ch.queueUnbind("my-q", exchange: "my-exchange", routingKey: "hi")
 

@@ -95,8 +95,8 @@ class RMQReaderTest: XCTestCase {
         let frameHandler = FrameHandlerSpy()
         let reader = RMQReader(transport: transport, frameHandler: frameHandler)
         let method = MethodFixtures.basicGetOk(routingKey: "my.great.queue")
-        let content1 = RMQContentBody(data: "aa".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let content2 = RMQContentBody(data: "bb".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let content1 = RMQContentBody(data: "aa".data(using: String.Encoding.utf8)!)
+        let content2 = RMQContentBody(data: "bb".data(using: String.Encoding.utf8)!)
         let contentHeader = RMQContentHeader(
             classID: 10,
             bodySize: 999999,
@@ -132,11 +132,11 @@ class RMQReaderTest: XCTestCase {
         let frameHandler = FrameHandlerSpy()
         let reader = RMQReader(transport: transport, frameHandler: frameHandler)
         let method = MethodFixtures.basicGetOk(routingKey: "my.great.queue")
-        let content1 = RMQContentBody(data: "aa".dataUsingEncoding(NSUTF8StringEncoding)!)
-        let content2 = RMQContentBody(data: "bb".dataUsingEncoding(NSUTF8StringEncoding)!)
+        let content1 = RMQContentBody(data: "aa".data(using: String.Encoding.utf8)!)
+        let content2 = RMQContentBody(data: "bb".data(using: String.Encoding.utf8)!)
         let contentHeader = RMQContentHeader(
             classID: 10,
-            bodySize: content1.amqEncoded().length + content2.amqEncoded().length,
+            bodySize: content1.amqEncoded().count + content2.amqEncoded().count as NSNumber,
             properties: [
                 RMQBasicContentType("text/flame")
             ]
@@ -198,6 +198,6 @@ class RMQReaderTest: XCTestCase {
     }
 
     func nonContentPayload() -> RMQBasicDeliver {
-        return RMQBasicDeliver(consumerTag: RMQShortstr(""), deliveryTag: RMQLonglong(0), options: RMQBasicDeliverOptions.NoOptions, exchange: RMQShortstr(""), routingKey: RMQShortstr("somekey"))
+        return RMQBasicDeliver(consumerTag: RMQShortstr(""), deliveryTag: RMQLonglong(0), options: RMQBasicDeliverOptions(), exchange: RMQShortstr(""), routingKey: RMQShortstr("somekey"))
     }
 }

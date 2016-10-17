@@ -58,20 +58,20 @@ class RMQGCDHeartbeatSenderTest: XCTestCase {
         let sender = RMQGCDHeartbeatSender(transport: transport,
                                            clock: clock)
 
-        return (sender, transport, clock)
+        return (sender!, transport, clock)
     }
 
     func testSendsHeartbeatsRegularly() {
         let (sender, transport, clock) = makeSender()
         let beat = RMQHeartbeat().amqEncoded()
 
-        let handler = sender.startWithInterval(1)
+        let handler = sender.start(withInterval: 1)
         sender.stop() // don't let scheduled runs interfere with test runs
 
         clock.advance(1.01)
-        handler()
+        handler!()
         clock.advance(1)
-        handler()
+        handler!()
 
         XCTAssertEqual([beat, beat], transport.outboundData)
     }
@@ -79,11 +79,11 @@ class RMQGCDHeartbeatSenderTest: XCTestCase {
     func testDoesNotBeatIfIntervalNotPassed() {
         let (sender, transport, clock) = makeSender()
 
-        let handler = sender.startWithInterval(1)
+        let handler = sender.start(withInterval: 1)
         sender.stop()
 
         clock.advance(1)
-        handler()
+        handler!()
 
         XCTAssertEqual([], transport.outboundData)
     }
@@ -91,12 +91,12 @@ class RMQGCDHeartbeatSenderTest: XCTestCase {
     func testDoesNotBeatIfActivityRecentlySignalled() {
         let (sender, transport, clock) = makeSender()
 
-        let handler = sender.startWithInterval(1)
+        let handler = sender.start(withInterval: 1)
         sender.stop()
 
         clock.advance(1.01)
         sender.signalActivity()
-        handler()
+        handler!()
 
         XCTAssertEqual([], transport.outboundData)
     }
@@ -104,9 +104,9 @@ class RMQGCDHeartbeatSenderTest: XCTestCase {
     func testCanBeStoppedAndStartedWithoutOverResumeException() {
         let (sender, _, _) = makeSender()
 
-        sender.startWithInterval(0.01)
+        sender.start(withInterval: 0.01)
         sender.stop()
-        sender.startWithInterval(0.01)
+        sender.start(withInterval: 0.01)
     }
 
     func testCanBeStoppedBeforeBeingStartedWithoutBadAccess() {
