@@ -25,7 +25,6 @@
 		AE111BD71C57B33300F88277 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE111BD61C57B33300F88277 /* TestHelper.swift */; };
 		AE111BD81C57B33300F88277 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE111BD61C57B33300F88277 /* TestHelper.swift */; };
 		AE11F1B21D155C8A007AD330 /* RMQMessageTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE11F1B11D155C8A007AD330 /* RMQMessageTest.swift */; };
-		AE1E0EC91CB2613A008285DD /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE1E0EC81CB2613A008285DD /* CocoaAsyncSocket.framework */; };
 		AE254F601C51B4D800DEA468 /* MethodFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE41C5521C4FC88F00129207 /* MethodFixtures.swift */; };
 		AE26FA281C90309F00CDBBAA /* RMQFrameTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE26FA271C90309F00CDBBAA /* RMQFrameTest.swift */; };
 		AE26FA2B1C9032E400CDBBAA /* RMQHeartbeat.h in Headers */ = {isa = PBXBuildFile; fileRef = AE26FA291C9032E400CDBBAA /* RMQHeartbeat.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -53,10 +52,8 @@
 		AE39BDA21C68B105000E7A77 /* RMQProtocolHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = AE39BDA01C68B105000E7A77 /* RMQProtocolHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE39BDA31C68B105000E7A77 /* RMQProtocolHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = AE39BDA11C68B105000E7A77 /* RMQProtocolHeader.m */; };
 		AE3E0E381C56416F00186BA7 /* EncodingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE3E0E371C56416F00186BA7 /* EncodingTest.swift */; };
-		AE40C74A1CB272F000CC7B97 /* CocoaAsyncSocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE1E0EC81CB2613A008285DD /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE41C5531C4FC88F00129207 /* MethodFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE41C5521C4FC88F00129207 /* MethodFixtures.swift */; };
 		AE43841B1CEC9DAD000A4A7A /* ChannelRecoveryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE43841A1CEC9DAD000A4A7A /* ChannelRecoveryTest.swift */; };
-		AE46F91E1CFF47F8009DE49F /* JKVValue.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE46F91D1CFF47F8009DE49F /* JKVValue.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AE48F9341CE22CA200296A23 /* RMQSuspendResumeDispatcherTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE48F9331CE22CA200296A23 /* RMQSuspendResumeDispatcherTest.swift */; };
 		AE4B72FB1D17F9E000907667 /* RMQBasicProperties+MergeDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = AE4B72F91D17F9E000907667 /* RMQBasicProperties+MergeDefaults.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE4B72FC1D17F9E000907667 /* RMQBasicProperties+MergeDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4B72FA1D17F9E000907667 /* RMQBasicProperties+MergeDefaults.m */; };
@@ -223,29 +220,6 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		AE40C7491CB272E600CC7B97 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				AE40C74A1CB272F000CC7B97 /* CocoaAsyncSocket.framework in CopyFiles */,
-				AE46F91E1CFF47F8009DE49F /* JKVValue.framework in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		AEEDB0C21CE3373C00005A92 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		AE05DA661C69EC47009E68C7 /* RMQChannelAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQChannelAllocator.h; sourceTree = "<group>"; };
 		AE05DA6A1C6A0848009E68C7 /* RMQMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQMessage.h; sourceTree = "<group>"; };
@@ -262,7 +236,6 @@
 		AE09C83B1CCE680F00FA6915 /* RMQProcessInfoNameGeneratorTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQProcessInfoNameGeneratorTest.swift; sourceTree = "<group>"; };
 		AE111BD61C57B33300F88277 /* TestHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
 		AE11F1B11D155C8A007AD330 /* RMQMessageTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQMessageTest.swift; sourceTree = "<group>"; };
-		AE1E0EC81CB2613A008285DD /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/iOS/CocoaAsyncSocket.framework; sourceTree = "<group>"; };
 		AE26FA271C90309F00CDBBAA /* RMQFrameTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQFrameTest.swift; sourceTree = "<group>"; };
 		AE26FA291C9032E400CDBBAA /* RMQHeartbeat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQHeartbeat.h; sourceTree = "<group>"; };
 		AE26FA2A1C9032E400CDBBAA /* RMQHeartbeat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQHeartbeat.m; sourceTree = "<group>"; };
@@ -451,7 +424,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AE1E0EC91CB2613A008285DD /* CocoaAsyncSocket.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -758,7 +730,6 @@
 			isa = PBXGroup;
 			children = (
 				AE46F91D1CFF47F8009DE49F /* JKVValue.framework */,
-				AE1E0EC81CB2613A008285DD /* CocoaAsyncSocket.framework */,
 				AEE7FE931C3BCA6000DF8C4F /* RMQClient */,
 				AEE7FE9F1C3BCA6000DF8C4F /* RMQClientTests */,
 				AEA45ED81C440FE400FE1F62 /* RMQClientIntegrationTests */,
@@ -953,8 +924,6 @@
 				AEA45ED31C440FE400FE1F62 /* Sources */,
 				AEA45ED41C440FE400FE1F62 /* Frameworks */,
 				AEA45ED51C440FE400FE1F62 /* Resources */,
-				AEEB97A81C58E2890051C6A6 /* ShellScript */,
-				AEEDB0C21CE3373C00005A92 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -975,7 +944,6 @@
 				AEE7FE8E1C3BCA6000DF8C4F /* Headers */,
 				AEE7FE8F1C3BCA6000DF8C4F /* Resources */,
 				AE637E2C1C4CFF28006F9EDF /* ShellScript */,
-				AE40C7491CB272E600CC7B97 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -1077,28 +1045,14 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/CocoaAsyncSocket.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/JKVValue.framework",
+				CocoaAsyncSocket,
+				JKVValue,
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
-		AEEB97A81C58E2890051C6A6 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/CocoaAsyncSocket.framework",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
+			shellScript = "case \"$PLATFORM_NAME\" in\nmacosx) plat=Mac;;\niphone*) plat=iOS;;\n*) echo \\\"error: Unknown PLATFORM_NAME: $PLATFORM_NAME\\\"; exit 1;;\nesac\nfor (( n = 0; n < SCRIPT_INPUT_FILE_COUNT; n++ )); do\nVAR=SCRIPT_INPUT_FILE_$n\nframework=$(basename \"${!VAR}\")\nexport SCRIPT_INPUT_FILE_$n=\"$SRCROOT\"/Carthage/Build/$plat/\"$framework\".framework\ndone\n\n/usr/local/bin/carthage copy-frameworks || exit\n\nfor (( n = 0; n < SCRIPT_INPUT_FILE_COUNT; n++ )); do\nVAR=SCRIPT_INPUT_FILE_$n\nsource=${!VAR}.dSYM\ndest=${BUILT_PRODUCTS_DIR}/$(basename \"$source\")\nditto \"$source\" \"$dest\" || exit\ndone";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1342,7 +1296,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1387,7 +1341,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macosx";
@@ -1452,7 +1406,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = RMQClientTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/Frameworks @executable_path/Frameworks @loader_path/../Frameworks @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClientTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RMQClientTests/RMQClientTests-Bridging-Header.h";
@@ -1470,7 +1424,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = RMQClientTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/Frameworks @executable_path/Frameworks @loader_path/../Frameworks @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClientTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RMQClientTests/RMQClientTests-Bridging-Header.h";
