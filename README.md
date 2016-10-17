@@ -105,10 +105,6 @@ See [the tutorials](http://www.rabbitmq.com/tutorials/tutorial-one-objectivec.ht
 
 ## Running Tests
 
-First make sure you have `xctool` installed:
-
-    brew install xctool
-
 Then start a local RabbitMQ node (any way you please, doesn't have to be from Homebrew or source),
 configure it using files under `.travis/etc/`, for example:
 
@@ -125,7 +121,7 @@ Then run a few setup steps:
 
 Finally, run the test suite:
 
-    xctool -project RMQClient.xcodeproj -sdk iphonesimulator -scheme RMQClient test
+    xcodebuild test -project RMQClient.xcodeproj -scheme RMQClient -destination 'platform=iOS Simulator,name=iPhone 7 Plus,OS=10.0'
 
 
 ## License
