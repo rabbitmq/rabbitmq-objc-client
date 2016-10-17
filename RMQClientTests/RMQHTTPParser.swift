@@ -50,25 +50,18 @@
 // ---------------------------------------------------------------------------
 
 import Foundation
-import Gloss
 
-public struct RMQHTTPConnection : Decodable {
+public struct RMQHTTPConnection {
     public let name: String
-
-    public init?(json: JSON) {
-        guard let name: String = "name" <~~ json
-            else { return nil }
-        self.name = name
-    }
 }
 
 class RMQHTTPParser {
     func connections(_ data: Data) -> [RMQHTTPConnection] {
-        var json: [[String: AnyObject]]!
-        json = try! JSONSerialization.jsonObject(with: data, options: []) as? [[String: AnyObject]]
-
-        return json.map { (item) -> RMQHTTPConnection in
-            RMQHTTPConnection(json: item)!
+        let s = String(data: data, encoding: String.Encoding.utf8)
+        let bits = s?.components(separatedBy: "name\":\"").dropFirst()
+        return bits!.map { bit in
+            let name = bit.components(separatedBy: "\"")[0] as String
+            return RMQHTTPConnection(name: name)
         }
     }
 }
