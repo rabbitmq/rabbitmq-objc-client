@@ -15,7 +15,7 @@ before_script:
   - until lsof -i:5672; do echo "Waiting for RabbitMQ to start"; sleep 1; done
   - /usr/local/sbin/rabbitmqctl add_user "O=client,CN=guest" bunnies
   - /usr/local/sbin/rabbitmqctl set_permissions "O=client,CN=guest" ".*" ".*" ".*"
-script: "xcodebuild test -project RMQClient.xcodeproj -scheme RMQClient -destination 'platform=iOS Simulator,name=iPhone 7 Plus,OS=10.0'"
+script: "xcodebuild test -project RMQClient.xcodeproj -scheme RMQClient -destination 'platform=iOS Simulator,name=iPhone SE,OS=10.0'"
 after_failure:
   - cat /usr/local/var/log/rabbitmq/rabbit@localhost.log
 cache:
