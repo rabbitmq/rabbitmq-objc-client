@@ -264,7 +264,6 @@
 		AE41C5521C4FC88F00129207 /* MethodFixtures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MethodFixtures.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		AE41C5621C51A2D500129207 /* RMQTransportContract.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RMQTransportContract.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		AE43841A1CEC9DAD000A4A7A /* ChannelRecoveryTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelRecoveryTest.swift; sourceTree = "<group>"; };
-		AE46F91D1CFF47F8009DE49F /* JKVValue.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JKVValue.framework; path = Carthage/Build/iOS/JKVValue.framework; sourceTree = "<group>"; };
 		AE48F9331CE22CA200296A23 /* RMQSuspendResumeDispatcherTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMQSuspendResumeDispatcherTest.swift; sourceTree = "<group>"; };
 		AE4B72F91D17F9E000907667 /* RMQBasicProperties+MergeDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RMQBasicProperties+MergeDefaults.h"; sourceTree = "<group>"; };
 		AE4B72FA1D17F9E000907667 /* RMQBasicProperties+MergeDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RMQBasicProperties+MergeDefaults.m"; sourceTree = "<group>"; };
@@ -729,7 +728,6 @@
 		AEE7FE871C3BCA6000DF8C4F = {
 			isa = PBXGroup;
 			children = (
-				AE46F91D1CFF47F8009DE49F /* JKVValue.framework */,
 				AEE7FE931C3BCA6000DF8C4F /* RMQClient */,
 				AEE7FE9F1C3BCA6000DF8C4F /* RMQClientTests */,
 				AEA45ED81C440FE400FE1F62 /* RMQClientIntegrationTests */,
