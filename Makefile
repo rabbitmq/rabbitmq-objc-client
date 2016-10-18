@@ -10,6 +10,6 @@ test_dependencies:
 	gem list -i xcpretty || gem install xcpretty
 
 test_user:
-	/usr/local/sbin/rabbitmqctl add_user "O=client,CN=guest" bunnies &&
-	/usr/local/sbin/rabbitmqctl set_permissions "O=client,CN=guest" ".*" ".*" ".*"
+	/usr/local/sbin/rabbitmqctl add_user "O=client,CN=guest" bunnies && \
+	  /usr/local/sbin/rabbitmqctl set_permissions "O=client,CN=guest" ".*" ".*" ".*"
 
