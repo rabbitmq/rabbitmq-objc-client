@@ -5,7 +5,6 @@ xcode_scheme: RMQClient
 xcode_sdk: iphonesimulator
 before_install:
   - brew update
-  - brew outdated xctool || brew upgrade xctool
   - brew install rabbitmq
   - cp .travis/etc/* /usr/local/etc/rabbitmq/
   - /usr/local/sbin/rabbitmq-plugins enable --offline rabbitmq_auth_mechanism_ssl
@@ -13,9 +12,8 @@ before_install:
 before_script:
   - bin/bootstrap-if-needed
   - until lsof -i:5672; do echo "Waiting for RabbitMQ to start"; sleep 1; done
-  - /usr/local/sbin/rabbitmqctl add_user "O=client,CN=guest" bunnies
-  - /usr/local/sbin/rabbitmqctl set_permissions "O=client,CN=guest" ".*" ".*" ".*"
-script: "xcodebuild test -project RMQClient.xcodeproj -scheme RMQClient -destination 'platform=iOS Simulator,name=iPhone SE,OS=10.0'"
+  - make test_user
+script: make tests
 after_failure:
   - cat /usr/local/var/log/rabbitmq/rabbit@localhost.log
 cache:

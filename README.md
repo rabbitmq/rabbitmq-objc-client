@@ -116,12 +116,11 @@ configure it using files under `.travis/etc/`, for example:
 Then run a few setup steps:
 
     bin/bootstrap-if-needed
-    /usr/local/sbin/rabbitmqctl add_user "O=client,CN=guest" bunnies
-    /usr/local/sbin/rabbitmqctl -p / set_permissions "O=client,CN=guest" ".*" ".*" ".*"
+    make test_user
 
 Finally, run the test suite:
 
-    xcodebuild test -project RMQClient.xcodeproj -scheme RMQClient -destination 'platform=iOS Simulator,name=iPhone 7 Plus,OS=10.0'
+    make tests
 
 
 ## License
