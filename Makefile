@@ -1,9 +1,19 @@
-tests: test_dependencies
+tests: tests_iOS tests_OSX
+
+tests_iOS: test_dependencies
 	set -o pipefail && \
 		xcodebuild test \
 		-project RMQClient.xcodeproj \
 		-scheme RMQClient \
 		-destination 'platform=iOS Simulator,name=iPhone SE,OS=10.0' | \
+		xcpretty
+
+tests_OSX: test_dependencies
+	set -o pipefail && \
+		xcodebuild test \
+		-project RMQClient.xcodeproj \
+		-scheme RMQClient \
+		-destination 'platform=OS X,arch=x86_64' | \
 		xcpretty
 
 test_dependencies:
