@@ -13,7 +13,11 @@ before_script:
   - bin/bootstrap-if-needed
   - until lsof -i:5672; do echo "Waiting for RabbitMQ to start"; sleep 1; done
   - make test_user
-script: make tests
+env:
+  matrix:
+  - TARGET=tests_iOS
+  - TARGET=tests_OSX
+script: make $TARGET
 after_failure:
   - cat /usr/local/var/log/rabbitmq/rabbit@localhost.log
 cache:
