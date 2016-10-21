@@ -90,9 +90,9 @@ this list.
    ```swift
    let q = ch.queue("myqueue")
    q.subscribe({ m in
-      print("Received: \(m.body)")
+      print("Received: \(String(data: m.body, encoding: String.Encoding.utf8))")
    })
-   q.publish("foo".dataUsingEncoding(NSUTF8StringEncoding)!)
+   q.publish("foo".data(using: String.Encoding.utf8))
    ```
 
 1. Close the connection when done:
