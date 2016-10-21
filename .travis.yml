@@ -9,7 +9,7 @@ before_install:
   - /usr/local/sbin/rabbitmq-plugins enable --offline rabbitmq_auth_mechanism_ssl
   - brew services start rabbitmq
 before_script:
-  - bin/bootstrap-if-needed
+  - make bootstrap
   - until lsof -i:5672; do echo "Waiting for RabbitMQ to start"; sleep 1; done
   - make test_user
 env:

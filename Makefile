@@ -16,8 +16,11 @@ tests_OSX: test_dependencies
 		-destination 'platform=OS X,arch=x86_64' | \
 		xcpretty
 
-test_dependencies:
+test_dependencies: bootstrap
 	gem list -i xcpretty || gem install xcpretty
+
+bootstrap:
+	bin/bootstrap-if-needed
 
 test_user:
 	/usr/local/sbin/rabbitmqctl add_user "O=client,CN=guest" bunnies && \
