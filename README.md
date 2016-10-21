@@ -89,9 +89,9 @@ this list.
 
    ```swift
    let q = ch.queue("myqueue")
-   q.subscribe { m in
+   q.subscribe({ m in
       print("Received: \(m.body)")
-   }
+   })
    q.publish("foo".dataUsingEncoding(NSUTF8StringEncoding)!)
    ```
 
