@@ -2,7 +2,6 @@ language: objective-c
 osx_image: xcode8
 xcode_project: RMQClient.xcodeproj
 xcode_scheme: RMQClient
-xcode_sdk: iphonesimulator
 before_install:
   - brew update
   - brew install rabbitmq
@@ -14,9 +13,8 @@ before_script:
   - until lsof -i:5672; do echo "Waiting for RabbitMQ to start"; sleep 1; done
   - make test_user
 env:
-  matrix:
-  - TARGET=tests_iOS
-  - TARGET=tests_OSX
+  - TARGET=tests_iOS TRAVIS_XCODE_SDK=iphonesimulator10.0
+  - TARGET=tests_OSX TRAVIS_XCODE_SDK=macosx10.11
 script: travis_retry make $TARGET
 after_failure:
   - cat /usr/local/var/log/rabbitmq/rabbit@localhost.log
