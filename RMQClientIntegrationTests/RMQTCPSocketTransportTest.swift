@@ -180,7 +180,10 @@ class RMQTCPSocketTransportTest: XCTestCase {
             pkcs12Password: "incorrect-password"
         )
         let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5671, tlsOptions: tlsOptions)
+
+        #if os(iOS)
         XCTAssertThrowsError(try transport.connect())
+        #endif
     }
 
     func testSimulatedDisconnectCausesTransportToReportAsDisconnected() {

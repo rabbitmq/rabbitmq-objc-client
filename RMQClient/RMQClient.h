@@ -49,7 +49,6 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <UIKit/UIKit.h>
 #import <RMQClient/RMQConnection.h>
 #import <RMQClient/RMQErrors.h>
 #import <RMQClient/RMQBasicProperties.h>

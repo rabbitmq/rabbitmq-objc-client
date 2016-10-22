@@ -49,8 +49,6 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-import UIKit
-
 class MethodFixtures {
     static let rmqTrue = RMQBoolean(true)
 

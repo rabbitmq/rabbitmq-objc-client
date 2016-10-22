@@ -60,14 +60,18 @@ class RMQPKCS12CertificateConverterTest: XCTestCase {
 
         XCTAssertEqual(1, result?.count)
         let description = (result?.first! as AnyObject).description()
+
+        #if os(iOS)
         XCTAssert(description?.range(of: "SecIdentityRef") != nil,
                   "Didn't get SecIdentityRef as first item in cert array")
+        #endif
     }
 
     func testIncorrectPasswordThrowsError() {
         let p12 = CertificateFixtures.guestBunniesP12()
         let converter = RMQPKCS12CertificateConverter(data: p12 as Data!, password: "hares")
 
+        #if os(iOS)
         XCTAssertThrowsError(try converter?.certificates()) { (error) in
             do {
                 XCTAssertEqual(
@@ -76,12 +80,14 @@ class RMQPKCS12CertificateConverterTest: XCTestCase {
                 )
             }
         }
+        #endif
     }
 
     func testGarbageDataThrowsError() {
         let p12 = "somegarbage".data(using: String.Encoding.utf8)!
         let converter = RMQPKCS12CertificateConverter(data: p12, password: "bunnies")
 
+        #if os(iOS)
         XCTAssertThrowsError(try converter?.certificates()) { (error) in
             do {
                 XCTAssertEqual(
@@ -90,6 +96,7 @@ class RMQPKCS12CertificateConverterTest: XCTestCase {
                 )
             }
         }
+        #endif
     }
 
     func testReturnsEmptyCertificatesWhenNoP12DataProvided() {

@@ -17,9 +17,10 @@ Test-driven from Swift and implemented in Objective-C, to avoid burdening Object
 - [x] Carthage support
 - [x] CocoaPods support
 - [x] iOS support
-- [ ] [OSX support](https://github.com/rabbitmq/rabbitmq-objc-client/issues/55)
-- [x] PKCS12 client certificates using the [TLS auth mechanism plugin](https://github.com/rabbitmq/rabbitmq-auth-mechanism-ssl)
-- [ ] [PKCS12 client certificates using chained CAs](https://github.com/rabbitmq/rabbitmq-objc-client/issues/74)
+- [x] [OSX support](https://github.com/rabbitmq/rabbitmq-objc-client/issues/55)
+- [ ] PKCS12 support for OSX
+- [x] PKCS12 client certificates on iOS using the [TLS auth mechanism plugin](https://github.com/rabbitmq/rabbitmq-auth-mechanism-ssl)
+- [ ] [PKCS12 client certificates on iOS using chained CAs](https://github.com/rabbitmq/rabbitmq-objc-client/issues/74)
 - [x] [Publisher confirmations](https://github.com/rabbitmq/rabbitmq-objc-client/issues/68)
 - [x] [Publish and consume messages as data](https://github.com/rabbitmq/rabbitmq-objc-client/issues/46)
 - [ ] [Connection closure when broker doesn't send heartbeats fast enough](https://github.com/rabbitmq/rabbitmq-objc-client/issues/41)
@@ -38,11 +39,11 @@ Test-driven from Swift and implemented in Objective-C, to avoid burdening Object
    Run carthage, for example in a new project:
 
    ```
-   carthage bootstrap --platform iOS
+   carthage bootstrap
    ```
 1. In your Xcode project, in the **Build Phases** section of your target, open up **Link
-Binary With Libraries**. Now drag `Carthage/Build/iOS/RMQClient.framework` into
-this list.
+   Binary With Libraries**. Now drag e.g. `Carthage/Build/iOS/RMQClient.framework`
+   (choose Mac for OSX) into this list.
 1. If you don't already have one, click the '+' icon under **Build Phases** to add a
 **Copy Files** phase.
 1. Under **Destination**, choose **Frameworks**.
