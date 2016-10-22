@@ -65,7 +65,7 @@
 
 extern NSInteger const RMQChannelLimit;
 
-/// @brief Public API: Interface to an AMQ connection. See the see the <a href="http://www.amqp.org/">spec</a> for details.
+/// @brief Public API: Interface to an AMQP 0-9-1 connection. See the <a href="http://www.rabbitmq.com/specification.html">spec</a> for details.
 @interface RMQConnection : NSObject<RMQFrameHandler, RMQSender, RMQStarter, RMQTransportDelegate>
 
 @property (nonnull, copy, nonatomic, readonly) NSString *vhost;
