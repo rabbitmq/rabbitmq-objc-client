@@ -217,6 +217,18 @@
         return consumer!
     }
 
+    func basicConsume(_ queueName: String, options: RMQBasicConsumeOptions = [], arguments: RMQTable, handler: @escaping RMQConsumerDeliveryHandler) -> RMQConsumer {
+        lastReceivedBasicConsumeOptions = options
+        lastReceivedBasicConsumeBlock = handler
+        if let msg = stubbedBasicConsumeError {
+            let e = NSError(domain: RMQErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey: msg])
+            delegateSentToActivate?.channel(self, error: e)
+        }
+        let consumer = RMQConsumer(channel: self, queueName: queueName, options: options, arguments: arguments)
+        consumer?.onDelivery(handler)
+        return consumer!
+    }
+
     func basicConsume(_ consumer: RMQConsumer) {
     }
 
