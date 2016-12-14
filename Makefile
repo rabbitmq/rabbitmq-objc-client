@@ -5,7 +5,7 @@ tests_iOS: test_dependencies
 		xcodebuild test \
 		-project RMQClient.xcodeproj \
 		-scheme RMQClient \
-		-destination 'platform=iOS Simulator,name=iPhone SE,OS=10.0' | \
+		-destination 'platform=iOS Simulator,name=iPhone SE,OS=10.2' | \
 		xcpretty
 
 tests_OSX: test_dependencies
