@@ -226,14 +226,30 @@
     return consumer;
 }
 
+- (RMQConsumer *)basicConsume:(NSString *)queueName
+                      options:(RMQBasicConsumeOptions)options
+                    arguments:(RMQTable *)arguments
+                      handler:(RMQConsumerDeliveryHandler)handler {
+    RMQConsumer *consumer = [[RMQConsumer alloc] initWithChannel:self
+                                                       queueName:queueName
+                                                         options:options
+                                                       arguments:arguments];
+    [consumer onDelivery:handler];
+    [self basicConsume:consumer];
+    return consumer;
+}
+
 - (void)basicConsume:(RMQConsumer *)consumer {
     [self.dispatcher sendSyncMethod:[[RMQBasicConsume alloc] initWithQueue:consumer.queueName
                                                                consumerTag:consumer.tag
-                                                                   options:consumer.options]
+                                                                   options:consumer.options
+                                                                   arguments:consumer.arguments]
                   completionHandler:^(RMQFrameset *frameset) {
                       self.consumers[consumer.tag] = consumer;
                   }];
 }
+
+
 
 - (NSString *)generateConsumerTag {
     return [self.nameGenerator generateWithPrefix:@"rmq-objc-client.gen-"];

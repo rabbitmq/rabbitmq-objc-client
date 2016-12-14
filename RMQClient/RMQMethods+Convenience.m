@@ -63,6 +63,17 @@
                          arguments:[RMQTable new]];
 }
 
+- (instancetype)initWithQueue:(NSString *)queueName
+                  consumerTag:(NSString *)consumerTag
+                      options:(RMQBasicConsumeOptions)options
+                      arguments:(RMQTable *)arguments {
+    return [self initWithReserved1:[[RMQShort alloc] init:0]
+                             queue:[[RMQShortstr alloc] init:queueName]
+                       consumerTag:[[RMQShortstr alloc] init:consumerTag]
+                           options:options
+                         arguments:arguments];
+}
+
 @end
 
 @implementation RMQBasicQos (Convenience)

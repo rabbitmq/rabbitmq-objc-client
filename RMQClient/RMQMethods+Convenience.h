@@ -57,6 +57,11 @@
                   consumerTag:(NSString *)consumerTag
                       options:(RMQBasicConsumeOptions)options;
 
+- (instancetype)initWithQueue:(NSString *)queueName
+                  consumerTag:(NSString *)consumerTag
+                      options:(RMQBasicConsumeOptions)options
+                      arguments:(RMQTable *)arguments;
+
 @end
 
 @interface RMQBasicQos (Convenience)

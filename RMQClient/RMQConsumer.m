@@ -59,6 +59,7 @@
 @property (nonatomic, readwrite) id<RMQChannel> channel;
 @property (nonatomic, readwrite) RMQConsumerDeliveryHandler deliveryHandler;
 @property (nonatomic, readwrite) RMQConsumerCancellationHandler cancellationHandler;
+@property (nonatomic, readwrite) RMQTable *arguments;
 @end
 
 @implementation RMQConsumer
@@ -70,6 +71,24 @@
     if (self) {
         self.queueName = queueName;
         self.options = options;
+        self.arguments = [RMQTable new];
+        self.tag = [channel generateConsumerTag];
+        self.channel = channel;
+        self.cancellationHandler = ^(){};
+        self.deliveryHandler = ^(id _){};
+    }
+    return self;
+}
+
+- (instancetype)initWithChannel:(id<RMQChannel>)channel
+                      queueName:(NSString *)queueName
+                        options:(RMQBasicConsumeOptions)options
+                      arguments:(RMQTable *)arguments {
+    self = [super init];
+    if (self) {
+        self.queueName = queueName;
+        self.options = options;
+        self.arguments = arguments;
         self.tag = [channel generateConsumerTag];
         self.channel = channel;
         self.cancellationHandler = ^(){};

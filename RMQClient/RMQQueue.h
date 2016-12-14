@@ -127,5 +127,11 @@
  */
 - (RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options
                    handler:(RMQConsumerDeliveryHandler)handler;
-
+/*!
+ * @brief Perform an RMQChannel#basicConsume with the current queue's name, options and arguments.
+ *        Pass an RMQConsumer instance to that method to customise cancellation behaviour.
+ */
+- (RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options
+                 arguments:(RMQTable *)arguments
+                   handler:(RMQConsumerDeliveryHandler)handler;
 @end

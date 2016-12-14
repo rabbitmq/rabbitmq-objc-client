@@ -155,4 +155,12 @@
                    handler:handler];
 }
 
+- (RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options
+                 arguments:(RMQTable *)arguments
+                   handler:(RMQConsumerDeliveryHandler)handler {
+    return [self.channel basicConsume:self.name
+                              options:options
+                            arguments:arguments
+                              handler:handler];
+}
 @end
