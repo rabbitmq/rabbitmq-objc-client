@@ -155,6 +155,15 @@
  */
 - (void)basicConsume:(nonnull RMQConsumer *)consumer;
 
+/*!
+ * @brief Consume messages from a queue
+ * @see RMQQueue's subscribe method (which has variants with defaults)
+ */
+- (nonnull RMQConsumer *)basicConsume:(nonnull NSString *)queueName
+                              options:(RMQBasicConsumeOptions)options
+                            arguments:(RMQTable * _Nonnull)arguments
+                              handler:(RMQConsumerDeliveryHandler _Nonnull)handler;
+                              
 /// @brief Internal method used by a consumer object
 - (nonnull NSString *)generateConsumerTag;
 

@@ -1,11 +1,13 @@
 tests: tests_iOS tests_OSX
 
+iOS_VERSION := 10.2
+
 tests_iOS: test_dependencies
 	set -o pipefail && \
 		xcodebuild test \
 		-project RMQClient.xcodeproj \
 		-scheme RMQClient \
-		-destination 'platform=iOS Simulator,name=iPhone SE,OS=10.0' | \
+		-destination 'platform=iOS Simulator,name=iPhone SE,OS=$(iOS_VERSION)' | \
 		xcpretty
 
 tests_OSX: test_dependencies
