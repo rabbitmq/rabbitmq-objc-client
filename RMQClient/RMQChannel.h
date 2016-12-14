@@ -161,7 +161,7 @@
  */
 - (nonnull RMQConsumer *)basicConsume:(nonnull NSString *)queueName
                               options:(RMQBasicConsumeOptions)options
-                            arguments:(RMQTable *)arguments
+                            arguments:(RMQTable * _Nonnull)arguments
                               handler:(RMQConsumerDeliveryHandler _Nonnull)handler;
                               
 /// @brief Internal method used by a consumer object
