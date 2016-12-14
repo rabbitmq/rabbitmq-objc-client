@@ -13,9 +13,9 @@ before_script:
   - until lsof -i:5672; do echo "Waiting for RabbitMQ to start"; sleep 1; done
   - make test_user
 env:
-  - TARGET=tests_iOS TRAVIS_XCODE_SDK=iphonesimulator10.0
+  - TARGET=tests_iOS TRAVIS_XCODE_SDK=iphonesimulator10.0 iOS_VERSION=10.0
   - TARGET=tests_OSX TRAVIS_XCODE_SDK=macosx10.11
-script: travis_retry make $TARGET
+script: travis_retry make $TARGET iOS_VERSION=$iOS_VERSION
 after_failure:
   - cat /usr/local/var/log/rabbitmq/rabbit@localhost.log
 cache:
