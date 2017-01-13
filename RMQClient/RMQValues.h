@@ -125,7 +125,7 @@
 @end
 
 @interface RMQDouble : RMQValue<RMQFieldValue>
-@property (nonatomic, readonly) double floatValue;
+@property (nonatomic, readonly) double doubleValue;
 - (nonnull instancetype)init:(double)val;
 @end
 
