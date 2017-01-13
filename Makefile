@@ -28,3 +28,6 @@ test_user:
 	/usr/local/sbin/rabbitmqctl add_user "O=client,CN=guest" bunnies && \
 	  /usr/local/sbin/rabbitmqctl set_permissions "O=client,CN=guest" ".*" ".*" ".*"
 
+licenses:
+	bin/add-license rb '#' license-header-ruby.txt codegen/ && \
+		bin/add-license m,h,swift '//' license-header.txt RMQClient/ RMQClientTests/ RMQClientIntegrationTests/
