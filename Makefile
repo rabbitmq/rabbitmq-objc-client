@@ -2,6 +2,8 @@ tests: tests_iOS tests_OSX
 
 iOS_VERSION := 10.2
 
+RABBITMQCTL := /usr/local/sbin/rabbitmqctl
+
 tests_iOS: test_dependencies
 	set -o pipefail && \
 		xcodebuild test \
@@ -25,8 +27,8 @@ bootstrap:
 	bin/bootstrap-if-needed
 
 test_user:
-	/usr/local/sbin/rabbitmqctl add_user "O=client,CN=guest" bunnies && \
-	  /usr/local/sbin/rabbitmqctl set_permissions "O=client,CN=guest" ".*" ".*" ".*"
+	$(RABBITMQCTL) add_user "O=client,CN=guest" bunnies && \
+	  $(RABBITMQCTL) set_permissions "O=client,CN=guest" ".*" ".*" ".*"
 
 licenses:
 	bin/add-license rb '#' license-header-ruby.txt codegen/ && \
