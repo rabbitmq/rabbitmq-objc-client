@@ -10,7 +10,7 @@ before_install:
   - brew services start rabbitmq
 before_script:
   - make bootstrap
-  - until lsof -i:5672; do echo "Waiting for RabbitMQ to start"; sleep 1; done
+  - until lsof -i:5672; do echo "Waiting for RabbitMQ to start..."; sleep 1; done
   - make test_user
 env:
   - TARGET=tests_iOS TRAVIS_XCODE_SDK=iphonesimulator10.0 iOS_VERSION=10.0
