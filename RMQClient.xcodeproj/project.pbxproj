@@ -937,7 +937,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AEE7FEA51C3BCA6000DF8C4F /* Build configuration list for PBXNativeTarget "RMQClient" */;
 			buildPhases = (
-				AE637E2C1C4CFF28006F9EDF /* ShellScript */,
 				AEE7FE8C1C3BCA6000DF8C4F /* Sources */,
 				AEE7FE8D1C3BCA6000DF8C4F /* Frameworks */,
 				AEE7FE8E1C3BCA6000DF8C4F /* Headers */,
@@ -1035,24 +1034,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		AE637E2C1C4CFF28006F9EDF /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
-			files = (
-			);
-			inputPaths = (
-				CocoaAsyncSocket,
-				JKVValue,
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "case \"$PLATFORM_NAME\" in\nmacosx) plat=Mac;;\niphone*) plat=iOS;;\n*) echo \\\"error: Unknown PLATFORM_NAME: $PLATFORM_NAME\\\"; exit 1;;\nesac\nfor (( n = 0; n < SCRIPT_INPUT_FILE_COUNT; n++ )); do\nVAR=SCRIPT_INPUT_FILE_$n\nframework=$(basename \"${!VAR}\")\nexport SCRIPT_INPUT_FILE_$n=\"$SRCROOT\"/Carthage/Build/$plat/\"$framework\".framework\ndone\n\n/usr/local/bin/carthage copy-frameworks || exit\n\necho \"Copying frameworks\"\nfor (( n = 0; n < SCRIPT_INPUT_FILE_COUNT; n++ )); do\nVAR=SCRIPT_INPUT_FILE_$n\nsource=${!VAR}\ndest=${BUILT_PRODUCTS_DIR}/$(basename \"$source\")\necho \"$source => $dest\"\nditto \"$source\" \"$dest\" || exit\ndone\n\necho \"Copying debug symbols\"\nfor (( n = 0; n < SCRIPT_INPUT_FILE_COUNT; n++ )); do\nVAR=SCRIPT_INPUT_FILE_$n\nsource=${!VAR}.dSYM\ndest=${BUILT_PRODUCTS_DIR}/$(basename \"$source\")\necho \"$source => $dest\"\nditto \"$source\" \"$dest\" || exit\ndone";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		AEA45ED31C440FE400FE1F62 /* Sources */ = {
