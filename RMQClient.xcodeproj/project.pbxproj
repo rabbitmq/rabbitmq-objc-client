@@ -201,6 +201,10 @@
 		AEF1E8FC1CBEA057000C7AB8 /* RMQHandshaker.m in Sources */ = {isa = PBXBuildFile; fileRef = AEF1E8FA1CBEA057000C7AB8 /* RMQHandshaker.m */; };
 		AEFFE6381C8EE7B30039D652 /* RMQConnectionConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = AEFFE6361C8EE7B30039D652 /* RMQConnectionConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEFFE6391C8EE7B30039D652 /* RMQConnectionConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = AEFFE6371C8EE7B30039D652 /* RMQConnectionConfig.m */; };
+		FBCA03A11ED774DA00610AEC /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBCA039F1ED774DA00610AEC /* CocoaAsyncSocket.framework */; };
+		FBCA03A21ED774DA00610AEC /* JKVValue.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBCA03A01ED774DA00610AEC /* JKVValue.framework */; };
+		FBCA03A51ED774E600610AEC /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBCA03A31ED774E600610AEC /* CocoaAsyncSocket.framework */; };
+		FBCA03A61ED774E600610AEC /* JKVValue.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBCA03A41ED774E600610AEC /* JKVValue.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -408,6 +412,10 @@
 		AEF1E8FA1CBEA057000C7AB8 /* RMQHandshaker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQHandshaker.m; sourceTree = "<group>"; };
 		AEFFE6361C8EE7B30039D652 /* RMQConnectionConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQConnectionConfig.h; sourceTree = "<group>"; };
 		AEFFE6371C8EE7B30039D652 /* RMQConnectionConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQConnectionConfig.m; sourceTree = "<group>"; };
+		FBCA039F1ED774DA00610AEC /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/iOS/CocoaAsyncSocket.framework; sourceTree = "<group>"; };
+		FBCA03A01ED774DA00610AEC /* JKVValue.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JKVValue.framework; path = Carthage/Build/iOS/JKVValue.framework; sourceTree = "<group>"; };
+		FBCA03A31ED774E600610AEC /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/Mac/CocoaAsyncSocket.framework; sourceTree = "<group>"; };
+		FBCA03A41ED774E600610AEC /* JKVValue.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JKVValue.framework; path = Carthage/Build/Mac/JKVValue.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -423,6 +431,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FBCA03A51ED774E600610AEC /* CocoaAsyncSocket.framework in Frameworks */,
+				FBCA03A21ED774DA00610AEC /* JKVValue.framework in Frameworks */,
+				FBCA03A61ED774E600610AEC /* JKVValue.framework in Frameworks */,
+				FBCA03A11ED774DA00610AEC /* CocoaAsyncSocket.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -732,6 +744,7 @@
 				AEE7FE9F1C3BCA6000DF8C4F /* RMQClientTests */,
 				AEA45ED81C440FE400FE1F62 /* RMQClientIntegrationTests */,
 				AEE7FE921C3BCA6000DF8C4F /* Products */,
+				FBCA039E1ED774C300610AEC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -837,6 +850,17 @@
 				AE41C5621C51A2D500129207 /* RMQTransportContract.swift */,
 			);
 			name = Connection;
+			sourceTree = "<group>";
+		};
+		FBCA039E1ED774C300610AEC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FBCA03A31ED774E600610AEC /* CocoaAsyncSocket.framework */,
+				FBCA03A41ED774E600610AEC /* JKVValue.framework */,
+				FBCA039F1ED774DA00610AEC /* CocoaAsyncSocket.framework */,
+				FBCA03A01ED774DA00610AEC /* JKVValue.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1340,6 +1364,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 8;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = RMQClient/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1358,6 +1387,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 8;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = RMQClient/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
