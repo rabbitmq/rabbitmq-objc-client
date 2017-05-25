@@ -41,9 +41,9 @@ Test-driven from Swift and implemented in Objective-C, to avoid burdening Object
    ```
    carthage bootstrap
    ```
-   
-1. In your Xcode project, in the **Build Phases** section of your target, open up **Link Binary With Libraries**.
-   Now drag the following frameworks to the list (`Mac` for OS X):
+
+1. In your Xcode project, in the **Build Phases** section of your target, open up **Link
+   Binary With Libraries**. Now drag the following frameworks to the list (`Mac` for OS X):
    * `Carthage/Build/iOS/RMQClient.framework`
    * `Carthage/Build/iOS/CocoaAsyncSocket.framework`
    * `Carthage/Build/iOS/JKVValue.framework`
