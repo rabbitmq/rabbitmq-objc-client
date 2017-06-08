@@ -41,13 +41,16 @@ Test-driven from Swift and implemented in Objective-C, to avoid burdening Object
    ```
    carthage bootstrap
    ```
+
 1. In your Xcode project, in the **Build Phases** section of your target, open up **Link
-   Binary With Libraries**. Now drag e.g. `Carthage/Build/iOS/RMQClient.framework`
-   (choose Mac for OSX) into this list.
+   Binary With Libraries**. Now drag the following frameworks to the list (`Mac` for OS X):
+   * `Carthage/Build/iOS/RMQClient.framework`
+   * `Carthage/Build/iOS/CocoaAsyncSocket.framework`
+   * `Carthage/Build/iOS/JKVValue.framework`
 1. If you don't already have one, click the '+' icon under **Build Phases** to add a
 **Copy Files** phase.
 1. Under **Destination**, choose **Frameworks**.
-1. Click the '+' and add RMQClient.framework. Ensure **Code Sign On Copy** is checked.
+1. Click the '+' and add the same frameworks. Ensure **Code Sign On Copy** is checked.
 
 ## Installation with [CocoaPods](https://cocoapods.org/)
 
