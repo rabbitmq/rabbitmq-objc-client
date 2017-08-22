@@ -311,7 +311,6 @@ completionHandler:(RMQConsumerDeliveryHandler _Nonnull)completionHandler;
 /*!
  * @brief  Create an exchange of a configurable type.
  * @param  type        The exchange type name.
- * @return RMQExchange The new exchange.
  */
 - (void)exchangeDeclare:(nonnull NSString *)name
                    type:(nonnull NSString *)type
@@ -320,8 +319,8 @@ completionHandler:(RMQConsumerDeliveryHandler _Nonnull)completionHandler;
 /*!
  * @brief  Bind an exchange to another exchange.
  * @param  sourceName   the name of the exchange from which messages flow across the binding
- * @param  destination: the name of the exchange to which messages flow across the binding
- * @param  routingKey:  the routing key to use for the binding
+ * @param  destinationName the name of the exchange to which messages flow across the binding
+ * @param  routingKey  the routing key to use for the binding
  */
 - (void)exchangeBind:(nonnull NSString *)sourceName
          destination:(nonnull NSString *)destinationName
@@ -330,8 +329,8 @@ completionHandler:(RMQConsumerDeliveryHandler _Nonnull)completionHandler;
 /*!
  * @brief  Unbind an exchange from another exchange.
  * @param  sourceName   the name of the exchange from which messages flow across the binding
- * @param  destination: the name of the exchange to which messages flow across the binding
- * @param  routingKey:  the routing key of the binding
+ * @param  destinationName the name of the exchange to which messages flow across the binding
+ * @param  routingKey  the routing key of the binding
  */
 - (void)exchangeUnbind:(nonnull NSString *)sourceName
            destination:(nonnull NSString *)destinationName

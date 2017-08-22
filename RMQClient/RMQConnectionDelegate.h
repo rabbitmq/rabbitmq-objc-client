@@ -67,7 +67,7 @@ disconnectedWithError:(NSError *)error;
 - (void)startingRecoveryWithConnection:(RMQConnection *)connection;
 /*!
  * @brief Called when <a href="http://www.rabbitmq.com/api-guide.html#recovery">automatic connection recovery</a> has succeeded.
- * @param RMQConnection the connection instance that was recovered.
+ * @param connection the connection instance that was recovered.
  */
 - (void)recoveredConnection:(RMQConnection *)connection;
 /// @brief Called with any channel-level AMQP exception.
