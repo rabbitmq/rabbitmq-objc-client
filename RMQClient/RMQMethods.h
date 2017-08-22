@@ -107,7 +107,6 @@
 
 typedef NS_OPTIONS(NSUInteger, RMQConnectionOpenOptions) {
     RMQConnectionOpenNoOptions = 0,
-    /// @brief
     RMQConnectionOpenReserved2 = 1 << 0,
 };
 
@@ -206,7 +205,6 @@ typedef NS_OPTIONS(NSUInteger, RMQExchangeDeclareOptions) {
     RMQExchangeDeclareAutoDelete = 1 << 2,
     /// @brief If set, the exchange may not be used directly by publishers, but only when bound to other exchanges. Internal exchanges are used to construct wiring that is not visible to applications.
     RMQExchangeDeclareInternal   = 1 << 3,
-    /// @brief
     RMQExchangeDeclareNoWait     = 1 << 4,
 };
 
@@ -231,7 +229,6 @@ typedef NS_OPTIONS(NSUInteger, RMQExchangeDeleteOptions) {
     RMQExchangeDeleteNoOptions = 0,
     /// @brief If set, the server will only delete the exchange if it has no queue bindings. If the exchange has queue bindings the server does not delete it but raises a channel exception instead.
     RMQExchangeDeleteIfUnused  = 1 << 0,
-    /// @brief
     RMQExchangeDeleteNoWait    = 1 << 1,
 };
 
@@ -250,7 +247,6 @@ typedef NS_OPTIONS(NSUInteger, RMQExchangeDeleteOptions) {
 
 typedef NS_OPTIONS(NSUInteger, RMQExchangeBindOptions) {
     RMQExchangeBindNoOptions = 0,
-    /// @brief
     RMQExchangeBindNoWait    = 1 << 0,
 };
 
@@ -275,7 +271,6 @@ typedef NS_OPTIONS(NSUInteger, RMQExchangeBindOptions) {
 
 typedef NS_OPTIONS(NSUInteger, RMQExchangeUnbindOptions) {
     RMQExchangeUnbindNoOptions = 0,
-    /// @brief
     RMQExchangeUnbindNoWait    = 1 << 0,
 };
 
@@ -308,7 +303,6 @@ typedef NS_OPTIONS(NSUInteger, RMQQueueDeclareOptions) {
     RMQQueueDeclareExclusive  = 1 << 2,
     /// @brief If set, the queue is deleted when all consumers have finished using it. The last consumer can be cancelled either explicitly or because its channel is closed. If there was no consumer ever on the queue, it won't be deleted. Applications can explicitly delete auto-delete queues using the Delete method as normal.
     RMQQueueDeclareAutoDelete = 1 << 3,
-    /// @brief
     RMQQueueDeclareNoWait     = 1 << 4,
 };
 
@@ -334,7 +328,6 @@ typedef NS_OPTIONS(NSUInteger, RMQQueueDeclareOptions) {
 
 typedef NS_OPTIONS(NSUInteger, RMQQueueBindOptions) {
     RMQQueueBindNoOptions = 0,
-    /// @brief
     RMQQueueBindNoWait    = 1 << 0,
 };
 
@@ -376,7 +369,6 @@ typedef NS_OPTIONS(NSUInteger, RMQQueueBindOptions) {
 
 typedef NS_OPTIONS(NSUInteger, RMQQueuePurgeOptions) {
     RMQQueuePurgeNoOptions = 0,
-    /// @brief
     RMQQueuePurgeNoWait    = 1 << 0,
 };
 
@@ -400,7 +392,6 @@ typedef NS_OPTIONS(NSUInteger, RMQQueueDeleteOptions) {
     RMQQueueDeleteIfUnused  = 1 << 0,
     /// @brief If set, the server will only delete the queue if it has no messages.
     RMQQueueDeleteIfEmpty   = 1 << 1,
-    /// @brief
     RMQQueueDeleteNoWait    = 1 << 2,
 };
 
@@ -439,13 +430,10 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicQosOptions) {
 
 typedef NS_OPTIONS(NSUInteger, RMQBasicConsumeOptions) {
     RMQBasicConsumeNoOptions = 0,
-    /// @brief
     RMQBasicConsumeNoLocal   = 1 << 0,
-    /// @brief
     RMQBasicConsumeNoAck     = 1 << 1,
     /// @brief Request exclusive consumer access, meaning only this consumer can access the queue.
     RMQBasicConsumeExclusive = 1 << 2,
-    /// @brief
     RMQBasicConsumeNoWait    = 1 << 3,
 };
 
@@ -469,7 +457,6 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicConsumeOptions) {
 
 typedef NS_OPTIONS(NSUInteger, RMQBasicCancelOptions) {
     RMQBasicCancelNoOptions = 0,
-    /// @brief
     RMQBasicCancelNoWait    = 1 << 0,
 };
 
@@ -515,7 +502,6 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicPublishOptions) {
 
 typedef NS_OPTIONS(NSUInteger, RMQBasicDeliverOptions) {
     RMQBasicDeliverNoOptions   = 0,
-    /// @brief
     RMQBasicDeliverRedelivered = 1 << 0,
 };
 
@@ -534,7 +520,6 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicDeliverOptions) {
 
 typedef NS_OPTIONS(NSUInteger, RMQBasicGetOptions) {
     RMQBasicGetNoOptions = 0,
-    /// @brief
     RMQBasicGetNoAck     = 1 << 0,
 };
 
@@ -549,7 +534,6 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicGetOptions) {
 
 typedef NS_OPTIONS(NSUInteger, RMQBasicGetOkOptions) {
     RMQBasicGetOkNoOptions   = 0,
-    /// @brief
     RMQBasicGetOkRedelivered = 1 << 0,
 };
 
