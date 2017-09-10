@@ -1,6 +1,6 @@
 tests: tests_iOS tests_OSX
 
-iOS_VERSION := 10.2
+iOS_VERSION := 10.3.1
 
 RABBITMQCTL := /usr/local/sbin/rabbitmqctl
 
