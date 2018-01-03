@@ -253,6 +253,7 @@ completionHandler:(RMQConsumerDeliveryHandler _Nonnull)completionHandler;
  */
 - (void)nack:(nonnull NSNumber *)deliveryTag;
 
+/// @brief Sends a basic.recover.
 - (void)basicRecover;
 
 /// @return RMQExchange The default exchange, which allows for convenient ("direct") publishing to queues by name.
