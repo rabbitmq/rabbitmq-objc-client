@@ -354,6 +354,12 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
     [self nack:deliveryTag options:RMQBasicNackNoOptions];
 }
 
+- (void)basicRecover
+{
+    // According to http://www.rabbitmq.com/specification.html "Recovery with requeue=false is not supported."
+    [self.dispatcher sendSyncMethod:[[RMQBasicRecover alloc] initWithOptions:RMQBasicRecoverRequeue]];
+}
+
 - (void)exchangeDeclare:(NSString *)name
                    type:(NSString *)type
                 options:(RMQExchangeDeclareOptions)options {
