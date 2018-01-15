@@ -185,7 +185,7 @@ struct __attribute__((__packed__)) AMQPHeader {
 }
 
 - (void)invokeZeroArityCallback:(long)tag {
-    void (^foundCallback)() = self.callbacks[@(tag)];
+    void (^foundCallback)(void) = self.callbacks[@(tag)];
     [self.callbacks removeObjectForKey:@(tag)];
     if (foundCallback) {
         foundCallback();

@@ -56,7 +56,7 @@
  * @brief  Connect and handshake with the remote AMQP server, calling completionHandler when done.
            This is usually unnecessary because future operations are queued.
  */
-- (void)start:(void (^)())completionHandler;
+- (void)start:(void (^)(void))completionHandler;
 /// @brief Connect and handshake with the remote AMQP server.
 - (void)start;
 @end

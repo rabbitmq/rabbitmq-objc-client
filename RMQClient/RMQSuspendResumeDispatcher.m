@@ -206,7 +206,7 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 # pragma mark - Private
 
 - (void)processOutgoing:(id<RMQMethod>)method
-           executeOrErr:(void (^)())operation {
+           executeOrErr:(void (^)(void))operation {
     if (self.channelIsOpen) {
         operation();
     } else if (![self isClose:method]) {

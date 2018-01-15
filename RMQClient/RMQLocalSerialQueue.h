@@ -51,7 +51,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void (^RMQOperation)();
+typedef void (^RMQOperation)(void);
 
 @protocol RMQLocalSerialQueue <NSObject>
 

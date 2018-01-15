@@ -267,7 +267,7 @@ NSInteger const RMQChannelLimit = 65535;
     return [self initWithDelegate:nil];
 }
 
-- (void)start:(void (^)())completionHandler {
+- (void)start:(void (^)(void))completionHandler {
     NSError *connectError = NULL;
 
     [self.transport connectAndReturnError:&connectError];

@@ -53,7 +53,7 @@
 
 @protocol RMQHeartbeatSender <NSObject>
 
-- (void (^)())startWithInterval:(NSNumber *)intervalSeconds;
+- (void (^)(void))startWithInterval:(NSNumber *)intervalSeconds;
 - (void)stop;
 - (void)signalActivity;
 
