@@ -60,10 +60,10 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
     let httpAPI = RMQHTTP("http://guest:guest@127.0.0.1:15672/api")
 
     func testRecoversFromSocketDisconnect() {
-        let recoveryInterval = 5
+        let recoveryInterval = 2
         let recoveryTimeout: TimeInterval = 30
         let semaphoreTimeout: Double = 30
-        let confirmationTimeout = 5
+        let confirmationTimeout = 10
         let delegate = ConnectionDelegateSpy()
 
         let tlsOptions = RMQTLSOptions.fromURI(amqpLocalhost)
@@ -157,11 +157,12 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
                                  delegate: delegate,
                                  delegateQueue: DispatchQueue.main,
                                  recoverAfter: recoveryInterval as NSNumber,
-                                 recoveryAttempts: 2,
+                                 recoveryAttempts: 5,
                                  recoverFromConnectionClose: true)
         conn.start()
         defer { conn.blockingClose() }
         let ch = conn.createChannel()
+        ch.confirmSelect()
         let q = ch.queue("", options: [.autoDelete, .exclusive])
         let ex = ch.direct("foo", options: [.autoDelete])
         let semaphore = DispatchSemaphore(value: 0)
@@ -180,9 +181,8 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
 
         try! closeAllConnections()
 
-        XCTAssert(TestHelper.pollUntil { delegate.recoveredConnection != nil },
+        XCTAssert(TestHelper.pollUntil(30) { self.connections().count >= 1 },
                   "Didn't finish recovery the first time")
-        delegate.recoveredConnection = nil
 
         q.publish("after close 1".data(using: String.Encoding.utf8))
         _ = semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(semaphoreTimeout))
@@ -195,7 +195,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
 
         try! closeAllConnections()
 
-        XCTAssert(TestHelper.pollUntil { delegate.recoveredConnection != nil },
+        XCTAssert(TestHelper.pollUntil(30) { self.connections().count >= 1 },
                   "Didn't finish recovery the second time")
 
         q.publish("after close 3".data(using: String.Encoding.utf8))
@@ -216,11 +216,11 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
 
     fileprivate func closeAllConnections() throws {
         let conns = connections()
-        XCTAssertGreaterThan(conns.count, 0)
 
         for conn in conns {
             let escapedName = conn.name.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
             let path = "/connections/\(escapedName)"
+
             httpAPI.delete(path)
         }
 
