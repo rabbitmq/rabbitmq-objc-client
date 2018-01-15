@@ -55,7 +55,7 @@ class TestHelper {
 
     @discardableResult
     static func pollUntil(_ checker: () -> Bool) -> Bool {
-        for _ in 1...10 {
+        for _ in 1...30 {
             if checker() {
                 return true
             } else {
