@@ -103,7 +103,7 @@ class RMQQueueTest: XCTestCase {
         ]
 
         queue.publish("{\"a\": \"message\"}".data(using: String.Encoding.utf8),
-                      properties: properties,
+                      properties: properties as! [RMQValue & RMQBasicValue],
                       options: [.mandatory])
 
         XCTAssertEqual("{\"a\": \"message\"}".data(using: String.Encoding.utf8), channel.lastReceivedBasicPublishMessage)

@@ -347,7 +347,7 @@ class EncodingTest: XCTestCase {
             "mass_hysteria": RMQTable(subDict),
             "sacrifice": RMQLongstr("forty years of darkness"),
             ]
-        let fieldTable = RMQTable(dict)
+        let fieldTable = RMQTable(dict as! [String : RMQValue & RMQFieldValue])
 
         TestHelper.assertEqualBytes(expectedData!, fieldTable.amqEncoded())
     }

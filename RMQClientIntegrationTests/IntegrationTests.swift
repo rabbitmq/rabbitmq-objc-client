@@ -100,7 +100,7 @@ class IntegrationTests: XCTestCase {
             redelivered: false,
             exchangeName: src.name,
             routingKey: "",
-            properties: RMQBasicProperties.defaultProperties()
+            properties: RMQBasicProperties.defaultProperties() as! [RMQValue & RMQBasicValue]
         )
         var actual: RMQMessage?
         q.pop { m in
@@ -194,7 +194,7 @@ class IntegrationTests: XCTestCase {
                 RMQArray([RMQTable(["abc": RMQShort(123)])])
                 ]),
             ]
-        let headers = RMQBasicHeaders(headerDict)
+        let headers = RMQBasicHeaders(headerDict as! [String : RMQValue & RMQFieldValue])
 
         let props: [RMQValue] = [
             RMQBasicAppId("rmqclient.example"),
@@ -206,7 +206,7 @@ class IntegrationTests: XCTestCase {
             RMQBasicCorrelationId("r-1"),
             RMQBasicMessageId("m-1"),
             ]
-        q.publish("a message".data(using: String.Encoding.utf8), properties: props, options: [])
+        q.publish("a message".data(using: String.Encoding.utf8), properties: props as! [RMQValue & RMQBasicValue], options: [])
 
         XCTAssertEqual(.success,
                        semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
@@ -223,7 +223,7 @@ class IntegrationTests: XCTestCase {
         XCTAssertEqual("rmqclient.example",                 delivered!.appID())
 
         let consumerTag = delivered!.consumerTag
-        XCTAssertEqual("rmq-objc-client.gen-",              consumerTag?.substring(to: (consumerTag?.index((consumerTag?.startIndex)!, offsetBy: 20))!))
+        XCTAssertTrue(consumerTag!.starts(with: "rmq-objc-client.gen-"))
         XCTAssertEqual(1,                                   delivered!.deliveryTag)
         XCTAssertEqual(q.name,                              delivered!.routingKey)
         XCTAssertEqual("",                                  delivered!.exchangeName)

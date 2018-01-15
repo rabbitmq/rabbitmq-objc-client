@@ -66,7 +66,7 @@ class RMQUnallocatedChannelTest: XCTestCase {
 
         let blocks: [() -> Void] = [
             { ch.ack(1) },
-            { ch.afterConfirmed { _ in } },
+            { ch.afterConfirmed { _,_  in } },
             { ch.basicConsume("foo", options: []) { _ in } },
             { ch.generateConsumerTag() },
             { ch.basicGet("foo", options: []) { _ in } },

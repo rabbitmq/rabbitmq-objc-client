@@ -117,7 +117,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
 
         TestHelper.pollUntil { delegate.lastDisconnectError != nil }
 
-        XCTAssertEqual(NSPOSIXErrorDomain, (delegate.lastDisconnectError as! NSError).domain)
+        XCTAssertEqual(NSPOSIXErrorDomain, (delegate.lastDisconnectError! as NSError).domain)
     }
 
     func testExtendsReadWhenReadTimesOut() {

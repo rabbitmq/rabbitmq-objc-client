@@ -75,7 +75,7 @@ class RMQParserTest: XCTestCase {
     func testShortString() {
         let s = "PRECONDITION_FAILED - inequivalent arg 'durable' for queue 'rmqclient.integration-tests.E0B5A093-6B2E-402C-84F3-E93B59DF807B-71865-0003F85C24C90FC6' in vhost '/': received 'false' but current is 'true'"
         let data = NSMutableData()
-        var stringLength = s.characters.count
+        var stringLength = s.lengthOfBytes(using: String.Encoding.utf8)
         data.append(&stringLength, length: 1)
         data.append(s.data(using: String.Encoding.utf8)!)
         data.append("stuffthatshouldn'tbeparsed".data(using: String.Encoding.utf8)!)
@@ -197,7 +197,7 @@ class RMQParserTest: XCTestCase {
         dict["void"]            = RMQVoid()
         dict["byte-array"]      = RMQByteArray("hi".data(using: String.Encoding.utf8)!)
 
-        let table = RMQTable(dict)
+        let table = RMQTable(dict as! [String : RMQValue & RMQFieldValue])
         let parser = RMQParser(data: table.amqEncoded())
         XCTAssertEqual(dict, parser.parseFieldTable())
     }
@@ -207,10 +207,10 @@ class RMQParserTest: XCTestCase {
         dict["unsigned-16-bit"]      = RMQShort(65535)
         dict["bad-size"]             = ValueWithBadSize(123)
 
-        let table = RMQTable(dict)
+        let table = RMQTable(dict as! [String : RMQValue & RMQFieldValue])
         let data = table.amqEncoded()
         let parser = RMQParser(data: data)
-        XCTAssertEqual([:], parser.parseFieldTable())
+        XCTAssertTrue(parser.parseFieldTable().isEmpty)
     }
 
     @objc class ValueWithBadSize : RMQSignedLong {

@@ -158,7 +158,7 @@ class RMQConnectionTest: XCTestCase {
 
         XCTAssertEqual(conn, recovery.connectionPassedToRecover as? RMQConnection)
         XCTAssertEqual(allocator, recovery.allocatorPassedToRecover as? ChannelSpyAllocator)
-        XCTAssertEqual(error, recovery.errorPassedToRecover as! NSError)
+        XCTAssertEqual(error, recovery.errorPassedToRecover! as NSError)
     }
 
     func testTransportDisconnectMessageWithoutErrorTriggersRecovery() {

@@ -161,7 +161,7 @@
                     completionHandler: (RMQFrameset?, NSError?) -> Void) {
     }
 
-    func queue(_ queueName: String, options: RMQQueueDeclareOptions, arguments: [String : RMQValue]) -> RMQQueue {
+    func queue(_ queueName: String, options: RMQQueueDeclareOptions, arguments: [String: RMQValue & RMQFieldValue]) -> RMQQueue {
         if let foundQueue = queues[queueName] {
             return foundQueue;
         } else {

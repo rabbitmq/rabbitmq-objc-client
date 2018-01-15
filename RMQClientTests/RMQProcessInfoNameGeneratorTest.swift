@@ -58,8 +58,8 @@ class RMQProcessInfoNameGeneratorTest: XCTestCase {
         let name1 = generator.generate(withPrefix: "foo")
         let name2 = generator.generate(withPrefix: "foo")
 
-        XCTAssertEqual("foo", name1?.substring(to: (name1?.index((name1?.startIndex)!, offsetBy: 3))!))
-        XCTAssertEqual("foo", name2?.substring(to: (name2?.index((name2?.startIndex)!, offsetBy: 3))!))
+        XCTAssertTrue(name1!.starts(with: "foo"))
+        XCTAssertTrue(name2!.starts(with: "foo"))
         XCTAssertNotEqual(name1, name2)
     }
 

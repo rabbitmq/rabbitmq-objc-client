@@ -192,7 +192,7 @@ class RMQAllocatedChannelTest: XCTestCase {
             redelivered: true,
             exchangeName: "someex",
             routingKey: "my-q",
-            properties: properties
+            properties: properties as! [RMQValue & RMQBasicValue]
         )
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
@@ -297,13 +297,23 @@ class RMQAllocatedChannelTest: XCTestCase {
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(999, contentBodySize: 4, dispatcher: dispatcher)
 
-        let props: [RMQValue] = [RMQBasicCorrelationId("my-correlation-id")]
+        let corrId: RMQBasicCorrelationId = RMQBasicCorrelationId("my-correlation-id")
+        let props: [RMQValue] = [corrId]
         ch.basicPublish(Data(), routingKey: "", exchange: "", properties: props, options: [])
 
-        let expectedProperties: Set<RMQValue> = Set(RMQBasicProperties.defaultProperties()).union(props)
+        let expectedProperties: Set<RMQValue> =
+            Set(RMQBasicProperties.defaultProperties())
+                .union(props)
         let header = dispatcher.lastAsyncFrameset!.contentHeader
-        let headerProperties: Set<RMQValue> = Set(header.properties)
-        XCTAssertEqual(expectedProperties, headerProperties)
+        let actualProperties = header.properties
+        
+        XCTAssertEqual(expectedProperties.count, actualProperties.count)
+        
+        XCTAssertEqual(actualProperties.first(where: { $0 is RMQBasicCorrelationId })!,
+                       corrId)
+        XCTAssertEqual(actualProperties.first(where: { $0 is RMQBasicDeliveryMode })!,
+                       RMQBasicDeliveryMode(1))
+        
     }
 
     func testPublishWhenContentLengthIsMultipleOfFrameMax() {
