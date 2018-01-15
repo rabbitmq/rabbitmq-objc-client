@@ -59,12 +59,6 @@ class RMQPKCS12CertificateConverterTest: XCTestCase {
         let result = try! converter?.certificates()
 
         XCTAssertEqual(1, result?.count)
-        let description = (result?.first! as AnyObject).description()
-
-        #if os(iOS)
-        XCTAssert(description?.range(of: "SecIdentityRef") != nil,
-                  "Didn't get SecIdentityRef as first item in cert array")
-        #endif
     }
 
     func testIncorrectPasswordThrowsError() {
