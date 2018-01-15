@@ -1,2 +1,2 @@
-github "robbiehanson/CocoaAsyncSocket" "7.5.0"
-github "jeffh/JKVValue" "v1.3.1"
+github "jeffh/JKVValue" "v1.3.3"
+github "robbiehanson/CocoaAsyncSocket" "7.6.2"
