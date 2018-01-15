@@ -145,6 +145,11 @@ completionHandler:(RMQConsumerDeliveryHandler)completionHandler {
     [self err];
 }
 
+- (void)basicRecover
+{
+    [self err];
+}
+
 - (RMQExchange *)defaultExchange {
     [self err];
     return nil;
