@@ -153,7 +153,7 @@ class IntegrationTests: XCTestCase {
         q.publish(body)
 
         XCTAssertEqual(.success,
-                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
+                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(30)),
                        "Timed out waiting for message")
 
         XCTAssertEqual(1, delivered!.deliveryTag)
@@ -215,8 +215,7 @@ class IntegrationTests: XCTestCase {
         XCTAssertEqual("application/octet-stream",          delivered!.contentType())
         XCTAssertEqual(8,                                   delivered!.priority())
         XCTAssertEqual(headerDict,                          delivered!.headers())
-        XCTAssertEqualWithAccuracy(date.timeIntervalSinceReferenceDate,
-                                                            delivered!.timestamp().timeIntervalSinceReferenceDate, accuracy: 1)
+        XCTAssertEqual(date.timeIntervalSinceReferenceDate, delivered!.timestamp().timeIntervalSinceReferenceDate, accuracy: 1)
         XCTAssertEqual("kinda.checkin",                     delivered!.messageType())
         XCTAssertEqual("a.sender",                          delivered!.replyTo())
         XCTAssertEqual("r-1",                               delivered!.correlationID())
