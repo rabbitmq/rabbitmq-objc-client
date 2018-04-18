@@ -1,6 +1,6 @@
 tests: tests_iOS tests_OSX
 
-iOS_VERSION := 11.2
+iOS_VERSION := 11.3
 
 RABBITMQCTL := /usr/local/sbin/rabbitmqctl
 RABBITMQ_PLUGINS := /usr/local/sbin/rabbitmq-plugins

@@ -321,15 +321,39 @@ NSInteger const RMQChannelLimit = 65535;
 }
 
 - (void)close {
-    for (RMQOperation operation in self.closeOperations) {
-        [self.commandQueue enqueue:operation];
+    if (![self callingCloseWhileDisconnected]) {
+        for (RMQOperation operation in self.safeCloseOperations) {
+            [self.commandQueue enqueue:operation];
+        }
     }
 }
 
 - (void)blockingClose {
-    for (RMQOperation operation in self.closeOperations) {
-        [self.commandQueue blockingEnqueue:operation];
+    if (![self callingCloseWhileDisconnected]) {
+        for (RMQOperation operation in self.safeCloseOperations) {
+            [self.commandQueue blockingEnqueue:operation];
+        }
     }
+}
+
+/**
+ If it's calling close while disconnected, will immidiately call delegate with error
+
+ @return if it's calling close while disconnected return true, otherwise false
+ */
+- (bool)callingCloseWhileDisconnected {
+    
+    if (!self.handshakeComplete) {
+        
+        NSError *error = [NSError errorWithDomain:RMQErrorDomain
+                                             code:RMQErrorConnectionHandshakeTimedOut
+                                         userInfo:@{NSLocalizedDescriptionKey: @"calling close while disconnected"}];
+        [self.delegate connection:self failedToConnectWithError:error];
+        
+        return true;
+    }
+    
+    return false;
 }
 
 # pragma mark - RMQSender
@@ -373,6 +397,24 @@ NSInteger const RMQChannelLimit = 65535;
 }
 
 # pragma mark - Private
+
+- (NSArray *)safeCloseOperations {
+    return self.handshakeComplete ? [self closeOperations] : [self closeOperationsWithoutBlock];
+}
+
+/**
+ Call this when try to safe close connection (e.g. may not event connected yet)
+ */
+- (NSArray *)closeOperationsWithoutBlock {
+    return @[^{[self closeAllUserChannels];},
+              ^{[self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:self.amqClose]];},
+              ^{[self.heartbeatSender stop];},
+              ^{
+                  self.transport.delegate = nil;
+                  [self.transport close];
+              }];
+}
+
 
 - (NSArray *)closeOperations {
     return @[^{[self closeAllUserChannels];},
