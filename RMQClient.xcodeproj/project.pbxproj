@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1029A0E02087A63500C72924 /* ConnectionDeadlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1029A0DF2087A63500C72924 /* ConnectionDeadlockTests.swift */; };
+		1029A0E22087A97E00C72924 /* ConnectionDeadlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1029A0E12087A97E00C72924 /* ConnectionDeadlockTests.swift */; };
 		AE05DA681C69EC47009E68C7 /* RMQChannelAllocator.h in Headers */ = {isa = PBXBuildFile; fileRef = AE05DA661C69EC47009E68C7 /* RMQChannelAllocator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE05DA6C1C6A0848009E68C7 /* RMQMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = AE05DA6A1C6A0848009E68C7 /* RMQMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE05DA6D1C6A0848009E68C7 /* RMQMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = AE05DA6B1C6A0848009E68C7 /* RMQMessage.m */; };
@@ -222,7 +222,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1029A0DF2087A63500C72924 /* ConnectionDeadlockTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionDeadlockTests.swift; sourceTree = "<group>"; };
+		1029A0E12087A97E00C72924 /* ConnectionDeadlockTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionDeadlockTests.swift; sourceTree = "<group>"; };
 		AE05DA661C69EC47009E68C7 /* RMQChannelAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQChannelAllocator.h; sourceTree = "<group>"; };
 		AE05DA6A1C6A0848009E68C7 /* RMQMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQMessage.h; sourceTree = "<group>"; };
 		AE05DA6B1C6A0848009E68C7 /* RMQMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQMessage.m; sourceTree = "<group>"; };
@@ -828,7 +828,7 @@
 		AEF1E8F31CBE4A8B000C7AB8 /* Connection */ = {
 			isa = PBXGroup;
 			children = (
-				1029A0DF2087A63500C72924 /* ConnectionDeadlockTests.swift */,
+				1029A0E12087A97E00C72924 /* ConnectionDeadlockTests.swift */,
 				AEA45EC71C43CBBE00FE1F62 /* RMQConnectionTest.swift */,
 				AEE445E71C7342EE0082132C /* RMQReaderTest.swift */,
 				AE541F421C7E132700C17932 /* ConnectionTuningTest.swift */,
@@ -1173,7 +1173,6 @@
 				AE09C8321CCE589800FA6915 /* QueueDeclarationTest.swift in Sources */,
 				AE929C7C1CD00EB7001A6524 /* ConnectionClosureTest.swift in Sources */,
 				AE8B18E71CEA62DF006E36B1 /* ExchangeBindTest.swift in Sources */,
-				1029A0E02087A63500C72924 /* ConnectionDeadlockTests.swift in Sources */,
 				AEA8A7661CC987FA00371E38 /* FakeSerialQueueTest.swift in Sources */,
 				AE9595411CD0E80E0039418C /* FakeClock.swift in Sources */,
 				AE26FA2E1C970DF100CDBBAA /* RMQChannelContract.swift in Sources */,
@@ -1193,6 +1192,7 @@
 				AE3415511CEBBD730071177A /* RecoverySpy.swift in Sources */,
 				AE111BD71C57B33300F88277 /* TestHelper.swift in Sources */,
 				AEA8A77A1CCA6FF100371E38 /* FakeWaiter.swift in Sources */,
+				1029A0E22087A97E00C72924 /* ConnectionDeadlockTests.swift in Sources */,
 				AEEB8B531C7DED0E002D3FCE /* RMQTransportContract.swift in Sources */,
 				AE3E0E381C56416F00186BA7 /* EncodingTest.swift in Sources */,
 				AE09C8301CCE495300FA6915 /* QueueBindTest.swift in Sources */,
@@ -1385,10 +1385,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos11.3;
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				VALID_ARCHS = "arm64 armv7 armv7s";
 			};
 			name = Debug;
 		};
@@ -1404,13 +1401,9 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks @executable_path/../Frameworks @loader_path/../Frameworks";
-				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos11.3;
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				VALID_ARCHS = "arm64 armv7 armv7s";
 			};
 			name = Release;
 		};
