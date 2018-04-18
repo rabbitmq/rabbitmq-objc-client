@@ -11,10 +11,22 @@ import XCTest
 class ConnectionDeadlockTests: XCTestCase {
     
     func testCallingCloseWhileDisconnected() {
-        /// a server can never connect
-        let uri = "amqp://127.0.0.1:5555"
-        let conn = RMQConnection(uri: uri, delegate: RMQConnectionDelegateLogger())
-        conn.start()
-        conn.blockingClose()
+        
+        let expection = expectation(description: "Should not encounter deadlock.")
+        
+        DispatchQueue(label: "test.queue").async {
+            /// a server can never connect
+            let uri = "amqp://127.0.0.1:5555"
+            let conn = RMQConnection(uri: uri, delegate: RMQConnectionDelegateLogger())
+            conn.start()
+            conn.blockingClose()
+            
+            /// if no deadlock, this should be called
+            expection.fulfill()
+        }
+        
+        waitForExpectations(timeout: 60) { (error) in
+            XCTAssertNil(error, "Should have no error")
+        }
     }
 }
