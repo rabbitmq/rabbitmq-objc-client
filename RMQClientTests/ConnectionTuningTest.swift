@@ -137,7 +137,7 @@ class ConnectionTuningTest: XCTestCase {
             heartbeatSender: heartbeatSender
         )
         connection.start()
-        try! q.step()
+        try? q.step()
         return q
     }
 

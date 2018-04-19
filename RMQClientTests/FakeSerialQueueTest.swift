@@ -59,9 +59,9 @@ class FakeSerialQueueTest: XCTestCase {
         q.enqueue { i += 1 }
         q.enqueue { i += 2 }
         XCTAssertEqual(0, i)
-        try! q.step()
+        try? q.step()
         XCTAssertEqual(1, i)
-        try! q.step()
+        try? q.step()
         XCTAssertEqual(3, i)
 
         XCTAssertThrowsError(try q.step())

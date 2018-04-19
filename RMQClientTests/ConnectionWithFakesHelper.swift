@@ -124,7 +124,7 @@ class ConnectionWithFakesHelper {
         let conn = ConnectionWithFakesHelper.startedConnection(transport,
                                                                commandQueue: q,
                                                                delegate: delegate)
-        try! q.step()
+        try? q.step()
         transport.handshake()
 
         return (transport, q, conn, delegate)
