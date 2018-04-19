@@ -321,27 +321,23 @@ NSInteger const RMQChannelLimit = 65535;
 }
 
 - (void)close {
-    if (![self callingCloseWhileDisconnected]) {
-        for (RMQOperation operation in self.safeCloseOperations) {
-            [self.commandQueue enqueue:operation];
-        }
+    [self givingCallingCloseWhileDisconnectedErrorIfNeeded];
+    for (RMQOperation operation in self.safeCloseOperations) {
+        [self.commandQueue enqueue:operation];
     }
 }
 
 - (void)blockingClose {
-    if (![self callingCloseWhileDisconnected]) {
-        for (RMQOperation operation in self.safeCloseOperations) {
-            [self.commandQueue blockingEnqueue:operation];
-        }
+    [self givingCallingCloseWhileDisconnectedErrorIfNeeded];
+    for (RMQOperation operation in self.safeCloseOperations) {
+        [self.commandQueue blockingEnqueue:operation];
     }
 }
 
 /**
  If it's calling close while disconnected, will immidiately call delegate with error
-
- @return if it's calling close while disconnected return true, otherwise false
  */
-- (bool)callingCloseWhileDisconnected {
+- (void)givingCallingCloseWhileDisconnectedErrorIfNeeded {
     
     if (!self.handshakeComplete) {
         
@@ -349,11 +345,7 @@ NSInteger const RMQChannelLimit = 65535;
                                              code:RMQErrorConnectionHandshakeTimedOut
                                          userInfo:@{NSLocalizedDescriptionKey: @"calling close while disconnected"}];
         [self.delegate connection:self failedToConnectWithError:error];
-        
-        return true;
     }
-    
-    return false;
 }
 
 # pragma mark - RMQSender
