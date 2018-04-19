@@ -70,7 +70,7 @@ class ConnectionClosureTest: XCTestCase {
                                  heartbeatSender: HeartbeatSenderSpy())
 
         conn.start()
-        try! q.step()
+        try? q.step()
         transport.handshake()
 
         for _ in 1...channelsToCreateCount {
@@ -80,12 +80,12 @@ class ConnectionClosureTest: XCTestCase {
         conn.close()
 
         for _ in 1...channelsToCreateCount {
-            try! q.step()
+            try? q.step()
         }
 
         XCTAssertEqual(handshakeCount + channelsToCreateCount + expectedCloseProcedureCount, q.items.count)
 
-        try! q.step()
+        try? q.step()
 
         XCTAssertFalse(allocator.channels[0].blockingCloseCalled)
         XCTAssertTrue(allocator.channels[1].blockingCloseCalled)
@@ -97,8 +97,8 @@ class ConnectionClosureTest: XCTestCase {
 
         conn.close()
 
-        try! q.step()
-        try! q.step()
+        try? q.step()
+        try? q.step()
 
         transport.assertClientSentMethod(MethodFixtures.connectionClose(), channelNumber: 0)
     }
@@ -116,15 +116,21 @@ class ConnectionClosureTest: XCTestCase {
                                  command: q,
                                  waiterFactory: FakeWaiterFactory(),
                                  heartbeatSender: HeartbeatSenderSpy())
-
+        // start connection
+        conn.start()
+        
+        /// simulate connection has been made
+        try? q.step()
+        transport.handshake()
+        
         conn.close()
 
-        try! q.step()
-        try! q.step()
+        try? q.step()
+        try? q.step()
 
         XCTAssertNil(allocator.channels[0].blockingWaitOnMethod)
-        try! q.step()
-        XCTAssertEqual("RMQConnectionCloseOk", allocator.channels[0].blockingWaitOnMethod!.description())
+        try? q.step()
+        XCTAssertEqual("RMQConnectionCloseOk", allocator.channels[0].blockingWaitOnMethod?.description())
     }
 
     func testCloseShutsDownHeartbeatSender() {
@@ -141,15 +147,16 @@ class ConnectionClosureTest: XCTestCase {
                                  command: q,
                                  waiterFactory: FakeWaiterFactory(),
                                  heartbeatSender: heartbeatSender)
-
+        
+        conn.start()
         conn.close()
 
-        try! q.step()
-        try! q.step()
-        try! q.step()
+        try? q.step()
+        try? q.step()
+        try? q.step()
 
         XCTAssertFalse(heartbeatSender.stopReceived)
-        try! q.step()
+        try? q.step()
         XCTAssertTrue(heartbeatSender.stopReceived)
     }
 
@@ -169,18 +176,18 @@ class ConnectionClosureTest: XCTestCase {
                                  waiterFactory: FakeWaiterFactory(),
                                  heartbeatSender: heartbeatSender)
         conn.start()
-        try! q.step()
+        try? q.step()
         transport.handshake()
 
         conn.close()
 
         for _ in 1...numCloseOpsBeforeTransportClose {
-            try! q.step()
+            try? q.step()
         }
 
         XCTAssertTrue(transport.connected)
         XCTAssertEqual(conn, transport.delegate as? RMQConnection)
-        try! q.step()
+        try? q.step()
         XCTAssertFalse(transport.connected)
         XCTAssertNil(transport.delegate)
     }
@@ -203,7 +210,7 @@ class ConnectionClosureTest: XCTestCase {
                                  heartbeatSender: heartbeatSender)
 
         conn.start()
-        try! q.step()
+        try? q.step()
         transport.handshake()
 
         for _ in 1...channelsToCreateCount {
@@ -213,30 +220,30 @@ class ConnectionClosureTest: XCTestCase {
         conn.blockingClose()
 
         for _ in 1...channelsToCreateCount {
-            try! q.step()
+            try? q.step()
         }
 
         XCTAssertEqual(expectedCloseProcedureCount, q.blockingItems.count)
 
-        try! q.step()
+        try? q.step()
 
         XCTAssertFalse(allocator.channels[0].blockingCloseCalled)
         XCTAssertTrue(allocator.channels[1].blockingCloseCalled)
         XCTAssertTrue(allocator.channels[2].blockingCloseCalled)
 
-        try! q.step()
+        try? q.step()
 
         XCTAssertEqual(MethodFixtures.connectionClose(), transport.lastSentPayload() as? RMQConnectionClose)
 
-        try! q.step()
+        try? q.step()
 
         XCTAssertEqual("RMQConnectionCloseOk", allocator.channels[0].blockingWaitOnMethod!.description())
 
-        try! q.step()
+        try? q.step()
 
         XCTAssertTrue(heartbeatSender.stopReceived)
 
-        try! q.step()
+        try? q.step()
 
         XCTAssertFalse(transport.connected)
     }
