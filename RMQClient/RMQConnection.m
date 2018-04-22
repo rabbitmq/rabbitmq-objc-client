@@ -335,7 +335,8 @@ NSInteger const RMQChannelLimit = 65535;
 }
 
 /**
- If it's calling close while disconnected, will immidiately call delegate with error
+ If called when connection is closed (or never was successfully completed),
+ will report an error to the delegate.
  */
 - (void)reportErrorIfAlreadyClosed {
     
