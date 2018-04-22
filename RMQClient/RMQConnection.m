@@ -321,14 +321,14 @@ NSInteger const RMQChannelLimit = 65535;
 }
 
 - (void)close {
-    [self givingCallingCloseWhileDisconnectedErrorIfNeeded];
+    [self reportErrorIfAlreadyClosed];
     for (RMQOperation operation in self.safeCloseOperations) {
         [self.commandQueue enqueue:operation];
     }
 }
 
 - (void)blockingClose {
-    [self givingCallingCloseWhileDisconnectedErrorIfNeeded];
+    [self reportErrorIfAlreadyClosed];
     for (RMQOperation operation in self.safeCloseOperations) {
         [self.commandQueue blockingEnqueue:operation];
     }
@@ -337,13 +337,13 @@ NSInteger const RMQChannelLimit = 65535;
 /**
  If it's calling close while disconnected, will immidiately call delegate with error
  */
-- (void)givingCallingCloseWhileDisconnectedErrorIfNeeded {
+- (void)reportErrorIfAlreadyClosed {
     
     if (!self.handshakeComplete) {
         
         NSError *error = [NSError errorWithDomain:RMQErrorDomain
                                              code:RMQErrorConnectionHandshakeTimedOut
-                                         userInfo:@{NSLocalizedDescriptionKey: @"calling close while disconnected"}];
+                                         userInfo:@{NSLocalizedDescriptionKey: @"attempt to close an already closed (or never successfully established) connection"}];
         [self.delegate connection:self failedToConnectWithError:error];
     }
 }
