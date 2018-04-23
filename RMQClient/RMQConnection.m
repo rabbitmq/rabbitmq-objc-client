@@ -396,7 +396,7 @@ NSInteger const RMQChannelLimit = 65535;
 }
 
 /**
- Call this when try to safe close connection (e.g. may not event connected yet)
+ Used to safely close a connection (including connections that were never successfully opened)
  */
 - (NSArray *)closeOperationsWithoutBlock {
     return @[^{[self closeAllUserChannels];},
