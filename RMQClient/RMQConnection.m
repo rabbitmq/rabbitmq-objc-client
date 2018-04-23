@@ -321,14 +321,31 @@ NSInteger const RMQChannelLimit = 65535;
 }
 
 - (void)close {
-    for (RMQOperation operation in self.closeOperations) {
+    [self reportErrorIfAlreadyClosed];
+    for (RMQOperation operation in self.safeCloseOperations) {
         [self.commandQueue enqueue:operation];
     }
 }
 
 - (void)blockingClose {
-    for (RMQOperation operation in self.closeOperations) {
+    [self reportErrorIfAlreadyClosed];
+    for (RMQOperation operation in self.safeCloseOperations) {
         [self.commandQueue blockingEnqueue:operation];
+    }
+}
+
+/**
+ If called when connection is closed (or never was successfully completed),
+ will report an error to the delegate.
+ */
+- (void)reportErrorIfAlreadyClosed {
+    
+    if (!self.handshakeComplete) {
+        
+        NSError *error = [NSError errorWithDomain:RMQErrorDomain
+                                             code:RMQErrorConnectionHandshakeTimedOut
+                                         userInfo:@{NSLocalizedDescriptionKey: @"attempt to close an already closed (or never successfully established) connection"}];
+        [self.delegate connection:self failedToConnectWithError:error];
     }
 }
 
@@ -373,6 +390,24 @@ NSInteger const RMQChannelLimit = 65535;
 }
 
 # pragma mark - Private
+
+- (NSArray *)safeCloseOperations {
+    return self.handshakeComplete ? [self closeOperations] : [self closeOperationsWithoutBlock];
+}
+
+/**
+ Used to safely close a connection (including connections that were never successfully opened)
+ */
+- (NSArray *)closeOperationsWithoutBlock {
+    return @[^{[self closeAllUserChannels];},
+              ^{[self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:self.amqClose]];},
+              ^{[self.heartbeatSender stop];},
+              ^{
+                  self.transport.delegate = nil;
+                  [self.transport close];
+              }];
+}
+
 
 - (NSArray *)closeOperations {
     return @[^{[self closeAllUserChannels];},

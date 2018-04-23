@@ -68,7 +68,7 @@ class RMQConnectionTest: XCTestCase {
         )
         var called = false
         conn.start { called = true }
-        try! q.step()
+        try? q.step()
         XCTAssertFalse(called)
         transport.handshake()
         XCTAssert(called)
@@ -112,7 +112,7 @@ class RMQConnectionTest: XCTestCase {
             heartbeatSender: HeartbeatSenderSpy()
         )
         conn.start()
-        try! q.step()
+        try? q.step()
 
         XCTAssertEqual("Handshake timed out.", delegate.lastConnectionError?.localizedDescription)
     }
@@ -197,7 +197,7 @@ class RMQConnectionTest: XCTestCase {
                                  waiterFactory: FakeWaiterFactory(),
                                  heartbeatSender: heartbeatSender)
         conn.start()
-        try! q.step()
+        try? q.step()
         transport.handshake()
 
         heartbeatSender.signalActivityReceived = false
@@ -224,7 +224,7 @@ class RMQConnectionTest: XCTestCase {
                                  heartbeatSender: heartbeatSender)
         recovery.interval = 1
         conn.start()
-        try! q.step()
+        try? q.step()
         // handshake not yet complete, simulating recovery mode
 
         transport.outboundData = []
@@ -249,7 +249,7 @@ class RMQConnectionTest: XCTestCase {
                                  waiterFactory: FakeWaiterFactory(),
                                  heartbeatSender: HeartbeatSenderSpy())
         conn.start()
-        try! q.step()
+        try? q.step()
 
         transport.serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 0)
 
@@ -272,7 +272,7 @@ class RMQConnectionTest: XCTestCase {
                                  waiterFactory: FakeWaiterFactory(),
                                  heartbeatSender: HeartbeatSenderSpy())
         conn.start()
-        try! q.step()
+        try? q.step()
 
         transport.handshake()
 

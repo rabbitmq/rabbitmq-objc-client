@@ -1,3 +1,5 @@
+//  Copyright © 2018 Pivotal . All rights reserved.
+//
 // This source code is dual-licensed under the Mozilla Public License ("MPL"),
 // version 1.1 and the Apache License ("ASL"), version 2.0.
 //
@@ -51,20 +53,26 @@
 
 import XCTest
 
-class FakeSerialQueueTest: XCTestCase {
-
-    func testCanStepThroughItemsSentAsync() {
-        let q = FakeSerialQueue()
-        var i = 0
-        q.enqueue { i += 1 }
-        q.enqueue { i += 2 }
-        XCTAssertEqual(0, i)
-        try? q.step()
-        XCTAssertEqual(1, i)
-        try? q.step()
-        XCTAssertEqual(3, i)
-
-        XCTAssertThrowsError(try q.step())
+class ConnectionDeadlockTests: XCTestCase {
+    
+    func testCallingCloseWhileDisconnected() {
+        
+        let expection = expectation(description: "Should not encounter deadlock.")
+        
+        DispatchQueue(label: "test.queue").async {
+            /// a server endpoint that's assumed to be unavailable
+            let uri = "amqp://127.0.0.1:5555"
+            let conn = RMQConnection(uri: uri, delegate: RMQConnectionDelegateLogger())
+            conn.start()
+            conn.blockingClose()
+            
+            /// will be reached if blockingClose above doesn't
+            /// run into a deadlock
+            expection.fulfill()
+        }
+        
+        waitForExpectations(timeout: 60) { (error) in
+            XCTAssertNil(error, "Should have no error")
+        }
     }
-
 }
