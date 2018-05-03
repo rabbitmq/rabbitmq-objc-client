@@ -80,6 +80,8 @@ long writeTag = UINT32_MAX + 1;
     if (self) {
         self.socket = [[GCDAsyncSocket alloc] initWithDelegate:self
                                                  delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)];
+        // see rabbitmq/rabbitmq-objc-client#138
+        self.socket.IPv4PreferredOverIPv6 = NO;
         self.host = host;
         self.port = port;
         self.tlsOptions = tlsOptions;
