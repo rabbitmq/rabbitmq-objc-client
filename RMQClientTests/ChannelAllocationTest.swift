@@ -135,19 +135,19 @@ class ChannelAllocationTest: XCTestCase {
 
         queues[0].async(group: group) {
             for n in 1...RMQChannelLimit {
-                allocator?.releaseChannelNumber(n as NSNumber!)
+                allocator?.releaseChannelNumber(n as NSNumber)
             }
         }
 
         queues[1].async(group: group) {
             for n in 1...RMQChannelLimit {
-                allocator?.releaseChannelNumber(n as NSNumber!)
+                allocator?.releaseChannelNumber(n as NSNumber)
             }
         }
 
         queues[2].async(group: group) {
             for n in 1...RMQChannelLimit {
-                allocator?.releaseChannelNumber(n as NSNumber!)
+                allocator?.releaseChannelNumber(n as NSNumber)
             }
         }
 

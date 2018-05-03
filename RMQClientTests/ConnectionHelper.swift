@@ -59,8 +59,8 @@ class ConnectionHelper {
         let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 10)
         let heartbeatSender = RMQGCDHeartbeatSender(transport: transport, clock: RMQTickingClock())
         let commandQueue = RMQGCDSerialQueue(name: "socket-recovery-test-queue")
-        let recovery = RMQConnectionRecover(interval: interval as NSNumber!,
-                                            attemptLimit: attemptLimit as NSNumber!,
+        let recovery = RMQConnectionRecover(interval: interval as NSNumber,
+                                            attemptLimit: attemptLimit as NSNumber,
                                             onlyErrors: onlyErrors,
                                             heartbeatSender: heartbeatSender,
                                             command: commandQueue,
