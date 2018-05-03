@@ -5,6 +5,18 @@ iOS_VERSION := 11.3
 RABBITMQCTL := /usr/local/sbin/rabbitmqctl
 RABBITMQ_PLUGINS := /usr/local/sbin/rabbitmq-plugins
 
+tests: tests_iOS tests_OSX
+
+test_ios: tests_iOS
+
+tests_ios: tests_iOS
+
+test_osx: tests_OSX
+
+tests_osx: tests_OSX
+
+tests_macos: tests_OSX
+
 tests_iOS: test_dependencies
 	set -o pipefail && \
 		xcodebuild test \
