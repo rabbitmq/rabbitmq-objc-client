@@ -49,43 +49,10 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-@objc class ConfirmationsSpy : NSObject, RMQConfirmations {
-    var lastReceivedCallback: RMQConfirmationCallback?
-    var lastReceivedAck: RMQBasicAck?
-    var lastReceivedNack: RMQBasicNack?
-    var lastReceivedTimeout: NSNumber?
-    var publicationCount = 0
-    var _isEnabled = false
-    var recoverCalled = false
+#import <Foundation/Foundation.h>
+#import "RMQTransport.h"
+#if defined(__has_feature) && __has_feature(modules)
+@import CocoaAsyncSocket;
+#endif
 
-    func enable() {
-        _isEnabled = true
-    }
-
-    func isEnabled() -> Bool {
-        return _isEnabled
-    }
-
-    func recover() {
-        recoverCalled = true
-    }
-
-    func addPublication() -> NSNumber! {
-        let beforeIncrease = publicationCount
-        publicationCount += 1
-        return beforeIncrease as NSNumber
-    }
-
-    func addCallback(withTimeout timeoutInSecs: NSNumber!, callback: RMQConfirmationCallback!) {
-        lastReceivedCallback = callback
-        lastReceivedTimeout = timeoutInSecs
-    }
-
-    func ack(_ ack: RMQBasicAck!) {
-        lastReceivedAck = ack
-    }
-
-    func nack(_ nack: RMQBasicNack!) {
-        lastReceivedNack = nack
-    }
-}
+typedef void (^RMQTCPSocketConfigurator)(GCDAsyncSocket * _Nonnull socket);

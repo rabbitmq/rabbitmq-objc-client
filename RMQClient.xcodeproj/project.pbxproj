@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1029A0E22087A97E00C72924 /* ConnectionDeadlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1029A0E12087A97E00C72924 /* ConnectionDeadlockTests.swift */; };
+		709007C3209B8DAC00476847 /* RMQTCPSocketConfigurator.h in Headers */ = {isa = PBXBuildFile; fileRef = 709007C2209B8DAC00476847 /* RMQTCPSocketConfigurator.h */; };
 		AE05DA681C69EC47009E68C7 /* RMQChannelAllocator.h in Headers */ = {isa = PBXBuildFile; fileRef = AE05DA661C69EC47009E68C7 /* RMQChannelAllocator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE05DA6C1C6A0848009E68C7 /* RMQMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = AE05DA6A1C6A0848009E68C7 /* RMQMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE05DA6D1C6A0848009E68C7 /* RMQMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = AE05DA6B1C6A0848009E68C7 /* RMQMessage.m */; };
@@ -223,6 +224,7 @@
 
 /* Begin PBXFileReference section */
 		1029A0E12087A97E00C72924 /* ConnectionDeadlockTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionDeadlockTests.swift; sourceTree = "<group>"; };
+		709007C2209B8DAC00476847 /* RMQTCPSocketConfigurator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMQTCPSocketConfigurator.h; sourceTree = "<group>"; };
 		AE05DA661C69EC47009E68C7 /* RMQChannelAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQChannelAllocator.h; sourceTree = "<group>"; };
 		AE05DA6A1C6A0848009E68C7 /* RMQMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQMessage.h; sourceTree = "<group>"; };
 		AE05DA6B1C6A0848009E68C7 /* RMQMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQMessage.m; sourceTree = "<group>"; };
@@ -678,6 +680,7 @@
 				AEE7FEAC1C3BCD0F00DF8C4F /* RMQConnection.m */,
 				AEA45EC91C43D2B900FE1F62 /* RMQTransport.h */,
 				AEF1E8F41CBE5810000C7AB8 /* RMQTransportDelegate.h */,
+				709007C2209B8DAC00476847 /* RMQTCPSocketConfigurator.h */,
 				AEA45ECF1C43F4DC00FE1F62 /* RMQTCPSocketTransport.h */,
 				AEA45ED01C43F4DC00FE1F62 /* RMQTCPSocketTransport.m */,
 				AE898D591C3C30D100AA3BF1 /* RMQURI.h */,
@@ -884,6 +887,7 @@
 				AE82798C1C8DBD6B0013ADD1 /* RMQUnallocatedChannel.h in Headers */,
 				AEA8A75F1CC97C1700371E38 /* RMQGCDSerialQueue.h in Headers */,
 				AEA8A75C1CC979AE00371E38 /* RMQLocalSerialQueue.h in Headers */,
+				709007C3209B8DAC00476847 /* RMQTCPSocketConfigurator.h in Headers */,
 				AEA8A7741CCA102900371E38 /* RMQWaiter.h in Headers */,
 				AEA8A76A1CC98E2500371E38 /* RMQWaiterFactory.h in Headers */,
 				AEA8A76D1CCA0F8300371E38 /* RMQSemaphoreWaiterFactory.h in Headers */,

@@ -53,8 +53,10 @@
 #import "RMQErrors.h"
 #import "RMQSynchronizedMutableDictionary.h"
 #import "RMQPKCS12CertificateConverter.h"
+#import "RMQTCPSocketConfigurator.h"
 
 long writeTag = UINT32_MAX + 1;
+RMQTCPSocketConfigurator noOpSocketConfigurator = ^(GCDAsyncSocket* _socket) {};
 
 @interface RMQTCPSocketTransport ()
 
@@ -75,7 +77,8 @@ long writeTag = UINT32_MAX + 1;
 - (instancetype)initWithHost:(NSString *)host
                         port:(NSNumber *)port
                   tlsOptions:(RMQTLSOptions *)tlsOptions
-             callbackStorage:(id)callbacks {
+             callbackStorage:(id)callbacks
+          socketConfigurator:(RMQTCPSocketConfigurator)socketConfigurator {
     self = [super init];
     if (self) {
         self.socket = [[GCDAsyncSocket alloc] initWithDelegate:self
@@ -87,8 +90,21 @@ long writeTag = UINT32_MAX + 1;
         self.tlsOptions = tlsOptions;
         self.callbacks = callbacks;
         self.connectTimeout = @2;
+        
+        socketConfigurator(self.socket);
     }
     return self;
+}
+
+- (instancetype)initWithHost:(NSString *)host
+                        port:(NSNumber *)port
+                  tlsOptions:(RMQTLSOptions *)tlsOptions
+          socketConfigurator:(RMQTCPSocketConfigurator)socketConfigurator {
+    return [self initWithHost:host
+                        port:port
+                  tlsOptions:tlsOptions
+             callbackStorage:[RMQSynchronizedMutableDictionary new]
+          socketConfigurator:socketConfigurator];
 }
 
 - (instancetype)initWithHost:(NSString *)host
@@ -97,7 +113,8 @@ long writeTag = UINT32_MAX + 1;
     return [self initWithHost:host
                          port:port
                    tlsOptions:tlsOptions
-              callbackStorage:[RMQSynchronizedMutableDictionary new]];
+              callbackStorage:[RMQSynchronizedMutableDictionary new]
+           socketConfigurator:noOpSocketConfigurator];
 }
 
 - (instancetype)init

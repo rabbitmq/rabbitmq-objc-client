@@ -55,6 +55,9 @@ import CocoaAsyncSocket
 class RMQTCPSocketTransportTest: XCTestCase {
     static let noTLS = RMQTLSOptions.fromURI("amqp://localhost")
     let noTLS = RMQTLSOptions.fromURI("amqp://localhost")
+    let noOpSocketConfigurator = { (_socket: GCDAsyncSocket?) -> Void in
+      // no-op
+    }
 
     func testObeysContract() {
         RMQTransportContract(createTransport()).check()
@@ -65,7 +68,8 @@ class RMQTCPSocketTransportTest: XCTestCase {
         let transport = RMQTCPSocketTransport(host: "127.0.0.1",
                                               port: 5672,
                                               tlsOptions: noTLS,
-                                              callbackStorage: callbacks)
+                                              callbackStorage: callbacks,
+                                              socketConfigurator: noOpSocketConfigurator)
         var receivedData: Data?
         transport.readFrame { data in
             receivedData = data
@@ -91,7 +95,8 @@ class RMQTCPSocketTransportTest: XCTestCase {
         let callbacks = [:] as NSMutableDictionary
         let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5672,
                                               tlsOptions: noTLS,
-                                              callbackStorage: callbacks)
+                                              callbackStorage: callbacks,
+                                              socketConfigurator: noOpSocketConfigurator)
 
         try! transport.connect()
         XCTAssert(TestHelper.pollUntil { return transport.isConnected() }, "couldn't connect")
@@ -110,7 +115,8 @@ class RMQTCPSocketTransportTest: XCTestCase {
         let delegate = TransportDelegateSpy()
         let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 123456,
                                               tlsOptions: noTLS,
-                                              callbackStorage: callbacks)
+                                              callbackStorage: callbacks,
+                                              socketConfigurator: noOpSocketConfigurator)
 
         transport.delegate = delegate
         try! transport.connect()
@@ -124,7 +130,8 @@ class RMQTCPSocketTransportTest: XCTestCase {
         let callbacks = RMQSynchronizedMutableDictionary()
         let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 123456,
                                               tlsOptions: noTLS,
-                                              callbackStorage: callbacks)
+                                              callbackStorage: callbacks,
+                                              socketConfigurator: noOpSocketConfigurator)
         let timeoutExtension = transport.socket(GCDAsyncSocket(), shouldTimeoutReadWithTag: 123, elapsed: 123, bytesDone: 999)
         XCTAssert(timeoutExtension > 0)
     }
