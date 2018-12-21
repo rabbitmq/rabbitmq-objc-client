@@ -39,9 +39,13 @@ test_dependencies: bootstrap
 bootstrap:
 	bin/bootstrap-if-needed
 
-test_user:
-	$(RABBITMQCTL) add_user "O=client,CN=guest" bunnies && \
-	  $(RABBITMQCTL) set_permissions "O=client,CN=guest" ".*" ".*" ".*"
+set_up_test_vhosts:
+	$(RABBITMQCTL) add_vhost "vhost/with/a/few/slashes"
+
+set_up_test_users:
+	$(RABBITMQCTL) add_user "O=client,CN=guest" bunnies
+	$(RABBITMQCTL) set_permissions "O=client,CN=guest" ".*" ".*" ".*"
+
 
 before_build:
 	$(RABBITMQ_PLUGINS) enable rabbitmq_management

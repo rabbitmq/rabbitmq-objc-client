@@ -106,22 +106,7 @@ See [the tutorials](http://www.rabbitmq.com/tutorials/tutorial-one-objectivec.ht
 
 ## Running Tests
 
-Then start a local RabbitMQ node (any way you please, doesn't have to be from Homebrew or source),
-configure it using files under `.travis/etc/`, for example:
-
-    brew install rabbitmq
-    cp .travis/etc/* /usr/local/etc/rabbitmq/
-    /usr/local/sbin/rabbitmq-plugins enable --offline rabbitmq_auth_mechanism_ssl
-    brew services start rabbitmq
-
-Then run a few setup steps:
-
-    bin/bootstrap-if-needed
-    make test_user
-
-Finally, run the test suite:
-
-    make tests
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 
 ## License

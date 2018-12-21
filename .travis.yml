@@ -12,7 +12,8 @@ before_script:
   - make bootstrap
   - until lsof -i:5672; do echo "Waiting for RabbitMQ to start..."; sleep 1; done
   - make before_build
-  - make test_user
+  - make test_vhosts
+  - make test_users
 env:
   - TARGET=tests_iOS TRAVIS_XCODE_SDK=iphonesimulator11.0 iOS_VERSION=11.0
   - TARGET=tests_OSX TRAVIS_XCODE_SDK=macosx10.11

@@ -9,13 +9,23 @@ First, run Carthage bootstrap:
 gmake bootstrap
 ```
 
-then, with a running RabbitMQ node set up to support [x509 certificate
-authentication](https://github.com/rabbitmq/rabbitmq-auth-mechanism-ssl):
+Then start a local RabbitMQ node (any way you please, doesn't have to be from Homebrew or source),
+configure it using files under `.travis/etc/` and enable the
+[x509 certificate authentication mechanism](https://github.com/rabbitmq/rabbitmq-auth-mechanism-ssl):
+
+    brew install rabbitmq
+    cp .travis/etc/* /path/to/etc/rabbitmq/
+    rabbitmq-plugins enable rabbitmq_auth_mechanism_ssl
+
+Then restart RabbitMQ.
+
+Now what's left is running a few setup steps:
 
 ```
 # use RABBITMQCTL="/path/to/rabbitmqctl"
 # Make variables to override RabbitMQ CLI tools to use
-gmake test_user RABBITMQCTL="/path/to/rabbitmqctl"
+gmake set_up_test_vhosts RABBITMQCTL="/path/to/rabbitmqctl"
+gmake set_up_test_users  RABBITMQCTL="/path/to/rabbitmqctl"
 
 # This will set up the management plugin and configured it to use a short (1s) stats refresh interval.
 #
