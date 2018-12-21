@@ -56,7 +56,7 @@ import XCTest
 class IntegrationTests: XCTestCase {
     let amqpLocalhost = "amqp://guest:guest@127.0.0.1"
 
-    func testPop() {
+    func testBasicGet() {
         let frameMaxRequiringTwoFrames = 4096
         var messageContent = ""
         for _ in 1...(frameMaxRequiringTwoFrames - RMQEmptyFrameSize) {
@@ -100,7 +100,7 @@ class IntegrationTests: XCTestCase {
             redelivered: false,
             exchangeName: src.name,
             routingKey: "",
-            properties: RMQBasicProperties.defaultProperties() as! [RMQValue & RMQBasicValue]
+            properties: (RMQBasicProperties.defaultProperties() as! [RMQValue & RMQBasicValue])
         )
         var actual: RMQMessage?
         q.pop { m in
@@ -206,7 +206,7 @@ class IntegrationTests: XCTestCase {
             RMQBasicCorrelationId("r-1"),
             RMQBasicMessageId("m-1"),
             ]
-        q.publish("a message".data(using: String.Encoding.utf8), properties: props as! [RMQValue & RMQBasicValue], options: [])
+        q.publish("a message".data(using: String.Encoding.utf8), properties: (props as! [RMQValue & RMQBasicValue]), options: [])
 
         XCTAssertEqual(.success,
                        semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
