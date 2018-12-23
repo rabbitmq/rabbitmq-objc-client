@@ -72,7 +72,7 @@ class RMQMessageTest: XCTestCase {
                            redelivered: false,
                            exchangeName: "my exchange",
                            routingKey: "my routing key",
-                           properties: props as! [RMQValue & RMQBasicValue])
+                           properties: (props as! [RMQValue & RMQBasicValue]))
 
         let expectedHeaders: [String : NSObject] = ["some" : RMQLongstr("header")]
         XCTAssertEqual("my app ID",         m?.appID())

@@ -82,7 +82,7 @@
 
 /*!
  * @brief Set a callback that will be called when all prior basic.publishes have been acked or nacked.
- * @discussion Each call to this method delimits a new 'transaction' for a set of basic.publishes.
+ * @discussion Each call to this method delimits a new 'batch' for a set of basic.publishes.
  * @param handler The callback to be called with a set of acked and a set of nacked delivery IDs.
  */
 - (void)afterConfirmed:(void (^ _Nonnull)(NSSet<NSNumber *> * _Nonnull acked, NSSet<NSNumber *> * _Nonnull nacked))handler;

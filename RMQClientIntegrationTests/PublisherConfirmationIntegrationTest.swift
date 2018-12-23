@@ -57,25 +57,25 @@ class PublisherConfirmationIntegrationTest: XCTestCase {
         let semaphore = DispatchSemaphore(value: 0)
         let conn = RMQConnection()
         conn.start()
+        defer { conn.blockingClose() }
 
         let ch = conn.createChannel()
-
         ch.confirmSelect()
 
         let q = ch.queue("", options: [.autoDelete, .exclusive])
 
-        q.publish("message a".data(using: String.Encoding.utf8))
-        q.publish("message b".data(using: String.Encoding.utf8))
-
         var acked: Set<NSNumber> = []
         var nacked: Set<NSNumber> = []
 
+        q.publish("message a".data(using: String.Encoding.utf8))
+        q.publish("message b".data(using: String.Encoding.utf8))
+        
         ch.afterConfirmed { (acks, nacks) in
             acked = acks
             nacked = nacks
             semaphore.signal()
         }
-
+        
         XCTAssertEqual(.success, semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)))
         XCTAssertEqual([1, 2], acked)
         XCTAssertEqual([], nacked)

@@ -51,7 +51,7 @@
 
 import XCTest
 
-// see https://github.com/rabbitmq/rabbitmq-objc-client#running-tests
+// see https://github.com/rabbitmq/rabbitmq-objc-client/blob/master/CONTRIBUTING.md
 // to set up your system for running these tests
 class IntegrationTests: XCTestCase {
     let amqpLocalhost = "amqp://guest:guest@127.0.0.1"
@@ -113,14 +113,24 @@ class IntegrationTests: XCTestCase {
         XCTAssertEqual(expected, actual)
     }
 
+    func testBlockingCloseIsIdempotent() {
+        let conn = RMQConnection()
+        conn.start()
+        let _ = conn.createChannel()
+        
+        for _ in 1...50 {
+            conn.blockingClose()
+        }
+    }
+    
     func testSubscribeWithClientCertificateAuthentication() {
         let delegate = RMQConnectionDelegateLogger()
         let noisyHeartbeats = 1
         let tlsOptions = RMQTLSOptions(
             peerName: "localhost",
             verifyPeer: false,
-            pkcs12: CertificateFixtures.guestBunniesP12() as Data,
-            pkcs12Password: "bunnies"
+            pkcs12: testClientCertificatePKCS12() as Data,
+            pkcs12Password: CertificateFixtures.password
         )
         let conn = RMQConnection(uri: "amqps://localhost",
                                  tlsOptions: tlsOptions,
@@ -153,7 +163,7 @@ class IntegrationTests: XCTestCase {
         q.publish(body)
 
         XCTAssertEqual(.success,
-                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(30)),
+                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
                        "Timed out waiting for message")
 
         XCTAssertEqual(1, delivered!.deliveryTag)
@@ -230,6 +240,8 @@ class IntegrationTests: XCTestCase {
 
         let missingDefaultsCount = 2
         XCTAssertEqual(props.count + missingDefaultsCount,  delivered!.properties.count)
+        
+        conn.blockingClose()
     }
 
     func testRejectAndRequeueCausesSecondDelivery() {
@@ -321,11 +333,11 @@ class IntegrationTests: XCTestCase {
     }
 
     func testConcurrentDeliveryOnDifferentChannels() {
-        var counter: Int32 = 0
+        let counter = AtomicInteger(value: 0)
         let semaphore = DispatchSemaphore(value: 0)
         let delegate = RMQConnectionDelegateLogger()
-        let channelCount = 600
-        let messageCount: Int32 = 600
+        let channelCount = 500
+        let messageCount: Int32 = 500
         let conn = RMQConnection(uri: amqpLocalhost,
                                  tlsOptions: RMQTLSOptions.fromURI(amqpLocalhost),
                                  channelMax: channelCount + 1 as NSNumber, frameMax: RMQFrameMax as NSNumber, heartbeat: 100, syncTimeout: 60,
@@ -341,8 +353,7 @@ class IntegrationTests: XCTestCase {
             let ch = conn.createChannel()
             let q = ch.queue(producingQueue.name, options: [.autoDelete, .exclusive])
             q.subscribe(handler: { message in
-                OSAtomicIncrement32(&counter)
-                if counter == messageCount {
+                if counter.incrementAndGet() >= messageCount {
                     semaphore.signal()
                 }
             })
@@ -354,7 +365,7 @@ class IntegrationTests: XCTestCase {
 
         XCTAssertEqual(
             .success,
-            semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(30)),
+            semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(15)),
             "Timed out waiting for messages to arrive on different channels"
         )
     }
@@ -397,5 +408,13 @@ class IntegrationTests: XCTestCase {
 
     fileprivate func causeServerChannelClose(_ ch: RMQChannel) {
         ch.basicPublish("".data(using: String.Encoding.utf8)!, routingKey: "a route that can't be found", exchange: "a non-existent exchange", properties: [], options: [])
+    }
+
+    fileprivate func testClientCertificatePKCS12() -> Data {
+        do {
+            return try CertificateFixtures.guestBunniesP12()
+        } catch {
+            fatalError("Failed to load the fixture client certificate")
+        }
     }
 }

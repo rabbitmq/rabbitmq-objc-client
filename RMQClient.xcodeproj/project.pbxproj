@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		1029A0E22087A97E00C72924 /* ConnectionDeadlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1029A0E12087A97E00C72924 /* ConnectionDeadlockTests.swift */; };
+		705359A921D174A400CF6456 /* TestCertificates in Resources */ = {isa = PBXBuildFile; fileRef = 705359A821D174A400CF6456 /* TestCertificates */; };
+		705359AA21D174A400CF6456 /* TestCertificates in Resources */ = {isa = PBXBuildFile; fileRef = 705359A821D174A400CF6456 /* TestCertificates */; };
+		705359AC21D1871600CF6456 /* AtomicInteger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705359AB21D1871600CF6456 /* AtomicInteger.swift */; };
+		705359AD21D1871600CF6456 /* AtomicInteger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705359AB21D1871600CF6456 /* AtomicInteger.swift */; };
 		709007C3209B8DAC00476847 /* RMQTCPSocketConfigurator.h in Headers */ = {isa = PBXBuildFile; fileRef = 709007C2209B8DAC00476847 /* RMQTCPSocketConfigurator.h */; };
 		AE05DA681C69EC47009E68C7 /* RMQChannelAllocator.h in Headers */ = {isa = PBXBuildFile; fileRef = AE05DA661C69EC47009E68C7 /* RMQChannelAllocator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE05DA6C1C6A0848009E68C7 /* RMQMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = AE05DA6A1C6A0848009E68C7 /* RMQMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -224,6 +228,8 @@
 
 /* Begin PBXFileReference section */
 		1029A0E12087A97E00C72924 /* ConnectionDeadlockTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionDeadlockTests.swift; sourceTree = "<group>"; };
+		705359A821D174A400CF6456 /* TestCertificates */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TestCertificates; sourceTree = SOURCE_ROOT; };
+		705359AB21D1871600CF6456 /* AtomicInteger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicInteger.swift; sourceTree = "<group>"; };
 		709007C2209B8DAC00476847 /* RMQTCPSocketConfigurator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMQTCPSocketConfigurator.h; sourceTree = "<group>"; };
 		AE05DA661C69EC47009E68C7 /* RMQChannelAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQChannelAllocator.h; sourceTree = "<group>"; };
 		AE05DA6A1C6A0848009E68C7 /* RMQMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQMessage.h; sourceTree = "<group>"; };
@@ -614,6 +620,7 @@
 		AE34154D1CEBB64A0071177A /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				705359AB21D1871600CF6456 /* AtomicInteger.swift */,
 				AE111BD61C57B33300F88277 /* TestHelper.swift */,
 				AE9DB0121D12D1DB0005F44B /* ChannelHelper.swift */,
 				AECA10361D199E0500ED9EA2 /* QueueHelper.swift */,
@@ -772,6 +779,7 @@
 		AEE7FE9F1C3BCA6000DF8C4F /* RMQClientTests */ = {
 			isa = PBXGroup;
 			children = (
+				705359A821D174A400CF6456 /* TestCertificates */,
 				AE607C671C3C0EAD00BE9AC4 /* RMQClientTests-Bridging-Header.h */,
 				AEE7FEA21C3BCA6000DF8C4F /* Info.plist */,
 				AE34154D1CEBB64A0071177A /* Helpers */,
@@ -1024,6 +1032,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				705359AA21D174A400CF6456 /* TestCertificates in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1038,6 +1047,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				705359A921D174A400CF6456 /* TestCertificates in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1088,6 +1098,7 @@
 				AECA103A1D1A9E6000ED9EA2 /* ConnectionHelper.swift in Sources */,
 				AE34154A1CEB87CF0071177A /* StarterSpy.swift in Sources */,
 				AE9DB0031D116F770005F44B /* PublisherConfirmationIntegrationTest.swift in Sources */,
+				705359AD21D1871600CF6456 /* AtomicInteger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1188,6 +1199,7 @@
 				AE34153B1CEB56ED0071177A /* ConsumeTest.swift in Sources */,
 				AEDBFF2A1CD8E3AD0004DB67 /* RMQPKCS12CertificateConverterTest.swift in Sources */,
 				AEBE6D1D1D105B7900951CC3 /* PublisherConfirmationTest.swift in Sources */,
+				705359AC21D1871600CF6456 /* AtomicInteger.swift in Sources */,
 				AECDECA11CBC4A4F00EA6E93 /* ConnectionDelegateSpy.swift in Sources */,
 				AE59345D1C87375F00560A73 /* ChannelSpyAllocator.swift in Sources */,
 				AECA10391D1A9E2C00ED9EA2 /* ConnectionHelper.swift in Sources */,

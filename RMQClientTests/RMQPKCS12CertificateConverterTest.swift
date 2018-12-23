@@ -54,15 +54,15 @@ import XCTest
 class RMQPKCS12CertificateConverterTest: XCTestCase {
 
     func testConvertNSDataToArrayOfCertificates() {
-        let p12 = CertificateFixtures.guestBunniesP12()
-        let converter = RMQPKCS12CertificateConverter(data: p12 as Data?, password: "bunnies")
+        let p12 = try! CertificateFixtures.guestBunniesP12()
+        let converter = RMQPKCS12CertificateConverter(data: p12 as Data?, password: CertificateFixtures.password)
         let result = try! converter?.certificates()
 
         XCTAssertEqual(1, result?.count)
     }
 
     func testIncorrectPasswordThrowsError() {
-        let p12 = CertificateFixtures.guestBunniesP12()
+        let p12 = try! CertificateFixtures.guestBunniesP12()
         let converter = RMQPKCS12CertificateConverter(data: p12 as Data?, password: "hares")
 
         #if os(iOS)
@@ -79,7 +79,7 @@ class RMQPKCS12CertificateConverterTest: XCTestCase {
 
     func testGarbageDataThrowsError() {
         let p12 = "somegarbage".data(using: String.Encoding.utf8)!
-        let converter = RMQPKCS12CertificateConverter(data: p12, password: "bunnies")
+        let converter = RMQPKCS12CertificateConverter(data: p12, password: CertificateFixtures.password)
 
         #if os(iOS)
         XCTAssertThrowsError(try converter?.certificates()) { (error) in

@@ -60,11 +60,11 @@ class RMQTLSOptionsTest: XCTestCase {
                                  pkcs12Password: "foo")
         XCTAssertEqual("PLAIN", opts.authMechanism())
     }
-
+    
     func testAuthMechanismIsExternalWhenPKCS12Provided() {
         let opts = RMQTLSOptions(peerName: "soakalmost",
                                  verifyPeer: true,
-                                 pkcs12: CertificateFixtures.guestBunniesP12() as Data,
+                                 pkcs12: testClientCertificatePKCS12() as Data,
                                  pkcs12Password: "bar")
         XCTAssertEqual("EXTERNAL", opts.authMechanism())
     }
@@ -72,8 +72,8 @@ class RMQTLSOptionsTest: XCTestCase {
     func testDelegatesCertificates() {
         let opts = RMQTLSOptions(peerName: "localghost",
                                  verifyPeer: true,
-                                 pkcs12: CertificateFixtures.guestBunniesP12() as Data,
-                                 pkcs12Password: "bunnies")
+                                 pkcs12: testClientCertificatePKCS12() as Data,
+                                 pkcs12Password: CertificateFixtures.password)
         XCTAssertEqual(1, try! opts.certificates().count)
     }
 
@@ -96,4 +96,11 @@ class RMQTLSOptionsTest: XCTestCase {
         XCTAssertFalse(opts.useTLS)
     }
 
+    fileprivate func testClientCertificatePKCS12() -> Data {
+        do {
+            return try CertificateFixtures.guestBunniesP12()
+        } catch {
+            fatalError("Failed to load the fixture client certificate")
+        }
+    }
 }

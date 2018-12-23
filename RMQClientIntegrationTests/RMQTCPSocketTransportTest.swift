@@ -81,6 +81,12 @@ class RMQTCPSocketTransportTest: XCTestCase {
         transport.socket(GCDAsyncSocket(), didRead: endByte, withTag: callbacks.allKeys.first as! Int)
 
         XCTAssertEqual(header, receivedData)
+        
+        defer {
+            if(transport.isConnected()) {
+                transport.close()
+            }
+        }
     }
 
     func testIsNotConnectedWhenSocketDisconnectedOutsideOfCloseBlock() {
@@ -89,6 +95,12 @@ class RMQTCPSocketTransportTest: XCTestCase {
         transport.socketDidDisconnect(GCDAsyncSocket(), withError: error)
 
         XCTAssertFalse(transport.isConnected())
+        
+        defer {
+            if(transport.isConnected()) {
+                transport.close()
+            }
+        }
     }
 
     func testCallbacksAreRemovedAfterUse() {
@@ -124,6 +136,12 @@ class RMQTCPSocketTransportTest: XCTestCase {
         TestHelper.pollUntil { delegate.lastDisconnectError != nil }
 
         XCTAssertEqual(NSPOSIXErrorDomain, (delegate.lastDisconnectError! as NSError).domain)
+        
+        defer {
+            if(transport.isConnected()) {
+                transport.close()
+            }
+        }
     }
 
     func testExtendsReadWhenReadTimesOut() {
@@ -136,35 +154,17 @@ class RMQTCPSocketTransportTest: XCTestCase {
         XCTAssert(timeoutExtension > 0)
     }
 
-    func doTestConnectsToHostWithoutTLS(host: String) {
-        let semaphore = DispatchSemaphore(value: 0)
-        let transport = RMQTCPSocketTransport(host: host, port: 5672, tlsOptions: noTLS)
-        try! transport.connect()
-        transport.write(RMQProtocolHeader().amqEncoded())
-
-        var receivedData: Data?
-        transport.readFrame { data in
-            receivedData = data
-            semaphore.signal()
-        }
-
-        XCTAssertEqual(.success, semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(2)),
-                       "Timed out waiting for read")
-        let parser = RMQParser(data: receivedData!)
-        XCTAssert(RMQFrame(parser: parser).payload.isKind(of: RMQConnectionStart.self))
-    }
-
-    func testConnectsOverIPV4() {
+    func testConnectsUsingIPv4Address() {
         doTestConnectsToHostWithoutTLS(host: "127.0.0.1")
     }
 
-    func testConnectsOverIPV6() {
-        doTestConnectsToHostWithoutTLS(host: "::1")
+    func testConnectsUsingHostname() {
+        doTestConnectsToHostWithoutTLS(host: "localhost")
     }
 
     func testConnectsViaTLS() {
         let semaphore = DispatchSemaphore(value: 0)
-        let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5671,
+        let transport = RMQTCPSocketTransport(host: "localhost", port: 5671,
                                               tlsOptions: RMQTLSOptions(peerName: "localhost", verifyPeer: false, pkcs12: nil, pkcs12Password: ""))
         try! transport.connect()
         transport.write(RMQProtocolHeader().amqEncoded())
@@ -175,10 +175,16 @@ class RMQTCPSocketTransportTest: XCTestCase {
             semaphore.signal()
         }
 
-        XCTAssertEqual(.success, semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(2)),
+        XCTAssertEqual(.success, semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
                        "Timed out waiting for read")
         let parser = RMQParser(data: receivedData!)
         XCTAssert(RMQFrame(parser: parser).payload.isKind(of: RMQConnectionStart.self))
+        
+        defer {
+            if(transport.isConnected()) {
+                transport.close()
+            }
+        }
     }
 
     func testConnectsViaTLSWithClientCert() {
@@ -186,10 +192,10 @@ class RMQTCPSocketTransportTest: XCTestCase {
         let tlsOptions = RMQTLSOptions(
             peerName: "localhost",
             verifyPeer: false,
-            pkcs12: CertificateFixtures.guestBunniesP12() as Data,
-            pkcs12Password: "bunnies"
+            pkcs12: testClientCertificatePKCS12() as Data,
+            pkcs12Password: CertificateFixtures.password
         )
-        let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5671, tlsOptions: tlsOptions)
+        let transport = RMQTCPSocketTransport(host: "localhost", port: 5671, tlsOptions: tlsOptions)
         try! transport.connect()
         transport.write(RMQProtocolHeader().amqEncoded())
 
@@ -199,17 +205,23 @@ class RMQTCPSocketTransportTest: XCTestCase {
             semaphore.signal()
         }
 
-        XCTAssertEqual(.success, semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(2)),
+        XCTAssertEqual(.success, semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
                        "Timed out waiting for read")
         let parser = RMQParser(data: receivedData!)
         XCTAssert(RMQFrame(parser: parser).payload.isKind(of: RMQConnectionStart.self))
+        
+        defer {
+            if(transport.isConnected()) {
+                transport.close()
+            }
+        }
     }
-
+    
     func testThrowsWhenTLSPasswordIncorrect() {
         let tlsOptions = RMQTLSOptions(
             peerName: "localhost",
             verifyPeer: false,
-            pkcs12: CertificateFixtures.guestBunniesP12() as Data,
+            pkcs12: testClientCertificatePKCS12() as Data,
             pkcs12Password: "incorrect-password"
         )
         let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5671, tlsOptions: tlsOptions)
@@ -237,6 +249,12 @@ class RMQTCPSocketTransportTest: XCTestCase {
         transport.simulateDisconnect()
 
         XCTAssert(TestHelper.pollUntil { delegate.lastDisconnectError?._code == RMQError.simulatedDisconnect.rawValue })
+        
+        defer {
+            if(transport.isConnected()) {
+                transport.close()
+            }
+        }
     }
 
     func createTransport() -> RMQTCPSocketTransport {
@@ -245,4 +263,35 @@ class RMQTCPSocketTransportTest: XCTestCase {
                                      tlsOptions: noTLS)
     }
 
+    func doTestConnectsToHostWithoutTLS(host: String) {
+        let semaphore = DispatchSemaphore(value: 0)
+        let transport = RMQTCPSocketTransport(host: host, port: 5672, tlsOptions: noTLS)
+        try! transport.connect()
+        transport.write(RMQProtocolHeader().amqEncoded())
+        
+        var receivedData: Data?
+        transport.readFrame { data in
+            receivedData = data
+            semaphore.signal()
+        }
+        
+        XCTAssertEqual(.success, semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
+                       "Timed out waiting for read")
+        let parser = RMQParser(data: receivedData!)
+        XCTAssert(RMQFrame(parser: parser).payload.isKind(of: RMQConnectionStart.self))
+        
+        defer {
+            if(transport.isConnected()) {
+                transport.close()
+            }
+        }
+    }
+    
+    fileprivate func testClientCertificatePKCS12() -> Data {
+        do {
+            return try CertificateFixtures.guestBunniesP12()
+        } catch {
+            fatalError("Failed to load the fixture client certificate")
+        }
+    }
 }

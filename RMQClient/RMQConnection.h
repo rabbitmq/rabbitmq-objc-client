@@ -162,10 +162,13 @@ extern NSInteger const RMQChannelLimit;
 /// @brief Assumes amqp://guest:guest@localhost URI.
 - (nonnull instancetype)initWithDelegate:(nullable id<RMQConnectionDelegate>)delegate;
 
-/// @brief Close the AMQP connection with a handshake.
+/// @brief Returns true if the connection is currently open
+- (BOOL)isConnected;
+
+/// @brief Close the connection.
 - (void)close;
 
-/// @brief Close the AMQP connection with a handshake, blocking the calling thread until done.
+/// @brief Close the connection, blocking the calling thread until done.
 - (void)blockingClose;
 
 /*!

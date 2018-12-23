@@ -112,7 +112,7 @@ class RMQExchangeTest: XCTestCase {
 
         _ = ex?.publish("{\"a\": \"message\"}".data(using: String.Encoding.utf8),
                         routingKey: "some.queue",
-                        properties: properties as! [RMQValue & RMQBasicValue],
+                        properties: (properties as! [RMQValue & RMQBasicValue]),
                         options: [.mandatory])
 
         XCTAssertEqual("{\"a\": \"message\"}".data(using: String.Encoding.utf8), channel.lastReceivedBasicPublishMessage)

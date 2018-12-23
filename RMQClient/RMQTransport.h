@@ -59,5 +59,6 @@
 - (void)write:(nonnull NSData *)data;
 - (void)readFrame:(void (^ _Nonnull)(NSData * _Nonnull))complete;
 - (void)simulateDisconnect;
+/// @brief Returns true if the transport is connected
 - (BOOL)isConnected;
 @end
