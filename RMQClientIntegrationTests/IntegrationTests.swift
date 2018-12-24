@@ -240,8 +240,6 @@ class IntegrationTests: XCTestCase {
 
         let missingDefaultsCount = 2
         XCTAssertEqual(props.count + missingDefaultsCount,  delivered!.properties.count)
-        
-        conn.blockingClose()
     }
 
     func testRejectAndRequeueCausesSecondDelivery() {
