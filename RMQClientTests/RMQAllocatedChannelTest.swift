@@ -192,7 +192,7 @@ class RMQAllocatedChannelTest: XCTestCase {
             redelivered: true,
             exchangeName: "someex",
             routingKey: "my-q",
-            properties: properties as! [RMQValue & RMQBasicValue]
+            properties: (properties as! [RMQValue & RMQBasicValue])
         )
         let dispatcher = DispatcherSpy()
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
