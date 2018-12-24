@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -1001,7 +1001,7 @@
 				};
 			};
 			buildConfigurationList = AEE7FE8B1C3BCA6000DF8C4F /* Build configuration list for PBXProject "RMQClient" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 10.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1233,7 +1233,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = RMQClientIntegrationTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClientIntegrationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RMQClientIntegrationTests/RMQClientIntegrationTests-Bridging-Header.h";
@@ -1247,7 +1253,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = RMQClientIntegrationTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClientIntegrationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RMQClientIntegrationTests/RMQClientIntegrationTests-Bridging-Header.h";
@@ -1375,7 +1387,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macosx";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -1396,7 +1409,13 @@
 				INFOPLIST_FILE = RMQClient/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1414,7 +1433,13 @@
 				INFOPLIST_FILE = RMQClient/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1426,7 +1451,13 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = RMQClientTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClientTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RMQClientTests/RMQClientTests-Bridging-Header.h";
@@ -1441,7 +1472,13 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = RMQClientTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClientTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RMQClientTests/RMQClientTests-Bridging-Header.h";
