@@ -52,9 +52,9 @@
 import XCTest
 
 // see https://github.com/rabbitmq/rabbitmq-objc-client/blob/master/CONTRIBUTING.md
-// to set up your system for running these tests
+// to set up your system for running integration tests
 class OriginalIntegrationTests: XCTestCase {
-    let amqpLocalhost = "amqp://guest:guest@127.0.0.1"
+    let plainEndpoint = ConnectionHelper.defaultEndpoint
 
     func testBasicGet() {
         let frameMaxRequiringTwoFrames = 4096
@@ -65,8 +65,8 @@ class OriginalIntegrationTests: XCTestCase {
         messageContent += "bb"
 
         let conn = RMQConnection(
-            uri: amqpLocalhost,
-            tlsOptions: RMQTLSOptions.fromURI(amqpLocalhost),
+            uri: plainEndpoint,
+            tlsOptions: RMQTLSOptions.fromURI(plainEndpoint),
             channelMax: RMQChannelLimit as NSNumber,
             frameMax: frameMaxRequiringTwoFrames as NSNumber,
             heartbeat: 0,
@@ -115,12 +115,13 @@ class OriginalIntegrationTests: XCTestCase {
 
     func testBlockingCloseIsIdempotent() {
         let conn = RMQConnection()
-        conn.start()
-        let _ = conn.createChannel()
-        
-        for _ in 1...50 {
-            conn.blockingClose()
-        }
+        conn.start() {
+            let _ = conn.createChannel()
+            
+            for _ in 1...50 {
+                conn.blockingClose()
+            }
+        }        
     }
     
     func testSubscribeWithClientCertificateAuthentication() {
@@ -243,7 +244,7 @@ class OriginalIntegrationTests: XCTestCase {
     }
 
     func testRejectAndRequeueCausesSecondDelivery() {
-        let conn = RMQConnection(uri: amqpLocalhost, delegate: nil, recoverAfter: 0)
+        let conn = RMQConnection(uri: plainEndpoint, delegate: nil, recoverAfter: 0)
         conn.start()
         defer { conn.blockingClose() }
 
@@ -270,7 +271,7 @@ class OriginalIntegrationTests: XCTestCase {
     }
 
     func testMultipleConsumersOnSameChannel() {
-        let conn = RMQConnection(uri: amqpLocalhost, delegate: nil, recoverAfter: 0)
+        let conn = RMQConnection(uri: plainEndpoint, delegate: nil, recoverAfter: 0)
         conn.start()
         defer { conn.blockingClose() }
 
@@ -336,8 +337,8 @@ class OriginalIntegrationTests: XCTestCase {
         let delegate = RMQConnectionDelegateLogger()
         let channelCount = 500
         let messageCount: Int32 = 500
-        let conn = RMQConnection(uri: amqpLocalhost,
-                                 tlsOptions: RMQTLSOptions.fromURI(amqpLocalhost),
+        let conn = RMQConnection(uri: plainEndpoint,
+                                 tlsOptions: RMQTLSOptions.fromURI(plainEndpoint),
                                  channelMax: channelCount + 1 as NSNumber, frameMax: RMQFrameMax as NSNumber, heartbeat: 100, syncTimeout: 60,
                                  delegate: delegate, delegateQueue: DispatchQueue.global(qos: DispatchQoS.QoSClass.userInteractive),
                                  recoverAfter: 0, recoveryAttempts: 0, recoverFromConnectionClose: false)
@@ -370,7 +371,7 @@ class OriginalIntegrationTests: XCTestCase {
 
     func testClientChannelCloseCausesFutureOperationsToFail() {
         let delegate = ConnectionDelegateSpy()
-        let conn = RMQConnection(uri: amqpLocalhost, delegate: delegate, recoverAfter: 0)
+        let conn = RMQConnection(uri: plainEndpoint, delegate: delegate, recoverAfter: 0)
         conn.start()
         defer { conn.blockingClose() }
 
@@ -388,7 +389,7 @@ class OriginalIntegrationTests: XCTestCase {
 
     func testServerChannelCloseCausesFutureOperationsToFail() {
         let delegate = ConnectionDelegateSpy()
-        let conn = RMQConnection(uri: amqpLocalhost, delegate: delegate, recoverAfter: 0)
+        let conn = RMQConnection(uri: plainEndpoint, delegate: delegate, recoverAfter: 0)
         conn.start()
         defer { conn.blockingClose() }
 

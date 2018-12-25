@@ -320,8 +320,12 @@ NSInteger const RMQChannelLimit = 65535;
     return ch;
 }
 
-- (BOOL)isConnected {
+- (BOOL)isOpen {
     return self.transport.isConnected;
+}
+
+- (BOOL)isClosed {
+    return !self.isOpen;
 }
 
 - (void)close {
@@ -335,7 +339,7 @@ NSInteger const RMQChannelLimit = 65535;
     [self reportErrorIfAlreadyClosed];
     // this enqueues a blocking command,
     // so be idempotent
-    if(self.isConnected) {
+    if(self.isOpen) {
         for (RMQOperation operation in self.safeCloseOperations) {
             [self.commandQueue blockingEnqueue:operation];
         }

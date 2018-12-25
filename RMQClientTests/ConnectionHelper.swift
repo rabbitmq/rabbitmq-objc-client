@@ -50,12 +50,17 @@
 // ---------------------------------------------------------------------------
 
 class ConnectionHelper {
+    static let defaultUsername = "guest"
+    static let defaultPassword = "guest"
+    
+    static let defaultEndpoint = "amqp://guest:guest@127.0.0.1"
+    
     static func makeConnection(recoveryInterval interval: Int = 2,
                                                 onlyErrors: Bool = true,
                                                 attemptLimit: Int = 1,
                                                 transport: RMQTCPSocketTransport,
                                                 delegate: RMQConnectionDelegate) -> RMQConnection {
-        let credentials = RMQCredentials(username: "guest", password: "guest")
+        let credentials = RMQCredentials(username: defaultUsername, password: defaultPassword)
         let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 10)
         let heartbeatSender = RMQGCDHeartbeatSender(transport: transport, clock: RMQTickingClock())
         let commandQueue = RMQGCDSerialQueue(name: "socket-recovery-test-queue")
@@ -81,5 +86,25 @@ class ConnectionHelper {
                              command: commandQueue!,
                              waiterFactory: RMQSemaphoreWaiterFactory(),
                              heartbeatSender: heartbeatSender!)
+    }
+
+    static func awaitCompletion(semaphore: DispatchSemaphore) -> DispatchTimeoutResult {
+        return semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(3))
+    }
+    
+    static func pollUntilTransportDisconnected(conn: RMQConnection) -> Bool {
+        return TestHelper.pollUntil {
+            if let stillConnected = conn.transport()?.isConnected() {
+                return !stillConnected
+            } else {
+                return false
+            }
+        }
+    }
+    
+    static func pollUntilDisconnected(conn: RMQConnection) -> Bool {
+        return TestHelper.pollUntil {
+            return conn.isClosed()
+        }
     }
 }

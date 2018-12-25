@@ -49,57 +49,59 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-import Foundation
+import XCTest
 
-class RMQHTTP {
-    static let testEndpoint = "http://guest:guest@127.0.0.1:15672/api"
+// see https://github.com/rabbitmq/rabbitmq-objc-client/blob/master/CONTRIBUTING.md
+// to set up your system for running integration tests
+class ConnectionLifecycleIntegrationTests: XCTestCase {
+    let endpoint = ConnectionHelper.defaultEndpoint
     
-    var uri: String
-
-    init(_ uri: String) {
-        self.uri = uri
-    }
-
-    static func withTestEndpoint() -> RMQHTTP {
-        return RMQHTTP(testEndpoint)
+    func testConnectingWithAllDefaults() {
+        let semaphore = DispatchSemaphore(value: 0)
+        let conn = RMQConnection()
+        conn.start() {
+            semaphore.signal()
+        }
+        
+        XCTAssertEqual(.success, ConnectionHelper.awaitCompletion(semaphore: semaphore),
+            "Timed out waiting for connection and handshake to complete")
+        
+        XCTAssert(conn.isOpen())
+        conn.blockingClose()
     }
     
-    func get(_ path: String) -> Data {
-        let url = URL(string: uri + path)
-
+    func testConnectingWithAURI() {
         let semaphore = DispatchSemaphore(value: 0)
-
-        var data: Data?
-        let task = URLSession.shared.dataTask(with: url!, completionHandler: {(d, _, _) in
-            data = d
+        let delegate = RMQConnectionDelegateLogger()
+        let conn = RMQConnection(uri: ConnectionHelper.defaultEndpoint,
+                                 delegate: delegate)
+        conn.start() {
             semaphore.signal()
-        }) 
+        }
         
-        task.resume()
-
-        _ = semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5))
-
-        return data!
+        XCTAssertEqual(.success,
+                       ConnectionHelper.awaitCompletion(semaphore: semaphore),
+                       "Timed out waiting for connection and handshake to complete")
+        
+        XCTAssert(conn.isOpen())
+        conn.blockingClose()
     }
-
-    @discardableResult
-    func delete(_ path: String) -> Data {
-        let url = URL(string: "\(uri)\(path)")
-
+    
+    func testUserInitiatedClosure() {
         let semaphore = DispatchSemaphore(value: 0)
-        var request = URLRequest(url: url!)
-        request.httpMethod = "DELETE"
-
-        var data: Data?
-        let task = URLSession.shared.dataTask(with: request, completionHandler: { (d, _, _) in
-            data = d
+        let conn = RMQConnection()
+        conn.start() {
             semaphore.signal()
-        }) 
-
-        task.resume()
-
-        _ = semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5))
+        }
+        XCTAssertEqual(.success, ConnectionHelper.awaitCompletion(semaphore: semaphore),
+                       "Timed out waiting for connection and handshake to complete")
         
-        return data!
+        XCTAssertTrue((conn.transport()?.isConnected())!)
+        XCTAssertTrue(conn.isOpen())
+        
+        conn.blockingClose()
+
+        XCTAssertTrue(ConnectionHelper.pollUntilTransportDisconnected(conn: conn))
+        XCTAssertTrue(ConnectionHelper.pollUntilDisconnected(conn: conn))
     }
 }

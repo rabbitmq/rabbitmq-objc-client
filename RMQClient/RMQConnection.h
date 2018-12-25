@@ -65,7 +65,7 @@
 
 extern NSInteger const RMQChannelLimit;
 
-/// @brief Public API: Interface to an AMQP 0-9-1 connection. See the <a href="http://www.rabbitmq.com/specification.html">spec</a> for details.
+/// @brief Public API: Interface to an AMQP 0-9-1 connection. See the <a href="https://www.rabbitmq.com/specification.html">spec</a> for details.
 @interface RMQConnection : NSObject<RMQFrameHandler, RMQSender, RMQStarter, RMQTransportDelegate>
 
 @property (nonnull, copy, nonatomic, readonly) NSString *vhost;
@@ -162,8 +162,14 @@ extern NSInteger const RMQChannelLimit;
 /// @brief Assumes amqp://guest:guest@localhost URI.
 - (nonnull instancetype)initWithDelegate:(nullable id<RMQConnectionDelegate>)delegate;
 
+/// @brief Returns the transport used by this connection, if any
+-(id<RMQTransport>)transport;
+
 /// @brief Returns true if the connection is currently open
-- (BOOL)isConnected;
+- (BOOL)isOpen;
+
+/// @brief Returns true if the connection is currently closed
+- (BOOL)isClosed;
 
 /// @brief Close the connection.
 - (void)close;

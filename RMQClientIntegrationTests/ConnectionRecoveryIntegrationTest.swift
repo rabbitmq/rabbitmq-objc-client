@@ -56,8 +56,8 @@ enum RecoveryTestError : Error {
 }
 
 class ConnectionRecoveryIntegrationTest: XCTestCase {
-    let amqpLocalhost = "amqp://guest:guest@127.0.0.1"
-    let httpAPI = RMQHTTP("http://guest:guest@127.0.0.1:15672/api")
+    let plainEndpoint = ConnectionHelper.defaultEndpoint
+    let httpAPIClient = RMQHTTP.withTestEndpoint()
 
     func testRecoversFromSocketDisconnect() {
         let recoveryInterval = 2
@@ -66,7 +66,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         let confirmationTimeout = 10
         let delegate = ConnectionDelegateSpy()
 
-        let tlsOptions = RMQTLSOptions.fromURI(amqpLocalhost)
+        let tlsOptions = RMQTLSOptions.fromURI(plainEndpoint)
         let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5672, tlsOptions: tlsOptions)
 
         let conn = ConnectionHelper.makeConnection(recoveryInterval: recoveryInterval, transport: transport, delegate: delegate)
@@ -148,8 +148,8 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         let semaphoreTimeout: Double = 30
         let delegate = ConnectionDelegateSpy()
 
-        let conn = RMQConnection(uri: amqpLocalhost,
-                                 tlsOptions: RMQTLSOptions.fromURI(amqpLocalhost),
+        let conn = RMQConnection(uri: plainEndpoint,
+                                 tlsOptions: RMQTLSOptions.fromURI(plainEndpoint),
                                  channelMax: RMQChannelLimit as NSNumber,
                                  frameMax: RMQFrameMax as NSNumber,
                                  heartbeat: 10,
@@ -211,7 +211,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
     }
 
     fileprivate func connections() -> [RMQHTTPConnection] {
-        return RMQHTTPParser().connections(httpAPI.get("/connections"))
+        return RMQHTTPParser().connections(httpAPIClient.get("/connections"))
     }
 
     fileprivate func closeAllConnections() throws {
@@ -221,7 +221,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
             let escapedName = conn.name.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
             let path = "/connections/\(escapedName)"
 
-            httpAPI.delete(path)
+            httpAPIClient.delete(path)
         }
 
         if (!TestHelper.pollUntil(30) { self.connections().count == 0 }) {

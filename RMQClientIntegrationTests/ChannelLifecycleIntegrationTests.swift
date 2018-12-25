@@ -49,57 +49,17 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-import Foundation
+import XCTest
 
-class RMQHTTP {
-    static let testEndpoint = "http://guest:guest@127.0.0.1:15672/api"
-    
-    var uri: String
-
-    init(_ uri: String) {
-        self.uri = uri
-    }
-
-    static func withTestEndpoint() -> RMQHTTP {
-        return RMQHTTP(testEndpoint)
-    }
-    
-    func get(_ path: String) -> Data {
-        let url = URL(string: uri + path)
-
-        let semaphore = DispatchSemaphore(value: 0)
-
-        var data: Data?
-        let task = URLSession.shared.dataTask(with: url!, completionHandler: {(d, _, _) in
-            data = d
-            semaphore.signal()
-        }) 
+// see https://github.com/rabbitmq/rabbitmq-objc-client/blob/master/CONTRIBUTING.md
+// to set up your system for running integration tests
+class ChannelLifecycleIntegrationTests: XCTestCase {    
+    func testOpeningAChannelWithoutExplicitlyProvidedID() {
+        let conn = RMQConnection()
+        conn.start()
+        defer { conn.blockingClose() }
         
-        task.resume()
-
-        _ = semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5))
-
-        return data!
-    }
-
-    @discardableResult
-    func delete(_ path: String) -> Data {
-        let url = URL(string: "\(uri)\(path)")
-
-        let semaphore = DispatchSemaphore(value: 0)
-        var request = URLRequest(url: url!)
-        request.httpMethod = "DELETE"
-
-        var data: Data?
-        let task = URLSession.shared.dataTask(with: request, completionHandler: { (d, _, _) in
-            data = d
-            semaphore.signal()
-        }) 
-
-        task.resume()
-
-        _ = semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5))
-        
-        return data!
+        let ch = conn.createChannel();
+        ch.close()
     }
 }
