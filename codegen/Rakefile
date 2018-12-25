@@ -10,21 +10,21 @@ integration_tests_dir = Pathname(File.absolute_path('../RMQClientIntegrationTest
 this_dir = Pathname(__dir__)
 xml = Nokogiri::XML(File.open(this_dir.join("amqp0-9-1.extended.xml")))
 
-desc "Generate AMQP method code"
+desc "Generate AMQP 0-9-1 protocol parser"
 task :generate_methods do
   generator = GenerateMethods.new(xml)
   code_dir.join('RMQMethods.h').write(generator.generate_header)
   code_dir.join('RMQMethods.m').write(generator.generate_implementation)
 end
 
-desc "Generate mapping between [classID, methodID] to method classes"
+desc "Generate a mapping between [classID, methodID] to method classes"
 task :generate_method_map do
   generator = GenerateMethodMap.new(xml)
   code_dir.join('RMQMethodMap.h').write(generator.generate_header)
   code_dir.join('RMQMethodMap.m').write(generator.generate_implementation)
 end
 
-desc "Generate basic properties"
+desc "Generate basic properties parser"
 task :generate_basic_properties do
   generator = GenerateBasicProperties.new(xml)
   code_dir.join('RMQBasicProperties.h').write(generator.generate_header)
