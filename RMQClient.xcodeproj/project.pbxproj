@@ -121,7 +121,7 @@
 		AEA45ED11C43F4DC00FE1F62 /* RMQTCPSocketTransport.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA45ECF1C43F4DC00FE1F62 /* RMQTCPSocketTransport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEA45ED21C43F4DC00FE1F62 /* RMQTCPSocketTransport.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA45ED01C43F4DC00FE1F62 /* RMQTCPSocketTransport.m */; };
 		AEA45EDC1C440FE400FE1F62 /* RMQClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE7FE911C3BCA6000DF8C4F /* RMQClient.framework */; };
-		AEA45EE21C440FFD00FE1F62 /* IntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */; };
+		AEA45EE21C440FFD00FE1F62 /* OriginalIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE607C681C3C0EAD00BE9AC4 /* OriginalIntegrationTests.swift */; };
 		AEA45EE31C44100C00FE1F62 /* RMQTCPSocketTransportTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA45ECD1C43F44400FE1F62 /* RMQTCPSocketTransportTest.swift */; };
 		AEA7A3D91C72255900BDEA05 /* RMQQueueTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA7A3D81C72255900BDEA05 /* RMQQueueTest.swift */; };
 		AEA8A75C1CC979AE00371E38 /* RMQLocalSerialQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA8A75B1CC979AE00371E38 /* RMQLocalSerialQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -285,7 +285,7 @@
 		AE59345C1C87375F00560A73 /* ChannelSpyAllocator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelSpyAllocator.swift; sourceTree = "<group>"; };
 		AE59345E1C873B6900560A73 /* RMQChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQChannel.h; sourceTree = "<group>"; };
 		AE607C671C3C0EAD00BE9AC4 /* RMQClientTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "RMQClientTests-Bridging-Header.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegrationTests.swift; sourceTree = "<group>"; };
+		AE607C681C3C0EAD00BE9AC4 /* OriginalIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OriginalIntegrationTests.swift; sourceTree = "<group>"; };
 		AE744E311C85A1B000A4C2FA /* RMQFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RMQFrame.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		AE744E321C85A1B000A4C2FA /* RMQFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQFrame.m; sourceTree = "<group>"; };
 		AE744E351C85A20700A4C2FA /* RMQFrameset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RMQFrameset.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -668,7 +668,7 @@
 				AEEDB0B61CE32E1300005A92 /* HTTP */,
 				AEA45EE41C44111200FE1F62 /* RMQClientIntegrationTests-Bridging-Header.h */,
 				AEA45EDB1C440FE400FE1F62 /* Info.plist */,
-				AE607C681C3C0EAD00BE9AC4 /* IntegrationTests.swift */,
+				AE607C681C3C0EAD00BE9AC4 /* OriginalIntegrationTests.swift */,
 				AEEDB0B41CE3284200005A92 /* ConnectionRecoveryIntegrationTest.swift */,
 				AE9DB0021D116F770005F44B /* PublisherConfirmationIntegrationTest.swift */,
 				AE95953C1CD0CC4D0039418C /* RMQGCDHeartbeatSenderTest.swift */,
@@ -1080,7 +1080,7 @@
 				AEDBFF2D1CD8F67B0004DB67 /* CertificateFixtures.swift in Sources */,
 				AEEB8B561C7DF043002D3FCE /* RMQTransportContract.swift in Sources */,
 				AEEDB0BF1CE3326C00005A92 /* RMQHTTPParserTest.swift in Sources */,
-				AEA45EE21C440FFD00FE1F62 /* IntegrationTests.swift in Sources */,
+				AEA45EE21C440FFD00FE1F62 /* OriginalIntegrationTests.swift in Sources */,
 				AEEB8B501C7DE8D1002D3FCE /* ControlledInteractionTransport.swift in Sources */,
 				AE063BE11CD7565B00F90EB5 /* FakeClock.swift in Sources */,
 				AEEDB0B51CE3284200005A92 /* ConnectionRecoveryIntegrationTest.swift in Sources */,
