@@ -1,12 +1,10 @@
-//  Copyright © 2018 Pivotal . All rights reserved.
-//
 // This source code is dual-licensed under the Mozilla Public License ("MPL"),
 // version 1.1 and the Apache License ("ASL"), version 2.0.
 //
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright 2017 Pivotal Software, Inc.
+// Copyright 2017-2019 Pivotal Software, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
