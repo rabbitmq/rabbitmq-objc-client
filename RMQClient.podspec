@@ -14,6 +14,6 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = "10.11"
   s.source           = { :git => "https://github.com/rabbitmq/rabbitmq-objc-client.git", :tag => "v#{s.version}" }
   s.source_files     = "RMQClient", "RMQClient/**/*.{h,m}"
-  s.dependency       "JKVValue"
-  s.dependency       "CocoaAsyncSocket", "~> 7.5.0"
+  s.dependency       "JKVValue", "~> 1.3.3"
+  s.dependency       "CocoaAsyncSocket", "~> 7.6.3"
 end
