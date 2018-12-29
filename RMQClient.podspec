@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
                    DESC
   s.homepage         = "https://github.com/rabbitmq/rabbitmq-objc-client"
   s.license          = "Mozilla Public License, Version 1.1 and Apache License, Version 2.0"
-  s.author           = { "RabbitMQ team" => "https://groups.google.com/forum/#!forum/rabbitmq-users" }
+  s.author           = { "RabbitMQ team" => "rabbitmq-users@googlegroups.com" }
   s.social_media_url = "https://twitter.com/rabbitmq"
   s.ios.deployment_target = "8.0"
   s.osx.deployment_target = "10.11"
