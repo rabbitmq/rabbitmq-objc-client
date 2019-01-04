@@ -52,7 +52,6 @@
 import XCTest
 
 class RMQURIParseTest: XCTestCase {
-    
     func testNonAMQPSchemesNotAllowed() {
         XCTAssertThrowsError(try RMQURI.parse("http://dev.rabbitmq.com")) { error in
             do {
@@ -71,7 +70,7 @@ class RMQURIParseTest: XCTestCase {
             }
         }
     }
-    
+
     func testAMQPURIWithoutThePathComponent() {
         let val = try! RMQURI.parse("amqp://dev.rabbitmq.com")
         XCTAssertEqual("/", val.vhost)
@@ -93,7 +92,7 @@ class RMQURIParseTest: XCTestCase {
         let val = try! RMQURI.parse("amqp://dev.rabbitmq.com/")
         XCTAssertEqual("", val.vhost)
     }
-    
+
     func testLeadingPercentEncodedSlash() {
         let val1 = try! RMQURI.parse("amqp://dev.rabbitmq.com/%2F")
         XCTAssertEqual("/", val1.vhost)
@@ -109,7 +108,7 @@ class RMQURIParseTest: XCTestCase {
         let val2 = try! RMQURI.parse("amqp://dev.rabbitmq.com/a%2Fpath%2Fwith%2Fa%2Ffew%2Fencoded%2Fslashes")
         XCTAssertEqual("a/path/with/a/few/encoded/slashes", val2.vhost)
     }
-    
+
     func testDotsInVirtualHostName() {
         let val = try! RMQURI.parse("amqp://dev.rabbitmq.com/a.path.without.slashes")
         XCTAssertEqual("a.path.without.slashes", val.vhost)
@@ -123,6 +122,16 @@ class RMQURIParseTest: XCTestCase {
         XCTAssertFalse(val.isTLS)
         XCTAssertEqual("hedgehog", val.username)
         XCTAssertEqual("t0ps3kr3t", val.password)
+    }
+
+    func testParsesUsernameWithMissingPassword() {
+        let val = try! RMQURI.parse("amqp://hedgehog@hub.megacorp.internal")
+        XCTAssertEqual("/", val.vhost)
+        XCTAssertEqual("hub.megacorp.internal", val.host)
+        XCTAssertEqual(5672, val.portNumber)
+        XCTAssertFalse(val.isTLS)
+        XCTAssertEqual("hedgehog", val.username)
+        XCTAssertEqual("", val.password)
     }
 
     func testParsesUsernameAndPasswordWithSlashes() {
