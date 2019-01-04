@@ -91,7 +91,7 @@ class RMQURIParseTest: XCTestCase {
     // This matches Bunny/amq-protocol behavior
     func testVirtualHostWithPathSeparatorOnly() {
         let val = try! RMQURI.parse("amqp://dev.rabbitmq.com/")
-        XCTAssertEqual("/", val.vhost)
+        XCTAssertEqual("", val.vhost)
     }
     
     func testLeadingPercentEncodedSlash() {

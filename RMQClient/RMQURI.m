@@ -106,23 +106,25 @@
  *
  *              This method assumes that the default virtual host used by clients
  *              is a single slash ("/"). It will be returned in cases where the path
- *              component is blank or only consists of a URI component separator (a slash),
- *              for example, "amqp://hostname:5672" and "amqp://hostname:5672/".
+ *              component only consists of a URI component separator (a slash),
+ *              for example, "amqp://hostname:5672/".
+ *              If the path component is blank but the separator is present, an empty
+ *              string will be returned.
+ *              See https://www.rabbitmq.com/uri-spec.html for details.
  */
 + (NSString *)parseVhost:(NSURLComponents *)components error:(NSError **)error {
     NSString *path = components.path;
-    // return default virtual host for a blank path
+    // Missing path means missing virtual host,
+    // so return the default
     if (path.length == 0) {
         return @"/";
     }
     
     // will include a trailing slash
     NSString *vhost = [path substringFromIndex:1];
-    // return default virtual host for a slash-only value
-    if (vhost.length == 0) {
-        return @"/";
-    }
 
+    // if the vhost is blank we return it as is and
+    // not the defaut, per https://www.rabbitmq.com/uri-spec.html
     return [vhost stringByRemovingPercentEncoding];
 }
 @end
