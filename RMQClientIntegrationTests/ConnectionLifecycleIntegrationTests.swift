@@ -55,21 +55,21 @@ import XCTest
 // to set up your system for running integration tests
 class ConnectionLifecycleIntegrationTests: XCTestCase {
     let endpoint = ConnectionHelper.defaultEndpoint
-    
+
     func testConnectingWithAllDefaults() {
         let semaphore = DispatchSemaphore(value: 0)
         let conn = RMQConnection()
         conn.start() {
             semaphore.signal()
         }
-        
+
         XCTAssertEqual(.success, ConnectionHelper.awaitCompletion(semaphore: semaphore),
             "Timed out waiting for connection and handshake to complete")
-        
+
         XCTAssert(conn.isOpen())
         conn.blockingClose()
     }
-    
+
     func testConnectingWithAURI() {
         let semaphore = DispatchSemaphore(value: 0)
         let delegate = RMQConnectionDelegateLogger()
@@ -78,15 +78,32 @@ class ConnectionLifecycleIntegrationTests: XCTestCase {
         conn.start() {
             semaphore.signal()
         }
-        
+
         XCTAssertEqual(.success,
                        ConnectionHelper.awaitCompletion(semaphore: semaphore),
                        "Timed out waiting for connection and handshake to complete")
-        
+
         XCTAssert(conn.isOpen())
         conn.blockingClose()
     }
-    
+
+    func testConnectingWithAURIThatHasEncodedSlashesInPath() {
+        let semaphore = DispatchSemaphore(value: 0)
+        let delegate = RMQConnectionDelegateLogger()
+        let conn = RMQConnection(uri: "amqp://guest:guest@localhost:5672/vhost%2Fwith%2Fa%2Ffew%2Fslashes",
+                                 delegate: delegate)
+        conn.start() {
+            semaphore.signal()
+        }
+
+        XCTAssertEqual(.success,
+                       ConnectionHelper.awaitCompletion(semaphore: semaphore),
+                       "Timed out waiting for connection and handshake to complete")
+
+        XCTAssert(conn.isOpen())
+        conn.blockingClose()
+    }
+
     func testUserInitiatedClosure() {
         let semaphore = DispatchSemaphore(value: 0)
         let conn = RMQConnection()
@@ -95,10 +112,10 @@ class ConnectionLifecycleIntegrationTests: XCTestCase {
         }
         XCTAssertEqual(.success, ConnectionHelper.awaitCompletion(semaphore: semaphore),
                        "Timed out waiting for connection and handshake to complete")
-        
+
         XCTAssertTrue((conn.transport()?.isConnected())!)
         XCTAssertTrue(conn.isOpen())
-        
+
         conn.blockingClose()
 
         XCTAssertTrue(ConnectionHelper.pollUntilTransportDisconnected(conn: conn))

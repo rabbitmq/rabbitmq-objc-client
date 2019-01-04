@@ -101,21 +101,28 @@
     return [scheme isEqualToString:@"amqp"] || [scheme isEqualToString:@"amqps"];
 }
 
+/*! @brief Parses virtual host out from the path component.
+ *  @discussion Slashes in URI path must be percent-encoded as "%2F" or "%2f".
+ *
+ *              This method assumes that the default virtual host used by clients
+ *              is a single slash ("/"). It will be returned in cases where the path
+ *              component is blank or only consists of a URI component separator (a slash),
+ *              for example, "amqp://hostname:5672" and "amqp://hostname:5672/".
+ */
 + (NSString *)parseVhost:(NSURLComponents *)components error:(NSError **)error {
-    NSRegularExpression *r = [NSRegularExpression
-                              regularExpressionWithPattern:@"/"
-                              options:NSRegularExpressionCaseInsensitive
-                              error:NULL];
-    NSUInteger numberOfSlashes = [r numberOfMatchesInString:components.path options:0 range:NSMakeRange(0, components.path.length)];
-    
-    if (numberOfSlashes > 2) {
-        NSString *msg = [NSString stringWithFormat:@"%@ has multiple-segment path; please percent-encode any slashes in the vhost name (e.g. /production => %%2Fproduction). Learn more at http://bit.ly/amqp-gem-and-connection-uris", components.URL];
-        *error = [NSError errorWithDomain:RMQErrorDomain code:RMQErrorInvalidPath userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(msg, nil)}];
-        return nil;
-    } else if (components.path.length == 0) {
+    NSString *path = components.path;
+    // return default virtual host for a blank path
+    if (path.length == 0) {
         return @"/";
-    } else {
-        return [components.path substringFromIndex:1];
     }
+    
+    // will include a trailing slash
+    NSString *vhost = [path substringFromIndex:1];
+    // return default virtual host for a slash-only value
+    if (vhost.length == 0) {
+        return @"/";
+    }
+
+    return [vhost stringByRemovingPercentEncoding];
 }
 @end

@@ -53,6 +53,14 @@
 
 @interface RMQURI : NSObject
 @property (nonatomic,nonnull,readonly) NSString *host;
+/*! @brief Virtual host to connect to, extracted from the path component.
+ *  @discussion Slashes in URI path must be percent-encoded as "%2F" or "%2f".
+ *
+ *              The default virtual is assumed to be a single slash ("/").
+ *              It will be used in cases where the path
+ *              component is blank or only consists of a URI component separator (a slash),
+ *              for example, "amqp://hostname:5672" and "amqp://hostname:5672/".
+ */
 @property (nonatomic,nonnull,readonly) NSString *vhost;
 @property (nonatomic,nonnull,readonly) NSNumber *portNumber;
 @property (nonatomic,nonnull,readonly) NSString *username;

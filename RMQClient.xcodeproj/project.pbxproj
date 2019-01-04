@@ -15,6 +15,7 @@
 		705CB9CC21D253AF00996B64 /* ChannelLifecycleIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705CB9CB21D253AF00996B64 /* ChannelLifecycleIntegrationTests.swift */; };
 		705CB9CE21D258C300996B64 /* ConnectionLifecycleIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705CB9CD21D258C300996B64 /* ConnectionLifecycleIntegrationTests.swift */; };
 		709007C3209B8DAC00476847 /* RMQTCPSocketConfigurator.h in Headers */ = {isa = PBXBuildFile; fileRef = 709007C2209B8DAC00476847 /* RMQTCPSocketConfigurator.h */; };
+		70FC58B121DF4DB900BB25CB /* ChannelIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FC58B021DF4DB900BB25CB /* ChannelIntegrationTests.swift */; };
 		AE05DA681C69EC47009E68C7 /* RMQChannelAllocator.h in Headers */ = {isa = PBXBuildFile; fileRef = AE05DA661C69EC47009E68C7 /* RMQChannelAllocator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE05DA6C1C6A0848009E68C7 /* RMQMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = AE05DA6A1C6A0848009E68C7 /* RMQMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE05DA6D1C6A0848009E68C7 /* RMQMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = AE05DA6B1C6A0848009E68C7 /* RMQMessage.m */; };
@@ -109,7 +110,6 @@
 		AE96A76A1CE1F16600C772AA /* RMQSuspendResumeDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = AE96A7681CE1F16600C772AA /* RMQSuspendResumeDispatcher.m */; };
 		AE96A76C1CE1F2F000C772AA /* RMQDispatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = AE96A76B1CE1F2F000C772AA /* RMQDispatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE96A76E1CE2126100C772AA /* DispatcherSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE96A76D1CE2126100C772AA /* DispatcherSpy.swift */; };
-		AE9DB0031D116F770005F44B /* PublisherConfirmationIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9DB0021D116F770005F44B /* PublisherConfirmationIntegrationTest.swift */; };
 		AE9DB0061D11F0820005F44B /* RMQTransactionalConfirmations.h in Headers */ = {isa = PBXBuildFile; fileRef = AE9DB0041D11F0820005F44B /* RMQTransactionalConfirmations.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE9DB0071D11F0820005F44B /* RMQTransactionalConfirmations.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9DB0051D11F0820005F44B /* RMQTransactionalConfirmations.m */; };
 		AE9DB0091D11FDED0005F44B /* ConfirmationsSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9DB0081D11FDED0005F44B /* ConfirmationsSpy.swift */; };
@@ -235,6 +235,7 @@
 		705CB9CB21D253AF00996B64 /* ChannelLifecycleIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelLifecycleIntegrationTests.swift; sourceTree = "<group>"; };
 		705CB9CD21D258C300996B64 /* ConnectionLifecycleIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionLifecycleIntegrationTests.swift; sourceTree = "<group>"; };
 		709007C2209B8DAC00476847 /* RMQTCPSocketConfigurator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMQTCPSocketConfigurator.h; sourceTree = "<group>"; };
+		70FC58B021DF4DB900BB25CB /* ChannelIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelIntegrationTests.swift; sourceTree = "<group>"; };
 		AE05DA661C69EC47009E68C7 /* RMQChannelAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQChannelAllocator.h; sourceTree = "<group>"; };
 		AE05DA6A1C6A0848009E68C7 /* RMQMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQMessage.h; sourceTree = "<group>"; };
 		AE05DA6B1C6A0848009E68C7 /* RMQMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQMessage.m; sourceTree = "<group>"; };
@@ -327,7 +328,6 @@
 		AE96A7681CE1F16600C772AA /* RMQSuspendResumeDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQSuspendResumeDispatcher.m; sourceTree = "<group>"; };
 		AE96A76B1CE1F2F000C772AA /* RMQDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQDispatcher.h; sourceTree = "<group>"; };
 		AE96A76D1CE2126100C772AA /* DispatcherSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatcherSpy.swift; sourceTree = "<group>"; };
-		AE9DB0021D116F770005F44B /* PublisherConfirmationIntegrationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublisherConfirmationIntegrationTest.swift; sourceTree = "<group>"; };
 		AE9DB0041D11F0820005F44B /* RMQTransactionalConfirmations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQTransactionalConfirmations.h; sourceTree = "<group>"; };
 		AE9DB0051D11F0820005F44B /* RMQTransactionalConfirmations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQTransactionalConfirmations.m; sourceTree = "<group>"; };
 		AE9DB0081D11FDED0005F44B /* ConfirmationsSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmationsSpy.swift; sourceTree = "<group>"; };
@@ -673,7 +673,7 @@
 				705CB9CD21D258C300996B64 /* ConnectionLifecycleIntegrationTests.swift */,
 				AEEDB0B41CE3284200005A92 /* ConnectionRecoveryIntegrationTest.swift */,
 				705CB9CB21D253AF00996B64 /* ChannelLifecycleIntegrationTests.swift */,
-				AE9DB0021D116F770005F44B /* PublisherConfirmationIntegrationTest.swift */,
+				70FC58B021DF4DB900BB25CB /* ChannelIntegrationTests.swift */,
 				AE95953C1CD0CC4D0039418C /* RMQGCDHeartbeatSenderTest.swift */,
 				AEA45ECD1C43F44400FE1F62 /* RMQTCPSocketTransportTest.swift */,
 				AEA45EE41C44111200FE1F62 /* RMQClientIntegrationTests-Bridging-Header.h */,
@@ -1105,7 +1105,7 @@
 				AEA45EE31C44100C00FE1F62 /* RMQTCPSocketTransportTest.swift in Sources */,
 				AECA103A1D1A9E6000ED9EA2 /* ConnectionHelper.swift in Sources */,
 				AE34154A1CEB87CF0071177A /* StarterSpy.swift in Sources */,
-				AE9DB0031D116F770005F44B /* PublisherConfirmationIntegrationTest.swift in Sources */,
+				70FC58B121DF4DB900BB25CB /* ChannelIntegrationTests.swift in Sources */,
 				705359AD21D1871600CF6456 /* AtomicInteger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
