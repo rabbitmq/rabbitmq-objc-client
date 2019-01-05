@@ -5,7 +5,7 @@ iOS_VERSION := 12.1
 RABBITMQCTL := /usr/local/sbin/rabbitmqctl
 RABBITMQ_PLUGINS := /usr/local/sbin/rabbitmq-plugins
 
-tests: tests_iOS tests_OSX
+tests: tests_iOS tests_OSX lint
 
 test_ios: tests_iOS
 
@@ -52,6 +52,8 @@ before_build:
 	$(RABBITMQCTL) eval 'supervisor2:terminate_child(rabbit_mgmt_sup_sup, rabbit_mgmt_sup), application:set_env(rabbitmq_management,       sample_retention_policies, [{global, [{605, 1}]}, {basic, [{605, 1}]}, {detailed, [{10, 1}]}]), rabbit_mgmt_sup_sup:start_child().'
 	$(RABBITMQCTL) eval 'supervisor2:terminate_child(rabbit_mgmt_agent_sup_sup, rabbit_mgmt_agent_sup), application:set_env(rabbitmq_management_agent, sample_retention_policies, [{global, [{605, 1}]}, {basic, [{605, 1}]}, {detailed, [{10, 1}]}]), rabbit_mgmt_agent_sup_sup:start_child().'
 
+lint:
+	swiftlint
 
 licenses:
 	bin/add-license rb '#' license-header-ruby.txt codegen/ && \
