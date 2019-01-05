@@ -49,7 +49,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-@objc class FrameHandlerSpy : NSObject, RMQFrameHandler {
+@objc class FrameHandlerSpy: NSObject, RMQFrameHandler {
     var receivedFramesets: [RMQFrameset] = []
 
     func handle(_ frameset: RMQFrameset!) {

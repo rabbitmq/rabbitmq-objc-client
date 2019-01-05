@@ -73,9 +73,9 @@ class ConnectionWithFakesHelper {
     }
 
     static func connectionConfig(vhost: String = "",
-                                       channelMax: Int = 123,
-                                       frameMax: UInt = 321,
-                                       heartbeat: Int = 10) -> RMQConnectionConfig {
+                                 channelMax: Int = 123,
+                                 frameMax: UInt = 321,
+                                 heartbeat: Int = 10) -> RMQConnectionConfig {
         let nullRecovery = RMQConnectionRecover(interval: 0,
                                                 attemptLimit: 0,
                                                 onlyErrors: true,
@@ -117,7 +117,8 @@ class ConnectionWithFakesHelper {
         return conn
     }
 
-    static func connectionAfterHandshake() -> (transport: ControlledInteractionTransport, q: FakeSerialQueue, conn: RMQConnection, delegate: ConnectionDelegateSpy) {
+    static func connectionAfterHandshake() -> (transport: ControlledInteractionTransport, q: FakeSerialQueue,
+        conn: RMQConnection, delegate: ConnectionDelegateSpy) {
         let transport = ControlledInteractionTransport()
         let q = FakeSerialQueue()
         let delegate = ConnectionDelegateSpy()

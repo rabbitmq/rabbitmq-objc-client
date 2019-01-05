@@ -59,7 +59,7 @@ class RMQMessageTest: XCTestCase {
         props.append(RMQBasicAppId("my app ID"))
         props.append(RMQBasicContentType("some/contenttype"))
         props.append(RMQBasicCorrelationId("my correlation ID"))
-        props.append(RMQBasicHeaders(["some" : RMQLongstr("header")]))
+        props.append(RMQBasicHeaders(["some": RMQLongstr("header")]))
         props.append(RMQBasicMessageId("my message ID"))
         props.append(RMQBasicType("my type"))
         props.append(RMQBasicPriority(9))
@@ -74,16 +74,16 @@ class RMQMessageTest: XCTestCase {
                            routingKey: "my routing key",
                            properties: (props as! [RMQValue & RMQBasicValue]))
 
-        let expectedHeaders: [String : NSObject] = ["some" : RMQLongstr("header")]
-        XCTAssertEqual("my app ID",         m?.appID())
-        XCTAssertEqual("some/contenttype",  m?.contentType())
+        let expectedHeaders: [String: NSObject] = ["some": RMQLongstr("header")]
+        XCTAssertEqual("my app ID", m?.appID())
+        XCTAssertEqual("some/contenttype", m?.contentType())
         XCTAssertEqual("my correlation ID", m?.correlationID())
-        XCTAssertEqual(expectedHeaders,     (m?.headers())!)
-        XCTAssertEqual("my message ID",     m?.messageID())
-        XCTAssertEqual("my type",           m?.messageType())
-        XCTAssertEqual(9,                   m?.priority())
-        XCTAssertEqual("my.sender",         m?.replyTo())
-        XCTAssertEqual(date,                m?.timestamp())
+        XCTAssertEqual(expectedHeaders, (m?.headers())!)
+        XCTAssertEqual("my message ID", m?.messageID())
+        XCTAssertEqual("my type", m?.messageType())
+        XCTAssertEqual(9, m?.priority())
+        XCTAssertEqual("my.sender", m?.replyTo())
+        XCTAssertEqual(date, m?.timestamp())
     }
 
 }

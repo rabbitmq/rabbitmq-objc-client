@@ -49,11 +49,11 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-@objc class ChannelSpyAllocator : NSObject, RMQChannelAllocator {
+@objc class ChannelSpyAllocator: NSObject, RMQChannelAllocator {
     var id = 0
     var channels: [ChannelSpy] = []
     var sender: RMQSender!
-    
+
     func allocate() -> RMQChannel {
         let ch = ChannelSpy(channelNumber: id)
         id += 1

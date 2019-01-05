@@ -78,7 +78,7 @@
         *error = parseVhostError;
         return nil;
     }
-    
+
     RMQURI *u = [[RMQURI alloc] init];
     u.host = components.host;
     u.vhost = vhost;
@@ -93,7 +93,7 @@
         u.portNumber = u.portNumber ?: @5671;
         u.isTLS = YES;
     }
-    
+
     return u;
 }
 
@@ -119,7 +119,7 @@
     if (path.length == 0) {
         return @"/";
     }
-    
+
     // will include a trailing slash
     NSString *vhost = [path substringFromIndex:1];
 

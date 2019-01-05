@@ -44,3 +44,20 @@ gmake tests_ios iOS_VERSION=12.1
 # for macOS
 gmake tests_macos
 ```
+
+## SwiftLint
+
+The test suite uses [SwiftLint](https://github.com/realm/SwiftLint) as a build phase.
+It must be installed in order for XCode to use it:
+
+``` bash
+brew install swiftlint
+```
+
+In order to lint from the command line, use
+
+``` bash
+swiftlint
+```
+
+The lint configuration can be found at [.swiftlint.yml](.swiftlint.yml).

@@ -59,7 +59,7 @@ class ConnectionLifecycleIntegrationTests: XCTestCase {
     func testConnectingWithAllDefaults() {
         let semaphore = DispatchSemaphore(value: 0)
         let conn = RMQConnection()
-        conn.start() {
+        conn.start {
             semaphore.signal()
         }
 
@@ -75,7 +75,7 @@ class ConnectionLifecycleIntegrationTests: XCTestCase {
         let delegate = RMQConnectionDelegateLogger()
         let conn = RMQConnection(uri: ConnectionHelper.defaultEndpoint,
                                  delegate: delegate)
-        conn.start() {
+        conn.start {
             semaphore.signal()
         }
 
@@ -92,7 +92,7 @@ class ConnectionLifecycleIntegrationTests: XCTestCase {
         let delegate = RMQConnectionDelegateLogger()
         let conn = RMQConnection(uri: "amqp://guest:guest@localhost:5672/vhost%2Fwith%2Fa%2Ffew%2Fslashes",
                                  delegate: delegate)
-        conn.start() {
+        conn.start {
             semaphore.signal()
         }
 
@@ -107,7 +107,7 @@ class ConnectionLifecycleIntegrationTests: XCTestCase {
     func testUserInitiatedClosure() {
         let semaphore = DispatchSemaphore(value: 0)
         let conn = RMQConnection()
-        conn.start() {
+        conn.start {
             semaphore.signal()
         }
         XCTAssertEqual(.success, ConnectionHelper.awaitCompletion(semaphore: semaphore),

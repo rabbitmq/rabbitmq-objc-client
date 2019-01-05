@@ -115,7 +115,8 @@ class RMQExchangeTest: XCTestCase {
                         properties: (properties as! [RMQValue & RMQBasicValue]),
                         options: [.mandatory])
 
-        XCTAssertEqual("{\"a\": \"message\"}".data(using: String.Encoding.utf8), channel.lastReceivedBasicPublishMessage)
+        XCTAssertEqual("{\"a\": \"message\"}".data(using: String.Encoding.utf8),
+                       channel.lastReceivedBasicPublishMessage)
         XCTAssertEqual("some.queue", channel.lastReceivedBasicPublishRoutingKey)
         XCTAssertEqual("some-ex", channel.lastReceivedBasicPublishExchange)
         XCTAssertEqual([.mandatory], channel.lastReceivedBasicPublishOptions)
@@ -137,7 +138,7 @@ class RMQExchangeTest: XCTestCase {
     func testDeleteCallsDeleteOnChannel() {
         let ch = ChannelSpy(channelNumber: 1)
         let ex = RMQExchange(name: "deletable", type: "direct", options: [], channel: ch)
-        
+
         ex?.delete()
         XCTAssertEqual("deletable", ch.lastReceivedExchangeDeleteExchangeName)
         XCTAssertEqual([], ch.lastReceivedExchangeDeleteOptions)
@@ -178,5 +179,4 @@ class RMQExchangeTest: XCTestCase {
         XCTAssertEqual("ex2", ch.lastReceivedExchangeUnbindSourceName)
         XCTAssertEqual("foo", ch.lastReceivedExchangeUnbindRoutingKey)
     }
-
 }

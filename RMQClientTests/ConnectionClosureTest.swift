@@ -118,11 +118,11 @@ class ConnectionClosureTest: XCTestCase {
                                  heartbeatSender: HeartbeatSenderSpy())
         // start connection
         conn.start()
-        
+
         /// simulate connection has been made
         try? q.step()
         transport.handshake()
-        
+
         conn.close()
 
         try? q.step()
@@ -147,7 +147,7 @@ class ConnectionClosureTest: XCTestCase {
                                  command: q,
                                  waiterFactory: FakeWaiterFactory(),
                                  heartbeatSender: heartbeatSender)
-        
+
         conn.start()
         conn.close()
 
@@ -253,7 +253,7 @@ class ConnectionClosureTest: XCTestCase {
 
         transport.delegate = nil // this actually happens in the transport, which is fake here
         transport.serverSendsPayload(MethodFixtures.connectionClose(), channelNumber: 0)
-        
+
         XCTAssertFalse(transport.isConnected())
         transport.assertClientSentMethod(MethodFixtures.connectionCloseOk(), channelNumber: 0)
         XCTAssertEqual(conn, transport.delegate as? RMQConnection)

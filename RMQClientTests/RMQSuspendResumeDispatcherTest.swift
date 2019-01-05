@@ -69,7 +69,8 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
     func testDisableSuspendsCommandQueueAndPreventsFramesetHandlingFromResuming() {
         let q = FakeSerialQueue()
         let eq = FakeSerialQueue()
-        let dispatcher = RMQSuspendResumeDispatcher(sender: SenderSpy(), command: q, enablementQueue: eq, enableDelay: 3)
+        let dispatcher = RMQSuspendResumeDispatcher(sender: SenderSpy(), command: q,
+                                                    enablementQueue: eq, enableDelay: 3)
 
         dispatcher?.disable()
         XCTAssertTrue(q.suspended)
@@ -142,7 +143,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
 
         XCTAssertEqual(RMQError.channelIncorrectSyncMethod.rawValue, delegate.lastChannelError!._code)
     }
-    
+
     func testAsyncMethodSendsFrameset() {
         let (dispatcher, q, sender, _, _) = setupActivated()
 
@@ -208,7 +209,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         XCTAssertEqual(RMQError.channelClosed.rawValue, delegate.lastChannelError?._code,
                        "Didn't receive correct error\nGot: \(delegate.lastChannelError!)")
     }
-    
+
     func testSendAsyncFramesetProducesErrorAfterClientClose() {
         let (dispatcher, q, delegate) = setUpAfterCloseTest()
         dispatcher.handle(RMQFrameset(channelNumber: 123, method: MethodFixtures.channelCloseOk()))
@@ -233,11 +234,11 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         try? q.step()                   // run queue.declare-ok expectation block
         XCTAssertNil(delegate.lastChannelError)
     }
-    
+
     func testReceivingChannelCloseOkStopsFutureSyncCompletionHandlersFromExecuting() {
         let (dispatcher, q, _) = setUpAfterCloseTest()
         var called = false
-        dispatcher.sendSyncMethod(MethodFixtures.basicConsume("", consumerTag: "", options: [])) { result in
+        dispatcher.sendSyncMethod(MethodFixtures.basicConsume("", consumerTag: "", options: [])) { _ in
             called = true
         }
         dispatcher.handle(RMQFrameset(channelNumber: 123, method: MethodFixtures.channelCloseOk()))
@@ -284,16 +285,16 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
     func testClientCloseFollowingServerCloseHasNoEffect() {
         let (dispatcher, q, sender, delegate, _) = setupActivated()
         dispatcher.handle(RMQFrameset(channelNumber: 123, method: MethodFixtures.channelClose()))
-        
+
         delegate.lastChannelError = nil
         sender.lastSentMethod = nil
         dispatcher.sendSyncMethodBlocking(MethodFixtures.channelClose())
         try! q.finish()
-        
+
         XCTAssertNil(delegate.lastChannelError)
         XCTAssertNil(sender.lastSentMethod)
     }
-    
+
     // MARK: Server-sent channel.close tests
 
     func testServerSentChannelCloseCausesCloseOkToBeSentInResponse() {
@@ -306,7 +307,7 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
     func testServerSentChannelCloseStopsFutureConsumersFromTriggering() {
         let (dispatcher, q, _, _, _) = setupActivated()
         var called = false
-        dispatcher.sendSyncMethod(MethodFixtures.basicConsume("", consumerTag: "", options: [])) { result in
+        dispatcher.sendSyncMethod(MethodFixtures.basicConsume("", consumerTag: "", options: [])) { _ in
             called = true
         }
         dispatcher.handle(RMQFrameset(channelNumber: 123, method: MethodFixtures.channelClose()))
@@ -327,7 +328,8 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         )
         dispatcher.handle(RMQFrameset(channelNumber: 123, method: close))
         XCTAssertEqual(RMQError.notFound.rawValue, delegate.lastChannelError?._code)
-        XCTAssertEqual("NOT_FOUND - no exchange 'yomoney' in vhost '/'", delegate.lastChannelError?.localizedDescription)
+        XCTAssertEqual("NOT_FOUND - no exchange 'yomoney' in vhost '/'",
+                       delegate.lastChannelError?.localizedDescription)
     }
 
     func testServerSentChannelCloseTriggersErrorsForFutureOperations() {
@@ -348,7 +350,8 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
 
     // MARK: Helpers
 
-    func setupActivated() -> (dispatcher: RMQSuspendResumeDispatcher, q: FakeSerialQueue, sender: SenderSpy, delegate: ConnectionDelegateSpy, ch: RMQAllocatedChannel) {
+    func setupActivated() -> (dispatcher: RMQSuspendResumeDispatcher, q: FakeSerialQueue, sender: SenderSpy,
+                              delegate: ConnectionDelegateSpy, ch: RMQAllocatedChannel) {
         let q = FakeSerialQueue()
         let sender = SenderSpy()
         let delegate = ConnectionDelegateSpy()
@@ -358,7 +361,8 @@ class RMQSuspendResumeDispatcherTest: XCTestCase {
         return (dispatcher!, q, sender, delegate, ch)
     }
 
-    func setUpAfterCloseTest() -> (dispatcher: RMQSuspendResumeDispatcher, q: FakeSerialQueue, delegate: ConnectionDelegateSpy) {
+    func setUpAfterCloseTest() -> (dispatcher: RMQSuspendResumeDispatcher, q: FakeSerialQueue,
+                                   delegate: ConnectionDelegateSpy) {
         let (dispatcher, q, _, delegate, _) = setupActivated()
         dispatcher.sendSyncMethod(MethodFixtures.channelClose())
         try? q.step()

@@ -51,10 +51,11 @@
 
 import XCTest
 
-enum RecoveryTestError : Error {
+enum RecoveryTestError: Error {
     case timeOutWaitingForConnectionCountToDrop
 }
 
+// swiftlint:disable function_body_length
 class ConnectionRecoveryIntegrationTest: XCTestCase {
     let plainEndpoint = ConnectionHelper.defaultEndpoint
     let httpAPIClient = RMQHTTP.withTestEndpoint()
@@ -69,12 +70,13 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         let tlsOptions = RMQTLSOptions.fromURI(plainEndpoint)
         let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5672, tlsOptions: tlsOptions)
 
-        let conn = ConnectionHelper.makeConnection(recoveryInterval: recoveryInterval, transport: transport, delegate: delegate)
+        let conn = ConnectionHelper.makeConnection(recoveryInterval: recoveryInterval,
+                                                   transport: transport, delegate: delegate)
         conn.start()
         defer { conn.blockingClose() }
 
         let ch = conn.createChannel()
-        let q = ch.queue("", options: [.exclusive], arguments: ["x-max-length" : RMQShort(3)])
+        let q = ch.queue("", options: [.exclusive], arguments: ["x-max-length": RMQShort(3)])
         let ex1 = ch.direct("foo", options: [.autoDelete])
         let ex2 = ch.direct("bar", options: [.autoDelete])
         let consumerSemaphore = DispatchSemaphore(value: 0)

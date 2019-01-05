@@ -149,7 +149,7 @@ class RMQTransactionalConfirmationsTest: XCTestCase {
         _ = confirms?.addPublication()
 
         var callCount = 0
-        confirms?.addCallback(withTimeout: 10) { (acks, nacks) in
+        confirms?.addCallback(withTimeout: 10) { (_, _) in
             callCount += 1
         }
 

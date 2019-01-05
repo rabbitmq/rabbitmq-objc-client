@@ -53,13 +53,13 @@ import XCTest
 
 // see https://github.com/rabbitmq/rabbitmq-objc-client/blob/master/CONTRIBUTING.md
 // to set up your system for running integration tests
-class ChannelLifecycleIntegrationTests: XCTestCase {    
+class ChannelLifecycleIntegrationTests: XCTestCase {
     func testOpeningAChannelWithoutExplicitlyProvidedID() {
         let conn = RMQConnection()
         conn.start()
         defer { conn.blockingClose() }
-        
-        let ch = conn.createChannel();
+
+        let ch = conn.createChannel()
         ch.close()
     }
 }

@@ -49,7 +49,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-@objc class SenderSpy : NSObject, RMQSender {
+@objc class SenderSpy: NSObject, RMQSender {
     var sentFramesets: [RMQFrameset] = []
     var lastSentMethod: RMQMethod?
     var frameMax: NSNumber
@@ -68,6 +68,6 @@
     }
 
     override func isEqual(_ object: Any?) -> Bool {
-        return (object! as AnyObject).isKind(of: SenderSpy.self);
+        return (object! as AnyObject).isKind(of: SenderSpy.self)
     }
 }

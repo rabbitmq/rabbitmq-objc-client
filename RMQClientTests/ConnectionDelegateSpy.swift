@@ -49,7 +49,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-@objc class ConnectionDelegateSpy : NSObject, RMQConnectionDelegate {
+@objc class ConnectionDelegateSpy: NSObject, RMQConnectionDelegate {
     var lastChannelError: Error?
     var lastConnectionError: Error?
     var lastChannelOpenError: Error?

@@ -56,7 +56,7 @@ class RMQGCDSerialQueueTest: XCTestCase {
     func testAsyncEnqueue() {
         let q = RMQGCDSerialQueue(name: "async enqueue test")
         let semaphore = DispatchSemaphore(value: 0)
-        q?.enqueue() { semaphore.signal() }
+        q?.enqueue { semaphore.signal() }
 
         XCTAssertEqual(
             .success,
@@ -68,7 +68,7 @@ class RMQGCDSerialQueueTest: XCTestCase {
     func testSyncEnqueue() {
         let q = RMQGCDSerialQueue(name: "sync enqueue test")
         var foo = 1
-        q?.enqueue() { foo += 1 }
+        q?.enqueue { foo += 1 }
         q?.blockingEnqueue { foo += 2 }
 
         XCTAssertEqual(4, foo)

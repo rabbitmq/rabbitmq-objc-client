@@ -64,7 +64,7 @@ class BasicPropertyFixtures {
         let headers: [String: RMQValue] = [
             "arbitrary": RMQLongstr("string"),
             "a-number": RMQSignedLonglong(-2),
-            "moar": RMQTable(subTable as! [String : RMQValue & RMQFieldValue]),
+            "moar": RMQTable(subTable as! [String: RMQValue & RMQFieldValue]),
             "an-array": RMQArray(array),
             "mytime": RMQTimestamp(mytime),
             "onbool": RMQBoolean(true),
@@ -75,6 +75,6 @@ class BasicPropertyFixtures {
     }
 
     static func exhaustiveHeaders() -> RMQBasicHeaders {
-        return RMQBasicHeaders(exhaustiveHeadersDict() as! [String : RMQValue & RMQFieldValue])
+        return RMQBasicHeaders(exhaustiveHeadersDict() as! [String: RMQValue & RMQFieldValue])
     }
 }

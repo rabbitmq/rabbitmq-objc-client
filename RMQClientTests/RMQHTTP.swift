@@ -53,7 +53,7 @@ import Foundation
 
 class RMQHTTP {
     static let testEndpoint = "http://guest:guest@127.0.0.1:15672/api"
-    
+
     var uri: String
 
     init(_ uri: String) {
@@ -63,7 +63,7 @@ class RMQHTTP {
     static func withTestEndpoint() -> RMQHTTP {
         return RMQHTTP(testEndpoint)
     }
-    
+
     func get(_ path: String) -> Data {
         let url = URL(string: uri + path)
 
@@ -73,8 +73,8 @@ class RMQHTTP {
         let task = URLSession.shared.dataTask(with: url!, completionHandler: {(d, _, _) in
             data = d
             semaphore.signal()
-        }) 
-        
+        })
+
         task.resume()
 
         _ = semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5))
@@ -94,12 +94,12 @@ class RMQHTTP {
         let task = URLSession.shared.dataTask(with: request, completionHandler: { (d, _, _) in
             data = d
             semaphore.signal()
-        }) 
+        })
 
         task.resume()
 
         _ = semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5))
-        
+
         return data!
     }
 }

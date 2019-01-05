@@ -78,7 +78,7 @@ class RMQURIParseTest: XCTestCase {
         XCTAssertEqual(5672, val.portNumber)
         XCTAssertFalse(val.isTLS)
     }
-    
+
     func testAMQPSURIWithoutThePathComponent() {
         let val = try! RMQURI.parse("amqps://dev.rabbitmq.com")
         XCTAssertEqual("/", val.vhost)

@@ -114,7 +114,8 @@ class ChannelAllocationTest: XCTestCase {
             }
         }
 
-        XCTAssertEqual(.success, group.wait(timeout: TestHelper.dispatchTimeFromNow(10)), "Timed out waiting for allocations")
+        XCTAssertEqual(.success, group.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
+                                            "Timed out waiting for allocations")
 
         let channelSets                    = [channelSet1, channelSet2, channelSet3]
         let expectedUniqueUnallocatedCount = channelSets.reduce(0, sumUnallocated)
@@ -151,7 +152,8 @@ class ChannelAllocationTest: XCTestCase {
             }
         }
 
-        XCTAssertEqual(.success, group.wait(timeout: TestHelper.dispatchTimeFromNow(10)), "Timed out waiting for releases")
+        XCTAssertEqual(.success, group.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
+                                            "Timed out waiting for releases")
         XCTAssertEqual(1, allocator?.allocate().channelNumber)
     }
 

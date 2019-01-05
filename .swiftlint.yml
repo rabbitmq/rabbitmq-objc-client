@@ -1,0 +1,23 @@
+disabled_rules:
+  - identifier_name
+  - type_body_length
+  - file_length
+  - force_try
+  - force_cast
+  - large_tuple
+  # this is a very reasonable rule but
+  # it doesn't seem to work well with
+  # Objective-C methods called from Swift
+  - control_statement
+included:
+  - RMQClientTests
+  - RMQClientIntegrationTests
+excluded:
+  - .travis
+  - .travis.yml
+  - Cartfile*
+  - Carthage
+  - Pods
+  - "*.podspec"
+  - codegen
+  - TestCertificates

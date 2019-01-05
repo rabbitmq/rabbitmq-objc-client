@@ -53,7 +53,7 @@ enum FakeSerialQueueError: Error {
     case overstep
 }
 
-@objc class FakeSerialQueue : NSObject, RMQLocalSerialQueue {
+@objc class FakeSerialQueue: NSObject, RMQLocalSerialQueue {
     var items: [() -> Void] = []
     var blockingItems: [() -> Void] = []
     var delayedItems: [() -> Void] = []

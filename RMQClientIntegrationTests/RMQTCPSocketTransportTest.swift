@@ -81,11 +81,9 @@ class RMQTCPSocketTransportTest: XCTestCase {
         transport.socket(GCDAsyncSocket(), didRead: endByte, withTag: callbacks.allKeys.first as! Int)
 
         XCTAssertEqual(header, receivedData)
-        
-        defer {
-            if(transport.isConnected()) {
-                transport.close()
-            }
+
+        if(transport.isConnected()) {
+            transport.close()
         }
     }
 
@@ -95,11 +93,9 @@ class RMQTCPSocketTransportTest: XCTestCase {
         transport.socketDidDisconnect(GCDAsyncSocket(), withError: error)
 
         XCTAssertFalse(transport.isConnected())
-        
-        defer {
-            if(transport.isConnected()) {
-                transport.close()
-            }
+
+        if(transport.isConnected()) {
+            transport.close()
         }
     }
 
@@ -136,11 +132,9 @@ class RMQTCPSocketTransportTest: XCTestCase {
         TestHelper.pollUntil { delegate.lastDisconnectError != nil }
 
         XCTAssertEqual(NSPOSIXErrorDomain, (delegate.lastDisconnectError! as NSError).domain)
-        
-        defer {
-            if(transport.isConnected()) {
-                transport.close()
-            }
+
+        if(transport.isConnected()) {
+            transport.close()
         }
     }
 
@@ -150,7 +144,8 @@ class RMQTCPSocketTransportTest: XCTestCase {
                                               tlsOptions: noTLS,
                                               callbackStorage: callbacks,
                                               socketConfigurator: noOpSocketConfigurator)
-        let timeoutExtension = transport.socket(GCDAsyncSocket(), shouldTimeoutReadWithTag: 123, elapsed: 123, bytesDone: 999)
+        let timeoutExtension = transport.socket(GCDAsyncSocket(), shouldTimeoutReadWithTag: 123,
+                                                elapsed: 123, bytesDone: 999)
         XCTAssert(timeoutExtension > 0)
     }
 
@@ -165,7 +160,8 @@ class RMQTCPSocketTransportTest: XCTestCase {
     func testConnectsViaTLS() {
         let semaphore = DispatchSemaphore(value: 0)
         let transport = RMQTCPSocketTransport(host: "localhost", port: 5671,
-                                              tlsOptions: RMQTLSOptions(peerName: "localhost", verifyPeer: false, pkcs12: nil, pkcs12Password: ""))
+                                              tlsOptions: RMQTLSOptions(peerName: "localhost", verifyPeer: false,
+                                                                        pkcs12: nil, pkcs12Password: ""))
         try! transport.connect()
         transport.write(RMQProtocolHeader().amqEncoded())
 
@@ -179,11 +175,9 @@ class RMQTCPSocketTransportTest: XCTestCase {
                        "Timed out waiting for read")
         let parser = RMQParser(data: receivedData!)
         XCTAssert(RMQFrame(parser: parser).payload.isKind(of: RMQConnectionStart.self))
-        
-        defer {
-            if(transport.isConnected()) {
-                transport.close()
-            }
+
+        if(transport.isConnected()) {
+            transport.close()
         }
     }
 
@@ -192,7 +186,7 @@ class RMQTCPSocketTransportTest: XCTestCase {
         let tlsOptions = RMQTLSOptions(
             peerName: "localhost",
             verifyPeer: false,
-            pkcs12: testClientCertificatePKCS12() as Data,
+            pkcs12: fixtureClientCertificatePKCS12() as Data,
             pkcs12Password: CertificateFixtures.password
         )
         let transport = RMQTCPSocketTransport(host: "localhost", port: 5671, tlsOptions: tlsOptions)
@@ -209,19 +203,17 @@ class RMQTCPSocketTransportTest: XCTestCase {
                        "Timed out waiting for read")
         let parser = RMQParser(data: receivedData!)
         XCTAssert(RMQFrame(parser: parser).payload.isKind(of: RMQConnectionStart.self))
-        
-        defer {
-            if(transport.isConnected()) {
-                transport.close()
-            }
+
+        if(transport.isConnected()) {
+            transport.close()
         }
     }
-    
+
     func testThrowsWhenTLSPasswordIncorrect() {
         let tlsOptions = RMQTLSOptions(
             peerName: "localhost",
             verifyPeer: false,
-            pkcs12: testClientCertificatePKCS12() as Data,
+            pkcs12: fixtureClientCertificatePKCS12() as Data,
             pkcs12Password: "incorrect-password"
         )
         let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5671, tlsOptions: tlsOptions)
@@ -248,12 +240,12 @@ class RMQTCPSocketTransportTest: XCTestCase {
         transport.write(RMQProtocolHeader().amqEncoded())
         transport.simulateDisconnect()
 
-        XCTAssert(TestHelper.pollUntil { delegate.lastDisconnectError?._code == RMQError.simulatedDisconnect.rawValue })
-        
-        defer {
-            if(transport.isConnected()) {
-                transport.close()
-            }
+        XCTAssert(TestHelper.pollUntil {
+            delegate.lastDisconnectError?._code == RMQError.simulatedDisconnect.rawValue
+        })
+
+        if(transport.isConnected()) {
+            transport.close()
         }
     }
 
@@ -268,26 +260,24 @@ class RMQTCPSocketTransportTest: XCTestCase {
         let transport = RMQTCPSocketTransport(host: host, port: 5672, tlsOptions: noTLS)
         try! transport.connect()
         transport.write(RMQProtocolHeader().amqEncoded())
-        
+
         var receivedData: Data?
         transport.readFrame { data in
             receivedData = data
             semaphore.signal()
         }
-        
+
         XCTAssertEqual(.success, semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
                        "Timed out waiting for read")
         let parser = RMQParser(data: receivedData!)
         XCTAssert(RMQFrame(parser: parser).payload.isKind(of: RMQConnectionStart.self))
-        
-        defer {
-            if(transport.isConnected()) {
-                transport.close()
-            }
+
+        if(transport.isConnected()) {
+            transport.close()
         }
     }
-    
-    fileprivate func testClientCertificatePKCS12() -> Data {
+
+    fileprivate func fixtureClientCertificatePKCS12() -> Data {
         do {
             return try CertificateFixtures.guestBunniesP12()
         } catch {

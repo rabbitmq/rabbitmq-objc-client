@@ -73,14 +73,14 @@ class RMQTransportContract {
     @discardableResult
     func sendingPreambleStimulatesAConnectionStart() -> RMQTransportContract {
         defer { self.transport.close() }
-        
+
         var readData: Data = Data()
         var connectionStart = RMQConnectionStart()
 
         try! self.transport.connect()
         self.transport.write(RMQProtocolHeader().amqEncoded())
         XCTAssertEqual(0, readData.count)
-        self.transport.readFrame() { receivedData in
+        self.transport.readFrame { receivedData in
             readData = receivedData
             let parser = RMQParser(data: readData)
             let frame = RMQFrame(parser: parser)
@@ -99,4 +99,3 @@ class RMQTransportContract {
             .sendingPreambleStimulatesAConnectionStart()
     }
 }
-

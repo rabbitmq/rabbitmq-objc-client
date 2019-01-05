@@ -52,7 +52,7 @@
 import XCTest
 
 class ConsumeTest: XCTestCase {
-    class CustomConsumer : RMQConsumer {
+    class CustomConsumer: RMQConsumer {
         var message: RMQMessage?
 
         override func consume(_ message: RMQMessage!) {
@@ -100,7 +100,8 @@ class ConsumeTest: XCTestCase {
         let nameGenerator = StubNameGenerator()
         nameGenerator.nextName = "tag"
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, nameGenerator: nameGenerator)
-        let consumeOkFrameset = RMQFrameset(channelNumber: 432, method: RMQBasicConsumeOk(consumerTag: RMQShortstr("tag")))
+        let consumeOkFrameset = RMQFrameset(channelNumber: 432,
+                                            method: RMQBasicConsumeOk(consumerTag: RMQShortstr("tag")))
         let incomingDeliver = deliverFrameset(
             consumerTag: "tag",
             deliveryTag: 456,
@@ -135,7 +136,8 @@ class ConsumeTest: XCTestCase {
         let nameGenerator = StubNameGenerator()
         nameGenerator.nextName = "tag"
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, nameGenerator: nameGenerator)
-        let consumeOkFrameset = RMQFrameset(channelNumber: 432, method: RMQBasicConsumeOk(consumerTag: RMQShortstr("tag")))
+        let consumeOkFrameset = RMQFrameset(channelNumber: 432,
+                                            method: RMQBasicConsumeOk(consumerTag: RMQShortstr("tag")))
         let incomingDeliver = deliverFrameset(
             consumerTag: "tag",
             deliveryTag: 456,
@@ -168,7 +170,8 @@ class ConsumeTest: XCTestCase {
         let nameGenerator = StubNameGenerator()
         nameGenerator.nextName = "tag"
         let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher, nameGenerator: nameGenerator)
-        let consumeOkFrameset = RMQFrameset(channelNumber: 432, method: RMQBasicConsumeOk(consumerTag: RMQShortstr("tag")))
+        let consumeOkFrameset = RMQFrameset(channelNumber: 432,
+                                            method: RMQBasicConsumeOk(consumerTag: RMQShortstr("tag")))
         let incomingDeliver = deliverFrameset(
             consumerTag: "tag",
             deliveryTag: 456,
@@ -203,18 +206,22 @@ class ConsumeTest: XCTestCase {
         let consumer = ch.basicConsume("my q", options: []) { _ in
             consumerCallCount += 1
         }
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 432, method: MethodFixtures.basicConsumeOk(consumer.tag)))
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 432,
+                                                      method: MethodFixtures.basicConsumeOk(consumer.tag)))
 
         ch.basicCancel(consumer.tag)
 
-        ch.handle(deliverFrameset(consumerTag: consumer.tag, routingKey: "foo", content: "message", channelNumber: 432))
+        ch.handle(deliverFrameset(consumerTag: consumer.tag, routingKey: "foo",
+                                  content: "message", channelNumber: 432))
         try! dispatcher.finish()
 
         XCTAssertEqual(1, consumerCallCount)
 
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 432, method: MethodFixtures.basicCancelOk(consumer.tag)))
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 432,
+                                                      method: MethodFixtures.basicCancelOk(consumer.tag)))
 
-        ch.handle(deliverFrameset(consumerTag: consumer.tag, routingKey: "foo", content: "message", channelNumber: 432))
+        ch.handle(deliverFrameset(consumerTag: consumer.tag, routingKey: "foo",
+                                  content: "message", channelNumber: 432))
         try! dispatcher.finish()
 
         XCTAssertEqual(1, consumerCallCount)
@@ -228,12 +235,14 @@ class ConsumeTest: XCTestCase {
         let consumer = ch.basicConsume("my q", options: []) { _ in
             consumerCalled = true
         }
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 432, method: MethodFixtures.basicConsumeOk(consumer.tag)))
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 432,
+                                                      method: MethodFixtures.basicConsumeOk(consumer.tag)))
 
         ch.handle(RMQFrameset(channelNumber: 123, method: MethodFixtures.basicCancel(consumer.tag)))
         try! dispatcher.step()
 
-        ch.handle(deliverFrameset(consumerTag: consumer.tag, routingKey: "foo", content: "message", channelNumber: 432))
+        ch.handle(deliverFrameset(consumerTag: consumer.tag, routingKey: "foo",
+                                  content: "message", channelNumber: 432))
         try! dispatcher.step()
 
         XCTAssertFalse(consumerCalled)
@@ -250,7 +259,8 @@ class ConsumeTest: XCTestCase {
         }
 
         ch.basicConsume(consumer!)
-        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 123, method: MethodFixtures.basicConsumeOk((consumer?.tag)!)))
+        dispatcher.lastSyncMethodHandler!(RMQFrameset(channelNumber: 123,
+                                                      method: MethodFixtures.basicConsumeOk((consumer?.tag)!)))
 
         ch.handle(RMQFrameset(channelNumber: 123, method: MethodFixtures.basicCancel((consumer?.tag)!)))
 
@@ -261,7 +271,9 @@ class ConsumeTest: XCTestCase {
 
     // MARK: Helpers
 
-    func deliverFrameset(consumerTag: String, deliveryTag: UInt64 = 123, routingKey: String, content: String, channelNumber: Int, exchange: String = "", options: RMQBasicDeliverOptions = []) -> RMQFrameset {
+    func deliverFrameset(consumerTag: String, deliveryTag: UInt64 = 123, routingKey: String, content: String,
+                         channelNumber: Int, exchange: String = "",
+                         options: RMQBasicDeliverOptions = []) -> RMQFrameset {
         let deliverMethod = MethodFixtures.basicDeliver(
             consumerTag: consumerTag,
             deliveryTag: deliveryTag,
@@ -271,7 +283,8 @@ class ConsumeTest: XCTestCase {
         )
         let deliverHeader = RMQContentHeader(classID: deliverMethod.classID(), bodySize: 123, properties: [])
         let deliverBody = RMQContentBody(data: content.data(using: String.Encoding.utf8)!)
-        return RMQFrameset(channelNumber: channelNumber as NSNumber, method: deliverMethod, contentHeader: deliverHeader, contentBodies: [deliverBody])
+        return RMQFrameset(channelNumber: channelNumber as NSNumber, method: deliverMethod,
+                           contentHeader: deliverHeader, contentBodies: [deliverBody])
     }
 
 }

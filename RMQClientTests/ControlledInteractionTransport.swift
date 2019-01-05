@@ -57,10 +57,11 @@ enum TestDoubleTransportError: Error {
 }
 
 @objc class ControlledInteractionTransport: NSObject, RMQTransport {
-    var delegate: RMQTransportDelegate? = nil
+    // swiftlint:disable weak_delegate
+    var delegate: RMQTransportDelegate?
     var connected = false
     var outboundData: [Data] = []
-    var readCallbacks: Array<(Data) -> Void> = []
+    var readCallbacks: [(Data) -> Void] = []
     var callbackIndexToRunNext = 0
     var stubbedToThrowErrorOnConnect: String?
 
@@ -71,7 +72,7 @@ enum TestDoubleTransportError: Error {
             connected = true
         }
     }
-    
+
     func close() {
         connected = false
         delegate?.transport(self, disconnectedWithError: nil)

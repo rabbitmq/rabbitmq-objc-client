@@ -55,10 +55,11 @@ class ControlledInteractionTransportTest: XCTestCase {
     func testObeysContract() {
         let transport = ControlledInteractionTransport()
         let contract = RMQTransportContract(transport)
-        
+
         contract.connectAndDisconnect()
 
-        DispatchQueue.global(qos: DispatchQoS.QoSClass.default).asyncAfter(deadline: TestHelper.dispatchTimeFromNow(0.05)) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.default)
+            .asyncAfter(deadline: TestHelper.dispatchTimeFromNow(0.05)) {
             transport
                 .assertClientSentProtocolHeader()
                 .serverSendsPayload(MethodFixtures.connectionStart(), channelNumber: 1)

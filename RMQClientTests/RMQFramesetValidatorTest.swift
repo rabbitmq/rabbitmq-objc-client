@@ -52,7 +52,7 @@
 import XCTest
 
 class RMQFramesetValidatorTest: XCTestCase {
-    
+
     func testIncorrectFramesetProducesError() {
         let validator = RMQFramesetValidator()
         let deliveredFrameset = RMQFrameset(channelNumber: 1, method: MethodFixtures.basicConsumeOk("foo"))
@@ -75,5 +75,5 @@ class RMQFramesetValidatorTest: XCTestCase {
         XCTAssertEqual(deliveredFrameset, result?.frameset)
         XCTAssertNil(result?.error)
     }
-    
+
 }

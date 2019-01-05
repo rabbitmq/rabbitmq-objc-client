@@ -64,5 +64,5 @@ class ChannelHelper {
                                    allocator: allocator,
                                    confirmations: confirmations)
     }
-    
+
 }

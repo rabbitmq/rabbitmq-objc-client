@@ -53,6 +53,8 @@ import XCTest
 
 // see https://github.com/rabbitmq/rabbitmq-objc-client/blob/master/CONTRIBUTING.md
 // to set up your system for running integration tests
+//
+// swiftlint:disable function_body_length
 class OriginalIntegrationTests: XCTestCase {
     let plainEndpoint = ConnectionHelper.defaultEndpoint
 
@@ -115,22 +117,22 @@ class OriginalIntegrationTests: XCTestCase {
 
     func testBlockingCloseIsIdempotent() {
         let conn = RMQConnection()
-        conn.start() {
-            let _ = conn.createChannel()
-            
+        conn.start {
+            _ = conn.createChannel()
+
             for _ in 1...50 {
                 conn.blockingClose()
             }
-        }        
+        }
     }
-    
+
     func testSubscribeWithClientCertificateAuthentication() {
         let delegate = RMQConnectionDelegateLogger()
         let noisyHeartbeats = 1
         let tlsOptions = RMQTLSOptions(
             peerName: "localhost",
             verifyPeer: false,
-            pkcs12: testClientCertificatePKCS12() as Data,
+            pkcs12: fixtureClientCertificatePKCS12() as Data,
             pkcs12Password: CertificateFixtures.password
         )
         let conn = RMQConnection(uri: "amqps://localhost",
@@ -190,7 +192,7 @@ class OriginalIntegrationTests: XCTestCase {
         let date = Date.distantFuture
         let coordinates = RMQTable(["latitude": RMQFloat(59.35), "longitude": RMQFloat(18.066667)])
 
-        let headerDict: [String : RMQValue] = [
+        let headerDict: [String: RMQValue] = [
             "coordinates": coordinates,
             "time": RMQBasicTimestamp(date),
             "participants": RMQShort(11),
@@ -203,9 +205,9 @@ class OriginalIntegrationTests: XCTestCase {
                 RMQFloat(2.0),
                 RMQShort(3),
                 RMQArray([RMQTable(["abc": RMQShort(123)])])
-                ]),
+                ])
             ]
-        let headers = RMQBasicHeaders(headerDict as! [String : RMQValue & RMQFieldValue])
+        let headers = RMQBasicHeaders(headerDict as! [String: RMQValue & RMQFieldValue])
 
         let props: [RMQValue] = [
             RMQBasicAppId("rmqclient.example"),
@@ -215,32 +217,34 @@ class OriginalIntegrationTests: XCTestCase {
             RMQBasicTimestamp(date),
             RMQBasicReplyTo("a.sender"),
             RMQBasicCorrelationId("r-1"),
-            RMQBasicMessageId("m-1"),
+            RMQBasicMessageId("m-1")
             ]
-        q.publish("a message".data(using: String.Encoding.utf8), properties: (props as! [RMQValue & RMQBasicValue]), options: [])
+        q.publish("a message".data(using: String.Encoding.utf8),
+                  properties: (props as! [RMQValue & RMQBasicValue]), options: [])
 
         XCTAssertEqual(.success,
                        semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
                        "Timed out waiting for message")
 
-        XCTAssertEqual("application/octet-stream",          delivered!.contentType())
-        XCTAssertEqual(8,                                   delivered!.priority())
-        XCTAssertEqual(headerDict,                          delivered!.headers())
-        XCTAssertEqual(date.timeIntervalSinceReferenceDate, delivered!.timestamp().timeIntervalSinceReferenceDate, accuracy: 1)
-        XCTAssertEqual("kinda.checkin",                     delivered!.messageType())
-        XCTAssertEqual("a.sender",                          delivered!.replyTo())
-        XCTAssertEqual("r-1",                               delivered!.correlationID())
-        XCTAssertEqual("m-1",                               delivered!.messageID())
-        XCTAssertEqual("rmqclient.example",                 delivered!.appID())
+        XCTAssertEqual("application/octet-stream", delivered!.contentType())
+        XCTAssertEqual(8, delivered!.priority())
+        XCTAssertEqual(headerDict, delivered!.headers())
+        XCTAssertEqual(date.timeIntervalSinceReferenceDate, delivered!.timestamp().timeIntervalSinceReferenceDate,
+                       accuracy: 1)
+        XCTAssertEqual("kinda.checkin", delivered!.messageType())
+        XCTAssertEqual("a.sender", delivered!.replyTo())
+        XCTAssertEqual("r-1", delivered!.correlationID())
+        XCTAssertEqual("m-1", delivered!.messageID())
+        XCTAssertEqual("rmqclient.example", delivered!.appID())
 
         let consumerTag = delivered!.consumerTag
         XCTAssertTrue(consumerTag!.starts(with: "rmq-objc-client.gen-"))
-        XCTAssertEqual(1,                                   delivered!.deliveryTag)
-        XCTAssertEqual(q.name,                              delivered!.routingKey)
-        XCTAssertEqual("",                                  delivered!.exchangeName)
+        XCTAssertEqual(1, delivered!.deliveryTag)
+        XCTAssertEqual(q.name, delivered!.routingKey)
+        XCTAssertEqual("", delivered!.exchangeName)
 
         let missingDefaultsCount = 2
-        XCTAssertEqual(props.count + missingDefaultsCount,  delivered!.properties.count)
+        XCTAssertEqual(props.count + missingDefaultsCount, delivered!.properties.count)
     }
 
     func testRejectAndRequeueCausesSecondDelivery() {
@@ -280,9 +284,9 @@ class OriginalIntegrationTests: XCTestCase {
         var set3 = Set<NSNumber>()
 
         let messageCount = 4000
+        let semaphore = DispatchSemaphore(value: 0)
         let consumingChannel = conn.createChannel()
         let consumingQueue = consumingChannel.queue("", options: [.autoDelete, .exclusive])
-        let semaphore = DispatchSemaphore(value: 0);
 
         consumingQueue.subscribe(handler: { message in
             set1.insert(message.deliveryTag)
@@ -339,8 +343,10 @@ class OriginalIntegrationTests: XCTestCase {
         let messageCount: Int32 = 500
         let conn = RMQConnection(uri: plainEndpoint,
                                  tlsOptions: RMQTLSOptions.fromURI(plainEndpoint),
-                                 channelMax: channelCount + 1 as NSNumber, frameMax: RMQFrameMax as NSNumber, heartbeat: 100, syncTimeout: 60,
-                                 delegate: delegate, delegateQueue: DispatchQueue.global(qos: DispatchQoS.QoSClass.userInteractive),
+                                 channelMax: channelCount + 1 as NSNumber, frameMax: RMQFrameMax as NSNumber,
+                                 heartbeat: 100, syncTimeout: 60,
+                                 delegate: delegate,
+                                 delegateQueue: DispatchQueue.global(qos: DispatchQoS.QoSClass.userInteractive),
                                  recoverAfter: 0, recoveryAttempts: 0, recoverFromConnectionClose: false)
         conn.start()
         defer { conn.blockingClose() }
@@ -351,7 +357,7 @@ class OriginalIntegrationTests: XCTestCase {
         for _ in 1...channelCount {
             let ch = conn.createChannel()
             let q = ch.queue(producingQueue.name, options: [.autoDelete, .exclusive])
-            q.subscribe(handler: { message in
+            q.subscribe(handler: { _ in
                 if counter.incrementAndGet() >= messageCount {
                     semaphore.signal()
                 }
@@ -406,10 +412,11 @@ class OriginalIntegrationTests: XCTestCase {
     }
 
     fileprivate func causeServerChannelClose(_ ch: RMQChannel) {
-        ch.basicPublish("".data(using: String.Encoding.utf8)!, routingKey: "a route that can't be found", exchange: "a non-existent exchange", properties: [], options: [])
+        ch.basicPublish("".data(using: String.Encoding.utf8)!, routingKey: "a route that can't be found",
+                        exchange: "a non-existent exchange", properties: [], options: [])
     }
 
-    fileprivate func testClientCertificatePKCS12() -> Data {
+    fileprivate func fixtureClientCertificatePKCS12() -> Data {
         do {
             return try CertificateFixtures.guestBunniesP12()
         } catch {

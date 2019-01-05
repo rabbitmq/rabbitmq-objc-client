@@ -87,7 +87,9 @@ class TestHelper {
 
     static func assertEqualBytes(_ expected: Data, _ actual: Data, _ message: String = "") {
         if message == "" {
-            XCTAssertEqual(expected, actual, "\n\nBytes not equal:\n\(expected)\n\(actual)")
+            let expectedStr = String(data: expected, encoding: .utf8)
+            let actualStr = String(data: actual, encoding: .utf8)
+            XCTAssertEqual(expected, actual, "Bytes not equal: \(expectedStr!)\n\(actualStr!)")
         } else {
             XCTAssertEqual(expected, actual, message)
         }

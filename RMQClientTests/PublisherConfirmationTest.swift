@@ -92,7 +92,8 @@ class PublisherConfirmationTest: XCTestCase {
         let ch = ChannelHelper.makeChannel(1, confirmations: confirmations)
 
         XCTAssertEqual(0, confirmations.publicationCount)
-        ch.basicPublish("hi there".data(using: String.Encoding.utf8)!, routingKey: "", exchange: "", properties: [], options: [])
+        ch.basicPublish("hi there".data(using: String.Encoding.utf8)!, routingKey: "", exchange: "",
+                        properties: [], options: [])
         XCTAssertEqual(1, confirmations.publicationCount)
     }
 
@@ -130,11 +131,11 @@ class PublisherConfirmationTest: XCTestCase {
 
         ch.basicPublish(Data(), routingKey: "", exchange: "", properties: [], options: [])
 
-        ch.afterConfirmed { (acks, nacks) in }
+        ch.afterConfirmed { (_, _) in }
         XCTAssertEqual(30, confirmations.lastReceivedTimeout)
 
-        ch.afterConfirmed(123) { (acks, nacks) in }
+        ch.afterConfirmed(123) { (_, _) in }
         XCTAssertEqual(123, confirmations.lastReceivedTimeout)
     }
-    
+
 }

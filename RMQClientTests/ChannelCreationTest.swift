@@ -55,6 +55,7 @@ class ChannelCreationTest: XCTestCase {
     var conn: RMQConnection?
     var q: FakeSerialQueue?
     var allocator: ChannelSpyAllocator?
+    // swiftlint:disable weak_delegate
     var delegate: ConnectionDelegateSpy?
     var transport: ControlledInteractionTransport?
 
@@ -86,7 +87,8 @@ class ChannelCreationTest: XCTestCase {
 
         try! q?.step()
 
-        let actualDelegate: ConnectionDelegateSpy = allocator!.channels.last!.delegateSentToActivate! as! ConnectionDelegateSpy
+        let actualDelegate: ConnectionDelegateSpy = allocator!.channels.last!
+                                                .delegateSentToActivate! as! ConnectionDelegateSpy
         XCTAssertEqual(delegate!, actualDelegate)
     }
 

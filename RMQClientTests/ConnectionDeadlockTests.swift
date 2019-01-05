@@ -52,23 +52,23 @@
 import XCTest
 
 class ConnectionDeadlockTests: XCTestCase {
-    
+
     func testCallingCloseWhileDisconnected() {
-        
+
         let expection = expectation(description: "Should not encounter deadlock.")
-        
+
         DispatchQueue(label: "test.queue").async {
             /// a server endpoint that's assumed to be unavailable
             let uri = "amqp://127.0.0.1:5555"
             let conn = RMQConnection(uri: uri, delegate: RMQConnectionDelegateLogger())
             conn.start()
             conn.blockingClose()
-            
+
             /// will be reached if blockingClose above doesn't
             /// run into a deadlock
             expection.fulfill()
         }
-        
+
         waitForExpectations(timeout: 60) { (error) in
             XCTAssertNil(error, "Should have no error")
         }

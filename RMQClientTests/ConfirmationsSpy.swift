@@ -49,7 +49,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-@objc class ConfirmationsSpy : NSObject, RMQConfirmations {
+@objc class ConfirmationsSpy: NSObject, RMQConfirmations {
     var lastReceivedCallback: RMQConfirmationCallback?
     var lastReceivedAck: RMQBasicAck?
     var lastReceivedNack: RMQBasicNack?

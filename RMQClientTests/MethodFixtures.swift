@@ -64,7 +64,8 @@ class MethodFixtures {
         return RMQBasicCancelOk(consumerTag: RMQShortstr(consumerTag))
     }
 
-    static func basicConsume(_ queueName: String, consumerTag: String, options: RMQBasicConsumeOptions) -> RMQBasicConsume {
+    static func basicConsume(_ queueName: String, consumerTag: String,
+                             options: RMQBasicConsumeOptions) -> RMQBasicConsume {
         return RMQBasicConsume(queue: queueName, consumerTag: consumerTag, options: options)
     }
 
@@ -72,7 +73,8 @@ class MethodFixtures {
         return RMQBasicConsumeOk(consumerTag: RMQShortstr(consumerTag))
     }
 
-    static func basicDeliver(consumerTag: String = "", deliveryTag: UInt64 = 0, routingKey: String = "", exchange: String = "", options: RMQBasicDeliverOptions = []) -> RMQBasicDeliver {
+    static func basicDeliver(consumerTag: String = "", deliveryTag: UInt64 = 0, routingKey: String = "",
+                             exchange: String = "", options: RMQBasicDeliverOptions = []) -> RMQBasicDeliver {
         return RMQBasicDeliver(
             consumerTag: RMQShortstr(consumerTag),
             deliveryTag: RMQLonglong(deliveryTag),
@@ -86,7 +88,8 @@ class MethodFixtures {
         return RMQBasicGet(reserved1: RMQShort(0), queue: RMQShortstr(queue), options: options)
     }
 
-    static func basicGetOk(routingKey: String, deliveryTag: UInt64 = 0, exchange: String = "", options: RMQBasicGetOkOptions = []) -> RMQBasicGetOk {
+    static func basicGetOk(routingKey: String, deliveryTag: UInt64 = 0, exchange: String = "",
+                           options: RMQBasicGetOkOptions = []) -> RMQBasicGetOk {
         return RMQBasicGetOk(deliveryTag: RMQLonglong(deliveryTag),
                              options: options,
                              exchange: RMQShortstr(exchange),
@@ -98,8 +101,10 @@ class MethodFixtures {
         return RMQBasicNack(deliveryTag: RMQLonglong(deliveryTag), options: options)
     }
 
-    static func basicPublish(_ routingKey: String, exchange: String = "", options: RMQBasicPublishOptions = []) -> RMQBasicPublish {
-        return RMQBasicPublish(reserved1: RMQShort(0), exchange: RMQShortstr(exchange), routingKey: RMQShortstr(routingKey), options: options)
+    static func basicPublish(_ routingKey: String, exchange: String = "",
+                             options: RMQBasicPublishOptions = []) -> RMQBasicPublish {
+        return RMQBasicPublish(reserved1: RMQShort(0), exchange: RMQShortstr(exchange),
+                               routingKey: RMQShortstr(routingKey), options: options)
     }
 
     static func basicQos(_ prefetchCount: UInt, options: RMQBasicQosOptions) -> RMQBasicQos {
@@ -148,7 +153,8 @@ class MethodFixtures {
     }
 
     static func connectionOpen() -> RMQConnectionOpen {
-        return RMQConnectionOpen(virtualHost: RMQShortstr("/"), reserved1: RMQShortstr(""), options: RMQConnectionOpenOptions())
+        return RMQConnectionOpen(virtualHost: RMQShortstr("/"), reserved1: RMQShortstr(""),
+                                 options: RMQConnectionOpenOptions())
     }
 
     static func connectionOpenOk() -> RMQConnectionOpenOk {
@@ -157,23 +163,23 @@ class MethodFixtures {
 
     static func connectionStart() -> RMQConnectionStart {
         let dict: [String: RMQBoolean] = [
-            "authentication_failure_close" : rmqTrue,
-            "basic.nack"                   : rmqTrue,
-            "connection.blocked"           : rmqTrue,
-            "consumer_cancel_notify"       : rmqTrue,
-            "consumer_priorities"          : rmqTrue,
-            "exchange_exchange_bindings"   : rmqTrue,
-            "per_consumer_qos"             : rmqTrue,
-            "publisher_confirms"           : rmqTrue
+            "authentication_failure_close": rmqTrue,
+            "basic.nack": rmqTrue,
+            "connection.blocked": rmqTrue,
+            "consumer_cancel_notify": rmqTrue,
+            "consumer_priorities": rmqTrue,
+            "exchange_exchange_bindings": rmqTrue,
+            "per_consumer_qos": rmqTrue,
+            "publisher_confirms": rmqTrue
         ]
         let serverPropertiesDict: [String: RMQValue] = [
-            "capabilities" : RMQTable(dict),
-            "cluster_name" : RMQLongstr("rabbit@myapp.cfapps.pez.pivotal.io"),
-            "copyright"    : RMQLongstr("Copyright (C) 2007-2015 Pivotal Software, Inc."),
-            "information"  : RMQLongstr("Licensed under the MPL.  See http://www.rabbitmq.com/"),
-            "platform"     : RMQLongstr("Erlang/OTP"),
-            "product"      : RMQLongstr("RabbitMQ"),
-            "version"      : RMQLongstr("3.6.0")
+            "capabilities": RMQTable(dict),
+            "cluster_name": RMQLongstr("rabbit@myapp.cfapps.pez.pivotal.io"),
+            "copyright": RMQLongstr("Copyright (C) 2007-2019 Pivotal Software, Inc."),
+            "information": RMQLongstr("Licensed under the MPL.  See http://www.rabbitmq.com/"),
+            "platform": RMQLongstr("Erlang/OTP"),
+            "product": RMQLongstr("RabbitMQ"),
+            "version": RMQLongstr("3.7.10")
         ]
         return RMQConnectionStart(
             versionMajor: RMQOctet(0),
@@ -184,21 +190,23 @@ class MethodFixtures {
         )
     }
 
-    static func connectionStartOk(user: String = "foo", password: String = "bar", version: String = "0.0.1") -> RMQConnectionStartOk {
+    static func connectionStartOk(user: String = "foo",
+                                  password: String = "bar",
+                                  version: String = "1.1.0") -> RMQConnectionStartOk {
         let capabilitiesDict: [String: RMQBoolean] = [
-            "publisher_confirms"           : rmqTrue,
-            "consumer_cancel_notify"       : rmqTrue,
-            "exchange_exchange_bindings"   : rmqTrue,
-            "basic.nack"                   : rmqTrue,
-            "connection.blocked"           : rmqTrue,
-            "authentication_failure_close" : rmqTrue
+            "publisher_confirms": rmqTrue,
+            "consumer_cancel_notify": rmqTrue,
+            "exchange_exchange_bindings": rmqTrue,
+            "basic.nack": rmqTrue,
+            "connection.blocked": rmqTrue,
+            "authentication_failure_close": rmqTrue
         ]
         let clientPropertiesDict: [String: RMQValue] = [
-            "capabilities" : RMQTable(capabilitiesDict),
-            "product"      : RMQLongstr("RMQClient"),
-            "platform"     : RMQLongstr("iOS"),
-            "version"      : RMQLongstr(version),
-            "information"  : RMQLongstr("https://github.com/rabbitmq/rabbitmq-objc-client")
+            "capabilities": RMQTable(capabilitiesDict),
+            "product": RMQLongstr("RMQClient"),
+            "platform": RMQLongstr("iOS"),
+            "version": RMQLongstr(version),
+            "information": RMQLongstr("https://github.com/rabbitmq/rabbitmq-objc-client")
         ]
         return RMQConnectionStartOk(
             clientProperties: RMQTable(clientPropertiesDict as! [String : RMQValue & RMQFieldValue]),
@@ -224,7 +232,9 @@ class MethodFixtures {
         return RMQExchangeBindOk()
     }
 
-    static func exchangeDeclare(_ name: String, type: String, options: RMQExchangeDeclareOptions) -> RMQExchangeDeclare {
+    static func exchangeDeclare(_ name: String,
+                                type: String,
+                                options: RMQExchangeDeclareOptions) -> RMQExchangeDeclare {
         return RMQExchangeDeclare(exchange: name, type: type, options: options)
     }
 
@@ -252,11 +262,13 @@ class MethodFixtures {
         return RMQQueueBindOk()
     }
 
-    static func queueDeclare(_ name: String, options: RMQQueueDeclareOptions, arguments: [String: RMQValue] = [:]) -> RMQQueueDeclare {
+    static func queueDeclare(_ name: String,
+                             options: RMQQueueDeclareOptions,
+                             arguments: [String: RMQValue] = [:]) -> RMQQueueDeclare {
         return RMQQueueDeclare(
             queue: name,
             options: options,
-            arguments: RMQTable(arguments as! [String : RMQValue & RMQFieldValue])
+            arguments: RMQTable(arguments as! [String: RMQValue & RMQFieldValue])
         )
     }
 

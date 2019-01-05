@@ -89,7 +89,7 @@ class RMQReaderTest: XCTestCase {
             "\n\nExpected: \(method)\n\nGot: \(frameHandler.lastReceivedFrameset()!.method)"
         )
     }
-    
+
     func testHandlesContentTerminatedByNonContentFrame() {
         let transport = ControlledInteractionTransport()
         let frameHandler = FrameHandlerSpy()
@@ -198,6 +198,8 @@ class RMQReaderTest: XCTestCase {
     }
 
     func nonContentPayload() -> RMQBasicDeliver {
-        return RMQBasicDeliver(consumerTag: RMQShortstr(""), deliveryTag: RMQLonglong(0), options: RMQBasicDeliverOptions(), exchange: RMQShortstr(""), routingKey: RMQShortstr("somekey"))
+        return RMQBasicDeliver(consumerTag: RMQShortstr(""), deliveryTag: RMQLonglong(0),
+                               options: RMQBasicDeliverOptions(), exchange: RMQShortstr(""),
+                               routingKey: RMQShortstr("somekey"))
     }
 }

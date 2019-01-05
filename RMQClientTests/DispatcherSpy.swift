@@ -49,7 +49,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-@objc class DispatcherSpy : NSObject, RMQDispatcher {
+@objc class DispatcherSpy: NSObject, RMQDispatcher {
     var lastSyncMethod: RMQMethod?
     var lastSyncMethodHandler: ((RMQFrameset?) -> Void)?
     var lastBlockingSyncMethod: RMQMethod?
@@ -58,7 +58,7 @@
     var lastAsyncMethod: RMQMethod?
     var lastBlockingWaitOn: String?
     var activatedWithChannel: RMQChannel?
-    var activatedWithDelegate: RMQConnectionDelegate?
+    weak var activatedWithDelegate: RMQConnectionDelegate?
     var lastFramesetHandled: RMQFrameset?
     var fakeSerialQueue = FakeSerialQueue()
     var disabled = false

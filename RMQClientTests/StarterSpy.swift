@@ -49,7 +49,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-@objc class StarterSpy : NSObject, RMQStarter {
+@objc class StarterSpy: NSObject, RMQStarter {
     var startCompletionHandler: (() -> Void)?
 
     func start(_ completionHandler: (() -> Void)!) {

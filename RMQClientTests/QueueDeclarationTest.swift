@@ -103,7 +103,8 @@ class QueueDeclarationTest: XCTestCase {
 
         ch.queue("priority-queue", options: [], arguments: ["x-max-priority": RMQShort(10)])
 
-        XCTAssertEqual(MethodFixtures.queueDeclare("priority-queue", options: [], arguments: ["x-max-priority": RMQShort(10)]),
+        XCTAssertEqual(MethodFixtures.queueDeclare("priority-queue", options: [],
+                                                   arguments: ["x-max-priority": RMQShort(10)]),
                        dispatcher.lastSyncMethod as? RMQQueueDeclare)
     }
 
@@ -122,7 +123,8 @@ class QueueDeclarationTest: XCTestCase {
         ch.queueDelete("my queue", options: [])
         dispatcher.lastSyncMethod = nil
         ch.queue("my queue")
-        XCTAssertEqual(MethodFixtures.queueDeclare("my queue", options: []), dispatcher.lastSyncMethod as? RMQQueueDeclare)
+        XCTAssertEqual(MethodFixtures.queueDeclare("my queue", options: []),
+                       dispatcher.lastSyncMethod as? RMQQueueDeclare)
     }
 
 }

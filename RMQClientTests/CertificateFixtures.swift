@@ -51,11 +51,14 @@
 
 class CertificateFixtures {
     static let password = "bunnies"
-    
+
     static func guestBunniesP12() throws -> Data {
         let bundle = Bundle.init(for: self)
-        guard let certURL = bundle.url(forResource: "client_key", withExtension: "p12", subdirectory: "TestCertificates") else {
-            preconditionFailure("Failed to load client_key.p12 from the bundle! Resourcee path: \(bundle.resourcePath!)")
+        guard let certURL = bundle.url(forResource: "client_key",
+                                       withExtension: "p12",
+                                       subdirectory: "TestCertificates") else {
+            let err = "Failed to load client_key.p12 from the bundle! Resourcee path: \(bundle.resourcePath!)"
+            preconditionFailure(err)
         }
 
         return try Data(contentsOf: certURL)

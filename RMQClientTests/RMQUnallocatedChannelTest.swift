@@ -64,13 +64,16 @@ class RMQUnallocatedChannelTest: XCTestCase {
         let ch = RMQUnallocatedChannel()
         ch.activate(with: delegate)
 
+        // swiftlint:disable opening_brace
         let blocks: [() -> Void] = [
             { ch.ack(1) },
-            { ch.afterConfirmed { _,_  in } },
+            { ch.afterConfirmed { _, _ in } },
             { ch.basicConsume("foo", options: []) { _ in } },
             { ch.generateConsumerTag() },
             { ch.basicGet("foo", options: []) { _ in } },
-            { ch.basicPublish("hi".data(using: String.Encoding.utf8)!, routingKey: "yo", exchange: "hmm", properties: [], options: []) },
+            { ch.basicPublish("hi".data(using: String.Encoding.utf8)!,
+                              routingKey: "yo", exchange: "hmm",
+                              properties: [], options: []) },
             { ch.basicQos(2, global: false) },
             { ch.blockingWait(on: RMQConnectionStart.self) },
             { ch.confirmSelect() },
@@ -88,7 +91,7 @@ class RMQUnallocatedChannelTest: XCTestCase {
             { ch.queueDelete("foo", options: []) },
             { ch.queueBind("", exchange: "", routingKey: "") },
             { ch.queueUnbind("", exchange: "", routingKey: "") },
-            { ch.reject(1) },
+            { ch.reject(1) }
         ]
 
         for (index, run) in blocks.enumerated() {

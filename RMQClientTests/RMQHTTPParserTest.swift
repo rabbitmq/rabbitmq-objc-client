@@ -52,10 +52,141 @@
 import XCTest
 
 class RMQHTTPParserTest: XCTestCase {
-
+    // swiftlint:disable function_body_length
     func testParseArrayOfConnectionsWithManyItems() {
         let parser = RMQHTTPParser()
-        let connections = parser.connections("[{\"connected_at\":1476723031601,\"client_properties\":{\"capabilities\":{\"publisher_confirms\":true,\"consumer_cancel_notify\":true,\"exchange_exchange_bindings\":true,\"basic.nack\":true,\"connection.blocked\":true,\"authentication_failure_close\":true},\"product\":\"Bunny\",\"platform\":\"ruby 2.3.1p112 (2016-04-26 revision 54768) [x86_64-darwin15]\",\"version\":\"2.5.0\",\"information\":\"http://rubybunny.info\"},\"channel_max\":65535,\"frame_max\":131072,\"timeout\":60,\"vhost\":\"/\",\"user\":\"guest\",\"protocol\":\"AMQP 0-9-1\",\"ssl_hash\":null,\"ssl_cipher\":null,\"ssl_key_exchange\":null,\"ssl_protocol\":null,\"auth_mechanism\":\"PLAIN\",\"peer_cert_validity\":null,\"peer_cert_issuer\":null,\"peer_cert_subject\":null,\"ssl\":false,\"peer_host\":\"127.0.0.1\",\"host\":\"127.0.0.1\",\"peer_port\":52257,\"port\":5672,\"name\":\"127.0.0.1:52257 -> 127.0.0.1:5672\",\"node\":\"rabbit@localhost\",\"type\":\"network\",\"garbage_collection\":{\"max_heap_size\":0,\"min_bin_vheap_size\":46422,\"min_heap_size\":233,\"fullsweep_after\":65535,\"minor_gcs\":1},\"reductions\":6520,\"channels\":0,\"state\":\"running\",\"send_pend\":0,\"send_cnt\":3,\"recv_cnt\":4,\"recv_oct_details\":{\"rate\":0.0},\"recv_oct\":402,\"send_oct_details\":{\"rate\":0.0},\"send_oct\":523,\"reductions_details\":{\"rate\":93.2},\"reductions\":6520},{\"connected_at\":1476723061830,\"client_properties\":{\"capabilities\":{\"publisher_confirms\":true,\"consumer_cancel_notify\":true,\"exchange_exchange_bindings\":true,\"basic.nack\":true,\"connection.blocked\":true,\"authentication_failure_close\":true},\"product\":\"Bunny\",\"platform\":\"ruby 2.3.1p112 (2016-04-26 revision 54768) [x86_64-darwin15]\",\"version\":\"2.5.0\",\"information\":\"http://rubybunny.info\"},\"channel_max\":65535,\"frame_max\":131072,\"timeout\":60,\"vhost\":\"/\",\"user\":\"guest\",\"protocol\":\"AMQP 0-9-1\",\"ssl_hash\":null,\"ssl_cipher\":null,\"ssl_key_exchange\":null,\"ssl_protocol\":null,\"auth_mechanism\":\"PLAIN\",\"peer_cert_validity\":null,\"peer_cert_issuer\":null,\"peer_cert_subject\":null,\"ssl\":false,\"peer_host\":\"127.0.0.1\",\"host\":\"127.0.0.1\",\"peer_port\":52282,\"port\":5672,\"name\":\"127.0.0.1:52282 -> 127.0.0.1:5672\",\"node\":\"rabbit@localhost\",\"type\":\"network\",\"garbage_collection\":{\"max_heap_size\":0,\"min_bin_vheap_size\":46422,\"min_heap_size\":233,\"fullsweep_after\":65535,\"minor_gcs\":4},\"reductions\":3594,\"channels\":0,\"state\":\"running\",\"send_pend\":0,\"send_cnt\":3,\"recv_cnt\":3,\"recv_oct_details\":{\"rate\":0.0},\"recv_oct\":394,\"send_oct_details\":{\"rate\":0.0},\"send_oct\":523,\"reductions_details\":{\"rate\":0.0},\"reductions\":3594}]".data(using: String.Encoding.utf8)!)
+        let json = """
+                [
+                  {
+                    "connected_at":1476723031601,
+                    "client_properties":{
+                      "capabilities":{
+                        "publisher_confirms":true,
+                        "consumer_cancel_notify":true,
+                        "exchange_exchange_bindings":true,
+                        "basic.nack":true,
+                        "connection.blocked":true,
+                        "authentication_failure_close":true
+                      },
+                      "product":"Bunny",
+                      "platform":"ruby 2.5.3p105 (2018-10-18 revision 65156) [x86_64-darwin17]",
+                      "version":"2.5.0",
+                      "information":"http://rubybunny.info"
+                    },
+                    "channel_max":65535,
+                    "frame_max":131072,
+                    "timeout":60,
+                    "vhost":"/",
+                    "user":"guest",
+                    "protocol":"AMQP 0-9-1",
+                    "ssl_hash":null,
+                    "ssl_cipher":null,
+                    "ssl_key_exchange":null,
+                    "ssl_protocol":null,
+                    "auth_mechanism":"PLAIN",
+                    "peer_cert_validity":null,
+                    "peer_cert_issuer":null,
+                    "peer_cert_subject":null,
+                    "ssl":false,
+                    "peer_host":"127.0.0.1",
+                    "host":"127.0.0.1",
+                    "peer_port":52257,
+                    "port":5672,
+                    "name":"127.0.0.1:52257 -> 127.0.0.1:5672",
+                    "node":"rabbit@localhost",
+                    "type":"network",
+                    "garbage_collection":{
+                      "max_heap_size":0,
+                      "min_bin_vheap_size":46422,
+                      "min_heap_size":233,
+                      "fullsweep_after":65535,
+                      "minor_gcs":1
+                    },
+                    "reductions":6520,
+                    "channels":0,
+                    "state":"running",
+                    "send_pend":0,
+                    "send_cnt":3,
+                    "recv_cnt":4,
+                    "recv_oct_details":{
+                      "rate":0.0
+                    },
+                    "recv_oct":402,
+                    "send_oct_details":{
+                      "rate":0.0
+                    },
+                    "send_oct":523,
+                    "reductions_details":{
+                      "rate":93.2
+                    },
+                    "reductions":6520
+                  },
+                  {
+                    "connected_at":1476723061830,
+                    "client_properties":{
+                      "capabilities":{
+                        "publisher_confirms":true,
+                        "consumer_cancel_notify":true,
+                        "exchange_exchange_bindings":true,
+                        "basic.nack":true,
+                        "connection.blocked":true,
+                        "authentication_failure_close":true
+                      },
+                      "product":"Bunny",
+                      "platform":"ruby 2.5.3p105 (2018-10-18 revision 65156) [x86_64-darwin17]",
+                      "version":"2.5.0",
+                      "information":"http://rubybunny.info"
+                    },
+                    "channel_max":65535,
+                    "frame_max":131072,
+                    "timeout":60,
+                    "vhost":"/",
+                    "user":"guest",
+                    "protocol":"AMQP 0-9-1",
+                    "ssl_hash":null,
+                    "ssl_cipher":null,
+                    "ssl_key_exchange":null,
+                    "ssl_protocol":null,
+                    "auth_mechanism":"PLAIN",
+                    "peer_cert_validity":null,
+                    "peer_cert_issuer":null,
+                    "peer_cert_subject":null,
+                    "ssl":false,
+                    "peer_host":"127.0.0.1",
+                    "host":"127.0.0.1",
+                    "peer_port":52282,
+                    "port":5672,
+                    "name":"127.0.0.1:52282 -> 127.0.0.1:5672",
+                    "node":"rabbit@localhost",
+                    "type":"network",
+                    "garbage_collection":{
+                      "max_heap_size":0,
+                      "min_bin_vheap_size":46422,
+                      "min_heap_size":233,
+                      "fullsweep_after":65535,
+                      "minor_gcs":4
+                    },
+                    "reductions":3594,
+                    "channels":0,
+                    "state":"running",
+                    "send_pend":0,
+                    "send_cnt":3,
+                    "recv_cnt":3,
+                    "recv_oct_details":{
+                      "rate":0.0
+                    },
+                    "recv_oct":394,
+                    "send_oct_details":{
+                      "rate":0.0
+                    },
+                    "send_oct":523,
+                    "reductions_details":{
+                      "rate":0.0
+                    }
+                  }
+                ]
+        """
+        let connections = parser.connections(json.data(using: String.Encoding.utf8)!)
         XCTAssertEqual("127.0.0.1:52257 -> 127.0.0.1:5672", connections[0].name)
         XCTAssertEqual("127.0.0.1:52282 -> 127.0.0.1:5672", connections[1].name)
     }
