@@ -122,6 +122,18 @@
     [self.dispatcher sendSyncMethod:[RMQChannelOpen new]];
 }
 
+- (BOOL)isOpen {
+    return [self.dispatcher isOpen];
+}
+
+- (BOOL)wasClosedExplicitly {
+    return [self.dispatcher wasClosedExplicitly];
+}
+
+- (BOOL)wasClosedByServer {
+    return [self.dispatcher wasClosedByServer];
+}
+
 - (void)close {
     [self.dispatcher sendSyncMethod:[RMQChannelClose new]
                   completionHandler:^(RMQFrameset *frameset) {
@@ -427,6 +439,7 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
                                                                         exchange:[[RMQShortstr alloc] init:name]
                                                                          options:options]];
 }
+
 
 # pragma mark - RMQFrameHandler
 

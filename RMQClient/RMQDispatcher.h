@@ -53,6 +53,12 @@
 #import "RMQConnectionDelegate.h"
 #import "RMQFrameset.h"
 
+typedef NS_ENUM(NSUInteger, DispatcherState) {
+    DispatcherStateOpen = 1,
+    DispatcherStateClosedByClient,
+    DispatcherStateClosedByServer,
+};
+
 @protocol RMQDispatcher <NSObject, RMQFrameHandler>
 
 - (void)blockingWaitOn:(Class)method;
@@ -74,5 +80,9 @@
 - (void)enqueue:(RMQOperation)operation;
 - (void)disable;
 - (void)enable;
+
+- (BOOL)isOpen;
+- (BOOL)wasClosedByServer;
+- (BOOL)wasClosedExplicitly;
 
 @end

@@ -109,4 +109,11 @@ class RMQUnallocatedChannelTest: XCTestCase {
         XCTAssertNil(delegate.lastChannelError)
     }
 
+    func testIsNotConsideredOpen() {
+        let delegate = ConnectionDelegateSpy()
+        let ch = RMQUnallocatedChannel()
+        ch.activate(with: delegate)
+
+        XCTAssertFalse(ch.isOpen())
+    }
 }

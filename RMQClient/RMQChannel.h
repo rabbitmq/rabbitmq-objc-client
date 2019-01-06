@@ -95,6 +95,30 @@
 /// @brief Internal. Sends a channel.open.
 - (void)open;
 
+/*!
+ * @brief Used to check if the channel is open and can be used
+ *
+ * @return true if the channel is open and can be used
+ */
+- (BOOL) isOpen;
+
+/*!
+ * @brief Used to check if the channel was closed by the server due to a channel-level
+ *        protocol exception
+ *
+ * @return true if the channel was closed by the server due to a channel-level
+ *         protocol exception
+ */
+- (BOOL) wasClosedByServer;
+
+/*!
+ * @brief Used to check if the channel was closed explicitly by calling the close
+ *        method on it
+ *
+ * @return true if the channel was closed explicitly by calling the close
+ *         method on it
+ */- (BOOL) wasClosedExplicitly;
+
 /// @brief Internal. Used by automatic connection recovery.
 - (void)recover;
 

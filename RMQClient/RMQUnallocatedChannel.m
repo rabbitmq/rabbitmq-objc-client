@@ -74,6 +74,18 @@
 
 - (void)open {}
 
+- (BOOL)isOpen {
+    return FALSE;
+}
+
+- (BOOL)wasClosedByServer {
+    return FALSE;
+}
+
+- (BOOL)wasClosedExplicitly {
+    return FALSE;
+}
+
 - (void)close {}
 
 - (void)blockingClose {}

@@ -99,6 +99,7 @@
     var stubbedBasicConsumeError: String?
     var openCalled = false
     var closeCalled = false
+    var currentlyOpen = false
     var blockingCloseCalled = false
     var prepareForRecoveryCalled = false
     var recoverCalled = false
@@ -124,14 +125,29 @@
 
     func open() {
         openCalled = true
+        currentlyOpen = true
+    }
+
+    func isOpen() -> Bool {
+        return currentlyOpen
     }
 
     func close() {
         closeCalled = true
+        currentlyOpen = false
+    }
+
+    func wasClosedByServer() -> Bool {
+        return !isOpen() && !wasClosedExplicitly()
+    }
+
+    func wasClosedExplicitly() -> Bool {
+        return closeCalled
     }
 
     func blockingClose() {
         blockingCloseCalled = true
+        currentlyOpen = false
     }
 
     func prepareForRecovery() {

@@ -51,12 +51,7 @@
 
 #import "RMQSuspendResumeDispatcher.h"
 #import "RMQErrors.h"
-
-typedef NS_ENUM(NSUInteger, DispatcherState) {
-    DispatcherStateOpen = 1,
-    DispatcherStateClosedByClient,
-    DispatcherStateClosedByServer,
-};
+#import "RMQDispatcher.h"
 
 @interface RMQSuspendResumeDispatcher ()
 @property (nonatomic, readwrite) id<RMQChannel> channel;
@@ -134,9 +129,9 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 
     [self.commandQueue enqueue:^{
         RMQFramesetValidationResult *result = [self.validator expect:method.syncResponse];
-        if (self.channelIsOpen && result.error) {
+        if (self.isOpen && result.error) {
             [self.delegate channel:self.channel error:result.error];
-        } else if (self.channelIsOpen) {
+        } else if (self.isOpen) {
             completionHandler(result.frameset);
         }
     }];
@@ -158,7 +153,7 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 
     [self.commandQueue blockingEnqueue:^{
         RMQFramesetValidationResult *result = [self.validator expect:method.syncResponse];
-        if (self.channelIsOpen && result.error) {
+        if (self.isOpen && result.error) {
             [self.delegate channel:self.channel error:result.error];
         }
     }];
@@ -192,10 +187,22 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
     }];
 }
 
+- (BOOL)isOpen {
+    return self.state == DispatcherStateOpen;
+}
+
+- (BOOL) wasClosedByServer {
+    return self.state == DispatcherStateClosedByServer;
+}
+
+- (BOOL) wasClosedExplicitly {
+    return self.state == DispatcherStateClosedByClient;
+}
+
 - (void)handleFrameset:(RMQFrameset *)frameset {
-    if (!self.channelAlreadyClosedByServer && [self isChannelClose:frameset.method]) {
+    if (!self.wasClosedByServer && [self isChannelClose:frameset.method]) {
         [self processServerSentChannelClose:(RMQChannelClose *)frameset.method];
-    } else if (self.channelIsOpen) {
+    } else if (self.isOpen) {
         [self.validator fulfill:frameset];
     }
     if (!self.disabled) {
@@ -207,7 +214,7 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 
 - (void)processOutgoing:(id<RMQMethod>)method
            executeOrErr:(void (^)(void))operation {
-    if (self.channelIsOpen) {
+    if (self.isOpen) {
         operation();
     } else if (![self isChannelClose:method]) {
         [self sendChannelClosedError];
@@ -233,14 +240,6 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
                                          code:RMQErrorChannelClosed
                                      userInfo:@{NSLocalizedDescriptionKey: @"Cannot use channel after it has been closed."}];
     [self.delegate channel:self.channel error:error];
-}
-
-- (BOOL)channelIsOpen {
-    return self.state == DispatcherStateOpen;
-}
-
-- (BOOL)channelAlreadyClosedByServer {
-    return self.state == DispatcherStateClosedByServer;
 }
 
 - (BOOL)isChannelClose:(id<RMQMethod>)method {

@@ -105,6 +105,17 @@ class RMQAllocatedChannelTest: XCTestCase {
         XCTAssertEqual(MethodFixtures.channelClose(), dispatcher.lastSyncMethod as? RMQChannelClose)
     }
 
+    func testIsOpen() {
+        let dispatcher = DispatcherSpy()
+        let ch = ChannelHelper.makeChannel(1, dispatcher: dispatcher)
+
+        ch.activate(with: nil)
+
+        XCTAssertTrue(ch.isOpen())
+
+        ch.close()
+    }
+
     func testCloseReleasesItsChannelNumberWhenCloseOkReceived() {
         let dispatcher = DispatcherSpy()
         let allocator = ChannelSpyAllocator()

@@ -62,6 +62,7 @@
     var lastFramesetHandled: RMQFrameset?
     var fakeSerialQueue = FakeSerialQueue()
     var disabled = false
+    var open = false
 
     func blockingWait(on method: AnyClass!) {
         lastBlockingWaitOn = method.description()
@@ -70,6 +71,7 @@
     func activate(with channel: RMQChannel!, delegate: RMQConnectionDelegate!) {
         activatedWithChannel = channel
         activatedWithDelegate = delegate
+        open = true
     }
 
     func sendAsyncMethod(_ method: RMQMethod!) {
@@ -111,6 +113,18 @@
     func enable() {
         disabled = false
         fakeSerialQueue.resume()
+    }
+
+    func isOpen() -> Bool {
+        return open
+    }
+
+    func wasClosedByServer() -> Bool {
+        return lastFramesetHandled?.method.isKind(of: RMQChannelClose.self) ?? false
+    }
+
+    func wasClosedExplicitly() -> Bool {
+        return lastSyncMethod?.isKind(of: RMQChannelClose.self) ?? false
     }
 
     // MARK: Helpers
