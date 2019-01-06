@@ -99,5 +99,4 @@ class TestHelper {
         let bundle = Bundle(identifier: "io.pivotal.RMQClient")!
         return bundle.infoDictionary!["CFBundleShortVersionString"] as! String
     }
-
 }

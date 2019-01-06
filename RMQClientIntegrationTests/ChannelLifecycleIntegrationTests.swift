@@ -62,4 +62,24 @@ class ChannelLifecycleIntegrationTests: XCTestCase {
         let ch = conn.createChannel()
         ch.close()
     }
+
+    func testDoubleClosureAfterAChannelLevelProtocolException() {
+        let conn = RMQConnection()
+        conn.start()
+        defer { conn.blockingClose() }
+
+        let ch = conn.createChannel()
+        let qName = "objc.tests.\(Int.random(in: 200...1000))"
+        // TODO: detect an error reported after the server sends
+        //       a channel.close
+        ch.queue(qName, options: [.exclusive])
+
+        // uses a different set of properties from
+        // the original declaration
+        ch.queue(qName, options: [.durable])
+
+        for _ in (1...10) {
+            ch.close()
+        }
+    }
 }

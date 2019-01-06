@@ -9,6 +9,7 @@ disabled_rules:
   # it doesn't seem to work well with
   # Objective-C methods called from Swift
   - control_statement
+  - todo
 included:
   - RMQClientTests
   - RMQClientIntegrationTests
