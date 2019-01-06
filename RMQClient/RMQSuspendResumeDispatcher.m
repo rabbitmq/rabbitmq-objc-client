@@ -121,8 +121,8 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
      completionHandler:(void (^)(RMQFrameset *frameset))completionHandler {
     [self.commandQueue enqueue:^{
         [self processOutgoing:method executeOrErr:^{
-            if ([self isClose:method]) {
-                [self processClientClose];
+            if ([self isChannelClose:method]) {
+                [self processUserInitiatedChannelClose];
             }
 
             RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber
@@ -193,8 +193,8 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 }
 
 - (void)handleFrameset:(RMQFrameset *)frameset {
-    if (!self.channelAlreadyClosedByServer && [self isClose:frameset.method]) {
-        [self processServerClose:(RMQChannelClose *)frameset.method];
+    if (!self.channelAlreadyClosedByServer && [self isChannelClose:frameset.method]) {
+        [self processServerSentChannelClose:(RMQChannelClose *)frameset.method];
     } else if (self.channelIsOpen) {
         [self.validator fulfill:frameset];
     }
@@ -209,16 +209,16 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
            executeOrErr:(void (^)(void))operation {
     if (self.channelIsOpen) {
         operation();
-    } else if (![self isClose:method]) {
+    } else if (![self isChannelClose:method]) {
         [self sendChannelClosedError];
     }
 }
 
-- (void)processClientClose {
+- (void)processUserInitiatedChannelClose {
     self.state = DispatcherStateClosedByClient;
 }
 
-- (void)processServerClose:(RMQChannelClose *)close {
+- (void)processServerSentChannelClose:(RMQChannelClose *)close {
     self.state = DispatcherStateClosedByServer;
     NSError *error = [NSError errorWithDomain:RMQErrorDomain
                                          code:close.replyCode.integerValue
@@ -243,7 +243,7 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
     return self.state == DispatcherStateClosedByServer;
 }
 
-- (BOOL)isClose:(id<RMQMethod>)method {
+- (BOOL)isChannelClose:(id<RMQMethod>)method {
     return [method isKindOfClass:[RMQChannelClose class]];
 }
 
