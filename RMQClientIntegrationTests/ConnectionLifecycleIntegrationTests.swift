@@ -115,10 +115,15 @@ class ConnectionLifecycleIntegrationTests: XCTestCase {
 
         XCTAssertTrue((conn.transport()?.isConnected())!)
         XCTAssertTrue(conn.isOpen())
+        XCTAssertFalse(conn.isClosed())
 
         conn.blockingClose()
 
         XCTAssertTrue(ConnectionHelper.pollUntilTransportDisconnected(conn: conn))
         XCTAssertTrue(ConnectionHelper.pollUntilDisconnected(conn: conn))
+
+        XCTAssertFalse((conn.transport()?.isConnected())!)
+        XCTAssertFalse(conn.isOpen())
+        XCTAssertTrue(conn.isClosed())
     }
 }
