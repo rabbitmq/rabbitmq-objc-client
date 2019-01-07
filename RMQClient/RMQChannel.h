@@ -57,12 +57,14 @@
 
 @protocol RMQConnectionDelegate;
 
+typedef void (^RMQChannelCompletionHandler)(void);
+
 /*!
  * @brief Interface to a channel.
  * All operations on channels, except methods with 'blocking' in the name,
  * are asynchronous and execute on a GCD serial queue.
  *
- * @see <a href="http://www.rabbitmq.com/getstarted.html">RabbitMQ tutorials</a>
+ * @see <a href="https://www.rabbitmq.com/getstarted.html">RabbitMQ tutorials</a>
  */
 @protocol RMQChannel <NSObject, RMQFrameHandler>
 
@@ -70,6 +72,9 @@
 
 /// @brief Closes the channel.
 - (void)close;
+
+/// @brief Closes the channel and executes a completion handler.
+- (void)close:(RMQChannelCompletionHandler)handler;
 
 /// @brief Closes the channel, blocking the calling thread.
 - (void)blockingClose;
@@ -101,6 +106,14 @@
  * @return true if the channel is open and can be used
  */
 - (BOOL) isOpen;
+
+/*!
+ * @brief Used to check if the channel is closed. Closed channels no longer
+ *        can be used.
+ *
+ * @return true if the channel is closed and no longer can be used
+ */
+- (BOOL) isClosed;
 
 /*!
  * @brief Used to check if the channel was closed by the server due to a channel-level

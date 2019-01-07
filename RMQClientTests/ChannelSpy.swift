@@ -132,7 +132,16 @@
         return currentlyOpen
     }
 
+    func isClosed() -> Bool {
+        return !self.isOpen()
+    }
+
     func close() {
+        closeCalled = true
+        currentlyOpen = false
+    }
+
+    func close(_ completionHandler: () -> Void) {
         closeCalled = true
         currentlyOpen = false
     }

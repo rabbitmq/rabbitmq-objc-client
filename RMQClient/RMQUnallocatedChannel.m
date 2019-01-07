@@ -78,6 +78,10 @@
     return FALSE;
 }
 
+- (BOOL)isClosed {
+    return !self.isOpen;
+}
+
 - (BOOL)wasClosedByServer {
     return FALSE;
 }
@@ -87,6 +91,8 @@
 }
 
 - (void)close {}
+
+- (void)close:(RMQChannelCompletionHandler)handler {}
 
 - (void)blockingClose {}
 

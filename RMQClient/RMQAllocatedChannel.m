@@ -126,6 +126,10 @@
     return [self.dispatcher isOpen];
 }
 
+- (BOOL)isClosed {
+    return !self.isOpen;
+}
+
 - (BOOL)wasClosedExplicitly {
     return [self.dispatcher wasClosedExplicitly];
 }
@@ -136,9 +140,19 @@
 
 - (void)close {
     [self.dispatcher sendSyncMethod:[RMQChannelClose new]
-                  completionHandler:^(RMQFrameset *frameset) {
-                      [self.allocator releaseChannelNumber:self.channelNumber];
-                  }];
+                     completionHandler:^(RMQFrameset *frameset) {
+                         [self.allocator releaseChannelNumber:self.channelNumber];
+                     }];
+}
+
+- (void) close:(RMQChannelCompletionHandler)handler {
+    [self.dispatcher sendSyncMethod:[RMQChannelClose new]
+                     completionHandler:^(RMQFrameset *frameset) {
+                         [self.allocator releaseChannelNumber:self.channelNumber];
+                         if(handler) {
+                             handler();
+                         }
+                     }];
 }
 
 - (void)blockingClose {

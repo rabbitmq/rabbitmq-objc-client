@@ -57,10 +57,61 @@ class ChannelLifecycleIntegrationTests: XCTestCase {
     func testOpeningAChannelWithoutExplicitlyProvidedID() {
         let conn = RMQConnection()
         conn.start()
-        defer { conn.blockingClose() }
-
         let ch = conn.createChannel()
         ch.close()
+    }
+
+    func testOpenAndClosedStateWithBlockingClose() {
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+
+        XCTAssertTrue(ch.isOpen())
+        XCTAssertFalse(ch.isClosed())
+
+        ch.blockingClose()
+
+        XCTAssertFalse(ch.isOpen())
+        XCTAssertTrue(ch.isClosed())
+    }
+
+    func testOpenAndClosedStateWithCloseAndBlockingWait() {
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+
+        XCTAssertTrue(ch.isOpen())
+        XCTAssertFalse(ch.isClosed())
+
+        ch.close()
+        // wait for a response to arrive
+        ch.blockingWait(on: RMQChannelCloseOk.self)
+
+        XCTAssertFalse(ch.isOpen())
+        XCTAssertTrue(ch.isClosed())
+    }
+
+    func testOpenAndClosedStateWithCloseAndCompletionHandler() {
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+
+        XCTAssertTrue(ch.isOpen())
+        XCTAssertFalse(ch.isClosed())
+
+        let semaphore = DispatchSemaphore(value: 0)
+
+        ch.close {
+            XCTAssertFalse(ch.isOpen())
+            XCTAssertTrue(ch.isClosed())
+            semaphore.signal()
+        }
+
+        XCTAssertEqual(
+            .success,
+            semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(3)),
+            "Timed out waiting for channel closure"
+        )
     }
 
     func testDoubleClosureAfterAChannelLevelProtocolException() {
