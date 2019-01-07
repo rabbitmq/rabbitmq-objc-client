@@ -74,61 +74,54 @@ class ChannelLifecycleIntegrationTests: XCTestCase {
     }
 
     func testOpenAndClosedStateWithCloseAndBlockingWait() {
-        let conn = RMQConnection()
-        conn.start()
-        let ch = conn.createChannel()
+        _ = withChannel { (ch) in
+            XCTAssertTrue(ch.isOpen())
+            XCTAssertFalse(ch.isClosed())
 
-        XCTAssertTrue(ch.isOpen())
-        XCTAssertFalse(ch.isClosed())
+            ch.close()
+            // wait for a response to arrive
+            ch.blockingWait(on: RMQChannelCloseOk.self)
 
-        ch.close()
-        // wait for a response to arrive
-        ch.blockingWait(on: RMQChannelCloseOk.self)
-
-        XCTAssertFalse(ch.isOpen())
-        XCTAssertTrue(ch.isClosed())
+            XCTAssertFalse(ch.isOpen())
+            XCTAssertTrue(ch.isClosed())
+        }
     }
 
     func testOpenAndClosedStateWithCloseAndCompletionHandler() {
-        let conn = RMQConnection()
-        conn.start()
-        let ch = conn.createChannel()
+        _ = withChannel { (ch) in
+            XCTAssertTrue(ch.isOpen())
+            XCTAssertFalse(ch.isClosed())
 
-        XCTAssertTrue(ch.isOpen())
-        XCTAssertFalse(ch.isClosed())
+            let semaphore = DispatchSemaphore(value: 0)
 
-        let semaphore = DispatchSemaphore(value: 0)
+            ch.close {
+                XCTAssertFalse(ch.isOpen())
+                XCTAssertTrue(ch.isClosed())
+                semaphore.signal()
+            }
 
-        ch.close {
-            XCTAssertFalse(ch.isOpen())
-            XCTAssertTrue(ch.isClosed())
-            semaphore.signal()
+            XCTAssertEqual(
+                .success,
+                semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(3)),
+                "Timed out waiting for channel closure"
+            )
         }
-
-        XCTAssertEqual(
-            .success,
-            semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(3)),
-            "Timed out waiting for channel closure"
-        )
     }
 
     func testDoubleClosureAfterAChannelLevelProtocolException() {
-        let conn = RMQConnection()
-        conn.start()
-        defer { conn.blockingClose() }
+        _ = withChannel { (ch) in
+            let qName = "objc.tests.\(Int.random(in: 200...1000))"
+            // TODO: detect an error reported after the server sends
+            //       a channel.close
+            ch.queue(qName, options: [.exclusive])
 
-        let ch = conn.createChannel()
-        let qName = "objc.tests.\(Int.random(in: 200...1000))"
-        // TODO: detect an error reported after the server sends
-        //       a channel.close
-        ch.queue(qName, options: [.exclusive])
+            // uses a different set of properties from
+            // the original declaration
+            ch.queue(qName, options: [.durable])
 
-        // uses a different set of properties from
-        // the original declaration
-        ch.queue(qName, options: [.durable])
-
-        for _ in (1...10) {
-            ch.close()
+            for _ in (1...10) {
+                ch.close()
+            }
         }
     }
 
