@@ -114,14 +114,14 @@
 
 - (void)sendSyncMethod:(id<RMQMethod>)method
      completionHandler:(void (^)(RMQFrameset *frameset))completionHandler {
+
     [self.commandQueue enqueue:^{
         [self processOutgoing:method executeOrErr:^{
             if ([self isChannelClose:method]) {
                 [self processUserInitiatedChannelClose];
             }
 
-            RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber
-                                                                                method:method];
+            RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
             [self.commandQueue suspend];
             [self.sender sendFrameset:outgoingFrameset];
         }];
@@ -131,20 +131,23 @@
         RMQFramesetValidationResult *result = [self.validator expect:method.syncResponse];
         if (self.isOpen && result.error) {
             [self.delegate channel:self.channel error:result.error];
-        } else if (self.isOpen) {
+        } else {
             completionHandler(result.frameset);
         }
     }];
 }
 
 - (void)sendSyncMethod:(id<RMQMethod>)method {
-    [self sendSyncMethod:method
-       completionHandler:^(RMQFrameset *frameset) {}];
+    [self sendSyncMethod:method completionHandler:^(RMQFrameset *frameset) {}];
 }
 
 - (void)sendSyncMethodBlocking:(id<RMQMethod>)method {
     [self.commandQueue blockingEnqueue:^{
         [self processOutgoing:method executeOrErr:^{
+            if ([self isChannelClose:method]) {
+                [self processUserInitiatedChannelClose];
+            }
+
             RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
             [self.commandQueue suspend];
             [self.sender sendFrameset:frameset];
@@ -153,6 +156,7 @@
 
     [self.commandQueue blockingEnqueue:^{
         RMQFramesetValidationResult *result = [self.validator expect:method.syncResponse];
+
         if (self.isOpen && result.error) {
             [self.delegate channel:self.channel error:result.error];
         }
