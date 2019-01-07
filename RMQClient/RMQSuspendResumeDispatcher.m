@@ -131,7 +131,9 @@
         RMQFramesetValidationResult *result = [self.validator expect:method.syncResponse];
         if (self.isOpen && result.error) {
             [self.delegate channel:self.channel error:result.error];
-        } else {
+        } else if (self.isOpen || [self isChannelClose:method]) {
+            // execute completion handlers when open
+            // but special case user-initiated channel.close methods
             completionHandler(result.frameset);
         }
     }];
