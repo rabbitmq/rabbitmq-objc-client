@@ -69,6 +69,7 @@ extern NSInteger const RMQChannelLimit;
 @interface RMQConnection : NSObject<RMQFrameHandler, RMQSender, RMQStarter, RMQTransportDelegate>
 
 @property (nonnull, copy, nonatomic, readonly) NSString *vhost;
+@property (nonnull, copy, nonatomic, readwrite) RMQTable *serverProperties;
 
 /// @brief Designated initializer: do not use.
 - (nonnull instancetype)initWithTransport:(nonnull id<RMQTransport>)transport

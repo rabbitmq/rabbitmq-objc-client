@@ -58,7 +58,9 @@
 
 @interface RMQHandshaker : NSObject <RMQFrameHandler>
 @property (weak, nonatomic, readwrite) RMQReader *reader;
+
 - (instancetype)initWithSender:(id<RMQSender>)sender
                         config:(RMQConnectionConfig *)config
-             completionHandler:(void (^)(NSNumber *heartbeatTimeout))completionHandler;
+             completionHandler:(void (^)(NSNumber *heartbeatTimeout,
+                                         RMQTable *serverProperties))completionHandler;
 @end

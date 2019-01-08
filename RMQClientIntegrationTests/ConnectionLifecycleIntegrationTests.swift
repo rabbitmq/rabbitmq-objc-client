@@ -126,4 +126,19 @@ class ConnectionLifecycleIntegrationTests: XCTestCase {
         XCTAssertFalse(conn.isOpen())
         XCTAssertTrue(conn.isClosed())
     }
+
+    func testServerProperties() {
+        let semaphore = DispatchSemaphore(value: 0)
+        let conn = RMQConnection()
+        conn.start {
+            semaphore.signal()
+        }
+        XCTAssertEqual(.success, ConnectionHelper.awaitCompletion(semaphore: semaphore),
+                       "Timed out waiting for connection and handshake to complete")
+
+        let props = conn.serverProperties.dictionaryValue
+        XCTAssertNotNil(props["product"] ?? nil)
+        XCTAssertNotNil(props["version"] ?? nil)
+        XCTAssertNotNil(props["capabilities"] ?? nil)
+    }
 }

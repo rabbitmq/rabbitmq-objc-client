@@ -54,15 +54,18 @@
 @interface RMQHandshaker ()
 @property (nonatomic, readwrite) id<RMQSender> sender;
 @property (nonatomic, readwrite) RMQConnectionConfig *config;
-@property (nonatomic, readwrite) void (^completionHandler)(NSNumber *heartbeatTimeout);
+@property (nonatomic, readwrite) void (^completionHandler)(NSNumber *heartbeatTimeout,
+                                                           RMQTable *serverProperties);
 @property (nonatomic, readwrite) NSNumber *heartbeatTimeout;
+@property (nonatomic, readwrite) RMQTable *serverProperties;
 @end
 
 @implementation RMQHandshaker
 
 - (instancetype)initWithSender:(id<RMQSender>)sender
                         config:(RMQConnectionConfig *)config
-             completionHandler:(void (^)(NSNumber *heartbeatTimeout))completionHandler {
+             completionHandler:(void (^)(NSNumber *heartbeatTimeout,
+                                         RMQTable *serverProperties))completionHandler {
     self = [super init];
     if (self) {
         self.sender = sender;
@@ -76,6 +79,8 @@
 - (void)handleFrameset:(RMQFrameset *)frameset {
     id method = frameset.method;
     if ([method isKindOfClass:[RMQConnectionStart class]]) {
+        RMQConnectionStart *start = method;
+        self.serverProperties = start.serverProperties;
         [self sendMethod:self.startOk channelNumber:frameset.channelNumber];
         [self.reader run];
     } else if ([method isKindOfClass:[RMQConnectionTune class]]) {
@@ -86,7 +91,8 @@
         [self sendMethod:self.connectionOpen channelNumber:frameset.channelNumber];
         [self.reader run];
     } else {
-        self.completionHandler(self.heartbeatTimeout);
+        self.completionHandler(self.heartbeatTimeout,
+                               self.serverProperties);
     }
 }
 
@@ -151,5 +157,4 @@
     RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:channelNumber method:amqMethod];
     [self.sender sendFrameset:frameset force:YES];
 }
-
 @end

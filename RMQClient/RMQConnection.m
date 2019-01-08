@@ -281,11 +281,13 @@ NSInteger const RMQChannelLimit = 65535;
 
             RMQHandshaker *handshaker = [[RMQHandshaker alloc] initWithSender:self
                                                                        config:self.config
-                                                            completionHandler:^(NSNumber *heartbeatTimeout) {
+                                                            completionHandler:^(NSNumber *heartbeatTimeout,
+                                                                                RMQTable *serverProperties) {
                                                                 [self.heartbeatSender startWithInterval:@(heartbeatTimeout.integerValue / 2)];
                                                                 self.handshakeComplete = YES;
                                                                 [handshakeCompletion done];
                                                                 [self.reader run];
+                                                                self.serverProperties = serverProperties;
                                                                 completionHandler();
                                                             }];
             RMQReader *handshakeReader = [[RMQReader alloc] initWithTransport:self.transport
@@ -351,9 +353,7 @@ NSInteger const RMQChannelLimit = 65535;
  will report an error to the delegate.
  */
 - (void)reportErrorIfAlreadyClosed {
-    
     if (!self.handshakeComplete) {
-        
         NSError *error = [NSError errorWithDomain:RMQErrorDomain
                                              code:RMQErrorConnectionHandshakeTimedOut
                                          userInfo:@{NSLocalizedDescriptionKey: @"attempt to close an already closed (or never successfully established) connection"}];
