@@ -129,6 +129,8 @@ class ChannelLifecycleIntegrationTests: XCTestCase {
                 return delegate.lastChannelError?._code == RMQError.preconditionFailed.rawValue
             }
         )
+        XCTAssertFalse(ch2.isOpen())
+        XCTAssertTrue(ch2.isClosed())
 
         for _ in (1...10) {
             ch2.close()
