@@ -16,8 +16,8 @@ before_script:
   - make test_vhosts
   - make test_users
 env:
-  - TARGET=tests_iOS TRAVIS_XCODE_SDK=iphonesimulator11.0 iOS_VERSION=11.0
-  - TARGET=tests_OSX TRAVIS_XCODE_SDK=macosx10.11
+  - TARGET=tests_ios TRAVIS_XCODE_SDK=iphonesimulator11.0 iOS_VERSION=11.0
+  - TARGET=tests_macos TRAVIS_XCODE_SDK=macosx10.11
 script: travis_retry make $TARGET iOS_VERSION=$iOS_VERSION
 after_failure:
   - cat /usr/local/var/log/rabbitmq/rabbit@localhost.log

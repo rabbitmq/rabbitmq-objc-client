@@ -5,17 +5,11 @@ iOS_VERSION := 12.1
 RABBITMQCTL := /usr/local/sbin/rabbitmqctl
 RABBITMQ_PLUGINS := /usr/local/sbin/rabbitmq-plugins
 
-tests: tests_iOS tests_OSX lint
-
-test_ios: tests_iOS
+tests: tests_iOS tests_macos lint
 
 tests_ios: tests_iOS
 
-test_osx: tests_OSX
-
-tests_osx: tests_OSX
-
-tests_macos: tests_OSX
+tests_macos: tests_MacOS
 
 tests_iOS: test_dependencies
 	set -o pipefail && \
@@ -25,7 +19,7 @@ tests_iOS: test_dependencies
 		-destination 'platform=iOS Simulator,name=iPhone XR,OS=$(iOS_VERSION)' | \
 		xcpretty --test
 
-tests_OSX: test_dependencies
+tests_MacOS: test_dependencies
 	set -o pipefail && \
 		xcodebuild test \
 		-project RMQClient.xcodeproj \
