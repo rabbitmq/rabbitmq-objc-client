@@ -4,29 +4,9 @@
 
 A RabbitMQ client, largely influenced by [Bunny](https://github.com/ruby-amqp/bunny).
 
-Test-driven from Swift and implemented in Objective-C, to avoid burdening Objective-C developers with Swift baggage.
+Test-driven from Swift and implemented in Objective-C, to cover both Objective-C and Swift
+codebases before the ecosystem converts to 95+% Swift.
 
-## Currently implemented
-
-- [x] Publish and consume messages as strings
-- [x] Manipulate queues, exchanges, bindings and consumers.
-- [x] Asynchronous API using GCD queues under the hood (a delegate receives errors on a configurable GCD queue).
-- [x] Configurable recovery from network interruption and connection-level exceptions
-- [x] TLS support
-- [x] Client heartbeats
-- [x] Carthage support
-- [x] CocoaPods support
-- [x] iOS support
-- [x] [OSX support](https://github.com/rabbitmq/rabbitmq-objc-client/issues/55)
-- [ ] PKCS12 support for OSX
-- [x] PKCS12 client certificates on iOS using the [TLS auth mechanism plugin](https://github.com/rabbitmq/rabbitmq-auth-mechanism-ssl)
-- [ ] [PKCS12 client certificates on iOS using chained CAs](https://github.com/rabbitmq/rabbitmq-objc-client/issues/74)
-- [x] [Publisher confirmations](https://github.com/rabbitmq/rabbitmq-objc-client/issues/68)
-- [x] [Publish and consume messages as data](https://github.com/rabbitmq/rabbitmq-objc-client/issues/46)
-- [ ] [Connection closure when broker doesn't send heartbeats fast enough](https://github.com/rabbitmq/rabbitmq-objc-client/issues/41)
-- [x] [Customisable consumer hooks](https://github.com/rabbitmq/rabbitmq-objc-client/issues/71)
-- [ ] [basic.return support](https://github.com/rabbitmq/rabbitmq-objc-client/issues/72)
-- [ ] [Transaction support](https://github.com/rabbitmq/rabbitmq-objc-client/issues/73)
 
 ## Installation with [Carthage](https://github.com/Carthage/Carthage)
 
@@ -36,7 +16,7 @@ Test-driven from Swift and implemented in Objective-C, to avoid burdening Object
    github "rabbitmq/rabbitmq-objc-client" ~> 0.10.0
    ```
 
-   Run carthage, for example in a new project:
+   Run Carthage, for example in a new project:
 
    ```
    carthage bootstrap
@@ -63,12 +43,35 @@ Test-driven from Swift and implemented in Objective-C, to avoid burdening Object
 **Objective-C users:** importing with `@import RMQClient;` currently produces an error in Xcode (Could not build module 'RMQClient'), but this should not prevent code from compiling and running. Using crocodile imports avoids this Xcode bug: `#import <RMQClient/RMQClient.h>`.
 
 
+## Supported Features
+
+- [x] Publish and consume messages as strings
+- [x] Manipulate queues, exchanges, bindings and consumers.
+- [x] Asynchronous API using GCD queues under the hood (a delegate receives errors on a configurable GCD queue).
+- [x] Configurable recovery from network interruption and connection-level exceptions
+- [x] TLS support
+- [x] Client heartbeats
+- [x] Carthage support
+- [x] CocoaPods support
+- [x] iOS support
+- [x] MacOS support
+- [x] PKCS12 client certificates on iOS using the [TLS auth mechanism plugin](https://github.com/rabbitmq/rabbitmq-auth-mechanism-ssl)
+- [ ] PKCS12 support for MacOS
+- [ ] [PKCS12 client certificates on iOS using chained CAs](https://github.com/rabbitmq/rabbitmq-objc-client/issues/74)
+- [x] [Publisher confirmations](https://github.com/rabbitmq/rabbitmq-objc-client/issues/68)
+- [x] [Publish and consume messages as data](https://github.com/rabbitmq/rabbitmq-objc-client/issues/46)
+- [x] [Customisable consumer hooks](https://github.com/rabbitmq/rabbitmq-objc-client/issues/71)
+- [ ] Connection closure when broker [doesn't send heartbeats on schedule](https://github.com/rabbitmq/rabbitmq-objc-client/issues/41)
+- [ ] [basic.return support](https://github.com/rabbitmq/rabbitmq-objc-client/issues/72)
+- [ ] Acknowledgement [transaction support](https://github.com/rabbitmq/rabbitmq-objc-client/issues/73)
+
+
 ## Documentation
 
  * [Several RabbitMQ tutorials](http://www.rabbitmq.com/getstarted.html) are provided for
    this client library.
 
-## (Basic) Usage Example
+### (Basic) Usage Example
 
 1. Instantiate an `RMQConnection`:
 
@@ -103,6 +106,7 @@ Test-driven from Swift and implemented in Objective-C, to avoid burdening Object
    ```
 
 See [the tutorials](http://www.rabbitmq.com/tutorials/tutorial-one-objectivec.html) for more detailed instructions.
+
 
 ## Running Tests
 
