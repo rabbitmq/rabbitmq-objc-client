@@ -125,4 +125,8 @@
     return (self.options & RMQBasicConsumeAutomaticAckMode) == RMQBasicConsumeAutomaticAckMode;
 }
 
+- (BOOL)isExclusive {
+    return (self.options & RMQBasicConsumeExclusive) == RMQBasicConsumeExclusive;
+}
+
 @end

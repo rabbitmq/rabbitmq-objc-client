@@ -72,6 +72,7 @@
 
 - (BOOL)usesManualAckMode;
 - (BOOL)usesAutomaticAckMode;
+- (BOOL)isExclusive;
 - (void)onDelivery:(RMQConsumerDeliveryHandler)handler;
 - (void)onCancellation:(RMQConsumerCancellationHandler)handler;
 - (void)consume:(RMQMessage *)message;

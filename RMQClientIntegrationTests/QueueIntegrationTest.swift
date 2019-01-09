@@ -85,4 +85,20 @@ class QueueIntegrationTest: XCTestCase {
             x.delete()
         }
     }
+
+    func testQueueAndConsumerDSLExclusiveConsumerWithAutomaticAcknowledgementMode() {
+        _ = IntegrationHelper.withChannel { ch in
+            let x = ch.fanout("objc.tests.fanout", options: [])
+
+            let cons = ch.queue("", options: [.exclusive])
+                .bind(x)
+                .subscribe([.automaticAckMode, .exclusive]) { _ in
+                    // no-op
+            }
+            XCTAssertTrue(cons.usesAutomaticAckMode())
+            XCTAssertTrue(cons.isExclusive())
+
+            x.delete()
+        }
+    }
 }
