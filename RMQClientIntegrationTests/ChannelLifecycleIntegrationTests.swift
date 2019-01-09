@@ -109,20 +109,32 @@ class ChannelLifecycleIntegrationTests: XCTestCase {
     }
 
     func testDoubleClosureAfterAChannelLevelProtocolException() {
-        _ = withChannel { (ch) in
-            let qName = "objc.tests.\(Int.random(in: 200...1000))"
-            // TODO: detect an error reported after the server sends
-            //       a channel.close
-            ch.queue(qName, options: [.exclusive])
+        let delegate = ConnectionDelegateSpy()
+        let conn = RMQConnection(delegate: delegate)
+        conn.start()
 
-            // uses a different set of properties from
-            // the original declaration
-            ch.queue(qName, options: [.durable])
+        // use two channels to avoid queue object caching
+        let ch1 = conn.createChannel()
+        let ch2 = conn.createChannel()
 
-            for _ in (1...10) {
-                ch.close()
+        let qName = "objc.tests.\(Int.random(in: 200...1000))"
+        ch1.queue(qName, options: [.exclusive])
+
+        // uses a different set of properties from
+        // the original declaration
+        ch2.queue(qName, options: [.durable])
+
+        XCTAssert(
+            TestHelper.pollUntil(5) {
+                return delegate.lastChannelError?._code == RMQError.preconditionFailed.rawValue
             }
+        )
+
+        for _ in (1...10) {
+            ch2.close()
         }
+
+        conn.blockingClose()
     }
 
     fileprivate func withChannel(f: (_ channel: RMQChannel) -> Void) -> RMQChannel {

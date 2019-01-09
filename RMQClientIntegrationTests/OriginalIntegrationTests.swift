@@ -404,7 +404,13 @@ class OriginalIntegrationTests: XCTestCase {
         causeServerChannelClose(ch)
 
         XCTAssert(
-            TestHelper.pollUntil(30) {
+            TestHelper.pollUntil(5) {
+                return delegate.lastChannelError?._code == RMQError.notFound.rawValue
+            }
+        )
+
+        XCTAssert(
+            TestHelper.pollUntil(2) {
                 ch.basicQos(1, global: false)
                 return delegate.lastChannelError?._code == RMQError.channelClosed.rawValue
             }
@@ -412,7 +418,7 @@ class OriginalIntegrationTests: XCTestCase {
     }
 
     fileprivate func causeServerChannelClose(_ ch: RMQChannel) {
-        ch.basicPublish("".data(using: String.Encoding.utf8)!, routingKey: "a route that can't be found",
+        ch.basicPublish("".data(using: String.Encoding.utf8)!, routingKey: "irrelevant",
                         exchange: "a non-existent exchange", properties: [], options: [])
     }
 
