@@ -72,7 +72,7 @@ class ConnectionHelper {
                                             command: commandQueue,
                                             delegate: delegate)
         let config = RMQConnectionConfig(credentials: credentials,
-                                         channelMax: RMQChannelLimit as NSNumber,
+                                         channelMax: RMQChannelMaxDefault as NSNumber,
                                          frameMax: RMQFrameMax as NSNumber,
                                          heartbeat: 60,
                                          vhost: "/",

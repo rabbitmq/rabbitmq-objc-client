@@ -125,12 +125,10 @@ class ChannelLifecycleIntegrationTests: XCTestCase {
         ch2.queue(qName, options: [.durable])
 
         XCTAssert(
-            TestHelper.pollUntil(5) {
+            TestHelper.pollUntil(7) {
                 return delegate.lastChannelError?._code == RMQError.preconditionFailed.rawValue
             }
         )
-        XCTAssertFalse(ch2.isOpen())
-        XCTAssertTrue(ch2.isClosed())
 
         for _ in (1...10) {
             ch2.close()

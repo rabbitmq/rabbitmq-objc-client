@@ -152,7 +152,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
 
         let conn = RMQConnection(uri: plainEndpoint,
                                  tlsOptions: RMQTLSOptions.fromURI(plainEndpoint),
-                                 channelMax: RMQChannelLimit as NSNumber,
+                                 channelMax: RMQChannelMaxDefault as NSNumber,
                                  frameMax: RMQFrameMax as NSNumber,
                                  heartbeat: 10,
                                  syncTimeout: 10,

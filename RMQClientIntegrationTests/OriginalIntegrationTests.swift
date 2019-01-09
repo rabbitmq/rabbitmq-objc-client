@@ -69,7 +69,7 @@ class OriginalIntegrationTests: XCTestCase {
         let conn = RMQConnection(
             uri: plainEndpoint,
             tlsOptions: RMQTLSOptions.fromURI(plainEndpoint),
-            channelMax: RMQChannelLimit as NSNumber,
+            channelMax: RMQChannelMaxDefault as NSNumber,
             frameMax: frameMaxRequiringTwoFrames as NSNumber,
             heartbeat: 0,
             syncTimeout: 10,
@@ -137,7 +137,7 @@ class OriginalIntegrationTests: XCTestCase {
         )
         let conn = RMQConnection(uri: "amqps://localhost",
                                  tlsOptions: tlsOptions,
-                                 channelMax: RMQChannelLimit as NSNumber,
+                                 channelMax: RMQChannelMaxDefault as NSNumber,
                                  frameMax: RMQFrameMax as NSNumber,
                                  heartbeat: noisyHeartbeats as NSNumber,
                                  syncTimeout: 10,

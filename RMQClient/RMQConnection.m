@@ -68,7 +68,12 @@
 #import "RMQFrame.h"
 #import "RMQProcessInfoNameGenerator.h"
 
-NSInteger const RMQChannelLimit = 65535;
+/**
+ * @brief Default channel max value. One channel per connection
+ *        is reserved for protocol negotiation, error reporting
+ *        and so on.
+ */
+NSInteger const RMQChannelMaxDefault = 127;
 
 @interface RMQConnection ()
 @property (strong, nonatomic, readwrite) id <RMQTransport> transport;
@@ -182,7 +187,7 @@ NSInteger const RMQChannelLimit = 65535;
                recoverAfter:(NSNumber *)recoveryInterval {
     return [self initWithUri:uri
                   tlsOptions:[RMQTLSOptions fromURI:uri]
-                  channelMax:@(RMQChannelLimit)
+                  channelMax:@(RMQChannelMaxDefault)
                     frameMax:@(RMQFrameMax)
                    heartbeat:@0
                  syncTimeout:@10
@@ -236,7 +241,7 @@ NSInteger const RMQChannelLimit = 65535;
                    delegate:(id<RMQConnectionDelegate>)delegate {
     return [self initWithUri:uri
                   tlsOptions:tlsOptions
-                  channelMax:@(RMQChannelLimit)
+                  channelMax:@(RMQChannelMaxDefault)
                     frameMax:@(RMQFrameMax)
                    heartbeat:@0
                  syncTimeout:@10

@@ -101,7 +101,10 @@ class ConnectionWithFakesHelper {
         vhost: String = "baz"
         ) -> RMQConnection {
         let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
-        let config = connectionConfig(vhost: vhost, channelMax: RMQChannelLimit, frameMax: RMQFrameMax, heartbeat: 0)
+        let config = connectionConfig(vhost: vhost,
+                                      channelMax: RMQChannelMaxDefault,
+                                      frameMax: RMQFrameMax,
+                                      heartbeat: 0)
         let conn = RMQConnection(
             transport: transport,
             config: config,

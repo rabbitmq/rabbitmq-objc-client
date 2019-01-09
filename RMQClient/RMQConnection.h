@@ -63,7 +63,7 @@
 #import "RMQTLSOptions.h"
 #import "RMQStarter.h"
 
-extern NSInteger const RMQChannelLimit;
+extern NSInteger const RMQChannelMaxDefault;
 
 /// @brief Public API: Interface to an AMQP 0-9-1 connection. See the <a href="https://www.rabbitmq.com/specification.html">spec</a> for details.
 @interface RMQConnection : NSObject<RMQFrameHandler, RMQSender, RMQStarter, RMQTransportDelegate>

@@ -55,7 +55,7 @@ class ChannelAllocationTest: XCTestCase {
     let allocationsPerQueue = 30000
 
     func allocateAll(_ allocator: RMQChannelAllocator) {
-        for _ in 1...RMQChannelLimit {
+        for _ in 1...RMQChannelMaxDefault {
             allocator.allocate()
         }
     }
@@ -121,7 +121,7 @@ class ChannelAllocationTest: XCTestCase {
         let expectedUniqueUnallocatedCount = channelSets.reduce(0, sumUnallocated)
         let total                          = channelSets.reduce(0, {$0 + $1.count})
 
-        XCTAssertEqual(RMQChannelLimit + expectedUniqueUnallocatedCount, total)
+        XCTAssertEqual(RMQChannelMaxDefault + expectedUniqueUnallocatedCount, total)
     }
 
     func testChannelsAreReleasedWithThreadSafety() {
@@ -135,19 +135,19 @@ class ChannelAllocationTest: XCTestCase {
         allocateAll(allocator!)
 
         queues[0].async(group: group) {
-            for n in 1...RMQChannelLimit {
+            for n in 1...RMQChannelMaxDefault {
                 allocator?.releaseChannelNumber(n as NSNumber)
             }
         }
 
         queues[1].async(group: group) {
-            for n in 1...RMQChannelLimit {
+            for n in 1...RMQChannelMaxDefault {
                 allocator?.releaseChannelNumber(n as NSNumber)
             }
         }
 
         queues[2].async(group: group) {
-            for n in 1...RMQChannelLimit {
+            for n in 1...RMQChannelMaxDefault {
                 allocator?.releaseChannelNumber(n as NSNumber)
             }
         }

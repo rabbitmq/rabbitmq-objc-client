@@ -141,7 +141,7 @@
 }
 
 - (id<RMQChannel>)previouslyReleasedChannel {
-    for (UInt16 i = 1; i < RMQChannelLimit; i++) {
+    for (UInt16 i = 1; i < RMQChannelMaxDefault; i++) {
         if (!self.channels[@(i)]) {
             return [self allocatedChannel:i];
         }
@@ -174,11 +174,11 @@
 }
 
 - (BOOL)atCapacity {
-    return self.channels.count == RMQChannelLimit;
+    return self.channels.count == RMQChannelMaxDefault;
 }
 
 - (BOOL)atMaxIndex {
-    return self.channelNumber == RMQChannelLimit;
+    return self.channelNumber == RMQChannelMaxDefault;
 }
 
 - (RMQGCDSerialQueue *)serialQueue:(UInt16)channelNumber
