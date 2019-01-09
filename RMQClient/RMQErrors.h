@@ -67,6 +67,7 @@ typedef NS_ENUM(NSInteger, RMQError) {
 
     RMQErrorInvalidScheme,
 
-    RMQErrorInvalidPath                 = 402,
-    RMQErrorNotFound                    = 404,
+    RMQErrorInvalidPath        = 402,
+    RMQErrorNotFound           = 404,
+    RMQErrorPreconditionFailed = 406,
 };
