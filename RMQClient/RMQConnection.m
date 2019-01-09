@@ -145,9 +145,12 @@ NSInteger const RMQChannelMaxDefault = 127;
     RMQTCPSocketTransport *transport = [[RMQTCPSocketTransport alloc] initWithHost:rmqURI.host
                                                                               port:rmqURI.portNumber
                                                                         tlsOptions:tlsOptions];
-    RMQMultipleChannelAllocator *allocator = [[RMQMultipleChannelAllocator alloc] initWithChannelSyncTimeout:syncTimeout];
-    RMQQueuingConnectionDelegateProxy *delegateProxy = [[RMQQueuingConnectionDelegateProxy alloc] initWithDelegate:delegate
-                                                                                                             queue:delegateQueue];
+    RMQMultipleChannelAllocator *allocator = [[RMQMultipleChannelAllocator alloc]
+                                                initWithMaxCapacity:[channelMax unsignedIntegerValue]
+                                                channelSyncTimeout:syncTimeout];
+    RMQQueuingConnectionDelegateProxy *delegateProxy = [[RMQQueuingConnectionDelegateProxy alloc]
+                                                            initWithDelegate:delegate
+                                                            queue:delegateQueue];
     RMQSemaphoreWaiterFactory *waiterFactory = [RMQSemaphoreWaiterFactory new];
     RMQGCDHeartbeatSender *heartbeatSender = [[RMQGCDHeartbeatSender alloc] initWithTransport:transport
                                                                                         clock:[RMQTickingClock new]];
@@ -156,7 +159,8 @@ NSInteger const RMQChannelMaxDefault = 127;
 
 
     RMQProcessInfoNameGenerator *nameGenerator = [RMQProcessInfoNameGenerator new];
-    RMQGCDSerialQueue *commandQueue = [[RMQGCDSerialQueue alloc] initWithName:[nameGenerator generateWithPrefix:@"connection-commands"]];
+    RMQGCDSerialQueue *commandQueue = [[RMQGCDSerialQueue alloc]
+                                        initWithName:[nameGenerator generateWithPrefix:@"connection-commands"]];
     RMQConnectionRecover *recovery = [[RMQConnectionRecover alloc] initWithInterval:recoveryInterval
                                                                        attemptLimit:recoveryAttempts
                                                                          onlyErrors:!shouldRecoverFromConnectionClose

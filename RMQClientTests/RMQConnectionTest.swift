@@ -78,7 +78,7 @@ class RMQConnectionTest: XCTestCase {
         let transport = ControlledInteractionTransport()
         transport.stubbedToThrowErrorOnConnect = "bad connection"
         let delegate = ConnectionDelegateSpy()
-        let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
+        let allocator = RMQMultipleChannelAllocator(maxCapacity: 127, channelSyncTimeout: 2)
         let conn = RMQConnection(
             transport: transport,
             config: ConnectionWithFakesHelper.connectionConfig(),
@@ -97,7 +97,7 @@ class RMQConnectionTest: XCTestCase {
 
     func testErrorSentToDelegateOnHandshakeTimeout() {
         let transport = ControlledInteractionTransport()
-        let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 10)
+        let allocator = RMQMultipleChannelAllocator(maxCapacity: 127, channelSyncTimeout: 10)
         let delegate = ConnectionDelegateSpy()
         let q = FakeSerialQueue()
         let conn = RMQConnection(

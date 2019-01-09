@@ -54,7 +54,7 @@ import XCTest
 class FramesetRoutingTest: XCTestCase {
 
     func testConsumerTriggeredWhenCorrectChannelAllocated() {
-        let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
+        let allocator = RMQMultipleChannelAllocator(maxCapacity: 127, channelSyncTimeout: 2)
 
         _ = allocator?.allocate()          // 0
         let ch = allocator?.allocate() // 1

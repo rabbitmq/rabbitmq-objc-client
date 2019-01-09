@@ -54,6 +54,6 @@
 
 @interface RMQMultipleChannelAllocator : NSObject <RMQChannelAllocator, RMQFrameHandler>
 
-- (instancetype)initWithChannelSyncTimeout:(NSNumber *)syncTimeout;
-
+- (instancetype)initWithMaxCapacity:(UInt16)limit
+                 channelSyncTimeout:(NSNumber *)syncTimeout;
 @end

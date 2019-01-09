@@ -61,13 +61,13 @@ class ChannelAllocationTest: XCTestCase {
     }
 
     func testChannelGetsNegativeOneChannelNumberWhenOutOfChannelNumbers() {
-        let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
+        let allocator = RMQMultipleChannelAllocator(maxCapacity: 127, channelSyncTimeout: 2)
         allocateAll(allocator!)
         XCTAssertEqual(-1, allocator?.allocate().channelNumber)
     }
 
     func testChannelGetsAFreedChannelNumberIfOtherwiseOutOfChannelNumbers() {
-        let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
+        let allocator = RMQMultipleChannelAllocator(maxCapacity: 127, channelSyncTimeout: 2)
         allocateAll(allocator!)
         allocator?.releaseChannelNumber(2)
         XCTAssertEqual(2, allocator?.allocate().channelNumber)
@@ -75,7 +75,7 @@ class ChannelAllocationTest: XCTestCase {
     }
 
     func testAllocatedChannelsCanBeRead() {
-        let allocator = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
+        let allocator = RMQMultipleChannelAllocator(maxCapacity: 127, channelSyncTimeout: 2)
         _ = allocator?.allocate()
         _ = allocator?.allocate()
         _ = allocator?.allocate()
@@ -85,7 +85,7 @@ class ChannelAllocationTest: XCTestCase {
     }
 
     func testNumbersAreNotDoubleAllocated() {
-        let allocator   = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
+        let allocator   = RMQMultipleChannelAllocator(maxCapacity: 127, channelSyncTimeout: 2)
         var channelSet1 = Set<NSNumber>()
         var channelSet2 = Set<NSNumber>()
         var channelSet3 = Set<NSNumber>()
@@ -125,7 +125,7 @@ class ChannelAllocationTest: XCTestCase {
     }
 
     func testChannelsAreReleasedWithThreadSafety() {
-        let allocator   = RMQMultipleChannelAllocator(channelSyncTimeout: 2)
+        let allocator   = RMQMultipleChannelAllocator(maxCapacity: 127, channelSyncTimeout: 2)
         let group       = DispatchGroup()
         let queues      = [
             DispatchQueue.global(qos: DispatchQoS.QoSClass.userInteractive),
