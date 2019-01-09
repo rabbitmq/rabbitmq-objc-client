@@ -62,7 +62,7 @@ class ChannelLifecycleIntegrationTest: XCTestCase {
     }
 
     func testOpenAndClosedStateWithBlockingClose() {
-        _ = withChannel { (ch) in
+        _ = IntegrationHelper.withChannel { (ch) in
             XCTAssertTrue(ch.isOpen())
             XCTAssertFalse(ch.isClosed())
 
@@ -74,7 +74,7 @@ class ChannelLifecycleIntegrationTest: XCTestCase {
     }
 
     func testOpenAndClosedStateWithCloseAndBlockingWait() {
-        _ = withChannel { (ch) in
+        _ = IntegrationHelper.withChannel { (ch) in
             XCTAssertTrue(ch.isOpen())
             XCTAssertFalse(ch.isClosed())
 
@@ -88,7 +88,7 @@ class ChannelLifecycleIntegrationTest: XCTestCase {
     }
 
     func testOpenAndClosedStateWithCloseAndCompletionHandler() {
-        _ = withChannel { (ch) in
+        _ = IntegrationHelper.withChannel { (ch) in
             XCTAssertTrue(ch.isOpen())
             XCTAssertFalse(ch.isClosed())
 
@@ -135,16 +135,5 @@ class ChannelLifecycleIntegrationTest: XCTestCase {
         }
 
         conn.blockingClose()
-    }
-
-    fileprivate func withChannel(f: (_ channel: RMQChannel) -> Void) -> RMQChannel {
-        let conn = RMQConnection()
-        conn.start()
-        let ch = conn.createChannel()
-
-        f(ch)
-        conn.blockingClose()
-
-        return ch
     }
 }

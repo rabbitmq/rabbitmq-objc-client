@@ -63,7 +63,7 @@ class ConnectionLifecycleIntegrationTest: XCTestCase {
             semaphore.signal()
         }
 
-        XCTAssertEqual(.success, ConnectionHelper.awaitCompletion(semaphore: semaphore),
+        XCTAssertEqual(.success, IntegrationHelper.awaitCompletion(semaphore: semaphore),
             "Timed out waiting for connection and handshake to complete")
 
         XCTAssert(conn.isOpen())
@@ -80,7 +80,7 @@ class ConnectionLifecycleIntegrationTest: XCTestCase {
         }
 
         XCTAssertEqual(.success,
-                       ConnectionHelper.awaitCompletion(semaphore: semaphore),
+                       IntegrationHelper.awaitCompletion(semaphore: semaphore),
                        "Timed out waiting for connection and handshake to complete")
 
         XCTAssert(conn.isOpen())
@@ -97,7 +97,7 @@ class ConnectionLifecycleIntegrationTest: XCTestCase {
         }
 
         XCTAssertEqual(.success,
-                       ConnectionHelper.awaitCompletion(semaphore: semaphore),
+                       IntegrationHelper.awaitCompletion(semaphore: semaphore),
                        "Timed out waiting for connection and handshake to complete")
 
         XCTAssert(conn.isOpen())
@@ -110,7 +110,7 @@ class ConnectionLifecycleIntegrationTest: XCTestCase {
         conn.start {
             semaphore.signal()
         }
-        XCTAssertEqual(.success, ConnectionHelper.awaitCompletion(semaphore: semaphore),
+        XCTAssertEqual(.success, IntegrationHelper.awaitCompletion(semaphore: semaphore),
                        "Timed out waiting for connection and handshake to complete")
 
         XCTAssertTrue((conn.transport()?.isConnected())!)
@@ -119,8 +119,8 @@ class ConnectionLifecycleIntegrationTest: XCTestCase {
 
         conn.blockingClose()
 
-        XCTAssertTrue(ConnectionHelper.pollUntilTransportDisconnected(conn: conn))
-        XCTAssertTrue(ConnectionHelper.pollUntilDisconnected(conn: conn))
+        XCTAssertTrue(IntegrationHelper.pollUntilTransportDisconnected(conn: conn))
+        XCTAssertTrue(IntegrationHelper.pollUntilDisconnected(conn: conn))
 
         XCTAssertFalse((conn.transport()?.isConnected())!)
         XCTAssertFalse(conn.isOpen())
@@ -133,7 +133,7 @@ class ConnectionLifecycleIntegrationTest: XCTestCase {
         conn.start {
             semaphore.signal()
         }
-        XCTAssertEqual(.success, ConnectionHelper.awaitCompletion(semaphore: semaphore),
+        XCTAssertEqual(.success, IntegrationHelper.awaitCompletion(semaphore: semaphore),
                        "Timed out waiting for connection and handshake to complete")
 
         let props = conn.serverProperties.dictionaryValue

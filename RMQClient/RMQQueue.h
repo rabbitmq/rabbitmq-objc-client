@@ -75,17 +75,18 @@
                      channel:(id <RMQChannel>)channel;
 
 /// @brief Bind this queue to an exchange
-- (void)bind:(RMQExchange *)exchange routingKey:(NSString *)routingKey;
+- (nonnull instancetype)bind:(RMQExchange *)exchange routingKey:(NSString *)routingKey;
 /// @brief Bind this queue to an exchange
-- (void)bind:(RMQExchange *)exchange;
+- (nonnull instancetype)bind:(RMQExchange *)exchange;
 /// @brief Unbind this queue from an exchange
-- (void)unbind:(RMQExchange *)exchange routingKey:(NSString *)routingKey;
+- (nonnull instancetype)unbind:(RMQExchange *)exchange routingKey:(NSString *)routingKey;
 /// @brief Unbind this queue from an exchange
-- (void)unbind:(RMQExchange *)exchange;
+- (nonnull instancetype)unbind:(RMQExchange *)exchange;
 /// @brief Delete this queue
 - (void)delete:(RMQQueueDeleteOptions)options;
 /// @brief Delete this queue
 - (void)delete;
+
 /*!
  * @brief  Publish a message to this queue using the default exchange
  * @return Sequence number corresponding to the numbers passed to RMQChannel#afterConfirmed
@@ -93,6 +94,7 @@
 - (NSNumber *)publish:(NSData *)body
            properties:(NSArray <RMQValue<RMQBasicValue> *> *)properties
               options:(RMQBasicPublishOptions)options;
+
 /*!
  * @brief  Publish a message to this queue using the default exchange
  *         Convenience method for setting persistent property and no other properties.
@@ -101,6 +103,7 @@
 - (NSNumber *)publish:(NSData *)body
            persistent:(BOOL)isPersistent
               options:(RMQBasicPublishOptions)options;
+
 /*!
  * @brief  Publish a message to this queue using the default exchange
  *         Convenience method for setting persistent property and no other properties or options.
@@ -108,25 +111,30 @@
  */
 - (NSNumber *)publish:(NSData *)body
            persistent:(BOOL)isPersistent;
+
 /*!
  * @brief  Publish a message to this queue using the default exchange
  *         Convenience method for publishing without persistence or any other properties / options.
  * @return Sequence number corresponding to the numbers passed to RMQChannel#afterConfirmed
  */
 - (NSNumber *)publish:(NSData *)body;
+
 /// @brief  Perform an RMQChannel#basicGet with the current queue's name.
 - (void)pop:(RMQConsumerDeliveryHandler)handler;
+
 /*!
  * @brief Perform an RMQChannel#basicConsume with the current queue's name.
  *        Pass an RMQConsumer instance to that method to customise cancellation behaviour.
  */
 - (RMQConsumer *)subscribe:(RMQConsumerDeliveryHandler)handler;
+
 /*!
  * @brief Perform an RMQChannel#basicConsume with the current queue's name.
  *        Pass an RMQConsumer instance to that method to customise cancellation behaviour.
  */
 - (RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options
                    handler:(RMQConsumerDeliveryHandler)handler;
+
 /*!
  * @brief Perform an RMQChannel#basicConsume with the current queue's name, options and arguments.
  *        Pass an RMQConsumer instance to that method to customise cancellation behaviour.

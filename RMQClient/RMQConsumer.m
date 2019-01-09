@@ -117,4 +117,12 @@
     self.cancellationHandler();
 }
 
+- (BOOL)usesManualAckMode {
+    return (self.options & RMQBasicConsumeManualAckMode) == RMQBasicConsumeManualAckMode;
+}
+
+- (BOOL)usesAutomaticAckMode {
+    return (self.options & RMQBasicConsumeAutomaticAckMode) == RMQBasicConsumeAutomaticAckMode;
+}
+
 @end

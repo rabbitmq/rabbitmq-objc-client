@@ -160,7 +160,7 @@ class RMQQueueTest: XCTestCase {
         channel.lastReceivedBasicConsumeBlock!(message!)
 
         XCTAssert(handlerCalled)
-        XCTAssertEqual([.noAck], channel.lastReceivedBasicConsumeOptions)
+        XCTAssertEqual([.automaticAckMode], channel.lastReceivedBasicConsumeOptions)
     }
 
     func testSubscribeWithOptionsSendsOptionsToChannel() {

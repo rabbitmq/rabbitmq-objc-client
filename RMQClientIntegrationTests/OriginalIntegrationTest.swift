@@ -184,7 +184,7 @@ class OriginalIntegrationTest: XCTestCase {
 
         var delivered: RMQMessage?
 
-        q.subscribe([.noAck]) { message in
+        q.subscribe([.automaticAckMode]) { message in
             delivered = message
             semaphore.signal()
         }

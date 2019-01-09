@@ -49,43 +49,35 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-class ConnectionHelper {
-    static let defaultUsername = "guest"
-    static let defaultPassword = "guest"
+class IntegrationHelper {
+    static func awaitCompletion(semaphore: DispatchSemaphore) -> DispatchTimeoutResult {
+        return semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(3))
+    }
 
-    static let defaultEndpoint = "amqp://guest:guest@127.0.0.1"
+    static func pollUntilTransportDisconnected(conn: RMQConnection) -> Bool {
+        return TestHelper.pollUntil {
+            if let stillConnected = conn.transport()?.isConnected() {
+                return !stillConnected
+            } else {
+                return false
+            }
+        }
+    }
 
-    static func makeConnection(recoveryInterval
-                               interval: Int = 2,
-                               onlyErrors: Bool = true,
-                               attemptLimit: Int = 1,
-                               transport: RMQTCPSocketTransport,
-                               delegate: RMQConnectionDelegate) -> RMQConnection {
-        let credentials = RMQCredentials(username: defaultUsername, password: defaultPassword)
-        let allocator = RMQMultipleChannelAllocator(maxCapacity: 127, channelSyncTimeout: 10)
-        let heartbeatSender = RMQGCDHeartbeatSender(transport: transport, clock: RMQTickingClock())
-        let commandQueue = RMQGCDSerialQueue(name: "socket-recovery-test-queue")
-        let recovery = RMQConnectionRecover(interval: interval as NSNumber,
-                                            attemptLimit: attemptLimit as NSNumber,
-                                            onlyErrors: onlyErrors,
-                                            heartbeatSender: heartbeatSender,
-                                            command: commandQueue,
-                                            delegate: delegate)
-        let config = RMQConnectionConfig(credentials: credentials,
-                                         channelMax: RMQChannelMaxDefault as NSNumber,
-                                         frameMax: RMQFrameMax as NSNumber,
-                                         heartbeat: 60,
-                                         vhost: "/",
-                                         authMechanism: "PLAIN",
-                                         recovery: recovery!)
-        return RMQConnection(transport: transport,
-                             config: config,
-                             handshakeTimeout: 10,
-                             channelAllocator: allocator!,
-                             frameHandler: allocator!,
-                             delegate: delegate,
-                             command: commandQueue!,
-                             waiterFactory: RMQSemaphoreWaiterFactory(),
-                             heartbeatSender: heartbeatSender!)
+    static func pollUntilDisconnected(conn: RMQConnection) -> Bool {
+        return TestHelper.pollUntil {
+            return conn.isClosed()
+        }
+    }
+
+    static func withChannel(f: (_ channel: RMQChannel) -> Void) -> RMQChannel {
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+
+        f(ch)
+        conn.blockingClose()
+
+        return ch
     }
 }

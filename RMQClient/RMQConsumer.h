@@ -69,6 +69,9 @@
                       queueName:(NSString *)queueName
                         options:(RMQBasicConsumeOptions)options
                       arguments:(RMQTable *)arguments;
+
+- (BOOL)usesManualAckMode;
+- (BOOL)usesAutomaticAckMode;
 - (void)onDelivery:(RMQConsumerDeliveryHandler)handler;
 - (void)onCancellation:(RMQConsumerCancellationHandler)handler;
 - (void)consume:(RMQMessage *)message;

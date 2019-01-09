@@ -76,26 +76,30 @@
     return self;
 }
 
-- (void)bind:(RMQExchange *)source
-  routingKey:(NSString *)routingKey {
+- (nonnull instancetype)bind:(RMQExchange *)source
+                  routingKey:(NSString *)routingKey {
     [self.channel exchangeBind:source.name
                    destination:self.name
                     routingKey:routingKey];
+    return self;
 }
 
-- (void)bind:(RMQExchange *)source {
+- (nonnull instancetype)bind:(RMQExchange *)source {
     [self bind:source routingKey:@""];
+    return self;
 }
 
-- (void)unbind:(RMQExchange *)source
-    routingKey:(NSString *)routingKey {
+- (nonnull instancetype)unbind:(RMQExchange *)source
+                    routingKey:(NSString *)routingKey {
     [self.channel exchangeUnbind:source.name
                      destination:self.name
                       routingKey:routingKey];
+    return self;
 }
 
-- (void)unbind:(RMQExchange *)source {
+- (nonnull instancetype)unbind:(RMQExchange *)source {
     [self unbind:source routingKey:@""];
+    return self;
 }
 
 - (void)delete:(RMQExchangeDeleteOptions)options {

@@ -440,10 +440,10 @@ typedef NS_OPTIONS(NSUInteger, RMQBasicQosOptions) {
 typedef NS_OPTIONS(NSUInteger, RMQBasicConsumeOptions) {
     RMQBasicConsumeNoOptions = 0,
     /// @brief
-    RMQBasicConsumeNoLocal   = 1 << 0,
+    RMQBasicConsumeManualAckMode = 1 << 0,
     /// @brief
-    RMQBasicConsumeNoAck     = 1 << 1,
-    /// @brief Request exclusive consumer access, meaning only this consumer can access the queue.
+    RMQBasicConsumeAutomaticAckMode = 1 << 1,
+    /// @brief Request exclusive consumer access, meaning only this consumer can be registered on the queue at a time.
     RMQBasicConsumeExclusive = 1 << 2,
     /// @brief
     RMQBasicConsumeNoWait    = 1 << 3,

@@ -78,22 +78,26 @@
     return self;
 }
 
-- (void)bind:(RMQExchange *)exchange
-  routingKey:(NSString *)routingKey {
+- (nonnull instancetype)bind:(RMQExchange *)exchange
+                  routingKey:(NSString *)routingKey {
     [self.channel queueBind:self.name exchange:exchange.name routingKey:routingKey];
+    return self;
 }
 
-- (void)bind:(RMQExchange *)exchange {
+- (nonnull instancetype)bind:(RMQExchange *)exchange {
     [self bind:exchange routingKey:@""];
+    return self;
 }
 
-- (void)unbind:(RMQExchange *)exchange
-    routingKey:(NSString *)routingKey {
+- (nonnull instancetype)unbind:(RMQExchange *)exchange
+                    routingKey:(NSString *)routingKey {
     [self.channel queueUnbind:self.name exchange:exchange.name routingKey:routingKey];
+    return self;
 }
 
-- (void)unbind:(RMQExchange *)exchange {
+- (nonnull instancetype)unbind:(RMQExchange *)exchange {
     [self unbind:exchange routingKey:@""];
+    return self;
 }
 
 - (void)delete:(RMQQueueDeleteOptions)options {
@@ -151,7 +155,7 @@
 }
 
 - (RMQConsumer *)subscribe:(RMQConsumerDeliveryHandler)handler {
-    return [self subscribe:RMQBasicConsumeNoAck
+    return [self subscribe:RMQBasicConsumeAutomaticAckMode
                    handler:handler];
 }
 

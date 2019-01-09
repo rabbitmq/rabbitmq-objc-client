@@ -72,13 +72,13 @@
                      channel:(id<RMQChannel>)channel;
 
 /// @brief Bind this exchange to another exchange
-- (void)bind:(RMQExchange *)source routingKey:(NSString *)routingKey;
+- (nonnull instancetype)bind:(RMQExchange *)source routingKey:(NSString *)routingKey;
 /// @brief Bind this exchange to another exchange
-- (void)bind:(RMQExchange *)source;
+- (nonnull instancetype)bind:(RMQExchange *)source;
 /// @brief Unbind this exchange from another exchange
-- (void)unbind:(RMQExchange *)source routingKey:(NSString *)routingKey;
+- (nonnull instancetype)unbind:(RMQExchange *)source routingKey:(NSString *)routingKey;
 /// @brief Unbind this exchange from another exchange
-- (void)unbind:(RMQExchange *)source;
+- (nonnull instancetype)unbind:(RMQExchange *)source;
 /// @brief Delete the exchange
 - (void)delete:(RMQExchangeDeleteOptions)options;
 /// @brief Delete the exchange with no options

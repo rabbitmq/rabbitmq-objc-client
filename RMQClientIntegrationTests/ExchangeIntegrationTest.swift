@@ -54,10 +54,104 @@ import XCTest
 // see https://github.com/rabbitmq/rabbitmq-objc-client/blob/master/CONTRIBUTING.md
 // to set up your system for running integration tests
 class ExchangeIntegrationTest: XCTestCase {
+    func testDefaultExchangeAndImplicitBindingUsingRMQQueueShortcut() {
+        _ = IntegrationHelper.withChannel { ch in
+            let q: RMQQueue = ch.queue("", options: [.exclusive])
+
+            let semaphore = DispatchSemaphore(value: 0)
+            var delivered: RMQMessage?
+
+            q.subscribe([.automaticAckMode]) { message in
+                delivered = message
+                semaphore.signal()
+            }
+
+            let body = "msg".data(using: String.Encoding.utf8)!
+            q.publish(body)
+
+            XCTAssertEqual(.success,
+                           semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
+                           "Timed out waiting for a delivery")
+            XCTAssertEqual(body, delivered!.body)
+        }
+    }
+
     func testDefaultExchangeAndImplicitBinding() {
-        let conn = RMQConnection()
-        conn.start()
-        let ch = conn.createChannel()
-        ch.close()
+        _ = IntegrationHelper.withChannel { ch in
+            let q: RMQQueue = ch.queue("", options: [.exclusive])
+
+            let semaphore = DispatchSemaphore(value: 0)
+            var delivered: RMQMessage?
+
+            q.subscribe([.automaticAckMode]) { message in
+                delivered = message
+                semaphore.signal()
+            }
+
+            let body = "msg".data(using: String.Encoding.utf8)!
+            ch.defaultExchange().publish(body, routingKey: q.name!)
+
+            XCTAssertEqual(.success,
+                           semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
+                           "Timed out waiting for a delivery")
+            XCTAssertEqual(body, delivered!.body)
+        }
+    }
+
+    func testFanoutExchange() {
+        _ = IntegrationHelper.withChannel { ch in
+            let x = ch.fanout("objc.tests.fanout", options: [])
+
+            let semaphore = DispatchSemaphore(value: 0)
+            var delivered: RMQMessage?
+
+            ch.queue("", options: [.exclusive])
+              .bind(x)
+              .subscribe([.automaticAckMode]) { message in
+                    delivered = message
+                    semaphore.signal()
+            }
+
+            let body = "msg".data(using: String.Encoding.utf8)!
+            x.publish(body)
+
+            XCTAssertEqual(.success,
+                           semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
+                           "Timed out waiting for a delivery")
+            XCTAssertEqual(body, delivered!.body)
+
+            x.delete()
+        }
+    }
+
+    func testExchangeToExchangeBindingWithFanouts() {
+        _ = IntegrationHelper.withChannel { ch in
+            let x1 = ch.fanout("objc.tests.fanout1", options: [])
+            let x2 = ch.fanout("objc.tests.fanout2", options: [])
+
+            // x1 is the source
+            x2.bind(x1)
+
+            let semaphore = DispatchSemaphore(value: 0)
+            var delivered: RMQMessage?
+
+            ch.queue("", options: [.exclusive])
+                .bind(x2)
+                .subscribe([.automaticAckMode]) { message in
+                    delivered = message
+                    semaphore.signal()
+            }
+
+            let body = "msg".data(using: String.Encoding.utf8)!
+            x1.publish(body)
+
+            XCTAssertEqual(.success,
+                           semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
+                           "Timed out waiting for a delivery")
+            XCTAssertEqual(body, delivered!.body)
+
+            x1.delete()
+            x2.delete()
+        }
     }
 }
