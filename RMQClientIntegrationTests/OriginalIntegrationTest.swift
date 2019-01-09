@@ -55,7 +55,7 @@ import XCTest
 // to set up your system for running integration tests
 //
 // swiftlint:disable function_body_length
-class OriginalIntegrationTests: XCTestCase {
+class OriginalIntegrationTest: XCTestCase {
     let plainEndpoint = ConnectionHelper.defaultEndpoint
 
     func testBasicGet() {

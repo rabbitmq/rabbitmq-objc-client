@@ -53,7 +53,7 @@ import XCTest
 
 // see https://github.com/rabbitmq/rabbitmq-objc-client/blob/master/CONTRIBUTING.md
 // to set up your system for running integration tests
-class ConnectionLifecycleIntegrationTests: XCTestCase {
+class ConnectionLifecycleIntegrationTest: XCTestCase {
     let endpoint = ConnectionHelper.defaultEndpoint
 
     func testConnectingWithAllDefaults() {
