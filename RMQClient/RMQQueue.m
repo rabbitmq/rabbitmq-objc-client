@@ -147,21 +147,21 @@
          completionHandler:handler];
 }
 
-- (RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options
-                   handler:(RMQConsumerDeliveryHandler)handler {
+- (nonnull RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options
+                           handler:(RMQConsumerDeliveryHandler)handler {
     return [self.channel basicConsume:self.name
                               options:options
                               handler:handler];
 }
 
-- (RMQConsumer *)subscribe:(RMQConsumerDeliveryHandler)handler {
+- (nonnull RMQConsumer *)subscribe:(RMQConsumerDeliveryHandler)handler {
     return [self subscribe:RMQBasicConsumeAutomaticAckMode
                    handler:handler];
 }
 
-- (RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options
-                 arguments:(RMQTable *)arguments
-                   handler:(RMQConsumerDeliveryHandler)handler {
+- (nonnull RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options
+                         arguments:(RMQTable *)arguments
+                           handler:(RMQConsumerDeliveryHandler)handler {
     return [self.channel basicConsume:self.name
                               options:options
                             arguments:arguments

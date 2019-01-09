@@ -186,11 +186,10 @@ class RMQQueueTest: XCTestCase {
         let queue = QueueHelper.makeQueue(channel, name: "cancelling")
 
         let consumer = queue.subscribe({ _ in })
-        XCTAssertNotNil(consumer?.tag)
+        XCTAssertNotNil(consumer.tag)
 
-        consumer?.cancel()
-
-        XCTAssertEqual(consumer?.tag, channel.lastReceivedBasicCancelConsumerTag)
+        consumer.cancel()
+        XCTAssertEqual(consumer.tag, channel.lastReceivedBasicCancelConsumerTag)
     }
 
     func testBindCallsBindOnChannel() {

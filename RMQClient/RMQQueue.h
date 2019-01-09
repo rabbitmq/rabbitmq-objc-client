@@ -126,20 +126,20 @@
  * @brief Perform an RMQChannel#basicConsume with the current queue's name.
  *        Pass an RMQConsumer instance to that method to customise cancellation behaviour.
  */
-- (RMQConsumer *)subscribe:(RMQConsumerDeliveryHandler)handler;
+- (nonnull RMQConsumer *)subscribe:(RMQConsumerDeliveryHandler)handler;
 
 /*!
  * @brief Perform an RMQChannel#basicConsume with the current queue's name.
  *        Pass an RMQConsumer instance to that method to customise cancellation behaviour.
  */
-- (RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options
-                   handler:(RMQConsumerDeliveryHandler)handler;
+- (nonnull RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options
+                           handler:(RMQConsumerDeliveryHandler)handler;
 
 /*!
  * @brief Perform an RMQChannel#basicConsume with the current queue's name, options and arguments.
  *        Pass an RMQConsumer instance to that method to customise cancellation behaviour.
  */
-- (RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options
-                 arguments:(RMQTable *)arguments
-                   handler:(RMQConsumerDeliveryHandler)handler;
+- (nonnull RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options
+                         arguments:(RMQTable *)arguments
+                           handler:(RMQConsumerDeliveryHandler)handler;
 @end

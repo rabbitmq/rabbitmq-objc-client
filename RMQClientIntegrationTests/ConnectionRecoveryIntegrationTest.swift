@@ -125,7 +125,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
                        "Didn't receive acks or nacks for publications")
 
         // test recovery of queue arguments - in this case, x-max-length
-        consumer!.cancel()
+        consumer.cancel()
         q.publish("4".data(using: String.Encoding.utf8))
         q.publish("5".data(using: String.Encoding.utf8))
         q.publish("6".data(using: String.Encoding.utf8))
