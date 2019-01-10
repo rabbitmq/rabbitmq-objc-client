@@ -57,7 +57,7 @@ enum RecoveryTestError: Error {
 
 // swiftlint:disable function_body_length
 class ConnectionRecoveryIntegrationTest: XCTestCase {
-    let plainEndpoint = ConnectionHelper.defaultEndpoint
+    let plainEndpoint = IntegrationHelper.defaultEndpoint
     let httpAPIClient = RMQHTTP.withTestEndpoint()
 
     func testRecoversFromSocketDisconnect() {

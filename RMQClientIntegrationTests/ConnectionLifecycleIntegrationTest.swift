@@ -54,7 +54,7 @@ import XCTest
 // see https://github.com/rabbitmq/rabbitmq-objc-client/blob/master/CONTRIBUTING.md
 // to set up your system for running integration tests
 class ConnectionLifecycleIntegrationTest: XCTestCase {
-    let endpoint = ConnectionHelper.defaultEndpoint
+    let endpoint = IntegrationHelper.defaultEndpoint
 
     func testConnectingWithAllDefaults() {
         let semaphore = DispatchSemaphore(value: 0)
@@ -73,7 +73,7 @@ class ConnectionLifecycleIntegrationTest: XCTestCase {
     func testConnectingWithAURI() {
         let semaphore = DispatchSemaphore(value: 0)
         let delegate = RMQConnectionDelegateLogger()
-        let conn = RMQConnection(uri: ConnectionHelper.defaultEndpoint,
+        let conn = RMQConnection(uri: IntegrationHelper.defaultEndpoint,
                                  delegate: delegate)
         conn.start {
             semaphore.signal()

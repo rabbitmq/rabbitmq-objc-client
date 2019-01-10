@@ -56,7 +56,7 @@ import XCTest
 //
 // swiftlint:disable function_body_length
 class OriginalIntegrationTest: XCTestCase {
-    let plainEndpoint = ConnectionHelper.defaultEndpoint
+    let plainEndpoint = IntegrationHelper.defaultEndpoint
 
     func testBasicGet() {
         let frameMaxRequiringTwoFrames = 4096

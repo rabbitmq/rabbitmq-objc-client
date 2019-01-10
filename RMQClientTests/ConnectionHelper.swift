@@ -53,8 +53,6 @@ class ConnectionHelper {
     static let defaultUsername = "guest"
     static let defaultPassword = "guest"
 
-    static let defaultEndpoint = "amqp://guest:guest@127.0.0.1"
-
     static func makeConnection(recoveryInterval
                                interval: Int = 2,
                                onlyErrors: Bool = true,

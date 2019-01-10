@@ -50,6 +50,8 @@
 // ---------------------------------------------------------------------------
 
 class IntegrationHelper {
+    static let defaultEndpoint = "amqp://guest:guest@127.0.0.1"
+
     static func awaitCompletion(semaphore: DispatchSemaphore) -> DispatchTimeoutResult {
         return semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(3))
     }
