@@ -155,7 +155,7 @@ class OriginalIntegrationTest: XCTestCase {
 
         var delivered: RMQMessage?
 
-        q.subscribe(RMQBasicConsumeOptions()) { message in
+        q.subscribe([.manualAckMode]) { message in
             delivered = message
             ch.ack(message.deliveryTag)
             semaphore.signal()
@@ -245,33 +245,6 @@ class OriginalIntegrationTest: XCTestCase {
 
         let missingDefaultsCount = 2
         XCTAssertEqual(props.count + missingDefaultsCount, delivered!.properties.count)
-    }
-
-    func testRejectAndRequeueCausesSecondDelivery() {
-        let conn = RMQConnection(uri: plainEndpoint, delegate: nil, recoverAfter: 0)
-        conn.start()
-        defer { conn.blockingClose() }
-
-        let ch = conn.createChannel()
-        let q = ch.queue("", options: [.autoDelete, .exclusive])
-        let semaphore = DispatchSemaphore(value: 0)
-
-        var isRejected = false
-
-        q.subscribe(RMQBasicConsumeOptions()) { message in
-            if isRejected {
-                semaphore.signal()
-            } else {
-                isRejected = true
-                ch.reject(message.deliveryTag, options: [.requeue])
-            }
-        }
-
-        ch.defaultExchange().publish("my message".data(using: String.Encoding.utf8), routingKey: q.name)
-
-        XCTAssertEqual(.success,
-                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
-                       "Timed out waiting for second delivery")
     }
 
     func testMultipleConsumersOnSameChannel() {

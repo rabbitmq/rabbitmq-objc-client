@@ -56,7 +56,7 @@ import XCTest
 class QueueIntegrationTest: XCTestCase {
     func testQueueAndConsumerDSLAutomaticAcknowledgementMode() {
         _ = IntegrationHelper.withChannel { ch in
-            let x = ch.fanout("objc.tests.fanout", options: [])
+            let x = ch.fanout("objc.tests.fanouts.testQueueAndConsumerDSLAutomaticAcknowledgementMode", options: [])
 
             let cons = ch.queue("", options: [.exclusive])
                 .bind(x)
@@ -72,7 +72,7 @@ class QueueIntegrationTest: XCTestCase {
 
     func testQueueAndConsumerDSLManualAcknowledgementMode() {
         _ = IntegrationHelper.withChannel { ch in
-            let x = ch.fanout("objc.tests.fanout", options: [])
+            let x = ch.fanout("objc.tests.fanouts.testQueueAndConsumerDSLManualAcknowledgementMode", options: [])
 
             let cons = ch.queue("", options: [.exclusive])
                 .bind(x)
@@ -88,7 +88,7 @@ class QueueIntegrationTest: XCTestCase {
 
     func testQueueAndConsumerDSLExclusiveConsumerWithAutomaticAcknowledgementMode() {
         _ = IntegrationHelper.withChannel { ch in
-            let x = ch.fanout("objc.tests.fanout", options: [])
+            let x = ch.fanout("objc.tests.fanouts.testQueueAndConsumerDSLExclusiveConsumer", options: [])
 
             let cons = ch.queue("", options: [.exclusive])
                 .bind(x)
@@ -99,6 +99,154 @@ class QueueIntegrationTest: XCTestCase {
             XCTAssertTrue(cons.isExclusive())
 
             x.delete()
+        }
+    }
+
+    func testManualAcknowledgementOfASingleDelivery() {
+        _ = IntegrationHelper.withChannel { ch in
+            let x = ch.fanout("objc.tests.fanouts.testManualAcknowledgementOfASingleDelivery", options: [])
+
+            let semaphore = DispatchSemaphore(value: 0)
+            var delivered: RMQMessage?
+
+            let cons = ch.queue("", options: [.exclusive])
+                .bind(x)
+                .subscribe([.manualAckMode]) { message in
+                    delivered = message
+                    ch.ack(message.deliveryTag)
+                    semaphore.signal()
+            }
+
+            let body = "msg".data(using: String.Encoding.utf8)!
+            x.publish(body)
+
+            XCTAssertEqual(.success,
+                           semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
+                           "Timed out waiting for a delivery")
+            XCTAssertEqual(body, delivered!.body)
+            XCTAssertEqual(delivered!.consumerTag, cons.tag)
+            XCTAssertEqual(delivered!.deliveryTag, 1)
+            XCTAssertFalse(delivered!.isRedelivered)
+
+            x.delete()
+        }
+    }
+
+    func testManualAcknowledgementOfMultipleDeliveries() {
+        _ = IntegrationHelper.withChannel { ch in
+            let x = ch.fanout("objc.tests.fanouts.testManualAcknowledgementOfMultipleDeliveries", options: [])
+
+            let semaphore = DispatchSemaphore(value: 0)
+            let total = 100
+            let counter = AtomicInteger(value: 0)
+
+            ch.queue("", options: [.exclusive])
+                .bind(x)
+                .subscribe([.manualAckMode]) { message in
+                    if counter.value >= total {
+                        ch.ack(message.deliveryTag, options: [.multiple])
+                        semaphore.signal()
+                    } else {
+                        _ = counter.incrementAndGet()
+                    }
+            }
+
+            let body = "msg".data(using: String.Encoding.utf8)!
+            for _ in (0...total) {
+                x.publish(body)
+            }
+
+            XCTAssertEqual(.success,
+                           semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
+                           "Timed out waiting for acks")
+
+            x.delete()
+        }
+    }
+
+    func testNegativeAcknowledgementOfMultipleDeliveries() {
+        _ = IntegrationHelper.withChannel { ch in
+            let semaphore = DispatchSemaphore(value: 0)
+            let total = 100
+            let counter = AtomicInteger(value: 0)
+
+            let q = ch.queue("", options: [.exclusive])
+            q.subscribe([.manualAckMode]) { message in
+                    if counter.value >= total {
+                        ch.nack(message.deliveryTag, options: [.multiple])
+                        semaphore.signal()
+                    } else {
+                        _ = counter.incrementAndGet()
+                    }
+            }
+
+            let body = "msg".data(using: String.Encoding.utf8)!
+            for _ in (0...total) {
+                ch.defaultExchange().publish(body, routingKey: q.name!)
+            }
+
+            XCTAssertEqual(.success,
+                           semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
+                           "Timed out waiting for acks")
+        }
+    }
+
+    func testNegativeAcknowledgementWithRequeueingRedelivers() {
+        _ = IntegrationHelper.withChannel { ch in
+            let q = ch.queue("", options: [.autoDelete, .exclusive])
+            let semaphore = DispatchSemaphore(value: 0)
+
+            var isRejected = false
+            q.subscribe([.manualAckMode]) { message in
+                if isRejected {
+                    semaphore.signal()
+                } else {
+                    ch.reject(message.deliveryTag, options: [.requeue])
+                    isRejected = true
+                }
+            }
+
+            ch.defaultExchange().publish("msg".data(using: String.Encoding.utf8), routingKey: q.name)
+
+            XCTAssertEqual(.success,
+                           semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
+                           "Timed out waiting for a redelivery")
+        }
+    }
+
+    func testNegativeAcknowledgementWithRequeueingRedeliversToADifferentConsumer() {
+        _ = IntegrationHelper.withChannel { ch in
+            let q = ch.queue("", options: [.autoDelete, .exclusive])
+            let semaphore = DispatchSemaphore(value: 0)
+            let counter = AtomicInteger(value: 0)
+            var activeTags: [String] = []
+            var delivered: RMQMessage?
+
+            let handler: RMQConsumerDeliveryHandler = { (message: RMQMessage) -> Void in
+                if counter.value < 10 {
+                    activeTags.append(message.consumerTag)
+                    ch.nack(message.deliveryTag, options: [.requeue])
+                    _ = counter.incrementAndGet()
+                } else {
+                    delivered = message
+                    semaphore.signal()
+                }
+            }
+
+            // 3 competing consumers
+            let cons1 = q.subscribe([.manualAckMode], handler: handler)
+            let cons2 = q.subscribe([.manualAckMode], handler: handler)
+            let cons3 = q.subscribe([.manualAckMode], handler: handler)
+
+            ch.defaultExchange().publish("msg".data(using: String.Encoding.utf8), routingKey: q.name)
+
+            XCTAssertEqual(.success,
+                           semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
+                           "Timed out waiting for N redeliveries")
+            XCTAssertTrue(activeTags.contains(cons1.tag))
+            XCTAssertTrue(activeTags.contains(cons2.tag))
+            XCTAssertTrue(activeTags.contains(cons3.tag))
+            XCTAssertTrue(delivered!.isRedelivered)
         }
     }
 }
