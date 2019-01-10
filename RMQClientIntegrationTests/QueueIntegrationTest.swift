@@ -249,4 +249,24 @@ class QueueIntegrationTest: XCTestCase {
             XCTAssertTrue(delivered!.isRedelivered)
         }
     }
+
+    func testQueueDeletion() {
+        _ = IntegrationHelper.withChannel { ch in
+            let q = ch.queue("", options: [.autoDelete, .exclusive])
+            q.delete()
+            // TODO: check for qeueue existence with a predicate
+            //       we're yet to add
+        }
+    }
+
+    func testQueueDeletionWithOptions() {
+        _ = IntegrationHelper.withChannel { ch in
+            let q = ch.queue("", options: [.autoDelete, .exclusive])
+            q.delete([.ifEmpty])
+            // queue deletion is idempotent
+            q.delete([.ifUnused])
+            // TODO: check for qeueue existence with a predicate
+            //       we're yet to add
+        }
+    }
 }
