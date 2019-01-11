@@ -173,7 +173,7 @@ class QueueIntegrationTest: XCTestCase {
         }
 
         let body = "msg".data(using: String.Encoding.utf8)!
-        for _ in (0...total) {
+        for _ in (0...(total + 10)) {
             x.publish(body)
         }
 
