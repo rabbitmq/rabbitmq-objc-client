@@ -143,8 +143,6 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         XCTAssertEqual("5".data(using: String.Encoding.utf8), messagesPostCancel[0].body)
         XCTAssertEqual("6".data(using: String.Encoding.utf8), messagesPostCancel[1].body)
         XCTAssertEqual("7".data(using: String.Encoding.utf8), messagesPostCancel[2].body)
-
-
     }
 
     func testReenablesConsumersOnEachRecoveryFromConnectionClose() {
