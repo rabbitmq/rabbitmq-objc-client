@@ -17,7 +17,7 @@ tests_iOS: test_dependencies
 		-project RMQClient.xcodeproj \
 		-scheme RMQClient \
 		-destination 'platform=iOS Simulator,name=iPhone XR,OS=$(iOS_VERSION)' | \
-		xcpretty --test
+		xcpretty
 
 tests_MacOS: test_dependencies
 	set -o pipefail && \
@@ -25,7 +25,7 @@ tests_MacOS: test_dependencies
 		-project RMQClient.xcodeproj \
 		-scheme RMQClient \
 		-destination 'platform=OS X,arch=x86_64' | \
-		xcpretty --test
+		xcpretty
 
 test_dependencies: bootstrap
 	gem list -i xcpretty || gem install xcpretty
