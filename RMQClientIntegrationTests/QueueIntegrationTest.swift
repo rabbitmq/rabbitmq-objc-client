@@ -63,7 +63,7 @@ class QueueIntegrationTest: XCTestCase {
 
         let cons = ch.queue("", options: [.exclusive])
             .bind(x)
-            .subscribe([.automaticAckMode]) { _ in
+            .subscribe(withAckMode: [.auto]) { _ in
                 // no-op
         }
         XCTAssertTrue(cons.usesAutomaticAckMode())
@@ -84,7 +84,7 @@ class QueueIntegrationTest: XCTestCase {
         let cons = ch.queue("objc.tests.queueAndConsumerDSLManualAckMode",
                             options: [.exclusive])
             .bind(x)
-            .subscribe([.manualAckMode]) { _ in
+            .subscribe(withAckMode: [.manual]) { _ in
                 // no-op
         }
         XCTAssertFalse(cons.usesAutomaticAckMode())
@@ -104,7 +104,8 @@ class QueueIntegrationTest: XCTestCase {
         let cons = ch.queue("objc.tests.queueAndConsumerDSLExclusiveConsumerWithAutomaticAckMode",
                             options: [.exclusive])
             .bind(x)
-            .subscribe([.automaticAckMode, .exclusive]) { _ in
+            // no manual acks
+            .subscribe([.exclusive, .noAck]) { _ in
                 // no-op
         }
         XCTAssertTrue(cons.usesAutomaticAckMode())
@@ -127,7 +128,7 @@ class QueueIntegrationTest: XCTestCase {
 
         let cons = ch.queue("", options: [.exclusive])
             .bind(x)
-            .subscribe([.manualAckMode]) { message in
+            .subscribe(withAckMode: [.manual]) { message in
                 delivered = message
                 ch.ack(message.deliveryTag)
                 semaphore.signal()
@@ -162,7 +163,7 @@ class QueueIntegrationTest: XCTestCase {
 
         ch.queue("", options: [.exclusive])
             .bind(x)
-            .subscribe([.manualAckMode]) { message in
+            .subscribe(withAckMode: [.manual]) { message in
                 if counter.value >= total {
                     ch.ack(message.deliveryTag, options: [.multiple])
                     semaphore.signal()
@@ -194,7 +195,7 @@ class QueueIntegrationTest: XCTestCase {
         let counter = AtomicInteger(value: 0)
 
         let q = ch.queue("", options: [.exclusive])
-        q.subscribe([.manualAckMode]) { message in
+        q.subscribe(withAckMode: [.manual]) { message in
             if counter.value >= total {
                 ch.nack(message.deliveryTag, options: [.multiple])
                 semaphore.signal()
@@ -223,7 +224,7 @@ class QueueIntegrationTest: XCTestCase {
         let semaphore = DispatchSemaphore(value: 0)
 
         var isRejected = false
-        q.subscribe([.manualAckMode]) { message in
+        q.subscribe(withAckMode: [.manual]) { message in
             if isRejected {
                 semaphore.signal()
             } else {
@@ -262,10 +263,10 @@ class QueueIntegrationTest: XCTestCase {
             }
         }
 
-        // 3 competing consumers
-        let cons1 = q.subscribe([.manualAckMode], handler: handler)
-        let cons2 = q.subscribe([.manualAckMode], handler: handler)
-        let cons3 = q.subscribe([.manualAckMode], handler: handler)
+        // 3 competing consumers in manual acknowledgement mode
+        let cons1 = q.subscribe(handler: handler)
+        let cons2 = q.subscribe(handler: handler)
+        let cons3 = q.subscribe(handler: handler)
 
         ch.defaultExchange().publish("msg".data(using: String.Encoding.utf8), routingKey: q.name)
 

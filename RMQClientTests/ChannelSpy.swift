@@ -239,6 +239,18 @@
         lastReceivedQueueUnbindRoutingKey = routingKey
     }
 
+    func basicConsume(_ queueName: String, acknowledgementMode: RMQBasicConsumeAcknowledgementMode,
+                      handler: @escaping RMQConsumerDeliveryHandler) -> RMQConsumer {
+        let options = RMQBasicConsumeAcknowledgementModeToOptions(acknowledgementMode)
+        return basicConsume(queueName, options: options, handler: handler)
+    }
+
+    func basicConsume(_ queueName: String, acknowledgementMode: RMQBasicConsumeAcknowledgementMode,
+                      arguments: RMQTable, handler: @escaping RMQConsumerDeliveryHandler) -> RMQConsumer {
+        let options = RMQBasicConsumeAcknowledgementModeToOptions(acknowledgementMode)
+        return basicConsume(queueName, options: options, arguments: arguments, handler: handler)
+    }
+
     func basicConsume(_ queueName: String, options: RMQBasicConsumeOptions,
                       handler: @escaping RMQConsumerDeliveryHandler) -> RMQConsumer {
         lastReceivedBasicConsumeOptions = options

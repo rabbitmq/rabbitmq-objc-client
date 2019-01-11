@@ -247,6 +247,20 @@
                                                   @"routing-key": routingKey}];
 }
 
+#pragma mark Register a consumer
+
+- (RMQConsumer *)basicConsume:(NSString *)queueName
+          acknowledgementMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode
+                      handler:(RMQConsumerDeliveryHandler)handler {
+    RMQBasicConsumeOptions options = RMQBasicConsumeAcknowledgementModeToOptions(acknowledgementMode);
+    RMQConsumer *consumer = [[RMQConsumer alloc] initWithChannel:self
+                                                       queueName:queueName
+                                                         options:options];
+    [consumer onDelivery:handler];
+    [self basicConsume:consumer];
+    return consumer;
+}
+
 - (RMQConsumer *)basicConsume:(NSString *)queueName
                       options:(RMQBasicConsumeOptions)options
                       handler:(RMQConsumerDeliveryHandler)handler {
@@ -281,6 +295,19 @@
                   }];
 }
 
+- (RMQConsumer *)basicConsume:(NSString *)queueName
+                      acknowledgementMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode
+                    arguments:(RMQTable *)arguments
+                      handler:(RMQConsumerDeliveryHandler)handler {
+    RMQBasicConsumeOptions options = RMQBasicConsumeAcknowledgementModeToOptions(acknowledgementMode);
+    RMQConsumer *consumer = [[RMQConsumer alloc] initWithChannel:self
+                                                       queueName:queueName
+                                                         options:options
+                                                       arguments:arguments];
+    [consumer onDelivery:handler];
+    [self basicConsume:consumer];
+    return consumer;
+}
 
 
 - (NSString *)generateConsumerTag {

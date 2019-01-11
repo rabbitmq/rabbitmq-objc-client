@@ -51,6 +51,7 @@
 
 #import <Foundation/Foundation.h>
 #import "RMQMethods.h"
+#import "RMQMethods+Convenience.h"
 #import "RMQMessage.h"
 #import "RMQExchange.h"
 #import "RMQConsumer.h"
@@ -129,23 +130,52 @@
 - (void)pop:(RMQConsumerDeliveryHandler)handler;
 
 /*!
- * @brief Perform an RMQChannel#basicConsume with the current queue's name.
- *        Pass an RMQConsumer instance to that method to customise cancellation behaviour.
+ * @brief Registers a consumer on this queue using the manual acknowledgement mode.
+ *        Returns an RMQConsumer instance that can be used to cancel the consumer.
  */
 - (nonnull RMQConsumer *)subscribe:(RMQConsumerDeliveryHandler)handler;
 
 /*!
- * @brief Perform an RMQChannel#basicConsume with the current queue's name.
- *        Pass an RMQConsumer instance to that method to customise cancellation behaviour.
+ * @brief Register a consumer on this queue using the provided options
+ *        Returns an RMQConsumer instance that can be used to cancel the consumer.
  */
 - (nonnull RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options
                            handler:(RMQConsumerDeliveryHandler)handler;
 
 /*!
  * @brief Perform an RMQChannel#basicConsume with the current queue's name, options and arguments.
- *        Pass an RMQConsumer instance to that method to customise cancellation behaviour.
+ *        Returns an RMQConsumer instance that can be used to cancel the consumer.
  */
 - (nonnull RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options
                          arguments:(RMQTable *)arguments
                            handler:(RMQConsumerDeliveryHandler)handler;
+
+/*!
+ * @brief Perform an RMQChannel#basicConsume with the current queue's name
+ *        and using the automatic acknowledgement mode.
+ *        Returns an RMQConsumer instance that can be used to cancel the consumer.
+ */
+- (nonnull RMQConsumer *)subscribeAutoAcks:(RMQConsumerDeliveryHandler)handler;
+
+/*!
+ * @brief Perform an RMQChannel#basicConsume with the current queue's name
+ *        and using the manual acknowledgement mode.
+ *        Returns an RMQConsumer instance that can be used to cancel the consumer.
+ */
+- (nonnull RMQConsumer *)subscribeManualAcks:(RMQConsumerDeliveryHandler)handler;
+
+/*!
+ * @brief Perform an RMQChannel#basicConsume with the current queue's name.
+ *        Returns an RMQConsumer instance that can be used to cancel the consumer.
+ */
+- (nonnull RMQConsumer *)subscribeWithAckMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode
+                                      handler:(RMQConsumerDeliveryHandler)handler;
+
+/*!
+ * @brief Perform an RMQChannel#basicConsume with the current queue's name, options and arguments.
+ *        Returns an RMQConsumer instance that can be used to cancel the consumer.
+ */
+- (nonnull RMQConsumer *)subscribeWithAckMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode
+                                    arguments:(RMQTable *)arguments
+                                      handler:(RMQConsumerDeliveryHandler)handler;
 @end

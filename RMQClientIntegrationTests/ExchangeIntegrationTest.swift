@@ -63,7 +63,7 @@ class ExchangeIntegrationTest: XCTestCase {
         let semaphore = DispatchSemaphore(value: 0)
         var delivered: RMQMessage?
 
-        q.subscribe([.automaticAckMode]) { message in
+        q.subscribe(withAckMode: [.auto]) { message in
             delivered = message
             semaphore.signal()
         }
@@ -87,7 +87,7 @@ class ExchangeIntegrationTest: XCTestCase {
         let semaphore = DispatchSemaphore(value: 0)
         var delivered: RMQMessage?
 
-        q.subscribe([.automaticAckMode]) { message in
+        q.subscribe(withAckMode: [.auto]) { message in
             delivered = message
             semaphore.signal()
         }
@@ -113,7 +113,7 @@ class ExchangeIntegrationTest: XCTestCase {
 
         ch.queue("", options: [.exclusive])
             .bind(x)
-            .subscribe([.automaticAckMode]) { message in
+            .subscribe(withAckMode: [.auto]) { message in
                 delivered = message
                 semaphore.signal()
         }
@@ -146,7 +146,7 @@ class ExchangeIntegrationTest: XCTestCase {
 
         ch.queue("", options: [.exclusive])
             .bind(x2)
-            .subscribe([.automaticAckMode]) { message in
+            .subscribeAutoAcks { message in
                 delivered = message
                 semaphore.signal()
         }

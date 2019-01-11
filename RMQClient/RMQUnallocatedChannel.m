@@ -118,6 +118,13 @@
 }
 
 - (RMQConsumer *)basicConsume:(NSString *)queueName
+          acknowledgementMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode
+                      handler:(RMQConsumerDeliveryHandler)handler {
+    [self err];
+    return nil;
+}
+
+- (RMQConsumer *)basicConsume:(NSString *)queueName
                       options:(RMQBasicConsumeOptions)options
                       handler:(RMQConsumerDeliveryHandler)handler {
     [self basicConsume:[[RMQConsumer alloc] initWithChannel:self queueName:queueName options:options]];
@@ -136,6 +143,14 @@
                               options:(RMQBasicConsumeOptions)options
                             arguments:(RMQTable * _Nonnull)arguments
                               handler:(RMQConsumerDeliveryHandler _Nonnull)handler {
+    [self err];
+    return nil;
+}
+
+- (RMQConsumer *)basicConsume:(NSString *)queueName
+          acknowledgementMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode
+                    arguments:(RMQTable *)arguments
+                      handler:(RMQConsumerDeliveryHandler)handler {
     [self err];
     return nil;
 }

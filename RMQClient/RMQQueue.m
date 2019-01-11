@@ -149,10 +149,42 @@
     return [self publish:body persistent:NO];
 }
 
+#pragma mark basic.get
+
 - (void)pop:(RMQConsumerDeliveryHandler)handler {
     [self.channel basicGet:self.name
                    options:RMQBasicGetNoOptions
          completionHandler:handler];
+}
+
+#pragma mark Register a consumer
+
+- (nonnull RMQConsumer *)subscribeAutoAcks:(RMQConsumerDeliveryHandler)handler {
+    return [self.channel basicConsume:self.name
+                  acknowledgementMode:RMQBasicConsumeAcknowledgementModeAuto
+                              handler:handler];
+}
+
+- (nonnull RMQConsumer *)subscribeManualAcks:(RMQConsumerDeliveryHandler)handler {
+    return [self.channel basicConsume:self.name
+                  acknowledgementMode:RMQBasicConsumeAcknowledgementModeManual
+                              handler:handler];
+}
+
+- (nonnull RMQConsumer *)subscribeWithAckMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode
+                                      handler:(RMQConsumerDeliveryHandler)handler {
+    return [self.channel basicConsume:self.name
+                  acknowledgementMode:acknowledgementMode
+                              handler:handler];
+}
+
+- (nonnull RMQConsumer *)subscribeWithAckMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode
+                                    arguments:(RMQTable *)arguments
+                                      handler:(RMQConsumerDeliveryHandler)handler {
+    return [self.channel basicConsume:self.name
+                  acknowledgementMode:acknowledgementMode
+                            arguments:arguments
+                              handler:handler];
 }
 
 - (nonnull RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options
@@ -163,7 +195,7 @@
 }
 
 - (nonnull RMQConsumer *)subscribe:(RMQConsumerDeliveryHandler)handler {
-    return [self subscribe:RMQBasicConsumeAutomaticAckMode
+    return [self subscribe:RMQBasicConsumeNoAck
                    handler:handler];
 }
 

@@ -51,6 +51,7 @@
 
 #import "RMQConsumer.h"
 #import "RMQChannel.h"
+#import "RMQMethods+Convenience.h"
 
 @interface RMQConsumer ()
 @property (nonatomic, readwrite) NSString *queueName;
@@ -118,11 +119,11 @@
 }
 
 - (BOOL)usesManualAckMode {
-    return (self.options & RMQBasicConsumeManualAckMode) == RMQBasicConsumeManualAckMode;
+    return ![self usesAutomaticAckMode];
 }
 
 - (BOOL)usesAutomaticAckMode {
-    return (self.options & RMQBasicConsumeAutomaticAckMode) == RMQBasicConsumeAutomaticAckMode;
+    return (self.options & RMQBasicConsumeNoAck) == RMQBasicConsumeNoAck;
 }
 
 - (BOOL)isExclusive {

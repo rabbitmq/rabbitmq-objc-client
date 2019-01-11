@@ -51,6 +51,15 @@
 
 #import "RMQMethods.h"
 
+typedef NS_OPTIONS(NSUInteger, RMQBasicConsumeAcknowledgementMode) {
+    /// @brief
+    RMQBasicConsumeAcknowledgementModeManual = 1 << 0,
+    /// @brief
+    RMQBasicConsumeAcknowledgementModeAuto   = 1 << 1
+};
+
+RMQBasicConsumeOptions RMQBasicConsumeAcknowledgementModeToOptions(RMQBasicConsumeAcknowledgementMode mode);
+
 @interface RMQBasicConsume (Convenience)
 
 - (instancetype)initWithQueue:(NSString *)queueName
@@ -59,9 +68,17 @@
 
 - (instancetype)initWithQueue:(NSString *)queueName
                   consumerTag:(NSString *)consumerTag
+          acknowledgementMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode;
+
+- (instancetype)initWithQueue:(NSString *)queueName
+                  consumerTag:(NSString *)consumerTag
                       options:(RMQBasicConsumeOptions)options
                       arguments:(RMQTable *)arguments;
 
+- (instancetype)initWithQueue:(NSString *)queueName
+                  consumerTag:(NSString *)consumerTag
+          acknowledgementMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode
+                    arguments:(RMQTable *)arguments;
 @end
 
 @interface RMQBasicQos (Convenience)

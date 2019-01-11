@@ -51,6 +51,7 @@
 
 #import <Foundation/Foundation.h>
 #import "RMQMethods.h"
+#import "RMQMethods+Convenience.h"
 #import "RMQExchange.h"
 #import "RMQFrameHandler.h"
 #import "RMQQueue.h"
@@ -183,6 +184,16 @@ typedef void (^RMQChannelCompletionHandler)(void);
            exchange:(nonnull NSString *)exchangeName
          routingKey:(nonnull NSString *)routingKey;
 
+#pragma mark Register a consumer
+
+/*!
+ * @brief Consume messages from a queue
+ * @see RMQQueue's subscribe method (which has variants with defaults)
+ */
+- (nonnull RMQConsumer *)basicConsume:(nonnull NSString *)queueName
+                  acknowledgementMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode
+                              handler:(RMQConsumerDeliveryHandler _Nonnull)handler;
+
 /*!
  * @brief Consume messages from a queue
  * @see RMQQueue's subscribe method (which has variants with defaults)
@@ -195,6 +206,15 @@ typedef void (^RMQChannelCompletionHandler)(void);
  * @see RMQQueue's subscribe method (which has variants with defaults)
  */
 - (void)basicConsume:(nonnull RMQConsumer *)consumer;
+
+/*!
+ * @brief Consume messages from a queue
+ * @see RMQQueue's subscribe method (which has variants with defaults)
+ */
+- (nonnull RMQConsumer *)basicConsume:(nonnull NSString *)queueName
+                              acknowledgementMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode
+                            arguments:(RMQTable * _Nonnull)arguments
+                              handler:(RMQConsumerDeliveryHandler _Nonnull)handler;
 
 /*!
  * @brief Consume messages from a queue

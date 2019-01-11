@@ -51,6 +51,14 @@
 
 #import "RMQMethods+Convenience.h"
 
+RMQBasicConsumeOptions RMQBasicConsumeAcknowledgementModeToOptions(RMQBasicConsumeAcknowledgementMode mode) {
+    if ((mode & RMQBasicConsumeAcknowledgementModeAuto) == RMQBasicConsumeAcknowledgementModeAuto) {
+        return RMQBasicConsumeNoAck;
+    } else {
+        return RMQBasicConsumeNoOptions;
+    };
+}
+
 @implementation RMQBasicConsume (Convenience)
 
 - (instancetype)initWithQueue:(NSString *)queueName
@@ -71,6 +79,27 @@
                              queue:[[RMQShortstr alloc] init:queueName]
                        consumerTag:[[RMQShortstr alloc] init:consumerTag]
                            options:options
+                         arguments:arguments];
+}
+
+- (instancetype)initWithQueue:(NSString *)queueName
+                  consumerTag:(NSString *)consumerTag
+          acknowledgementMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode {
+
+
+    return [self initWithQueue:queueName
+                   consumerTag:consumerTag
+                       options:RMQBasicConsumeAcknowledgementModeToOptions(acknowledgementMode)];
+}
+
+- (instancetype)initWithQueue:(NSString *)queueName
+                  consumerTag:(NSString *)consumerTag
+          acknowledgementMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode
+                    arguments:(RMQTable *)arguments{
+    return [self initWithReserved1:[[RMQShort alloc] init:0]
+                             queue:[[RMQShortstr alloc] init:queueName]
+                       consumerTag:[[RMQShortstr alloc] init:consumerTag]
+                           options:RMQBasicConsumeAcknowledgementModeToOptions(acknowledgementMode)
                          arguments:arguments];
 }
 
