@@ -1,4 +1,4 @@
-tests: tests_iOS tests_OSX
+tests: tests_iOS tests_MacOS
 
 iOS_VERSION := 12.1
 
