@@ -82,6 +82,12 @@
 - (nonnull instancetype)unbind:(RMQExchange *)exchange routingKey:(NSString *)routingKey;
 /// @brief Unbind this queue from an exchange
 - (nonnull instancetype)unbind:(RMQExchange *)exchange;
+
+/// @brief Purges this queue
+- (void)purge:(RMQQueuePurgeOptions)options;
+/// @brief Purges this queue
+- (void)purge;
+
 /// @brief Delete this queue
 - (void)delete:(RMQQueueDeleteOptions)options;
 /// @brief Delete this queue

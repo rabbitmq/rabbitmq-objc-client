@@ -100,6 +100,14 @@
     return self;
 }
 
+- (void)purge:(RMQQueuePurgeOptions)options {
+    [self.channel queuePurge:self.name options:options];
+}
+
+- (void)purge {
+    [self purge:RMQQueuePurgeNoOptions];
+}
+
 - (void)delete:(RMQQueueDeleteOptions)options {
     [self.channel queueDelete:self.name options:options];
 }

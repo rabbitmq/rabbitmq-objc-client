@@ -214,6 +214,12 @@
     return [self queue:queueName options:RMQQueueDeclareNoOptions];
 }
 
+- (void)queuePurge:(NSString *)queueName
+           options:(RMQQueuePurgeOptions)options {
+    [self.dispatcher sendSyncMethod:[[RMQQueuePurge alloc] initWithQueue:queueName
+                                                                 options:options]];
+}
+
 - (void)queueDelete:(NSString *)queueName
             options:(RMQQueueDeleteOptions)options {
     [self.queues removeObjectForKey:queueName];

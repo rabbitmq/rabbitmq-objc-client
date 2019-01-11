@@ -186,6 +186,11 @@ completionHandler:(RMQConsumerDeliveryHandler)completionHandler {
     return [self queue:queueName options:RMQQueueDeclareNoOptions];
 }
 
+- (void)queuePurge:(NSString *)queueName
+           options:(RMQQueuePurgeOptions)options {
+    [self err];
+}
+
 - (void)queueDelete:(NSString *)queueName
             options:(RMQQueueDeleteOptions)options {
     [self err];

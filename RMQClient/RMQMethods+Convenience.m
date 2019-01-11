@@ -192,6 +192,17 @@
 
 @end
 
+@implementation RMQQueuePurge (Convenience)
+
+- (instancetype)initWithQueue:(NSString *)queueName
+                      options:(RMQQueuePurgeOptions)options {
+    return [self initWithReserved1:[[RMQShort alloc] init:0]
+                             queue:[[RMQShortstr alloc] init:queueName]
+                           options:options];
+}
+
+@end
+
 @implementation RMQQueueDelete (Convenience)
 
 - (instancetype)initWithQueue:(NSString *)queueName

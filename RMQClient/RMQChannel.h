@@ -165,6 +165,10 @@ typedef void (^RMQChannelCompletionHandler)(void);
  */
 - (nonnull RMQQueue *)queue:(nonnull NSString *)queueName;
 
+/// @brief Purge a queue
+- (void)queuePurge:(nonnull NSString *)queueName
+           options:(RMQQueuePurgeOptions)options;
+
 /// @brief Delete a queue
 - (void)queueDelete:(nonnull NSString *)queueName
             options:(RMQQueueDeleteOptions)options;

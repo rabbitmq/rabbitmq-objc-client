@@ -120,6 +120,13 @@
 
 @end
 
+@interface RMQQueuePurge (Convenience)
+
+- (instancetype)initWithQueue:(NSString *)queueName
+                      options:(RMQQueuePurgeOptions)options;
+
+@end
+
 @interface RMQQueueDelete (Convenience)
 
 - (instancetype)initWithQueue:(NSString *)queueName
