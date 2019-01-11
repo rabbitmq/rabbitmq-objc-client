@@ -177,7 +177,8 @@ class QueueIntegrationTest: XCTestCase {
             }
         }
 
-        ch.defaultExchange().publish("msg".data(using: String.Encoding.utf8), routingKey: q.name)
+        ch.defaultExchange().publish("msg".data(using: String.Encoding.utf8)!,
+                                     routingKey: q.name)
 
         XCTAssertEqual(.success,
                        semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
@@ -211,7 +212,8 @@ class QueueIntegrationTest: XCTestCase {
         let cons2 = q.subscribe(handler: handler)
         let cons3 = q.subscribe(handler: handler)
 
-        ch.defaultExchange().publish("msg".data(using: String.Encoding.utf8), routingKey: q.name)
+        ch.defaultExchange().publish("!msg".data(using: String.Encoding.utf8)!,
+                                     routingKey: q.name)
 
         XCTAssertEqual(.success,
                        semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
@@ -304,7 +306,7 @@ class QueueIntegrationTest: XCTestCase {
             RMQBasicCorrelationId("r-1"),
             RMQBasicMessageId("m-1")
         ]
-        q.publish("a message".data(using: String.Encoding.utf8),
+        q.publish("a message".data(using: String.Encoding.utf8)!,
                   properties: (props as! [RMQValue & RMQBasicValue]), options: [])
 
         XCTAssertEqual(.success,
@@ -376,7 +378,7 @@ class QueueIntegrationTest: XCTestCase {
         let producingQueue = producingChannel.queue(consumingQueue.name, options: [.autoDelete, .exclusive])
 
         for _ in 1...messageCount {
-            producingQueue.publish("hello".data(using: String.Encoding.utf8))
+            producingQueue.publish("h!ello".data(using: String.Encoding.utf8)!)
         }
 
         XCTAssertEqual(.success,
@@ -423,7 +425,7 @@ class QueueIntegrationTest: XCTestCase {
         }
 
         for _ in 1...messageCount {
-            producingQueue.publish("hello".data(using: String.Encoding.utf8))
+            producingQueue.publish("hello".data(using: String.Encoding.utf8)!)
         }
 
         XCTAssertEqual(

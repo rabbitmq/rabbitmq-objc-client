@@ -70,8 +70,8 @@ class ChannelIntegrationTest: XCTestCase {
         var acked: Set<NSNumber> = []
         var nacked: Set<NSNumber> = []
 
-        ch.defaultExchange().publish("message a".data(using: String.Encoding.utf8), routingKey: qName)
-        ch.defaultExchange().publish("message b".data(using: String.Encoding.utf8), routingKey: qName)
+        ch.defaultExchange().publish("message a".data(using: String.Encoding.utf8)!, routingKey: qName)
+        ch.defaultExchange().publish("message b".data(using: String.Encoding.utf8)!, routingKey: qName)
 
         ch.afterConfirmed { (acks, nacks) in
             print("Received all outstanding confirms")

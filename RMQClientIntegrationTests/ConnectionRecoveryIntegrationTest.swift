@@ -93,7 +93,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
 
         ch.confirmSelect()
 
-        ex1.publish("before close".data(using: String.Encoding.utf8))
+        ex1.publish("before close".data(using: String.Encoding.utf8)!)
         XCTAssertEqual(.success, consumerSemaphore.wait(timeout: TestHelper.dispatchTimeFromNow(semaphoreTimeout)),
                        "Timed out waiting for message")
 
@@ -102,9 +102,9 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         XCTAssert(TestHelper.pollUntil(recoveryTimeout) { delegate.recoveredConnection != nil },
                   "Didn't finish recovery")
 
-        q.publish("after close 1".data(using: String.Encoding.utf8))
+        q.publish("after close 1".data(using: String.Encoding.utf8)!)
         _ = consumerSemaphore.wait(timeout: TestHelper.dispatchTimeFromNow(semaphoreTimeout))
-        ex1.publish("after close 2".data(using: String.Encoding.utf8))
+        ex1.publish("after close 2".data(using: String.Encoding.utf8)!)
         _ = consumerSemaphore.wait(timeout: TestHelper.dispatchTimeFromNow(semaphoreTimeout))
 
         var acks: Set<NSNumber>?
@@ -126,10 +126,10 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
 
         // test recovery of queue arguments - in this case, x-max-length
         consumer.cancel()
-        q.publish("4".data(using: String.Encoding.utf8))
-        q.publish("5".data(using: String.Encoding.utf8))
-        q.publish("6".data(using: String.Encoding.utf8))
-        q.publish("7".data(using: String.Encoding.utf8))
+        q.publish("4".data(using: String.Encoding.utf8)!)
+        q.publish("5".data(using: String.Encoding.utf8)!)
+        q.publish("6".data(using: String.Encoding.utf8)!)
+        q.publish("7".data(using: String.Encoding.utf8)!)
 
         var messagesPostCancel: [RMQMessage] = []
         q.subscribe(handler: { m in
@@ -177,7 +177,7 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
             semaphore.signal()
         })
 
-        ex.publish("before close".data(using: String.Encoding.utf8))
+        ex.publish("before close".data(using: String.Encoding.utf8)!)
         XCTAssertEqual(.success, semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(semaphoreTimeout)),
                        "Timed out waiting for message")
 
@@ -186,9 +186,9 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         XCTAssert(TestHelper.pollUntil(30) { self.connections().count >= 1 },
                   "Didn't finish recovery the first time")
 
-        q.publish("after close 1".data(using: String.Encoding.utf8))
+        q.publish("after close 1".data(using: String.Encoding.utf8)!)
         _ = semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(semaphoreTimeout))
-        ex.publish("after close 2".data(using: String.Encoding.utf8))
+        ex.publish("after close 2".data(using: String.Encoding.utf8)!)
         _ = semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(semaphoreTimeout))
 
         XCTAssertEqual("before close".data(using: String.Encoding.utf8), messages[0].body)
@@ -200,9 +200,9 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         XCTAssert(TestHelper.pollUntil(30) { self.connections().count >= 1 },
                   "Didn't finish recovery the second time")
 
-        q.publish("after close 3".data(using: String.Encoding.utf8))
+        q.publish("after close 3".data(using: String.Encoding.utf8)!)
         _ = semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(semaphoreTimeout))
-        ex.publish("after close 4".data(using: String.Encoding.utf8))
+        ex.publish("after close 4".data(using: String.Encoding.utf8)!)
         _ = semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(semaphoreTimeout))
 
         XCTAssertEqual("before close".data(using: String.Encoding.utf8), messages[0].body)

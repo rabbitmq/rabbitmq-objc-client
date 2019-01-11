@@ -110,7 +110,7 @@ class RMQExchangeTest: XCTestCase {
             BasicPropertyFixtures.exhaustiveHeaders()
         ]
 
-        _ = ex?.publish("{\"a\": \"message\"}".data(using: String.Encoding.utf8),
+        _ = ex?.publish("{\"a\": \"message\"}".data(using: String.Encoding.utf8)!,
                         routingKey: "some.queue",
                         properties: (properties as! [RMQValue & RMQBasicValue]),
                         options: [.mandatory])
@@ -150,15 +150,15 @@ class RMQExchangeTest: XCTestCase {
 
     func testBindCallsBindOnChannel() {
         let ch = ChannelSpy(channelNumber: 1)
-        let ex1 = RMQExchange(name: "ex1", type: "direct", options: [], channel: ch)
-        let ex2 = RMQExchange(name: "ex2", type: "direct", options: [], channel: ch)
+        let ex1 = RMQExchange(name: "ex1", type: "direct", options: [], channel: ch)!
+        let ex2 = RMQExchange(name: "ex2", type: "direct", options: [], channel: ch)!
 
-        ex1?.bind(ex2)
+        ex1.bind(ex2)
         XCTAssertEqual("ex1", ch.lastReceivedExchangeBindDestinationName)
         XCTAssertEqual("ex2", ch.lastReceivedExchangeBindSourceName)
         XCTAssertEqual("", ch.lastReceivedExchangeBindRoutingKey)
 
-        ex1?.bind(ex2, routingKey: "foo")
+        ex1.bind(ex2, routingKey: "foo")
         XCTAssertEqual("ex1", ch.lastReceivedExchangeBindDestinationName)
         XCTAssertEqual("ex2", ch.lastReceivedExchangeBindSourceName)
         XCTAssertEqual("foo", ch.lastReceivedExchangeBindRoutingKey)
@@ -166,15 +166,15 @@ class RMQExchangeTest: XCTestCase {
 
     func testUnbindCallsUnbindOnChannel() {
         let ch = ChannelSpy(channelNumber: 1)
-        let ex1 = RMQExchange(name: "ex1", type: "direct", options: [], channel: ch)
-        let ex2 = RMQExchange(name: "ex2", type: "direct", options: [], channel: ch)
+        let ex1 = RMQExchange(name: "ex1", type: "direct", options: [], channel: ch)!
+        let ex2 = RMQExchange(name: "ex2", type: "direct", options: [], channel: ch)!
 
-        ex1?.unbind(ex2)
+        ex1.unbind(ex2)
         XCTAssertEqual("ex1", ch.lastReceivedExchangeUnbindDestinationName)
         XCTAssertEqual("ex2", ch.lastReceivedExchangeUnbindSourceName)
         XCTAssertEqual("", ch.lastReceivedExchangeUnbindRoutingKey)
 
-        ex1?.unbind(ex2, routingKey: "foo")
+        ex1.unbind(ex2, routingKey: "foo")
         XCTAssertEqual("ex1", ch.lastReceivedExchangeUnbindDestinationName)
         XCTAssertEqual("ex2", ch.lastReceivedExchangeUnbindSourceName)
         XCTAssertEqual("foo", ch.lastReceivedExchangeUnbindRoutingKey)

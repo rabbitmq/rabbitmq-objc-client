@@ -102,7 +102,7 @@ class RMQQueueTest: XCTestCase {
             BasicPropertyFixtures.exhaustiveHeaders()
         ]
 
-        queue.publish("{\"a\": \"message\"}".data(using: String.Encoding.utf8),
+        queue.publish("{\"a\": \"message\"}".data(using: String.Encoding.utf8)!,
                       properties: (properties as! [RMQValue & RMQBasicValue]),
                       options: [.mandatory])
 
@@ -194,7 +194,7 @@ class RMQQueueTest: XCTestCase {
 
     func testBindCallsBindOnChannel() {
         let channel = ChannelSpy(channelNumber: 123)
-        let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)
+        let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)!
         let queue = QueueHelper.makeQueue(channel, name: "bindy")
 
         queue.bind(ex, routingKey: "foo")
@@ -206,7 +206,7 @@ class RMQQueueTest: XCTestCase {
 
     func testBindWithoutRoutingKeySendsEmptyStringRoutingKey() {
         let channel = ChannelSpy(channelNumber: 123)
-        let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)
+        let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)!
         let queue = QueueHelper.makeQueue(channel, name: "bindy")
 
         queue.bind(ex)
@@ -218,7 +218,7 @@ class RMQQueueTest: XCTestCase {
 
     func testUnbindCallsUnbindOnChannel() {
         let channel = ChannelSpy(channelNumber: 123)
-        let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)
+        let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)!
         let queue = QueueHelper.makeQueue(channel, name: "unbindy")
 
         queue.unbind(ex, routingKey: "foo")
@@ -230,7 +230,7 @@ class RMQQueueTest: XCTestCase {
 
     func testUnbindWithoutRoutingKeySendsEmptyStringRoutingKey() {
         let channel = ChannelSpy(channelNumber: 123)
-        let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)
+        let ex = RMQExchange(name: "my-exchange", type: "direct", options: [], channel: channel)!
         let queue = QueueHelper.makeQueue(channel, name: "unbindy")
 
         queue.unbind(ex)

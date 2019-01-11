@@ -76,13 +76,15 @@
                      channel:(id <RMQChannel>)channel;
 
 /// @brief Bind this queue to an exchange
-- (nonnull instancetype)bind:(RMQExchange *)exchange routingKey:(NSString *)routingKey;
+- (nonnull instancetype)bind:(nonnull RMQExchange *)exchange
+                  routingKey:(NSString *)routingKey;
 /// @brief Bind this queue to an exchange
-- (nonnull instancetype)bind:(RMQExchange *)exchange;
+- (nonnull instancetype)bind:(nonnull RMQExchange *)exchange;
 /// @brief Unbind this queue from an exchange
-- (nonnull instancetype)unbind:(RMQExchange *)exchange routingKey:(NSString *)routingKey;
+- (nonnull instancetype)unbind:(nonnull RMQExchange *)exchange
+                    routingKey:(NSString *)routingKey;
 /// @brief Unbind this queue from an exchange
-- (nonnull instancetype)unbind:(RMQExchange *)exchange;
+- (nonnull instancetype)unbind:(nonnull RMQExchange *)exchange;
 
 /// @brief Purges this queue
 - (void)purge:(RMQQueuePurgeOptions)options;
@@ -98,16 +100,16 @@
  * @brief  Publish a message to this queue using the default exchange
  * @return Sequence number corresponding to the numbers passed to RMQChannel#afterConfirmed
  */
-- (NSNumber *)publish:(NSData *)body
-           properties:(NSArray <RMQValue<RMQBasicValue> *> *)properties
-              options:(RMQBasicPublishOptions)options;
+- (nonnull NSNumber *)publish:(nonnull NSData *)body
+                   properties:(NSArray <RMQValue<RMQBasicValue> *> *)properties
+                      options:(RMQBasicPublishOptions)options;
 
 /*!
  * @brief  Publish a message to this queue using the default exchange
  *         Convenience method for setting persistent property and no other properties.
  * @return Sequence number corresponding to the numbers passed to RMQChannel#afterConfirmed
  */
-- (NSNumber *)publish:(NSData *)body
+- (nonnull NSNumber *)publish:(nonnull NSData *)body
            persistent:(BOOL)isPersistent
               options:(RMQBasicPublishOptions)options;
 
@@ -116,15 +118,15 @@
  *         Convenience method for setting persistent property and no other properties or options.
  * @return Sequence number corresponding to the numbers passed to RMQChannel#afterConfirmed
  */
-- (NSNumber *)publish:(NSData *)body
-           persistent:(BOOL)isPersistent;
+- (nonnull NSNumber *)publish:(nonnull NSData *)body
+                   persistent:(BOOL)isPersistent;
 
 /*!
  * @brief  Publish a message to this queue using the default exchange
  *         Convenience method for publishing without persistence or any other properties / options.
  * @return Sequence number corresponding to the numbers passed to RMQChannel#afterConfirmed
  */
-- (NSNumber *)publish:(NSData *)body;
+- (nonnull NSNumber *)publish:(nonnull NSData *)body;
 
 /// @brief  Perform an RMQChannel#basicGet with the current queue's name.
 - (void)pop:(RMQConsumerDeliveryHandler)handler;
@@ -176,6 +178,6 @@
  *        Returns an RMQConsumer instance that can be used to cancel the consumer.
  */
 - (nonnull RMQConsumer *)subscribeWithAckMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode
-                                    arguments:(RMQTable *)arguments
+                                    arguments:(nonnull RMQTable *)arguments
                                       handler:(RMQConsumerDeliveryHandler)handler;
 @end
