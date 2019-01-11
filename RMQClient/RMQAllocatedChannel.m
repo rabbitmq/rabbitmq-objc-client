@@ -289,14 +289,14 @@
     [self.dispatcher sendSyncMethod:[[RMQBasicConsume alloc] initWithQueue:consumer.queueName
                                                                consumerTag:consumer.tag
                                                                    options:consumer.options
-                                                                   arguments:consumer.arguments]
+                                                                 arguments:consumer.arguments]
                   completionHandler:^(RMQFrameset *frameset) {
                       self.consumers[consumer.tag] = consumer;
                   }];
 }
 
 - (RMQConsumer *)basicConsume:(NSString *)queueName
-                      acknowledgementMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode
+          acknowledgementMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode
                     arguments:(RMQTable *)arguments
                       handler:(RMQConsumerDeliveryHandler)handler {
     RMQBasicConsumeOptions options = RMQBasicConsumeAcknowledgementModeToOptions(acknowledgementMode);
