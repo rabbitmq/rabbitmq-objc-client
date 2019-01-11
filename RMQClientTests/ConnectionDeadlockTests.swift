@@ -52,10 +52,8 @@
 import XCTest
 
 class ConnectionDeadlockTests: XCTestCase {
-
     func testCallingCloseWhileDisconnected() {
-
-        let expection = expectation(description: "Should not encounter deadlock.")
+        let shouldNotHappen = expectation(description: "Should not run into deadlock.")
 
         DispatchQueue(label: "test.queue").async {
             /// a server endpoint that's assumed to be unavailable
@@ -66,7 +64,7 @@ class ConnectionDeadlockTests: XCTestCase {
 
             /// will be reached if blockingClose above doesn't
             /// run into a deadlock
-            expection.fulfill()
+            shouldNotHappen.fulfill()
         }
 
         waitForExpectations(timeout: 60) { (error) in
