@@ -66,17 +66,21 @@ class GenerateMethods
   def generate_header
     xml.xpath("//method").reduce(header) { |acc, method|
       class_name = objc_class_name(method)
+
       protocols = ["RMQMethod"]
-      bits, fields, max_bit_length = bits_and_fields(method)
+      bits, fields, max_bit_length = bits_and_fields(class_name, method)
       constructor = constructor(fields)
-      acc + template('methods_header_template').result(binding)
+
+      header = template('methods_header_template').result(binding)
+
+      acc + header
     }
   end
 
   def generate_implementation
     xml.xpath("//method").reduce(implementation) { |acc, method|
-      _, fields = bits_and_fields(method)
       class_name = objc_class_name(method)
+      _, fields = bits_and_fields(class_name, method)
       class_id = method.xpath('..').first[:index]
       method_id = method[:index]
       response_name = objc_response_name(method)
@@ -117,18 +121,20 @@ class GenerateMethods
     OBJC
   end
 
-  def bits_and_fields(method)
+  def bits_and_fields(class_name, method)
     original_fields =
       camelized_fields(method.xpath('field')).
-      reject {|f| blacklisted_bitfields.include?([method.parent[:name], method[:name], f[:name]])}
-    bits = original_fields.select {|f| f[:type] == "RMQBit"}
+      reject { |f| blacklisted_bitfields.include?([method.parent[:name], method[:name], f[:name]]) }
+    bits = original_fields.select { |f| f[:type] == "RMQBit" }
     type = objc_class_name(method) + "Options"
+
     bit_name_lengths = ["nooptions".length] + bits.map {|b| b[:name].length}
+
     max_bit_length = bit_name_lengths.max
     [
-      bits.map {|bit| bit.merge(name: bit[:name].camelize.ljust(max_bit_length))},
+      bits.map { |bit| bit.merge(name: bit[:name].camelize.ljust(max_bit_length)) },
       collapse_bits_into_options(original_fields, type),
-      max_bit_length,
+      max_bit_length
     ]
   end
 
