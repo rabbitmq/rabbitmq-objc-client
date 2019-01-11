@@ -75,6 +75,9 @@
     var lastReceivedQueueUnbindExchange: String?
     var lastReceivedQueueUnbindRoutingKey: String?
 
+    var lastReceivedQueuePurgeQueueName: String?
+    var lastReceivedQueuePurgeOptions: RMQQueuePurgeOptions?
+
     var lastReceivedQueueDeleteQueueName: String?
     var lastReceivedQueueDeleteOptions: RMQQueueDeleteOptions?
 
@@ -212,6 +215,11 @@
             messageCount: stubbedMessageCount,
             consumerCount: stubbedConsumerCount
         )
+    }
+
+    func queuePurge(_ queueName: String, options: RMQQueuePurgeOptions = []) {
+        lastReceivedQueuePurgeQueueName = queueName
+        lastReceivedQueuePurgeOptions = options
     }
 
     func queueDelete(_ queueName: String, options: RMQQueueDeleteOptions) {

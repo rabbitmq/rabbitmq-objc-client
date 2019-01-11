@@ -55,218 +55,266 @@ import XCTest
 // to set up your system for running integration tests
 class QueueIntegrationTest: XCTestCase {
     func testQueueAndConsumerDSLAutomaticAcknowledgementMode() {
-        _ = IntegrationHelper.withChannel { ch in
-            let x = ch.fanout("objc.tests.fanouts.testQueueAndConsumerDSLAutomaticAcknowledgementMode", options: [])
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+        let x  = ch.fanout("objc.tests.fanouts.testQueueAndConsumerDSLAutomaticAcknowledgementMode",
+                           options: [])
 
-            let cons = ch.queue("", options: [.exclusive])
-                .bind(x)
-                .subscribe([.automaticAckMode]) { _ in
-                    // no-op
-            }
-            XCTAssertTrue(cons.usesAutomaticAckMode())
-            XCTAssertFalse(cons.usesManualAckMode())
-
-            x.delete()
+        let cons = ch.queue("", options: [.exclusive])
+            .bind(x)
+            .subscribe([.automaticAckMode]) { _ in
+                // no-op
         }
+        XCTAssertTrue(cons.usesAutomaticAckMode())
+        XCTAssertFalse(cons.usesManualAckMode())
+
+        x.delete()
+        ch.blockingClose()
+        conn.blockingClose()
     }
 
     func testQueueAndConsumerDSLManualAcknowledgementMode() {
-        _ = IntegrationHelper.withChannel { ch in
-            let x = ch.fanout("objc.tests.fanouts.testQueueAndConsumerDSLManualAcknowledgementMode", options: [])
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+        let x = ch.fanout("objc.tests.fanouts.testQueueAndConsumerDSLManualAcknowledgementMode",
+                          options: [])
 
-            let cons = ch.queue("", options: [.exclusive])
-                .bind(x)
-                .subscribe([.manualAckMode]) { _ in
-                    // no-op
-            }
-            XCTAssertFalse(cons.usesAutomaticAckMode())
-            XCTAssertTrue(cons.usesManualAckMode())
-
-            x.delete()
+        let cons = ch.queue("objc.tests.queueAndConsumerDSLManualAckMode",
+                            options: [.exclusive])
+            .bind(x)
+            .subscribe([.manualAckMode]) { _ in
+                // no-op
         }
+        XCTAssertFalse(cons.usesAutomaticAckMode())
+        XCTAssertTrue(cons.usesManualAckMode())
+
+        x.delete()
+        ch.blockingClose()
+        conn.blockingClose()
     }
 
     func testQueueAndConsumerDSLExclusiveConsumerWithAutomaticAcknowledgementMode() {
-        _ = IntegrationHelper.withChannel { ch in
-            let x = ch.fanout("objc.tests.fanouts.testQueueAndConsumerDSLExclusiveConsumer", options: [])
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+        let x = ch.fanout("objc.tests.fanouts.testQueueAndConsumerDSLExclusiveConsumer", options: [])
 
-            let cons = ch.queue("", options: [.exclusive])
-                .bind(x)
-                .subscribe([.automaticAckMode, .exclusive]) { _ in
-                    // no-op
-            }
-            XCTAssertTrue(cons.usesAutomaticAckMode())
-            XCTAssertTrue(cons.isExclusive())
-
-            x.delete()
+        let cons = ch.queue("objc.tests.queueAndConsumerDSLExclusiveConsumerWithAutomaticAckMode",
+                            options: [.exclusive])
+            .bind(x)
+            .subscribe([.automaticAckMode, .exclusive]) { _ in
+                // no-op
         }
+        XCTAssertTrue(cons.usesAutomaticAckMode())
+        XCTAssertTrue(cons.isExclusive())
+
+        x.delete()
+        ch.blockingClose()
+        conn.blockingClose()
     }
 
     func testManualAcknowledgementOfASingleDelivery() {
-        _ = IntegrationHelper.withChannel { ch in
-            let x = ch.fanout("objc.tests.fanouts.testManualAcknowledgementOfASingleDelivery", options: [])
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+        let x = ch.fanout("objc.tests.fanouts.testManualAcknowledgementOfASingleDelivery",
+                          options: [])
 
-            let semaphore = DispatchSemaphore(value: 0)
-            var delivered: RMQMessage?
+        let semaphore = DispatchSemaphore(value: 0)
+        var delivered: RMQMessage?
 
-            let cons = ch.queue("", options: [.exclusive])
-                .bind(x)
-                .subscribe([.manualAckMode]) { message in
-                    delivered = message
-                    ch.ack(message.deliveryTag)
-                    semaphore.signal()
-            }
-
-            let body = "msg".data(using: String.Encoding.utf8)!
-            x.publish(body)
-
-            XCTAssertEqual(.success,
-                           semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
-                           "Timed out waiting for a delivery")
-            XCTAssertEqual(body, delivered!.body)
-            XCTAssertEqual(delivered!.consumerTag, cons.tag)
-            XCTAssertEqual(delivered!.deliveryTag, 1)
-            XCTAssertFalse(delivered!.isRedelivered)
-
-            x.delete()
+        let cons = ch.queue("", options: [.exclusive])
+            .bind(x)
+            .subscribe([.manualAckMode]) { message in
+                delivered = message
+                ch.ack(message.deliveryTag)
+                semaphore.signal()
         }
+
+        let body = "msg".data(using: String.Encoding.utf8)!
+        x.publish(body)
+
+        XCTAssertEqual(.success,
+                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(8)),
+                       "Timed out waiting for a delivery")
+        XCTAssertEqual(body, delivered!.body)
+        XCTAssertEqual(delivered!.consumerTag, cons.tag)
+        XCTAssertEqual(delivered!.deliveryTag, 1)
+        XCTAssertFalse(delivered!.isRedelivered)
+
+        x.delete()
+        ch.blockingClose()
+        conn.blockingClose()
     }
 
     func testManualAcknowledgementOfMultipleDeliveries() {
-        _ = IntegrationHelper.withChannel { ch in
-            let x = ch.fanout("objc.tests.fanouts.testManualAcknowledgementOfMultipleDeliveries", options: [])
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+        let x = ch.fanout("objc.tests.fanouts.testManualAcknowledgementOfMultipleDeliveries",
+                          options: [])
 
-            let semaphore = DispatchSemaphore(value: 0)
-            let total = 100
-            let counter = AtomicInteger(value: 0)
+        let semaphore = DispatchSemaphore(value: 0)
+        let total = 100
+        let counter = AtomicInteger(value: 0)
 
-            ch.queue("", options: [.exclusive])
-                .bind(x)
-                .subscribe([.manualAckMode]) { message in
-                    if counter.value >= total {
-                        ch.ack(message.deliveryTag, options: [.multiple])
-                        semaphore.signal()
-                    } else {
-                        _ = counter.incrementAndGet()
-                    }
-            }
-
-            let body = "msg".data(using: String.Encoding.utf8)!
-            for _ in (0...total) {
-                x.publish(body)
-            }
-
-            XCTAssertEqual(.success,
-                           semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
-                           "Timed out waiting for acks")
-
-            x.delete()
+        ch.queue("", options: [.exclusive])
+            .bind(x)
+            .subscribe([.manualAckMode]) { message in
+                if counter.value >= total {
+                    ch.ack(message.deliveryTag, options: [.multiple])
+                    semaphore.signal()
+                } else {
+                    _ = counter.incrementAndGet()
+                }
         }
+
+        let body = "msg".data(using: String.Encoding.utf8)!
+        for _ in (0...total) {
+            x.publish(body)
+        }
+
+        XCTAssertEqual(.success,
+                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(8)),
+                       "Timed out waiting for acks")
+
+        x.delete()
+        ch.blockingClose()
+        conn.blockingClose()
     }
 
     func testNegativeAcknowledgementOfMultipleDeliveries() {
-        _ = IntegrationHelper.withChannel { ch in
-            let semaphore = DispatchSemaphore(value: 0)
-            let total = 100
-            let counter = AtomicInteger(value: 0)
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+        let semaphore = DispatchSemaphore(value: 0)
+        let total = 100
+        let counter = AtomicInteger(value: 0)
 
-            let q = ch.queue("", options: [.exclusive])
-            q.subscribe([.manualAckMode]) { message in
-                    if counter.value >= total {
-                        ch.nack(message.deliveryTag, options: [.multiple])
-                        semaphore.signal()
-                    } else {
-                        _ = counter.incrementAndGet()
-                    }
+        let q = ch.queue("", options: [.exclusive])
+        q.subscribe([.manualAckMode]) { message in
+            if counter.value >= total {
+                ch.nack(message.deliveryTag, options: [.multiple])
+                semaphore.signal()
+            } else {
+                _ = counter.incrementAndGet()
             }
-
-            let body = "msg".data(using: String.Encoding.utf8)!
-            for _ in (0...total) {
-                ch.defaultExchange().publish(body, routingKey: q.name!)
-            }
-
-            XCTAssertEqual(.success,
-                           semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
-                           "Timed out waiting for acks")
         }
+
+        let body = "msg".data(using: String.Encoding.utf8)!
+        for _ in (0...total) {
+            ch.defaultExchange().publish(body, routingKey: q.name!)
+        }
+
+        XCTAssertEqual(.success,
+                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(8)),
+                       "Timed out waiting for acks")
+        ch.blockingClose()
+        conn.blockingClose()
     }
 
     func testNegativeAcknowledgementWithRequeueingRedelivers() {
-        _ = IntegrationHelper.withChannel { ch in
-            let q = ch.queue("", options: [.autoDelete, .exclusive])
-            let semaphore = DispatchSemaphore(value: 0)
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+        let q = ch.queue("", options: [.autoDelete, .exclusive])
+        let semaphore = DispatchSemaphore(value: 0)
 
-            var isRejected = false
-            q.subscribe([.manualAckMode]) { message in
-                if isRejected {
-                    semaphore.signal()
-                } else {
-                    ch.reject(message.deliveryTag, options: [.requeue])
-                    isRejected = true
-                }
+        var isRejected = false
+        q.subscribe([.manualAckMode]) { message in
+            if isRejected {
+                semaphore.signal()
+            } else {
+                ch.reject(message.deliveryTag, options: [.requeue])
+                isRejected = true
             }
-
-            ch.defaultExchange().publish("msg".data(using: String.Encoding.utf8), routingKey: q.name)
-
-            XCTAssertEqual(.success,
-                           semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
-                           "Timed out waiting for a redelivery")
         }
+
+        ch.defaultExchange().publish("msg".data(using: String.Encoding.utf8), routingKey: q.name)
+
+        XCTAssertEqual(.success,
+                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
+                       "Timed out waiting for a redelivery")
+        ch.blockingClose()
+        conn.blockingClose()
     }
 
     func testNegativeAcknowledgementWithRequeueingRedeliversToADifferentConsumer() {
-        _ = IntegrationHelper.withChannel { ch in
-            let q = ch.queue("", options: [.autoDelete, .exclusive])
-            let semaphore = DispatchSemaphore(value: 0)
-            let counter = AtomicInteger(value: 0)
-            var activeTags: [String] = []
-            var delivered: RMQMessage?
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+        let q = ch.queue("", options: [.autoDelete, .exclusive])
+        let semaphore = DispatchSemaphore(value: 0)
+        let counter = AtomicInteger(value: 0)
+        var activeTags: [String] = []
+        var delivered: RMQMessage?
 
-            let handler: RMQConsumerDeliveryHandler = { (message: RMQMessage) -> Void in
-                if counter.value < 10 {
-                    activeTags.append(message.consumerTag)
-                    ch.nack(message.deliveryTag, options: [.requeue])
-                    _ = counter.incrementAndGet()
-                } else {
-                    delivered = message
-                    semaphore.signal()
-                }
+        let handler: RMQConsumerDeliveryHandler = { (message: RMQMessage) -> Void in
+            if counter.value < 10 {
+                activeTags.append(message.consumerTag)
+                ch.nack(message.deliveryTag, options: [.requeue])
+                _ = counter.incrementAndGet()
+            } else {
+                delivered = message
+                semaphore.signal()
             }
-
-            // 3 competing consumers
-            let cons1 = q.subscribe([.manualAckMode], handler: handler)
-            let cons2 = q.subscribe([.manualAckMode], handler: handler)
-            let cons3 = q.subscribe([.manualAckMode], handler: handler)
-
-            ch.defaultExchange().publish("msg".data(using: String.Encoding.utf8), routingKey: q.name)
-
-            XCTAssertEqual(.success,
-                           semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
-                           "Timed out waiting for N redeliveries")
-            XCTAssertTrue(activeTags.contains(cons1.tag))
-            XCTAssertTrue(activeTags.contains(cons2.tag))
-            XCTAssertTrue(activeTags.contains(cons3.tag))
-            XCTAssertTrue(delivered!.isRedelivered)
         }
+
+        // 3 competing consumers
+        let cons1 = q.subscribe([.manualAckMode], handler: handler)
+        let cons2 = q.subscribe([.manualAckMode], handler: handler)
+        let cons3 = q.subscribe([.manualAckMode], handler: handler)
+
+        ch.defaultExchange().publish("msg".data(using: String.Encoding.utf8), routingKey: q.name)
+
+        XCTAssertEqual(.success,
+                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
+                       "Timed out waiting for N redeliveries")
+        XCTAssertTrue(activeTags.contains(cons1.tag))
+        XCTAssertTrue(activeTags.contains(cons2.tag))
+        XCTAssertTrue(activeTags.contains(cons3.tag))
+        XCTAssertTrue(delivered!.isRedelivered)
+        ch.blockingClose()
+        conn.blockingClose()
     }
 
     func testQueueDeletion() {
-        _ = IntegrationHelper.withChannel { ch in
-            let q = ch.queue("", options: [.autoDelete, .exclusive])
-            q.delete()
-            // TODO: check for qeueue existence with a predicate
-            //       we're yet to add
-        }
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+        let q = ch.queue("", options: [.autoDelete, .exclusive])
+        q.delete()
+        // TODO: check for qeueue existence with a predicate
+        //       we're yet to add
+        ch.blockingClose()
+        conn.blockingClose()
     }
 
     func testQueueDeletionWithOptions() {
-        _ = IntegrationHelper.withChannel { ch in
-            let q = ch.queue("", options: [.autoDelete, .exclusive])
-            q.delete([.ifEmpty])
-            // queue deletion is idempotent
-            q.delete([.ifUnused])
-            // TODO: check for qeueue existence with a predicate
-            //       we're yet to add
-        }
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+        let q = ch.queue("", options: [.autoDelete, .exclusive])
+        q.delete([.ifEmpty])
+        // queue deletion is idempotent
+        q.delete([.ifUnused])
+        // TODO: check for qeueue existence with a predicate
+        //       we're yet to add
+        ch.blockingClose()
+        conn.blockingClose()
+    }
+
+    func testQueuePurge() {
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+        let q = ch.queue("", options: [.autoDelete, .exclusive])
+        q.purge()
+        // TODO: check the number of messages with a helper
+        //       we're yet to add
+        ch.blockingClose()
+        conn.blockingClose()
     }
 }

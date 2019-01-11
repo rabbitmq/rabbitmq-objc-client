@@ -54,58 +54,63 @@ import XCTest
 // see https://github.com/rabbitmq/rabbitmq-objc-client/blob/master/CONTRIBUTING.md
 // to set up your system for running integration tests
 class ChannelLifecycleIntegrationTest: XCTestCase {
-    func testOpeningAChannelWithoutExplicitlyProvidedID() {
+    func testOpenAndClosedStateWithBlockingClose() {
         let conn = RMQConnection()
         conn.start()
         let ch = conn.createChannel()
-        ch.close()
-    }
 
-    func testOpenAndClosedStateWithBlockingClose() {
-        _ = IntegrationHelper.withChannel { (ch) in
-            XCTAssertTrue(ch.isOpen())
-            XCTAssertFalse(ch.isClosed())
+        XCTAssertTrue(ch.isOpen())
+        XCTAssertFalse(ch.isClosed())
 
-            ch.blockingClose()
+        ch.blockingClose()
 
-            XCTAssertFalse(ch.isOpen())
-            XCTAssertTrue(ch.isClosed())
-        }
+        XCTAssertFalse(ch.isOpen())
+        XCTAssertTrue(ch.isClosed())
+
+        conn.blockingClose()
     }
 
     func testOpenAndClosedStateWithCloseAndBlockingWait() {
-        _ = IntegrationHelper.withChannel { (ch) in
-            XCTAssertTrue(ch.isOpen())
-            XCTAssertFalse(ch.isClosed())
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
 
-            ch.close()
-            // wait for a response to arrive
-            ch.blockingWait(on: RMQChannelCloseOk.self)
+        XCTAssertTrue(ch.isOpen())
+        XCTAssertFalse(ch.isClosed())
 
-            XCTAssertFalse(ch.isOpen())
-            XCTAssertTrue(ch.isClosed())
-        }
+        ch.close()
+        // wait for a response to arrive
+        ch.blockingWait(on: RMQChannelCloseOk.self)
+
+        XCTAssertFalse(ch.isOpen())
+        XCTAssertTrue(ch.isClosed())
+
+        conn.blockingClose()
     }
 
     func testOpenAndClosedStateWithCloseAndCompletionHandler() {
-        _ = IntegrationHelper.withChannel { (ch) in
-            XCTAssertTrue(ch.isOpen())
-            XCTAssertFalse(ch.isClosed())
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
 
-            let semaphore = DispatchSemaphore(value: 0)
+        XCTAssertTrue(ch.isOpen())
+        XCTAssertFalse(ch.isClosed())
 
-            ch.close {
-                XCTAssertFalse(ch.isOpen())
-                XCTAssertTrue(ch.isClosed())
-                semaphore.signal()
-            }
+        let semaphore = DispatchSemaphore(value: 0)
 
-            XCTAssertEqual(
-                .success,
-                semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(3)),
-                "Timed out waiting for channel closure"
-            )
+        ch.close {
+            XCTAssertFalse(ch.isOpen())
+            XCTAssertTrue(ch.isClosed())
+            semaphore.signal()
         }
+
+        XCTAssertEqual(
+            .success,
+            semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(3)),
+            "Timed out waiting for channel closure"
+        )
+
+        conn.blockingClose()
     }
 
     func testDoubleClosureAfterAChannelLevelProtocolException() {

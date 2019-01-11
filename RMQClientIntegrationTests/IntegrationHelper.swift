@@ -71,15 +71,4 @@ class IntegrationHelper {
             return conn.isClosed()
         }
     }
-
-    static func withChannel(f: (_ channel: RMQChannel) -> Void) -> RMQChannel {
-        let conn = RMQConnection()
-        conn.start()
-        let ch = conn.createChannel()
-
-        f(ch)
-        conn.blockingClose()
-
-        return ch
-    }
 }
