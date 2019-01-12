@@ -77,12 +77,12 @@
 
 /// @brief Bind this queue to an exchange
 - (nonnull instancetype)bind:(nonnull RMQExchange *)exchange
-                  routingKey:(NSString *)routingKey;
+                  routingKey:(nonnull NSString *)routingKey;
 /// @brief Bind this queue to an exchange
 - (nonnull instancetype)bind:(nonnull RMQExchange *)exchange;
 /// @brief Unbind this queue from an exchange
 - (nonnull instancetype)unbind:(nonnull RMQExchange *)exchange
-                    routingKey:(NSString *)routingKey;
+                    routingKey:(nonnull NSString *)routingKey;
 /// @brief Unbind this queue from an exchange
 - (nonnull instancetype)unbind:(nonnull RMQExchange *)exchange;
 
