@@ -127,7 +127,7 @@ class ChannelLifecycleIntegrationTest: XCTestCase {
 
         // uses a different set of properties from
         // the original declaration
-        ch2.queue(qName, options: [.durable])
+        let q = ch2.queue(qName, options: [.durable])
 
         XCTAssert(
             TestHelper.pollUntil(7) {
@@ -139,6 +139,7 @@ class ChannelLifecycleIntegrationTest: XCTestCase {
             ch2.close()
         }
 
+        q.delete()
         conn.blockingClose()
     }
 }

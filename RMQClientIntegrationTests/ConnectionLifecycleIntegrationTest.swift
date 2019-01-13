@@ -63,7 +63,7 @@ class ConnectionLifecycleIntegrationTest: XCTestCase {
             semaphore.signal()
         }
 
-        XCTAssertEqual(.success, IntegrationHelper.awaitCompletion(semaphore: semaphore),
+        XCTAssertEqual(.success, IntegrationHelper.awaitCompletion(semaphore),
             "Timed out waiting for connection and handshake to complete")
 
         XCTAssert(conn.isOpen())

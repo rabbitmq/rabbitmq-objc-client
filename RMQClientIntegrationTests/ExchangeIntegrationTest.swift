@@ -136,7 +136,7 @@ class ExchangeIntegrationTest: XCTestCase {
 
         let rk = "example-rk-value"
         let q  = ch.queue("", options: [.exclusive])
-        q.bind(x, routingKey: rk) .subscribe(withAckMode: [.auto]) { message in
+        q.bind(x, routingKey: rk).subscribe(withAckMode: [.auto]) { message in
                 delivered = message
                 semaphore.signal()
         }
@@ -160,8 +160,8 @@ class ExchangeIntegrationTest: XCTestCase {
         let semaphore = DispatchSemaphore(value: 0)
 
         let rk = "expected-rk-value"
-        let q  = ch.queue("objc.tests.q1", options: [.durable])
-        q.bind(x, routingKey: rk) .subscribe(withAckMode: [.auto]) { message in
+        let q  = ch.queue("", options: [.exclusive])
+        q.bind(x, routingKey: rk).subscribe(withAckMode: [.auto]) { message in
             print(message)
             semaphore.signal()
         }
@@ -172,7 +172,52 @@ class ExchangeIntegrationTest: XCTestCase {
         IntegrationHelper.awaitNoCompletion(semaphore)
 
         x.delete()
-        q.delete()
+        conn.blockingClose()
+    }
+
+    func testTopicExchangeWithMatchingBindings() {
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+        let x = ch.topic("objc.tests.topic", options: [])
+
+        let n = AtomicInteger(value: 0)
+
+        ch.queue("", options: [.exclusive])
+            .bind(x, routingKey: "cities.*")
+            .subscribe(withAckMode: [.auto]) { _ in _ = n.incrementAndGet() }
+
+        let body = "msg".data(using: String.Encoding.utf8)!
+        x.publish(body, routingKey: "cities.singapore")
+        x.publish(body, routingKey: "cities.newyorkcity")
+        x.publish(body, routingKey: "cities.moscow")
+
+        XCTAssertTrue(TestHelper.pollUntil { n.value >= 3 })
+
+        x.delete()
+        conn.blockingClose()
+    }
+
+    func testTopicExchangeWithNonMatchingBindings() {
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+        let x  = ch.topic("objc.tests.topic2", options: [])
+
+        let semaphore = DispatchSemaphore(value: 0)
+
+        ch.queue("", options: [.exclusive])
+            .bind(x, routingKey: "cities.*")
+            .subscribe(withAckMode: [.auto]) { _ in semaphore.signal() }
+
+        let body = "msg".data(using: String.Encoding.utf8)!
+        x.publish(body, routingKey: "locations.capetown")
+        x.publish(body, routingKey: "locations.delhi")
+        x.publish(body, routingKey: "locations.lisbon")
+
+        IntegrationHelper.awaitNoCompletion(semaphore)
+
+        x.delete()
         conn.blockingClose()
     }
 
@@ -201,10 +246,42 @@ class ExchangeIntegrationTest: XCTestCase {
         let body = "msg".data(using: String.Encoding.utf8)!
         x1.publish(body)
 
-        XCTAssertEqual(.success,
-                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
-                       "Timed out waiting for a delivery")
-        XCTAssertEqual(body, delivered!.body)
+        IntegrationHelper.awaitDelivery(semaphore,
+                                        expectedPayload: body, checker: { return delivered })
+
+        x1.delete()
+        x2.delete()
+
+        conn.blockingClose()
+    }
+
+    func testExchangeToExchangeBindingWithTopics() {
+        let conn = RMQConnection()
+        conn.start()
+
+        let ch = conn.createChannel()
+
+        let x1 = ch.topic("objc.tests.topic1", options: [])
+        let x2 = ch.topic("objc.tests.topic2", options: [])
+
+        // x1 is the source
+        x2.bind(x1, routingKey: "cities.*")
+
+        let semaphore = DispatchSemaphore(value: 0)
+        var delivered: RMQMessage?
+
+        ch.queue("", options: [.exclusive])
+            .bind(x2, routingKey: "cities.*")
+            .subscribeAutoAcks { message in
+                delivered = message
+                semaphore.signal()
+        }
+
+        let body = "msg".data(using: String.Encoding.utf8)!
+        x1.publish(body, routingKey: "cities.lima")
+
+        IntegrationHelper.awaitDelivery(semaphore,
+                                        expectedPayload: body, checker: { return delivered })
 
         x1.delete()
         x2.delete()
