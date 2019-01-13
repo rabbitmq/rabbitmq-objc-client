@@ -290,6 +290,42 @@ class ExchangeIntegrationTest: XCTestCase {
     }
 
     //
+    // exchange.unbind
+    //
+
+    func testExchangeToExchangeUnbinding() {
+        let conn = RMQConnection()
+        conn.start()
+
+        let ch = conn.createChannel()
+
+        let x1 = ch.topic("objc.tests.topic1", options: [])
+        let x2 = ch.topic("objc.tests.topic2", options: [])
+
+        let rk = "cities.*"
+
+        // x1 is the source
+        x2.bind(x1, routingKey: rk)
+        x2.unbind(x1, routingKey: rk)
+
+        let semaphore = DispatchSemaphore(value: 0)
+
+        ch.queue("", options: [.exclusive])
+            .bind(x2, routingKey: "cities.*")
+            .subscribeAutoAcks { _ in semaphore.signal() }
+
+        let body = "msg".data(using: String.Encoding.utf8)!
+        x1.publish(body, routingKey: "cities.lima")
+
+        IntegrationHelper.awaitNoCompletion(semaphore)
+
+        x1.delete()
+        x2.delete()
+
+        conn.blockingClose()
+    }
+
+    //
     // exchange.delete
     //
 

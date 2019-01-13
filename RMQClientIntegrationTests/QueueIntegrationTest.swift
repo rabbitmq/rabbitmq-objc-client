@@ -225,6 +225,31 @@ class QueueIntegrationTest: XCTestCase {
         conn.blockingClose()
     }
 
+    func testUnbinding() {
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+        let x  = ch.topic("objc.tests.topic3", options: [])
+
+        let semaphore = DispatchSemaphore(value: 0)
+        let rk = "cities.*"
+
+        ch.queue("", options: [.exclusive])
+            .bind(x, routingKey: rk)
+            .unbind(x, routingKey: rk)
+            .subscribe(withAckMode: [.auto]) { _ in semaphore.signal() }
+
+        let body = "msg".data(using: String.Encoding.utf8)!
+        x.publish(body, routingKey: "cities.bogotá")
+        x.publish(body, routingKey: "cities.melbourne")
+        x.publish(body, routingKey: "cities.manama")
+
+        IntegrationHelper.awaitNoCompletion(semaphore)
+
+        x.delete()
+        conn.blockingClose()
+    }
+
     func testQueueDeletion() {
         let conn = RMQConnection()
         conn.start()
