@@ -71,47 +71,31 @@ class ConnectionLifecycleIntegrationTest: XCTestCase {
     }
 
     func testConnectingWithAURI() {
-        let semaphore = DispatchSemaphore(value: 0)
         let delegate = RMQConnectionDelegateLogger()
         let conn = RMQConnection(uri: IntegrationHelper.defaultEndpoint,
                                  delegate: delegate)
-        conn.start {
-            semaphore.signal()
-        }
-
-        XCTAssertEqual(.success,
-                       IntegrationHelper.awaitCompletion(semaphore: semaphore),
-                       "Timed out waiting for connection and handshake to complete")
+        conn.start()
+        XCTAssertTrue(IntegrationHelper.pollUntilConnected(conn))
 
         XCTAssert(conn.isOpen())
         conn.blockingClose()
     }
 
     func testConnectingWithAURIThatHasEncodedSlashesInPath() {
-        let semaphore = DispatchSemaphore(value: 0)
         let delegate = RMQConnectionDelegateLogger()
         let conn = RMQConnection(uri: "amqp://guest:guest@localhost:5672/vhost%2Fwith%2Fa%2Ffew%2Fslashes",
                                  delegate: delegate)
-        conn.start {
-            semaphore.signal()
-        }
-
-        XCTAssertEqual(.success,
-                       IntegrationHelper.awaitCompletion(semaphore: semaphore),
-                       "Timed out waiting for connection and handshake to complete")
+        conn.start()
+        XCTAssertTrue(IntegrationHelper.pollUntilConnected(conn))
 
         XCTAssert(conn.isOpen())
         conn.blockingClose()
     }
 
     func testUserInitiatedClosure() {
-        let semaphore = DispatchSemaphore(value: 0)
         let conn = RMQConnection()
-        conn.start {
-            semaphore.signal()
-        }
-        XCTAssertEqual(.success, IntegrationHelper.awaitCompletion(semaphore: semaphore),
-                       "Timed out waiting for connection and handshake to complete")
+        conn.start()
+        XCTAssertTrue(IntegrationHelper.pollUntilConnected(conn))
 
         XCTAssertTrue((conn.transport()?.isConnected())!)
         XCTAssertTrue(conn.isOpen())
@@ -119,8 +103,8 @@ class ConnectionLifecycleIntegrationTest: XCTestCase {
 
         conn.blockingClose()
 
-        XCTAssertTrue(IntegrationHelper.pollUntilTransportDisconnected(conn: conn))
-        XCTAssertTrue(IntegrationHelper.pollUntilDisconnected(conn: conn))
+        XCTAssertTrue(IntegrationHelper.pollUntilTransportDisconnected(conn))
+        XCTAssertTrue(IntegrationHelper.pollUntilDisconnected(conn))
 
         XCTAssertFalse((conn.transport()?.isConnected())!)
         XCTAssertFalse(conn.isOpen())
@@ -128,13 +112,9 @@ class ConnectionLifecycleIntegrationTest: XCTestCase {
     }
 
     func testServerProperties() {
-        let semaphore = DispatchSemaphore(value: 0)
         let conn = RMQConnection()
-        conn.start {
-            semaphore.signal()
-        }
-        XCTAssertEqual(.success, IntegrationHelper.awaitCompletion(semaphore: semaphore),
-                       "Timed out waiting for connection and handshake to complete")
+        conn.start()
+        XCTAssertTrue(IntegrationHelper.pollUntilConnected(conn))
 
         let props = conn.serverProperties.dictionaryValue
         XCTAssertNotNil(props["product"] ?? nil)

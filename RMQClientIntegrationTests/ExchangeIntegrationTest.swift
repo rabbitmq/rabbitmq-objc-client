@@ -71,10 +71,9 @@ class ExchangeIntegrationTest: XCTestCase {
         let body = "msg".data(using: String.Encoding.utf8)!
         q.publish(body)
 
-        XCTAssertEqual(.success,
-                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
-                       "Timed out waiting for a delivery")
-        XCTAssertEqual(body, delivered!.body)
+        IntegrationHelper.awaitDelivery(semaphore,
+                                        expectedPayload: body, checker: { return delivered })
+
         conn.blockingClose()
     }
 
@@ -95,10 +94,8 @@ class ExchangeIntegrationTest: XCTestCase {
         let body = "msg".data(using: String.Encoding.utf8)!
         ch.defaultExchange().publish(body, routingKey: q.name!)
 
-        XCTAssertEqual(.success,
-                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
-                       "Timed out waiting for a delivery")
-        XCTAssertEqual(body, delivered!.body)
+        IntegrationHelper.awaitDelivery(semaphore,
+                                        expectedPayload: body, checker: { return delivered })
         conn.blockingClose()
     }
 
@@ -121,18 +118,68 @@ class ExchangeIntegrationTest: XCTestCase {
         let body = "msg".data(using: String.Encoding.utf8)!
         x.publish(body)
 
-        XCTAssertEqual(.success,
-                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
-                       "Timed out waiting for a delivery")
-        XCTAssertEqual(body, delivered!.body)
+        IntegrationHelper.awaitDelivery(semaphore,
+                                        expectedPayload: body, checker: { return delivered })
 
         x.delete()
+        conn.blockingClose()
+    }
+
+    func testDirectExchangeWithMatchingBindings() {
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+        let x = ch.direct("objc.tests.direct", options: [])
+
+        let semaphore = DispatchSemaphore(value: 0)
+        var delivered: RMQMessage?
+
+        let rk = "example-rk-value"
+        let q  = ch.queue("", options: [.exclusive])
+        q.bind(x, routingKey: rk) .subscribe(withAckMode: [.auto]) { message in
+                delivered = message
+                semaphore.signal()
+        }
+
+        let body = "msg".data(using: String.Encoding.utf8)!
+        x.publish(body, routingKey: rk)
+
+        IntegrationHelper.awaitDelivery(semaphore,
+                                        expectedPayload: body, checker: { return delivered })
+
+        x.delete()
+        conn.blockingClose()
+    }
+
+    func testDirectExchangeWithoutAnyBindings() {
+        let conn = RMQConnection()
+        conn.start()
+        let ch = conn.createChannel()
+        let x = ch.direct("objc.tests.direct-without-bindings", options: [])
+
+        let semaphore = DispatchSemaphore(value: 0)
+
+        let rk = "expected-rk-value"
+        let q  = ch.queue("objc.tests.q1", options: [.durable])
+        q.bind(x, routingKey: rk) .subscribe(withAckMode: [.auto]) { message in
+            print(message)
+            semaphore.signal()
+        }
+
+        let body = "msg".data(using: String.Encoding.utf8)!
+        x.publish(body, routingKey: "won't route ¯\\_(ツ)_/¯")
+
+        IntegrationHelper.awaitNoCompletion(semaphore)
+
+        x.delete()
+        q.delete()
         conn.blockingClose()
     }
 
     func testExchangeToExchangeBindingWithFanouts() {
         let conn = RMQConnection()
         conn.start()
+
         let ch = conn.createChannel()
 
         let x1 = ch.fanout("objc.tests.fanout1", options: [])
@@ -162,6 +209,25 @@ class ExchangeIntegrationTest: XCTestCase {
         x1.delete()
         x2.delete()
 
+        conn.blockingClose()
+    }
+
+    //
+    // exchange.delete
+    //
+
+    func testDeletingAnExchangeIsIdempotent() {
+        let conn = RMQConnection()
+        conn.start()
+        _ = IntegrationHelper.pollUntilConnected(conn)
+        let ch = conn.createChannel()
+        let x = ch.fanout("objc.tests.fanout", options: [])
+
+        ch.queue("", options: [.exclusive]).bind(x)
+        x.delete()
+        for _ in (0...20) {
+            x.delete()
+        }
         conn.blockingClose()
     }
 }

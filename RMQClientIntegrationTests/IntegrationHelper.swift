@@ -49,15 +49,38 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
+import XCTest
+
 class IntegrationHelper {
-    static let defaultEndpoint = "amqp://guest:guest@127.0.0.1"
+    static let defaultEndpoint: String = "amqp://guest:guest@127.0.0.1"
+    static let defaultTimeout: Double  = 3
 
     static func awaitCompletion(semaphore: DispatchSemaphore) -> DispatchTimeoutResult {
-        return semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(3))
+        return semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(defaultTimeout))
     }
 
-    static func pollUntilTransportDisconnected(conn: RMQConnection) -> Bool {
-        return TestHelper.pollUntil {
+    static func awaitNoCompletion(_ semaphore: DispatchSemaphore) {
+        let result = semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(defaultTimeout))
+        XCTAssertEqual(.timedOut, result, "Got an unexpected delivery")
+    }
+
+    static func awaitDelivery(_ semaphore: DispatchSemaphore, expectedPayload: Data,
+                              checker: () -> RMQMessage?) {
+        awaitDelivery(semaphore, seconds: defaultTimeout,
+                      expectedPayload: expectedPayload, checker: checker)
+    }
+
+    static func awaitDelivery(_ semaphore: DispatchSemaphore, seconds: Double, expectedPayload: Data,
+                              checker: () -> RMQMessage?) {
+        let result = semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(seconds))
+        XCTAssertEqual(.success, result, "Timed out waiting for a delivery")
+        let delivered = checker()
+        XCTAssertNotNil(delivered)
+        XCTAssertEqual(expectedPayload, delivered!.body)
+    }
+
+    static func pollUntilTransportDisconnected(_ conn: RMQConnection) -> Bool {
+        return TestHelper.pollUntil(defaultTimeout) {
             if let stillConnected = conn.transport()?.isConnected() {
                 return !stillConnected
             } else {
@@ -66,9 +89,15 @@ class IntegrationHelper {
         }
     }
 
-    static func pollUntilDisconnected(conn: RMQConnection) -> Bool {
-        return TestHelper.pollUntil {
+    static func pollUntilDisconnected(_ conn: RMQConnection) -> Bool {
+        return TestHelper.pollUntil(defaultTimeout) {
             return conn.isClosed()
+        }
+    }
+
+    static func pollUntilConnected(_ conn: RMQConnection) -> Bool {
+        return TestHelper.pollUntil(defaultTimeout) {
+            return conn.isOpen()
         }
     }
 }
