@@ -56,7 +56,6 @@ import XCTest
 class ChannelIntegrationTest: XCTestCase {
 
     func testWaitingForConfirmations() {
-        let semaphore = DispatchSemaphore(value: 0)
         let conn = RMQConnection()
         conn.start()
         defer { conn.blockingClose() }
@@ -70,8 +69,8 @@ class ChannelIntegrationTest: XCTestCase {
         var acked: Set<NSNumber> = []
         var nacked: Set<NSNumber> = []
 
-        ch.defaultExchange().publish("message a".data(using: String.Encoding.utf8)!, routingKey: qName)
-        ch.defaultExchange().publish("message b".data(using: String.Encoding.utf8)!, routingKey: qName)
+        let semaphore = DispatchSemaphore(value: 0)
+        ch.defaultExchange().publish("msg".data(using: String.Encoding.utf8)!, routingKey: qName)
 
         ch.afterConfirmed { (acks, nacks) in
             print("Received all outstanding confirms")
@@ -83,7 +82,7 @@ class ChannelIntegrationTest: XCTestCase {
         XCTAssertEqual(.success, semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)))
         print("Acked: \(acked)")
         print("Nacked: \(nacked)")
-        XCTAssertEqual([1, 2], acked)
+        XCTAssertEqual([1], acked)
         XCTAssertEqual([], nacked)
     }
 }
