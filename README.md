@@ -105,7 +105,7 @@ codebases before the ecosystem converts to 95+% Swift.
    conn.close()
    ```
 
-See [the tutorials](http://www.rabbitmq.com/tutorials/tutorial-one-objectivec.html) for more detailed instructions.
+See [the tutorials](http://www.rabbitmq.com/getstarted.html) for more detailed instructions.
 
 
 ## Running Tests
