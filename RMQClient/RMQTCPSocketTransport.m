@@ -66,7 +66,9 @@ RMQTCPSocketConfigurator noOpSocketConfigurator = ^(GCDAsyncSocket* _socket) {};
 @property (nonatomic, readwrite) BOOL _isConnected;
 @property (nonatomic, readwrite) GCDAsyncSocket *socket;
 @property (nonatomic, readwrite) id callbacks;
-@property (nonatomic, readwrite) NSNumber *connectTimeout;
+@property (nonatomic, readwrite) NSTimeInterval connectTimeout;
+@property (nonatomic, readwrite) NSTimeInterval readTimeout;
+@property (nonatomic, readwrite) NSTimeInterval writeTimeout;
 @property (nonatomic, readwrite) NSData *pkcs12data;
 
 @end
@@ -76,9 +78,13 @@ RMQTCPSocketConfigurator noOpSocketConfigurator = ^(GCDAsyncSocket* _socket) {};
 
 - (instancetype)initWithHost:(NSString *)host
                         port:(NSNumber *)port
+
                   tlsOptions:(RMQTLSOptions *)tlsOptions
              callbackStorage:(id)callbacks
-          socketConfigurator:(RMQTCPSocketConfigurator)socketConfigurator {
+          socketConfigurator:(RMQTCPSocketConfigurator)socketConfigurator
+              connectTimeout:(nonnull NSNumber *)connectTimeout
+                 readTimeout:(nonnull NSNumber *)readTimeout
+                writeTimeout:(nonnull NSNumber *)writeTimeout;{
     self = [super init];
     if (self) {
         self.socket = [[GCDAsyncSocket alloc] initWithDelegate:self
@@ -89,7 +95,10 @@ RMQTCPSocketConfigurator noOpSocketConfigurator = ^(GCDAsyncSocket* _socket) {};
         self.port = port;
         self.tlsOptions = tlsOptions;
         self.callbacks = callbacks;
-        self.connectTimeout = @2;
+
+        self.connectTimeout = [connectTimeout doubleValue];
+        self.readTimeout = [readTimeout doubleValue];
+        self.writeTimeout = [writeTimeout doubleValue];
         
         socketConfigurator(self.socket);
     }
@@ -99,23 +108,36 @@ RMQTCPSocketConfigurator noOpSocketConfigurator = ^(GCDAsyncSocket* _socket) {};
 - (instancetype)initWithHost:(NSString *)host
                         port:(NSNumber *)port
                   tlsOptions:(RMQTLSOptions *)tlsOptions
-          socketConfigurator:(RMQTCPSocketConfigurator)socketConfigurator {
+          socketConfigurator:(RMQTCPSocketConfigurator)socketConfigurator
+              connectTimeout:(nonnull NSNumber *)connectTimeout
+                 readTimeout:(nonnull NSNumber *)readTimeout
+                writeTimeout:(nonnull NSNumber *)writeTimeout {
     return [self initWithHost:host
                         port:port
                   tlsOptions:tlsOptions
              callbackStorage:[RMQSynchronizedMutableDictionary new]
-          socketConfigurator:socketConfigurator];
+          socketConfigurator:socketConfigurator
+               connectTimeout:connectTimeout
+                  readTimeout:readTimeout
+                 writeTimeout:writeTimeout];
 }
 
 - (instancetype)initWithHost:(NSString *)host
                         port:(NSNumber *)port
-                  tlsOptions:(RMQTLSOptions *)tlsOptions {
+                  tlsOptions:(RMQTLSOptions *)tlsOptions
+              connectTimeout:(nonnull NSNumber *)connectTimeout
+                 readTimeout:(nonnull NSNumber *)readTimeout
+                writeTimeout:(nonnull NSNumber *)writeTimeout{
     return [self initWithHost:host
                          port:port
                    tlsOptions:tlsOptions
               callbackStorage:[RMQSynchronizedMutableDictionary new]
-           socketConfigurator:noOpSocketConfigurator];
+           socketConfigurator:noOpSocketConfigurator
+               connectTimeout:connectTimeout
+                  readTimeout:readTimeout
+                 writeTimeout:writeTimeout];
 }
+
 
 - (instancetype)init
 {
@@ -140,7 +162,7 @@ RMQTCPSocketConfigurator noOpSocketConfigurator = ^(GCDAsyncSocket* _socket) {};
 
 - (void)write:(NSData *)data {
     [self.socket writeData:data
-               withTimeout:10
+               withTimeout:self.writeTimeout
                        tag:writeTag];
 }
 
@@ -222,7 +244,7 @@ struct __attribute__((__packed__)) AMQPHeader {
 }
 
 - (dispatch_time_t)connectTimeoutFromNow {
-    return dispatch_time(DISPATCH_TIME_NOW, self.connectTimeout.doubleValue * NSEC_PER_SEC);
+    return dispatch_time(DISPATCH_TIME_NOW, self.connectTimeout * NSEC_PER_SEC);
 }
 
 # pragma mark - GCDAsyncSocketDelegate

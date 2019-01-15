@@ -63,8 +63,6 @@
 #import "RMQTLSOptions.h"
 #import "RMQStarter.h"
 
-extern NSInteger const RMQChannelMaxDefault;
-
 /// @brief Public API: Interface to an AMQP 0-9-1 connection. See the <a href="https://www.rabbitmq.com/specification.html">spec</a> for details.
 @interface RMQConnection : NSObject<RMQFrameHandler, RMQSender, RMQStarter, RMQTransportDelegate>
 
@@ -88,12 +86,22 @@ extern NSInteger const RMQChannelMaxDefault;
                          channelMax:(nonnull NSNumber *)channelMax
                            frameMax:(nonnull NSNumber *)frameMax
                           heartbeat:(nonnull NSNumber *)heartbeat
+                     connectTimeout:(nonnull NSNumber*)connectTimeout
+                        readTimeout:(nonnull NSNumber*)readTimeout
+                       writeTimeout:(nonnull NSNumber*)writeTimeout
                         syncTimeout:(nonnull NSNumber *)syncTimeout
                            delegate:(nullable id<RMQConnectionDelegate>)delegate
                       delegateQueue:(nonnull dispatch_queue_t)delegateQueue
                        recoverAfter:(nonnull NSNumber *)recoveryInterval
                    recoveryAttempts:(nonnull NSNumber *)recoveryAttempts
          recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose;
+
+/// @brief Allows setting of timeouts
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                     connectTimeout:(nonnull NSNumber*)connectTimeout
+                        readTimeout:(nonnull NSNumber*)readTimeout
+                       writeTimeout:(nonnull NSNumber*)writeTimeout
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate;
 
 /// @brief Allows setting of recovery interval
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
@@ -106,6 +114,9 @@ extern NSInteger const RMQChannelMaxDefault;
                          channelMax:(nonnull NSNumber *)channelMax
                            frameMax:(nonnull NSNumber *)frameMax
                           heartbeat:(nonnull NSNumber *)heartbeat
+                     connectTimeout:(nonnull NSNumber*)connectTimeout
+                        readTimeout:(nonnull NSNumber*)readTimeout
+                       writeTimeout:(nonnull NSNumber*)writeTimeout
                         syncTimeout:(nonnull NSNumber *)syncTimeout
                            delegate:(nullable id<RMQConnectionDelegate>)delegate
                       delegateQueue:(nonnull dispatch_queue_t)delegateQueue;
@@ -115,6 +126,9 @@ extern NSInteger const RMQChannelMaxDefault;
                          channelMax:(nonnull NSNumber *)channelMax
                            frameMax:(nonnull NSNumber *)frameMax
                           heartbeat:(nonnull NSNumber *)heartbeat
+                     connectTimeout:(nonnull NSNumber*)connectTimeout
+                        readTimeout:(nonnull NSNumber*)readTimeout
+                       writeTimeout:(nonnull NSNumber*)writeTimeout
                         syncTimeout:(nonnull NSNumber *)syncTimeout
                            delegate:(nullable id<RMQConnectionDelegate>)delegate
                       delegateQueue:(nonnull dispatch_queue_t)delegateQueue;

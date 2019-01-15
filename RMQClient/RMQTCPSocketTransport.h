@@ -62,17 +62,26 @@
                                 port:(nonnull NSNumber *)port
                           tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
                      callbackStorage:(nonnull id)callbacks
-                  socketConfigurator:(void (^)(GCDAsyncSocket *socket))socketConfigurator;
+                  socketConfigurator:(void (^)(GCDAsyncSocket *socket))socketConfigurator
+                      connectTimeout:(nonnull NSNumber *)connectTimeout
+                         readTimeout:(nonnull NSNumber *)readTimeout
+                        writeTimeout:(nonnull NSNumber *)writeTimeout;
 
 /// @brief Most common connection options plus a socket configurator.
 - (nonnull instancetype)initWithHost:(nonnull NSString *)host
                                 port:(nonnull NSNumber *)port
                           tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
-                  socketConfigurator:(void (^)(GCDAsyncSocket *socket))socketConfigurator;
+                  socketConfigurator:(void (^)(GCDAsyncSocket *socket))socketConfigurator
+                      connectTimeout:(nonnull NSNumber *)connectTimeout
+                         readTimeout:(nonnull NSNumber *)readTimeout
+                        writeTimeout:(nonnull NSNumber *)writeTimeout;
 
-/// @brief Most common connection options.
+/// @brief Most common connection options plus all timeouts.
 - (nonnull instancetype)initWithHost:(nonnull NSString *)host
                                 port:(nonnull NSNumber *)port
-                          tlsOptions:(nonnull RMQTLSOptions *)tlsOptions;
+                          tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
+                      connectTimeout:(nonnull NSNumber *)connectTimeout
+                         readTimeout:(nonnull NSNumber *)readTimeout
+                        writeTimeout:(nonnull NSNumber *)writeTimeout;
 
 @end

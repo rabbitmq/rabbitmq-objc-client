@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1029A0E22087A97E00C72924 /* ConnectionDeadlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1029A0E12087A97E00C72924 /* ConnectionDeadlockTests.swift */; };
+		70311B0B21ED538600AE1804 /* RMQConnectionDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = 70311B0A21ED538600AE1804 /* RMQConnectionDefaults.h */; };
 		705359A921D174A400CF6456 /* TestCertificates in Resources */ = {isa = PBXBuildFile; fileRef = 705359A821D174A400CF6456 /* TestCertificates */; };
 		705359AA21D174A400CF6456 /* TestCertificates in Resources */ = {isa = PBXBuildFile; fileRef = 705359A821D174A400CF6456 /* TestCertificates */; };
 		705359AC21D1871600CF6456 /* AtomicInteger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705359AB21D1871600CF6456 /* AtomicInteger.swift */; };
@@ -233,6 +234,7 @@
 
 /* Begin PBXFileReference section */
 		1029A0E12087A97E00C72924 /* ConnectionDeadlockTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionDeadlockTests.swift; sourceTree = "<group>"; };
+		70311B0A21ED538600AE1804 /* RMQConnectionDefaults.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMQConnectionDefaults.h; sourceTree = "<group>"; };
 		705359A821D174A400CF6456 /* TestCertificates */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TestCertificates; sourceTree = SOURCE_ROOT; };
 		705359AB21D1871600CF6456 /* AtomicInteger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicInteger.swift; sourceTree = "<group>"; };
 		705CB9CB21D253AF00996B64 /* ChannelLifecycleIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelLifecycleIntegrationTest.swift; sourceTree = "<group>"; };
@@ -724,6 +726,7 @@
 				AE929C781CCF9CD7001A6524 /* RMQQueuingConnectionDelegateProxy.m */,
 				AEA8E5CE1CC65D2C005B5E1E /* RMQConnectionDelegateLogger.h */,
 				AEA8E5CF1CC65D2C005B5E1E /* RMQConnectionDelegateLogger.m */,
+				70311B0A21ED538600AE1804 /* RMQConnectionDefaults.h */,
 				AEFFE6361C8EE7B30039D652 /* RMQConnectionConfig.h */,
 				AEFFE6371C8EE7B30039D652 /* RMQConnectionConfig.m */,
 				AEA8A7691CC98E2500371E38 /* RMQWaiterFactory.h */,
@@ -894,6 +897,7 @@
 				AEADA3811C71F59A00012D61 /* RMQMethodMap.h in Headers */,
 				AE26FA2B1C9032E400CDBBAA /* RMQHeartbeat.h in Headers */,
 				AE59345F1C873B6900560A73 /* RMQChannel.h in Headers */,
+				70311B0B21ED538600AE1804 /* RMQConnectionDefaults.h in Headers */,
 				AE898D5B1C3C30D100AA3BF1 /* RMQURI.h in Headers */,
 				AEE445E51C7341CB0082132C /* RMQFrameHandler.h in Headers */,
 				AEC4D1D71C74C1AC00D7D585 /* RMQSender.h in Headers */,

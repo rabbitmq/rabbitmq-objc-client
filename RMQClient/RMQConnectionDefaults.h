@@ -49,58 +49,17 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
+#import <Foundation/Foundation.h>
 #import "RMQFrame.h"
-#import "RMQConnectionConfig.h"
 
-/**
- * @brief Default channel max value. One channel per connection
- *        is reserved for protocol negotiation, error reporting
- *        and so on.
- */
-NSInteger const RMQChannelMaxDefault = 127;
+/// @brief Default heartbeat timeout value.
+/// @see https://www.rabbitmq.com/heartbeats.html
+NSNumber* RMQDefaultHeartbeatTimeout;
 
-@interface RMQConnectionConfig ()
-@property (nonnull, nonatomic, readwrite) NSNumber *channelMax;
-@property (nonnull, nonatomic, readwrite) NSNumber *frameMax;
-@property (nonnull, nonatomic, readwrite) NSNumber *heartbeat;
-@property (nonnull, nonatomic, readwrite) NSString *vhost;
-@property (nonnull, nonatomic, readwrite) RMQCredentials *credentials;
-@property (nonnull, nonatomic, readwrite) NSString *authMechanism;
-@property (nonnull, nonatomic, readwrite) id<RMQConnectionRecovery> recovery;
-@end
-
-@implementation RMQConnectionConfig
-- (instancetype)initWithCredentials:(RMQCredentials *)credentials
-                         channelMax:(NSNumber *)channelMax
-                           frameMax:(NSNumber *)frameMax
-                          heartbeat:(NSNumber *)heartbeat
-                              vhost:(nonnull NSString *)vhost
-                      authMechanism:(nonnull NSString *)authMechanism
-                           recovery:(nonnull id<RMQConnectionRecovery>)recovery {
-    self = [super init];
-    if (self) {
-        self.credentials = credentials;
-        self.channelMax = channelMax;
-        self.frameMax = frameMax;
-        self.heartbeat = heartbeat;
-        self.vhost = vhost;
-        self.authMechanism = authMechanism;
-        self.recovery = recovery;
-    }
-    return self;
-}
-
-- (instancetype)initWithCredentials:(RMQCredentials *)credentials
-                          heartbeat:(NSNumber *)heartbeat
-                              vhost:(nonnull NSString *)vhost
-                      authMechanism:(nonnull NSString *)authMechanism
-                           recovery:(nonnull id<RMQConnectionRecovery>)recovery {
-    return [self initWithCredentials:credentials
-                          channelMax:[NSNumber numberWithInteger:RMQChannelMaxDefault]
-                            frameMax:[NSNumber numberWithInteger:RMQFrameMax]
-                           heartbeat:heartbeat
-                               vhost:vhost
-                       authMechanism:authMechanism
-                            recovery:recovery];
-}
-@end
+NSNumber* RMQDefaultConnectTimeout;
+/// @brief Default socket read timeout. This is slightly below a commonly
+///        used heartbeat timeout value.
+NSNumber* RMQDefaultReadTimeout;
+/// @brief Default socket reawrite timeout. This is slightly below a commonly
+///        used heartbeat timeout value.
+NSNumber* RMQDefaultWriteTimeout;

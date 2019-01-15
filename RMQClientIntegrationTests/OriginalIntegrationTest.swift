@@ -53,8 +53,6 @@ import XCTest
 
 // see https://github.com/rabbitmq/rabbitmq-objc-client/blob/master/CONTRIBUTING.md
 // to set up your system for running integration tests
-//
-// swiftlint:disable function_body_length
 class OriginalIntegrationTest: XCTestCase {
     let plainEndpoint = IntegrationHelper.defaultEndpoint
 
@@ -69,15 +67,7 @@ class OriginalIntegrationTest: XCTestCase {
         let conn = RMQConnection(
             uri: plainEndpoint,
             tlsOptions: RMQTLSOptions.fromURI(plainEndpoint),
-            channelMax: RMQChannelMaxDefault as NSNumber,
-            frameMax: frameMaxRequiringTwoFrames as NSNumber,
-            heartbeat: 0,
-            syncTimeout: 10,
-            delegate: nil,
-            delegateQueue: DispatchQueue.main,
-            recoverAfter: 0,
-            recoveryAttempts: 0,
-            recoverFromConnectionClose: false
+            delegate: nil
         )
         conn.start()
         defer { conn.blockingClose() }
@@ -137,15 +127,7 @@ class OriginalIntegrationTest: XCTestCase {
         )
         let conn = RMQConnection(uri: "amqps://localhost",
                                  tlsOptions: tlsOptions,
-                                 channelMax: RMQChannelMaxDefault as NSNumber,
-                                 frameMax: RMQFrameMax as NSNumber,
-                                 heartbeat: noisyHeartbeats as NSNumber,
-                                 syncTimeout: 10,
-                                 delegate: delegate,
-                                 delegateQueue: DispatchQueue.main,
-                                 recoverAfter: 0,
-                                 recoveryAttempts: 0,
-                                 recoverFromConnectionClose: false)
+                                 delegate: delegate)
         conn.start()
         defer { conn.blockingClose() }
 

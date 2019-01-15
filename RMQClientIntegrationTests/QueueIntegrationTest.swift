@@ -428,11 +428,7 @@ class QueueIntegrationTest: XCTestCase {
         let messageCount: Int32 = 500
         let conn = RMQConnection(uri: IntegrationHelper.defaultEndpoint,
                                  tlsOptions: RMQTLSOptions.fromURI(IntegrationHelper.defaultEndpoint),
-                                 channelMax: channelCount + 1 as NSNumber, frameMax: RMQFrameMax as NSNumber,
-                                 heartbeat: 100, syncTimeout: 60,
-                                 delegate: delegate,
-                                 delegateQueue: DispatchQueue.global(qos: DispatchQoS.QoSClass.userInteractive),
-                                 recoverAfter: 0, recoveryAttempts: 0, recoverFromConnectionClose: false)
+                                 delegate: delegate)
         conn.start()
         defer { conn.blockingClose() }
 

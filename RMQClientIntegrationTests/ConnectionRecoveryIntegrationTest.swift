@@ -68,7 +68,12 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
         let delegate = ConnectionDelegateSpy()
 
         let tlsOptions = RMQTLSOptions.fromURI(plainEndpoint)
-        let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5672, tlsOptions: tlsOptions)
+        let transport = RMQTCPSocketTransport(host: "127.0.0.1",
+                                              port: 5672,
+                                              tlsOptions: tlsOptions,
+                                              connectTimeout: 15,
+                                              readTimeout: 30,
+                                              writeTimeout: 30)
 
         let conn = ConnectionHelper.makeConnection(recoveryInterval: recoveryInterval,
                                                    transport: transport, delegate: delegate)
@@ -155,6 +160,9 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
                                  channelMax: RMQChannelMaxDefault as NSNumber,
                                  frameMax: RMQFrameMax as NSNumber,
                                  heartbeat: 10,
+                                 connectTimeout: 15,
+                                 readTimeout: 30,
+                                 writeTimeout: 30,
                                  syncTimeout: 10,
                                  delegate: delegate,
                                  delegateQueue: DispatchQueue.main,

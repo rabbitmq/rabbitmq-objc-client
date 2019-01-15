@@ -49,6 +49,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
+#import "RMQConnectionDefaults.h"
 #import "RMQConnection.h"
 #import "RMQConnectionRecover.h"
 #import "RMQGCDHeartbeatSender.h"
@@ -68,13 +69,6 @@
 #import "RMQFrame.h"
 #import "RMQProcessInfoNameGenerator.h"
 
-/**
- * @brief Default channel max value. One channel per connection
- *        is reserved for protocol negotiation, error reporting
- *        and so on.
- */
-NSInteger const RMQChannelMaxDefault = 127;
-
 @interface RMQConnection ()
 @property (strong, nonatomic, readwrite) id <RMQTransport> transport;
 @property (nonatomic, readwrite) RMQReader *reader;
@@ -91,6 +85,14 @@ NSInteger const RMQChannelMaxDefault = 127;
 @property (nonatomic, readwrite) BOOL handshakeComplete;
 @property (nonatomic, readwrite) NSNumber *handshakeTimeout;
 @end
+
+__attribute__((constructor))
+static void RMQInitConnectionConfigDefaults() {
+    RMQDefaultHeartbeatTimeout = [NSNumber numberWithInteger:60];
+    RMQDefaultConnectTimeout   = [NSNumber numberWithInteger:30];
+    RMQDefaultReadTimeout      = [NSNumber numberWithInteger:55];
+    RMQDefaultWriteTimeout     = [NSNumber numberWithInteger:55];
+}
 
 @implementation RMQConnection
 
@@ -130,10 +132,13 @@ NSInteger const RMQChannelMaxDefault = 127;
 
 - (nonnull instancetype)initWithUri:(NSString *)uri
                          tlsOptions:(RMQTLSOptions *)tlsOptions
-                         channelMax:(NSNumber *)channelMax
-                           frameMax:(NSNumber *)frameMax
-                          heartbeat:(NSNumber *)heartbeat
-                        syncTimeout:(NSNumber *)syncTimeout
+                         channelMax:(nonnull NSNumber *)channelMax
+                           frameMax:(nonnull NSNumber *)frameMax
+                          heartbeat:(nonnull NSNumber *)heartbeat
+                     connectTimeout:(nonnull NSNumber*)connectTimeout
+                        readTimeout:(nonnull NSNumber*)readTimeout
+                       writeTimeout:(nonnull NSNumber*)writeTimeout
+                        syncTimeout:(nonnull NSNumber *)syncTimeout
                            delegate:(id<RMQConnectionDelegate>)delegate
                       delegateQueue:(dispatch_queue_t)delegateQueue
                        recoverAfter:(nonnull NSNumber *)recoveryInterval
@@ -144,7 +149,10 @@ NSInteger const RMQChannelMaxDefault = 127;
 
     RMQTCPSocketTransport *transport = [[RMQTCPSocketTransport alloc] initWithHost:rmqURI.host
                                                                               port:rmqURI.portNumber
-                                                                        tlsOptions:tlsOptions];
+                                                                        tlsOptions:tlsOptions
+                                                                    connectTimeout:connectTimeout
+                                                                       readTimeout:readTimeout
+                                                                      writeTimeout:writeTimeout];
     RMQMultipleChannelAllocator *allocator = [[RMQMultipleChannelAllocator alloc]
                                                 initWithMaxCapacity:[channelMax unsignedIntegerValue]
                                                 channelSyncTimeout:syncTimeout];
@@ -193,11 +201,53 @@ NSInteger const RMQChannelMaxDefault = 127;
                   tlsOptions:[RMQTLSOptions fromURI:uri]
                   channelMax:@(RMQChannelMaxDefault)
                     frameMax:@(RMQFrameMax)
-                   heartbeat:@0
-                 syncTimeout:@10
+                   heartbeat:RMQDefaultHeartbeatTimeout
+              connectTimeout:RMQDefaultConnectTimeout
+                 readTimeout:RMQDefaultReadTimeout
+                writeTimeout:RMQDefaultWriteTimeout
+                 syncTimeout:@15
                     delegate:delegate
                delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
                 recoverAfter:recoveryInterval
+            recoveryAttempts:@(NSUIntegerMax)
+  recoverFromConnectionClose:YES];
+}
+
+- (instancetype)initWithUri:(NSString *)uri
+                   delegate:(id<RMQConnectionDelegate>)delegate {
+    return [self initWithUri:uri
+                  tlsOptions:[RMQTLSOptions fromURI:uri]
+                  channelMax:@(RMQChannelMaxDefault)
+                    frameMax:@(RMQFrameMax)
+                   heartbeat:RMQDefaultHeartbeatTimeout
+              connectTimeout:RMQDefaultConnectTimeout
+                 readTimeout:RMQDefaultReadTimeout
+                writeTimeout:RMQDefaultWriteTimeout
+                 syncTimeout:@15
+                    delegate:delegate
+               delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+                recoverAfter:@4
+            recoveryAttempts:@(NSUIntegerMax)
+  recoverFromConnectionClose:YES];
+}
+
+- (instancetype)initWithUri:(NSString *)uri
+             connectTimeout:(nonnull NSNumber*)connectTimeout
+                readTimeout:(nonnull NSNumber*)readTimeout
+               writeTimeout:(nonnull NSNumber*)writeTimeout
+                   delegate:(id<RMQConnectionDelegate>)delegate {
+    return [self initWithUri:uri
+                  tlsOptions:[RMQTLSOptions fromURI:uri]
+                  channelMax:@(RMQChannelMaxDefault)
+                    frameMax:@(RMQFrameMax)
+                   heartbeat:RMQDefaultHeartbeatTimeout
+              connectTimeout:connectTimeout
+                 readTimeout:readTimeout
+                writeTimeout:writeTimeout
+                 syncTimeout:@15
+                    delegate:delegate
+               delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+                recoverAfter:@4
             recoveryAttempts:@(NSUIntegerMax)
   recoverFromConnectionClose:YES];
 }
@@ -207,6 +257,9 @@ NSInteger const RMQChannelMaxDefault = 127;
                  channelMax:(NSNumber *)channelMax
                    frameMax:(NSNumber *)frameMax
                   heartbeat:(NSNumber *)heartbeat
+             connectTimeout:(nonnull NSNumber*)connectTimeout
+                readTimeout:(nonnull NSNumber*)readTimeout
+               writeTimeout:(nonnull NSNumber*)writeTimeout
                 syncTimeout:(NSNumber *)syncTimeout
                    delegate:(id<RMQConnectionDelegate>)delegate
               delegateQueue:(dispatch_queue_t)delegateQueue {
@@ -215,6 +268,9 @@ NSInteger const RMQChannelMaxDefault = 127;
                   channelMax:channelMax
                     frameMax:frameMax
                    heartbeat:heartbeat
+              connectTimeout:connectTimeout
+                 readTimeout:readTimeout
+                writeTimeout:writeTimeout
                  syncTimeout:syncTimeout
                     delegate:delegate
                delegateQueue:delegateQueue
@@ -227,6 +283,9 @@ NSInteger const RMQChannelMaxDefault = 127;
                  channelMax:(NSNumber *)channelMax
                    frameMax:(NSNumber *)frameMax
                   heartbeat:(NSNumber *)heartbeat
+             connectTimeout:(nonnull NSNumber*)connectTimeout
+                readTimeout:(nonnull NSNumber*)readTimeout
+               writeTimeout:(nonnull NSNumber*)writeTimeout
                 syncTimeout:(NSNumber *)syncTimeout
                    delegate:(id<RMQConnectionDelegate>)delegate
               delegateQueue:(dispatch_queue_t)delegateQueue {
@@ -235,6 +294,9 @@ NSInteger const RMQChannelMaxDefault = 127;
                   channelMax:channelMax
                     frameMax:frameMax
                    heartbeat:heartbeat
+              connectTimeout:connectTimeout
+                 readTimeout:readTimeout
+                writeTimeout:writeTimeout
                  syncTimeout:syncTimeout
                     delegate:delegate
                delegateQueue:delegateQueue];
@@ -247,7 +309,10 @@ NSInteger const RMQChannelMaxDefault = 127;
                   tlsOptions:tlsOptions
                   channelMax:@(RMQChannelMaxDefault)
                     frameMax:@(RMQFrameMax)
-                   heartbeat:@0
+                   heartbeat:RMQDefaultHeartbeatTimeout
+              connectTimeout:RMQDefaultConnectTimeout
+                 readTimeout:RMQDefaultReadTimeout
+                writeTimeout:RMQDefaultWriteTimeout
                  syncTimeout:@10
                     delegate:delegate
                delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
@@ -258,13 +323,6 @@ NSInteger const RMQChannelMaxDefault = 127;
                    delegate:(id<RMQConnectionDelegate>)delegate {
     RMQTLSOptions *tlsOptions = [RMQTLSOptions fromURI:uri verifyPeer:verifyPeer];
     return [self initWithUri:uri tlsOptions:tlsOptions delegate:delegate];
-}
-
-- (instancetype)initWithUri:(NSString *)uri
-                   delegate:(id<RMQConnectionDelegate>)delegate {
-    return [self initWithUri:uri
-                  tlsOptions:[RMQTLSOptions fromURI:uri]
-                    delegate:delegate];
 }
 
 - (instancetype)initWithDelegate:(id<RMQConnectionDelegate>)delegate {

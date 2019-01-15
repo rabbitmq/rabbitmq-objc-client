@@ -69,7 +69,10 @@ class RMQTCPSocketTransportTest: XCTestCase {
                                               port: 5672,
                                               tlsOptions: noTLS,
                                               callbackStorage: callbacks,
-                                              socketConfigurator: noOpSocketConfigurator)
+                                              socketConfigurator: noOpSocketConfigurator,
+                                              connectTimeout: 15.0,
+                                              readTimeout: 30.0,
+                                              writeTimeout: 30.0)
         var receivedData: Data?
         transport.readFrame { data in
             receivedData = data
@@ -104,7 +107,10 @@ class RMQTCPSocketTransportTest: XCTestCase {
         let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5672,
                                               tlsOptions: noTLS,
                                               callbackStorage: callbacks,
-                                              socketConfigurator: noOpSocketConfigurator)
+                                              socketConfigurator: noOpSocketConfigurator,
+                                              connectTimeout: 15.0,
+                                              readTimeout: 30.0,
+                                              writeTimeout: 30.0)
 
         try! transport.connect()
         XCTAssert(TestHelper.pollUntil { return transport.isConnected() }, "couldn't connect")
@@ -124,7 +130,10 @@ class RMQTCPSocketTransportTest: XCTestCase {
         let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 123456,
                                               tlsOptions: noTLS,
                                               callbackStorage: callbacks,
-                                              socketConfigurator: noOpSocketConfigurator)
+                                              socketConfigurator: noOpSocketConfigurator,
+                                              connectTimeout: 15.0,
+                                              readTimeout: 30.0,
+                                              writeTimeout: 30.0)
 
         transport.delegate = delegate
         try! transport.connect()
@@ -143,7 +152,10 @@ class RMQTCPSocketTransportTest: XCTestCase {
         let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 123456,
                                               tlsOptions: noTLS,
                                               callbackStorage: callbacks,
-                                              socketConfigurator: noOpSocketConfigurator)
+                                              socketConfigurator: noOpSocketConfigurator,
+                                              connectTimeout: 15.0,
+                                              readTimeout: 30.0,
+                                              writeTimeout: 30.0)
         let timeoutExtension = transport.socket(GCDAsyncSocket(), shouldTimeoutReadWithTag: 123,
                                                 elapsed: 123, bytesDone: 999)
         XCTAssert(timeoutExtension > 0)
@@ -158,10 +170,17 @@ class RMQTCPSocketTransportTest: XCTestCase {
     }
 
     func testConnectsViaTLS() {
-        let semaphore = DispatchSemaphore(value: 0)
-        let transport = RMQTCPSocketTransport(host: "localhost", port: 5671,
-                                              tlsOptions: RMQTLSOptions(peerName: "localhost", verifyPeer: false,
-                                                                        pkcs12: nil, pkcs12Password: ""))
+        let semaphore  = DispatchSemaphore(value: 0)
+        let tlsOptions = RMQTLSOptions(peerName: "localhost",
+                                       verifyPeer: false,
+                                       pkcs12: nil,
+                                       pkcs12Password: "")
+        let transport  = RMQTCPSocketTransport(host: "localhost",
+                                               port: 5671,
+                                               tlsOptions: tlsOptions,
+                                               connectTimeout: 15,
+                                               readTimeout: 30,
+                                               writeTimeout: 30)
         try! transport.connect()
         transport.write(RMQProtocolHeader().amqEncoded())
 
@@ -189,7 +208,12 @@ class RMQTCPSocketTransportTest: XCTestCase {
             pkcs12: fixtureClientCertificatePKCS12() as Data,
             pkcs12Password: CertificateFixtures.password
         )
-        let transport = RMQTCPSocketTransport(host: "localhost", port: 5671, tlsOptions: tlsOptions)
+        let transport = RMQTCPSocketTransport(host: "localhost",
+                                              port: 5671,
+                                              tlsOptions: tlsOptions,
+                                              connectTimeout: 15,
+                                              readTimeout: 30,
+                                              writeTimeout: 30)
         try! transport.connect()
         transport.write(RMQProtocolHeader().amqEncoded())
 
@@ -216,7 +240,12 @@ class RMQTCPSocketTransportTest: XCTestCase {
             pkcs12: fixtureClientCertificatePKCS12() as Data,
             pkcs12Password: "incorrect-password"
         )
-        let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5671, tlsOptions: tlsOptions)
+        let transport = RMQTCPSocketTransport(host: "127.0.0.1",
+                                              port: 5671,
+                                              tlsOptions: tlsOptions,
+                                              connectTimeout: 15,
+                                              readTimeout: 30,
+                                              writeTimeout: 30)
 
         #if os(iOS)
         XCTAssertThrowsError(try transport.connect())
@@ -224,7 +253,12 @@ class RMQTCPSocketTransportTest: XCTestCase {
     }
 
     func testSimulatedDisconnectCausesTransportToReportAsDisconnected() {
-        let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5672, tlsOptions: noTLS)
+        let transport = RMQTCPSocketTransport(host: "127.0.0.1",
+                                              port: 5672,
+                                              tlsOptions: noTLS,
+                                              connectTimeout: 15,
+                                              readTimeout: 30,
+                                              writeTimeout: 30)
         try! transport.connect()
         XCTAssert(TestHelper.pollUntil { transport.isConnected() })
         transport.simulateDisconnect()
@@ -232,7 +266,12 @@ class RMQTCPSocketTransportTest: XCTestCase {
     }
 
     func testSimulatedDisconnectSendsErrorToDelegate() {
-        let transport = RMQTCPSocketTransport(host: "127.0.0.1", port: 5672, tlsOptions: noTLS)
+        let transport = RMQTCPSocketTransport(host: "127.0.0.1",
+                                              port: 5672,
+                                              tlsOptions: noTLS,
+                                              connectTimeout: 15,
+                                              readTimeout: 30,
+                                              writeTimeout: 30)
         let delegate = TransportDelegateSpy()
         transport.delegate = delegate
         try! transport.connect()
@@ -252,12 +291,20 @@ class RMQTCPSocketTransportTest: XCTestCase {
     func createTransport() -> RMQTCPSocketTransport {
         return RMQTCPSocketTransport(host: "127.0.0.1",
                                      port: 5672,
-                                     tlsOptions: noTLS)
+                                     tlsOptions: noTLS,
+                                     connectTimeout: 15,
+                                     readTimeout: 30,
+                                     writeTimeout: 30)
     }
 
     func doTestConnectsToHostWithoutTLS(host: String) {
         let semaphore = DispatchSemaphore(value: 0)
-        let transport = RMQTCPSocketTransport(host: host, port: 5672, tlsOptions: noTLS)
+        let transport = RMQTCPSocketTransport(host: host,
+                                              port: 5672,
+                                              tlsOptions: noTLS,
+                                              connectTimeout: 15,
+                                              readTimeout: 30,
+                                              writeTimeout: 30)
         try! transport.connect()
         transport.write(RMQProtocolHeader().amqEncoded())
 
