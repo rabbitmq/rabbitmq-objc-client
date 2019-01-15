@@ -92,6 +92,9 @@ static void RMQInitConnectionConfigDefaults() {
     RMQDefaultConnectTimeout   = [NSNumber numberWithInteger:30];
     RMQDefaultReadTimeout      = [NSNumber numberWithInteger:55];
     RMQDefaultWriteTimeout     = [NSNumber numberWithInteger:55];
+
+    RMQDefaultSyncTimeout      = [NSNumber numberWithInteger:15];
+    RMQDefaultRecoveryInterval = [NSNumber numberWithInteger:4];
 }
 
 @implementation RMQConnection
@@ -205,7 +208,7 @@ static void RMQInitConnectionConfigDefaults() {
               connectTimeout:RMQDefaultConnectTimeout
                  readTimeout:RMQDefaultReadTimeout
                 writeTimeout:RMQDefaultWriteTimeout
-                 syncTimeout:@15
+                 syncTimeout:RMQDefaultSyncTimeout
                     delegate:delegate
                delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
                 recoverAfter:recoveryInterval
@@ -223,10 +226,10 @@ static void RMQInitConnectionConfigDefaults() {
               connectTimeout:RMQDefaultConnectTimeout
                  readTimeout:RMQDefaultReadTimeout
                 writeTimeout:RMQDefaultWriteTimeout
-                 syncTimeout:@15
+                 syncTimeout:RMQDefaultSyncTimeout
                     delegate:delegate
                delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-                recoverAfter:@4
+                recoverAfter:RMQDefaultRecoveryInterval
             recoveryAttempts:@(NSUIntegerMax)
   recoverFromConnectionClose:YES];
 }
@@ -244,10 +247,10 @@ static void RMQInitConnectionConfigDefaults() {
               connectTimeout:connectTimeout
                  readTimeout:readTimeout
                 writeTimeout:writeTimeout
-                 syncTimeout:@15
+                 syncTimeout:RMQDefaultSyncTimeout
                     delegate:delegate
                delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-                recoverAfter:@4
+                recoverAfter:RMQDefaultRecoveryInterval
             recoveryAttempts:@(NSUIntegerMax)
   recoverFromConnectionClose:YES];
 }
@@ -274,7 +277,7 @@ static void RMQInitConnectionConfigDefaults() {
                  syncTimeout:syncTimeout
                     delegate:delegate
                delegateQueue:delegateQueue
-                recoverAfter:@4
+                recoverAfter:RMQDefaultRecoveryInterval
             recoveryAttempts:@(NSUIntegerMax)
   recoverFromConnectionClose:YES];
 }
@@ -313,7 +316,7 @@ static void RMQInitConnectionConfigDefaults() {
               connectTimeout:RMQDefaultConnectTimeout
                  readTimeout:RMQDefaultReadTimeout
                 writeTimeout:RMQDefaultWriteTimeout
-                 syncTimeout:@10
+                 syncTimeout:RMQDefaultSyncTimeout
                     delegate:delegate
                delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
 }

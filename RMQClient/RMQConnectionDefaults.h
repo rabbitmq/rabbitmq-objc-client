@@ -56,6 +56,7 @@
 /// @see https://www.rabbitmq.com/heartbeats.html
 NSNumber* RMQDefaultHeartbeatTimeout;
 
+/// @brief Default initial socket connection timeout.
 NSNumber* RMQDefaultConnectTimeout;
 /// @brief Default socket read timeout. This is slightly below a commonly
 ///        used heartbeat timeout value.
@@ -63,3 +64,8 @@ NSNumber* RMQDefaultReadTimeout;
 /// @brief Default socket reawrite timeout. This is slightly below a commonly
 ///        used heartbeat timeout value.
 NSNumber* RMQDefaultWriteTimeout;
+
+NSNumber* RMQDefaultSyncTimeout;
+
+/// @brief Default connection recovery interval.
+NSNumber* RMQDefaultRecoveryInterval;
