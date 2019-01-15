@@ -3,3 +3,4 @@ Carthage
 xcuserdata
 notes.txt
 .bundle
+.build
