@@ -239,6 +239,7 @@
 		705359AB21D1871600CF6456 /* AtomicInteger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicInteger.swift; sourceTree = "<group>"; };
 		705CB9CB21D253AF00996B64 /* ChannelLifecycleIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelLifecycleIntegrationTest.swift; sourceTree = "<group>"; };
 		705CB9CD21D258C300996B64 /* ConnectionLifecycleIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionLifecycleIntegrationTest.swift; sourceTree = "<group>"; };
+		707F885B21ED6C24004543DF /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		709007C2209B8DAC00476847 /* RMQTCPSocketConfigurator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMQTCPSocketConfigurator.h; sourceTree = "<group>"; };
 		70970AD321E6781C00E9CC8B /* ExchangeIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeIntegrationTest.swift; sourceTree = "<group>"; };
 		70970AD621E68DC900E9CC8B /* IntegrationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationHelper.swift; sourceTree = "<group>"; };
@@ -766,6 +767,7 @@
 		AEE7FE871C3BCA6000DF8C4F = {
 			isa = PBXGroup;
 			children = (
+				707F885B21ED6C24004543DF /* Package.swift */,
 				AEE7FE931C3BCA6000DF8C4F /* RMQClient */,
 				AEE7FE9F1C3BCA6000DF8C4F /* RMQClientTests */,
 				AEA45ED81C440FE400FE1F62 /* RMQClientIntegrationTests */,
