@@ -19,6 +19,7 @@
 		70970AD421E6781C00E9CC8B /* ExchangeIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70970AD321E6781C00E9CC8B /* ExchangeIntegrationTest.swift */; };
 		70970AD721E68DC900E9CC8B /* IntegrationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70970AD621E68DC900E9CC8B /* IntegrationHelper.swift */; };
 		70970AD921E6A64700E9CC8B /* QueueIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70970AD821E6A64700E9CC8B /* QueueIntegrationTest.swift */; };
+		70F6980521EF17D600D1E7A1 /* ConsumersIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F6980421EF17D600D1E7A1 /* ConsumersIntegrationTest.swift */; };
 		70FC58B121DF4DB900BB25CB /* ChannelIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FC58B021DF4DB900BB25CB /* ChannelIntegrationTest.swift */; };
 		AE05DA681C69EC47009E68C7 /* RMQChannelAllocator.h in Headers */ = {isa = PBXBuildFile; fileRef = AE05DA661C69EC47009E68C7 /* RMQChannelAllocator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE05DA6C1C6A0848009E68C7 /* RMQMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = AE05DA6A1C6A0848009E68C7 /* RMQMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -243,6 +244,7 @@
 		70970AD321E6781C00E9CC8B /* ExchangeIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeIntegrationTest.swift; sourceTree = "<group>"; };
 		70970AD621E68DC900E9CC8B /* IntegrationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationHelper.swift; sourceTree = "<group>"; };
 		70970AD821E6A64700E9CC8B /* QueueIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueIntegrationTest.swift; sourceTree = "<group>"; };
+		70F6980421EF17D600D1E7A1 /* ConsumersIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsumersIntegrationTest.swift; sourceTree = "<group>"; };
 		70FC58B021DF4DB900BB25CB /* ChannelIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelIntegrationTest.swift; sourceTree = "<group>"; };
 		AE05DA661C69EC47009E68C7 /* RMQChannelAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQChannelAllocator.h; sourceTree = "<group>"; };
 		AE05DA6A1C6A0848009E68C7 /* RMQMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQMessage.h; sourceTree = "<group>"; };
@@ -693,6 +695,7 @@
 				70FC58B021DF4DB900BB25CB /* ChannelIntegrationTest.swift */,
 				70970AD321E6781C00E9CC8B /* ExchangeIntegrationTest.swift */,
 				70970AD821E6A64700E9CC8B /* QueueIntegrationTest.swift */,
+				70F6980421EF17D600D1E7A1 /* ConsumersIntegrationTest.swift */,
 				AE95953C1CD0CC4D0039418C /* RMQGCDHeartbeatSenderTest.swift */,
 				AEA45ECD1C43F44400FE1F62 /* RMQTCPSocketTransportTest.swift */,
 				AEA45EE41C44111200FE1F62 /* RMQClientIntegrationTests-Bridging-Header.h */,
@@ -1140,6 +1143,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AEA8A77B1CCA733400371E38 /* FakeSerialQueue.swift in Sources */,
+				70F6980521EF17D600D1E7A1 /* ConsumersIntegrationTest.swift in Sources */,
 				AEDBFF2D1CD8F67B0004DB67 /* CertificateFixtures.swift in Sources */,
 				705CB9CC21D253AF00996B64 /* ChannelLifecycleIntegrationTest.swift in Sources */,
 				AEEB8B561C7DF043002D3FCE /* RMQTransportContract.swift in Sources */,

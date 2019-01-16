@@ -108,6 +108,11 @@
                            delegate:(nullable id<RMQConnectionDelegate>)delegate
                        recoverAfter:(nonnull NSNumber *)recoveryInterval;
 
+/// @brief Allows setting of GCD queue
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate
+                       delegateQueue:(nonnull dispatch_queue_t)delegateQueue;
+
 /// @brief Connection tuning options with customisable TLS
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
                          tlsOptions:(nonnull RMQTLSOptions *)tlsOptions

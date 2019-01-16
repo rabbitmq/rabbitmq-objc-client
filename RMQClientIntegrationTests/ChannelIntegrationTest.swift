@@ -54,11 +54,9 @@ import XCTest
 // see https://github.com/rabbitmq/rabbitmq-objc-client/blob/master/CONTRIBUTING.md
 // to set up your system for running integration tests
 class ChannelIntegrationTest: XCTestCase {
-
     func testWaitingForConfirmations() {
         let conn = RMQConnection()
         conn.start()
-        defer { conn.blockingClose() }
 
         let ch = conn.createChannel()
         ch.confirmSelect()
@@ -84,5 +82,7 @@ class ChannelIntegrationTest: XCTestCase {
         print("Nacked: \(nacked)")
         XCTAssertEqual([1], acked)
         XCTAssertEqual([], nacked)
+
+        conn.blockingClose()
     }
 }

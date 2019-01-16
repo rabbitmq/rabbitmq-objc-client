@@ -321,6 +321,22 @@ static void RMQInitConnectionConfigDefaults() {
                delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
 }
 
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate
+                      delegateQueue:(nonnull dispatch_queue_t)delegateQueue {
+    return [self initWithUri:uri
+                  tlsOptions:[RMQTLSOptions fromURI:uri]
+                  channelMax:@(RMQChannelMaxDefault)
+                    frameMax:@(RMQFrameMax)
+                   heartbeat:RMQDefaultHeartbeatTimeout
+              connectTimeout:RMQDefaultConnectTimeout
+                 readTimeout:RMQDefaultReadTimeout
+                writeTimeout:RMQDefaultWriteTimeout
+                 syncTimeout:RMQDefaultSyncTimeout
+                    delegate:delegate
+               delegateQueue:delegateQueue];
+}
+
 - (instancetype)initWithUri:(NSString *)uri
                  verifyPeer:(BOOL)verifyPeer
                    delegate:(id<RMQConnectionDelegate>)delegate {

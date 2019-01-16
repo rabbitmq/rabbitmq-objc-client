@@ -359,10 +359,12 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
                                                                    options:options]
                   completionHandler:^(RMQFrameset *frameset) {
                       RMQBasicGetOk *getOk = (RMQBasicGetOk *)frameset.method;
+
+                      BOOL redelivered = (getOk.options & RMQBasicGetOkRedelivered) == RMQBasicGetOkRedelivered;
                       RMQMessage *message = [[RMQMessage alloc] initWithBody:frameset.contentData
                                                                  consumerTag:@""
                                                                  deliveryTag:@(getOk.deliveryTag.integerValue)
-                                                                 redelivered:getOk.options & RMQBasicGetOkRedelivered
+                                                                 redelivered:redelivered
                                                                 exchangeName:getOk.exchange.stringValue
                                                                   routingKey:getOk.routingKey.stringValue
                                                                   properties:frameset.contentHeader.properties];

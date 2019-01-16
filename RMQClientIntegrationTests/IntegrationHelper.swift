@@ -53,14 +53,24 @@ import XCTest
 
 class IntegrationHelper {
     static let defaultEndpoint: String = "amqp://guest:guest@127.0.0.1"
-    static let defaultTimeout: Double  = 3
+    static let defaultTimeout: Double = 10
+    static let defaultNoCompletionTimeout: Double = 3
 
     static func awaitCompletion(_ semaphore: DispatchSemaphore) -> DispatchTimeoutResult {
         return semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(defaultTimeout))
     }
 
+    static func awaitCompletion(_ semaphore: DispatchSemaphore, timeout: Double) -> DispatchTimeoutResult {
+        return semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(timeout))
+    }
+
     static func awaitNoCompletion(_ semaphore: DispatchSemaphore) {
-        let result = semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(defaultTimeout))
+        let result = semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(defaultNoCompletionTimeout))
+        XCTAssertEqual(.timedOut, result, "Got an unexpected delivery")
+    }
+
+    static func awaitNoCompletion(_ semaphore: DispatchSemaphore, timeout: Double) {
+        let result = semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(timeout))
         XCTAssertEqual(.timedOut, result, "Got an unexpected delivery")
     }
 

@@ -215,7 +215,7 @@ class ExchangeIntegrationTest: XCTestCase {
         x.publish(body, routingKey: "locations.delhi")
         x.publish(body, routingKey: "locations.lisbon")
 
-        IntegrationHelper.awaitNoCompletion(semaphore)
+        IntegrationHelper.awaitNoCompletion(semaphore, timeout: 3)
 
         x.delete()
         conn.blockingClose()
