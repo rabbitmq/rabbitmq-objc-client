@@ -1419,7 +1419,6 @@
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = NO;
-				VALID_ARCHS = "x86_64 arm64";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -1429,26 +1428,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"ARCHS[sdk=appletvos*]" = (
-					"$(ARCHS_STANDARD)",
-					armv7,
-					armv7s,
-					arm64,
-				);
-				"ARCHS[sdk=iphoneos*]" = (
-					"$(ARCHS_STANDARD)",
-					arm64,
-					armv7s,
-					armv7,
-				);
-				"ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD)";
-				"ARCHS[sdk=macosx*]" = "$(ARCHS_STANDARD)";
-				"ARCHS[sdk=watchos*]" = (
-					"$(ARCHS_STANDARD)",
-					arm64,
-					armv7s,
-					armv7,
-				);
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1503,7 +1482,6 @@
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "x86_64 armv7s armv7 i386 arm64";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -1530,7 +1508,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = "arm64 x86_64";
 			};
 			name = Debug;
 		};
@@ -1555,7 +1532,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = "arm64 x86_64 armv7s armv7";
 			};
 			name = Release;
 		};
