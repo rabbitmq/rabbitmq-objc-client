@@ -11,7 +11,7 @@ before_install:
   - brew services start rabbitmq
 before_script:
   - make bootstrap
-  - until lsof -i:5672; do echo "Waiting for RabbitMQ to start..."; sleep 1; done
+  - until sudo lsof -i:5672; do echo "Waiting for RabbitMQ to start..."; sleep 1; done
   - make before_build
   - make set_up_test_vhosts
   - make set_up_test_users
