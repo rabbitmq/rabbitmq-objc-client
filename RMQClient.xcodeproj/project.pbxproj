@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1029A0E22087A97E00C72924 /* ConnectionDeadlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1029A0E12087A97E00C72924 /* ConnectionDeadlockTests.swift */; };
 		70311B0B21ED538600AE1804 /* RMQConnectionDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = 70311B0A21ED538600AE1804 /* RMQConnectionDefaults.h */; };
+		70338A2421FBAA7C00C9069D /* CertificateAuthenticationIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70338A2321FBAA7C00C9069D /* CertificateAuthenticationIntegrationTest.swift */; };
 		705359A921D174A400CF6456 /* TestCertificates in Resources */ = {isa = PBXBuildFile; fileRef = 705359A821D174A400CF6456 /* TestCertificates */; };
 		705359AA21D174A400CF6456 /* TestCertificates in Resources */ = {isa = PBXBuildFile; fileRef = 705359A821D174A400CF6456 /* TestCertificates */; };
 		705359AC21D1871600CF6456 /* AtomicInteger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705359AB21D1871600CF6456 /* AtomicInteger.swift */; };
@@ -236,6 +237,7 @@
 /* Begin PBXFileReference section */
 		1029A0E12087A97E00C72924 /* ConnectionDeadlockTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionDeadlockTests.swift; sourceTree = "<group>"; };
 		70311B0A21ED538600AE1804 /* RMQConnectionDefaults.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMQConnectionDefaults.h; sourceTree = "<group>"; };
+		70338A2321FBAA7C00C9069D /* CertificateAuthenticationIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateAuthenticationIntegrationTest.swift; sourceTree = "<group>"; };
 		705359A821D174A400CF6456 /* TestCertificates */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TestCertificates; sourceTree = SOURCE_ROOT; };
 		705359AB21D1871600CF6456 /* AtomicInteger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicInteger.swift; sourceTree = "<group>"; };
 		705CB9CB21D253AF00996B64 /* ChannelLifecycleIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelLifecycleIntegrationTest.swift; sourceTree = "<group>"; };
@@ -690,6 +692,7 @@
 				70970AD521E68D6100E9CC8B /* Helpers */,
 				AE607C681C3C0EAD00BE9AC4 /* OriginalIntegrationTest.swift */,
 				705CB9CD21D258C300996B64 /* ConnectionLifecycleIntegrationTest.swift */,
+				70338A2321FBAA7C00C9069D /* CertificateAuthenticationIntegrationTest.swift */,
 				AEEDB0B41CE3284200005A92 /* ConnectionRecoveryIntegrationTest.swift */,
 				705CB9CB21D253AF00996B64 /* ChannelLifecycleIntegrationTest.swift */,
 				70FC58B021DF4DB900BB25CB /* ChannelIntegrationTest.swift */,
@@ -1152,6 +1155,7 @@
 				AEA45EE21C440FFD00FE1F62 /* OriginalIntegrationTest.swift in Sources */,
 				AEEB8B501C7DE8D1002D3FCE /* ControlledInteractionTransport.swift in Sources */,
 				AE063BE11CD7565B00F90EB5 /* FakeClock.swift in Sources */,
+				70338A2421FBAA7C00C9069D /* CertificateAuthenticationIntegrationTest.swift in Sources */,
 				AEEDB0B51CE3284200005A92 /* ConnectionRecoveryIntegrationTest.swift in Sources */,
 				70970AD921E6A64700E9CC8B /* QueueIntegrationTest.swift in Sources */,
 				AEA8A77D1CCA734400371E38 /* FakeWaiterFactory.swift in Sources */,

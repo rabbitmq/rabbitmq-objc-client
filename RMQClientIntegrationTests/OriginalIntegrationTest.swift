@@ -116,45 +116,6 @@ class OriginalIntegrationTest: XCTestCase {
         }
     }
 
-    func testSubscribeWithClientCertificateAuthentication() {
-        let delegate = RMQConnectionDelegateLogger()
-        let noisyHeartbeats = 1
-        let tlsOptions = RMQTLSOptions(
-            peerName: "localhost",
-            verifyPeer: false,
-            pkcs12: fixtureClientCertificatePKCS12() as Data,
-            pkcs12Password: CertificateFixtures.password
-        )
-        let conn = RMQConnection(uri: "amqps://localhost",
-                                 tlsOptions: tlsOptions,
-                                 delegate: delegate)
-        conn.start()
-        defer { conn.blockingClose() }
-
-        let semaphore = DispatchSemaphore(value: 0)
-        let ch = conn.createChannel()
-        let q = ch.queue("", options: [.autoDelete, .exclusive])
-
-        var delivered: RMQMessage?
-
-        q.subscribe(withAckMode: [.manual]) { message in
-            delivered = message
-            ch.ack(message.deliveryTag)
-            semaphore.signal()
-        }
-
-        let body = "my message".data(using: String.Encoding.utf8)!
-
-        q.publish(body)
-
-        XCTAssertEqual(.success,
-                       semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(10)),
-                       "Timed out waiting for message")
-
-        XCTAssertEqual(1, delivered!.deliveryTag)
-        XCTAssertEqual(body, delivered!.body)
-    }
-
     func testClientChannelCloseCausesFutureOperationsToFail() {
         let delegate = ConnectionDelegateSpy()
         let conn = RMQConnection(uri: plainEndpoint, delegate: delegate, recoverAfter: 0)
@@ -200,13 +161,5 @@ class OriginalIntegrationTest: XCTestCase {
     fileprivate func causeServerChannelClose(_ ch: RMQChannel) {
         ch.basicPublish("".data(using: String.Encoding.utf8)!, routingKey: "irrelevant",
                         exchange: "a non-existent exchange", properties: [], options: [])
-    }
-
-    fileprivate func fixtureClientCertificatePKCS12() -> Data {
-        do {
-            return try CertificateFixtures.guestBunniesP12()
-        } catch {
-            fatalError("Failed to load the fixture client certificate")
-        }
     }
 }

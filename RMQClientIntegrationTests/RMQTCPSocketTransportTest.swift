@@ -200,58 +200,6 @@ class RMQTCPSocketTransportTest: XCTestCase {
         }
     }
 
-    func testConnectsViaTLSWithClientCert() {
-        let semaphore = DispatchSemaphore(value: 0)
-        let tlsOptions = RMQTLSOptions(
-            peerName: "localhost",
-            verifyPeer: false,
-            pkcs12: fixtureClientCertificatePKCS12() as Data,
-            pkcs12Password: CertificateFixtures.password
-        )
-        let transport = RMQTCPSocketTransport(host: "localhost",
-                                              port: 5671,
-                                              tlsOptions: tlsOptions,
-                                              connectTimeout: 15,
-                                              readTimeout: 30,
-                                              writeTimeout: 30)
-        try! transport.connect()
-        transport.write(RMQProtocolHeader().amqEncoded())
-
-        var receivedData: Data?
-        transport.readFrame { data in
-            receivedData = data
-            semaphore.signal()
-        }
-
-        XCTAssertEqual(.success, semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(5)),
-                       "Timed out waiting for read")
-        let parser = RMQParser(data: receivedData!)
-        XCTAssert(RMQFrame(parser: parser).payload.isKind(of: RMQConnectionStart.self))
-
-        if(transport.isConnected()) {
-            transport.close()
-        }
-    }
-
-    func testThrowsWhenTLSPasswordIncorrect() {
-        let tlsOptions = RMQTLSOptions(
-            peerName: "localhost",
-            verifyPeer: false,
-            pkcs12: fixtureClientCertificatePKCS12() as Data,
-            pkcs12Password: "incorrect-password"
-        )
-        let transport = RMQTCPSocketTransport(host: "127.0.0.1",
-                                              port: 5671,
-                                              tlsOptions: tlsOptions,
-                                              connectTimeout: 15,
-                                              readTimeout: 30,
-                                              writeTimeout: 30)
-
-        #if os(iOS)
-        XCTAssertThrowsError(try transport.connect())
-        #endif
-    }
-
     func testSimulatedDisconnectCausesTransportToReportAsDisconnected() {
         let transport = RMQTCPSocketTransport(host: "127.0.0.1",
                                               port: 5672,
