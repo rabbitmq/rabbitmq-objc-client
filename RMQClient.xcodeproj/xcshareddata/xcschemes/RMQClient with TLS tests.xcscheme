@@ -20,16 +20,26 @@
                ReferencedContainer = "container:RMQClient.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
-      </BuildActionEntries>
-   </BuildAction>
-   <TestAction
-      buildConfiguration = "Test without TLS"
-      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
-      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
-      <Testables>
-         <TestableReference
-            skipped = "NO">
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AEA45ED61C440FE400FE1F62"
+               BuildableName = "RMQClientIntegrationTests.xctest"
+               BlueprintName = "RMQClientIntegrationTests"
+               ReferencedContainer = "container:RMQClient.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AEE7FE9A1C3BCA6000DF8C4F"
@@ -37,7 +47,15 @@
                BlueprintName = "RMQClientTests"
                ReferencedContainer = "container:RMQClient.xcodeproj">
             </BuildableReference>
-         </TestableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      buildConfiguration = "Test with TLS"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "NO">
+      <Testables>
          <TestableReference
             skipped = "NO">
             <BuildableReference
@@ -48,22 +66,24 @@
                ReferencedContainer = "container:RMQClient.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "AEE7FE9A1C3BCA6000DF8C4F"
+               BuildableName = "RMQClientTests.xctest"
+               BlueprintName = "RMQClientTests"
+               ReferencedContainer = "container:RMQClient.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "AEE7FE901C3BCA6000DF8C4F"
-            BuildableName = "RMQClient.framework"
-            BlueprintName = "RMQClient"
-            ReferencedContainer = "container:RMQClient.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <AdditionalOptions>
-         <AdditionalOption
-            key = "NSZombieEnabled"
-            value = "YES"
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "-DRUN_TLS_TESTS"
             isEnabled = "YES">
-         </AdditionalOption>
+         </CommandLineArgument>
+      </CommandLineArguments>
+      <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
    <LaunchAction

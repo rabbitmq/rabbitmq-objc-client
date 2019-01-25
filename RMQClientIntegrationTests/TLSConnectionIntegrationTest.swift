@@ -55,6 +55,7 @@ import XCTest
 // see https://github.com/rabbitmq/rabbitmq-objc-client/blob/master/CONTRIBUTING.md
 // to set up your system for running integration tests
 class CertificateAuthenticationIntegrationTest: XCTestCase {
+    #if RUN_TLS_TESTS
     func testConnectsViaTLS() {
         let semaphore  = DispatchSemaphore(value: 0)
         let tlsOptions = RMQTLSOptions(peerName: "localhost",
@@ -176,9 +177,10 @@ class CertificateAuthenticationIntegrationTest: XCTestCase {
         XCTAssertEqual(1, delivered!.deliveryTag)
         XCTAssertEqual(body, delivered!.body)
     }
+    #endif
 
     //
-    // Implement
+    // Implementation
     //
 
     fileprivate func fixtureClientCertificatePKCS12() -> Data {

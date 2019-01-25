@@ -11,6 +11,8 @@ tests_ios: tests_iOS
 
 tests_macos: tests_MacOS
 
+tests_with_tls: tests_iOS_with_tls tests_macos_with_tls lint
+
 tests_iOS: test_dependencies
 	set -o pipefail && \
 		xcodebuild test \
@@ -19,11 +21,27 @@ tests_iOS: test_dependencies
 		-destination 'platform=iOS Simulator,name=iPhone XR,OS=$(iOS_VERSION)' | \
 		xcpretty
 
+tests_iOS_with_tls: test_dependencies
+	set -o pipefail && \
+		xcodebuild test \
+		-project RMQClient.xcodeproj \
+		-scheme "RMQClient with TLS tests" \
+		-destination 'platform=iOS Simulator,name=iPhone XR,OS=$(iOS_VERSION)' | \
+		xcpretty
+
 tests_MacOS: test_dependencies
 	set -o pipefail && \
 		xcodebuild test \
 		-project RMQClient.xcodeproj \
 		-scheme RMQClient \
+		-destination 'platform=OS X,arch=x86_64' | \
+		xcpretty
+
+tests_MacOS_with_tls: test_dependencies
+	set -o pipefail && \
+		xcodebuild test \
+		-project RMQClient.xcodeproj \
+		-scheme "RMQClient with TLS tests" \
 		-destination 'platform=OS X,arch=x86_64' | \
 		xcpretty
 
