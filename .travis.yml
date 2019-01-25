@@ -1,7 +1,7 @@
 language: objective-c
 osx_image: xcode10.1
 xcode_project: RMQClient.xcodeproj
-xcode_scheme: RMQClient
+xcode_scheme: "RMQClient"
 before_install:
   - brew update
   - brew install rabbitmq
@@ -16,9 +16,11 @@ before_script:
   - make set_up_test_vhosts
   - make set_up_test_users
 env:
-  - TARGET=tests_ios TRAVIS_XCODE_SDK=iphonesimulator12.1 iOS_VERSION=12.1
-  - TARGET=tests_macos TRAVIS_XCODE_SDK=macosx10.14
-script: travis_retry make $TARGET iOS_VERSION=$iOS_VERSION
+  - TARGET=tests_ios   SCHEME="RMQClient" TRAVIS_XCODE_SDK=iphonesimulator12.1 iOS_VERSION=12.1
+  - TARGET=tests_macos SCHEME="RMQClient" TRAVIS_XCODE_SDK=macosx10.14
+  - TARGET=tests_ios   SCHEME="RMQClient with TLS tests" TRAVIS_XCODE_SDK=iphonesimulator12.1 iOS_VERSION=12.1
+  - TARGET=tests_macos SCHEME="RMQClient with TLS tests" TRAVIS_XCODE_SDK=macosx10.14
+script: travis_retry make $TARGET SCHEME=$ iOS_VERSION=$iOS_VERSION
 after_failure:
   - cat /usr/local/var/log/rabbitmq/rabbit@localhost.log
 cache:

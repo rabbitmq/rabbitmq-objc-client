@@ -1,6 +1,6 @@
-tests: tests_iOS tests_MacOS
-
 iOS_VERSION := 12.1
+
+SCHEME := "RMQClient"
 
 RABBITMQCTL := /usr/local/sbin/rabbitmqctl
 RABBITMQ_PLUGINS := /usr/local/sbin/rabbitmq-plugins
@@ -11,21 +11,11 @@ tests_ios: tests_iOS
 
 tests_macos: tests_MacOS
 
-tests_with_tls: tests_iOS_with_tls tests_macos_with_tls lint
-
 tests_iOS: test_dependencies
 	set -o pipefail && \
 		xcodebuild test \
 		-project RMQClient.xcodeproj \
-		-scheme RMQClient \
-		-destination 'platform=iOS Simulator,name=iPhone XR,OS=$(iOS_VERSION)' | \
-		xcpretty
-
-tests_iOS_with_tls: test_dependencies
-	set -o pipefail && \
-		xcodebuild test \
-		-project RMQClient.xcodeproj \
-		-scheme "RMQClient with TLS tests" \
+		-scheme "${SCHEME}" \
 		-destination 'platform=iOS Simulator,name=iPhone XR,OS=$(iOS_VERSION)' | \
 		xcpretty
 
@@ -33,17 +23,14 @@ tests_MacOS: test_dependencies
 	set -o pipefail && \
 		xcodebuild test \
 		-project RMQClient.xcodeproj \
-		-scheme RMQClient \
+		-scheme "${SCHEME}" \
 		-destination 'platform=OS X,arch=x86_64' | \
 		xcpretty
 
-tests_MacOS_with_tls: test_dependencies
-	set -o pipefail && \
-		xcodebuild test \
-		-project RMQClient.xcodeproj \
-		-scheme "RMQClient with TLS tests" \
-		-destination 'platform=OS X,arch=x86_64' | \
-		xcpretty
+tests_with_tls:
+	${MAKE} tests_ios SCHEME="RMQClient with TLS tests"
+	${MAKE} tests_macos SCHEME="RMQClient with TLS tests"
+	${MAKE} lint
 
 test_dependencies: bootstrap
 	gem list -i xcpretty || gem install xcpretty
