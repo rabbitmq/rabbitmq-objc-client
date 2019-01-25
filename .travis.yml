@@ -20,7 +20,7 @@ env:
   - TARGET=tests_macos SCHEME="RMQClient" TRAVIS_XCODE_SDK=macosx10.14
   - TARGET=tests_ios   SCHEME="RMQClient with TLS tests" TRAVIS_XCODE_SDK=iphonesimulator12.1 iOS_VERSION=12.1
   - TARGET=tests_macos SCHEME="RMQClient with TLS tests" TRAVIS_XCODE_SDK=macosx10.14
-script: travis_retry make $TARGET SCHEME=$ iOS_VERSION=$iOS_VERSION
+script: travis_retry make $TARGET SCHEME=$SCHEME iOS_VERSION=$iOS_VERSION
 after_failure:
   - cat /usr/local/var/log/rabbitmq/rabbit@localhost.log
 cache:
