@@ -44,15 +44,29 @@ To configure a node to run the TLS tests, configure the node to use the [certifi
 under `TestCertificates`. The certificates have a Subject Alternative Name of `localhost`
 which makes them not to be dependent on the host they were generated on.
 
-The following [RabbitMQ configuration file](https://www.rabbitmq.com/configure.html#configuration-files) is used by CI:
+The test suite also requires the [x509 certificate authentication mechanism](https://github.com/rabbitmq/rabbitmq-auth-mechanism-ssl)
+plugin to be enabled:
+
+``` shell
+brew install rabbitmq
+# target location will vary depending on how RabbitMQ was installed,
+# the Homebrew Cellar location and so on
+cp TestCertificates/* /usr/local/etc/rabbitmq/
+rabbitmq-plugins enable rabbitmq_auth_mechanism_ssl --offline
+```
+
+Then restart RabbitMQ.
+
+The following [RabbitMQ configuration file](https://www.rabbitmq.com/configure.html#configuration-files)
+is used by CI and can be used as example:
 
 ``` ini
 listeners.tcp.1 = 0.0.0.0:5672
 listeners.tcp.2 = 0.0.0.0:5674
 
-
 listeners.ssl.default = 5671
 
+# the paths must match those
 ssl_options.cacertfile = /usr/local/etc/rabbitmq/ca_certificate.pem
 ssl_options.certfile   = /usr/local/etc/rabbitmq/server_certificate.pem
 ssl_options.keyfile    = /usr/local/etc/rabbitmq/server_key.pem
@@ -65,16 +79,8 @@ auth_mechanisms.2 = AMQPLAIN
 auth_mechanisms.3 = EXTERNAL
 ```
 
-The test suite also requires the [x509 certificate authentication mechanism](https://github.com/rabbitmq/rabbitmq-auth-mechanism-ssl)
-plugin to be enabled:
-
-``` shell
-brew install rabbitmq
-cp TestCertificates/* /path/to/rabbitmq/installation/etc/rabbitmq/
-rabbitmq-plugins enable rabbitmq_auth_mechanism_ssl --offline
-```
-
-Then restart RabbitMQ.
+In case a different set of certificates is desired, it is highly recommended
+[using tls-gen](https://github.com/michaelklishin/tls-gen)'s basic profile.
 
 ### Node Preconfiguration
 
