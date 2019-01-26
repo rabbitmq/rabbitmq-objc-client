@@ -24,6 +24,20 @@ Carthage bootstrap will clone and build the dependencies:
 gmake bootstrap
 ```
 
+### Run a RabbitMQ Node in Docker
+
+It is possible to run a preconfigured node, including a TLS setup,
+in Docker:
+
+``` shell
+docker-compose build
+docker-compose up
+```
+
+This will publish (forward) local ports 5672, 5671, 15672 to the container,
+so if there are any local RabbitMQ nodes running they must be stopped first
+to avoid port conflicts.  
+
 ### Run a Local RabbitMQ Node
 
 There are two sets of tests that can be executed, each with its own
