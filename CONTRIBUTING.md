@@ -44,7 +44,7 @@ To configure a node to run the TLS tests, configure the node to use the [certifi
 under `TestCertificates`. The certificates have a Subject Alternative Name of `localhost`
 which makes them not to be dependent on the host they were generated on.
 
-The following minimalistic [RabbitMQ configuration file](https://www.rabbitmq.com/configure.html#configuration-files) is used by CI:
+The following [RabbitMQ configuration file](https://www.rabbitmq.com/configure.html#configuration-files) is used by CI:
 
 ``` ini
 listeners.tcp.1 = 0.0.0.0:5672
