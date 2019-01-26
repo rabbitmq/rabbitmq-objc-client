@@ -1,25 +1,85 @@
-##
+# Contributing
 
+## Development Workflow
+
+This project uses the most basic development workflow possible:
+
+ * Identify a problem
+ * Add a failing test or any other way to reproduce it
+ * Fix it
+ * Make sure all tests pass
+ * Submit a pull request on GitHub explaining **why** the change it necessary
+   and how to reproduce it
+ * Wait for maintainer's feedback
+
+That's about it.
 
 ## Running Tests
 
-First, run Carthage bootstrap:
+### Building Dependencies
+
+Carthage bootstrap will clone and build the dependencies:
 
 ```
 gmake bootstrap
 ```
 
-Then start a local RabbitMQ node (any way you please, doesn't have to be from Homebrew or source),
-configure it using files under `.travis/etc/` and enable the
-[x509 certificate authentication mechanism](https://github.com/rabbitmq/rabbitmq-auth-mechanism-ssl):
+### Run a Local RabbitMQ Node
 
-    brew install rabbitmq
-    cp .travis/etc/* /path/to/etc/rabbitmq/
-    rabbitmq-plugins enable rabbitmq_auth_mechanism_ssl
+There are two sets of tests that can be executed, each with its own
+XCode scheme:
+
+ * Unit and integration tests (core tests) use the `RMQClient` scheme
+   and can be executed against a RabbitMQ node with stock defaults
+   (assuming that certain setup targets are executed, see below)
+ * TLS tests use the `RMQClient with TLS tests` scheme and requires
+   a RabbitMQ node configured in a particular way
+
+The RabbitMQ node can be installed from Homebrew or by downloading
+and extracting a [generic binary build](https://www.rabbitmq.com/install-generic-unix.html).
+
+### Node Configuration for TLS Tests
+
+To configure a node to run the TLS tests, configure the node to use the [certificates and keys](https://www.rabbitmq.com/ssl.html#certificates-and-keys)
+under `TestCertificates`. The certificates have a Subject Alternative Name of `localhost`
+which makes them not to be dependent on the host they were generated on.
+
+The following minimalistic [RabbitMQ configuration file](https://www.rabbitmq.com/configure.html#configuration-files) is used by CI:
+
+``` ini
+listeners.tcp.1 = 0.0.0.0:5672
+listeners.tcp.2 = 0.0.0.0:5674
+
+
+listeners.ssl.default = 5671
+
+ssl_options.cacertfile = /usr/local/etc/rabbitmq/ca_certificate.pem
+ssl_options.certfile   = /usr/local/etc/rabbitmq/server_certificate.pem
+ssl_options.keyfile    = /usr/local/etc/rabbitmq/server_key.pem
+ssl_options.verify     = verify_peer
+ssl_options.fail_if_no_peer_cert = false
+
+
+auth_mechanisms.1 = PLAIN
+auth_mechanisms.2 = AMQPLAIN
+auth_mechanisms.3 = EXTERNAL
+```
+
+The test suite also requires the [x509 certificate authentication mechanism](https://github.com/rabbitmq/rabbitmq-auth-mechanism-ssl)
+plugin to be enabled:
+
+``` shell
+brew install rabbitmq
+cp TestCertificates/* /path/to/rabbitmq/installation/etc/rabbitmq/
+rabbitmq-plugins enable rabbitmq_auth_mechanism_ssl --offline
+```
 
 Then restart RabbitMQ.
 
-Now what's left is running a few setup steps:
+### Node Preconfiguration
+
+To seed the node (pre-create certain [virtual hosts](https://www.rabbitmq.com/vhosts.html), users,
+[permissions](https://www.rabbitmq.com/access-control.html)):
 
 ```
 # use RABBITMQCTL="/path/to/rabbitmqctl"
@@ -34,29 +94,47 @@ gmake set_up_test_users  RABBITMQCTL="/path/to/rabbitmqctl"
 gmake before_build RABBITMQCTL="/path/to/rabbitmqctl" RABBITMQ_PLUGINS="/path/to/rabbitmq-plugins"
 ```
 
-Finally, to run the tests:
+### Test Targets
+
+To run the core test suite:
 
 
-``` bash
-# for iOS
+``` shell
+# runs all tests with iOS and MacOS destinations
+gmake tests
+
+# iOS only
 gmake tests_ios iOS_VERSION=12.1
 
-# for macOS
+# MacOS only
 gmake tests_macos
+
 ```
 
-## SwiftLint
+or run the tests using the `RMQClient` scheme from XCode.
+
+To run the TLS test suite:
+
+
+``` shell
+# see the
+gmake tests_with_tls
+```
+
+or run the tests using the `RMQClient with TLS tests` scheme in XCode.
+
+## Linting with SwiftLint
 
 The test suite uses [SwiftLint](https://github.com/realm/SwiftLint) as a build phase.
 It must be installed in order for XCode to use it:
 
-``` bash
+``` shell
 brew install swiftlint
 ```
 
 In order to lint from the command line, use
 
-``` bash
+``` shell
 swiftlint
 ```
 
