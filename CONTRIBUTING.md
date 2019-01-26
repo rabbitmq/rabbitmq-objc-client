@@ -62,7 +62,6 @@ is used by CI and can be used as example:
 
 ``` ini
 listeners.tcp.1 = 0.0.0.0:5672
-listeners.tcp.2 = 0.0.0.0:5674
 
 listeners.ssl.default = 5671
 

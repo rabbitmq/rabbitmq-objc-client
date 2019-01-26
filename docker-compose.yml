@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  rabbitmq:
+    build: ./docker
+    container_name: rabbitmq_objc_client
+    environment:
+      RABBITMQ_LOGS: '-'
+      RABBITMQ_SASL_LOGS: '-'
+    ports:
+      - 5671-5672:5671-5672
+      - 15672:15672
