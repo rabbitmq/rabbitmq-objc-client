@@ -63,6 +63,7 @@ extern NSInteger const RMQChannelMaxDefault;
 @property (nonnull, nonatomic, readonly) NSString *vhost;
 @property (nonnull, nonatomic, readonly) RMQCredentials *credentials;
 @property (nonnull, nonatomic, readonly) NSString *authMechanism;
+@property (nonatomic, readonly) NSString *userProvidedConnectionName;
 @property (nonnull, nonatomic, readonly) id<RMQConnectionRecovery> recovery;
 
 - (nonnull instancetype)initWithCredentials:(nonnull RMQCredentials *)credentials
@@ -77,5 +78,21 @@ extern NSInteger const RMQChannelMaxDefault;
                                   heartbeat:(nonnull NSNumber *)heartbeat
                                       vhost:(nonnull NSString *)vhost
                               authMechanism:(nonnull NSString *)authMechanism
+                                   recovery:(nonnull id<RMQConnectionRecovery>)recovery;
+
+- (nonnull instancetype)initWithCredentials:(nonnull RMQCredentials *)credentials
+                                 channelMax:(nonnull NSNumber *)channelMax
+                                   frameMax:(nonnull NSNumber *)frameMax
+                                  heartbeat:(nonnull NSNumber *)heartbeat
+                                      vhost:(nonnull NSString *)vhost
+                              authMechanism:(nonnull NSString *)authMechanism
+                 userProvidedConnectionName:(nonnull NSString *)userProvidedConnectionName
+                                   recovery:(nonnull id<RMQConnectionRecovery>)recovery;
+
+- (nonnull instancetype)initWithCredentials:(nonnull RMQCredentials *)credentials
+                                  heartbeat:(nonnull NSNumber *)heartbeat
+                                      vhost:(nonnull NSString *)vhost
+                              authMechanism:(nonnull NSString *)authMechanism
+                 userProvidedConnectionName:(nonnull NSString *)userProvidedConnectionName
                                    recovery:(nonnull id<RMQConnectionRecovery>)recovery;
 @end
