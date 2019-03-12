@@ -123,7 +123,7 @@ class ChannelLifecycleIntegrationTest: XCTestCase {
         let ch2 = conn.createChannel()
 
         let qName = "objc.tests.\(Int.random(in: 200...1000))"
-        ch1.queue(qName, options: [.exclusive])
+        ch1.queue(qName, options: [.autoDelete])
 
         // uses a different set of properties from
         // the original declaration

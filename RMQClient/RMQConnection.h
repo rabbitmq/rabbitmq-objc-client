@@ -80,9 +80,9 @@
                             waiterFactory:(nonnull id<RMQWaiterFactory>)waiterFactory
                           heartbeatSender:(nonnull id<RMQHeartbeatSender>)heartbeatSender;
 
-/// @brief Connection tuning, customisable TLS, all recovery options.
+/// @brief Connection tuning, customisable config, all recovery options.
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
-                         tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
+         userProvidedConnectionName:(nonnull NSString *)connectionName
                          channelMax:(nonnull NSNumber *)channelMax
                            frameMax:(nonnull NSNumber *)frameMax
                           heartbeat:(nonnull NSNumber *)heartbeat
@@ -95,6 +95,42 @@
                        recoverAfter:(nonnull NSNumber *)recoveryInterval
                    recoveryAttempts:(nonnull NSNumber *)recoveryAttempts
          recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose;
+
+/// @brief Connection tuning, customisable TLS, key recovery options.
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                         tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate
+                       recoverAfter:(nonnull NSNumber *)recoveryInterval
+                   recoveryAttempts:(nonnull NSNumber *)recoveryAttempts
+         recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose;
+
+/// @brief Connection tuning, customisable TLS and connection name, key recovery options.
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                         tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
+         userProvidedConnectionName:(nullable NSString *)connectionName
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate
+                       recoverAfter:(nonnull NSNumber *)recoveryInterval
+                   recoveryAttempts:(nonnull NSNumber *)recoveryAttempts
+         recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose;
+
+/// @brief Connection tuning, customisable TLS, all recovery options.
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+         userProvidedConnectionName:(nullable NSString *)connectionName
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate
+                       recoverAfter:(nonnull NSNumber *)recoveryInterval
+                   recoveryAttempts:(nonnull NSNumber *)recoveryAttempts
+         recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose;
+
+/// @brief Connection configuration.
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+         userProvidedConnectionName:(nonnull NSString *)connectionName
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate;
+
+/// @brief TLS, connection configuration and delegate.
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                         tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
+         userProvidedConnectionName:(nonnull NSString *)connectionName
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate;
 
 /// @brief Allows setting of timeouts
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri

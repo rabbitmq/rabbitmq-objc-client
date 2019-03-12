@@ -110,12 +110,19 @@
     NSBundle *bundle = [NSBundle bundleWithIdentifier:@"io.pivotal.RMQClient"];
     NSString *version = bundle.infoDictionary[@"CFBundleShortVersionString"];
 
-    RMQTable *clientProperties = [[RMQTable alloc] init:
-                                  @{@"capabilities" : capabilities,
-                                    @"product"      : [[RMQLongstr alloc] init:@"RMQClient"],
-                                    @"platform"     : [[RMQLongstr alloc] init:@"iOS"],
-                                    @"version"      : [[RMQLongstr alloc] init:version],
-                                    @"information"  : [[RMQLongstr alloc] init:@"https://github.com/rabbitmq/rabbitmq-objc-client"]}];
+    NSDictionary *libraryProperties = @{@"capabilities" : capabilities,
+                                        @"product"      : [[RMQLongstr alloc] init:@"RMQClient"],
+                                        @"platform"     : [[RMQLongstr alloc] init:@"iOS"],
+                                        @"version"      : [[RMQLongstr alloc] init:version],
+                                        @"information"  : [[RMQLongstr alloc] init:@"https://github.com/rabbitmq/rabbitmq-objc-client"]};
+    NSMutableDictionary *combinedProperties = [[NSMutableDictionary alloc] initWithDictionary:libraryProperties];
+
+    NSString *userProvidedConnectionName = [self.config userProvidedConnectionName];
+    if (userProvidedConnectionName != nil) {
+        [combinedProperties setObject:[[RMQLongstr alloc] init:userProvidedConnectionName]
+                               forKey:@"connection_name"];
+    }
+    RMQTable *clientProperties = [[RMQTable alloc] init:combinedProperties];
 
     return [[RMQConnectionStartOk alloc] initWithClientProperties:clientProperties
                                                         mechanism:[[RMQShortstr alloc] init:self.config.authMechanism]

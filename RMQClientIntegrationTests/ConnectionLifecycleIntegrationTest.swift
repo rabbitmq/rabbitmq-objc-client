@@ -120,5 +120,18 @@ class ConnectionLifecycleIntegrationTest: XCTestCase {
         XCTAssertNotNil(props["product"] ?? nil)
         XCTAssertNotNil(props["version"] ?? nil)
         XCTAssertNotNil(props["capabilities"] ?? nil)
+
+        conn.blockingClose()
+    }
+
+    func testUserProvidedConnectionName() {
+        let conn = RMQConnection(uri: IntegrationHelper.defaultEndpoint,
+                                 userProvidedConnectionName: "testUserProvidedConnectionName.1",
+                                 delegate: RMQConnectionDelegateLogger())
+        conn.start()
+        XCTAssertTrue(IntegrationHelper.pollUntilConnected(conn))
+
+        XCTAssert(conn.isOpen())
+        conn.blockingClose()
     }
 }

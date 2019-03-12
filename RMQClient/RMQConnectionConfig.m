@@ -66,6 +66,7 @@ NSInteger const RMQChannelMaxDefault = 127;
 @property (nonnull, nonatomic, readwrite) NSString *vhost;
 @property (nonnull, nonatomic, readwrite) RMQCredentials *credentials;
 @property (nonnull, nonatomic, readwrite) NSString *authMechanism;
+@property (nonatomic, readwrite) NSString *userProvidedConnectionName;
 @property (nonnull, nonatomic, readwrite) id<RMQConnectionRecovery> recovery;
 @end
 
@@ -101,6 +102,44 @@ NSInteger const RMQChannelMaxDefault = 127;
                            heartbeat:heartbeat
                                vhost:vhost
                        authMechanism:authMechanism
+                            recovery:recovery];
+}
+
+- (instancetype)initWithCredentials:(RMQCredentials *)credentials
+                         channelMax:(NSNumber *)channelMax
+                           frameMax:(NSNumber *)frameMax
+                          heartbeat:(NSNumber *)heartbeat
+                              vhost:(nonnull NSString *)vhost
+                      authMechanism:(nonnull NSString *)authMechanism
+         userProvidedConnectionName:(nonnull NSString *)userProvidedConnectionName
+                           recovery:(nonnull id<RMQConnectionRecovery>)recovery {
+    self = [super init];
+    if (self) {
+        self.credentials = credentials;
+        self.channelMax = channelMax;
+        self.frameMax = frameMax;
+        self.heartbeat = heartbeat;
+        self.vhost = vhost;
+        self.authMechanism = authMechanism;
+        self.userProvidedConnectionName = userProvidedConnectionName;
+        self.recovery = recovery;
+    }
+    return self;
+}
+
+- (instancetype)initWithCredentials:(RMQCredentials *)credentials
+                          heartbeat:(NSNumber *)heartbeat
+                              vhost:(nonnull NSString *)vhost
+                      authMechanism:(nonnull NSString *)authMechanism
+         userProvidedConnectionName:(nonnull NSString *)userProvidedConnectionName
+                           recovery:(nonnull id<RMQConnectionRecovery>)recovery {
+    return [self initWithCredentials:credentials
+                          channelMax:[NSNumber numberWithInteger:RMQChannelMaxDefault]
+                            frameMax:[NSNumber numberWithInteger:RMQFrameMax]
+                           heartbeat:heartbeat
+                               vhost:vhost
+                       authMechanism:authMechanism
+          userProvidedConnectionName:userProvidedConnectionName
                             recovery:recovery];
 }
 @end

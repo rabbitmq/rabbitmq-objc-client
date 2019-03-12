@@ -157,15 +157,8 @@ class ConnectionRecoveryIntegrationTest: XCTestCase {
 
         let conn = RMQConnection(uri: plainEndpoint,
                                  tlsOptions: RMQTLSOptions.fromURI(plainEndpoint),
-                                 channelMax: RMQChannelMaxDefault as NSNumber,
-                                 frameMax: RMQFrameMax as NSNumber,
-                                 heartbeat: 10,
-                                 connectTimeout: 15,
-                                 readTimeout: 30,
-                                 writeTimeout: 30,
-                                 syncTimeout: 10,
+                                 userProvidedConnectionName: nil,
                                  delegate: delegate,
-                                 delegateQueue: DispatchQueue.main,
                                  recoverAfter: recoveryInterval as NSNumber,
                                  recoveryAttempts: 5,
                                  recoverFromConnectionClose: true)
