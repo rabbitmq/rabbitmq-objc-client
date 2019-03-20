@@ -1,2 +1,2 @@
-deb http://dl.bintray.com/rabbitmq-erlang/debian bionic erlang
-deb http://dl.bintray.com/rabbitmq/debian bionic main
+deb https://dl.bintray.com/rabbitmq-erlang/debian bionic erlang
+deb https://dl.bintray.com/rabbitmq/debian bionic main

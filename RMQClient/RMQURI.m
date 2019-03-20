@@ -68,7 +68,7 @@
     if (![self isValidScheme:components.scheme]) {
         *error = [NSError errorWithDomain:RMQErrorDomain
                                      code:RMQErrorInvalidScheme
-                                 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Connection URI must use amqp or amqps schema (example: amqp://bus.megacorp.internal:5766), learn more at http://bit.ly/ks8MXK", nil)}];
+                                 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Connection URI must use amqp or amqps schema (example: amqp://bus.megacorp.internal:5766), learn more at https://bit.ly/ks8MXK", nil)}];
         return nil;
     }
 

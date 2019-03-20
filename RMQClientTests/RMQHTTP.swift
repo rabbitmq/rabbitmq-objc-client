@@ -52,7 +52,7 @@
 import Foundation
 
 class RMQHTTP {
-    static let testEndpoint = "http://guest:guest@127.0.0.1:15672/api"
+    static let testEndpoint = "https://guest:guest@127.0.0.1:15672/api"
 
     var uri: String
 

@@ -61,12 +61,12 @@ failedToConnectWithError:(NSError *)error;
 /// @brief Called when a connection disconnects for any reason
 - (void)   connection:(RMQConnection *)connection
 disconnectedWithError:(NSError *)error;
-/// @brief Called before the configured <a href="http://www.rabbitmq.com/api-guide.html#recovery">automatic connection recovery</a> sleep.
+/// @brief Called before the configured <a href="https://www.rabbitmq.com/api-guide.html#recovery">automatic connection recovery</a> sleep.
 - (void)willStartRecoveryWithConnection:(RMQConnection *)connection;
-/// @brief Called after the configured <a href="http://www.rabbitmq.com/api-guide.html#recovery">automatic connection recovery</a> sleep.
+/// @brief Called after the configured <a href="https://www.rabbitmq.com/api-guide.html#recovery">automatic connection recovery</a> sleep.
 - (void)startingRecoveryWithConnection:(RMQConnection *)connection;
 /*!
- * @brief Called when <a href="http://www.rabbitmq.com/api-guide.html#recovery">automatic connection recovery</a> has succeeded.
+ * @brief Called when <a href="https://www.rabbitmq.com/api-guide.html#recovery">automatic connection recovery</a> has succeeded.
  * @param connection the connection instance that was recovered.
  */
 - (void)recoveredConnection:(RMQConnection *)connection;

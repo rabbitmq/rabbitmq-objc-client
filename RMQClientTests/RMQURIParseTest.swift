@@ -53,7 +53,7 @@ import XCTest
 
 class RMQURIParseTest: XCTestCase {
     func testNonAMQPSchemesNotAllowed() {
-        XCTAssertThrowsError(try RMQURI.parse("http://dev.rabbitmq.com")) { error in
+        XCTAssertThrowsError(try RMQURI.parse("https://dev.rabbitmq.com")) { error in
             do {
                 XCTAssertEqual(
                     RMQError.invalidScheme.rawValue,

@@ -68,7 +68,7 @@ codebases before the ecosystem converts to 95+% Swift.
 
 ## Documentation
 
- * [Several RabbitMQ tutorials](http://www.rabbitmq.com/getstarted.html) are provided for
+ * [Several RabbitMQ tutorials](https://www.rabbitmq.com/getstarted.html) are provided for
    this client library.
 
 ### (Basic) Usage Example
@@ -105,7 +105,7 @@ codebases before the ecosystem converts to 95+% Swift.
    conn.close()
    ```
 
-See [the tutorials](http://www.rabbitmq.com/getstarted.html) for more detailed instructions.
+See [the tutorials](https://www.rabbitmq.com/getstarted.html) for more detailed instructions.
 
 
 ## Running Tests

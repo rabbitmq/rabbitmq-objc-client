@@ -176,7 +176,7 @@ class MethodFixtures {
             "capabilities": RMQTable(dict),
             "cluster_name": RMQLongstr("rabbit@myapp.cfapps.pez.pivotal.io"),
             "copyright": RMQLongstr("Copyright (C) 2007-2019 Pivotal Software, Inc."),
-            "information": RMQLongstr("Licensed under the MPL.  See http://www.rabbitmq.com/"),
+            "information": RMQLongstr("Licensed under the MPL.  See https://www.rabbitmq.com/"),
             "platform": RMQLongstr("Erlang/OTP"),
             "product": RMQLongstr("RabbitMQ"),
             "version": RMQLongstr("3.7.10")

@@ -417,7 +417,7 @@ completionHandler:(RMQConsumerDeliveryHandler)userCompletionHandler {
 
 - (void)basicRecover
 {
-    // According to http://www.rabbitmq.com/specification.html "Recovery with requeue=false is not supported."
+    // According to https://www.rabbitmq.com/specification.html "Recovery with requeue=false is not supported."
     [self.dispatcher sendSyncMethod:[[RMQBasicRecover alloc] initWithOptions:RMQBasicRecoverRequeue]];
 }
 
