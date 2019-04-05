@@ -61,24 +61,24 @@
  */
 @interface RMQExchange : NSObject
 
-@property (nonatomic, readonly) NSString *name;
-@property (nonatomic, readonly) NSString *type;
+@property (nonnull, nonatomic, readonly) NSString *name;
+@property (nonnull, nonatomic, readonly) NSString *type;
 @property (nonatomic, readonly) RMQExchangeDeclareOptions options;
 
 /// @brief Internal constructor used by RMQChannel exchange creation methods (direct, fanout, topic, headers)
-- (instancetype)initWithName:(NSString *)name
-                        type:(NSString *)type
-                     options:(RMQExchangeDeclareOptions)options
-                     channel:(id<RMQChannel>)channel;
+- (instancetype _Nonnull )initWithName:(nonnull NSString *)name
+                                  type:(nonnull NSString *)type
+                               options:(RMQExchangeDeclareOptions)options
+                               channel:(nonnull id<RMQChannel>)channel;
 
 /// @brief Bind this exchange to another exchange
 - (nonnull instancetype)bind:(nonnull RMQExchange *)source
-                  routingKey:(NSString *)routingKey;
+                  routingKey:(NSString *_Nullable)routingKey;
 /// @brief Bind this exchange to another exchange
 - (nonnull instancetype)bind:(nonnull RMQExchange *)source;
 /// @brief Unbind this exchange from another exchange
 - (nonnull instancetype)unbind:(nonnull RMQExchange *)source
-                    routingKey:(NSString *)routingKey;
+                    routingKey:(NSString *_Nullable)routingKey;
 /// @brief Unbind this exchange from another exchange
 - (nonnull instancetype)unbind:(nonnull RMQExchange *)source;
 /// @brief Delete the exchange
@@ -91,7 +91,7 @@
  */
 - (nonnull NSNumber *)publish:(nonnull NSData *)body
                    routingKey:(nonnull NSString *)routingKey
-                   properties:(NSArray <RMQValue<RMQBasicValue> *> *)properties
+                   properties:(NSArray <RMQValue<RMQBasicValue> *> *_Nonnull)properties
                       options:(RMQBasicPublishOptions)options;
 /*!
  * @brief  Publish a message to this exchange

@@ -75,7 +75,7 @@ typedef void (^RMQChannelCompletionHandler)(void);
 - (void)close;
 
 /// @brief Closes the channel and executes a completion handler.
-- (void)close:(RMQChannelCompletionHandler)handler;
+- (void)close:(nullable RMQChannelCompletionHandler)handler;
 
 /// @brief Closes the channel, blocking the calling thread.
 - (void)blockingClose;

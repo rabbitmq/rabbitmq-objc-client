@@ -59,7 +59,7 @@ class RMQExchangeTest: XCTestCase {
         let ch = ChannelSpy(channelNumber: 1)
         ch.publishReturn = 123
         let ex = RMQExchange(name: "", type: "direct", options: [], channel: ch)
-        let retval = ex?.publish(body, routingKey: "my.q")
+        let retval = ex.publish(body, routingKey: "my.q")
 
         XCTAssertEqual(123, retval)
         XCTAssertEqual(body, ch.lastReceivedBasicPublishMessage)
@@ -72,7 +72,7 @@ class RMQExchangeTest: XCTestCase {
     func testPublishWithoutRoutingKeyUsesEmptyString() {
         let ch = ChannelSpy(channelNumber: 1)
         let ex = RMQExchange(name: "", type: "direct", options: [], channel: ch)
-        _ = ex?.publish(body)
+        _ = ex.publish(body)
 
         XCTAssertEqual("", ch.lastReceivedBasicPublishRoutingKey)
     }
@@ -80,7 +80,7 @@ class RMQExchangeTest: XCTestCase {
     func testPublishWithPersistence() {
         let ch = ChannelSpy(channelNumber: 1)
         let ex = RMQExchange(name: "some-ex", type: "direct", options: [], channel: ch)
-        _ = ex?.publish(body, routingKey: "my.q", persistent: true)
+        _ = ex.publish(body, routingKey: "my.q", persistent: true)
 
         XCTAssertEqual(body, ch.lastReceivedBasicPublishMessage)
         XCTAssertEqual("my.q", ch.lastReceivedBasicPublishRoutingKey)
@@ -110,7 +110,7 @@ class RMQExchangeTest: XCTestCase {
             BasicPropertyFixtures.exhaustiveHeaders()
         ]
 
-        _ = ex?.publish("{\"a\": \"message\"}".data(using: String.Encoding.utf8)!,
+        _ = ex.publish("{\"a\": \"message\"}".data(using: String.Encoding.utf8)!,
                         routingKey: "some.queue",
                         properties: (properties as! [RMQValue & RMQBasicValue]),
                         options: [.mandatory])
@@ -126,7 +126,7 @@ class RMQExchangeTest: XCTestCase {
     func testPublishWithOptions() {
         let ch = ChannelSpy(channelNumber: 1)
         let ex = RMQExchange(name: "some-ex", type: "direct", options: [], channel: ch)
-        _ = ex?.publish(body, routingKey: "my.q", persistent: false, options: [.mandatory])
+        _ = ex.publish(body, routingKey: "my.q", persistent: false, options: [.mandatory])
 
         XCTAssertEqual(body, ch.lastReceivedBasicPublishMessage)
         XCTAssertEqual("my.q", ch.lastReceivedBasicPublishRoutingKey)
@@ -139,19 +139,19 @@ class RMQExchangeTest: XCTestCase {
         let ch = ChannelSpy(channelNumber: 1)
         let ex = RMQExchange(name: "deletable", type: "direct", options: [], channel: ch)
 
-        ex?.delete()
+        ex.delete()
         XCTAssertEqual("deletable", ch.lastReceivedExchangeDeleteExchangeName)
         XCTAssertEqual([], ch.lastReceivedExchangeDeleteOptions)
 
-        ex?.delete([.ifUnused])
+        ex.delete([.ifUnused])
         XCTAssertEqual("deletable", ch.lastReceivedExchangeDeleteExchangeName)
         XCTAssertEqual([.ifUnused], ch.lastReceivedExchangeDeleteOptions)
     }
 
     func testBindCallsBindOnChannel() {
         let ch = ChannelSpy(channelNumber: 1)
-        let ex1 = RMQExchange(name: "ex1", type: "direct", options: [], channel: ch)!
-        let ex2 = RMQExchange(name: "ex2", type: "direct", options: [], channel: ch)!
+        let ex1 = RMQExchange(name: "ex1", type: "direct", options: [], channel: ch)
+        let ex2 = RMQExchange(name: "ex2", type: "direct", options: [], channel: ch)
 
         ex1.bind(ex2)
         XCTAssertEqual("ex1", ch.lastReceivedExchangeBindDestinationName)
@@ -166,8 +166,8 @@ class RMQExchangeTest: XCTestCase {
 
     func testUnbindCallsUnbindOnChannel() {
         let ch = ChannelSpy(channelNumber: 1)
-        let ex1 = RMQExchange(name: "ex1", type: "direct", options: [], channel: ch)!
-        let ex2 = RMQExchange(name: "ex2", type: "direct", options: [], channel: ch)!
+        let ex1 = RMQExchange(name: "ex1", type: "direct", options: [], channel: ch)
+        let ex2 = RMQExchange(name: "ex2", type: "direct", options: [], channel: ch)
 
         ex1.unbind(ex2)
         XCTAssertEqual("ex1", ch.lastReceivedExchangeUnbindDestinationName)

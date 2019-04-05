@@ -219,7 +219,7 @@
 - (nonnull instancetype)initWithDelegate:(nullable id<RMQConnectionDelegate>)delegate;
 
 /// @brief Returns the transport used by this connection, if any
--(id<RMQTransport>)transport;
+-(nonnull id<RMQTransport>)transport;
 
 /// @brief Returns true if the connection is currently open
 - (BOOL)isOpen;

@@ -92,7 +92,7 @@ class ExchangeIntegrationTest: XCTestCase {
         }
 
         let body = "msg".data(using: String.Encoding.utf8)!
-        ch.defaultExchange().publish(body, routingKey: q.name!)
+        ch.defaultExchange().publish(body, routingKey: q.name)
 
         IntegrationHelper.awaitDelivery(semaphore,
                                         expectedPayload: body, checker: { return delivered })

@@ -62,7 +62,7 @@
                                 port:(nonnull NSNumber *)port
                           tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
                      callbackStorage:(nonnull id)callbacks
-                  socketConfigurator:(void (^)(GCDAsyncSocket *socket))socketConfigurator
+                  socketConfigurator:(void (^_Nullable)(GCDAsyncSocket * _Nonnull socket))socketConfigurator
                       connectTimeout:(nonnull NSNumber *)connectTimeout
                          readTimeout:(nonnull NSNumber *)readTimeout
                         writeTimeout:(nonnull NSNumber *)writeTimeout;
@@ -71,7 +71,7 @@
 - (nonnull instancetype)initWithHost:(nonnull NSString *)host
                                 port:(nonnull NSNumber *)port
                           tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
-                  socketConfigurator:(void (^)(GCDAsyncSocket *socket))socketConfigurator
+                  socketConfigurator:(void (^_Nullable)(GCDAsyncSocket * _Nonnull socket))socketConfigurator
                       connectTimeout:(nonnull NSNumber *)connectTimeout
                          readTimeout:(nonnull NSNumber *)readTimeout
                         writeTimeout:(nonnull NSNumber *)writeTimeout;

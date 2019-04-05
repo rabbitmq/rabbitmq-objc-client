@@ -63,7 +63,7 @@ extern NSInteger const RMQChannelMaxDefault;
 @property (nonnull, nonatomic, readonly) NSString *vhost;
 @property (nonnull, nonatomic, readonly) RMQCredentials *credentials;
 @property (nonnull, nonatomic, readonly) NSString *authMechanism;
-@property (nonatomic, readonly) NSString *userProvidedConnectionName;
+@property (nullable, nonatomic, readonly) NSString *userProvidedConnectionName;
 @property (nonnull, nonatomic, readonly) id<RMQConnectionRecovery> recovery;
 
 - (nonnull instancetype)initWithCredentials:(nonnull RMQCredentials *)credentials

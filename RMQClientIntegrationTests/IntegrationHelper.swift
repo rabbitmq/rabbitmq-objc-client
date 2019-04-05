@@ -91,7 +91,8 @@ class IntegrationHelper {
 
     static func pollUntilTransportDisconnected(_ conn: RMQConnection) -> Bool {
         return TestHelper.pollUntil(defaultTimeout) {
-            if let stillConnected = conn.transport()?.isConnected() {
+            let stillConnected = conn.transport().isConnected()
+            if stillConnected {
                 return !stillConnected
             } else {
                 return false

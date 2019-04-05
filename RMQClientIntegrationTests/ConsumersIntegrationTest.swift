@@ -120,7 +120,7 @@ class ConsumersIntegrationTest: XCTestCase {
 
         let body = "msg".data(using: String.Encoding.utf8)!
         for _ in (0...total) {
-            ch.defaultExchange().publish(body, routingKey: q.name!)
+            ch.defaultExchange().publish(body, routingKey: q.name)
         }
 
         XCTAssertEqual(.success,

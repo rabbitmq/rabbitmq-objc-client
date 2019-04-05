@@ -144,9 +144,16 @@
         currentlyOpen = false
     }
 
-    func close(_ completionHandler: () -> Void) {
+    func close(_ completionHandler: RMQChannelCompletionHandler? = nil) {
         closeCalled = true
         currentlyOpen = false
+    }
+
+    func close(_ completionHandler: () -> Void?) {
+        closeCalled = true
+        currentlyOpen = false
+
+        completionHandler()
     }
 
     func wasClosedByServer() -> Bool {

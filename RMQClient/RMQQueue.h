@@ -65,15 +65,15 @@
  * All operations delegate to the associated RMQChannel.
  */
 @interface RMQQueue : NSObject
-@property (copy, nonatomic, readonly) NSString *name;
+@property (copy, nonnull, nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) RMQQueueDeclareOptions options;
-@property (nonatomic, readonly) RMQTable *arguments;
+@property (nonatomic, nullable, readonly) RMQTable *arguments;
 
 /// @brief Internal constructor used by RMQChannel
-- (instancetype)initWithName:(NSString *)name
-                     options:(RMQQueueDeclareOptions)options
-                   arguments:(RMQTable *)arguments
-                     channel:(id <RMQChannel>)channel;
+- (nonnull instancetype)initWithName:(nonnull NSString *)name
+                             options:(RMQQueueDeclareOptions)options
+                            arguments:(nullable RMQTable *)arguments
+                              channel:(nonnull id <RMQChannel>)channel;
 
 /// @brief Bind this queue to an exchange
 - (nonnull instancetype)bind:(nonnull RMQExchange *)exchange
@@ -101,7 +101,7 @@
  * @return Sequence number corresponding to the numbers passed to RMQChannel#afterConfirmed
  */
 - (nonnull NSNumber *)publish:(nonnull NSData *)body
-                   properties:(NSArray <RMQValue<RMQBasicValue> *> *)properties
+                   properties:(nullable NSArray <RMQValue<RMQBasicValue> *> *)properties
                       options:(RMQBasicPublishOptions)options;
 
 /*!
@@ -129,49 +129,49 @@
 - (nonnull NSNumber *)publish:(nonnull NSData *)body;
 
 /// @brief  Perform an RMQChannel#basicGet with the current queue's name.
-- (void)pop:(RMQConsumerDeliveryHandler)handler;
+- (void)pop:(nullable RMQConsumerDeliveryHandler)handler;
 
 /*!
  * @brief Registers a consumer on this queue using the manual acknowledgement mode.
  *        Returns an RMQConsumer instance that can be used to cancel the consumer.
  */
-- (nonnull RMQConsumer *)subscribe:(RMQConsumerDeliveryHandler)handler;
+- (nonnull RMQConsumer *)subscribe:(nonnull RMQConsumerDeliveryHandler)handler;
 
 /*!
  * @brief Register a consumer on this queue using the provided options
  *        Returns an RMQConsumer instance that can be used to cancel the consumer.
  */
 - (nonnull RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options
-                           handler:(RMQConsumerDeliveryHandler)handler;
+                           handler:(nonnull RMQConsumerDeliveryHandler)handler;
 
 /*!
  * @brief Perform an RMQChannel#basicConsume with the current queue's name, options and arguments.
  *        Returns an RMQConsumer instance that can be used to cancel the consumer.
  */
 - (nonnull RMQConsumer *)subscribe:(RMQBasicConsumeOptions)options
-                         arguments:(RMQTable *)arguments
-                           handler:(RMQConsumerDeliveryHandler)handler;
+                         arguments:(nullable RMQTable *)arguments
+                           handler:(nonnull RMQConsumerDeliveryHandler)handler;
 
 /*!
  * @brief Perform an RMQChannel#basicConsume with the current queue's name
  *        and using the automatic acknowledgement mode.
  *        Returns an RMQConsumer instance that can be used to cancel the consumer.
  */
-- (nonnull RMQConsumer *)subscribeAutoAcks:(RMQConsumerDeliveryHandler)handler;
+- (nonnull RMQConsumer *)subscribeAutoAcks:(nonnull RMQConsumerDeliveryHandler)handler;
 
 /*!
  * @brief Perform an RMQChannel#basicConsume with the current queue's name
  *        and using the manual acknowledgement mode.
  *        Returns an RMQConsumer instance that can be used to cancel the consumer.
  */
-- (nonnull RMQConsumer *)subscribeManualAcks:(RMQConsumerDeliveryHandler)handler;
+- (nonnull RMQConsumer *)subscribeManualAcks:(nonnull RMQConsumerDeliveryHandler)handler;
 
 /*!
  * @brief Perform an RMQChannel#basicConsume with the current queue's name.
  *        Returns an RMQConsumer instance that can be used to cancel the consumer.
  */
 - (nonnull RMQConsumer *)subscribeWithAckMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode
-                                      handler:(RMQConsumerDeliveryHandler)handler;
+                                      handler:(nonnull RMQConsumerDeliveryHandler)handler;
 
 /*!
  * @brief Perform an RMQChannel#basicConsume with the current queue's name, options and arguments.
@@ -179,5 +179,5 @@
  */
 - (nonnull RMQConsumer *)subscribeWithAckMode:(RMQBasicConsumeAcknowledgementMode)acknowledgementMode
                                     arguments:(nonnull RMQTable *)arguments
-                                      handler:(RMQConsumerDeliveryHandler)handler;
+                                      handler:(nonnull RMQConsumerDeliveryHandler)handler;
 @end
