@@ -16,7 +16,7 @@ tests_iOS: test_dependencies
 		xcodebuild test \
 		-project RMQClient.xcodeproj \
 		-scheme "${SCHEME}" \
-		-destination 'platform=iOS Simulator,name=iPhone XR,OS=$(iOS_VERSION)' | \
+		-destination 'platform=iOS Simulator,name=iPhone Xʀ,OS=$(iOS_VERSION)' | \
 		xcpretty
 
 tests_MacOS: test_dependencies
