@@ -99,6 +99,12 @@ static void RMQInitConnectionConfigDefaults() {
 
 @implementation RMQConnection
 
++ (dispatch_queue_t)defaultDispatchQueue {
+    // TODO: consider a library-specific GCD queue, e.g.
+    // return dispatch_queue_create("com.rabbitmq.client.connections", DISPATCH_QUEUE_SERIAL);
+    return dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+}
+
 - (instancetype)initWithTransport:(id<RMQTransport>)transport
                            config:(RMQConnectionConfig *)config
                  handshakeTimeout:(NSNumber *)handshakeTimeout
@@ -326,7 +332,7 @@ static void RMQInitConnectionConfigDefaults() {
     RMQQueuingConnectionDelegateProxy *delegateProxy =
                     [[RMQQueuingConnectionDelegateProxy alloc]
                                         initWithDelegate:delegate
-                                                   queue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+                                                   queue:[RMQConnection defaultDispatchQueue]];
     RMQSemaphoreWaiterFactory *waiterFactory = [RMQSemaphoreWaiterFactory new];
     RMQGCDHeartbeatSender *heartbeatSender = [[RMQGCDHeartbeatSender alloc] initWithTransport:transport
                                                                                         clock:[RMQTickingClock new]];
@@ -391,7 +397,7 @@ static void RMQInitConnectionConfigDefaults() {
                 writeTimeout:RMQDefaultWriteTimeout
                  syncTimeout:RMQDefaultSyncTimeout
                     delegate:delegate
-               delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+               delegateQueue:[RMQConnection defaultDispatchQueue]
                 recoverAfter:recoveryInterval
             recoveryAttempts:@(NSUIntegerMax)
   recoverFromConnectionClose:YES];
@@ -410,7 +416,7 @@ static void RMQInitConnectionConfigDefaults() {
                 writeTimeout:RMQDefaultWriteTimeout
                  syncTimeout:RMQDefaultSyncTimeout
                     delegate:delegate
-               delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+               delegateQueue:[RMQConnection defaultDispatchQueue]
                 recoverAfter:RMQDefaultRecoveryInterval
             recoveryAttempts:@(NSUIntegerMax)
   recoverFromConnectionClose:YES];
@@ -432,7 +438,7 @@ static void RMQInitConnectionConfigDefaults() {
                 writeTimeout:writeTimeout
                  syncTimeout:RMQDefaultSyncTimeout
                     delegate:delegate
-               delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+               delegateQueue:[RMQConnection defaultDispatchQueue]
                 recoverAfter:RMQDefaultRecoveryInterval
             recoveryAttempts:@(NSUIntegerMax)
   recoverFromConnectionClose:YES];
@@ -502,7 +508,7 @@ static void RMQInitConnectionConfigDefaults() {
                 writeTimeout:RMQDefaultWriteTimeout
                  syncTimeout:RMQDefaultSyncTimeout
                     delegate:delegate
-               delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+               delegateQueue:[RMQConnection defaultDispatchQueue]];
 }
 
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
@@ -590,6 +596,10 @@ static void RMQInitConnectionConfigDefaults() {
     [ch open];
 
     return ch;
+}
+
+- (BOOL)hasCompletedHandshake {
+    return self.handshakeComplete;
 }
 
 - (BOOL)isOpen {

@@ -69,6 +69,9 @@
 @property (nonnull, copy, nonatomic, readonly) NSString *vhost;
 @property (nonnull, copy, nonatomic, readwrite) RMQTable *serverProperties;
 
+/// @brief Returns a GCD dispatch queue used for newly created connections by default.
++(nonnull dispatch_queue_t) defaultDispatchQueue;
+
 /// @brief Designated initializer: do not use.
 - (nonnull instancetype)initWithTransport:(nonnull id<RMQTransport>)transport
                                    config:(nonnull RMQConnectionConfig *)config
@@ -220,6 +223,9 @@
 
 /// @brief Returns the transport used by this connection, if any
 -(nonnull id<RMQTransport>)transport;
+
+/// @brief Returns true if the connection has successfully completed protocol handshake
+- (BOOL)hasCompletedHandshake;
 
 /// @brief Returns true if the connection is currently open
 - (BOOL)isOpen;
