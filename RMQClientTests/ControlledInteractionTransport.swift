@@ -86,6 +86,10 @@ enum TestDoubleTransportError: Error {
         return connected
     }
 
+    func isDisconnected() -> Bool {
+        return !self.isConnected()
+    }
+
     func readFrame(_ complete: @escaping (Data) -> Void) {
         readCallbacks.append(complete)
     }

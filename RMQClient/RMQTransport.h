@@ -61,4 +61,6 @@
 - (void)simulateDisconnect;
 /// @brief Returns true if the transport is connected
 - (BOOL)isConnected;
+/// @brief Returns true if the transport is not connected
+- (BOOL)isDisconnected;
 @end

@@ -63,7 +63,7 @@ RMQTCPSocketConfigurator noOpSocketConfigurator = ^(GCDAsyncSocket* _socket) {};
 @property (nonatomic, readwrite) NSString *host;
 @property (nonatomic, readwrite) NSNumber *port;
 @property (nonatomic, readwrite) RMQTLSOptions *tlsOptions;
-@property (nonatomic, readwrite) BOOL _isConnected;
+@property (atomic, readwrite) BOOL _isConnected;
 @property (nonatomic, readwrite) GCDAsyncSocket *socket;
 @property (nonatomic, readwrite) id callbacks;
 @property (nonatomic, readwrite) NSTimeInterval connectTimeout;
@@ -158,6 +158,7 @@ RMQTCPSocketConfigurator noOpSocketConfigurator = ^(GCDAsyncSocket* _socket) {};
 
 - (void)close {
     [self.socket disconnect];
+    self._isConnected = NO;
 }
 
 - (void)write:(NSData *)data {
@@ -205,6 +206,10 @@ struct __attribute__((__packed__)) AMQPHeader {
 
 - (BOOL)isConnected {
     return self._isConnected;
+}
+
+- (BOOL)isDisconnected {
+    return !self._isConnected;
 }
 
 # pragma mark - Private
