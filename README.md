@@ -15,15 +15,16 @@ This library currently targets iOS 10+ and macOS 10.11+.
 
 1. Create a Cartfile with the following line:
 
-   ```
-   github "rabbitmq/rabbitmq-objc-client" ~> 0.10.0
-   ```
+ ```
+ github "rabbitmq/rabbitmq-objc-client" "v0.11.0-rc1"
+ ```
 
-   Run Carthage, for example in a new project:
+Run Carthage, for example in a new project:
 
-   ```
-   carthage bootstrap
-   ```
+ ```
+ carthage bootstrap
+ ```
+
 1. In your Xcode project, in the **Build Phases** section of your target, open up **Link
    Binary With Libraries**. Now drag e.g. `Carthage/Build/iOS/RMQClient.framework`
    (choose Mac for OSX) into this list.
@@ -37,7 +38,7 @@ This library currently targets iOS 10+ and macOS 10.11+.
 1. Add the following to your Podfile:
 
    ```
-   pod 'RMQClient', '~> 0.10.0'
+   pod 'RMQClient', '~> 0.11.0-rc1'
    ```
    We recommend adding `use_frameworks!` to enable modular imports (Objective-C only).
 1. Run `pod install`.
