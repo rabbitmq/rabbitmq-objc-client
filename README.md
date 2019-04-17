@@ -4,8 +4,11 @@
 
 A RabbitMQ client, largely influenced by [Bunny](https://github.com/ruby-amqp/bunny).
 
-Test-driven from Swift and implemented in Objective-C, to cover both Objective-C and Swift
-codebases before the ecosystem converts to 95+% Swift.
+Test-driven from Swift and implemented in Objective-C.
+
+## Supported iOS and macOS Versions
+
+This library currently targets iOS 10+ and macOS 10.11+.
 
 
 ## Installation with [Carthage](https://github.com/Carthage/Carthage)
