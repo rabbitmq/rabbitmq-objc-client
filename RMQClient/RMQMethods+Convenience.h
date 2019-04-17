@@ -52,9 +52,9 @@
 #import "RMQMethods.h"
 
 typedef NS_OPTIONS(NSUInteger, RMQBasicConsumeAcknowledgementMode) {
-    /// @brief
+    /// @brief Consume using manual acknowledgement mode
     RMQBasicConsumeAcknowledgementModeManual = 1 << 0,
-    /// @brief
+    /// @brief Consume using automatic acknowledgement mode
     RMQBasicConsumeAcknowledgementModeAuto   = 1 << 1
 };
 
