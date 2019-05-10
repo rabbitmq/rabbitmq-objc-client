@@ -50,9 +50,7 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#if defined(__has_feature) && __has_feature(modules)
-@import JKVValue;
-#endif
+#import <JKVValue/JKVValue.h>
 #import "RMQParser.h"
 #import "RMQConnectionConfig.h"
 
