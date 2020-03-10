@@ -1028,7 +1028,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 1020;
-				ORGANIZATIONNAME = Pivotal;
+				ORGANIZATIONNAME = VMware;
 				TargetAttributes = {
 					AEA45ED61C440FE400FE1F62 = {
 						CreatedOnToolsVersion = 7.0;
