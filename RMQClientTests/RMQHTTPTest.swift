@@ -52,19 +52,10 @@
 import XCTest
 
 class RMQHTTPTest: XCTestCase {
-
     func testGet() {
         let http = RMQHTTP("http://scooterlabs.com")
         let actual = http.get("/echo")
         let actualString = String(data: actual, encoding: String.Encoding.utf8)
         XCTAssertNotNil(actualString!.range(of: "[method] => GET"))
     }
-
-    func testDelete() {
-        let http = RMQHTTP("http://scooterlabs.com")
-        let actual = http.delete("/echo")
-        let actualString = String(data: actual, encoding: String.Encoding.utf8)
-        XCTAssertNotNil(actualString!.range(of: "[method] => DELETE"))
-    }
-
 }
