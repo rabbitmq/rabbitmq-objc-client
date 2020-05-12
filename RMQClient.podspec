@@ -7,13 +7,17 @@ Pod::Spec.new do |s|
   RabbitMQ team.
                    DESC
   s.homepage         = "https://github.com/rabbitmq/rabbitmq-objc-client"
-  s.license          = "Mozilla Public License, Version 1.1 and Apache License, Version 2.0"
+  s.license          = { type: "ASL2", file: "LICENSE-APACHE2" }
   s.author           = { "RabbitMQ team" => "rabbitmq-users@googlegroups.com" }
   s.social_media_url = "https://twitter.com/rabbitmq"
   s.ios.deployment_target = "11.0"
   s.osx.deployment_target = "10.11"
-  s.source           = { :git => "https://github.com/rabbitmq/rabbitmq-objc-client.git", :tag => "v#{s.version}" }
+  s.source           = { git: "https://github.com/rabbitmq/rabbitmq-objc-client.git", tag: "v#{s.version}" }
   s.source_files     = "RMQClient", "RMQClient/**/*.{h,m}"
   s.dependency       "JKVValue", "~> 1.3"
   s.dependency       "CocoaAsyncSocket", "~> 7.6"
+
+  s.info_plist = {
+    'CFBundleIdentifier' => 'io.pivotal.RMQClient'
+  }
 end
