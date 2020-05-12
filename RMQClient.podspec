@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   RabbitMQ team.
                    DESC
   s.homepage         = "https://github.com/rabbitmq/rabbitmq-objc-client"
-  s.license          = { type: "ASL2", file: "LICENSE-APACHE2" }
+  s.license          = { type: "Apache 2.0", file: "LICENSE-APACHE2" }
   s.author           = { "RabbitMQ team" => "rabbitmq-users@googlegroups.com" }
   s.social_media_url = "https://twitter.com/rabbitmq"
   s.ios.deployment_target = "11.0"
