@@ -271,6 +271,23 @@ static void RMQInitConnectionConfigDefaults() {
 - (nonnull instancetype)initWithUri:(NSString *)uri
          userProvidedConnectionName:(NSString *)connectionName
                            delegate:(id<RMQConnectionDelegate>)delegate
+                      delegateQueue:delegateQueue {
+    RMQQueuingConnectionDelegateProxy *delegateProxy = [[RMQQueuingConnectionDelegateProxy alloc]
+                                                        initWithDelegate:delegate
+                                                        queue:delegateQueue];
+
+    return [self initWithUri:uri
+                    tlsOptions:[RMQTLSOptions fromURI:uri]
+    userProvidedConnectionName:connectionName
+                      delegate:delegateProxy
+                  recoverAfter:RMQDefaultRecoveryInterval
+              recoveryAttempts:@(NSUIntegerMax)
+    recoverFromConnectionClose:YES];
+}
+
+- (nonnull instancetype)initWithUri:(NSString *)uri
+         userProvidedConnectionName:(NSString *)connectionName
+                           delegate:(id<RMQConnectionDelegate>)delegate
                        recoverAfter:(nonnull NSNumber *)recoveryInterval
                    recoveryAttempts:(nonnull NSNumber *)recoveryAttempts
          recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose {

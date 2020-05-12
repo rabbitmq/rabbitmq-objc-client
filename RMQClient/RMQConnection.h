@@ -124,10 +124,16 @@
                    recoveryAttempts:(nonnull NSNumber *)recoveryAttempts
          recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose;
 
-/// @brief Connection configuration.
+/// @brief Connection URI, custom name and delegate..
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
          userProvidedConnectionName:(nonnull NSString *)connectionName
                            delegate:(nullable id<RMQConnectionDelegate>)delegate;
+
+/// @brief Connection URI, custom name, delegate object and delegate GCD queue.
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+         userProvidedConnectionName:(nonnull NSString *)connectionName
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate
+                      delegateQueue:(nonnull dispatch_queue_t)delegateQueue;
 
 /// @brief TLS, connection configuration and delegate.
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri

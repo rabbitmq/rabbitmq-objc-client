@@ -56,6 +56,15 @@ class IntegrationHelper {
     static let defaultTimeout: Double = 10
     static let defaultNoCompletionTimeout: Double = 3
 
+    static func createNamedConnection(_ name: String) -> RMQConnection {
+        let gcdQueue = DispatchQueue(label: "com.rabbitmq.client.tests.\(name)")
+        return RMQConnection(
+                    uri: IntegrationHelper.defaultEndpoint,
+                    userProvidedConnectionName: name,
+                    delegate: nil,
+                    delegateQueue: gcdQueue)
+    }
+
     static func awaitCompletion(_ semaphore: DispatchSemaphore) -> DispatchTimeoutResult {
         return semaphore.wait(timeout: TestHelper.dispatchTimeFromNow(defaultTimeout))
     }

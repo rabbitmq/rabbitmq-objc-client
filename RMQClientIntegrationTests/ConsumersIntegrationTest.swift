@@ -61,10 +61,11 @@ class ConsumersIntegrationTest: XCTestCase {
     //
 
     func testQueueAndConsumerDSLManualAcknowledgementMode() {
-        let conn = RMQConnection()
+        let testName = "testQueueAndConsumerDSLManualAcknowledgementMode"
+        let conn = IntegrationHelper.createNamedConnection(testName)
         conn.start()
         let ch = conn.createChannel()
-        let x = ch.fanout("objc.tests.fanouts.testQueueAndConsumerDSLManualAcknowledgementMode",
+        let x = ch.fanout("objc.tests.fanouts.\(testName)",
                           options: [])
 
         let cons = ch.queue("objc.tests.queueAndConsumerDSLManualAckMode",
@@ -81,12 +82,13 @@ class ConsumersIntegrationTest: XCTestCase {
     }
 
     func testQueueAndConsumerDSLExclusiveConsumerWithAutomaticAcknowledgementMode() {
-        let conn = RMQConnection()
+        let testName = "testQueueAndConsumerDSLExclusiveConsumerWithAutomaticAcknowledgementMode"
+        let conn = IntegrationHelper.createNamedConnection(testName)
         conn.start()
         let ch = conn.createChannel()
-        let x = ch.fanout("objc.tests.fanouts.testQueueAndConsumerDSLExclusiveConsumer", options: [])
+        let x = ch.fanout("objc.tests.fanouts.\(testName)", options: [])
 
-        let cons = ch.queue("objc.tests.queueAndConsumerDSLExclusiveConsumerWithAutomaticAckMode",
+        let cons = ch.queue("objc.tests.queues.\(testName)",
                             options: [.exclusive])
             .bind(x)
             // no manual acks
@@ -101,7 +103,8 @@ class ConsumersIntegrationTest: XCTestCase {
     }
 
     func testNegativeAcknowledgementOfMultipleDeliveries() {
-        let conn = RMQConnection()
+        let testName = "testNegativeAcknowledgementOfMultipleDeliveries"
+        let conn = IntegrationHelper.createNamedConnection(testName)
         conn.start()
         let ch = conn.createChannel()
         let semaphore = DispatchSemaphore(value: 0)
@@ -130,7 +133,8 @@ class ConsumersIntegrationTest: XCTestCase {
     }
 
     func testNegativeAcknowledgementWithRequeueingRedelivers() {
-        let conn = RMQConnection()
+        let testName = "testNegativeAcknowledgementWithRequeueingRedelivers"
+        let conn = IntegrationHelper.createNamedConnection(testName)
         conn.start()
         let ch = conn.createChannel()
         let q = ch.queue("", options: [.autoDelete, .exclusive])
@@ -156,7 +160,8 @@ class ConsumersIntegrationTest: XCTestCase {
     }
 
     func testNegativeAcknowledgementWithRequeueingRedeliversToADifferentConsumer() {
-        let conn = RMQConnection()
+        let testName = "testNegativeAcknowledgementWithRequeueingRedeliversToADifferentConsumer"
+        let conn = IntegrationHelper.createNamedConnection(testName)
         conn.start()
         let ch = conn.createChannel()
         let q = ch.queue("", options: [.autoDelete, .exclusive])
@@ -193,7 +198,8 @@ class ConsumersIntegrationTest: XCTestCase {
     }
 
     func testManualAcknowledgementOfMultipleDeliveries() {
-        let conn = RMQConnection()
+        let testName = "testManualAcknowledgementOfMultipleDeliveries"
+        let conn = IntegrationHelper.createNamedConnection(testName)
         conn.start()
         let ch = conn.createChannel()
         let x = ch.fanout("amq.fanout", options: [.durable])
@@ -231,7 +237,8 @@ class ConsumersIntegrationTest: XCTestCase {
     //
 
     func testMessageProperties() {
-        let conn = RMQConnection()
+        let testName = "testMessageProperties"
+        let conn = IntegrationHelper.createNamedConnection(testName)
         conn.start()
         defer { conn.blockingClose() }
 
