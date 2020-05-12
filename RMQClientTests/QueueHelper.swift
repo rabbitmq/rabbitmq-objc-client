@@ -56,7 +56,7 @@ class QueueHelper {
                           options: RMQQueueDeclareOptions = [],
                           arguments: [String: RMQValue] = [:]) -> RMQQueue {
         return RMQQueue(name: name, options: options,
-                        arguments: RMQTable(arguments as! [String : RMQValue & RMQFieldValue]), channel: channel)
+                        arguments: RMQTable(arguments as! [String: RMQValue & RMQFieldValue]), channel: channel)
     }
 
 }

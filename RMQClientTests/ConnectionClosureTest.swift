@@ -119,7 +119,7 @@ class ConnectionClosureTest: XCTestCase {
         // start connection
         conn.start()
 
-        /// simulate connection has been made
+        // simulate connection has been made
         try? q.step()
         transport.handshake()
 

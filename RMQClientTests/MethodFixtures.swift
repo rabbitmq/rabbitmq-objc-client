@@ -179,12 +179,12 @@ class MethodFixtures {
             "information": RMQLongstr("Licensed under the MPL.  See http://www.rabbitmq.com/"),
             "platform": RMQLongstr("Erlang/OTP"),
             "product": RMQLongstr("RabbitMQ"),
-            "version": RMQLongstr("3.7.10")
+            "version": RMQLongstr("3.8.3")
         ]
         return RMQConnectionStart(
             versionMajor: RMQOctet(0),
             versionMinor: RMQOctet(9),
-            serverProperties: RMQTable(serverPropertiesDict as! [String : RMQValue & RMQFieldValue]),
+            serverProperties: RMQTable(serverPropertiesDict as! [String: RMQValue & RMQFieldValue]),
             mechanisms: RMQLongstr("AMQPLAIN PLAIN"),
             locales: RMQLongstr("en_US")
         )
@@ -209,7 +209,7 @@ class MethodFixtures {
             "information": RMQLongstr("https://github.com/rabbitmq/rabbitmq-objc-client")
         ]
         return RMQConnectionStartOk(
-            clientProperties: RMQTable(clientPropertiesDict as! [String : RMQValue & RMQFieldValue]),
+            clientProperties: RMQTable(clientPropertiesDict as! [String: RMQValue & RMQFieldValue]),
             mechanism: RMQShortstr("PLAIN"),
             response: RMQCredentials(username: user, password: password),
             locale: RMQShortstr("en_GB")
