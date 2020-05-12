@@ -8,8 +8,14 @@ Test-driven from Swift and implemented in Objective-C.
 
 ## Supported iOS and macOS Versions
 
-This library currently targets iOS 10+ and macOS 10.11+.
+This library currently targets iOS 11+ and macOS 10.11+.
 
+## Dependencies
+
+This library depends on
+
+ * [CocoaAsyncSocket](https://cocoapods.org/pods/CocoaAsyncSocket)
+ * [JKVValue](https://cocoapods.org/pods/JKVValue)
 
 ## Installation with [Carthage](https://github.com/Carthage/Carthage)
 
