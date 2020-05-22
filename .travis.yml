@@ -8,7 +8,6 @@ before_install:
   - cp docker/rabbitmq.conf /usr/local/etc/rabbitmq/
   - cp docker/certificates/* /usr/local/etc/rabbitmq/
   - /usr/local/sbin/rabbitmq-plugins enable --offline rabbitmq_auth_mechanism_ssl
-  - brew services stop rabbitmq
   - brew services start rabbitmq
 before_script:
   - make bootstrap
