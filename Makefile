@@ -1,4 +1,4 @@
-iOS_VERSION := 13.4.1
+iOS_VERSION := 13.5
 
 SCHEME := "RMQClient"
 
