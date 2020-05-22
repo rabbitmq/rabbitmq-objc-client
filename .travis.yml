@@ -5,6 +5,7 @@ xcode_scheme: "RMQClient"
 before_install:
   - brew update
   - brew install rabbitmq
+  - ls $(pwd)
   - cp .travis/etc/* /usr/local/etc/rabbitmq/
   - cp TestCertificates/* /usr/local/etc/rabbitmq/
   - /usr/local/sbin/rabbitmq-plugins enable --offline rabbitmq_auth_mechanism_ssl
