@@ -9,6 +9,7 @@ before_install:
   - cp docker/certificates/* /usr/local/etc/rabbitmq/
   - /usr/local/sbin/rabbitmq-plugins enable --offline rabbitmq_auth_mechanism_ssl
   - brew services start rabbitmq
+  - epmd -names
 before_script:
   - make bootstrap
   - /usr/local/sbin/rabbitmqctl await_startup --timeout=60
