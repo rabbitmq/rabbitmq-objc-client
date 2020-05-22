@@ -11,7 +11,7 @@ before_install:
   - brew services start rabbitmq
 before_script:
   - make bootstrap
-  - rabbitmqctl await_startup --timeout=60
+  - /usr/local/sbin/rabbitmqctl await_startup --timeout=60
   - make before_build
   - make set_up_test_vhosts
   - make set_up_test_users
