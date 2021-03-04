@@ -123,7 +123,7 @@ To run the core test suite:
 gmake tests
 
 # iOS only
-gmake tests_ios iOS_VERSION=12.1
+gmake tests_ios iOS_VERSION=14.4
 
 # MacOS only
 gmake tests_macos
