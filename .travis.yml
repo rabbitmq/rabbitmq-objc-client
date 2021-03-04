@@ -1,5 +1,5 @@
 language: objective-c
-osx_image: xcode11.4
+osx_image: xcode12.2
 xcode_project: RMQClient.xcodeproj
 xcode_scheme: "RMQClient"
 before_install:
@@ -16,10 +16,10 @@ before_script:
   - make set_up_test_vhosts
   - make set_up_test_users
 env:
-  - TARGET=tests_ios   SCHEME="RMQClient" TRAVIS_XCODE_SDK=iphonesimulator13.4 iOS_VERSION=13.4
-  - TARGET=tests_macos SCHEME="RMQClient" TRAVIS_XCODE_SDK=macosx10.14
-  - TARGET=tests_ios   SCHEME="RMQClient with TLS tests" TRAVIS_XCODE_SDK=iphonesimulator13.4 iOS_VERSION=13.4
-  - TARGET=tests_macos SCHEME="RMQClient with TLS tests" TRAVIS_XCODE_SDK=macosx10.14
+  - TARGET=tests_ios   SCHEME="RMQClient" TRAVIS_XCODE_SDK=iphonesimulator14.2 iOS_VERSION=14.0
+  - TARGET=tests_macos SCHEME="RMQClient" TRAVIS_XCODE_SDK=macosx11.0
+  - TARGET=tests_ios   SCHEME="RMQClient with TLS tests" TRAVIS_XCODE_SDK=iphonesimulator14.2 iOS_VERSION=14.0
+  - TARGET=tests_macos SCHEME="RMQClient with TLS tests" TRAVIS_XCODE_SDK=macosx11.0
 script: travis_retry make $TARGET SCHEME=$SCHEME iOS_VERSION=$iOS_VERSION
 after_failure:
   - cat /usr/local/var/log/rabbitmq/rabbit@localhost.log
