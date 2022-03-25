@@ -28,7 +28,7 @@ This library depends on
 Run Carthage, for example in a new project:
 
  ```
- carthage bootstrap
+ carthage bootstrap --use-xcframeworks
  ```
 
 1. In your Xcode project, in the **Build Phases** section of your target, open up **Link

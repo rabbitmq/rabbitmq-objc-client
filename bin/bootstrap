@@ -2,5 +2,5 @@
 
 export XCODE_XCCONFIG_FILE=$PWD/xcode_arch_workaround.xcconfig
 
-carthage bootstrap --platform iOS,OSX
+carthage bootstrap --use-xcframeworks --platform iOS,OSX
 cp Cartfile.resolved Carthage
