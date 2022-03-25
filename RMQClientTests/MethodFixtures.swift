@@ -4,7 +4,7 @@
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright 2017-2020 VMware, Inc. or its affiliates.
+// Copyright 2017-2022 VMware, Inc. or its affiliates.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 //
-// Copyright (c) 2007-2020 VMware, Inc. or its affiliates.  All rights reserved.
+// Copyright (c) 2007-2022 VMware, Inc. or its affiliates.  All rights reserved.
 //
 // Alternatively, the contents of this file may be used under the terms
 // of the Apache Standard license (the "ASL License"), in which case the
@@ -166,7 +166,7 @@ class MethodFixtures {
         let serverPropertiesDict: [String: RMQValue] = [
             "capabilities": RMQTable(dict),
             "cluster_name": RMQLongstr("rabbit@myapp.cfapps.pez.pivotal.io"),
-            "copyright": RMQLongstr("Copyright (c) 2007-2020 VMware, Inc. or its affiliates."),
+            "copyright": RMQLongstr("Copyright (c) 2007-2022 VMware, Inc. or its affiliates."),
             "information": RMQLongstr("Licensed under the MPL.  See http://www.rabbitmq.com/"),
             "platform": RMQLongstr("Erlang/OTP"),
             "product": RMQLongstr("RabbitMQ"),

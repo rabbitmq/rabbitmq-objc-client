@@ -125,7 +125,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## License and Copyright
 
-(c) 2016-2020 VMware, Inc. or its affiliates
+(c) 2016-2022 VMware, Inc. or its affiliates
 
 This package, the RabbitMQ Objective-C client library, is
 dual-licensed under the Mozilla Public License 2.0 ("MPL") and the
