@@ -40,7 +40,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQConnectionRecover.h"
+#import <RMQConnectionRecover.h>
 
 @interface RMQConnectionRecover ()
 @property (nonatomic, readwrite) NSNumber *interval;

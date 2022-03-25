@@ -41,8 +41,8 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "RMQConnectionDelegate.h"
-#import "RMQFrameset.h"
+#import <RMQConnectionDelegate.h>
+#import <RMQFrameset.h>
 
 typedef NS_ENUM(NSUInteger, DispatcherState) {
     DispatcherStateOpen = 1,

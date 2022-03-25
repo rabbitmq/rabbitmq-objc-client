@@ -40,7 +40,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQSynchronizedMutableDictionary.h"
+#import <RMQSynchronizedMutableDictionary.h>
 
 @interface RMQSynchronizedMutableDictionary ()
 @property (nonatomic, readwrite) NSMutableDictionary *backingDictionary;

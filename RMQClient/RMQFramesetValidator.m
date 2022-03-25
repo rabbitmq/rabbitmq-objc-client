@@ -40,9 +40,9 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQChannel.h"
-#import "RMQErrors.h"
-#import "RMQFramesetValidator.h"
+#import <RMQChannel.h>
+#import <RMQErrors.h>
+#import <RMQFramesetValidator.h>
 
 @interface RMQFramesetValidator ()
 @property (nonatomic, readwrite) RMQFrameset *lastFrameset;

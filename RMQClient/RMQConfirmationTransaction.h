@@ -41,8 +41,8 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "RMQConfirmations.h"
-#import "RMQLocalSerialQueue.h"
+#import <RMQConfirmations.h>
+#import <RMQLocalSerialQueue.h>
 
 @interface RMQConfirmationTransaction : NSObject
 

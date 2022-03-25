@@ -40,7 +40,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQConfirmationTransaction.h"
+#import <RMQConfirmationTransaction.h>
 
 @interface RMQConfirmationTransaction ()
 @property (nonatomic, readwrite) RMQConfirmationCallback callback;

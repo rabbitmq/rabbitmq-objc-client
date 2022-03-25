@@ -41,7 +41,7 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "RMQNameGenerator.h"
+#import <RMQNameGenerator.h>
 
 @interface RMQProcessInfoNameGenerator : NSObject <RMQNameGenerator>
 

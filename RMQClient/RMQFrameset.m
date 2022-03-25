@@ -40,8 +40,8 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQFrameset.h"
-#import "RMQFrame.h"
+#import <RMQFrameset.h>
+#import <RMQFrame.h>
 
 @interface RMQFrameset ()
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;

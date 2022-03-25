@@ -41,8 +41,8 @@
 // ---------------------------------------------------------------------------
 
 #import <RMQClient/RMQClient.h>
-#import "RMQConfirmations.h"
-#import "RMQLocalSerialQueue.h"
+#import <RMQConfirmations.h>
+#import <RMQLocalSerialQueue.h>
 
 @interface RMQTransactionalConfirmations : RMQValue <RMQConfirmations>
 

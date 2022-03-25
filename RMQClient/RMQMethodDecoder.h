@@ -41,8 +41,8 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "RMQValues.h"
-#import "RMQParser.h"
+#import <RMQValues.h>
+#import <RMQParser.h>
 
 @interface RMQMethodDecoder : NSObject
 

@@ -41,7 +41,7 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "RMQFramesetValidationResult.h"
+#import <RMQFramesetValidationResult.h>
 
 @interface RMQFramesetValidator : NSObject
 - (RMQFramesetValidationResult *)expect:(Class)methodClass;

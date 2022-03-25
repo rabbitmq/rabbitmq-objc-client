@@ -40,16 +40,16 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQConnection.h"
-#import "RMQAllocatedChannel.h"
-#import "RMQFramesetValidator.h"
-#import "RMQMultipleChannelAllocator.h"
-#import "RMQUnallocatedChannel.h"
-#import "RMQGCDSerialQueue.h"
-#import "RMQProcessInfoNameGenerator.h"
-#import "RMQFrame.h"
-#import "RMQSuspendResumeDispatcher.h"
-#import "RMQTransactionalConfirmations.h"
+#import <RMQConnection.h>
+#import <RMQAllocatedChannel.h>
+#import <RMQFramesetValidator.h>
+#import <RMQMultipleChannelAllocator.h>
+#import <RMQUnallocatedChannel.h>
+#import <RMQGCDSerialQueue.h>
+#import <RMQProcessInfoNameGenerator.h>
+#import <RMQFrame.h>
+#import <RMQSuspendResumeDispatcher.h>
+#import <RMQTransactionalConfirmations.h>
 
 @interface RMQMultipleChannelAllocator ()
 @property (atomic, readwrite) UInt16 channelNumber;

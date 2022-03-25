@@ -40,7 +40,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQGCDSerialQueue.h"
+#import <RMQGCDSerialQueue.h>
 #import <libkern/OSAtomic.h>
 
 typedef NS_ENUM(int32_t, RMQGCDSerialQueueStatus) {

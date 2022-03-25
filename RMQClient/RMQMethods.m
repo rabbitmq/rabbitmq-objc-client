@@ -1,7 +1,7 @@
 // License goes here
 
 // This file is generated. Do not edit.
-#import "RMQMethods.h"
+#import <RMQMethods.h>
 
 @interface RMQConnectionStart ()
 @property (nonnull, copy, nonatomic, readwrite) RMQOctet *versionMajor;

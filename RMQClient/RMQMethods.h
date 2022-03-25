@@ -2,7 +2,7 @@
 
 // This file is generated. Do not edit.
 #import <Foundation/Foundation.h>
-#import "RMQTable.h"
+#import <RMQTable.h>
 
 @interface RMQConnectionStart : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQOctet *versionMajor;

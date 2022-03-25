@@ -69,8 +69,8 @@ class GenerateMethodMap
     }
     <<-OBJC
 #{implementation_start}
-#import "RMQMethodMap.h"
-#import "RMQMethods.h"
+#import <RMQMethodMap.h>
+#import <RMQMethods.h>
 
 @implementation RMQMethodMap
 + (NSDictionary *)methodMap {

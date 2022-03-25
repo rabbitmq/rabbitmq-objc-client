@@ -40,9 +40,9 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQFrame.h"
-#import "RMQMethodDecoder.h"
-#import "RMQHeartbeat.h"
+#import <RMQFrame.h>
+#import <RMQMethodDecoder.h>
+#import <RMQHeartbeat.h>
 
 NSUInteger const RMQFrameMax = 131072;
 NSInteger const RMQEmptyFrameSize = 8;

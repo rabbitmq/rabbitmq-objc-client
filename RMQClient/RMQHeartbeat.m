@@ -40,9 +40,9 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQHeartbeat.h"
-#import "RMQValues.h"
-#import "RMQFrame.h"
+#import <RMQHeartbeat.h>
+#import <RMQValues.h>
+#import <RMQFrame.h>
 
 @implementation RMQHeartbeat
 

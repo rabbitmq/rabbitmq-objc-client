@@ -40,7 +40,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQValues.h"
+#import <RMQValues.h>
 
 @interface RMQTLSOptions : RMQValue
 

@@ -40,9 +40,9 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQConsumer.h"
-#import "RMQChannel.h"
-#import "RMQMethods+Convenience.h"
+#import <RMQConsumer.h>
+#import <RMQChannel.h>
+#import <RMQMethods+Convenience.h>
 
 @interface RMQConsumer ()
 @property (nonatomic, readwrite) NSString *queueName;

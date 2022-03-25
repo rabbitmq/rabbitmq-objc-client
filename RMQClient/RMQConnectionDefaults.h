@@ -41,7 +41,7 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "RMQFrame.h"
+#import <RMQFrame.h>
 
 /// @brief Default heartbeat timeout value.
 /// @see https://www.rabbitmq.com/heartbeats.html

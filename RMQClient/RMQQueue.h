@@ -41,13 +41,13 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "RMQMethods.h"
-#import "RMQMethods+Convenience.h"
-#import "RMQMessage.h"
-#import "RMQExchange.h"
-#import "RMQConsumer.h"
-#import "RMQConsumerHandlers.h"
-#import "RMQBasicProperties.h"
+#import <RMQMethods.h>
+#import <RMQMethods+Convenience.h>
+#import <RMQMessage.h>
+#import <RMQExchange.h>
+#import <RMQConsumer.h>
+#import <RMQConsumerHandlers.h>
+#import <RMQBasicProperties.h>
 
 @protocol RMQChannel;
 

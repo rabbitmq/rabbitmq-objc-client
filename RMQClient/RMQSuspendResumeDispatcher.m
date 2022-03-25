@@ -40,9 +40,9 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQSuspendResumeDispatcher.h"
-#import "RMQErrors.h"
-#import "RMQDispatcher.h"
+#import <RMQSuspendResumeDispatcher.h>
+#import <RMQErrors.h>
+#import <RMQDispatcher.h>
 
 @interface RMQSuspendResumeDispatcher ()
 @property (nonatomic, readwrite) id<RMQChannel> channel;

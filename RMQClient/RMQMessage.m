@@ -40,7 +40,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQMessage.h"
+#import <RMQMessage.h>
 
 @interface RMQMessage ()
 @property (nonatomic, readwrite) NSData *body;

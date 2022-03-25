@@ -41,7 +41,7 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "RMQFrameset.h"
+#import <RMQFrameset.h>
 
 @interface RMQFramesetValidationResult : NSObject
 @property (nonatomic, readonly) NSError *error;

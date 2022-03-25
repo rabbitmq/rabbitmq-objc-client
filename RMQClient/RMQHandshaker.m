@@ -40,7 +40,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQHandshaker.h"
+#import <RMQHandshaker.h>
 
 @interface RMQHandshaker ()
 @property (nonatomic, readwrite) id<RMQSender> sender;

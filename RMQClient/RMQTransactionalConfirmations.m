@@ -40,8 +40,8 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQTransactionalConfirmations.h"
-#import "RMQConfirmationTransaction.h"
+#import <RMQTransactionalConfirmations.h>
+#import <RMQConfirmationTransaction.h>
 
 @interface RMQTransactionalConfirmations ()
 @property (nonatomic, readwrite) NSUInteger offset;

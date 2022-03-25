@@ -40,7 +40,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQConnectionDelegateLogger.h"
+#import <RMQConnectionDelegateLogger.h>
 
 @implementation RMQConnectionDelegateLogger
 

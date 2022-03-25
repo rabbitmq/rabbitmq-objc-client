@@ -42,8 +42,8 @@
 
 #import <Foundation/Foundation.h>
 #import <JKVValue/JKVValue.h>
-#import "RMQParser.h"
-#import "RMQConnectionConfig.h"
+#import <RMQParser.h>
+#import <RMQConnectionConfig.h>
 
 @protocol RMQEncodable <NSObject>
 - (nonnull NSData *)amqEncoded;

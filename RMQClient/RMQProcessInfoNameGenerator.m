@@ -40,7 +40,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQProcessInfoNameGenerator.h"
+#import <RMQProcessInfoNameGenerator.h>
 
 @implementation RMQProcessInfoNameGenerator
 

@@ -41,7 +41,7 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "RMQStarter.h"
+#import <RMQStarter.h>
 
 @protocol RMQChannelAllocator;
 

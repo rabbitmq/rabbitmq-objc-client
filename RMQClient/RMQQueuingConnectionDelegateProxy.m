@@ -40,7 +40,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQQueuingConnectionDelegateProxy.h"
+#import <RMQQueuingConnectionDelegateProxy.h>
 
 @interface RMQQueuingConnectionDelegateProxy ()
 @property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;

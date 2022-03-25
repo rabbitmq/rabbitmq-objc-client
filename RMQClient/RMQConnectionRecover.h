@@ -41,11 +41,11 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "RMQConnectionRecovery.h"
-#import "RMQChannelAllocator.h"
-#import "RMQHeartbeatSender.h"
-#import "RMQLocalSerialQueue.h"
-#import "RMQConnectionDelegate.h"
+#import <RMQConnectionRecovery.h>
+#import <RMQChannelAllocator.h>
+#import <RMQHeartbeatSender.h>
+#import <RMQLocalSerialQueue.h>
+#import <RMQConnectionDelegate.h>
 
 @interface RMQConnectionRecover : NSObject <RMQConnectionRecovery>
 

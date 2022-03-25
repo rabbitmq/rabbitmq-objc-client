@@ -40,7 +40,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQFrameset.h"
+#import <RMQFrameset.h>
 
 @protocol RMQFrameHandler
 - (void)handleFrameset:(RMQFrameset *)frameset;

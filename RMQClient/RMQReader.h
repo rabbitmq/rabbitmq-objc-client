@@ -41,8 +41,8 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "RMQTransport.h"
-#import "RMQFrameHandler.h"
+#import <RMQTransport.h>
+#import <RMQFrameHandler.h>
 
 @interface RMQReader : NSObject
 - (nonnull instancetype)initWithTransport:(nonnull id<RMQTransport>)transport

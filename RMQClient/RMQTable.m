@@ -40,7 +40,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQTable.h"
+#import <RMQTable.h>
 
 @interface RMQTable ()
 @property (nonnull, nonatomic, copy, readwrite) NSDictionary *dictionaryValue;

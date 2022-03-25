@@ -40,7 +40,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQTickingClock.h"
+#import <RMQTickingClock.h>
 
 @implementation RMQTickingClock
 

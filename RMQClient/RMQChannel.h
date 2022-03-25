@@ -41,11 +41,11 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "RMQMethods.h"
-#import "RMQMethods+Convenience.h"
-#import "RMQExchange.h"
-#import "RMQFrameHandler.h"
-#import "RMQQueue.h"
+#import <RMQMethods.h>
+#import <RMQMethods+Convenience.h>
+#import <RMQExchange.h>
+#import <RMQFrameHandler.h>
+#import <RMQQueue.h>
 
 @protocol RMQConnectionDelegate;
 

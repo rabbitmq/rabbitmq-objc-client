@@ -40,6 +40,6 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import "RMQErrors.h"
+#import <RMQErrors.h>
 
 NSString * const RMQErrorDomain = @"com.rabbitmq.rabbitmq-objc-client";
