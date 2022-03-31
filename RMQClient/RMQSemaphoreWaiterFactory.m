@@ -40,8 +40,8 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQSemaphoreWaiterFactory.h>
-#import <RMQSemaphoreWaiter.h>
+#import "RMQSemaphoreWaiterFactory.h"
+#import "RMQSemaphoreWaiter.h"
 
 @implementation RMQSemaphoreWaiterFactory
 

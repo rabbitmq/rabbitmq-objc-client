@@ -40,11 +40,11 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQTCPSocketTransport.h>
-#import <RMQErrors.h>
-#import <RMQSynchronizedMutableDictionary.h>
-#import <RMQPKCS12CertificateConverter.h>
-#import <RMQTCPSocketConfigurator.h>
+#import "RMQTCPSocketTransport.h"
+#import "RMQErrors.h"
+#import "RMQSynchronizedMutableDictionary.h"
+#import "RMQPKCS12CertificateConverter.h"
+#import "RMQTCPSocketConfigurator.h"
 
 long writeTag = UINT32_MAX + 1;
 RMQTCPSocketConfigurator noOpSocketConfigurator = ^(GCDAsyncSocket* _socket) {};
@@ -90,7 +90,7 @@ RMQTCPSocketConfigurator noOpSocketConfigurator = ^(GCDAsyncSocket* _socket) {};
         self.connectTimeout = [connectTimeout doubleValue];
         self.readTimeout = [readTimeout doubleValue];
         self.writeTimeout = [writeTimeout doubleValue];
-
+        
         socketConfigurator(self.socket);
     }
     return self;
@@ -171,9 +171,9 @@ struct __attribute__((__packed__)) AMQPHeader {
     [self read:AMQP091_HEADER_SIZE complete:^(NSData * _Nonnull data) {
         const struct AMQPHeader *header;
         header = (const struct AMQPHeader *)data.bytes;
-
+        
         UInt32 hostSize = CFSwapInt32BigToHost(header->size);
-
+        
         [self read:hostSize complete:^(NSData * _Nonnull payload) {
             [self read:AMQP091_FINAL_OCTET_SIZE complete:^(NSData * _Nonnull frameEnd) {
                 NSMutableData *allData = [data mutableCopy];

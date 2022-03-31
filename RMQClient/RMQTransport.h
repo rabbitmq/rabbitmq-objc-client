@@ -41,7 +41,7 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import <RMQTransportDelegate.h>
+#import "RMQTransportDelegate.h"
 
 @protocol RMQTransport
 @property (nullable, nonatomic, readwrite) id<RMQTransportDelegate> delegate;

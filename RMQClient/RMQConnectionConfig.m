@@ -40,8 +40,8 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQFrame.h>
-#import <RMQConnectionConfig.h>
+#import "RMQFrame.h"
+#import "RMQConnectionConfig.h"
 
 /**
  * @brief Default channel max value. One channel per connection

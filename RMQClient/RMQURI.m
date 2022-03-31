@@ -40,8 +40,8 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQURI.h>
-#import <RMQErrors.h>
+#import "RMQURI.h"
+#import "RMQErrors.h"
 
 @interface RMQURI ()
 @property (nonatomic,nonnull,readwrite) NSString *host;
@@ -55,7 +55,7 @@
 @implementation RMQURI
 + (instancetype)parse:(NSString *)uri error:(NSError *__autoreleasing  _Nullable *)error {
     NSURLComponents *components = [NSURLComponents componentsWithString:uri];
-
+    
     if (![self isValidScheme:components.scheme]) {
         *error = [NSError errorWithDomain:RMQErrorDomain
                                      code:RMQErrorInvalidScheme

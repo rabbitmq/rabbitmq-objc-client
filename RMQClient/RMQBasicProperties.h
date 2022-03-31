@@ -1,7 +1,7 @@
 // License goes here
 
 // This file is generated. Do not edit.
-#import <RMQTable.h>
+#import "RMQTable.h"
 
 @protocol RMQBasicValue <NSObject, RMQEncodable>
 + (NSUInteger)flagBit;

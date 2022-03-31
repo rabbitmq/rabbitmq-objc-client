@@ -41,8 +41,8 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import <RMQConsumerHandlers.h>
-#import <RMQMethods.h>
+#import "RMQConsumerHandlers.h"
+#import "RMQMethods.h"
 
 @protocol RMQChannel;
 

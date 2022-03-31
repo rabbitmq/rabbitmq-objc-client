@@ -40,8 +40,8 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQValues.h>
-#import <RMQBasicProperties.h>
+#import "RMQValues.h"
+#import "RMQBasicProperties.h"
 
 @implementation RMQValue
 @end

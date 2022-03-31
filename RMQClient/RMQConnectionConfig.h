@@ -41,7 +41,7 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import <RMQConnectionRecovery.h>
+#import "RMQConnectionRecovery.h"
 
 extern NSInteger const RMQChannelMaxDefault;
 

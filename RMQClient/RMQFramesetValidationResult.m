@@ -40,7 +40,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQFramesetValidationResult.h>
+#import "RMQFramesetValidationResult.h"
 
 @interface RMQFramesetValidationResult ()
 @property (nonatomic, readwrite) NSError *error;

@@ -40,10 +40,10 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQTLSOptions.h>
-#import <RMQTCPSocketTransport.h>
-#import <RMQPKCS12CertificateConverter.h>
-#import <RMQURI.h>
+#import "RMQTLSOptions.h"
+#import "RMQTCPSocketTransport.h"
+#import "RMQPKCS12CertificateConverter.h"
+#import "RMQURI.h"
 
 @interface RMQTLSOptions ()
 

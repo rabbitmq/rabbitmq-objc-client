@@ -99,7 +99,7 @@ class GenerateMethods
   def header
     <<-OBJC
 #{header_start}
-#import <RMQTable.h>
+#import "RMQTable.h"
 
       OBJC
   end
@@ -107,7 +107,7 @@ class GenerateMethods
   def implementation
     <<-OBJC
 #{implementation_start}
-#import <RMQMethods.h>
+#import "RMQMethods.h"
 
     OBJC
   end

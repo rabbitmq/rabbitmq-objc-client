@@ -41,7 +41,7 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import <RMQWaiter.h>
+#import "RMQWaiter.h"
 
 @protocol RMQWaiterFactory <NSObject>
 

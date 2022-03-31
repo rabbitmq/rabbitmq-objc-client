@@ -41,11 +41,11 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import <RMQFrameHandler.h>
-#import <RMQMethods.h>
-#import <RMQSender.h>
-#import <RMQConnectionConfig.h>
-#import <RMQReader.h>
+#import "RMQFrameHandler.h"
+#import "RMQMethods.h"
+#import "RMQSender.h"
+#import "RMQConnectionConfig.h"
+#import "RMQReader.h"
 
 @interface RMQHandshaker : NSObject <RMQFrameHandler>
 @property (weak, nonatomic, readwrite) RMQReader *reader;

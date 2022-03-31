@@ -40,9 +40,9 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQReader.h>
-#import <RMQFrame.h>
-#import <RMQMethodDecoder.h>
+#import "RMQReader.h"
+#import "RMQFrame.h"
+#import "RMQMethodDecoder.h"
 
 @interface RMQReader ()
 @property (nonatomic, readwrite) id<RMQTransport>transport;
@@ -63,7 +63,7 @@
 - (void)run {
     [self.transport readFrame:^(NSData * _Nonnull methodData) {
         // executing on a concurrent queue
-
+        
         RMQFrame *frame = [self frameWithData:methodData];
 
         if (frame.isHeartbeat) {

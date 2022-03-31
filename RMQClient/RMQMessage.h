@@ -41,7 +41,7 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import <RMQBasicProperties.h>
+#import "RMQBasicProperties.h"
 
 @interface RMQMessage : RMQValue
 @property (nonatomic, readonly) NSData *body;

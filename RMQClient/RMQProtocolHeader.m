@@ -40,8 +40,8 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQProtocolHeader.h>
-#import <RMQMethods.h>
+#import "RMQProtocolHeader.h"
+#import "RMQMethods.h"
 
 @implementation RMQProtocolHeader
 

@@ -1,7 +1,7 @@
 // License goes here
 
 // This file is generated. Do not edit.
-#import <RMQBasicProperties.h>
+#import "RMQBasicProperties.h"
 
 @implementation RMQBasicProperties
 + (NSArray *)properties {

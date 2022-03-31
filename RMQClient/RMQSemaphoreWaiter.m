@@ -40,7 +40,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQSemaphoreWaiter.h>
+#import "RMQSemaphoreWaiter.h"
 
 @interface RMQSemaphoreWaiter ()
 @property (nonatomic, readwrite) NSNumber *timeoutSeconds;

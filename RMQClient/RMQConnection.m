@@ -40,25 +40,25 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQConnectionDefaults.h>
-#import <RMQConnection.h>
-#import <RMQConnectionRecover.h>
-#import <RMQGCDHeartbeatSender.h>
-#import <RMQGCDSerialQueue.h>
-#import <RMQHandshaker.h>
-#import <RMQMethods.h>
-#import <RMQMultipleChannelAllocator.h>
-#import <RMQProtocolHeader.h>
-#import <RMQQueuingConnectionDelegateProxy.h>
-#import <RMQReader.h>
-#import <RMQSemaphoreWaiterFactory.h>
-#import <RMQTCPSocketTransport.h>
-#import <RMQURI.h>
-#import <RMQTickingClock.h>
-#import <RMQTLSOptions.h>
-#import <RMQErrors.h>
-#import <RMQFrame.h>
-#import <RMQProcessInfoNameGenerator.h>
+#import "RMQConnectionDefaults.h"
+#import "RMQConnection.h"
+#import "RMQConnectionRecover.h"
+#import "RMQGCDHeartbeatSender.h"
+#import "RMQGCDSerialQueue.h"
+#import "RMQHandshaker.h"
+#import "RMQMethods.h"
+#import "RMQMultipleChannelAllocator.h"
+#import "RMQProtocolHeader.h"
+#import "RMQQueuingConnectionDelegateProxy.h"
+#import "RMQReader.h"
+#import "RMQSemaphoreWaiterFactory.h"
+#import "RMQTCPSocketTransport.h"
+#import "RMQURI.h"
+#import "RMQTickingClock.h"
+#import "RMQTLSOptions.h"
+#import "RMQErrors.h"
+#import "RMQFrame.h"
+#import "RMQProcessInfoNameGenerator.h"
 
 @interface RMQConnection ()
 @property (strong, nonatomic, readwrite) id <RMQTransport> transport;

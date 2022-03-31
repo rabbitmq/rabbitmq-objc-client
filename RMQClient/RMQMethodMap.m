@@ -1,8 +1,8 @@
 // License goes here
 
 // This file is generated. Do not edit.
-#import <RMQMethodMap.h>
-#import <RMQMethods.h>
+#import "RMQMethodMap.h"
+#import "RMQMethods.h"
 
 @implementation RMQMethodMap
 + (NSDictionary *)methodMap {

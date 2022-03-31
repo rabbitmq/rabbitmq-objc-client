@@ -40,8 +40,8 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQPKCS12CertificateConverter.h>
-#import <RMQErrors.h>
+#import "RMQPKCS12CertificateConverter.h"
+#import "RMQErrors.h"
 
 @interface RMQPKCS12CertificateConverter ()
 @property (nonatomic, readwrite) NSData *data;

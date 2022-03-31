@@ -40,9 +40,9 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQUnallocatedChannel.h>
-#import <RMQErrors.h>
-#import <RMQConnectionDelegate.h>
+#import "RMQUnallocatedChannel.h"
+#import "RMQErrors.h"
+#import "RMQConnectionDelegate.h"
 
 @interface RMQUnallocatedChannel ()
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;

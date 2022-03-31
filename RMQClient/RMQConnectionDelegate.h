@@ -41,7 +41,7 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import <RMQChannel.h>
+#import "RMQChannel.h"
 
 @class RMQConnection;
 @protocol RMQConnectionDelegate <NSObject>

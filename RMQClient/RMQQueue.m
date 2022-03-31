@@ -40,11 +40,11 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQQueue.h>
-#import <RMQMethods.h>
-#import <RMQConnection.h>
-#import <RMQBasicProperties.h>
-#import <RMQChannel.h>
+#import "RMQQueue.h"
+#import "RMQMethods.h"
+#import "RMQConnection.h"
+#import "RMQBasicProperties.h"
+#import "RMQChannel.h"
 
 @interface RMQQueue ()
 @property (nonatomic, copy, readwrite) NSString *name;

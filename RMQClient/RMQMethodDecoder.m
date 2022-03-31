@@ -40,8 +40,8 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQMethodDecoder.h>
-#import <RMQMethodMap.h>
+#import "RMQMethodDecoder.h"
+#import "RMQMethodMap.h"
 
 @interface RMQMethodDecoder ()
 @property (nonatomic, readwrite) RMQParser *parser;

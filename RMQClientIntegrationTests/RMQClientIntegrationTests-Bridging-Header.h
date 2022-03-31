@@ -40,4 +40,4 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQClient.h>
+#import "RMQClient.h"

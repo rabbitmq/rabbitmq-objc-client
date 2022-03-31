@@ -40,7 +40,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQMethods.h>
+#import "RMQMethods.h"
 
 typedef NS_OPTIONS(NSUInteger, RMQBasicConsumeAcknowledgementMode) {
     /// @brief Consume using manual acknowledgement mode

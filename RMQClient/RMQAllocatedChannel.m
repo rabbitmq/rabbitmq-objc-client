@@ -40,11 +40,11 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQBasicProperties+MergeDefaults.h>
-#import <RMQErrors.h>
-#import <RMQMethods+Convenience.h>
-#import <RMQAllocatedChannel.h>
-#import <RMQConnectionDelegate.h>
+#import "RMQBasicProperties+MergeDefaults.h"
+#import "RMQErrors.h"
+#import "RMQMethods+Convenience.h"
+#import "RMQAllocatedChannel.h"
+#import "RMQConnectionDelegate.h"
 
 @interface RMQAllocatedChannel ()
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
@@ -160,7 +160,7 @@
     [self recoverPrefetch];
     [self recoverConfirmations];
     [self recoverExchanges];
-    [self recoverExchangeBindings];
+    [self recoverExchangeBindings]; 
     [self recoverQueuesAndTheirBindings];
     [self recoverConsumers];
 }

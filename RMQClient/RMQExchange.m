@@ -40,9 +40,9 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQExchange.h>
-#import <RMQChannel.h>
-#import <RMQBasicProperties.h>
+#import "RMQExchange.h"
+#import "RMQChannel.h"
+#import "RMQBasicProperties.h"
 
 @interface RMQExchange ()
 @property (nonatomic, readwrite) NSString *name;

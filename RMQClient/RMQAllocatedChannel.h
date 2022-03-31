@@ -41,12 +41,12 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import <RMQChannel.h>
-#import <RMQLocalSerialQueue.h>
-#import <RMQNameGenerator.h>
-#import <RMQDispatcher.h>
-#import <RMQChannelAllocator.h>
-#import <RMQConfirmations.h>
+#import "RMQChannel.h"
+#import "RMQLocalSerialQueue.h"
+#import "RMQNameGenerator.h"
+#import "RMQDispatcher.h"
+#import "RMQChannelAllocator.h"
+#import "RMQConfirmations.h"
 
 @interface RMQAllocatedChannel : RMQValue <RMQChannel>
 - (nonnull instancetype)init:(nonnull NSNumber *)channelNumber

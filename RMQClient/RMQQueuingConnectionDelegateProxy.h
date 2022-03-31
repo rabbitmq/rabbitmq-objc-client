@@ -41,7 +41,7 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import <RMQConnectionDelegate.h>
+#import "RMQConnectionDelegate.h"
 
 @interface RMQQueuingConnectionDelegateProxy : NSObject <RMQConnectionDelegate>
 

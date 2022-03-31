@@ -41,7 +41,7 @@
 // ---------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import <RMQMethods.h>
+#import "RMQMethods.h"
 
 typedef void (^RMQConfirmationCallback)(NSSet<NSNumber *> *, NSSet<NSNumber *> *);
 

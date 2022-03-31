@@ -40,7 +40,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQBasicProperties+MergeDefaults.h>
+#import "RMQBasicProperties+MergeDefaults.h"
 
 @implementation RMQBasicProperties (MergeDefaults)
 

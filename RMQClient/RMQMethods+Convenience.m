@@ -40,7 +40,7 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQMethods+Convenience.h>
+#import "RMQMethods+Convenience.h"
 
 RMQBasicConsumeOptions RMQBasicConsumeAcknowledgementModeToOptions(RMQBasicConsumeAcknowledgementMode mode) {
     if ((mode & RMQBasicConsumeAcknowledgementModeAuto) == RMQBasicConsumeAcknowledgementModeAuto) {

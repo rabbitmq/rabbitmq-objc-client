@@ -40,8 +40,8 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
-#import <RMQGCDHeartbeatSender.h>
-#import <RMQHeartbeat.h>
+#import "RMQGCDHeartbeatSender.h"
+#import "RMQHeartbeat.h"
 
 @interface RMQGCDHeartbeatSender ()
 @property (nonatomic, readwrite) id<RMQTransport> transport;
@@ -72,7 +72,7 @@
 
 - (void (^)(void))startWithInterval:(NSNumber *)intervalSeconds {
     self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.dispatchQueue);
-
+    
     void (^eventHandler)(void) = ^{
         if ([self intervalPassed:intervalSeconds]) [self.transport write:self.heartbeatData];
     };
