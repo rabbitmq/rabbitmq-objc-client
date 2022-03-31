@@ -215,7 +215,7 @@ typedef void (^RMQChannelCompletionHandler)(void);
                               options:(RMQBasicConsumeOptions)options
                             arguments:(RMQTable * _Nonnull)arguments
                               handler:(RMQConsumerDeliveryHandler _Nonnull)handler;
-                              
+
 /// @brief Internal method used by a consumer object
 - (nonnull NSString *)generateConsumerTag;
 

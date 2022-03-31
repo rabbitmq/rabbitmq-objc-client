@@ -61,16 +61,16 @@
 #import "RMQProcessInfoNameGenerator.h"
 
 @interface RMQConnection ()
-@property (strong, nonatomic, readwrite) id <RMQTransport> transport;
+@property ( nonatomic, readwrite) id <RMQTransport> transport;
 @property (nonatomic, readwrite) RMQReader *reader;
-@property (nonatomic, readwrite) id <RMQChannelAllocator> channelAllocator;
-@property (nonatomic, readwrite) id <RMQFrameHandler> frameHandler;
-@property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
-@property (nonatomic, readwrite) id<RMQWaiterFactory> waiterFactory;
-@property (nonatomic, readwrite) id<RMQHeartbeatSender> heartbeatSender;
 @property (nonatomic, weak, readwrite) id<RMQConnectionDelegate> delegate;
+@property (nonatomic, weak, readwrite) id <RMQChannelAllocator> channelAllocator;
+@property (nonatomic, weak, readwrite) id <RMQFrameHandler> frameHandler;
+@property (nonatomic, readwrite) id<RMQHeartbeatSender> heartbeatSender;
 @property (nonatomic, readwrite) id <RMQChannel> channelZero;
 @property (nonatomic, readwrite) RMQConnectionConfig *config;
+@property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
+@property (nonatomic, readwrite) id<RMQWaiterFactory> waiterFactory;
 @property (nonatomic, readwrite) NSMutableDictionary *userChannels;
 @property (nonatomic, readwrite) NSNumber *frameMax;
 @property (nonatomic, readwrite) BOOL handshakeComplete;
