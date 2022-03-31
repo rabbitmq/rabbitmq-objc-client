@@ -46,7 +46,7 @@ import CocoaAsyncSocket
 class RMQTCPSocketTransportTest: XCTestCase {
     static let noTLS = RMQTLSOptions.fromURI("amqp://localhost")
     let noTLS = RMQTLSOptions.fromURI("amqp://localhost")
-    let noOpSocketConfigurator = { (_socket: GCDAsyncSocket?) -> Void in
+    let noOpSocketConfigurator = { (_: GCDAsyncSocket?) -> Void in
       // no-op
     }
 
