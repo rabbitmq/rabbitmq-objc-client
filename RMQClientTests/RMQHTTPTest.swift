@@ -44,9 +44,9 @@ import XCTest
 
 class RMQHTTPTest: XCTestCase {
     func testGet() {
-        let http = RMQHTTP("http://scooterlabs.com")
-        let actual = http.get("/echo")
+        let http = RMQHTTP("http://httpbin.org")
+        let actual = http.get("/uuid")
         let actualString = String(data: actual, encoding: String.Encoding.utf8)
-        XCTAssertNotNil(actualString!.range(of: "[method] => GET"))
+        XCTAssertNotNil(actualString!.range(of: "uuid"))
     }
 }
