@@ -62,10 +62,8 @@ The test suite also requires the [x509 certificate authentication mechanism](htt
 plugin to be enabled:
 
 ``` shell
-brew install rabbitmq
-# target location will vary depending on how RabbitMQ was installed,
-# the Homebrew Cellar location and so on
-cp TestCertificates/* /usr/local/etc/rabbitmq/
+# target location will vary depending on how RabbitMQ was installed
+cp TestCertificates/* /path/to/rabbitmq-home/etc/rabbitmq/
 rabbitmq-plugins enable rabbitmq_auth_mechanism_ssl --offline
 ```
 
@@ -75,21 +73,41 @@ The following [RabbitMQ configuration file](https://www.rabbitmq.com/configure.h
 is used by CI and can be used as example:
 
 ``` ini
-listeners.tcp.1 = 0.0.0.0:5672
-
-listeners.ssl.default = 5671
-
-# the paths must match those
-ssl_options.cacertfile = /usr/local/etc/rabbitmq/ca_certificate.pem
-ssl_options.certfile   = /usr/local/etc/rabbitmq/server_certificate.pem
-ssl_options.keyfile    = /usr/local/etc/rabbitmq/server_key.pem
-ssl_options.verify     = verify_peer
-ssl_options.fail_if_no_peer_cert = false
-
-
 auth_mechanisms.1 = PLAIN
 auth_mechanisms.2 = AMQPLAIN
 auth_mechanisms.3 = EXTERNAL
+
+listeners.ssl.default  = 5671
+
+## These MUST be updated to point to actual tls-gen generated
+## certificates and private keys
+ssl_options.cacertfile = /path/to/ca_certificate.pem
+ssl_options.certfile   = /path/to/server_certificate.pem
+ssl_options.keyfile    = /path/to/server_key.pem
+
+
+ssl_options.versions.1 = tlsv1.2
+
+ssl_options.verify               = verify_peer
+ssl_options.fail_if_no_peer_cert = false
+
+ssl_options.honor_cipher_order   = true
+ssl_options.honor_ecc_order      = true
+ssl_options.client_renegotiation = false
+ssl_options.secure_renegotiate   = true
+
+ssl_options.ciphers.1  = ECDHE-ECDSA-AES256-GCM-SHA384
+ssl_options.ciphers.2  = ECDHE-RSA-AES256-GCM-SHA384
+ssl_options.ciphers.3  = ECDH-ECDSA-AES256-GCM-SHA384
+ssl_options.ciphers.4  = ECDH-RSA-AES256-GCM-SHA384
+ssl_options.ciphers.5  = DHE-RSA-AES256-GCM-SHA384
+ssl_options.ciphers.6  = DHE-DSS-AES256-GCM-SHA384
+ssl_options.ciphers.7  = ECDHE-ECDSA-AES128-GCM-SHA256
+ssl_options.ciphers.8  = ECDHE-RSA-AES128-GCM-SHA256
+ssl_options.ciphers.9  = ECDH-ECDSA-AES128-GCM-SHA256
+ssl_options.ciphers.10 = ECDH-RSA-AES128-GCM-SHA256
+ssl_options.ciphers.11 = DHE-RSA-AES128-GCM-SHA256
+ssl_options.ciphers.12 = DHE-DSS-AES128-GCM-SHA256
 ```
 
 In case a different set of certificates is desired, it is highly recommended
@@ -123,7 +141,7 @@ To run the core test suite:
 gmake tests
 
 # iOS only
-gmake tests_ios iOS_VERSION=14.4
+gmake tests_ios iOS_VERSION=15.4
 
 # MacOS only
 gmake tests_macos
