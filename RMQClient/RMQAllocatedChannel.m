@@ -60,7 +60,7 @@
 @property (nonatomic, readwrite) NSNumber *prefetchCountPerChannel;
 @property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) id<RMQNameGenerator> nameGenerator;
-@property (nonatomic, readwrite) id<RMQChannelAllocator> allocator;
+@property (nonatomic, weak, readwrite) id<RMQChannelAllocator> allocator;
 @end
 
 @implementation RMQAllocatedChannel
