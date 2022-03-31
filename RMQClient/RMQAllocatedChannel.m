@@ -49,7 +49,7 @@
 @interface RMQAllocatedChannel ()
 @property (nonatomic, copy, readwrite) NSNumber *channelNumber;
 @property (nonatomic, readwrite) NSNumber *contentBodySize;
-@property (nonatomic, readwrite) id <RMQDispatcher> dispatcher;
+@property (nonatomic, weak, readwrite) id <RMQDispatcher> dispatcher;
 @property (nonatomic, readwrite) NSMutableDictionary *consumers;
 @property (nonatomic, readwrite) NSMutableDictionary *exchanges;
 @property (nonatomic, readwrite) NSMutableDictionary *exchangeBindings;
@@ -58,9 +58,9 @@
 @property (nonatomic, readwrite) id<RMQConfirmations> confirmations;
 @property (nonatomic, readwrite) NSNumber *prefetchCountPerConsumer;
 @property (nonatomic, readwrite) NSNumber *prefetchCountPerChannel;
-@property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
+@property (nonatomic, weak, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) id<RMQNameGenerator> nameGenerator;
-@property (nonatomic, readwrite) id<RMQChannelAllocator> allocator;
+@property (nonatomic, weak, readwrite) id<RMQChannelAllocator> allocator;
 @end
 
 @implementation RMQAllocatedChannel
