@@ -45,7 +45,7 @@
 #import "RMQMethodDecoder.h"
 
 @interface RMQReader ()
-@property (nonatomic, readwrite) id<RMQTransport>transport;
+@property (nonatomic,weak, readwrite) id<RMQTransport>transport;
 @property (nonatomic, readwrite) id<RMQFrameHandler>frameHandler;
 @end
 
