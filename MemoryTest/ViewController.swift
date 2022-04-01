@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        connection = RMQConnection(uri: amqp, delegate: self)
+        connection = RMQConnection()
          connection?.start({
              print("Connected")
          })
