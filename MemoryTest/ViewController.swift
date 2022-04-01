@@ -25,6 +25,10 @@ class ViewController: UIViewController {
         connection?.close()
         connection = nil
         print("CLOSED")
+        connection = RMQConnection()
+         connection?.start({
+             print("Connected")
+         })
     }
 
 

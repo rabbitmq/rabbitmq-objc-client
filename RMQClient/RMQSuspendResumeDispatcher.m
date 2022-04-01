@@ -46,7 +46,7 @@
 
 @interface RMQSuspendResumeDispatcher ()
 @property (nonatomic, readwrite) id<RMQChannel> channel;
-@property (nonatomic, readwrite) id<RMQSender> sender;
+@property (nonatomic,weak, readwrite) id<RMQSender> sender;
 @property (nonatomic, readwrite) RMQFramesetValidator *validator;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> enablementQueue;

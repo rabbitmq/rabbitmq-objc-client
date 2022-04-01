@@ -706,6 +706,7 @@ static void RMQInitConnectionConfigDefaults() {
               ^{[self.heartbeatSender stop];},
               ^{
                   self.transport.delegate = nil;
+                  [self.transport cleanup];
                   [self.transport close];
               },
               ^{
@@ -725,6 +726,7 @@ static void RMQInitConnectionConfigDefaults() {
               ^{[self.heartbeatSender stop];},
               ^{
                   self.transport.delegate = nil;
+                  [self.transport cleanup];
                   [self.transport close];
               },
               ^{

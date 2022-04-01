@@ -17,10 +17,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UmE-Cc-1KD">
-                                <rect key="frame" x="162" y="270" width="148" height="31"/>
+                                <rect key="frame" x="20" y="270" width="374" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Reset Connection"/>
                                 <connections>
                                     <action selector="clearConnection" destination="BYZ-38-t0r" eventType="touchUpInside" id="Nbh-hI-wwa"/>
                                 </connections>

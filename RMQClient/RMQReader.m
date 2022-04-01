@@ -104,17 +104,18 @@
 }
 
 - (void)readBodiesForIncompleteFrameset:(RMQFrameset *)contentFrameset {
+    __weak id this = self;
     [self.transport readFrame:^(NSData * _Nonnull data) {
         RMQFrame *frame = [self frameWithData:data];
-
+        __strong typeof(self) strongThis = this;
         if ([frame.payload isKindOfClass:[RMQContentBody class]]) {
-            [self frameset:contentFrameset
+            [this frameset:contentFrameset
               addBodyFrame:frame];
         } else {
-            [self.frameHandler handleFrameset:contentFrameset];
+            [strongThis.frameHandler handleFrameset:contentFrameset];
             RMQFrameset *nonContentFrameset = [[RMQFrameset alloc] initWithChannelNumber:contentFrameset.channelNumber
                                                                                   method:(id <RMQMethod>)frame.payload];
-            [self.frameHandler handleFrameset:nonContentFrameset];
+            [strongThis.frameHandler handleFrameset:nonContentFrameset];
         }
     }];
 }

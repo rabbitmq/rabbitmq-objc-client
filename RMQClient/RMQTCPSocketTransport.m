@@ -229,6 +229,9 @@ struct __attribute__((__packed__)) AMQPHeader {
         foundCallback();
     }
 }
+- (void)cleanup {
+    [self.callbacks removeAllObjects];
+}
 
 - (BOOL)tlsUpgradeWithError:(NSError **)error {
     NSArray *certificates = [self.tlsOptions certificatesWithError:error];
