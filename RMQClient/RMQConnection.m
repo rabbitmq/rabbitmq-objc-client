@@ -623,6 +623,8 @@ static void RMQInitConnectionConfigDefaults() {
     for (RMQOperation operation in self.safeCloseOperations) {
         [self.commandQueue enqueue:operation];
     }
+    self.reader = nil;
+    self.frameHandler = nil;
 }
 
 - (void)blockingClose {
