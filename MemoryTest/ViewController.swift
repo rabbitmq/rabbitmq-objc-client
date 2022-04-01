@@ -9,13 +9,13 @@
 import UIKit
 import RMQClient
 class ViewController: UIViewController {
-    let amqp = "amqps://tofs_ios_qa:jIShN8QDsLkxUwxS@tofs-us-west-1-rabbitmq-qa.tycodiy.com:443"
+    let amqp = "my-server"
 
     var connection: RMQConnection?
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        connection = RMQConnection(uri: "amqps://tofs_ios_qa:jIShN8QDsLkxUwxS@tofs-us-west-1-rabbitmq-qa.tycodiy.com:443", delegate: self)
+        connection = RMQConnection(uri: amqp, delegate: self)
          connection?.start({
              print("Connected")
          })
@@ -25,13 +25,6 @@ class ViewController: UIViewController {
         connection?.close()
         connection = nil
         print("CLOSED")
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2, execute: {[weak self] in
-            self?.connection = RMQConnection(uri: "amqps://tofs_ios_qa:jIShN8QDsLkxUwxS@tofs-us-west-1-rabbitmq-qa.tycodiy.com:443", delegate: self)
-            self?.connection?.start({
-                 print("Connected")
-             })
-            
-        })
     }
 
 
