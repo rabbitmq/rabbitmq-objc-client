@@ -9,7 +9,7 @@
 import UIKit
 import RMQClient
 class ViewController: UIViewController {
-    let amqp = "my-server"
+    let amqp = ""
 
     var connection: RMQConnection?
     override func viewDidLoad() {
