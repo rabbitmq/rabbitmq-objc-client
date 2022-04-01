@@ -17,7 +17,7 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         connection = RMQConnection(uri: "amqps://tofs_ios_qa:jIShN8QDsLkxUwxS@tofs-us-west-1-rabbitmq-qa.tycodiy.com:443", delegate: self)
          connection?.start({
-             print(self)
+             print("Connected")
          })
     }
     
@@ -25,6 +25,13 @@ class ViewController: UIViewController {
         connection?.close()
         connection = nil
         print("CLOSED")
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2, execute: {[weak self] in
+            self?.connection = RMQConnection(uri: "amqps://tofs_ios_qa:jIShN8QDsLkxUwxS@tofs-us-west-1-rabbitmq-qa.tycodiy.com:443", delegate: self)
+            self?.connection?.start({
+                 print("Connected")
+             })
+            
+        })
     }
 
 
