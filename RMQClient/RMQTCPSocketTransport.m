@@ -168,14 +168,15 @@ struct __attribute__((__packed__)) AMQPHeader {
 #define AMQP091_FINAL_OCTET_SIZE 1
 
 - (void)readFrame:(void (^)(NSData * _Nonnull))complete {
+    __weak id this = self;
     [self read:AMQP091_HEADER_SIZE complete:^(NSData * _Nonnull data) {
         const struct AMQPHeader *header;
         header = (const struct AMQPHeader *)data.bytes;
-        
+        __strong typeof(self) strongThis = this;
         UInt32 hostSize = CFSwapInt32BigToHost(header->size);
         
-        [self read:hostSize complete:^(NSData * _Nonnull payload) {
-            [self read:AMQP091_FINAL_OCTET_SIZE complete:^(NSData * _Nonnull frameEnd) {
+        [strongThis read:hostSize complete:^(NSData * _Nonnull payload) {
+            [strongThis read:AMQP091_FINAL_OCTET_SIZE complete:^(NSData * _Nonnull frameEnd) {
                 NSMutableData *allData = [data mutableCopy];
                 [allData appendData:payload];
                 complete(allData);

@@ -22,7 +22,9 @@ class ViewController: UIViewController {
     }
     
     @IBAction func clearConnection() {
+        connection?.close()
         connection = nil
+        print("CLOSED")
     }
 
 
