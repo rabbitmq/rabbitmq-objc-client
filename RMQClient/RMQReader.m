@@ -61,16 +61,15 @@
 }
 
 - (void)run {
-    __weak id this = self;
     [self.transport readFrame:^(NSData * _Nonnull methodData) {
         // executing on a concurrent queue
-        __strong typeof(self) strongThis = this;
-        RMQFrame *frame = [strongThis frameWithData:methodData];
+        
+        RMQFrame *frame = [self frameWithData:methodData];
 
         if (frame.isHeartbeat) {
-            [strongThis run];
+            [self run];
         } else {
-            [strongThis handleMethodFrame:frame];
+            [self handleMethodFrame:frame];
         }
     }];
 }
