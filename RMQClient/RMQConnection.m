@@ -623,8 +623,6 @@ static void RMQInitConnectionConfigDefaults() {
     for (RMQOperation operation in self.safeCloseOperations) {
         [self.commandQueue enqueue:operation];
     }
-    self.reader = nil;
-    self.frameHandler = nil;
 }
 
 - (void)blockingClose {
@@ -707,6 +705,13 @@ static void RMQInitConnectionConfigDefaults() {
               ^{
                   self.transport.delegate = nil;
                   [self.transport close];
+              },
+              ^{
+                  self.channelAllocator = nil;
+              },
+              ^{
+                  self.reader = nil;
+                  self.frameHandler = nil;
               }];
 }
 
@@ -719,6 +724,13 @@ static void RMQInitConnectionConfigDefaults() {
               ^{
                   self.transport.delegate = nil;
                   [self.transport close];
+              },
+              ^{
+                  self.channelAllocator = nil;
+              },
+              ^{
+                  self.reader = nil;
+                  self.frameHandler = nil;
               }];
 }
 
