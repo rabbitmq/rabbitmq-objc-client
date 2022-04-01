@@ -49,4 +49,6 @@
 - (id<RMQChannel>)allocate;
 - (void)releaseChannelNumber:(NSNumber *)channelNumber;
 - (NSArray<id<RMQChannel>> *)allocatedUserChannels;
+- (void)cleanupOnClose;
+
 @end

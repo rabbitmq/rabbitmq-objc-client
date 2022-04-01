@@ -41,6 +41,7 @@
 // ---------------------------------------------------------------------------
 
 @objc class ChannelSpyAllocator: NSObject, RMQChannelAllocator {
+   
     var id = 0
     var channels: [ChannelSpy] = []
     var sender: RMQSender!
@@ -50,6 +51,12 @@
         id += 1
         channels.append(ch)
         return ch
+    }
+    func cleanupOnClose() {
+        for channel in channels {
+            channel.close()
+        }
+        channels.removeAll()
     }
 
     func releaseChannelNumber(_ channelNumber: NSNumber!) {

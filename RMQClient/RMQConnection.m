@@ -710,6 +710,7 @@ static void RMQInitConnectionConfigDefaults() {
                   [self.transport close];
               },
               ^{
+                  [self.channelAllocator cleanupOnClose];
                   self.channelAllocator = nil;
               },
               ^{
@@ -730,6 +731,7 @@ static void RMQInitConnectionConfigDefaults() {
                   [self.transport close];
               },
               ^{
+                  [self.channelAllocator cleanupOnClose];
                   self.channelAllocator = nil;
               },
               ^{
