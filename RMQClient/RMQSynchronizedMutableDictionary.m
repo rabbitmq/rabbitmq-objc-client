@@ -79,5 +79,11 @@
         self.count--;
     }
 }
+- (void)removeAllObjects {
+    @synchronized (self.lock) {
+        [self.backingDictionary removeAllObjects];
+        self.count = 0;
+    }
+}
 
 @end

@@ -82,7 +82,13 @@
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
-
+- (void)cleanupOnClose {
+    for (id key in self.channels) {
+        [[self.channels objectForKey:key] close];
+    }
+    [self.channels removeAllObjects];
+   
+}
 - (id<RMQChannel>)allocate {
     id<RMQChannel> ch;
     @synchronized(self) {

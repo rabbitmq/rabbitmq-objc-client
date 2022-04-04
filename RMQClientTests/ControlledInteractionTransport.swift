@@ -68,6 +68,9 @@ enum TestDoubleTransportError: Error {
         connected = false
         delegate?.transport(self, disconnectedWithError: nil)
     }
+    func cleanup() {
+    
+    }
 
     func write(_ data: Data) {
         outboundData.append(data)

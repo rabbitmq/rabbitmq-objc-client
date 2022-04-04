@@ -48,7 +48,7 @@ class ConnectionClosureTest: XCTestCase {
         let allocator = ChannelSpyAllocator()
         let q = FakeSerialQueue()
         let handshakeCount = 1
-        let expectedCloseProcedureCount = 5
+        let expectedCloseProcedureCount = 7
         let channelsToCreateCount = 2
         let conn = RMQConnection(transport: transport,
                                  config: ConnectionWithFakesHelper.connectionConfig(),
@@ -187,7 +187,7 @@ class ConnectionClosureTest: XCTestCase {
         let transport = ControlledInteractionTransport()
         let allocator = ChannelSpyAllocator()
         let q = FakeSerialQueue()
-        let expectedCloseProcedureCount = 5
+        let expectedCloseProcedureCount = 7
         let channelsToCreateCount = 2
         let heartbeatSender = HeartbeatSenderSpy()
         let conn = RMQConnection(transport: transport,

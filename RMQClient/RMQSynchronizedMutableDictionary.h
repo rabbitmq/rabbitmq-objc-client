@@ -47,4 +47,5 @@
 - (nullable id)objectForKeyedSubscript:(nonnull id)key;
 - (void)setObject:(nonnull id)obj forKeyedSubscript:(nonnull id)key;
 - (void)removeObjectForKey:(nonnull id)key;
+- (void)removeAllObjects;
 @end

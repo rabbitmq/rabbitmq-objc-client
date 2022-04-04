@@ -46,12 +46,12 @@
 
 @interface RMQSuspendResumeDispatcher ()
 @property (nonatomic, readwrite) id<RMQChannel> channel;
-@property (nonatomic, readwrite) id<RMQSender> sender;
+@property (nonatomic,weak, readwrite) id<RMQSender> sender;
 @property (nonatomic, readwrite) RMQFramesetValidator *validator;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> enablementQueue;
 @property (nonatomic, readwrite) NSNumber *enableDelay;
-@property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
+@property (nonatomic,weak, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) DispatcherState state;
 @property (nonatomic, readwrite) BOOL disabled;
 @end

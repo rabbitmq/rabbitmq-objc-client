@@ -54,4 +54,5 @@
 - (BOOL)isConnected;
 /// @brief Returns true if the transport is not connected
 - (BOOL)isDisconnected;
+- (void)cleanup;
 @end
