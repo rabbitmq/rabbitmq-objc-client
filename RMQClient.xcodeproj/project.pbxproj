@@ -8,15 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1029A0E22087A97E00C72924 /* ConnectionDeadlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1029A0E12087A97E00C72924 /* ConnectionDeadlockTests.swift */; };
-		4DF6E43927F6E90700C43208 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF6E43827F6E90700C43208 /* AppDelegate.swift */; };
-		4DF6E43B27F6E90700C43208 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF6E43A27F6E90700C43208 /* SceneDelegate.swift */; };
-		4DF6E43D27F6E90700C43208 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF6E43C27F6E90700C43208 /* ViewController.swift */; };
-		4DF6E44027F6E90700C43208 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4DF6E43E27F6E90700C43208 /* Main.storyboard */; };
-		4DF6E44227F6E90900C43208 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4DF6E44127F6E90900C43208 /* Assets.xcassets */; };
-		4DF6E44527F6E90900C43208 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4DF6E44327F6E90900C43208 /* LaunchScreen.storyboard */; };
-		4DF6E45027F6E90A00C43208 /* MemoryTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF6E44F27F6E90A00C43208 /* MemoryTestTests.swift */; };
-		4DF6E45A27F6E90A00C43208 /* MemoryTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF6E45927F6E90A00C43208 /* MemoryTestUITests.swift */; };
-		4DF6E45C27F6E90A00C43208 /* MemoryTestUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF6E45B27F6E90A00C43208 /* MemoryTestUITestsLaunchTests.swift */; };
 		4DF6E46D27F6E98100C43208 /* RMQClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE7FE911C3BCA6000DF8C4F /* RMQClient.framework */; };
 		70311B0B21ED538600AE1804 /* RMQConnectionDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = 70311B0A21ED538600AE1804 /* RMQConnectionDefaults.h */; };
 		70338A2421FBAA7C00C9069D /* TLSConnectionIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70338A2321FBAA7C00C9069D /* TLSConnectionIntegrationTest.swift */; };
@@ -261,18 +252,8 @@
 /* Begin PBXFileReference section */
 		1029A0E12087A97E00C72924 /* ConnectionDeadlockTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionDeadlockTests.swift; sourceTree = "<group>"; };
 		4DF6E43627F6E90700C43208 /* MemoryTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemoryTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4DF6E43827F6E90700C43208 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4DF6E43A27F6E90700C43208 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		4DF6E43C27F6E90700C43208 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		4DF6E43F27F6E90700C43208 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		4DF6E44127F6E90900C43208 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		4DF6E44427F6E90900C43208 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		4DF6E44627F6E90900C43208 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4DF6E44B27F6E90A00C43208 /* MemoryTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MemoryTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4DF6E44F27F6E90A00C43208 /* MemoryTestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryTestTests.swift; sourceTree = "<group>"; };
 		4DF6E45527F6E90A00C43208 /* MemoryTestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MemoryTestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4DF6E45927F6E90A00C43208 /* MemoryTestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryTestUITests.swift; sourceTree = "<group>"; };
-		4DF6E45B27F6E90A00C43208 /* MemoryTestUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryTestUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		70311B0A21ED538600AE1804 /* RMQConnectionDefaults.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMQConnectionDefaults.h; sourceTree = "<group>"; };
 		70338A2321FBAA7C00C9069D /* TLSConnectionIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLSConnectionIntegrationTest.swift; sourceTree = "<group>"; };
 		705359A821D174A400CF6456 /* TestCertificates */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TestCertificates; sourceTree = SOURCE_ROOT; };
@@ -522,37 +503,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4DF6E43727F6E90700C43208 /* MemoryTest */ = {
-			isa = PBXGroup;
-			children = (
-				4DF6E43827F6E90700C43208 /* AppDelegate.swift */,
-				4DF6E43A27F6E90700C43208 /* SceneDelegate.swift */,
-				4DF6E43C27F6E90700C43208 /* ViewController.swift */,
-				4DF6E43E27F6E90700C43208 /* Main.storyboard */,
-				4DF6E44127F6E90900C43208 /* Assets.xcassets */,
-				4DF6E44327F6E90900C43208 /* LaunchScreen.storyboard */,
-				4DF6E44627F6E90900C43208 /* Info.plist */,
-			);
-			path = MemoryTest;
-			sourceTree = "<group>";
-		};
-		4DF6E44E27F6E90A00C43208 /* MemoryTestTests */ = {
-			isa = PBXGroup;
-			children = (
-				4DF6E44F27F6E90A00C43208 /* MemoryTestTests.swift */,
-			);
-			path = MemoryTestTests;
-			sourceTree = "<group>";
-		};
-		4DF6E45827F6E90A00C43208 /* MemoryTestUITests */ = {
-			isa = PBXGroup;
-			children = (
-				4DF6E45927F6E90A00C43208 /* MemoryTestUITests.swift */,
-				4DF6E45B27F6E90A00C43208 /* MemoryTestUITestsLaunchTests.swift */,
-			);
-			path = MemoryTestUITests;
-			sourceTree = "<group>";
-		};
 		4DF6E46C27F6E98100C43208 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -872,9 +822,6 @@
 				AEE7FE931C3BCA6000DF8C4F /* RMQClient */,
 				AEE7FE9F1C3BCA6000DF8C4F /* RMQClientTests */,
 				AEA45ED81C440FE400FE1F62 /* RMQClientIntegrationTests */,
-				4DF6E43727F6E90700C43208 /* MemoryTest */,
-				4DF6E44E27F6E90A00C43208 /* MemoryTestTests */,
-				4DF6E45827F6E90A00C43208 /* MemoryTestUITests */,
 				AEE7FE921C3BCA6000DF8C4F /* Products */,
 				4DF6E46C27F6E98100C43208 /* Frameworks */,
 			);
@@ -1239,9 +1186,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4DF6E44527F6E90900C43208 /* LaunchScreen.storyboard in Resources */,
-				4DF6E44227F6E90900C43208 /* Assets.xcassets in Resources */,
-				4DF6E44027F6E90700C43208 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1341,9 +1285,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4DF6E43D27F6E90700C43208 /* ViewController.swift in Sources */,
-				4DF6E43927F6E90700C43208 /* AppDelegate.swift in Sources */,
-				4DF6E43B27F6E90700C43208 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1351,7 +1292,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4DF6E45027F6E90A00C43208 /* MemoryTestTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1359,8 +1299,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4DF6E45A27F6E90A00C43208 /* MemoryTestUITests.swift in Sources */,
-				4DF6E45C27F6E90A00C43208 /* MemoryTestUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1549,25 +1487,6 @@
 		};
 /* End PBXTargetDependency section */
 
-/* Begin PBXVariantGroup section */
-		4DF6E43E27F6E90700C43208 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4DF6E43F27F6E90700C43208 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		4DF6E44327F6E90900C43208 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4DF6E44427F6E90900C43208 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
 		4DF6E45D27F6E90A00C43208 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1731,7 +1650,6 @@
 		4DF6E46127F6E90A00C43208 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1769,7 +1687,6 @@
 		4DF6E46227F6E90A00C43208 /* Test without TLS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1804,7 +1721,6 @@
 		4DF6E46327F6E90A00C43208 /* Test with TLS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1839,7 +1755,6 @@
 		4DF6E46427F6E90A00C43208 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1874,7 +1789,6 @@
 		4DF6E46527F6E90A00C43208 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -1911,7 +1825,6 @@
 		4DF6E46627F6E90A00C43208 /* Test without TLS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -1945,7 +1858,6 @@
 		4DF6E46727F6E90A00C43208 /* Test with TLS */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -1979,7 +1891,6 @@
 		4DF6E46827F6E90A00C43208 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
