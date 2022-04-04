@@ -219,20 +219,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4DF6E44C27F6E90A00C43208 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AEE7FE881C3BCA6000DF8C4F /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4DF6E43527F6E90700C43208;
-			remoteInfo = MemoryTest;
-		};
-		4DF6E45627F6E90A00C43208 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AEE7FE881C3BCA6000DF8C4F /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4DF6E43527F6E90700C43208;
-			remoteInfo = MemoryTest;
-		};
 		AEA45EDD1C440FE400FE1F62 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AEE7FE881C3BCA6000DF8C4F /* Project object */;
@@ -252,8 +238,6 @@
 /* Begin PBXFileReference section */
 		1029A0E12087A97E00C72924 /* ConnectionDeadlockTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionDeadlockTests.swift; sourceTree = "<group>"; };
 		4DF6E43627F6E90700C43208 /* MemoryTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemoryTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4DF6E44B27F6E90A00C43208 /* MemoryTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MemoryTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4DF6E45527F6E90A00C43208 /* MemoryTestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MemoryTestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		70311B0A21ED538600AE1804 /* RMQConnectionDefaults.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMQConnectionDefaults.h; sourceTree = "<group>"; };
 		70338A2321FBAA7C00C9069D /* TLSConnectionIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLSConnectionIntegrationTest.swift; sourceTree = "<group>"; };
 		705359A821D174A400CF6456 /* TestCertificates */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TestCertificates; sourceTree = SOURCE_ROOT; };
@@ -460,20 +444,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4DF6E46D27F6E98100C43208 /* RMQClient.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4DF6E44827F6E90A00C43208 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4DF6E45227F6E90A00C43208 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -834,8 +804,6 @@
 				AEE7FE9B1C3BCA6000DF8C4F /* RMQClientTests.xctest */,
 				AEA45ED71C440FE400FE1F62 /* RMQClientIntegrationTests.xctest */,
 				4DF6E43627F6E90700C43208 /* MemoryTest.app */,
-				4DF6E44B27F6E90A00C43208 /* MemoryTestTests.xctest */,
-				4DF6E45527F6E90A00C43208 /* MemoryTestUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1031,42 +999,6 @@
 			productReference = 4DF6E43627F6E90700C43208 /* MemoryTest.app */;
 			productType = "com.apple.product-type.application";
 		};
-		4DF6E44A27F6E90A00C43208 /* MemoryTestTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4DF6E46A27F6E90A00C43208 /* Build configuration list for PBXNativeTarget "MemoryTestTests" */;
-			buildPhases = (
-				4DF6E44727F6E90A00C43208 /* Sources */,
-				4DF6E44827F6E90A00C43208 /* Frameworks */,
-				4DF6E44927F6E90A00C43208 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4DF6E44D27F6E90A00C43208 /* PBXTargetDependency */,
-			);
-			name = MemoryTestTests;
-			productName = MemoryTestTests;
-			productReference = 4DF6E44B27F6E90A00C43208 /* MemoryTestTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		4DF6E45427F6E90A00C43208 /* MemoryTestUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4DF6E46B27F6E90A00C43208 /* Build configuration list for PBXNativeTarget "MemoryTestUITests" */;
-			buildPhases = (
-				4DF6E45127F6E90A00C43208 /* Sources */,
-				4DF6E45227F6E90A00C43208 /* Frameworks */,
-				4DF6E45327F6E90A00C43208 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4DF6E45727F6E90A00C43208 /* PBXTargetDependency */,
-			);
-			name = MemoryTestUITests;
-			productName = MemoryTestUITests;
-			productReference = 4DF6E45527F6E90A00C43208 /* MemoryTestUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 		AEA45ED61C440FE400FE1F62 /* RMQClientIntegrationTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = AEA45EDF1C440FE400FE1F62 /* Build configuration list for PBXNativeTarget "RMQClientIntegrationTests" */;
@@ -1137,14 +1069,6 @@
 					4DF6E43527F6E90700C43208 = {
 						CreatedOnToolsVersion = 13.0;
 					};
-					4DF6E44A27F6E90A00C43208 = {
-						CreatedOnToolsVersion = 13.0;
-						TestTargetID = 4DF6E43527F6E90700C43208;
-					};
-					4DF6E45427F6E90A00C43208 = {
-						CreatedOnToolsVersion = 13.0;
-						TestTargetID = 4DF6E43527F6E90700C43208;
-					};
 					AEA45ED61C440FE400FE1F62 = {
 						CreatedOnToolsVersion = 7.0;
 						LastSwiftMigration = 1020;
@@ -1175,28 +1099,12 @@
 				AEE7FE9A1C3BCA6000DF8C4F /* RMQClientTests */,
 				AEA45ED61C440FE400FE1F62 /* RMQClientIntegrationTests */,
 				4DF6E43527F6E90700C43208 /* MemoryTest */,
-				4DF6E44A27F6E90A00C43208 /* MemoryTestTests */,
-				4DF6E45427F6E90A00C43208 /* MemoryTestUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4DF6E43427F6E90700C43208 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4DF6E44927F6E90A00C43208 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4DF6E45327F6E90A00C43208 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1282,20 +1190,6 @@
 
 /* Begin PBXSourcesBuildPhase section */
 		4DF6E43227F6E90700C43208 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4DF6E44727F6E90A00C43208 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4DF6E45127F6E90A00C43208 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1465,16 +1359,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		4DF6E44D27F6E90A00C43208 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4DF6E43527F6E90700C43208 /* MemoryTest */;
-			targetProxy = 4DF6E44C27F6E90A00C43208 /* PBXContainerItemProxy */;
-		};
-		4DF6E45727F6E90A00C43208 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4DF6E43527F6E90700C43208 /* MemoryTest */;
-			targetProxy = 4DF6E45627F6E90A00C43208 /* PBXContainerItemProxy */;
-		};
 		AEA45EDE1C440FE400FE1F62 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = AEE7FE901C3BCA6000DF8C4F /* RMQClient */;
@@ -1644,280 +1528,6 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		4DF6E46127F6E90A00C43208 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = UL386KE9LP;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jci.MemoryTestTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MemoryTest.app/MemoryTest";
-			};
-			name = Debug;
-		};
-		4DF6E46227F6E90A00C43208 /* Test without TLS */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = UL386KE9LP;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jci.MemoryTestTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MemoryTest.app/MemoryTest";
-			};
-			name = "Test without TLS";
-		};
-		4DF6E46327F6E90A00C43208 /* Test with TLS */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = UL386KE9LP;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jci.MemoryTestTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MemoryTest.app/MemoryTest";
-			};
-			name = "Test with TLS";
-		};
-		4DF6E46427F6E90A00C43208 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = UL386KE9LP;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jci.MemoryTestTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MemoryTest.app/MemoryTest";
-			};
-			name = Release;
-		};
-		4DF6E46527F6E90A00C43208 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = UL386KE9LP;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jci.MemoryTestUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = MemoryTest;
-			};
-			name = Debug;
-		};
-		4DF6E46627F6E90A00C43208 /* Test without TLS */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = UL386KE9LP;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jci.MemoryTestUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = MemoryTest;
-			};
-			name = "Test without TLS";
-		};
-		4DF6E46727F6E90A00C43208 /* Test with TLS */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = UL386KE9LP;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jci.MemoryTestUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = MemoryTest;
-			};
-			name = "Test with TLS";
-		};
-		4DF6E46827F6E90A00C43208 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = UL386KE9LP;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jci.MemoryTestUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = MemoryTest;
 			};
 			name = Release;
 		};
@@ -2504,28 +2114,6 @@
 				4DF6E45E27F6E90A00C43208 /* Test without TLS */,
 				4DF6E45F27F6E90A00C43208 /* Test with TLS */,
 				4DF6E46027F6E90A00C43208 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4DF6E46A27F6E90A00C43208 /* Build configuration list for PBXNativeTarget "MemoryTestTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4DF6E46127F6E90A00C43208 /* Debug */,
-				4DF6E46227F6E90A00C43208 /* Test without TLS */,
-				4DF6E46327F6E90A00C43208 /* Test with TLS */,
-				4DF6E46427F6E90A00C43208 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4DF6E46B27F6E90A00C43208 /* Build configuration list for PBXNativeTarget "MemoryTestUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4DF6E46527F6E90A00C43208 /* Debug */,
-				4DF6E46627F6E90A00C43208 /* Test without TLS */,
-				4DF6E46727F6E90A00C43208 /* Test with TLS */,
-				4DF6E46827F6E90A00C43208 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
