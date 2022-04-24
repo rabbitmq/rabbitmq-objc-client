@@ -8,7 +8,7 @@ Test-driven from Swift and implemented in Objective-C.
 
 ## Supported iOS and macOS Versions
 
-This library currently targets iOS 11+ and macOS 10.12+.
+This library currently targets iOS 12+ and macOS 10.12+.
 
 ## Dependencies
 
@@ -22,7 +22,7 @@ This library depends on
 1. Create a Cartfile with the following line:
 
  ```
- github "rabbitmq/rabbitmq-objc-client" "v0.11.0"
+ github "rabbitmq/rabbitmq-objc-client" "v0.12.0"
  ```
 
 Run Carthage, for example in a new project:
@@ -44,7 +44,7 @@ Run Carthage, for example in a new project:
 1. Add the following to your Podfile:
 
    ```
-   pod 'RMQClient', '~> 0.11.0'
+   pod 'RMQClient', '~> 0.12.0'
    ```
    We recommend adding `use_frameworks!` to enable modular imports (Objective-C only).
 1. Run `pod install`.
