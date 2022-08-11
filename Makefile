@@ -1,4 +1,4 @@
-iOS_VERSION := 15.4
+iOS_VERSION := 15.5
 
 SCHEME := "RMQClient"
 
