@@ -43,7 +43,7 @@
 #import "RMQQueuingConnectionDelegateProxy.h"
 
 @interface RMQQueuingConnectionDelegateProxy ()
-@property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
+@property (nonatomic, readwrite, weak) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, readwrite) dispatch_queue_t queue;
 @end
 
