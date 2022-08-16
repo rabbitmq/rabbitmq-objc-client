@@ -1063,7 +1063,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1300;
-				LastUpgradeCheck = 1330;
+				LastUpgradeCheck = 1340;
 				ORGANIZATIONNAME = VMware;
 				TargetAttributes = {
 					4DF6E43527F6E90700C43208 = {
@@ -2039,7 +2039,7 @@
 		AEE7FEA71C3BCA6000DF8C4F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
