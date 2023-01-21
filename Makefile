@@ -1,4 +1,4 @@
-iOS_VERSION := 15.5
+iOS_VERSION := 16.2
 
 SCHEME := "RMQClient"
 
@@ -16,7 +16,7 @@ tests_iOS: test_dependencies
 		xcodebuild test \
 		-project RMQClient.xcodeproj \
 		-scheme "${SCHEME}" \
-		-destination 'platform=iOS Simulator,name=iPhone 13,OS=$(iOS_VERSION)' | \
+		-destination 'platform=iOS Simulator,name=iPhone 14,OS=$(iOS_VERSION)' | \
 		xcpretty
 
 tests_MacOS: test_dependencies
