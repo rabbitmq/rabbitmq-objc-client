@@ -166,11 +166,11 @@ class MethodFixtures {
         let serverPropertiesDict: [String: RMQValue] = [
             "capabilities": RMQTable(dict),
             "cluster_name": RMQLongstr("rabbit@myapp.cfapps.pez.pivotal.io"),
-            "copyright": RMQLongstr("Copyright (c) 2007-2022 VMware, Inc. or its affiliates."),
+            "copyright": RMQLongstr("Copyright (c) 2007-2023 Broadcom, Inc. or its affiliates."),
             "information": RMQLongstr("Licensed under the MPL.  See http://www.rabbitmq.com/"),
             "platform": RMQLongstr("Erlang/OTP"),
             "product": RMQLongstr("RabbitMQ"),
-            "version": RMQLongstr("3.8.3")
+            "version": RMQLongstr("3.12.10")
         ]
         return RMQConnectionStart(
             versionMajor: RMQOctet(0),

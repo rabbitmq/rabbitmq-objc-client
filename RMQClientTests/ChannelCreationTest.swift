@@ -48,6 +48,7 @@ class ChannelCreationTest: XCTestCase {
     var allocator: ChannelSpyAllocator?
     // swiftlint:disable weak_delegate
     var delegate: ConnectionDelegateSpy?
+    // swiftlint:enable weak_delegate
     var transport: ControlledInteractionTransport?
 
     override func setUp() {

@@ -67,7 +67,7 @@
 @property (nonatomic, readwrite) id <RMQFrameHandler> frameHandler;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) id<RMQWaiterFactory> waiterFactory;
-@property (nonatomic, weak, readwrite) id<RMQHeartbeatSender> heartbeatSender;
+@property (nonatomic, readwrite) id<RMQHeartbeatSender> heartbeatSender;
 @property (nonatomic, weak, readwrite) id<RMQConnectionDelegate> delegate;
 @property (nonatomic, weak, readwrite) id <RMQChannel> channelZero;
 @property (nonatomic, readwrite) RMQConnectionConfig *config;
@@ -78,7 +78,7 @@
 @end
 
 __attribute__((constructor))
-static void RMQInitConnectionConfigDefaults() {
+static void RMQInitConnectionConfigDefaults(void) {
     RMQDefaultHeartbeatTimeout = [NSNumber numberWithInteger:60];
     RMQDefaultConnectTimeout   = [NSNumber numberWithInteger:30];
     RMQDefaultReadTimeout      = [NSNumber numberWithInteger:55];
@@ -685,6 +685,8 @@ static void RMQInitConnectionConfigDefaults() {
 
 - (void)transport:(id<RMQTransport>)transport disconnectedWithError:(NSError *)error {
     self.handshakeComplete = NO;
+    [self.heartbeatSender stop];
+    
     if (error) [self.delegate connection:self disconnectedWithError:error];
     [self.recovery recover:self
           channelAllocator:self.channelAllocator

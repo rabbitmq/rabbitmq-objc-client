@@ -47,7 +47,7 @@
 @property (nonatomic, readwrite) NSUInteger attempts;
 @property (nonatomic, readwrite) NSUInteger attemptLimit;
 @property (nonatomic, readwrite) BOOL onlyErrors;
-@property (nonatomic, weak, readwrite) id<RMQHeartbeatSender> heartbeatSender;
+@property (nonatomic, readwrite) id<RMQHeartbeatSender> heartbeatSender;
 @property (nonatomic, readwrite) id<RMQLocalSerialQueue> commandQueue;
 @property (nonatomic, readwrite) id<RMQConnectionDelegate> delegate;
 @end
