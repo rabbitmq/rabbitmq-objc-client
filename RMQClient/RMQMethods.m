@@ -699,6 +699,97 @@
 
 @end
 
+@interface RMQConnectionUpdateSecret ()
+@property (nonnull, copy, nonatomic, readwrite) RMQLongstr *secret;
+@property (nonnull, copy, nonatomic, readwrite) RMQShortstr *reason;
+@property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
+@end
+
+@implementation RMQConnectionUpdateSecret
+
++ (NSArray *)propertyClasses {
+    return @[[RMQLongstr class],
+             [RMQShortstr class]];
+}
+- (NSNumber *)classID       { return @10; }
+- (NSNumber *)methodID      { return @70; }
+- (Class)syncResponse       { return [RMQConnectionUpdateSecretOk class]; }
+- (NSNumber *)frameTypeID   { return @1; }
+- (BOOL)hasContent          { return NO; }
+
+- (nonnull instancetype)initWithSecret:(nonnull RMQLongstr *)secret
+                                reason:(nonnull RMQShortstr *)reason {
+    self = [super init];
+    if (self) {
+        self.secret = secret;
+        self.reason = reason;
+        self.payloadArguments = @[self.secret,
+                                  self.reason];
+    }
+    return self;
+}
+
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
+    self = [super init];
+    if (self) {
+        self.secret = ((RMQLongstr *)frame[0]);
+        self.reason = ((RMQShortstr *)frame[1]);
+        self.payloadArguments = @[self.secret,
+                                  self.reason];
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    NSMutableData *encoded = [NSMutableData new];
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
+        [encoded appendData:arg.amqEncoded];
+    }
+    return encoded;
+}
+
+@end
+
+@interface RMQConnectionUpdateSecretOk ()
+@property (nonatomic, readwrite) NSArray *payloadArguments;
+@property (nonatomic, readwrite) BOOL hasContent;
+@end
+
+@implementation RMQConnectionUpdateSecretOk
+
++ (NSArray *)propertyClasses {
+    return @[];
+}
+- (NSNumber *)classID       { return @10; }
+- (NSNumber *)methodID      { return @71; }
+- (Class)syncResponse       { return nil; }
+- (NSNumber *)frameTypeID   { return @1; }
+- (BOOL)hasContent          { return NO; }
+
+
+- (instancetype)initWithDecodedFrame:(NSArray *)frame {
+    self = [super init];
+    if (self) {
+        self.payloadArguments = @[];
+    }
+    return self;
+}
+
+- (NSData *)amqEncoded {
+    NSMutableData *encoded = [NSMutableData new];
+    [encoded appendData:[[RMQShort alloc] init:self.classID.integerValue].amqEncoded];
+    [encoded appendData:[[RMQShort alloc] init:self.methodID.integerValue].amqEncoded];
+    for (id<RMQEncodable>arg in self.payloadArguments) {
+        [encoded appendData:arg.amqEncoded];
+    }
+    return encoded;
+}
+
+@end
+
 @interface RMQChannelOpen ()
 @property (nonnull, copy, nonatomic, readwrite) RMQShortstr *reserved1;
 @property (nonatomic, readwrite) NSArray *payloadArguments;

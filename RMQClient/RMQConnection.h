@@ -242,4 +242,12 @@
  */
 - (nonnull id<RMQChannel>)createChannel;
 
+/*!
+ * @brief Update secret.
+ * This method updates the secret used to authenticate this connection.
+ * It is used when secrets have an expiration date and need to be renewed, like OAuth 2 tokens.
+ * @param secret    The new secret.
+ */
+- (void)updateSecret:(NSString *)secret;
+
 @end

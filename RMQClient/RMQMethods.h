@@ -127,6 +127,15 @@ typedef NS_OPTIONS(NSUInteger, RMQConnectionOpenOptions) {
 @interface RMQConnectionUnblocked : RMQValue <RMQMethod>
 
 @end
+@interface RMQConnectionUpdateSecret : RMQValue <RMQMethod>
+@property (nonnull, copy, nonatomic, readonly) RMQLongstr *secret;
+@property (nonnull, copy, nonatomic, readonly) RMQShortstr *reason;
+- (nonnull instancetype)initWithSecret:(nonnull RMQLongstr *)secret
+                                reason:(nonnull RMQShortstr *)reason;
+@end
+@interface RMQConnectionUpdateSecretOk : RMQValue <RMQMethod>
+
+@end
 @interface RMQChannelOpen : RMQValue <RMQMethod>
 @property (nonnull, copy, nonatomic, readonly) RMQShortstr *reserved1;
 - (nonnull instancetype)initWithReserved1:(nonnull RMQShortstr *)reserved1;
