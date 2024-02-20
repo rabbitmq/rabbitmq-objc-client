@@ -248,6 +248,6 @@
  * It is used when secrets have an expiration date and need to be renewed, like OAuth 2 tokens.
  * @param secret    The new secret.
  */
-- (void)updateSecret:(NSString *)secret;
+- (void)updateSecret:(nonnull NSString *)secret;
 
 @end
