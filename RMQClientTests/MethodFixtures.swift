@@ -214,6 +214,11 @@ class MethodFixtures {
     static func connectionTuneOk() -> RMQConnectionTuneOk {
         return RMQConnectionTuneOk(channelMax: RMQShort(65535), frameMax: RMQLong(RMQFrameMax), heartbeat: RMQShort(60))
     }
+    
+    static func connectionUpdateSecret(_ secret: String,
+                                       reason: String) -> RMQConnectionUpdateSecret {
+        return RMQConnectionUpdateSecret(secret: RMQLongstr(secret), reason: RMQShortstr(reason))
+    }
 
     static func exchangeBind(_ source: String, destination: String, routingKey: String) -> RMQExchangeBind {
         return RMQExchangeBind(destination: destination, source: source, routingKey: routingKey)
