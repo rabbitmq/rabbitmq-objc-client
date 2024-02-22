@@ -14,9 +14,9 @@ final class ConnectionUpdateSecretTest: XCTestCase {
         let (transport, q, conn, _) = ConnectionWithFakesHelper.connectionAfterHandshake()
         
         let secret = "someSecret"
-        let reason = "ObjC client needs it"
+        let reason = "some test reason"
 
-        conn.updateSecret(secret)
+        conn.updateSecret(secret, reason: reason);
 
         try? q.step()
         

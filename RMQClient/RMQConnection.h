@@ -247,7 +247,9 @@
  * This method updates the secret used to authenticate this connection.
  * It is used when secrets have an expiration date and need to be renewed, like OAuth 2 tokens.
  * @param secret    The new secret.
+ * @param reason    The reason for the secret update.
  */
-- (void)updateSecret:(nonnull NSString *)secret;
+- (void)updateSecret:(nonnull NSString *)secret
+              reason:(nonnull NSString *)reason;
 
 @end

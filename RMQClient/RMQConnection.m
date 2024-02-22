@@ -609,9 +609,10 @@ static void RMQInitConnectionConfigDefaults() {
 }
 
 - (void)updateSecret:(NSString *)secret
+              reason:(NSString *)reason
 {
     [self.commandQueue enqueue:^{
-        [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:[self methodForUpdateSecret:secret]]];
+        [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:[self methodForUpdateSecret:secret reason:reason]]];
     }];
 }
 
@@ -753,11 +754,12 @@ static void RMQInitConnectionConfigDefaults() {
     }
 }
 
-- (RMQConnectionUpdateSecret *)methodForUpdateSecret:(NSString *)secret {
+- (RMQConnectionUpdateSecret *)methodForUpdateSecret:(NSString *)secret
+                                              reason:(NSString *)reason {
     RMQLongstr *secretLongstr = [[RMQLongstr alloc] init:secret];
-    RMQShortstr *reason = [[RMQShortstr alloc] init:@"ObjC client needs it"];
+    RMQShortstr *reasonShortstr = [[RMQShortstr alloc] init:reason];
     return [[RMQConnectionUpdateSecret alloc] initWithSecret:secretLongstr
-                                                      reason:reason];
+                                                      reason:reasonShortstr];
 }
 
 - (RMQConnectionClose *)amqClose {
