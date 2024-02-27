@@ -1,5 +1,5 @@
 // This source code is dual-licensed under the Mozilla Public License ("MPL"),
-// version 1.1 and the Apache License ("ASL"), version 2.0.
+// version 2.0 and the Apache License ("ASL"), version 2.0.
 //
 // The ASL v2.0:
 //
