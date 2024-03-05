@@ -4,7 +4,7 @@
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright 2017-2022 VMware, Inc. or its affiliates.
+// Copyright (c) 2007-2024 Broadcom. All Rights Reserved. The term “Broadcom” refers to Broadcom Inc. and/or its subsidiaries. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@
 
 - (void (^)(void))startWithInterval:(NSNumber *)intervalSeconds {
     self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.dispatchQueue);
-    
+
     void (^eventHandler)(void) = ^{
         if ([self intervalPassed:intervalSeconds]) [self.transport write:self.heartbeatData];
     };

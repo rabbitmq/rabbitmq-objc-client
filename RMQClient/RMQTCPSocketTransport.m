@@ -4,7 +4,7 @@
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright 2017-2022 VMware, Inc. or its affiliates.
+// Copyright (c) 2007-2024 Broadcom. All Rights Reserved. The term “Broadcom” refers to Broadcom Inc. and/or its subsidiaries. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ RMQTCPSocketConfigurator noOpSocketConfigurator = ^(GCDAsyncSocket* _socket) {};
         self.connectTimeout = [connectTimeout doubleValue];
         self.readTimeout = [readTimeout doubleValue];
         self.writeTimeout = [writeTimeout doubleValue];
-        
+
         socketConfigurator(self.socket);
     }
     return self;
@@ -174,7 +174,7 @@ struct __attribute__((__packed__)) AMQPHeader {
         header = (const struct AMQPHeader *)data.bytes;
         __strong typeof(self) strongThis = this;
         UInt32 hostSize = CFSwapInt32BigToHost(header->size);
-        
+
         [strongThis read:hostSize complete:^(NSData * _Nonnull payload) {
             [strongThis read:AMQP091_FINAL_OCTET_SIZE complete:^(NSData * _Nonnull frameEnd) {
                 NSMutableData *allData = [data mutableCopy];
