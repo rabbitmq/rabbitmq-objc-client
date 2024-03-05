@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1029A0E22087A97E00C72924 /* ConnectionDeadlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1029A0E12087A97E00C72924 /* ConnectionDeadlockTests.swift */; };
 		4DF6E46D27F6E98100C43208 /* RMQClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE7FE911C3BCA6000DF8C4F /* RMQClient.framework */; };
+		5CE0C5292B873842000087B7 /* ConnectionUpdateSecretTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CE0C5282B873842000087B7 /* ConnectionUpdateSecretTest.swift */; };
 		70311B0B21ED538600AE1804 /* RMQConnectionDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = 70311B0A21ED538600AE1804 /* RMQConnectionDefaults.h */; };
 		70338A2421FBAA7C00C9069D /* TLSConnectionIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70338A2321FBAA7C00C9069D /* TLSConnectionIntegrationTest.swift */; };
 		705359A921D174A400CF6456 /* TestCertificates in Resources */ = {isa = PBXBuildFile; fileRef = 705359A821D174A400CF6456 /* TestCertificates */; };
@@ -238,6 +239,7 @@
 /* Begin PBXFileReference section */
 		1029A0E12087A97E00C72924 /* ConnectionDeadlockTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionDeadlockTests.swift; sourceTree = "<group>"; };
 		4DF6E43627F6E90700C43208 /* MemoryTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemoryTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5CE0C5282B873842000087B7 /* ConnectionUpdateSecretTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionUpdateSecretTest.swift; sourceTree = "<group>"; };
 		70311B0A21ED538600AE1804 /* RMQConnectionDefaults.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMQConnectionDefaults.h; sourceTree = "<group>"; };
 		70338A2321FBAA7C00C9069D /* TLSConnectionIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLSConnectionIntegrationTest.swift; sourceTree = "<group>"; };
 		705359A821D174A400CF6456 /* TestCertificates */ = {isa = PBXFileReference; lastKnownFileType = folder; path = TestCertificates; sourceTree = SOURCE_ROOT; };
@@ -491,6 +493,7 @@
 		AE26FA2F1C970E9A00CDBBAA /* Channels */ = {
 			isa = PBXGroup;
 			children = (
+				5CE0C5282B873842000087B7 /* ConnectionUpdateSecretTest.swift */,
 				AE26FA2D1C970DF100CDBBAA /* RMQChannelContract.swift */,
 				AE8279841C8D86110013ADD1 /* ChannelAllocationTest.swift */,
 				AE8AD2681CC545ED00229444 /* RMQFramesetValidatorTest.swift */,
@@ -1292,6 +1295,7 @@
 				AE9DB00D1D12AA120005F44B /* RMQTransactionalConfirmationsTest.swift in Sources */,
 				AE11F1B21D155C8A007AD330 /* RMQMessageTest.swift in Sources */,
 				AE9DB0091D11FDED0005F44B /* ConfirmationsSpy.swift in Sources */,
+				5CE0C5292B873842000087B7 /* ConnectionUpdateSecretTest.swift in Sources */,
 				AEA8A7621CC97C7900371E38 /* RMQGCDSerialQueueTest.swift in Sources */,
 				AE59345B1C8735FA00560A73 /* ChannelSpy.swift in Sources */,
 				AE8AD25C1CC4E67F00229444 /* RMQUnallocatedChannelTest.swift in Sources */,

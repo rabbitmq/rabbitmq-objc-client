@@ -18,6 +18,8 @@
              @[@(10), @(51)] : [RMQConnectionCloseOk class],
              @[@(10), @(60)] : [RMQConnectionBlocked class],
              @[@(10), @(61)] : [RMQConnectionUnblocked class],
+             @[@(10), @(70)] : [RMQConnectionUpdateSecret class],
+             @[@(10), @(71)] : [RMQConnectionUpdateSecretOk class],
              @[@(20), @(10)] : [RMQChannelOpen class],
              @[@(20), @(11)] : [RMQChannelOpenOk class],
              @[@(20), @(20)] : [RMQChannelFlow class],

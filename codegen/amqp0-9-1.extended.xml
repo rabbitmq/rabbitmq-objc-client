@@ -4,6 +4,7 @@
      WARNING: Modified from the official 0-9-1 specification XML by
      the addition of:
      confirm.select and confirm.select-ok,
+     connection.update-secret and connection.update-secret-ok,
      exchange.bind and exchange.bind-ok,
      exchange.unbind and exchange.unbind-ok,
      basic.nack,
@@ -914,6 +915,35 @@
       <chassis name = "server" implement = "MUST"/>
       <chassis name = "client" implement = "MUST"/>
     </method>
+
+    <method name = "update-secret" synchronous = "1" index = "70" label = "update secret">
+        <doc>
+            This method updates the secret used to authenticate this connection. It is used when secrets have an expiration date and need to be renewed, like OAuth 2 tokens.
+        </doc>
+        
+        <chassis name = "client" implement = "MUST" />
+        <response name = "update-secret-ok" />
+        
+        <field name = "secret" domain = "longstr">
+            <doc>
+                The new secret.
+            </doc>
+        </field>
+        
+        <field name = "reason" domain = "shortstr">
+            <doc>
+                The reason for the secret update.
+            </doc>
+        </field>
+    </method>
+    
+    <method name = "update-secret-ok" synchronous = "1" index = "71" label = "update secret response">
+        <doc>
+            This method confirms the updated secret is valid.
+        </doc>
+        <chassis name = "server" implement = "MUST" />
+    </method>
+    
   </class>
 
   <!-- ==  CHANNEL  ========================================================== -->

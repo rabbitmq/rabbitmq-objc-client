@@ -608,6 +608,14 @@ static void RMQInitConnectionConfigDefaults() {
     return ch;
 }
 
+- (void)updateSecret:(NSString *)secret
+              reason:(NSString *)reason
+{
+    [self.commandQueue enqueue:^{
+        [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:[self methodForUpdateSecret:secret reason:reason]]];
+    }];
+}
+
 - (BOOL)hasCompletedHandshake {
     return self.handshakeComplete;
 }
@@ -744,6 +752,14 @@ static void RMQInitConnectionConfigDefaults() {
     for (id<RMQChannel> ch in self.userChannels.allValues) {
         [ch blockingClose];
     }
+}
+
+- (RMQConnectionUpdateSecret *)methodForUpdateSecret:(NSString *)secret
+                                              reason:(NSString *)reason {
+    RMQLongstr *secretLongstr = [[RMQLongstr alloc] init:secret];
+    RMQShortstr *reasonShortstr = [[RMQShortstr alloc] init:reason];
+    return [[RMQConnectionUpdateSecret alloc] initWithSecret:secretLongstr
+                                                      reason:reasonShortstr];
 }
 
 - (RMQConnectionClose *)amqClose {
