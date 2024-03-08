@@ -125,7 +125,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## License and Copyright
 
-(c) 2016-2022 VMware, Inc. or its affiliates
+Copyright (c) 2005-2024 Broadcom. All Rights Reserved. The term "Broadcom" refers to Broadcom Inc. and/or its subsidiaries.
 
 This package, the RabbitMQ Objective-C client library, is
 dual-licensed under the Mozilla Public License 2.0 ("MPL") and the
