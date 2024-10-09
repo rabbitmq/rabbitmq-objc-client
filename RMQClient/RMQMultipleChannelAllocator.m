@@ -105,7 +105,9 @@
 
 - (NSArray *)allocatedUserChannels {
     NSMutableArray *userChannels = [self.channels.allValues mutableCopy];
-    [userChannels removeObjectAtIndex:0];
+    if ([userChannels count] > 0) {
+        [userChannels removeObjectAtIndex:0];
+    }
     return [userChannels sortedArrayUsingComparator:^NSComparisonResult(id<RMQChannel> ch1, id<RMQChannel> ch2) {
         return ch1.channelNumber.integerValue > ch2.channelNumber.integerValue;
     }];
