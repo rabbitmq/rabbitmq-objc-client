@@ -22,7 +22,7 @@ This library depends on
 1. Create a Cartfile with the following line:
 
  ```
- github "rabbitmq/rabbitmq-objc-client" "v0.12.0"
+ github "rabbitmq/rabbitmq-objc-client" "v0.13.0"
  ```
 
 Run Carthage, for example in a new project:
@@ -44,7 +44,7 @@ Run Carthage, for example in a new project:
 1. Add the following to your Podfile:
 
    ```
-   pod 'RMQClient', '~> 0.12.0'
+   pod 'RMQClient', git: 'https://github.com/rabbitmq/rabbitmq-objc-client.git'
    ```
    We recommend adding `use_frameworks!` to enable modular imports (Objective-C only).
 1. Run `pod install`.
