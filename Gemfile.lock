@@ -69,7 +69,16 @@ GEM
     escape (0.0.4)
     ethon (0.16.0)
       ffi (>= 1.15.0)
-    ffi (1.17.0)
+    ffi (1.17.0-aarch64-linux-gnu)
+    ffi (1.17.0-aarch64-linux-musl)
+    ffi (1.17.0-arm-linux-gnu)
+    ffi (1.17.0-arm-linux-musl)
+    ffi (1.17.0-arm64-darwin)
+    ffi (1.17.0-x86-linux-gnu)
+    ffi (1.17.0-x86-linux-musl)
+    ffi (1.17.0-x86_64-darwin)
+    ffi (1.17.0-x86_64-linux-gnu)
+    ffi (1.17.0-x86_64-linux-musl)
     fourflusher (2.3.1)
     fuzzy_match (2.0.4)
     gh_inspector (1.1.3)
@@ -78,15 +87,23 @@ GEM
       concurrent-ruby (~> 1.0)
     json (2.7.2)
     logger (1.6.1)
-    mini_portile2 (2.8.7)
     minitest (5.25.1)
     molinillo (0.8.0)
     nanaimo (0.3.0)
     nap (1.1.0)
     netrc (0.11.0)
     nkf (0.2.0)
-    nokogiri (1.16.7)
-      mini_portile2 (~> 2.8.2)
+    nokogiri (1.16.7-aarch64-linux)
+      racc (~> 1.4)
+    nokogiri (1.16.7-arm-linux)
+      racc (~> 1.4)
+    nokogiri (1.16.7-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.16.7-x86-linux)
+      racc (~> 1.4)
+    nokogiri (1.16.7-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.16.7-x86_64-linux)
       racc (~> 1.4)
     public_suffix (4.0.7)
     racc (1.8.1)
@@ -106,11 +123,24 @@ GEM
       rexml (>= 3.3.6, < 4.0)
 
 PLATFORMS
-  ruby
+  aarch64-linux
+  aarch64-linux-gnu
+  aarch64-linux-musl
+  arm-linux
+  arm-linux-gnu
+  arm-linux-musl
+  arm64-darwin
+  x86-linux
+  x86-linux-gnu
+  x86-linux-musl
+  x86_64-darwin
+  x86_64-linux
+  x86_64-linux-gnu
+  x86_64-linux-musl
 
 DEPENDENCIES
   cocoapods (~> 1.15.2)
   nokogiri (>= 1.16.7)
 
 BUNDLED WITH
-   2.1.4
+   2.5.22
