@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1029A0E22087A97E00C72924 /* ConnectionDeadlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1029A0E12087A97E00C72924 /* ConnectionDeadlockTests.swift */; };
 		4DF6E46D27F6E98100C43208 /* RMQClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE7FE911C3BCA6000DF8C4F /* RMQClient.framework */; };
+		5CD938E58D7AC7BD696CD7BB /* Pods_RMQClient_RMQClientIntegrationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D71D203CF436AA4F76109467 /* Pods_RMQClient_RMQClientIntegrationTests.framework */; };
 		5CE0C5292B873842000087B7 /* ConnectionUpdateSecretTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CE0C5282B873842000087B7 /* ConnectionUpdateSecretTest.swift */; };
 		70311B0B21ED538600AE1804 /* RMQConnectionDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = 70311B0A21ED538600AE1804 /* RMQConnectionDefaults.h */; };
 		70338A2421FBAA7C00C9069D /* TLSConnectionIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70338A2321FBAA7C00C9069D /* TLSConnectionIntegrationTest.swift */; };
@@ -24,6 +25,9 @@
 		70970AD921E6A64700E9CC8B /* QueueIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70970AD821E6A64700E9CC8B /* QueueIntegrationTest.swift */; };
 		70F6980521EF17D600D1E7A1 /* ConsumersIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F6980421EF17D600D1E7A1 /* ConsumersIntegrationTest.swift */; };
 		70FC58B121DF4DB900BB25CB /* ChannelIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FC58B021DF4DB900BB25CB /* ChannelIntegrationTest.swift */; };
+		A5D28B6A22343A99D5EEE195 /* Pods_MemoryTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 874B733E5D782AFC1553DB14 /* Pods_MemoryTest.framework */; };
+		A8046802F8059BC5B69DD7DB /* Pods_RMQClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1272C30BB553E405D6F83233 /* Pods_RMQClient.framework */; };
+		AAF2229633CEA30E74F68DA6 /* Pods_RMQClient_RMQClientTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE72578CF6CC9BA593039B62 /* Pods_RMQClient_RMQClientTests.framework */; };
 		AE05DA681C69EC47009E68C7 /* RMQChannelAllocator.h in Headers */ = {isa = PBXBuildFile; fileRef = AE05DA661C69EC47009E68C7 /* RMQChannelAllocator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE05DA6C1C6A0848009E68C7 /* RMQMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = AE05DA6A1C6A0848009E68C7 /* RMQMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE05DA6D1C6A0848009E68C7 /* RMQMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = AE05DA6B1C6A0848009E68C7 /* RMQMessage.m */; };
@@ -238,7 +242,12 @@
 
 /* Begin PBXFileReference section */
 		1029A0E12087A97E00C72924 /* ConnectionDeadlockTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionDeadlockTests.swift; sourceTree = "<group>"; };
+		1272C30BB553E405D6F83233 /* Pods_RMQClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RMQClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C69411D0F6F665CDF6E5375 /* Pods-RMQClient-RMQClientTests.test without tls.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RMQClient-RMQClientTests.test without tls.xcconfig"; path = "Target Support Files/Pods-RMQClient-RMQClientTests/Pods-RMQClient-RMQClientTests.test without tls.xcconfig"; sourceTree = "<group>"; };
+		4940838A62CE8238363038E6 /* Pods-RMQClient-RMQClientIntegrationTests.test with tls.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RMQClient-RMQClientIntegrationTests.test with tls.xcconfig"; path = "Target Support Files/Pods-RMQClient-RMQClientIntegrationTests/Pods-RMQClient-RMQClientIntegrationTests.test with tls.xcconfig"; sourceTree = "<group>"; };
+		4C2909C30EF5F43A6592AE3F /* Pods-RMQClient-RMQClientTests.test with tls.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RMQClient-RMQClientTests.test with tls.xcconfig"; path = "Target Support Files/Pods-RMQClient-RMQClientTests/Pods-RMQClient-RMQClientTests.test with tls.xcconfig"; sourceTree = "<group>"; };
 		4DF6E43627F6E90700C43208 /* MemoryTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemoryTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		59484ED96BF0E2FE553AB9AA /* Pods-RMQClient-RMQClientTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RMQClient-RMQClientTests.release.xcconfig"; path = "Target Support Files/Pods-RMQClient-RMQClientTests/Pods-RMQClient-RMQClientTests.release.xcconfig"; sourceTree = "<group>"; };
 		5CE0C5282B873842000087B7 /* ConnectionUpdateSecretTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionUpdateSecretTest.swift; sourceTree = "<group>"; };
 		70311B0A21ED538600AE1804 /* RMQConnectionDefaults.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RMQConnectionDefaults.h; sourceTree = "<group>"; };
 		70338A2321FBAA7C00C9069D /* TLSConnectionIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLSConnectionIntegrationTest.swift; sourceTree = "<group>"; };
@@ -252,6 +261,10 @@
 		70970AD821E6A64700E9CC8B /* QueueIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueIntegrationTest.swift; sourceTree = "<group>"; };
 		70F6980421EF17D600D1E7A1 /* ConsumersIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsumersIntegrationTest.swift; sourceTree = "<group>"; };
 		70FC58B021DF4DB900BB25CB /* ChannelIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelIntegrationTest.swift; sourceTree = "<group>"; };
+		874B733E5D782AFC1553DB14 /* Pods_MemoryTest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MemoryTest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8826AB98575F2D497E0DA627 /* Pods-RMQClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RMQClient.release.xcconfig"; path = "Target Support Files/Pods-RMQClient/Pods-RMQClient.release.xcconfig"; sourceTree = "<group>"; };
+		8F8C7F381C4562C205A8FE5C /* Pods-RMQClient-RMQClientIntegrationTests.test without tls.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RMQClient-RMQClientIntegrationTests.test without tls.xcconfig"; path = "Target Support Files/Pods-RMQClient-RMQClientIntegrationTests/Pods-RMQClient-RMQClientIntegrationTests.test without tls.xcconfig"; sourceTree = "<group>"; };
+		9435D72A7BED15B7E766234C /* Pods-RMQClient.test with tls.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RMQClient.test with tls.xcconfig"; path = "Target Support Files/Pods-RMQClient/Pods-RMQClient.test with tls.xcconfig"; sourceTree = "<group>"; };
 		AE05DA661C69EC47009E68C7 /* RMQChannelAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQChannelAllocator.h; sourceTree = "<group>"; };
 		AE05DA6A1C6A0848009E68C7 /* RMQMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQMessage.h; sourceTree = "<group>"; };
 		AE05DA6B1C6A0848009E68C7 /* RMQMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQMessage.m; sourceTree = "<group>"; };
@@ -307,6 +320,7 @@
 		AE59345E1C873B6900560A73 /* RMQChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQChannel.h; sourceTree = "<group>"; };
 		AE607C671C3C0EAD00BE9AC4 /* RMQClientTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "RMQClientTests-Bridging-Header.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		AE607C681C3C0EAD00BE9AC4 /* OriginalIntegrationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OriginalIntegrationTest.swift; sourceTree = "<group>"; };
+		AE72578CF6CC9BA593039B62 /* Pods_RMQClient_RMQClientTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RMQClient_RMQClientTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE744E311C85A1B000A4C2FA /* RMQFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RMQFrame.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		AE744E321C85A1B000A4C2FA /* RMQFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQFrame.m; sourceTree = "<group>"; };
 		AE744E351C85A20700A4C2FA /* RMQFrameset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = RMQFrameset.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -438,6 +452,16 @@
 		AEF1E8FA1CBEA057000C7AB8 /* RMQHandshaker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQHandshaker.m; sourceTree = "<group>"; };
 		AEFFE6361C8EE7B30039D652 /* RMQConnectionConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMQConnectionConfig.h; sourceTree = "<group>"; };
 		AEFFE6371C8EE7B30039D652 /* RMQConnectionConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMQConnectionConfig.m; sourceTree = "<group>"; };
+		B24D5F8EEC4152A2B40A2303 /* Pods-MemoryTest.test with tls.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MemoryTest.test with tls.xcconfig"; path = "Target Support Files/Pods-MemoryTest/Pods-MemoryTest.test with tls.xcconfig"; sourceTree = "<group>"; };
+		BE106609B7FFA43EFD87FF66 /* Pods-RMQClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RMQClient.debug.xcconfig"; path = "Target Support Files/Pods-RMQClient/Pods-RMQClient.debug.xcconfig"; sourceTree = "<group>"; };
+		C2F1D7736BABF953318067EB /* Pods-MemoryTest.test without tls.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MemoryTest.test without tls.xcconfig"; path = "Target Support Files/Pods-MemoryTest/Pods-MemoryTest.test without tls.xcconfig"; sourceTree = "<group>"; };
+		C979DCA118DA65147F8925DC /* Pods-MemoryTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MemoryTest.release.xcconfig"; path = "Target Support Files/Pods-MemoryTest/Pods-MemoryTest.release.xcconfig"; sourceTree = "<group>"; };
+		CFAF4A7ABA927246ABFA46BD /* Pods-MemoryTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MemoryTest.debug.xcconfig"; path = "Target Support Files/Pods-MemoryTest/Pods-MemoryTest.debug.xcconfig"; sourceTree = "<group>"; };
+		D1825B40B2DE6C5C2B0F294B /* Pods-RMQClient-RMQClientIntegrationTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RMQClient-RMQClientIntegrationTests.release.xcconfig"; path = "Target Support Files/Pods-RMQClient-RMQClientIntegrationTests/Pods-RMQClient-RMQClientIntegrationTests.release.xcconfig"; sourceTree = "<group>"; };
+		D71D203CF436AA4F76109467 /* Pods_RMQClient_RMQClientIntegrationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RMQClient_RMQClientIntegrationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D756A459DB3354BD8784A781 /* Pods-RMQClient-RMQClientIntegrationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RMQClient-RMQClientIntegrationTests.debug.xcconfig"; path = "Target Support Files/Pods-RMQClient-RMQClientIntegrationTests/Pods-RMQClient-RMQClientIntegrationTests.debug.xcconfig"; sourceTree = "<group>"; };
+		DCF6E18E4458BA531912F592 /* Pods-RMQClient.test without tls.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RMQClient.test without tls.xcconfig"; path = "Target Support Files/Pods-RMQClient/Pods-RMQClient.test without tls.xcconfig"; sourceTree = "<group>"; };
+		E1B1A14D8293E470029B3CCB /* Pods-RMQClient-RMQClientTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RMQClient-RMQClientTests.debug.xcconfig"; path = "Target Support Files/Pods-RMQClient-RMQClientTests/Pods-RMQClient-RMQClientTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -446,6 +470,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4DF6E46D27F6E98100C43208 /* RMQClient.framework in Frameworks */,
+				A5D28B6A22343A99D5EEE195 /* Pods_MemoryTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -454,6 +479,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AEA45EDC1C440FE400FE1F62 /* RMQClient.framework in Frameworks */,
+				5CD938E58D7AC7BD696CD7BB /* Pods_RMQClient_RMQClientIntegrationTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -461,6 +487,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8046802F8059BC5B69DD7DB /* Pods_RMQClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,6 +496,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AEE7FE9C1C3BCA6000DF8C4F /* RMQClient.framework in Frameworks */,
+				AAF2229633CEA30E74F68DA6 /* Pods_RMQClient_RMQClientTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -478,8 +506,35 @@
 		4DF6E46C27F6E98100C43208 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				874B733E5D782AFC1553DB14 /* Pods_MemoryTest.framework */,
+				1272C30BB553E405D6F83233 /* Pods_RMQClient.framework */,
+				D71D203CF436AA4F76109467 /* Pods_RMQClient_RMQClientIntegrationTests.framework */,
+				AE72578CF6CC9BA593039B62 /* Pods_RMQClient_RMQClientTests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		664FDD841ED40E8D749CE347 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				CFAF4A7ABA927246ABFA46BD /* Pods-MemoryTest.debug.xcconfig */,
+				C2F1D7736BABF953318067EB /* Pods-MemoryTest.test without tls.xcconfig */,
+				B24D5F8EEC4152A2B40A2303 /* Pods-MemoryTest.test with tls.xcconfig */,
+				C979DCA118DA65147F8925DC /* Pods-MemoryTest.release.xcconfig */,
+				BE106609B7FFA43EFD87FF66 /* Pods-RMQClient.debug.xcconfig */,
+				DCF6E18E4458BA531912F592 /* Pods-RMQClient.test without tls.xcconfig */,
+				9435D72A7BED15B7E766234C /* Pods-RMQClient.test with tls.xcconfig */,
+				8826AB98575F2D497E0DA627 /* Pods-RMQClient.release.xcconfig */,
+				D756A459DB3354BD8784A781 /* Pods-RMQClient-RMQClientIntegrationTests.debug.xcconfig */,
+				8F8C7F381C4562C205A8FE5C /* Pods-RMQClient-RMQClientIntegrationTests.test without tls.xcconfig */,
+				4940838A62CE8238363038E6 /* Pods-RMQClient-RMQClientIntegrationTests.test with tls.xcconfig */,
+				D1825B40B2DE6C5C2B0F294B /* Pods-RMQClient-RMQClientIntegrationTests.release.xcconfig */,
+				E1B1A14D8293E470029B3CCB /* Pods-RMQClient-RMQClientTests.debug.xcconfig */,
+				3C69411D0F6F665CDF6E5375 /* Pods-RMQClient-RMQClientTests.test without tls.xcconfig */,
+				4C2909C30EF5F43A6592AE3F /* Pods-RMQClient-RMQClientTests.test with tls.xcconfig */,
+				59484ED96BF0E2FE553AB9AA /* Pods-RMQClient-RMQClientTests.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		70970AD521E68D6100E9CC8B /* Helpers */ = {
@@ -797,6 +852,7 @@
 				AEA45ED81C440FE400FE1F62 /* RMQClientIntegrationTests */,
 				AEE7FE921C3BCA6000DF8C4F /* Products */,
 				4DF6E46C27F6E98100C43208 /* Frameworks */,
+				664FDD841ED40E8D749CE347 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -989,6 +1045,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4DF6E46927F6E90A00C43208 /* Build configuration list for PBXNativeTarget "MemoryTest" */;
 			buildPhases = (
+				8963AB15D7ABE308F63D8B41 /* [CP] Check Pods Manifest.lock */,
 				4DF6E43227F6E90700C43208 /* Sources */,
 				4DF6E43327F6E90700C43208 /* Frameworks */,
 				4DF6E43427F6E90700C43208 /* Resources */,
@@ -1006,10 +1063,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AEA45EDF1C440FE400FE1F62 /* Build configuration list for PBXNativeTarget "RMQClientIntegrationTests" */;
 			buildPhases = (
+				59C0160DA2E411E28A27E415 /* [CP] Check Pods Manifest.lock */,
 				AEA45ED31C440FE400FE1F62 /* Sources */,
 				AEA45ED41C440FE400FE1F62 /* Frameworks */,
 				AEA45ED51C440FE400FE1F62 /* Resources */,
 				7035862321E01A16005F2AF9 /* ShellScript */,
+				CD323AB1D59A00F311EA6877 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1025,7 +1084,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AEE7FEA51C3BCA6000DF8C4F /* Build configuration list for PBXNativeTarget "RMQClient" */;
 			buildPhases = (
-				AE637E2C1C4CFF28006F9EDF /* ShellScript */,
+				AE8695C95ED6B08245238CB2 /* [CP] Check Pods Manifest.lock */,
 				AEE7FE8C1C3BCA6000DF8C4F /* Sources */,
 				AEE7FE8D1C3BCA6000DF8C4F /* Frameworks */,
 				AEE7FE8E1C3BCA6000DF8C4F /* Headers */,
@@ -1044,10 +1103,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AEE7FEA81C3BCA6000DF8C4F /* Build configuration list for PBXNativeTarget "RMQClientTests" */;
 			buildPhases = (
+				DAE1C91E637F936B27C86A82 /* [CP] Check Pods Manifest.lock */,
 				AEE7FE971C3BCA6000DF8C4F /* Sources */,
 				AEE7FE981C3BCA6000DF8C4F /* Frameworks */,
 				AEE7FE991C3BCA6000DF8C4F /* Resources */,
 				7035862421E01A20005F2AF9 /* ShellScript */,
+				F9BF49BA8A968BFD91C97325 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1140,6 +1201,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		59C0160DA2E411E28A27E415 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RMQClient-RMQClientIntegrationTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		7035862321E01A16005F2AF9 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1174,20 +1257,105 @@
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
-		AE637E2C1C4CFF28006F9EDF /* ShellScript */ = {
+		8963AB15D7ABE308F63D8B41 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
+			buildActionMask = 2147483647;
 			files = (
 			);
+			inputFileListPaths = (
+			);
 			inputPaths = (
-				CocoaAsyncSocket,
-				JKVValue,
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MemoryTest-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "case \"$PLATFORM_NAME\" in\nmacosx) plat=Mac;;\niphone*) plat=iOS;;\n*) echo \\\"error: Unknown PLATFORM_NAME: $PLATFORM_NAME\\\"; exit 1;;\nesac\nfor (( n = 0; n < SCRIPT_INPUT_FILE_COUNT; n++ )); do\nVAR=SCRIPT_INPUT_FILE_$n\nframework=$(basename \"${!VAR}\")\nexport SCRIPT_INPUT_FILE_$n=\"$SRCROOT\"/Carthage/Build/$plat/\"$framework\".framework\ndone\n\necho \"Copying frameworks\"\nfor (( n = 0; n < SCRIPT_INPUT_FILE_COUNT; n++ )); do\nVAR=SCRIPT_INPUT_FILE_$n\nsource=${!VAR}\ndest=${BUILT_PRODUCTS_DIR}/$(basename \"$source\")\necho \"$source => $dest\"\nditto \"$source\" \"$dest\" || exit\ndone\n\necho \"Copying debug symbols\"\nfor (( n = 0; n < SCRIPT_INPUT_FILE_COUNT; n++ )); do\nVAR=SCRIPT_INPUT_FILE_$n\nsource=${!VAR}.dSYM\ndest=${BUILT_PRODUCTS_DIR}/$(basename \"$source\")\necho \"$source => $dest\"\nditto \"$source\" \"$dest\" || exit\ndone\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AE8695C95ED6B08245238CB2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RMQClient-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CD323AB1D59A00F311EA6877 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RMQClient-RMQClientIntegrationTests/Pods-RMQClient-RMQClientIntegrationTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RMQClient-RMQClientIntegrationTests/Pods-RMQClient-RMQClientIntegrationTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RMQClient-RMQClientIntegrationTests/Pods-RMQClient-RMQClientIntegrationTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DAE1C91E637F936B27C86A82 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RMQClient-RMQClientTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F9BF49BA8A968BFD91C97325 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RMQClient-RMQClientTests/Pods-RMQClient-RMQClientTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RMQClient-RMQClientTests/Pods-RMQClient-RMQClientTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RMQClient-RMQClientTests/Pods-RMQClient-RMQClientTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1378,6 +1546,7 @@
 /* Begin XCBuildConfiguration section */
 		4DF6E45D27F6E90A00C43208 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CFAF4A7ABA927246ABFA46BD /* Pods-MemoryTest.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1386,7 +1555,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1420,6 +1589,7 @@
 		};
 		4DF6E45E27F6E90A00C43208 /* Test without TLS */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C2F1D7736BABF953318067EB /* Pods-MemoryTest.test without tls.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1428,7 +1598,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1459,6 +1629,7 @@
 		};
 		4DF6E45F27F6E90A00C43208 /* Test with TLS */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B24D5F8EEC4152A2B40A2303 /* Pods-MemoryTest.test with tls.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1467,7 +1638,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1498,6 +1669,7 @@
 		};
 		4DF6E46027F6E90A00C43208 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C979DCA118DA65147F8925DC /* Pods-MemoryTest.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1506,7 +1678,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1560,7 +1732,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = NO;
@@ -1575,8 +1747,8 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)",
 					"$(inherited)",
+					"$(SDKROOT)",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1594,14 +1766,15 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "";
+				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macosx";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = NO;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1611,6 +1784,7 @@
 		};
 		70338A2821FBBB0D00C9069D /* Test without TLS */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DCF6E18E4458BA531912F592 /* Pods-RMQClient.test without tls.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -1623,7 +1797,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = RMQClient/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1631,7 +1805,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.4;
+				MACOSX_DEPLOYMENT_TARGET = 12.5;
 				MARKETING_VERSION = 0.13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1642,8 +1816,10 @@
 		};
 		70338A2921FBBB0D00C9069D /* Test without TLS */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3C69411D0F6F665CDF6E5375 /* Pods-RMQClient-RMQClientTests.test without tls.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+
 				INFOPLIST_FILE = RMQClientTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1662,6 +1838,7 @@
 		};
 		70338A2A21FBBB0D00C9069D /* Test without TLS */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8F8C7F381C4562C205A8FE5C /* Pods-RMQClient-RMQClientIntegrationTests.test without tls.xcconfig */;
 			buildSettings = {
 				DEFINES_MODULE = NO;
 				INFOPLIST_FILE = RMQClientIntegrationTests/Info.plist;
@@ -1706,7 +1883,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = NO;
@@ -1721,8 +1898,8 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)",
 					"$(inherited)",
+					"$(SDKROOT)",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1740,14 +1917,15 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-DRUN_TLS_TESTS";
+				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macosx";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = RUN_TLS_TESTS;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = NO;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1757,6 +1935,7 @@
 		};
 		70338A2C21FBBB2000C9069D /* Test with TLS */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9435D72A7BED15B7E766234C /* Pods-RMQClient.test with tls.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -1769,7 +1948,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = RMQClient/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1777,7 +1956,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.4;
+				MACOSX_DEPLOYMENT_TARGET = 12.5;
 				MARKETING_VERSION = 0.13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1788,8 +1967,10 @@
 		};
 		70338A2D21FBBB2000C9069D /* Test with TLS */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4C2909C30EF5F43A6592AE3F /* Pods-RMQClient-RMQClientTests.test with tls.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+
 				INFOPLIST_FILE = RMQClientTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1808,6 +1989,7 @@
 		};
 		70338A2E21FBBB2000C9069D /* Test with TLS */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4940838A62CE8238363038E6 /* Pods-RMQClient-RMQClientIntegrationTests.test with tls.xcconfig */;
 			buildSettings = {
 				DEFINES_MODULE = NO;
 				INFOPLIST_FILE = RMQClientIntegrationTests/Info.plist;
@@ -1829,6 +2011,7 @@
 		};
 		AEA45EE01C440FE400FE1F62 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D756A459DB3354BD8784A781 /* Pods-RMQClient-RMQClientIntegrationTests.debug.xcconfig */;
 			buildSettings = {
 				DEFINES_MODULE = NO;
 				INFOPLIST_FILE = RMQClientIntegrationTests/Info.plist;
@@ -1850,6 +2033,7 @@
 		};
 		AEA45EE11C440FE400FE1F62 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1825B40B2DE6C5C2B0F294B /* Pods-RMQClient-RMQClientIntegrationTests.release.xcconfig */;
 			buildSettings = {
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = "";
@@ -1894,7 +2078,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = NO;
@@ -1909,8 +2093,8 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)",
 					"$(inherited)",
+					"$(SDKROOT)",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1928,14 +2112,15 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "";
+				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macosx";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = NO;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1967,7 +2152,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = NO;
@@ -1982,8 +2167,8 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)",
 					"$(inherited)",
+					"$(SDKROOT)",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1995,15 +2180,16 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_SWIFT_FLAGS = "";
+				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macosx";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2013,6 +2199,7 @@
 		};
 		AEE7FEA61C3BCA6000DF8C4F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BE106609B7FFA43EFD87FF66 /* Pods-RMQClient.debug.xcconfig */;
 			buildSettings = {
 				"ARCHS[sdk=iphonesimulator*]" = "$(ARCHS_STANDARD)";
 				CODE_SIGN_IDENTITY = "";
@@ -2026,7 +2213,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = RMQClient/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2034,7 +2221,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.4;
+				MACOSX_DEPLOYMENT_TARGET = 12.5;
 				MARKETING_VERSION = 0.13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2045,6 +2232,7 @@
 		};
 		AEE7FEA71C3BCA6000DF8C4F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8826AB98575F2D497E0DA627 /* Pods-RMQClient.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -2057,7 +2245,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = RMQClient/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2065,7 +2253,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.4;
+				MACOSX_DEPLOYMENT_TARGET = 12.5;
 				MARKETING_VERSION = 0.13.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.pivotal.RMQClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2076,8 +2264,10 @@
 		};
 		AEE7FEA91C3BCA6000DF8C4F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E1B1A14D8293E470029B3CCB /* Pods-RMQClient-RMQClientTests.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+
 				INFOPLIST_FILE = RMQClientTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2096,8 +2286,10 @@
 		};
 		AEE7FEAA1C3BCA6000DF8C4F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 59484ED96BF0E2FE553AB9AA /* Pods-RMQClient-RMQClientTests.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+
 				DEVELOPMENT_TEAM = FLJTZE77QC;
 				INFOPLIST_FILE = RMQClientTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

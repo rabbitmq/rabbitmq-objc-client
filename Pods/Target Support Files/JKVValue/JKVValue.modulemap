@@ -1,0 +1,6 @@
+framework module JKVValue {
+  umbrella header "JKVValue-umbrella.h"
+
+  export *
+  module * { export * }
+}

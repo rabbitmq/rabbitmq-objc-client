@@ -1,0 +1,3 @@
+${PODS_ROOT}/Target Support Files/Pods-RMQClient-RMQClientIntegrationTests/Pods-RMQClient-RMQClientIntegrationTests-frameworks.sh
+${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework
+${BUILT_PRODUCTS_DIR}/JKVValue/JKVValue.framework

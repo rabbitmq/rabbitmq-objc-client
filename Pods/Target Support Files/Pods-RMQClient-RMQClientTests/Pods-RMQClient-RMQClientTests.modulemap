@@ -1,0 +1,6 @@
+framework module Pods_RMQClient_RMQClientTests {
+  umbrella header "Pods-RMQClient-RMQClientTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

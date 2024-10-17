@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
                    DESC
   s.homepage         = "https://github.com/rabbitmq/rabbitmq-objc-client"
   s.license          = { type: "Apache 2.0", file: "LICENSE-APACHE2" }
-  s.author           = { "RabbitMQ team" => "rabbitmq-users@googlegroups.com" }
+  s.author           = { "Team RabbitMQ" => "rabbitmq-users@googlegroups.com" }
   s.social_media_url = "https://twitter.com/rabbitmq"
   s.ios.deployment_target = "15.0"
   s.osx.deployment_target = "12.5"
@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.dependency       "JKVValue", "~> 1.3"
   s.dependency       "CocoaAsyncSocket", "~> 7.6"
 
-  s.info_plist = {
-    'CFBundleIdentifier' => 'io.pivotal.RMQClient'
+  s.pod_target_xcconfig = {
+    'PRODUCT_BUNDLE_IDENTIFIER': 'io.pivotal.RMQClient'
   }
 end
