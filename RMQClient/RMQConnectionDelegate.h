@@ -61,6 +61,9 @@ disconnectedWithError:(NSError *)error;
  * @param connection the connection instance that was recovered.
  */
 - (void)recoveredConnection:(RMQConnection *)connection;
+
+- (void)tunedConnection:(RMQConnection *)connection;
+
 /// @brief Called with any channel-level AMQP exception.
 - (void)channel:(id<RMQChannel>)channel
           error:(NSError *)error;

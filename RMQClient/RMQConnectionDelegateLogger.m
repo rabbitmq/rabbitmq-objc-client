@@ -68,4 +68,8 @@
     NSLog(@"Recovered connection: %@", connection);
 }
 
+- (void)tunedConnection:(RMQConnection *)connection {
+     NSLog(@"Tuned connection: %@", connection);
+ }
+
 @end

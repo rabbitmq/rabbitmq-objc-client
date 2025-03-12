@@ -95,4 +95,10 @@
     });
 }
 
+- (void)tunedConnection:(RMQConnection *)connection {
+     dispatch_async(self.queue, ^{
+         [self.delegate tunedConnection:connection];
+     });
+ }
+
 @end

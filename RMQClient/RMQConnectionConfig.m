@@ -4,7 +4,7 @@
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright (c) 2007-2024 Broadcom. All Rights Reserved. The term “Broadcom” refers to Broadcom Inc. and/or its subsidiaries. All rights reserved.
+// Copyright 2017-2022 VMware, Inc. or its affiliates.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -58,6 +58,7 @@ NSInteger const RMQChannelMaxDefault = 127;
 @property (nonnull, nonatomic, readwrite) RMQCredentials *credentials;
 @property (nonnull, nonatomic, readwrite) NSString *authMechanism;
 @property (nonatomic, readwrite) NSString *userProvidedConnectionName;
+@property (nonatomic, readwrite) NSString *applicationName;
 @property (nonnull, nonatomic, readwrite) id<RMQConnectionRecovery> recovery;
 @end
 
@@ -113,6 +114,30 @@ NSInteger const RMQChannelMaxDefault = 127;
         self.vhost = vhost;
         self.authMechanism = authMechanism;
         self.userProvidedConnectionName = userProvidedConnectionName;
+        self.recovery = recovery;
+    }
+    return self;
+}
+
+- (instancetype)initWithCredentials:(RMQCredentials *)credentials
+                         channelMax:(NSNumber *)channelMax
+                           frameMax:(NSNumber *)frameMax
+                          heartbeat:(NSNumber *)heartbeat
+                              vhost:(nonnull NSString *)vhost
+                      authMechanism:(nonnull NSString *)authMechanism
+         userProvidedConnectionName:(nonnull NSString *)userProvidedConnectionName
+                    applicationName:(nonnull NSString *)applicationName
+                           recovery:(nonnull id<RMQConnectionRecovery>)recovery {
+    self = [super init];
+    if (self) {
+        self.credentials = credentials;
+        self.channelMax = channelMax;
+        self.frameMax = frameMax;
+        self.heartbeat = heartbeat;
+        self.vhost = vhost;
+        self.authMechanism = authMechanism;
+        self.userProvidedConnectionName = userProvidedConnectionName;
+        self.applicationName = applicationName;
         self.recovery = recovery;
     }
     return self;

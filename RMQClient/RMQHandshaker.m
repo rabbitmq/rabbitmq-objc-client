@@ -113,6 +113,13 @@
         [combinedProperties setObject:[[RMQLongstr alloc] init:userProvidedConnectionName]
                                forKey:@"connection_name"];
     }
+
+    NSString *applicationName = [self.config applicationName];
+     if (applicationName != nil) {
+         [combinedProperties setObject:[[RMQLongstr alloc] init:applicationName]
+                                forKey:@"applicationName"];
+     }
+
     RMQTable *clientProperties = [[RMQTable alloc] init:combinedProperties];
 
     return [[RMQConnectionStartOk alloc] initWithClientProperties:clientProperties

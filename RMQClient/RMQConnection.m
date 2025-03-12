@@ -4,7 +4,7 @@
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright (c) 2007-2024 Broadcom. All Rights Reserved. The term “Broadcom” refers to Broadcom Inc. and/or its subsidiaries. All rights reserved.
+// Copyright 2017-2022 VMware, Inc. or its affiliates.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -75,15 +75,20 @@
 @property (nonatomic, readwrite) NSNumber *frameMax;
 @property (nonatomic, readwrite) BOOL handshakeComplete;
 @property (nonatomic, readwrite) NSNumber *handshakeTimeout;
+
+@property (nonatomic, strong) dispatch_group_t tuneGroup;
+@property (nonatomic, assign) BOOL isCancelled;
+@property (nonatomic, assign) BOOL connectionTuneOK;
 @end
 
 __attribute__((constructor))
 static void RMQInitConnectionConfigDefaults() {
     RMQDefaultHeartbeatTimeout = [NSNumber numberWithInteger:60];
+    RMQDefaultHandshakeTimeout = [NSNumber numberWithInteger:10];
     RMQDefaultConnectTimeout   = [NSNumber numberWithInteger:30];
     RMQDefaultReadTimeout      = [NSNumber numberWithInteger:55];
     RMQDefaultWriteTimeout     = [NSNumber numberWithInteger:55];
-
+    
     RMQDefaultSyncTimeout      = [NSNumber numberWithInteger:15];
     RMQDefaultRecoveryInterval = [NSNumber numberWithInteger:4];
 }
@@ -117,13 +122,13 @@ static void RMQInitConnectionConfigDefaults() {
         self.channelAllocator.sender = self;
         self.frameHandler = frameHandler;
         self.reader = [[RMQReader alloc] initWithTransport:self.transport frameHandler:self];
-
+        
         self.userChannels = [NSMutableDictionary new];
         self.delegate = delegate;
         self.commandQueue = commandQueue;
         self.waiterFactory = waiterFactory;
         self.heartbeatSender = heartbeatSender;
-
+        
         self.channelZero = [self.channelAllocator allocate];
         [self.channelZero activateWithDelegate:self.delegate];
     }
@@ -147,7 +152,7 @@ static void RMQInitConnectionConfigDefaults() {
          recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose {
     NSError *error = NULL;
     RMQURI *rmqURI = [RMQURI parse:uri error:&error];
-
+    
     RMQTCPSocketTransport *transport = [[RMQTCPSocketTransport alloc] initWithHost:rmqURI.host
                                                                               port:rmqURI.portNumber
                                                                         tlsOptions:tlsOptions
@@ -155,24 +160,24 @@ static void RMQInitConnectionConfigDefaults() {
                                                                        readTimeout:readTimeout
                                                                       writeTimeout:writeTimeout];
     RMQMultipleChannelAllocator *allocator = [[RMQMultipleChannelAllocator alloc]
-                                                initWithMaxCapacity:[channelMax unsignedIntegerValue]
-                                                channelSyncTimeout:syncTimeout];
+                                              initWithMaxCapacity:[channelMax unsignedIntegerValue]
+                                              channelSyncTimeout:syncTimeout];
     RMQQueuingConnectionDelegateProxy *delegateProxy = [[RMQQueuingConnectionDelegateProxy alloc]
-                                                            initWithDelegate:delegate
-                                                            queue:delegateQueue];
+                                                        initWithDelegate:delegate
+                                                        queue:delegateQueue];
     RMQSemaphoreWaiterFactory *waiterFactory = [RMQSemaphoreWaiterFactory new];
     RMQGCDHeartbeatSender *heartbeatSender = [[RMQGCDHeartbeatSender alloc] initWithTransport:transport
                                                                                         clock:[RMQTickingClock new]];
     RMQProcessInfoNameGenerator *nameGenerator = [RMQProcessInfoNameGenerator new];
     RMQGCDSerialQueue *commandQueue = [[RMQGCDSerialQueue alloc]
-                                        initWithName:[nameGenerator generateWithPrefix:@"connection-commands"]];
+                                       initWithName:[nameGenerator generateWithPrefix:@"connection-commands"]];
     RMQConnectionRecover *recovery = [[RMQConnectionRecover alloc] initWithInterval:recoveryInterval
                                                                        attemptLimit:recoveryAttempts
                                                                          onlyErrors:!shouldRecoverFromConnectionClose
                                                                     heartbeatSender:heartbeatSender
                                                                        commandQueue:commandQueue
                                                                            delegate:delegateProxy];
-
+    
     RMQCredentials *credentials = [[RMQCredentials alloc] initWithUsername:rmqURI.username
                                                                   password:rmqURI.password];
     RMQConnectionConfig *config = [[RMQConnectionConfig alloc] initWithCredentials:credentials
@@ -210,7 +215,7 @@ static void RMQInitConnectionConfigDefaults() {
          recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose {
     NSError *error = NULL;
     RMQURI *rmqURI = [RMQURI parse:uri error:&error];
-
+    
     RMQTCPSocketTransport *transport = [[RMQTCPSocketTransport alloc] initWithHost:rmqURI.host
                                                                               port:rmqURI.portNumber
                                                                         tlsOptions:[RMQTLSOptions fromURI:uri]
@@ -226,8 +231,8 @@ static void RMQInitConnectionConfigDefaults() {
     RMQSemaphoreWaiterFactory *waiterFactory = [RMQSemaphoreWaiterFactory new];
     RMQGCDHeartbeatSender *heartbeatSender = [[RMQGCDHeartbeatSender alloc] initWithTransport:transport
                                                                                         clock:[RMQTickingClock new]];
-
-
+    
+    
     RMQProcessInfoNameGenerator *nameGenerator = [RMQProcessInfoNameGenerator new];
     RMQGCDSerialQueue *commandQueue = [[RMQGCDSerialQueue alloc]
                                        initWithName:[nameGenerator generateWithPrefix:@"connection-commands"]];
@@ -237,7 +242,7 @@ static void RMQInitConnectionConfigDefaults() {
                                                                     heartbeatSender:heartbeatSender
                                                                        commandQueue:commandQueue
                                                                            delegate:delegateProxy];
-
+    
     RMQCredentials *credentials = [[RMQCredentials alloc] initWithUsername:rmqURI.username
                                                                   password:rmqURI.password];
     RMQConnectionConfig *config = [[RMQConnectionConfig alloc] initWithCredentials:credentials
@@ -266,28 +271,37 @@ static void RMQInitConnectionConfigDefaults() {
     RMQQueuingConnectionDelegateProxy *delegateProxy = [[RMQQueuingConnectionDelegateProxy alloc]
                                                         initWithDelegate:delegate
                                                         queue:delegateQueue];
-
+    
     return [self initWithUri:uri
-                    tlsOptions:[RMQTLSOptions fromURI:uri]
-    userProvidedConnectionName:connectionName
-                      delegate:delegateProxy
-                  recoverAfter:RMQDefaultRecoveryInterval
-              recoveryAttempts:@(NSUIntegerMax)
-    recoverFromConnectionClose:YES];
+                  tlsOptions:[RMQTLSOptions fromURI:uri]
+  userProvidedConnectionName:connectionName
+             applicationName:NULL
+                    delegate:delegateProxy
+                recoverAfter:RMQDefaultRecoveryInterval
+            recoveryAttempts:@(NSUIntegerMax)
+              connectTimeout:RMQDefaultConnectTimeout
+                 syncTimeout:RMQDefaultSyncTimeout
+  recoverFromConnectionClose:YES];
 }
 
 - (nonnull instancetype)initWithUri:(NSString *)uri
          userProvidedConnectionName:(NSString *)connectionName
+                    applicationName:(NSString *)applicationName
                            delegate:(id<RMQConnectionDelegate>)delegate
                        recoverAfter:(nonnull NSNumber *)recoveryInterval
                    recoveryAttempts:(nonnull NSNumber *)recoveryAttempts
+                     connectTimeout:(nonnull NSNumber*)connectTimeout
+                        syncTimeout:(nonnull NSNumber *)syncTimeout
          recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose {
     return [self initWithUri:uri
-                 tlsOptions:[RMQTLSOptions fromURI:uri]
- userProvidedConnectionName:connectionName
+                  tlsOptions:[RMQTLSOptions fromURI:uri]
+  userProvidedConnectionName:connectionName
+             applicationName:applicationName
                     delegate:delegate
                 recoverAfter:recoveryInterval
             recoveryAttempts:recoveryAttempts
+              connectTimeout:connectTimeout
+                 syncTimeout:syncTimeout
   recoverFromConnectionClose:shouldRecoverFromConnectionClose];
 }
 
@@ -297,9 +311,12 @@ static void RMQInitConnectionConfigDefaults() {
     return [self initWithUri:uri
                   tlsOptions:[RMQTLSOptions fromURI:uri]
   userProvidedConnectionName:connectionName
+             applicationName:NULL
                     delegate:delegate
                 recoverAfter:RMQDefaultRecoveryInterval
             recoveryAttempts:@(NSUIntegerMax)
+              connectTimeout:RMQDefaultConnectTimeout
+                 syncTimeout:RMQDefaultSyncTimeout
   recoverFromConnectionClose:YES];
 }
 
@@ -312,50 +329,56 @@ static void RMQInitConnectionConfigDefaults() {
     return [self initWithUri:uri
                   tlsOptions:tlsOptions
   userProvidedConnectionName:NULL
+             applicationName:NULL
                     delegate:delegate
                 recoverAfter:recoveryInterval
             recoveryAttempts:recoveryAttempts
+              connectTimeout:RMQDefaultConnectTimeout
+                 syncTimeout:RMQDefaultSyncTimeout
   recoverFromConnectionClose:shouldRecoverFromConnectionClose];
 }
 
 - (nonnull instancetype)initWithUri:(NSString *)uri
                          tlsOptions:(RMQTLSOptions *)tlsOptions
          userProvidedConnectionName:(NSString *)connectionName
+                    applicationName:(NSString *)applicationName
                            delegate:(id<RMQConnectionDelegate>)delegate
                        recoverAfter:(nonnull NSNumber *)recoveryInterval
                    recoveryAttempts:(nonnull NSNumber *)recoveryAttempts
+                     connectTimeout:(nonnull NSNumber*)connectTimeout
+                        syncTimeout:(nonnull NSNumber *)syncTimeout
          recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose {
     NSError *error = NULL;
     RMQURI *rmqURI = [RMQURI parse:uri error:&error];
-
+    
     RMQTCPSocketTransport *transport = [[RMQTCPSocketTransport alloc] initWithHost:rmqURI.host
                                                                               port:rmqURI.portNumber
                                                                         tlsOptions:[RMQTLSOptions fromURI:uri]
-                                                                    connectTimeout:RMQDefaultConnectTimeout
+                                                                    connectTimeout:connectTimeout
                                                                        readTimeout:RMQDefaultReadTimeout
                                                                       writeTimeout:RMQDefaultWriteTimeout];
     RMQMultipleChannelAllocator *allocator = [[RMQMultipleChannelAllocator alloc]
-                                                initWithMaxCapacity:[@(RMQChannelMaxDefault) unsignedIntegerValue]
-                                                 channelSyncTimeout:RMQDefaultSyncTimeout];
+                                              initWithMaxCapacity:[@(RMQChannelMaxDefault) unsignedIntegerValue]
+                                              channelSyncTimeout:syncTimeout];
     RMQQueuingConnectionDelegateProxy *delegateProxy =
-                    [[RMQQueuingConnectionDelegateProxy alloc]
-                                        initWithDelegate:delegate
-                                                   queue:[RMQConnection defaultDispatchQueue]];
+    [[RMQQueuingConnectionDelegateProxy alloc]
+     initWithDelegate:delegate
+     queue:[RMQConnection defaultDispatchQueue]];
     RMQSemaphoreWaiterFactory *waiterFactory = [RMQSemaphoreWaiterFactory new];
     RMQGCDHeartbeatSender *heartbeatSender = [[RMQGCDHeartbeatSender alloc] initWithTransport:transport
                                                                                         clock:[RMQTickingClock new]];
-
-
+    
+    
     RMQProcessInfoNameGenerator *nameGenerator = [RMQProcessInfoNameGenerator new];
     RMQGCDSerialQueue *commandQueue = [[RMQGCDSerialQueue alloc]
                                        initWithName:[nameGenerator generateWithPrefix:@"connection-commands"]];
     RMQConnectionRecover *recovery = [[RMQConnectionRecover alloc]      initWithInterval:recoveryInterval
-            attemptLimit:recoveryAttempts
-              onlyErrors:!shouldRecoverFromConnectionClose
-         heartbeatSender:heartbeatSender
-            commandQueue:commandQueue
-                delegate:delegateProxy];
-
+                                                                            attemptLimit:recoveryAttempts
+                                                                              onlyErrors:!shouldRecoverFromConnectionClose
+                                                                         heartbeatSender:heartbeatSender
+                                                                            commandQueue:commandQueue
+                                                                                delegate:delegateProxy];
+    
     RMQCredentials *credentials = [[RMQCredentials alloc] initWithUsername:rmqURI.username
                                                                   password:rmqURI.password];
     RMQConnectionConfig *config = [[RMQConnectionConfig alloc] initWithCredentials:credentials
@@ -365,11 +388,12 @@ static void RMQInitConnectionConfigDefaults() {
                                                                              vhost:rmqURI.vhost
                                                                      authMechanism:tlsOptions.authMechanism
                                                         userProvidedConnectionName:connectionName
+                                                                   applicationName:applicationName
                                                                           recovery:recovery];
-
+    
     return [self initWithTransport:transport
                             config:config
-                  handshakeTimeout:RMQDefaultHeartbeatTimeout
+                  handshakeTimeout:RMQDefaultHandshakeTimeout
                   channelAllocator:allocator
                       frameHandler:allocator
                           delegate:delegateProxy
@@ -553,34 +577,37 @@ static void RMQInitConnectionConfigDefaults() {
 
 - (void)start:(void (^)(void))completionHandler {
     NSError *connectError = NULL;
-
+    
     [self.transport connectAndReturnError:&connectError];
     if (connectError) {
         [self.delegate connection:self failedToConnectWithError:connectError];
     } else {
+        self.isCancelled = NO;
+        self.tuneGroup = dispatch_group_create();
+        dispatch_group_enter(self.tuneGroup); // Входим в группу
+        
         [self.transport write:[RMQProtocolHeader new].amqEncoded];
         __weak id this = self;
-
+        
         [self.commandQueue enqueue:^{
             __strong typeof(self) strongThis = this;
             id<RMQWaiter> handshakeCompletion = [strongThis.waiterFactory makeWithTimeout:strongThis.handshakeTimeout];
-
+            
             RMQHandshaker *handshaker = [[RMQHandshaker alloc] initWithSender:strongThis
                                                                        config:strongThis.config
                                                             completionHandler:^(NSNumber *heartbeatTimeout,
                                                                                 RMQTable *serverProperties) {
-                                                                [strongThis.heartbeatSender startWithInterval:@(heartbeatTimeout.integerValue / 2)];
+                [strongThis.heartbeatSender startWithInterval:@(heartbeatTimeout.integerValue / 2)];
                 strongThis.handshakeComplete = YES;
-                                                                [handshakeCompletion done];
-                                                                [strongThis.reader run];
+                [handshakeCompletion done];
+                [strongThis.reader run];
                 strongThis.serverProperties = serverProperties;
-                                                                completionHandler();
-                                                            }];
+            }];
             RMQReader *handshakeReader = [[RMQReader alloc] initWithTransport:strongThis.transport
                                                                  frameHandler:handshaker];
             handshaker.reader = handshakeReader;
             [handshakeReader run];
-
+            
             if (handshakeCompletion.timesOut) {
                 NSError *error = [NSError errorWithDomain:RMQErrorDomain
                                                      code:RMQErrorConnectionHandshakeTimedOut
@@ -588,6 +615,15 @@ static void RMQInitConnectionConfigDefaults() {
                 [strongThis.delegate connection:strongThis failedToConnectWithError:error];
             }
         }];
+        
+        dispatch_group_notify(self.tuneGroup, dispatch_get_main_queue(), ^{
+            self.tuneGroup = nil;
+            if (self.isCancelled) {
+                return;
+            }
+            
+            completionHandler();
+        });
     }
 }
 
@@ -606,14 +642,6 @@ static void RMQInitConnectionConfigDefaults() {
     [ch open];
 
     return ch;
-}
-
-- (void)updateSecret:(NSString *)secret
-              reason:(NSString *)reason
-{
-    [self.commandQueue enqueue:^{
-        [self sendFrameset:[[RMQFrameset alloc] initWithChannelNumber:@0 method:[self methodForUpdateSecret:secret reason:reason]]];
-    }];
 }
 
 - (BOOL)hasCompletedHandshake {
@@ -667,6 +695,20 @@ static void RMQInitConnectionConfigDefaults() {
         [self.transport write:frameset.amqEncoded];
         [self.heartbeatSender signalActivity];
     }
+    
+    if ([frameset.method isKindOfClass:[RMQConnectionTuneOk class]]) {
+        
+        self.connectionTuneOK = YES;
+        [self.delegate tunedConnection:self];
+        
+        if (self.isCancelled) {
+            return;
+        }
+        
+        if (self.tuneGroup) {
+            dispatch_group_leave(self.tuneGroup); // <- key tmp fix
+        }
+    }
 }
 
 - (void)sendFrameset:(RMQFrameset *)frameset {
@@ -693,6 +735,16 @@ static void RMQInitConnectionConfigDefaults() {
 
 - (void)transport:(id<RMQTransport>)transport disconnectedWithError:(NSError *)error {
     self.handshakeComplete = NO;
+    
+    self.connectionTuneOK = NO;
+    if (!self.isCancelled) {
+        self.isCancelled = YES;
+        
+        if (self.tuneGroup) {
+            dispatch_group_leave(self.tuneGroup);
+        }
+    }
+    
     if (error) [self.delegate connection:self disconnectedWithError:error];
     [self.recovery recover:self
           channelAllocator:self.channelAllocator
@@ -752,14 +804,6 @@ static void RMQInitConnectionConfigDefaults() {
     for (id<RMQChannel> ch in self.userChannels.allValues) {
         [ch blockingClose];
     }
-}
-
-- (RMQConnectionUpdateSecret *)methodForUpdateSecret:(NSString *)secret
-                                              reason:(NSString *)reason {
-    RMQLongstr *secretLongstr = [[RMQLongstr alloc] init:secret];
-    RMQShortstr *reasonShortstr = [[RMQShortstr alloc] init:reason];
-    return [[RMQConnectionUpdateSecret alloc] initWithSecret:secretLongstr
-                                                      reason:reasonShortstr];
 }
 
 - (RMQConnectionClose *)amqClose {

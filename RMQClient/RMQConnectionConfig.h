@@ -4,7 +4,7 @@
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright (c) 2007-2024 Broadcom. All Rights Reserved. The term “Broadcom” refers to Broadcom Inc. and/or its subsidiaries. All rights reserved.
+// Copyright 2017-2022 VMware, Inc. or its affiliates.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -55,6 +55,7 @@ extern NSInteger const RMQChannelMaxDefault;
 @property (nonnull, nonatomic, readonly) RMQCredentials *credentials;
 @property (nonnull, nonatomic, readonly) NSString *authMechanism;
 @property (nullable, nonatomic, readonly) NSString *userProvidedConnectionName;
+@property (nullable, nonatomic, readonly) NSString *applicationName;
 @property (nonnull, nonatomic, readonly) id<RMQConnectionRecovery> recovery;
 
 - (nonnull instancetype)initWithCredentials:(nonnull RMQCredentials *)credentials
@@ -78,6 +79,16 @@ extern NSInteger const RMQChannelMaxDefault;
                                       vhost:(nonnull NSString *)vhost
                               authMechanism:(nonnull NSString *)authMechanism
                  userProvidedConnectionName:(nonnull NSString *)userProvidedConnectionName
+                                   recovery:(nonnull id<RMQConnectionRecovery>)recovery;
+
+- (nonnull instancetype)initWithCredentials:(nonnull RMQCredentials *)credentials
+                                 channelMax:(nonnull NSNumber *)channelMax
+                                   frameMax:(nonnull NSNumber *)frameMax
+                                  heartbeat:(nonnull NSNumber *)heartbeat
+                                      vhost:(nonnull NSString *)vhost
+                              authMechanism:(nonnull NSString *)authMechanism
+                 userProvidedConnectionName:(nonnull NSString *)userProvidedConnectionName
+                            applicationName:(nonnull NSString *)applicationName
                                    recovery:(nonnull id<RMQConnectionRecovery>)recovery;
 
 - (nonnull instancetype)initWithCredentials:(nonnull RMQCredentials *)credentials
