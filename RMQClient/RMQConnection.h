@@ -110,9 +110,12 @@
 /// @brief Connection tuning, customisable TLS, all recovery options.
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
          userProvidedConnectionName:(nullable NSString *)connectionName
+                           applicationName:(nullable NSString *)applicationName
                            delegate:(nullable id<RMQConnectionDelegate>)delegate
                        recoverAfter:(nonnull NSNumber *)recoveryInterval
                    recoveryAttempts:(nonnull NSNumber *)recoveryAttempts
+                     connectTimeout:(nonnull NSNumber*)connectTimeout
+                        syncTimeout:(nonnull NSNumber *)syncTimeout
          recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose;
 
 /// @brief Connection URI, custom name and delegate..
