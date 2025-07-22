@@ -5,8 +5,9 @@ GEM
       base64
       nkf
       rexml
-    activesupport (7.2.1.1)
+    activesupport (7.2.2.1)
       base64
+      benchmark (>= 0.3)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.3.1)
       connection_pool (>= 2.2.5)
@@ -22,8 +23,9 @@ GEM
       httpclient (~> 2.8, >= 2.8.3)
       json (>= 1.5.1)
     atomos (0.1.3)
-    base64 (0.2.0)
-    bigdecimal (3.1.8)
+    base64 (0.3.0)
+    benchmark (0.4.1)
+    bigdecimal (3.2.2)
     claide (1.1.0)
     cocoapods (1.15.2)
       addressable (~> 2.8)
@@ -63,92 +65,54 @@ GEM
       netrc (~> 0.11)
     cocoapods-try (1.2.0)
     colored2 (3.1.2)
-    concurrent-ruby (1.3.4)
-    connection_pool (2.4.1)
-    drb (2.2.1)
+    concurrent-ruby (1.3.5)
+    connection_pool (2.5.3)
+    drb (2.2.3)
     escape (0.0.4)
     ethon (0.16.0)
       ffi (>= 1.15.0)
-    ffi (1.17.0-aarch64-linux-gnu)
-    ffi (1.17.0-aarch64-linux-musl)
-    ffi (1.17.0-arm-linux-gnu)
-    ffi (1.17.0-arm-linux-musl)
-    ffi (1.17.0-arm64-darwin)
-    ffi (1.17.0-x86-linux-gnu)
-    ffi (1.17.0-x86-linux-musl)
-    ffi (1.17.0-x86_64-darwin)
-    ffi (1.17.0-x86_64-linux-gnu)
-    ffi (1.17.0-x86_64-linux-musl)
+    ffi (1.17.2-arm64-darwin)
     fourflusher (2.3.1)
     fuzzy_match (2.0.4)
     gh_inspector (1.1.3)
-    httpclient (2.8.3)
-    i18n (1.14.6)
+    httpclient (2.9.0)
+      mutex_m
+    i18n (1.14.7)
       concurrent-ruby (~> 1.0)
-    json (2.7.2)
-    logger (1.6.1)
-    mini_portile2 (2.8.8)
-    minitest (5.25.1)
+    json (2.13.0)
+    logger (1.7.0)
+    minitest (5.25.5)
     molinillo (0.8.0)
-    nanaimo (0.3.0)
+    mutex_m (0.3.0)
+    nanaimo (0.4.0)
     nap (1.1.0)
     netrc (0.11.0)
     nkf (0.2.0)
-    nokogiri (1.18.8)
-      mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
-    nokogiri (1.18.8-aarch64-linux-gnu)
-      racc (~> 1.4)
-    nokogiri (1.18.8-aarch64-linux-musl)
-      racc (~> 1.4)
-    nokogiri (1.18.8-arm-linux-gnu)
-      racc (~> 1.4)
-    nokogiri (1.18.8-arm-linux-musl)
-      racc (~> 1.4)
-    nokogiri (1.18.8-arm64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.18.8-x86_64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.18.8-x86_64-linux-gnu)
-      racc (~> 1.4)
-    nokogiri (1.18.8-x86_64-linux-musl)
+    nokogiri (1.18.9-arm64-darwin)
       racc (~> 1.4)
     public_suffix (4.0.7)
     racc (1.8.1)
-    rexml (3.3.9)
+    rexml (3.4.1)
     ruby-macho (2.5.1)
-    securerandom (0.3.1)
+    securerandom (0.4.1)
     typhoeus (1.4.1)
       ethon (>= 0.9.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    xcodeproj (1.25.1)
+    xcodeproj (1.27.0)
       CFPropertyList (>= 2.3.3, < 4.0)
       atomos (~> 0.1.3)
       claide (>= 1.0.2, < 2.0)
       colored2 (~> 3.1)
-      nanaimo (~> 0.3.0)
+      nanaimo (~> 0.4.0)
       rexml (>= 3.3.6, < 4.0)
 
 PLATFORMS
-  aarch64-linux
-  aarch64-linux-gnu
-  aarch64-linux-musl
-  arm-linux
-  arm-linux-gnu
-  arm-linux-musl
-  arm64-darwin
-  x86-linux
-  x86-linux-gnu
-  x86-linux-musl
-  x86_64-darwin
-  x86_64-linux
-  x86_64-linux-gnu
-  x86_64-linux-musl
+  arm64-darwin-24
 
 DEPENDENCIES
   cocoapods (~> 1.15.2)
-  nokogiri (>= 1.16.7)
+  nokogiri (>= 1.18.9)
 
 BUNDLED WITH
-   2.5.22
+   2.6.2
