@@ -1,6 +1,10 @@
-# RabbitMQ Objective-C and Swift client
+# RabbitMQ Objective-C Client
 
-[![Build Status](https://travis-ci.org/rabbitmq/rabbitmq-objc-client.svg?branch=master)](https://travis-ci.org/rabbitmq/rabbitmq-objc-client)
+## Wait, There is a More Modern Way!
+
+Please use a [modern Swift 6 client for RabbitMQ](https://github.com/michaelklishin/bunny-swift) instead.
+
+## Overview
 
 A RabbitMQ client, largely influenced by [Bunny](https://github.com/ruby-amqp/bunny).
 
